@@ -46,9 +46,9 @@ path = [
 SPDX-FileCopyrightText = "tix-mobile contributors"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
-# Documentation, specs, assets and agent tooling.
+# Documentation, specs, assets, golden images and agent tooling.
 [[annotations]]
-path = ["**/*.md", "docs/**", "openspec/**", "assets/**", ".claude/**", "screenshots/**"]
+path = ["**/*.md", "docs/**", "openspec/**", "assets/**", ".claude/**", "screenshots/**", "test/**/goldens/**"]
 SPDX-FileCopyrightText = "tix-mobile contributors"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 

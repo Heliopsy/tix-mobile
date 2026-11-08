@@ -12,10 +12,12 @@ _Tenant _$TenantFromJson(Map<String, dynamic> json) => _Tenant(
   id: json['id'] as String,
   key: json['key'] as String? ?? '',
   name: json['name'] as String? ?? '',
+  theme: json['theme'] as String? ?? '',
 );
 
 Map<String, dynamic> _$TenantToJson(_Tenant instance) => <String, dynamic>{
   'id': instance.id,
   'key': instance.key,
   'name': instance.name,
+  'theme': instance.theme,
 };

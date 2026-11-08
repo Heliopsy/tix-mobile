@@ -1,0 +1,3 @@
+# Test tags. `just goldens` runs the golden tests alone.
+tags:
+  golden:

@@ -12,6 +12,7 @@ abstract class Tenant with _$Tenant {
     required String id,
     @Default('') String key,
     @Default('') String name,
+    @Default('') String theme,
   }) = _Tenant;
 
   factory Tenant.fromJson(Map<String, dynamic> json) => _$TenantFromJson(json);

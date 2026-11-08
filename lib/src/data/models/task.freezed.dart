@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Task {
 
- String get id; String get ref; String get title; String get status; String get body; int get priority; String get projectId; String get assigneeActorId; List<String> get tags; bool get blocked; bool get starred; int get version; DateTime? get dueAt; DateTime? get createdAt; DateTime? get updatedAt; DateTime? get completedAt;
+ String get id; String get ref; String get title; String get status; String get body; int get priority; String get projectId; String get assigneeActorId; List<String> get tags; bool get blocked; bool get starred; int get version; DateTime? get dueAt; DateTime? get createdAt; DateTime? get updatedAt; DateTime? get completedAt; DateTime? get snoozedUntil;
 /// Create a copy of Task
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $TaskCopyWith<Task> get copyWith => _$TaskCopyWithImpl<Task>(this as Task, _$ide
 @override
 bool operator ==(Object other) {
   final _this = this as Task;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Task&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.ref, _this.ref) || other.ref == _this.ref)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.body, _this.body) || other.body == _this.body)&&(identical(other.priority, _this.priority) || other.priority == _this.priority)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.assigneeActorId, _this.assigneeActorId) || other.assigneeActorId == _this.assigneeActorId)&&const DeepCollectionEquality().equals(other.tags, _this.tags)&&(identical(other.blocked, _this.blocked) || other.blocked == _this.blocked)&&(identical(other.starred, _this.starred) || other.starred == _this.starred)&&(identical(other.version, _this.version) || other.version == _this.version)&&(identical(other.dueAt, _this.dueAt) || other.dueAt == _this.dueAt)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.completedAt, _this.completedAt) || other.completedAt == _this.completedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Task&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.ref, _this.ref) || other.ref == _this.ref)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.body, _this.body) || other.body == _this.body)&&(identical(other.priority, _this.priority) || other.priority == _this.priority)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.assigneeActorId, _this.assigneeActorId) || other.assigneeActorId == _this.assigneeActorId)&&const DeepCollectionEquality().equals(other.tags, _this.tags)&&(identical(other.blocked, _this.blocked) || other.blocked == _this.blocked)&&(identical(other.starred, _this.starred) || other.starred == _this.starred)&&(identical(other.version, _this.version) || other.version == _this.version)&&(identical(other.dueAt, _this.dueAt) || other.dueAt == _this.dueAt)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.completedAt, _this.completedAt) || other.completedAt == _this.completedAt)&&(identical(other.snoozedUntil, _this.snoozedUntil) || other.snoozedUntil == _this.snoozedUntil));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Task;
-  return Object.hash(runtimeType,_this.id,_this.ref,_this.title,_this.status,_this.body,_this.priority,_this.projectId,_this.assigneeActorId,const DeepCollectionEquality().hash(_this.tags),_this.blocked,_this.starred,_this.version,_this.dueAt,_this.createdAt,_this.updatedAt,_this.completedAt);
+  return Object.hash(runtimeType,_this.id,_this.ref,_this.title,_this.status,_this.body,_this.priority,_this.projectId,_this.assigneeActorId,const DeepCollectionEquality().hash(_this.tags),_this.blocked,_this.starred,_this.version,_this.dueAt,_this.createdAt,_this.updatedAt,_this.completedAt,_this.snoozedUntil);
 }
 
 @override
 String toString() {
   final _this = this as Task;
-  return 'Task(id: ${_this.id}, ref: ${_this.ref}, title: ${_this.title}, status: ${_this.status}, body: ${_this.body}, priority: ${_this.priority}, projectId: ${_this.projectId}, assigneeActorId: ${_this.assigneeActorId}, tags: ${_this.tags}, blocked: ${_this.blocked}, starred: ${_this.starred}, version: ${_this.version}, dueAt: ${_this.dueAt}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt}, completedAt: ${_this.completedAt})';
+  return 'Task(id: ${_this.id}, ref: ${_this.ref}, title: ${_this.title}, status: ${_this.status}, body: ${_this.body}, priority: ${_this.priority}, projectId: ${_this.projectId}, assigneeActorId: ${_this.assigneeActorId}, tags: ${_this.tags}, blocked: ${_this.blocked}, starred: ${_this.starred}, version: ${_this.version}, dueAt: ${_this.dueAt}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt}, completedAt: ${_this.completedAt}, snoozedUntil: ${_this.snoozedUntil})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $TaskCopyWith<$Res>  {
   factory $TaskCopyWith(Task value, $Res Function(Task) _then) = _$TaskCopyWithImpl;
 @useResult
 $Res call({
- String id, String ref, String title, String status, String body, int priority, String projectId, String assigneeActorId, List<String> tags, bool blocked, bool starred, int version, DateTime? dueAt, DateTime? createdAt, DateTime? updatedAt, DateTime? completedAt
+ String id, String ref, String title, String status, String body, int priority, String projectId, String assigneeActorId, List<String> tags, bool blocked, bool starred, int version, DateTime? dueAt, DateTime? createdAt, DateTime? updatedAt, DateTime? completedAt, DateTime? snoozedUntil
 });
 
 
@@ -71,7 +71,7 @@ class _$TaskCopyWithImpl<$Res>
 
 /// Create a copy of Task
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? ref = null,Object? title = null,Object? status = null,Object? body = null,Object? priority = null,Object? projectId = null,Object? assigneeActorId = null,Object? tags = null,Object? blocked = null,Object? starred = null,Object? version = null,Object? dueAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? completedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? ref = null,Object? title = null,Object? status = null,Object? body = null,Object? priority = null,Object? projectId = null,Object? assigneeActorId = null,Object? tags = null,Object? blocked = null,Object? starred = null,Object? version = null,Object? dueAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? completedAt = freezed,Object? snoozedUntil = freezed,}) {
   return _then(Task(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,ref: null == ref ? _self.ref : ref // ignore: cast_nullable_to_non_nullable
@@ -89,6 +89,7 @@ as int,dueAt: freezed == dueAt ? _self.dueAt : dueAt // ignore: cast_nullable_to
 as DateTime?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,completedAt: freezed == completedAt ? _self.completedAt : completedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,snoozedUntil: freezed == snoozedUntil ? _self.snoozedUntil : snoozedUntil // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
@@ -174,10 +175,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String ref,  String title,  String status,  String body,  int priority,  String projectId,  String assigneeActorId,  List<String> tags,  bool blocked,  bool starred,  int version,  DateTime? dueAt,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? completedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String ref,  String title,  String status,  String body,  int priority,  String projectId,  String assigneeActorId,  List<String> tags,  bool blocked,  bool starred,  int version,  DateTime? dueAt,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? completedAt,  DateTime? snoozedUntil)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Task() when $default != null:
-return $default(_that.id,_that.ref,_that.title,_that.status,_that.body,_that.priority,_that.projectId,_that.assigneeActorId,_that.tags,_that.blocked,_that.starred,_that.version,_that.dueAt,_that.createdAt,_that.updatedAt,_that.completedAt);case _:
+return $default(_that.id,_that.ref,_that.title,_that.status,_that.body,_that.priority,_that.projectId,_that.assigneeActorId,_that.tags,_that.blocked,_that.starred,_that.version,_that.dueAt,_that.createdAt,_that.updatedAt,_that.completedAt,_that.snoozedUntil);case _:
   return orElse();
 
 }
@@ -195,10 +196,10 @@ return $default(_that.id,_that.ref,_that.title,_that.status,_that.body,_that.pri
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String ref,  String title,  String status,  String body,  int priority,  String projectId,  String assigneeActorId,  List<String> tags,  bool blocked,  bool starred,  int version,  DateTime? dueAt,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? completedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String ref,  String title,  String status,  String body,  int priority,  String projectId,  String assigneeActorId,  List<String> tags,  bool blocked,  bool starred,  int version,  DateTime? dueAt,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? completedAt,  DateTime? snoozedUntil)  $default,) {final _that = this;
 switch (_that) {
 case _Task():
-return $default(_that.id,_that.ref,_that.title,_that.status,_that.body,_that.priority,_that.projectId,_that.assigneeActorId,_that.tags,_that.blocked,_that.starred,_that.version,_that.dueAt,_that.createdAt,_that.updatedAt,_that.completedAt);case _:
+return $default(_that.id,_that.ref,_that.title,_that.status,_that.body,_that.priority,_that.projectId,_that.assigneeActorId,_that.tags,_that.blocked,_that.starred,_that.version,_that.dueAt,_that.createdAt,_that.updatedAt,_that.completedAt,_that.snoozedUntil);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -215,10 +216,10 @@ return $default(_that.id,_that.ref,_that.title,_that.status,_that.body,_that.pri
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String ref,  String title,  String status,  String body,  int priority,  String projectId,  String assigneeActorId,  List<String> tags,  bool blocked,  bool starred,  int version,  DateTime? dueAt,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? completedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String ref,  String title,  String status,  String body,  int priority,  String projectId,  String assigneeActorId,  List<String> tags,  bool blocked,  bool starred,  int version,  DateTime? dueAt,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? completedAt,  DateTime? snoozedUntil)?  $default,) {final _that = this;
 switch (_that) {
 case _Task() when $default != null:
-return $default(_that.id,_that.ref,_that.title,_that.status,_that.body,_that.priority,_that.projectId,_that.assigneeActorId,_that.tags,_that.blocked,_that.starred,_that.version,_that.dueAt,_that.createdAt,_that.updatedAt,_that.completedAt);case _:
+return $default(_that.id,_that.ref,_that.title,_that.status,_that.body,_that.priority,_that.projectId,_that.assigneeActorId,_that.tags,_that.blocked,_that.starred,_that.version,_that.dueAt,_that.createdAt,_that.updatedAt,_that.completedAt,_that.snoozedUntil);case _:
   return null;
 
 }
@@ -230,7 +231,7 @@ return $default(_that.id,_that.ref,_that.title,_that.status,_that.body,_that.pri
 @JsonSerializable()
 
 class _Task implements Task {
-  const _Task({required this.id, required this.ref, required this.title, this.status = '', this.body = '', this.priority = 0, this.projectId = '', this.assigneeActorId = '',  List<String> tags = const <String>[], this.blocked = false, this.starred = false, this.version = 0, this.dueAt, this.createdAt, this.updatedAt, this.completedAt}): _tags = tags;
+  const _Task({required this.id, required this.ref, required this.title, this.status = '', this.body = '', this.priority = 0, this.projectId = '', this.assigneeActorId = '',  List<String> tags = const <String>[], this.blocked = false, this.starred = false, this.version = 0, this.dueAt, this.createdAt, this.updatedAt, this.completedAt, this.snoozedUntil}): _tags = tags;
   factory _Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
 
 @override final  String id;
@@ -255,6 +256,7 @@ class _Task implements Task {
 @override final  DateTime? createdAt;
 @override final  DateTime? updatedAt;
 @override final  DateTime? completedAt;
+@override final  DateTime? snoozedUntil;
 
 /// Create a copy of Task
 /// with the given fields replaced by the non-null parameter values.
@@ -269,18 +271,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Task&&(identical(other.id, id) || other.id == id)&&(identical(other.ref, ref) || other.ref == ref)&&(identical(other.title, title) || other.title == title)&&(identical(other.status, status) || other.status == status)&&(identical(other.body, body) || other.body == body)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.assigneeActorId, assigneeActorId) || other.assigneeActorId == assigneeActorId)&&const DeepCollectionEquality().equals(other.tags, _tags)&&(identical(other.blocked, blocked) || other.blocked == blocked)&&(identical(other.starred, starred) || other.starred == starred)&&(identical(other.version, version) || other.version == version)&&(identical(other.dueAt, dueAt) || other.dueAt == dueAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Task&&(identical(other.id, id) || other.id == id)&&(identical(other.ref, ref) || other.ref == ref)&&(identical(other.title, title) || other.title == title)&&(identical(other.status, status) || other.status == status)&&(identical(other.body, body) || other.body == body)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.assigneeActorId, assigneeActorId) || other.assigneeActorId == assigneeActorId)&&const DeepCollectionEquality().equals(other.tags, _tags)&&(identical(other.blocked, blocked) || other.blocked == blocked)&&(identical(other.starred, starred) || other.starred == starred)&&(identical(other.version, version) || other.version == version)&&(identical(other.dueAt, dueAt) || other.dueAt == dueAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.snoozedUntil, snoozedUntil) || other.snoozedUntil == snoozedUntil));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,ref,title,status,body,priority,projectId,assigneeActorId,const DeepCollectionEquality().hash(_tags),blocked,starred,version,dueAt,createdAt,updatedAt,completedAt);
+    return Object.hash(runtimeType,id,ref,title,status,body,priority,projectId,assigneeActorId,const DeepCollectionEquality().hash(_tags),blocked,starred,version,dueAt,createdAt,updatedAt,completedAt,snoozedUntil);
 }
 
 @override
 String toString() {
-    return 'Task(id: $id, ref: $ref, title: $title, status: $status, body: $body, priority: $priority, projectId: $projectId, assigneeActorId: $assigneeActorId, tags: $tags, blocked: $blocked, starred: $starred, version: $version, dueAt: $dueAt, createdAt: $createdAt, updatedAt: $updatedAt, completedAt: $completedAt)';
+    return 'Task(id: $id, ref: $ref, title: $title, status: $status, body: $body, priority: $priority, projectId: $projectId, assigneeActorId: $assigneeActorId, tags: $tags, blocked: $blocked, starred: $starred, version: $version, dueAt: $dueAt, createdAt: $createdAt, updatedAt: $updatedAt, completedAt: $completedAt, snoozedUntil: $snoozedUntil)';
 }
 
 
@@ -291,7 +293,7 @@ abstract mixin class _$TaskCopyWith<$Res> implements $TaskCopyWith<$Res> {
   factory _$TaskCopyWith(_Task value, $Res Function(_Task) _then) = __$TaskCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String ref, String title, String status, String body, int priority, String projectId, String assigneeActorId, List<String> tags, bool blocked, bool starred, int version, DateTime? dueAt, DateTime? createdAt, DateTime? updatedAt, DateTime? completedAt
+ String id, String ref, String title, String status, String body, int priority, String projectId, String assigneeActorId, List<String> tags, bool blocked, bool starred, int version, DateTime? dueAt, DateTime? createdAt, DateTime? updatedAt, DateTime? completedAt, DateTime? snoozedUntil
 });
 
 
@@ -308,7 +310,7 @@ class __$TaskCopyWithImpl<$Res>
 
 /// Create a copy of Task
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? ref = null,Object? title = null,Object? status = null,Object? body = null,Object? priority = null,Object? projectId = null,Object? assigneeActorId = null,Object? tags = null,Object? blocked = null,Object? starred = null,Object? version = null,Object? dueAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? completedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? ref = null,Object? title = null,Object? status = null,Object? body = null,Object? priority = null,Object? projectId = null,Object? assigneeActorId = null,Object? tags = null,Object? blocked = null,Object? starred = null,Object? version = null,Object? dueAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? completedAt = freezed,Object? snoozedUntil = freezed,}) {
   return _then(_Task(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,ref: null == ref ? _self.ref : ref // ignore: cast_nullable_to_non_nullable
@@ -326,6 +328,7 @@ as int,dueAt: freezed == dueAt ? _self.dueAt : dueAt // ignore: cast_nullable_to
 as DateTime?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,completedAt: freezed == completedAt ? _self.completedAt : completedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,snoozedUntil: freezed == snoozedUntil ? _self.snoozedUntil : snoozedUntil // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }

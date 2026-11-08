@@ -35,6 +35,9 @@ _Task _$TaskFromJson(Map<String, dynamic> json) => _Task(
   completedAt: json['completed_at'] == null
       ? null
       : DateTime.parse(json['completed_at'] as String),
+  snoozedUntil: json['snoozed_until'] == null
+      ? null
+      : DateTime.parse(json['snoozed_until'] as String),
 );
 
 Map<String, dynamic> _$TaskToJson(_Task instance) => <String, dynamic>{
@@ -54,6 +57,7 @@ Map<String, dynamic> _$TaskToJson(_Task instance) => <String, dynamic>{
   'created_at': ?instance.createdAt?.toIso8601String(),
   'updated_at': ?instance.updatedAt?.toIso8601String(),
   'completed_at': ?instance.completedAt?.toIso8601String(),
+  'snoozed_until': ?instance.snoozedUntil?.toIso8601String(),
 };
 
 _CreateTaskRequest _$CreateTaskRequestFromJson(Map<String, dynamic> json) =>

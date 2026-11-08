@@ -1,7 +1,17 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'package:flutter/foundation.dart';
+
 /// App locations.
 abstract final class Routes {
+  /// The component gallery, routed only in debug and profile builds or
+  /// with `--dart-define=TIX_GALLERY=true`.
+  static const gallery = '/gallery';
+
+  /// Whether [gallery] is routed in this build.
+  static const bool galleryEnabled =
+      kDebugMode || kProfileMode || bool.fromEnvironment('TIX_GALLERY');
+
   /// Shown while the saved session loads.
   static const splash = '/';
 

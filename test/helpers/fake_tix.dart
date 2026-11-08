@@ -162,6 +162,9 @@ class FakeTix {
   /// The challenge kind a password sign-in answers with when set.
   String? challengeKind;
 
+  /// The theme each tenant names, as `GET /tenants/{ref}` reports it.
+  final tenantThemes = <String, String>{};
+
   /// API tokens refused `GET /tenants/{id}`, as tix refuses a token
   /// without `tenant:admin`.
   final narrowTokens = <String>{};
@@ -318,13 +321,14 @@ class FakeTix {
         if (narrowTokens.contains(_bearer(o))) {
           return FakeResponse(403, envelope('forbidden', 'tenant:admin'));
         }
-        if (id != 'id-${caller.tenant}') {
+        if (id != 'id-${caller.tenant}' && id != caller.tenant) {
           return FakeResponse(404, envelope('not_found', 'tenant'));
         }
         return FakeResponse(200, {
-          'id': id,
+          'id': 'id-${caller.tenant}',
           'key': caller.tenant,
           'name': tenants[caller.tenant]?.name ?? caller.tenant,
+          'theme': tenantThemes[caller.tenant] ?? '',
         });
       }
       if (segments[2] == 'tasks') {

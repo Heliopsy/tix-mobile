@@ -7,6 +7,7 @@ import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/features/connect/presentation/connect_screen.dart';
+import 'package:tix_mobile/src/features/gallery/presentation/gallery_screen.dart';
 import 'package:tix_mobile/src/features/instances/presentation/instances_screen.dart';
 import 'package:tix_mobile/src/features/projects/presentation/projects_screen.dart';
 import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';
@@ -22,6 +23,7 @@ part 'router.g.dart';
 /// Where [uri] should lead instead, given [session], or null to stay.
 String? redirectFor(AsyncValue<Session?> session, Uri uri) {
   final path = uri.path;
+  if (path == Routes.gallery && Routes.galleryEnabled) return null;
   if (session.isLoading && !session.hasValue) {
     return path == Routes.splash ? null : Routes.splash;
   }
@@ -67,6 +69,8 @@ GoRouter router(Ref ref) {
           );
         },
       ),
+      if (Routes.galleryEnabled)
+        GoRoute(path: Routes.gallery, builder: (_, _) => const GalleryScreen()),
       StatefulShellRoute.indexedStack(
         builder: (_, _, shell) => HomeShell(shell: shell),
         branches: [

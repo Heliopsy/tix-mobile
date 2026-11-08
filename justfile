@@ -153,6 +153,15 @@ analyze:
 test *ARGS:
     flutter test {{ARGS}}
 
+# Regenerate the component goldens (Linux only); look at every changed image before committing.
+[group('test')]
+goldens:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    [ "$(uname -s)" = Linux ] || { echo "goldens are generated on Linux only; see docs/testing.md" >&2; exit 1; }
+    flutter test --update-goldens --tags golden
+    git status --short -- '*.png'
+
 # Tests with coverage, generated code excluded, into coverage/lcov.info.
 [group('test')]
 cover:
