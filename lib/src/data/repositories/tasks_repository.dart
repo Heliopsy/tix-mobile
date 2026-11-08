@@ -36,19 +36,25 @@ class TasksRepository {
     (e) => Task.fromJson(e! as Map<String, dynamic>),
   );
 
-  /// One page of projects.
-  Future<Page<Project>> projects({String? cursor}) {
-    final fresh = _api.project.list(cursor: cursor, limit: pageSize);
+  /// One page of projects, archived ones too when [archived]
+  /// (`project.list`, `include_archived`).
+  Future<Page<Project>> projects({String? cursor, bool archived = false}) {
+    final fresh = _api.project.list(
+      cursor: cursor,
+      limit: pageSize,
+      includeArchived: archived ? true : null,
+    );
     if (cursor != null) return fresh;
     return _cache.remember(
-      'projects',
+      archived ? 'projects/archived' : 'projects',
       fresh,
       (p) => p.toJson((e) => e.toJson()),
     );
   }
 
   /// The first page of projects as last read, null when never read.
-  Future<Page<Project>?> cachedProjects() => _cache.peek('projects', _projects);
+  Future<Page<Project>?> cachedProjects({bool archived = false}) =>
+      _cache.peek(archived ? 'projects/archived' : 'projects', _projects);
 
   /// One page of the tasks in [project].
   Future<Page<Task>> tasks(String project, {String? cursor}) {

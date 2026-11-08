@@ -53,6 +53,15 @@ abstract final class Routes {
   /// The tenant's workflows.
   static const workflows = '/manage/workflows';
 
+  /// The installation's status report.
+  static const manageStatus = '/manage/status';
+
+  /// Bundles out of and into the tenant.
+  static const manageBundles = '/manage/bundles';
+
+  /// A snapshot imported into the tenant.
+  static const manageSnapshot = '/manage/import';
+
   /// The projects whose custom fields can be managed.
   static const fieldProjects = '/manage/fields';
 

@@ -10,6 +10,69 @@ part of 'projects.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// Whether the projects list includes archived projects; off until turned
+/// on, for as long as the app runs.
+
+@ProviderFor(ShowArchivedProjects)
+final showArchivedProjectsProvider = ShowArchivedProjectsProvider._();
+
+/// Whether the projects list includes archived projects; off until turned
+/// on, for as long as the app runs.
+final class ShowArchivedProjectsProvider
+    extends $NotifierProvider<ShowArchivedProjects, bool> {
+  /// Whether the projects list includes archived projects; off until turned
+  /// on, for as long as the app runs.
+  ShowArchivedProjectsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'showArchivedProjectsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$showArchivedProjectsHash();
+
+  @$internal
+  @override
+  ShowArchivedProjects create() => ShowArchivedProjects();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$showArchivedProjectsHash() =>
+    r'f5d6e4bfaf9011ea314939861246c8962d31f3aa';
+
+/// Whether the projects list includes archived projects; off until turned
+/// on, for as long as the app runs.
+
+abstract class _$ShowArchivedProjects extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
 /// The projects on the active server, a page at a time: the cached first
 /// page at once, then the server's, and again whenever a project changes.
 
@@ -41,7 +104,7 @@ final class ProjectsProvider
   Projects create() => Projects();
 }
 
-String _$projectsHash() => r'92908c3c25d567a89f77c0121c40326d9132af8a';
+String _$projectsHash() => r'08119772fdda9d059e50f4fa34ec35207a3a1686';
 
 /// The projects on the active server, a page at a time: the cached first
 /// page at once, then the server's, and again whenever a project changes.
