@@ -169,4 +169,57 @@ void main() {
       ]),
     );
   });
+
+  testWidgets('New project suggests the key and creates it', (tester) async {
+    final server = FakeTix();
+    await pump(tester, server);
+    await tester.tap(find.byKey(const Key('project.new')));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('project.name')), 'Mobile app');
+    await tester.pumpAndSettle();
+    expect(find.text('mobile-app'), findsOneWidget);
+    await tester.ensureVisible(find.byKey(const Key('colour.teal')));
+    await tester.tap(find.byKey(const Key('colour.teal')));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(const Key('project.create')));
+    await tester.tap(find.byKey(const Key('project.create')));
+    await tester.pumpAndSettle();
+    final post = server.requests.lastWhere((r) => r.method == 'POST');
+    expect(post.uri.path, '/api/v1/projects');
+    expect(post.body, {
+      'name': 'Mobile app',
+      'key': 'mobile-app',
+      'color': 'teal',
+    });
+    expect(find.text('Mobile app'), findsOneWidget);
+    expect(find.text('Created Mobile app.'), findsOneWidget);
+  });
+
+  testWidgets('a taken key keeps the form open with the reason', (
+    tester,
+  ) async {
+    final server = FakeTix();
+    await pump(tester, server);
+    await tester.tap(find.byKey(const Key('project.new')));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('project.name')), 'Infra');
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(const Key('project.create')));
+    await tester.tap(find.byKey(const Key('project.create')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('project.error')), findsOneWidget);
+    expect(find.textContaining('in use'), findsOneWidget);
+  });
+
+  testWidgets('without project:write there is no New project', (tester) async {
+    await pump(tester, FakeTix()..identity = {'role': 'member'});
+    expect(find.byKey(const Key('project.new')), findsNothing);
+  });
+
+  testWidgets('a project opens its settings', (tester) async {
+    await pump(tester, FakeTix());
+    await tester.tap(find.byKey(const Key('project.infra.settings')));
+    await tester.pumpAndSettle();
+    expect(find.text('route:/projects/infra/settings'), findsOneWidget);
+  });
 }

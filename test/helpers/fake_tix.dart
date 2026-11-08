@@ -442,6 +442,7 @@ class FakeTix {
             ...actors['me']!,
             'kind': 'agent',
             'tenant_id': 'id-${caller.tenant}',
+            ...identity,
           });
         }
         return FakeResponse(200, {
@@ -454,6 +455,7 @@ class FakeTix {
           'memberships': [
             for (final t in account.tenants) _membership(t, account.handle),
           ],
+          ...identity,
         });
       case ('POST', '/api/v1/auth/switch'):
         return _switch(o, caller, o.data as Map<String, dynamic>);
@@ -472,7 +474,7 @@ class FakeTix {
       case ('POST', '/api/v1/tasks/bulk'):
         return FakeResponse(200, _bulk(o.data as Map<String, dynamic>));
       case ('GET', '/api/v1/workflows'):
-        return FakeResponse(200, {'items': workflows, 'next_cursor': ''});
+        return FakeResponse(200, {'items': _allWorkflows, 'next_cursor': ''});
       case ('GET', '/api/v1/stats'):
         return _stats(q['project']);
       case ('GET', '/api/v1/filters'):
@@ -852,6 +854,8 @@ class FakeTix {
         ? o.data as Map<String, dynamic>
         : const <String, dynamic>{};
     final s = path.substring('/api/v1/'.length).split('/');
+    final managed = _manage(o, s, body);
+    if (managed != null) return managed;
     switch ((o.method, s)) {
       case ('GET', ['actors']):
         return FakeResponse(200, {'items': actors.values.toList()});
@@ -1306,6 +1310,230 @@ class FakeTix {
     }
     return null;
   }
+
+  /// What `whoami` adds to the actor: its role and scopes. Everything by
+  /// default, so a screen offers every action unless a test narrows it.
+  Map<String, Object?> identity = {
+    'scopes': ['*'],
+  };
+
+  /// What deleting a project would do, by project key: live and trashed
+  /// tasks.
+  final deletionCounts = <String, ({int tasks, int deleted})>{};
+
+  /// The uploaded icon bytes per project key.
+  final icons = <String, List<int>>{};
+
+  List<Map<String, Object?>> get _allWorkflows => [
+    for (final w in workflows)
+      if (w['key'] == workflow['key']) {...w, 'builtin': true} else w,
+  ];
+
+  Map<String, Object?>? _project(String key) {
+    for (final p in projects) {
+      if (p['key'] == key || p['id'] == key) return p;
+    }
+    return null;
+  }
+
+  FakeResponse? _manage(
+    RequestOptions o,
+    List<String> s,
+    Map<String, dynamic> body,
+  ) {
+    final q = o.uri.queryParameters;
+    switch ((o.method, s)) {
+      case ('POST', ['projects']):
+        final key = (body['key'] as String? ?? '').toLowerCase();
+        if (key.isEmpty || (body['name'] as String? ?? '').isEmpty) {
+          return FakeResponse(
+            400,
+            envelope('invalid', 'name and key required'),
+          );
+        }
+        if (_project(key) != null) {
+          return FakeResponse(409, envelope('conflict', 'key "$key" in use'));
+        }
+        final p = <String, Object?>{
+          'id': 'p${++_ids}',
+          'key': key,
+          'name': body['name'],
+          'description': body['description'] ?? '',
+          'color': body['color'] ?? '',
+          'icon': body['icon'] ?? '',
+          'icon_name': body['icon_name'] ?? '',
+          'workflow_id': _allWorkflows.firstWhere(
+            (w) => w['key'] == (body['workflow_key'] ?? 'default'),
+            orElse: () => workflow,
+          )['id'],
+          'updated_at':
+              '2026-11-08T10:00:${(_ids % 60).toString().padLeft(2, '0')}Z',
+        };
+        projects.add(p);
+        return FakeResponse(201, p);
+      case ('PATCH', ['projects', final key]):
+        final p = _project(key);
+        if (p == null) return FakeResponse(404, envelope('not_found', key));
+        final wf = body['workflow_key'];
+        if (wf != null && !_allWorkflows.any((w) => w['key'] == wf)) {
+          return FakeResponse(404, envelope('not_found', 'workflow "$wf"'));
+        }
+        for (final MapEntry(:key, :value) in body.entries) {
+          switch (key) {
+            case 'workflow_key':
+              p['workflow_id'] = _allWorkflows.firstWhere(
+                (w) => w['key'] == value,
+              )['id'];
+            case 'icon':
+              p['icon'] = value;
+              p['icon_name'] = '';
+            case 'icon_name':
+              p['icon_name'] = value;
+              p['icon'] = '';
+            case 'icon_file':
+              p['icon_image'] = 'digest${++_ids}';
+            default:
+              p[key] = value;
+          }
+        }
+        p['updated_at'] =
+            '2026-11-08T11:00:${(++_ids % 60).toString().padLeft(2, '0')}Z';
+        return FakeResponse(200, p);
+      case ('DELETE', ['projects', final key]):
+        final p = _project(key);
+        if (p == null) return FakeResponse(404, envelope('not_found', key));
+        if (q['archive'] == 'true') {
+          if (p['archived_at'] != null) {
+            return FakeResponse(409, envelope('conflict', 'already archived'));
+          }
+          p['archived_at'] = '2026-11-08T12:00:00Z';
+          p['updated_at'] = '2026-11-08T12:00:00Z';
+          return const FakeResponse(204);
+        }
+        final counts = deletionCounts[p['key']] ?? (tasks: 0, deleted: 0);
+        final holds = counts.tasks + counts.deleted > 0;
+        if (holds &&
+            q['move_tasks_to'] == null &&
+            q['delete_tasks'] != 'true') {
+          return FakeResponse(
+            422,
+            envelope('precondition_failed', 'the project holds tasks'),
+          );
+        }
+        projects.remove(p);
+        return FakeResponse(200, {
+          'project': p['key'],
+          'tasks': counts.tasks,
+          'move_to': q['move_tasks_to'] ?? '',
+          'delete_tasks': q['delete_tasks'] == 'true',
+        });
+      case ('GET', ['projects', final key, 'deletion']):
+        final p = _project(key);
+        if (p == null) return FakeResponse(404, envelope('not_found', key));
+        final counts = deletionCounts[p['key']] ?? (tasks: 0, deleted: 0);
+        final to = q['move_tasks_to'];
+        return FakeResponse(200, {
+          'project': p['key'],
+          'dry_run': true,
+          'tasks': counts.tasks,
+          'deleted': counts.deleted,
+          'move_to': to ?? '',
+          'statuses': to == null
+              ? <Object?>[]
+              : [
+                  {'from': 'todo', 'to': 'todo', 'tasks': counts.tasks},
+                  {'from': 'doing', 'to': 'in_progress', 'tasks': 1},
+                ],
+        });
+      case ('GET', ['projects', final key, 'icon']):
+        final bytes = icons[key];
+        if (bytes == null) return FakeResponse(404, envelope('not_found', key));
+        return FakeResponse(200, String.fromCharCodes(bytes), 'image/png');
+      case ('PUT', ['projects', final key, 'fields']):
+        final p = _project(key);
+        if (p == null) return FakeResponse(404, envelope('not_found', key));
+        final fkey = body['key'] as String? ?? '';
+        if (fkey.isEmpty) {
+          return FakeResponse(400, envelope('invalid', 'field key required'));
+        }
+        if (body['type'] == 'enum' &&
+            ((body['enum_options'] as List?) ?? const []).isEmpty) {
+          return FakeResponse(
+            400,
+            envelope('invalid', 'an enum field needs options'),
+          );
+        }
+        final f = <String, Object?>{
+          'id': 'f-$fkey',
+          ...body,
+          'project_id': p['id'],
+        };
+        fields.putIfAbsent(p['key']! as String, () => [])
+          ..removeWhere((x) => x['key'] == fkey)
+          ..add(f);
+        return FakeResponse(200, f);
+      case ('DELETE', ['projects', final key, 'fields', final fkey]):
+        final list = fields[_project(key)?['key']];
+        final before = list?.length ?? 0;
+        list?.removeWhere((x) => x['key'] == fkey);
+        if ((list?.length ?? 0) == before) {
+          return FakeResponse(404, envelope('not_found', 'field "$fkey"'));
+        }
+        return const FakeResponse(204);
+      case ('GET', ['workflows', final key]):
+        for (final w in _allWorkflows) {
+          if (w['key'] == key || w['id'] == key) return FakeResponse(200, w);
+        }
+        return FakeResponse(404, envelope('not_found', 'workflow "$key"'));
+      case ('PUT', ['workflows']) || ('PUT', ['workflows', _]):
+        final key = s.length > 1 ? s[1] : body['key'] as String? ?? '';
+        final def = body['definition'] as Map<String, dynamic>?;
+        final states = (def?['states'] as List?) ?? const [];
+        if (!states.any((x) => (x as Map)['key'] == def?['initial'])) {
+          return FakeResponse(
+            400,
+            envelope(
+              'invalid',
+              'initial state "${def?['initial']}" is not defined',
+            ),
+          );
+        }
+        final w = <String, Object?>{
+          'id': key == workflow['key'] ? workflow['id'] : 'wf-$key',
+          'key': key,
+          'name': body['name'] ?? key,
+          'definition': def,
+          'updated_at':
+              '2026-11-08T13:00:${(++_ids % 60).toString().padLeft(2, '0')}Z',
+        };
+        final at = workflows.indexWhere((x) => x['key'] == key);
+        if (at < 0) {
+          workflows.add(w);
+        } else {
+          workflows[at] = w;
+        }
+        if (key == workflow['key']) workflow = w;
+        lastWorkflowPut = body;
+        return FakeResponse(
+          200,
+          key == workflow['key'] ? {...w, 'builtin': true} : w,
+        );
+      case ('DELETE', ['workflows', final key]):
+        if (key == workflow['key']) {
+          return FakeResponse(409, envelope('conflict', 'builtin workflow'));
+        }
+        final before = workflows.length;
+        workflows.removeWhere((x) => x['key'] == key);
+        if (workflows.length == before) {
+          return FakeResponse(404, envelope('not_found', 'workflow "$key"'));
+        }
+        return const FakeResponse(204);
+    }
+    return null;
+  }
+
+  /// The last body a workflow was saved with.
+  Map<String, dynamic>? lastWorkflowPut;
 
   Map<String, Object?> _page(List<Map<String, Object?>> rows, String? cursor) {
     final start = cursor == null ? 0 : int.parse(cursor);
