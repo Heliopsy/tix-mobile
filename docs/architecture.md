@@ -91,8 +91,42 @@ remote instance per address. `whoami` names the tenant only for a person's sessi
 `GET /api/v1/tenants/{id}`, which needs `tenant:admin`, and leaves a narrower token's tenant unnamed.
 
 A local instance's engine sits behind `LocalTixEngine` in `data/local`. It starts when a local context becomes
-active and stops when another instance becomes active or the app exits. Until the FFI engine ships, the app uses
-`UnavailableLocalTixEngine`, and tests use `InMemoryLocalTixEngine`.
+active and stops when another instance becomes active or the app exits. On phones it also stops while the app is in
+the background and restarts on resume, asking for the port it had so the session's address stays valid; if the port
+is taken, the session rebuilds against the new one.
+
+## The local engine
+
+The engine is tix itself, built as a C library (`embedded/libtix` in tix) and loaded with `dart:ffi`.
+
+```mermaid
+flowchart LR
+  L["tix.lock<br/>pinned commit"] --> H["hook/build.dart<br/>go build per target"]
+  H --> A["code asset<br/>libtix.so / .dylib / .dll"]
+  A --> F["FfiLocalTixEngine<br/>@Native, Isolate.run"]
+  F -- "TixStart → http://127.0.0.1:PORT" --> C["TixApi, as for any server"]
+```
+
+- **Building.** `hook/build.dart` runs inside every `flutter build`, `run` and `test`. It fetches tix at the commit
+  `tix.lock` pins, builds libtix with Go for the platform and architecture being built, caches the result under
+  `~/.cache/tix-mobile/libtix`, and bundles it as a code asset. Flutter places it where each platform loads native
+  code from. Without Go it bundles nothing and the app falls back to `UnavailableLocalTixEngine`.
+- **Calling.** `FfiLocalTixEngine` binds the seven `Tix*` functions with `@Native`. Every call blocks inside tix, so
+  each runs on a short-lived isolate; every returned string is freed with `TixFree`, and the JSON error object
+  becomes a `TixException`. Tests use `InMemoryLocalTixEngine`, and one integration test drives the real library.
+- **Files.** SQLite needs a real path and writes `-wal` and `-shm` files beside the database. Linux and Windows
+  work on the picked file in place. Android and iOS pickers hand over a copy, and the macOS sandbox does not let the
+  app create files beside one the person picked, so those platforms import a copy into the documents folder and
+  export it (engine stopped, so the file is whole) through the share sheet or a save dialog.
+- **Talking to it.** Once started, a local instance is an ordinary server on loopback: the same `TixApi`, the same
+  errors. Android allows cleartext HTTP to `127.0.0.1` only; Apple platforms set `NSAllowsLocalNetworking`.
+
+## Licences
+
+`TixBinding` replaces Flutter's licence collector. It lists Flutter's notices for runtime packages only (the
+closure of `dependencies`, generated into `core/licences/packages.g.dart` from `dart pub deps`) and the engine's
+components, leaves out licences that ask for no notice (CC0, the Unlicense, 0BSD), and adds tix and the Go modules
+libtix links for this platform from `assets/licenses/libtix.json`.
 
 ## Errors
 

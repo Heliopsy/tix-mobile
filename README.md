@@ -72,16 +72,19 @@ for the CLI.
 | Linux | x64 and arm64 desktop with GTK 3 | `.tar.gz` | libsecret (GNOME Keyring, KWallet) |
 | Windows | Windows 10, x64 | `.zip` | DPAPI |
 
-iOS builds are not published until signing is set up. Store listings (Google Play, App Store, F-Droid, Flathub) are
-on the [roadmap](ROADMAP.md), not available today.
+Every platform carries the embedded tix engine for local databases, which makes each artifact roughly 30 MB
+larger than the client alone. iOS builds are not published until signing is set up. Store listings (Google Play,
+App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available today.
 
 ## Features
 
 - **Several tix servers**, each with one or more connections: an API token, or a sign-in with email and password
   (second factor included). A sign-in can follow you between your tenants on that server or stay pinned to one.
 - **A switcher on every screen** showing Instance › Tenant, recent ones first.
-- **Local databases** (preview): the screens to create or open a `.db` file on this device are in place behind the
-  `TIX_LOCAL_INSTANCES` build flag, but the embedded tix engine that serves it is not in this build yet.
+- **Local databases** on every platform: tix itself is built into the app and serves a `.db` file on this device,
+  with no server anywhere. Linux and Windows open the file where it is; Android, iOS and macOS import a copy into
+  the app and export it back through the share sheet or a save dialog. The engine costs about 32 MB per Android
+  ABI and 34 MB on desktop.
 - **Projects** visible to the active connection.
 - **Task lists** with pull to refresh and keyset pagination, so a long list loads a page at a time and stays stable
   while tasks are being added.
