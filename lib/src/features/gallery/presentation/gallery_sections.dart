@@ -687,7 +687,9 @@ final galleryInbox = [
     actorHandle: 'kim',
     taskRef: 'ops-2',
     taskTitle: 'Move DNS to the new registrar',
-    createdAt: galleryNow.subtract(const Duration(days: 1)),
+    // Days back, not yesterday: yesterday shows a local clock time, which
+    // would make the goldens depend on the host's time zone.
+    createdAt: galleryNow.subtract(const Duration(days: 3)),
   ),
   InboxItem(
     id: 'g4',
