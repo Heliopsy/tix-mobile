@@ -7,7 +7,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
     show ProviderListenableSelect;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tix_mobile/src/core/session/api.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/events/live_events.dart';
 
@@ -81,7 +80,7 @@ LiveEvents? tixEventStream(Ref ref) {
       problem != null) {
     return null;
   }
-  final api = ref.watch(tixApiFactoryProvider)(baseUrl, credential);
+  final api = ref.watch(sessionApiProvider);
   final live = LiveEvents(
     baseUrl: baseUrl,
     headers: credential.headers,

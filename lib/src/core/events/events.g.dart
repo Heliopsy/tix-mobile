@@ -101,6 +101,47 @@ final class AppResumedProvider
 
 String _$appResumedHash() => r'a48e02764c6328223e6f2e16cbf9f6bc79a70526';
 
+/// Fires each time the app goes out of sight, the moment a home screen and
+/// its widgets come back into view.
+
+@ProviderFor(appHidden)
+final appHiddenProvider = AppHiddenProvider._();
+
+/// Fires each time the app goes out of sight, the moment a home screen and
+/// its widgets come back into view.
+
+final class AppHiddenProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, Stream<void>>
+    with $FutureModifier<void>, $StreamProvider<void> {
+  /// Fires each time the app goes out of sight, the moment a home screen and
+  /// its widgets come back into view.
+  AppHiddenProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appHiddenProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appHiddenHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<void> create(Ref ref) {
+    return appHidden(ref);
+  }
+}
+
+String _$appHiddenHash() => r'e5ccc5451e58cfa6fb5785aedcb6ae00783dae73';
+
 /// Fires each time the app goes to the background.
 
 @ProviderFor(appPaused)
@@ -285,7 +326,7 @@ final class TixEventStreamProvider
   }
 }
 
-String _$tixEventStreamHash() => r'fcee16b2f7208eb3a64a4dd3d3d34f8999959013';
+String _$tixEventStreamHash() => r'fd766efd9b6c0b7095da7ee5814a381c2139636c';
 
 /// Every update of the active context's live events.
 

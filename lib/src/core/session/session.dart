@@ -599,8 +599,9 @@ ContextDirectory contextDirectory(Ref ref) {
 /// The API client for the active session.
 ///
 /// A local instance's client wakes its engine before every request, so an
-/// engine stopped while idle comes back on its own.
-@riverpod
+/// engine stopped while idle comes back on its own. Kept alive so live
+/// updates, which outlive every screen, share it.
+@Riverpod(keepAlive: true)
 TixApi sessionApi(Ref ref) {
   final target = ref.watch(
     sessionControllerProvider.select(

@@ -44,25 +44,26 @@ abstract interface class EventPoller {
   });
 }
 
-/// [EventPoller] over the generated `event.poll`, on a client of its own so
-/// the request carries that connection's credential and can be cancelled.
+/// [EventPoller] over the generated `event.poll`, on the session's client so
+/// the request carries the connection's credential and whatever else that
+/// client adds.
 class TixEventPoller implements EventPoller {
-  /// Polls through [api], which no one else may share: its Dio gets the
-  /// interceptor that hands each poll its [CancelToken].
+  /// Polls through [api]. Its Dio gets, once, the interceptor that hands
+  /// each poll its [CancelToken].
   TixEventPoller(this.api) {
-    api.transport.dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) {
-          options.cancelToken ??= _cancel;
-          handler.next(options);
-        },
-      ),
-    );
+    final interceptors = api.transport.dio.interceptors;
+    final existing = interceptors.whereType<_PollCanceller>().firstOrNull;
+    if (existing != null) {
+      _canceller = existing;
+    } else {
+      _canceller = _PollCanceller();
+      interceptors.add(_canceller);
+    }
   }
 
   /// The connection's client.
   final TixClient api;
-  CancelToken? _cancel;
+  late final _PollCanceller _canceller;
 
   @override
   Future<EventPollPage> poll({
@@ -72,7 +73,7 @@ class TixEventPoller implements EventPoller {
     int limit = 200,
     CancelToken? cancel,
   }) async {
-    _cancel = cancel;
+    _canceller.token = cancel;
     try {
       final page = await api.event.poll(
         sinceSeq: sinceSeq > 0 ? sinceSeq : null,
@@ -93,7 +94,7 @@ class TixEventPoller implements EventPoller {
       }
       rethrow;
     } finally {
-      _cancel = null;
+      _canceller.token = null;
     }
   }
 
@@ -110,4 +111,16 @@ class TixEventPoller implements EventPoller {
     via: e.via,
     occurredAt: e.occurredAt,
   );
+}
+
+/// Gives the poll in flight its [CancelToken]; other requests on the same
+/// client are left alone.
+class _PollCanceller extends Interceptor {
+  CancelToken? token;
+
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    if (options.path.endsWith('/events/poll')) options.cancelToken ??= token;
+    handler.next(options);
+  }
 }

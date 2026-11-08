@@ -213,7 +213,8 @@ String _$contextDirectoryHash() => r'575aa0c3d9005ff43775aa1e31481c62660a75f0';
 /// The API client for the active session.
 ///
 /// A local instance's client wakes its engine before every request, so an
-/// engine stopped while idle comes back on its own.
+/// engine stopped while idle comes back on its own. Kept alive so live
+/// updates, which outlive every screen, share it.
 
 @ProviderFor(sessionApi)
 final sessionApiProvider = SessionApiProvider._();
@@ -221,7 +222,8 @@ final sessionApiProvider = SessionApiProvider._();
 /// The API client for the active session.
 ///
 /// A local instance's client wakes its engine before every request, so an
-/// engine stopped while idle comes back on its own.
+/// engine stopped while idle comes back on its own. Kept alive so live
+/// updates, which outlive every screen, share it.
 
 final class SessionApiProvider
     extends $FunctionalProvider<TixApi, TixApi, TixApi>
@@ -229,14 +231,15 @@ final class SessionApiProvider
   /// The API client for the active session.
   ///
   /// A local instance's client wakes its engine before every request, so an
-  /// engine stopped while idle comes back on its own.
+  /// engine stopped while idle comes back on its own. Kept alive so live
+  /// updates, which outlive every screen, share it.
   SessionApiProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'sessionApiProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -263,7 +266,7 @@ final class SessionApiProvider
   }
 }
 
-String _$sessionApiHash() => r'4688da727c8e47b6a40c1310755d945e4dc2fb94';
+String _$sessionApiHash() => r'3faedeaa65ed91ca6e28e72528b6575fde4a3838';
 
 /// The response cache of the active context. Reads are best effort, so a
 /// cache that cannot be opened behaves as an empty one.

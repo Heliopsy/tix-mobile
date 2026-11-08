@@ -88,4 +88,29 @@ void main() {
     cancel.cancel();
     await expectLater(pending, throwsA(isA<TixException>()));
   });
+
+  test('cancelling a poll leaves other requests on the client alone', () async {
+    final api = server.factory(
+      'https://tix.example',
+      const BearerCredential('tok'),
+    );
+    final shared = TixEventPoller(api);
+    TixEventPoller(api);
+    expect(
+      api.transport.dio.interceptors.where(
+        (i) => i.runtimeType.toString() == '_PollCanceller',
+      ),
+      hasLength(1),
+    );
+    final cancel = CancelToken();
+    final pending = shared.poll(
+      sinceSeq: 1,
+      wait: const Duration(seconds: 25),
+      cancel: cancel,
+    );
+    final other = api.project.list();
+    cancel.cancel();
+    await expectLater(pending, throwsA(isA<TixException>()));
+    expect((await other).items, isNotEmpty);
+  });
 }
