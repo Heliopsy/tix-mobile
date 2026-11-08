@@ -174,6 +174,12 @@ class TaskDetailController extends _$TaskDetailController {
     accept(await _repo.restore(taskRef));
   });
 
+  /// Ends the claim another actor holds on the task, saying [reason] when
+  /// given, as an administrator does for a worker that died.
+  Future<void> reclaim({String reason = ''}) => _serial(() async {
+    accept(await _repo.reclaim(taskRef, reason: reason));
+  });
+
   /// Copies the task as [request] says and returns the copy.
   Future<Task> copy(CopyTaskInput request) => _repo.copy(taskRef, request);
 

@@ -18,6 +18,7 @@ import 'package:tix_mobile/src/features/tasks/presentation/detail/actions.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/detail/activity.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/detail/editors.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/detail/properties.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/detail/reclaim.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/detail/sections.dart';
 
 export 'package:tix_mobile/src/features/tasks/presentation/detail/properties.dart'
@@ -234,6 +235,17 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
     );
   }
 
+  Future<void> _reclaim() async {
+    final l10n = context.l10n;
+    final done = await showTixSheet<Object>(
+      context,
+      builder: (_) => ReclaimForm(taskRef: task.ref),
+    );
+    if (done != null && done != false && mounted) {
+      showTixToast(context, l10n.taskReclaimed(task.ref));
+    }
+  }
+
   Future<void> _copyRef() async {
     await Clipboard.setData(ClipboardData(text: task.ref));
     if (mounted) showTixToast(context, context.l10n.taskDetailRefCopied);
@@ -288,6 +300,14 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
           label: l10n.taskDetailCopyRef,
           icon: Icons.tag,
         ),
+        if (task.claimedByActorId.isNotEmpty)
+          TixSheetAction(
+            key: const Key('menu.reclaim'),
+            value: 'reclaim',
+            label: l10n.taskReclaim,
+            icon: Icons.lock_open,
+            destructive: true,
+          ),
         TixSheetAction(
           key: const Key('menu.delete'),
           value: 'delete',
@@ -320,6 +340,8 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
         await _copy();
       case 'ref':
         await _copyRef();
+      case 'reclaim':
+        await _reclaim();
       case 'delete':
         await _delete();
       case 'purge':

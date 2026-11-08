@@ -2481,5 +2481,401 @@
   "columnHistory": "History",
   "settingsAccountHelp": "Profile, tenants and history",
   "settingsCalendarHelp": "Your due dates in your calendar app",
-  "settingsTokensHelp": "Credentials for scripts, the CLI and agents"
+  "settingsTokensHelp": "Credentials for scripts, the CLI and agents",
+  "securityTitle": "Security",
+  "securitySubtitle": "Your second factor and SSH keys",
+  "totpTitle": "Second factor",
+  "totpInfo": "A code from an authenticator app, asked for after your password. Recovery codes let you in when the app is not at hand.",
+  "totpOn": "On",
+  "totpOff": "Off",
+  "totpPending": "Not confirmed",
+  "totpSince": "Since {date}",
+  "@totpSince": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "totpOnBody": "Signing in asks for a code from your authenticator app after your password.",
+  "totpOffBody": "Signing in asks only for your password.",
+  "totpPendingBody": "Setup was started but never confirmed with a code. Set it up again to finish.",
+  "totpRequiredOn": "Your tenant requires a second factor for: {surfaces}.",
+  "@totpRequiredOn": {
+    "placeholders": {
+      "surfaces": {
+        "type": "String"
+      }
+    }
+  },
+  "totpSurfaceWeb": "the browser",
+  "totpSurfaceCli": "the command line",
+  "totpSurfaceSsh": "SSH",
+  "totpCodesLeft": "{count, plural, =0{No recovery codes left} =1{1 recovery code left} other{{count} recovery codes left}}",
+  "@totpCodesLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totpLocked": "Too many wrong codes. Codes are refused until {time}.",
+  "@totpLocked": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "totpSetUp": "Set up",
+  "totpNewCodes": "New recovery codes",
+  "totpNewCodesBody": "Your current recovery codes stop working at once, used or not, and a new set is shown once.",
+  "totpNewCodesConfirm": "Replace codes",
+  "totpRemove": "Remove second factor",
+  "totpRemoveBody": "Signing in will ask only for your password, and your recovery codes stop working. If your tenant requires a second factor, you will be asked to set one up again.",
+  "totpRemoved": "Second factor removed.",
+  "totpCodesHeading": "Save these recovery codes now",
+  "totpCodesNote": "Each one signs you in once without your authenticator. They are shown once and cannot be read again; if you lose them, make a new set.",
+  "totpCodesSaved": "I have saved them",
+  "totpConfirm": "Confirm",
+  "totpStep1": "1. Add this key to your authenticator app, or open it there from this device.",
+  "totpSecretHeading": "Your authenticator key",
+  "totpSecretNote": "Account {account} at {issuer}. Keep it private: anyone holding it can make your codes.",
+  "@totpSecretNote": {
+    "placeholders": {
+      "account": {
+        "type": "String"
+      },
+      "issuer": {
+        "type": "String"
+      }
+    }
+  },
+  "totpOpenApp": "Open in authenticator app",
+  "totpStep2": "2. Enter the six-digit code the app shows.",
+  "sshKeysTitle": "SSH keys",
+  "sshKeysInfo": "A key enrolled here signs you in to tix's terminal interface over SSH, in this tenant. Revoked keys stay listed so you can tell why one stopped working.",
+  "sshKeysEmpty": "No SSH keys yet.",
+  "sshKeyAdd": "Add SSH key",
+  "sshKeyAddSubmit": "Add key",
+  "sshKeyAdded": "SSH key added.",
+  "sshKeyUnlabelled": "Unlabelled key",
+  "sshKeyRevoked": "Revoked",
+  "sshKeyAddedOn": "Added {date}",
+  "@sshKeyAddedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "sshKeyLastUsed": "Last used {date}",
+  "@sshKeyLastUsed": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "sshKeyNeverUsed": "Never used",
+  "sshKeyRevokedOn": "Revoked {date}",
+  "@sshKeyRevokedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "sshKeyRevoke": "Revoke",
+  "sshKeyRevokeBody": "{name} stops signing in over SSH at once. This cannot be undone; enrol the key again to use it.",
+  "@sshKeyRevokeBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sshKeyRevokedToast": "SSH key revoked.",
+  "sshKeyPublicKey": "Public key",
+  "sshKeyPublicKeyHelp": "The line from your .pub file, as ssh-keygen writes it.",
+  "sshKeyLabel": "Label (optional)",
+  "sshKeyLabelHelp": "Tells this key from your others, such as the machine it lives on.",
+  "sshKeyAllTenants": "Every tenant I belong to",
+  "sshKeyAllTenantsHelp": "Enrols the key in each of your tenants, not only this one.",
+  "tenantSettingsTitle": "Tenant settings",
+  "tenantSaved": "Saved.",
+  "tenantGeneralTitle": "General",
+  "tenantName": "Name",
+  "tenantKey": "Key",
+  "tenantKeyHelp": "Short and unique: letters, digits, hyphens and underscores, starting with a letter. It cannot change later.",
+  "tenantTimezone": "Time zone",
+  "tenantTimezoneHelp": "An IANA zone people read dates in unless they chose their own. Empty uses the server's.",
+  "tenantTimeFormat": "Date format",
+  "tenantServerDefault": "Server default",
+  "tenantThemeTitle": "Theme",
+  "tenantThemeInfo": "The colour the tenant shows on every surface: the web, the terminal and this app. Status and priority colours never change with it.",
+  "tenantThemeDefault": "default",
+  "tenantThemeCustom": "Custom colour",
+  "tenantThemeCustomHelp": "#rrggbb. tix adjusts it until text on it and around it stays readable.",
+  "tenantThemeCustomBad": "Write the colour as #rrggbb, such as #0f766e.",
+  "tenantThemePreview": "Preview",
+  "tenantThemeSampleRow": "A selected row",
+  "tenantThemeSampleLink": "A link",
+  "tenantThemeSampleButton": "New task",
+  "tenantThemeSaved": "Theme saved.",
+  "tenantTotpTitle": "Second factor",
+  "tenantTotpInfo": "Require a code from an authenticator app when people sign in. Someone without one is taken through setting it up at sign-in, so turning this on cannot lock anyone out.",
+  "tenantTotpWeb": "Require it in the browser",
+  "tenantTotpCli": "Require it on the command line",
+  "tenantTotpSsh": "Require it over SSH, on top of the key",
+  "tenantTotpNone": "Not required",
+  "tenantTotpBadge": "Second factor",
+  "tenantLeaseTitle": "Claims",
+  "tenantLeaseInfo": "How long an agent's claim on a task lasts. A project, workflow or claim can ask for less; the server's ceiling always wins.",
+  "tenantLeaseDefault": "Default lease",
+  "tenantLeaseDefaultHelp": "A duration such as 30m or 2h. Empty uses the server's.",
+  "tenantLeaseMax": "Longest lease",
+  "tenantLeaseMaxHelp": "Caps every claim in this tenant. It can lower the server's ceiling, never raise it.",
+  "tenantTrashTitle": "Trash",
+  "tenantTrashKeep": "Keep deleted tasks in a trash",
+  "tenantTrashOnBody": "Deleted tasks can be restored until housekeeping empties the trash.",
+  "tenantTrashOffBody": "Deleting a task is permanent. Tasks already in the trash stay there.",
+  "tenantTrashOnShort": "Deleted tasks go to the trash",
+  "tenantTrashOffShort": "Deleting is permanent",
+  "tenantDelete": "Delete tenant",
+  "tenantDeleteHelp": "Its data stops being reachable and its domains stop resolving.",
+  "tenantDeleteCurrent": "This is the tenant you are working in. Switch to another one to delete it.",
+  "tenantDeleteBody": "{name} ({key}) and everything in it stop being reachable, for everyone, and its domains stop resolving. Only the server's operator can bring it back.",
+  "@tenantDeleteBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "tenantDeleted": "Deleted {name}.",
+  "@tenantDeleted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tenantsTitle": "Tenants",
+  "tenantsSubtitle": "Every tenant on this server",
+  "tenantsEmpty": "No tenants.",
+  "tenantsEmptyBody": "Create one with its first admin.",
+  "tenantsPick": "Pick a tenant to see it here.",
+  "tenantCreate": "New tenant",
+  "tenantCreateSubmit": "Create tenant",
+  "tenantCreated": "Created {name}.",
+  "@tenantCreated": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tenantFirstAdmin": "First admin",
+  "tenantFirstAdminHelp": "Becomes an admin of the new tenant. An address that already has an account keeps its password and second factor.",
+  "tenantPasswordHelp": "At least 12 characters. Leave it empty and tix generates one, shown once.",
+  "tenantCredentialsHeading": "Copy these passwords now",
+  "tenantCredentialsNote": "tix generated them and shows them once; nothing stores them. Hand each to its admin, who chooses a new one at first sign-in. If one is lost, set a new password.",
+  "tenantCurrent": "Current",
+  "tenantMember": "Member",
+  "tenantNoTrash": "No trash",
+  "tenantOverview": "Overview",
+  "tenantCreatedAt": "Created",
+  "tenantSwitch": "Switch to this tenant",
+  "tenantJoinSwitch": "Join and switch",
+  "tenantJoinBody": "You are not a member of {name}. As a global admin you can add yourself as an admin and switch to it. The change is in your account log.",
+  "@tenantJoinBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tenantJoinConfirm": "Join as admin",
+  "tenantSwitchPinned": "This connection reaches one tenant only. Sign in with a switchable connection to move between tenants.",
+  "tenantUsersTitle": "Users",
+  "tenantDomainsEmpty": "No domains map to this tenant.",
+  "domainsTitle": "Domains",
+  "domainsSubtitle": "Hostnames that open this tenant",
+  "domainsBody": "A request that arrives on one of these hostnames reaches this tenant without naming it.",
+  "domainsEmpty": "No domains yet.",
+  "domainsEmptyBody": "Map a hostname so people reach this tenant at its own address.",
+  "domainAdd": "Add domain",
+  "domainAddSubmit": "Add domain",
+  "domainAdded": "Domain added.",
+  "domainHostname": "Hostname",
+  "domainHostnameHelp": "Lowercased; any port or trailing dot is dropped.",
+  "domainCertMode": "Certificate",
+  "domainCertNone": "Terminated elsewhere",
+  "domainCertFile": "Certificate file",
+  "domainCertNoneHelp": "A proxy in front of tix holds the certificate, or the host is plain HTTP.",
+  "domainCertFileHelp": "tix serves TLS itself from PEM files on the server.",
+  "domainCertPath": "Certificate path on the server",
+  "domainKeyPath": "Private key path on the server",
+  "domainVerified": "Verified",
+  "domainShared": "Shared",
+  "domainSharedInfo": "A shared hostname also serves the tenant a credential or the X-Tix-Tenant header names, as a host no domain claims does. Only a global admin sets it.",
+  "domainRemove": "Remove domain",
+  "domainRemoveBody": "Requests to {hostname} stop reaching this tenant. People who use that address have to use another one.",
+  "@domainRemoveBody": {
+    "placeholders": {
+      "hostname": {
+        "type": "String"
+      }
+    }
+  },
+  "domainRemoved": "Domain removed.",
+  "serverTitle": "Server",
+  "serverVersion": "tix {version}",
+  "@serverVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "serverStatusTitle": "Status",
+  "serverVersionLabel": "Version",
+  "serverHealth": "Health",
+  "serverAddress": "Address",
+  "serverId": "Server process",
+  "serverCountTenant": "Live connections in this tenant",
+  "serverCountEvents": "Live update streams",
+  "serverCountSsh": "SSH sessions",
+  "serverCountProcess": "Connections on this server",
+  "serverCountProcessInfo": "Every connection this server process holds, across all tenants. It is capacity, not a directory, so it names nobody.",
+  "connectionsTitle": "Live connections",
+  "connectionsInfo": "The live update streams and SSH sessions of this tenant that this server process holds. Ending one closes it; the client may connect again.",
+  "connectionsEmpty": "No live connections.",
+  "connectionEvents": "Live updates",
+  "connectionSsh": "SSH",
+  "connectionSince": "since {date}",
+  "@connectionSince": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "connectionEnd": "End",
+  "connectionEndBody": "The connection closes at once. A client that is still running may connect again; revoke its token or key to keep it out.",
+  "connectionEnded": "Connection ended.",
+  "globalAdminsTitle": "Global admins",
+  "globalAdminsSubtitle": "People who administer every tenant on this server",
+  "globalAdminsEmpty": "No global admins.",
+  "globalAdminGrant": "Grant global admin",
+  "globalAdminGrantSubmit": "Grant",
+  "globalAdminGrantHelp": "The account with this email can then create tenants and administer every one of them.",
+  "globalAdminGranted": "Global admin granted.",
+  "globalAdminRevoke": "Revoke",
+  "globalAdminRevokeBody": "{email} stops administering every tenant at once. Their memberships stay as they are.",
+  "@globalAdminRevokeBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "globalAdminRevoked": "Global admin revoked.",
+  "globalAdminBadge": "Global admin",
+  "adminRoleAdmin": "Admin",
+  "adminRoleMember": "Member",
+  "adminRoleViewer": "Viewer",
+  "adminRoleNone": "No role",
+  "adminUsersEmpty": "No users in this tenant.",
+  "adminUsersEmptyBody": "Create a user, or add an account that already exists.",
+  "adminUserCreate": "New user",
+  "adminUserCreateSubmit": "Create user",
+  "adminUserActions": "User actions",
+  "adminUserEdit": "Edit",
+  "adminUserEditTitle": "Edit {email}",
+  "@adminUserEditTitle": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "adminUserDelete": "Delete user",
+  "adminUserDeleteBody": "{email} loses this tenant: their membership is revoked and their sessions and tokens here end. Their account stays for other tenants.",
+  "@adminUserDeleteBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "adminUserClearTotp": "Clear second factor",
+  "adminUserClearTotpConfirm": "Clear it",
+  "adminUserClearTotpBody": "{email} signs in with their password alone until they set up a second factor again. Do this only when they have lost their authenticator and their recovery codes.",
+  "@adminUserClearTotpBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "adminUserEmail": "Email",
+  "adminUserHandle": "Handle",
+  "adminUserHandleHelp": "Their short name in this tenant. Empty uses the part of the email before the @.",
+  "adminUserDisplayName": "Display name",
+  "adminUserPassword": "Password",
+  "adminUserPasswordHelp": "At least 12 characters. Leave it empty for a user who signs in another way or is invited later.",
+  "adminUserNewPassword": "New password",
+  "adminUserNewPasswordHelp": "Leave it empty to keep the current one.",
+  "adminUserRole": "Role",
+  "adminUserDisabled": "Disabled",
+  "adminUserDisabledSwitch": "Disabled",
+  "adminUserDisabledHelp": "A disabled user cannot sign in; their sessions and tokens end at once.",
+  "adminUserMustChangePassword": "Must change password",
+  "adminUserMustChangeSwitch": "Choose a new password at next sign-in",
+  "adminUserTotp": "Second factor",
+  "adminMemberAdd": "Add existing account",
+  "adminMemberAddSubmit": "Add to tenant",
+  "adminMemberAddHelp": "The person keeps their password and second factor and is not asked to accept.",
+  "adminAccountLogTitle": "Account log",
+  "adminAccountLogEmpty": "Nothing logged for this account.",
+  "adminAccountLogEmptyBody": "Changes to its password, second factor, standing and memberships show here.",
+  "adminAccountLogBy": "by {who}",
+  "@adminAccountLogBy": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "adminAccountLogVia": "via {channel}",
+  "@adminAccountLogVia": {
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      }
+    }
+  },
+  "adminAccountLogSystem": "the system",
+  "taskReclaim": "Force-release claim",
+  "taskReclaimSubmit": "Release claim",
+  "taskReclaimBody": "Ends the lease another actor holds on this task, for when its worker died. That worker's next renewal is refused.",
+  "taskReclaimReason": "Reason (optional)",
+  "taskReclaimReasonHelp": "Kept in the task's history.",
+  "taskReclaimed": "Released the claim on {ref}.",
+  "@taskReclaimed": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "totpWrongCode": "That code is not right. Check the time on this device and try the next one.",
+  "tenantThemeSampleStatus": "Doing",
+  "tenantSettingsSubtitle": "Name, theme, second factor, claims and trash",
+  "serverSubtitle": "Version and live connections"
 }

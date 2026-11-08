@@ -214,6 +214,13 @@ class SettingsScreen extends ConsumerWidget {
                     l10n.settingsTokensHelp,
                     Routes.myTokens,
                   ),
+                link(
+                  'settings.security',
+                  Icons.shield_outlined,
+                  l10n.securityTitle,
+                  l10n.securitySubtitle,
+                  Routes.security,
+                ),
                 padded(
                   Wrap(
                     spacing: TixSpace.s3,

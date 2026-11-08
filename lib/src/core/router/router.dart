@@ -9,6 +9,14 @@ import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/features/about/presentation/about_screen.dart';
 import 'package:tix_mobile/src/features/account/presentation/account_screen.dart';
 import 'package:tix_mobile/src/features/account/presentation/calendar_screen.dart';
+import 'package:tix_mobile/src/features/admin/presentation/account_log_screen.dart';
+import 'package:tix_mobile/src/features/admin/presentation/domains_screen.dart';
+import 'package:tix_mobile/src/features/admin/presentation/global_admins_screen.dart';
+import 'package:tix_mobile/src/features/admin/presentation/server_screen.dart';
+import 'package:tix_mobile/src/features/admin/presentation/tenant_detail.dart';
+import 'package:tix_mobile/src/features/admin/presentation/tenant_settings_screen.dart';
+import 'package:tix_mobile/src/features/admin/presentation/tenant_users_screen.dart';
+import 'package:tix_mobile/src/features/admin/presentation/tenants_screen.dart';
 import 'package:tix_mobile/src/features/connect/presentation/connect_screen.dart';
 import 'package:tix_mobile/src/features/gallery/presentation/gallery_screen.dart';
 import 'package:tix_mobile/src/features/inbox/presentation/channel_screen.dart';
@@ -23,6 +31,7 @@ import 'package:tix_mobile/src/features/projects/presentation/fields_screen.dart
 import 'package:tix_mobile/src/features/projects/presentation/project_settings_screen.dart';
 import 'package:tix_mobile/src/features/projects/presentation/projects_screen.dart';
 import 'package:tix_mobile/src/features/quick/presentation/quick_actions_host.dart';
+import 'package:tix_mobile/src/features/security/presentation/security_screen.dart';
 import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';
 import 'package:tix_mobile/src/features/shell/presentation/home_shell.dart';
 import 'package:tix_mobile/src/features/shell/presentation/splash_screen.dart';
@@ -198,6 +207,7 @@ GoRouter router(Ref ref) {
                     ],
                   ),
                   ...manageRoutes,
+                  ...adminRoutes,
                 ],
               ),
             ],
@@ -229,6 +239,10 @@ GoRouter router(Ref ref) {
                     builder: (_, _) => const AboutScreen(),
                   ),
                   ...accountRoutes,
+                  GoRoute(
+                    path: 'security',
+                    builder: (_, _) => const SecurityScreen(),
+                  ),
                 ],
               ),
             ],
@@ -287,3 +301,55 @@ final manageRoutes = [
     ),
   ),
 ];
+
+/// Tenant and server administration (wave 3), under Manage.
+final adminRoutes = <RouteBase>[
+  GoRoute(path: 'tenant', builder: (_, _) => const TenantSettingsScreen()),
+  GoRoute(path: 'domains', builder: (_, _) => const DomainsScreen()),
+  GoRoute(path: 'server', builder: (_, _) => const ServerScreen()),
+  GoRoute(
+    path: 'global-admins',
+    builder: (_, _) => const GlobalAdminsScreen(),
+  ),
+  GoRoute(
+    path: 'accounts/:email/log',
+    builder: (_, state) =>
+        AccountLogScreen(email: state.pathParameters['email']!),
+  ),
+  GoRoute(
+    path: 'tenants',
+    builder: (_, _) => const TenantsScreen(),
+    routes: [
+      GoRoute(
+        path: ':key',
+        pageBuilder: _tenantPage,
+        routes: [
+          GoRoute(
+            path: 'settings',
+            builder: (_, state) =>
+                TenantSettingsScreen(tenantRef: state.pathParameters['key']),
+          ),
+          GoRoute(
+            path: 'users',
+            builder: (_, state) =>
+                TenantUsersScreen(tenantKey: state.pathParameters['key']!),
+          ),
+        ],
+      ),
+    ],
+  ),
+];
+
+Page<void> _tenantPage(BuildContext context, GoRouterState state) {
+  final key = state.pathParameters['key']!;
+  if (context.isTwoPane) {
+    return NoTransitionPage(
+      key: state.pageKey,
+      child: TenantsScreen(selectedKey: key),
+    );
+  }
+  return MaterialPage(
+    key: state.pageKey,
+    child: TenantDetailScreen(tenantKey: key),
+  );
+}

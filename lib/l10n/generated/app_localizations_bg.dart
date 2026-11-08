@@ -4248,4 +4248,794 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get settingsTokensHelp => 'Токени за скриптове, CLI и агенти';
+
+  @override
+  String get securityTitle => 'Сигурност';
+
+  @override
+  String get securitySubtitle => 'Вторият ви фактор и SSH ключовете ви';
+
+  @override
+  String get totpTitle => 'Втори фактор';
+
+  @override
+  String get totpInfo =>
+      'Код от приложение за удостоверяване, който се иска след паролата. Кодовете за възстановяване ви пускат, когато приложението не е под ръка.';
+
+  @override
+  String get totpOn => 'Включен';
+
+  @override
+  String get totpOff => 'Изключен';
+
+  @override
+  String get totpPending => 'Непотвърден';
+
+  @override
+  String totpSince(String date) {
+    return 'От $date';
+  }
+
+  @override
+  String get totpOnBody =>
+      'При вход след паролата се иска код от приложението за удостоверяване.';
+
+  @override
+  String get totpOffBody => 'При вход се иска само паролата.';
+
+  @override
+  String get totpPendingBody =>
+      'Настройката е започната, но не е потвърдена с код. Настройте отново, за да я завършите.';
+
+  @override
+  String totpRequiredOn(String surfaces) {
+    return 'Наемателят ви изисква втори фактор за: $surfaces.';
+  }
+
+  @override
+  String get totpSurfaceWeb => 'браузъра';
+
+  @override
+  String get totpSurfaceCli => 'командния ред';
+
+  @override
+  String get totpSurfaceSsh => 'SSH';
+
+  @override
+  String totpCodesLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Остават $count кода за възстановяване',
+      one: 'Остава 1 код за възстановяване',
+      zero: 'Не остават кодове за възстановяване',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String totpLocked(String time) {
+    return 'Твърде много грешни кодове. Кодовете се отказват до $time.';
+  }
+
+  @override
+  String get totpSetUp => 'Настрой';
+
+  @override
+  String get totpNewCodes => 'Нови кодове за възстановяване';
+
+  @override
+  String get totpNewCodesBody =>
+      'Сегашните кодове за възстановяване спират да работят веднага, използвани или не, и нов набор се показва еднократно.';
+
+  @override
+  String get totpNewCodesConfirm => 'Замени кодовете';
+
+  @override
+  String get totpRemove => 'Премахни втория фактор';
+
+  @override
+  String get totpRemoveBody =>
+      'При вход ще се иска само паролата, а кодовете за възстановяване спират да работят. Ако наемателят изисква втори фактор, ще трябва да го настроите отново.';
+
+  @override
+  String get totpRemoved => 'Вторият фактор е премахнат.';
+
+  @override
+  String get totpCodesHeading => 'Запазете тези кодове за възстановяване сега';
+
+  @override
+  String get totpCodesNote =>
+      'Всеки от тях ви пуска веднъж без приложението за удостоверяване. Показват се еднократно и не могат да се видят отново; ако ги загубите, създайте нов набор.';
+
+  @override
+  String get totpCodesSaved => 'Запазих ги';
+
+  @override
+  String get totpConfirm => 'Потвърди';
+
+  @override
+  String get totpStep1 =>
+      '1. Добавете този ключ в приложението за удостоверяване или го отворете там от това устройство.';
+
+  @override
+  String get totpSecretHeading => 'Ключ за приложението за удостоверяване';
+
+  @override
+  String totpSecretNote(String account, String issuer) {
+    return 'Акаунт $account в $issuer. Пазете го в тайна: който го има, може да генерира кодовете ви.';
+  }
+
+  @override
+  String get totpOpenApp => 'Отвори в приложението';
+
+  @override
+  String get totpStep2 =>
+      '2. Въведете шестцифрения код, който показва приложението.';
+
+  @override
+  String get sshKeysTitle => 'SSH ключове';
+
+  @override
+  String get sshKeysInfo =>
+      'Ключ, добавен тук, ви вписва в терминалния интерфейс на tix през SSH в този наемател. Отменените ключове остават в списъка, за да се вижда защо някой е спрял да работи.';
+
+  @override
+  String get sshKeysEmpty => 'Все още няма SSH ключове.';
+
+  @override
+  String get sshKeyAdd => 'Добави SSH ключ';
+
+  @override
+  String get sshKeyAddSubmit => 'Добави ключа';
+
+  @override
+  String get sshKeyAdded => 'SSH ключът е добавен.';
+
+  @override
+  String get sshKeyUnlabelled => 'Ключ без етикет';
+
+  @override
+  String get sshKeyRevoked => 'Отменен';
+
+  @override
+  String sshKeyAddedOn(String date) {
+    return 'Добавен $date';
+  }
+
+  @override
+  String sshKeyLastUsed(String date) {
+    return 'Последно ползван $date';
+  }
+
+  @override
+  String get sshKeyNeverUsed => 'Неизползван';
+
+  @override
+  String sshKeyRevokedOn(String date) {
+    return 'Отменен $date';
+  }
+
+  @override
+  String get sshKeyRevoke => 'Отмени';
+
+  @override
+  String sshKeyRevokeBody(String name) {
+    return '$name спира да вписва през SSH веднага. Това не може да се върне; добавете ключа отново, за да го ползвате.';
+  }
+
+  @override
+  String get sshKeyRevokedToast => 'SSH ключът е отменен.';
+
+  @override
+  String get sshKeyPublicKey => 'Публичен ключ';
+
+  @override
+  String get sshKeyPublicKeyHelp =>
+      'Редът от .pub файла, както го записва ssh-keygen.';
+
+  @override
+  String get sshKeyLabel => 'Етикет (по избор)';
+
+  @override
+  String get sshKeyLabelHelp =>
+      'Отличава този ключ от другите, например по машината, на която е.';
+
+  @override
+  String get sshKeyAllTenants => 'Всички наематели, в които членувам';
+
+  @override
+  String get sshKeyAllTenantsHelp =>
+      'Добавя ключа във всеки ваш наемател, не само в този.';
+
+  @override
+  String get tenantSettingsTitle => 'Настройки на наемателя';
+
+  @override
+  String get tenantSaved => 'Запазено.';
+
+  @override
+  String get tenantGeneralTitle => 'Общи';
+
+  @override
+  String get tenantName => 'Име';
+
+  @override
+  String get tenantKey => 'Ключ';
+
+  @override
+  String get tenantKeyHelp =>
+      'Кратък и уникален: букви, цифри, тирета и долни черти, започва с буква. Не може да се промени после.';
+
+  @override
+  String get tenantTimezone => 'Часова зона';
+
+  @override
+  String get tenantTimezoneHelp =>
+      'IANA зона, в която хората четат датите, освен ако не са избрали своя. Празно използва тази на сървъра.';
+
+  @override
+  String get tenantTimeFormat => 'Формат на датите';
+
+  @override
+  String get tenantServerDefault => 'По подразбиране за сървъра';
+
+  @override
+  String get tenantThemeTitle => 'Тема';
+
+  @override
+  String get tenantThemeInfo =>
+      'Цветът на наемателя навсякъде: в уеб, в терминала и в това приложение. Цветовете на статусите и приоритетите не се променят с него.';
+
+  @override
+  String get tenantThemeDefault => 'по подразбиране';
+
+  @override
+  String get tenantThemeCustom => 'Собствен цвят';
+
+  @override
+  String get tenantThemeCustomHelp =>
+      '#rrggbb. tix го нагласява, докато текстът върху и около него остане четим.';
+
+  @override
+  String get tenantThemeCustomBad =>
+      'Запишете цвета като #rrggbb, например #0f766e.';
+
+  @override
+  String get tenantThemePreview => 'Преглед';
+
+  @override
+  String get tenantThemeSampleRow => 'Избран ред';
+
+  @override
+  String get tenantThemeSampleLink => 'Връзка';
+
+  @override
+  String get tenantThemeSampleButton => 'Нова задача';
+
+  @override
+  String get tenantThemeSaved => 'Темата е запазена.';
+
+  @override
+  String get tenantTotpTitle => 'Втори фактор';
+
+  @override
+  String get tenantTotpInfo =>
+      'Изисква код от приложение за удостоверяване при вход. Който няма такъв, го настройва при влизане, така че включването не заключва никого.';
+
+  @override
+  String get tenantTotpWeb => 'Изисквай го в браузъра';
+
+  @override
+  String get tenantTotpCli => 'Изисквай го в командния ред';
+
+  @override
+  String get tenantTotpSsh => 'Изисквай го през SSH, освен ключа';
+
+  @override
+  String get tenantTotpNone => 'Не се изисква';
+
+  @override
+  String get tenantTotpBadge => 'Втори фактор';
+
+  @override
+  String get tenantLeaseTitle => 'Заявки';
+
+  @override
+  String get tenantLeaseInfo =>
+      'Колко трае заявката на агент за задача. Проект, работен процес или заявка може да поиска по-малко; таванът на сървъра винаги печели.';
+
+  @override
+  String get tenantLeaseDefault => 'Срок по подразбиране';
+
+  @override
+  String get tenantLeaseDefaultHelp =>
+      'Продължителност като 30m или 2h. Празно използва тази на сървъра.';
+
+  @override
+  String get tenantLeaseMax => 'Най-дълъг срок';
+
+  @override
+  String get tenantLeaseMaxHelp =>
+      'Ограничава всяка заявка в наемателя. Може да свали тавана на сървъра, но не и да го вдигне.';
+
+  @override
+  String get tenantTrashTitle => 'Кошче';
+
+  @override
+  String get tenantTrashKeep => 'Пази изтритите задачи в кошче';
+
+  @override
+  String get tenantTrashOnBody =>
+      'Изтритите задачи могат да се възстановят, докато поддръжката не изпразни кошчето.';
+
+  @override
+  String get tenantTrashOffBody =>
+      'Изтриването на задача е окончателно. Задачите, които вече са в кошчето, остават там.';
+
+  @override
+  String get tenantTrashOnShort => 'Изтритите задачи отиват в кошчето';
+
+  @override
+  String get tenantTrashOffShort => 'Изтриването е окончателно';
+
+  @override
+  String get tenantDelete => 'Изтрий наемателя';
+
+  @override
+  String get tenantDeleteHelp =>
+      'Данните му стават недостъпни, а домейните му спират да работят.';
+
+  @override
+  String get tenantDeleteCurrent =>
+      'Това е наемателят, в който работите. Превключете към друг, за да го изтриете.';
+
+  @override
+  String tenantDeleteBody(String name, String key) {
+    return '$name ($key) и всичко в него стават недостъпни за всички, а домейните му спират да работят. Само операторът на сървъра може да го върне.';
+  }
+
+  @override
+  String tenantDeleted(String name) {
+    return '$name е изтрит.';
+  }
+
+  @override
+  String get tenantsTitle => 'Наематели';
+
+  @override
+  String get tenantsSubtitle => 'Всички наематели на този сървър';
+
+  @override
+  String get tenantsEmpty => 'Няма наематели.';
+
+  @override
+  String get tenantsEmptyBody => 'Създайте един с първия му администратор.';
+
+  @override
+  String get tenantsPick => 'Изберете наемател, за да го видите тук.';
+
+  @override
+  String get tenantCreate => 'Нов наемател';
+
+  @override
+  String get tenantCreateSubmit => 'Създай наемателя';
+
+  @override
+  String tenantCreated(String name) {
+    return '$name е създаден.';
+  }
+
+  @override
+  String get tenantFirstAdmin => 'Първи администратор';
+
+  @override
+  String get tenantFirstAdminHelp =>
+      'Става администратор на новия наемател. Адрес, който вече има акаунт, запазва паролата и втория си фактор.';
+
+  @override
+  String get tenantPasswordHelp =>
+      'Поне 12 знака. Оставете празно и tix ще генерира парола, показана еднократно.';
+
+  @override
+  String get tenantCredentialsHeading => 'Копирайте тези пароли сега';
+
+  @override
+  String get tenantCredentialsNote =>
+      'tix ги генерира и ги показва еднократно; никъде не се пазят. Дайте всяка на администратора ѝ, който избира нова при първия вход. Ако някоя се загуби, задайте нова парола.';
+
+  @override
+  String get tenantCurrent => 'Текущ';
+
+  @override
+  String get tenantMember => 'Член';
+
+  @override
+  String get tenantNoTrash => 'Без кошче';
+
+  @override
+  String get tenantOverview => 'Преглед';
+
+  @override
+  String get tenantCreatedAt => 'Създаден';
+
+  @override
+  String get tenantSwitch => 'Превключи към наемателя';
+
+  @override
+  String get tenantJoinSwitch => 'Присъедини се и превключи';
+
+  @override
+  String tenantJoinBody(String name) {
+    return 'Не сте член на $name. Като глобален администратор можете да се добавите като администратор и да превключите. Промяната остава в дневника на акаунта ви.';
+  }
+
+  @override
+  String get tenantJoinConfirm => 'Присъедини се като администратор';
+
+  @override
+  String get tenantSwitchPinned =>
+      'Тази връзка достига само един наемател. Влезте с връзка, която може да превключва, за да минавате между наематели.';
+
+  @override
+  String get tenantUsersTitle => 'Потребители';
+
+  @override
+  String get tenantDomainsEmpty => 'Няма домейни за този наемател.';
+
+  @override
+  String get domainsTitle => 'Домейни';
+
+  @override
+  String get domainsSubtitle => 'Имена на хостове, които отварят наемателя';
+
+  @override
+  String get domainsBody =>
+      'Заявка, пристигнала на едно от тези имена, стига до наемателя, без да го посочва.';
+
+  @override
+  String get domainsEmpty => 'Все още няма домейни.';
+
+  @override
+  String get domainsEmptyBody =>
+      'Свържете име на хост, за да стигат хората до наемателя на собствен адрес.';
+
+  @override
+  String get domainAdd => 'Добави домейн';
+
+  @override
+  String get domainAddSubmit => 'Добави домейна';
+
+  @override
+  String get domainAdded => 'Домейнът е добавен.';
+
+  @override
+  String get domainHostname => 'Име на хост';
+
+  @override
+  String get domainHostnameHelp =>
+      'С малки букви; порт или крайна точка се премахват.';
+
+  @override
+  String get domainCertMode => 'Сертификат';
+
+  @override
+  String get domainCertNone => 'Терминира се другаде';
+
+  @override
+  String get domainCertFile => 'Файл със сертификат';
+
+  @override
+  String get domainCertNoneHelp =>
+      'Прокси пред tix държи сертификата или хостът е обикновен HTTP.';
+
+  @override
+  String get domainCertFileHelp =>
+      'tix сам обслужва TLS от PEM файлове на сървъра.';
+
+  @override
+  String get domainCertPath => 'Път до сертификата на сървъра';
+
+  @override
+  String get domainKeyPath => 'Път до частния ключ на сървъра';
+
+  @override
+  String get domainVerified => 'Проверен';
+
+  @override
+  String get domainShared => 'Споделен';
+
+  @override
+  String get domainSharedInfo =>
+      'Споделеното име обслужва и наемателя, посочен от идентификацията или заглавката X-Tix-Tenant, както хост без домейн. Само глобален администратор го задава.';
+
+  @override
+  String get domainRemove => 'Премахни домейна';
+
+  @override
+  String domainRemoveBody(String hostname) {
+    return 'Заявките към $hostname спират да стигат до наемателя. Който ползва този адрес, трябва да ползва друг.';
+  }
+
+  @override
+  String get domainRemoved => 'Домейнът е премахнат.';
+
+  @override
+  String get serverTitle => 'Сървър';
+
+  @override
+  String serverVersion(String version) {
+    return 'tix $version';
+  }
+
+  @override
+  String get serverStatusTitle => 'Състояние';
+
+  @override
+  String get serverVersionLabel => 'Версия';
+
+  @override
+  String get serverHealth => 'Здраве';
+
+  @override
+  String get serverAddress => 'Адрес';
+
+  @override
+  String get serverId => 'Процес на сървъра';
+
+  @override
+  String get serverCountTenant => 'Живи връзки в наемателя';
+
+  @override
+  String get serverCountEvents => 'Потоци с живи обновления';
+
+  @override
+  String get serverCountSsh => 'SSH сесии';
+
+  @override
+  String get serverCountProcess => 'Връзки на този сървър';
+
+  @override
+  String get serverCountProcessInfo =>
+      'Всички връзки на този процес, във всички наематели. Това е капацитет, не указател, затова не назовава никого.';
+
+  @override
+  String get connectionsTitle => 'Живи връзки';
+
+  @override
+  String get connectionsInfo =>
+      'Потоците с живи обновления и SSH сесиите на наемателя, които държи този процес. Прекратяването я затваря; клиентът може да се свърже отново.';
+
+  @override
+  String get connectionsEmpty => 'Няма живи връзки.';
+
+  @override
+  String get connectionEvents => 'Живи обновления';
+
+  @override
+  String get connectionSsh => 'SSH';
+
+  @override
+  String connectionSince(String date) {
+    return 'от $date';
+  }
+
+  @override
+  String get connectionEnd => 'Прекрати';
+
+  @override
+  String get connectionEndBody =>
+      'Връзката се затваря веднага. Работещ клиент може да се свърже отново; отменете токена или ключа му, за да го спрете.';
+
+  @override
+  String get connectionEnded => 'Връзката е прекратена.';
+
+  @override
+  String get globalAdminsTitle => 'Глобални администратори';
+
+  @override
+  String get globalAdminsSubtitle =>
+      'Хора, които администрират всички наематели на сървъра';
+
+  @override
+  String get globalAdminsEmpty => 'Няма глобални администратори.';
+
+  @override
+  String get globalAdminGrant => 'Дай глобален администратор';
+
+  @override
+  String get globalAdminGrantSubmit => 'Дай';
+
+  @override
+  String get globalAdminGrantHelp =>
+      'Акаунтът с този имейл ще може да създава наематели и да администрира всеки от тях.';
+
+  @override
+  String get globalAdminGranted => 'Глобалният администратор е даден.';
+
+  @override
+  String get globalAdminRevoke => 'Отнеми';
+
+  @override
+  String globalAdminRevokeBody(String email) {
+    return '$email спира да администрира всички наематели веднага. Членствата му остават.';
+  }
+
+  @override
+  String get globalAdminRevoked => 'Глобалният администратор е отнет.';
+
+  @override
+  String get globalAdminBadge => 'Глобален администратор';
+
+  @override
+  String get adminRoleAdmin => 'Администратор';
+
+  @override
+  String get adminRoleMember => 'Член';
+
+  @override
+  String get adminRoleViewer => 'Наблюдател';
+
+  @override
+  String get adminRoleNone => 'Без роля';
+
+  @override
+  String get adminUsersEmpty => 'Няма потребители в този наемател.';
+
+  @override
+  String get adminUsersEmptyBody =>
+      'Създайте потребител или добавете съществуващ акаунт.';
+
+  @override
+  String get adminUserCreate => 'Нов потребител';
+
+  @override
+  String get adminUserCreateSubmit => 'Създай потребителя';
+
+  @override
+  String get adminUserActions => 'Действия с потребителя';
+
+  @override
+  String get adminUserEdit => 'Редактирай';
+
+  @override
+  String adminUserEditTitle(String email) {
+    return 'Редакция на $email';
+  }
+
+  @override
+  String get adminUserDelete => 'Изтрий потребителя';
+
+  @override
+  String adminUserDeleteBody(String email) {
+    return '$email губи този наемател: членството се отнема, а сесиите и токените тук спират. Акаунтът остава за другите наематели.';
+  }
+
+  @override
+  String get adminUserClearTotp => 'Изчисти втория фактор';
+
+  @override
+  String get adminUserClearTotpConfirm => 'Изчисти го';
+
+  @override
+  String adminUserClearTotpBody(String email) {
+    return '$email влиза само с паролата, докато не настрои отново втори фактор. Правете го само ако е загубил приложението и кодовете за възстановяване.';
+  }
+
+  @override
+  String get adminUserEmail => 'Имейл';
+
+  @override
+  String get adminUserHandle => 'Псевдоним';
+
+  @override
+  String get adminUserHandleHelp =>
+      'Краткото име в наемателя. Празно използва частта от имейла преди @.';
+
+  @override
+  String get adminUserDisplayName => 'Показвано име';
+
+  @override
+  String get adminUserPassword => 'Парола';
+
+  @override
+  String get adminUserPasswordHelp =>
+      'Поне 12 знака. Оставете празно за потребител, който влиза по друг начин или ще бъде поканен.';
+
+  @override
+  String get adminUserNewPassword => 'Нова парола';
+
+  @override
+  String get adminUserNewPasswordHelp =>
+      'Оставете празно, за да остане сегашната.';
+
+  @override
+  String get adminUserRole => 'Роля';
+
+  @override
+  String get adminUserDisabled => 'Деактивиран';
+
+  @override
+  String get adminUserDisabledSwitch => 'Деактивиран';
+
+  @override
+  String get adminUserDisabledHelp =>
+      'Деактивираният потребител не може да влиза; сесиите и токените му спират веднага.';
+
+  @override
+  String get adminUserMustChangePassword => 'Трябва да смени паролата';
+
+  @override
+  String get adminUserMustChangeSwitch => 'Нова парола при следващия вход';
+
+  @override
+  String get adminUserTotp => 'Втори фактор';
+
+  @override
+  String get adminMemberAdd => 'Добави съществуващ акаунт';
+
+  @override
+  String get adminMemberAddSubmit => 'Добави в наемателя';
+
+  @override
+  String get adminMemberAddHelp =>
+      'Човекът запазва паролата и втория си фактор и не се иска потвърждение от него.';
+
+  @override
+  String get adminAccountLogTitle => 'Дневник на акаунта';
+
+  @override
+  String get adminAccountLogEmpty => 'Няма записи за този акаунт.';
+
+  @override
+  String get adminAccountLogEmptyBody =>
+      'Промените по паролата, втория фактор, статуса и членствата се показват тук.';
+
+  @override
+  String adminAccountLogBy(String who) {
+    return 'от $who';
+  }
+
+  @override
+  String adminAccountLogVia(String channel) {
+    return 'чрез $channel';
+  }
+
+  @override
+  String get adminAccountLogSystem => 'системата';
+
+  @override
+  String get taskReclaim => 'Освободи заявката принудително';
+
+  @override
+  String get taskReclaimSubmit => 'Освободи заявката';
+
+  @override
+  String get taskReclaimBody =>
+      'Прекратява заявката на друг участник върху задачата, когато работникът му е спрял. Следващото му подновяване ще бъде отказано.';
+
+  @override
+  String get taskReclaimReason => 'Причина (по избор)';
+
+  @override
+  String get taskReclaimReasonHelp => 'Пази се в историята на задачата.';
+
+  @override
+  String taskReclaimed(String ref) {
+    return 'Заявката за $ref е освободена.';
+  }
+
+  @override
+  String get totpWrongCode =>
+      'Кодът не е верен. Проверете часа на устройството и опитайте със следващия.';
+
+  @override
+  String get tenantThemeSampleStatus => 'В работа';
+
+  @override
+  String get tenantSettingsSubtitle =>
+      'Име, тема, втори фактор, заявки и кошче';
+
+  @override
+  String get serverSubtitle => 'Версия и живи връзки';
 }
