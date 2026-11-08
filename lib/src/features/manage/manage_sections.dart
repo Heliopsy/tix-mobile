@@ -83,4 +83,32 @@ final manageSections = <ManageEntry>[
     route: Routes.fieldProjects,
     scope: Scope.projectRead,
   ),
+  // The screens below are routed by the people and access feature.
+  ManageEntry(
+    id: 'people.users',
+    group: ManageGroup.people,
+    icon: Icons.group_outlined,
+    title: (l) => l.manageUsersTitle,
+    subtitle: (l) => l.manageUsersSubtitle,
+    route: '/manage/users',
+    scope: Scope.userAdmin,
+  ),
+  ManageEntry(
+    id: 'access.tokens',
+    group: ManageGroup.access,
+    icon: Icons.key_outlined,
+    title: (l) => l.manageTokensTitle,
+    subtitle: (l) => l.manageTokensSubtitle,
+    route: '/manage/tokens',
+    scope: Scope.tokenAdmin,
+  ),
+  ManageEntry(
+    id: 'tenant.transfer',
+    group: ManageGroup.tenant,
+    icon: Icons.import_export,
+    title: (l) => l.manageTransferTitle,
+    subtitle: (l) => l.manageTransferSubtitle,
+    route: '/manage/transfer',
+    when: (a) => a.hasValue('export') || a.hasValue('import'),
+  ),
 ];
