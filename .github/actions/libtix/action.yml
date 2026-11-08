@@ -1,0 +1,87 @@
+name: libtix
+description: >-
+  Install the Go version .tool-versions names, so hook/build.dart builds the
+  embedded tix engine into every Flutter build and test, and restore the
+  libtix cache: the tix source, each built library, and Go's module and build
+  caches, keyed on tix.lock, the hook and the target. Restoring is all this
+  does; a job saves with actions/cache/save on a push to main only, so a pull
+  request reads main's cache and never writes one of its own.
+
+inputs:
+  target:
+    description: >-
+      What the job builds (android, linux, macos, ios, windows, test), part of
+      the cache key.
+    required: true
+
+outputs:
+  key:
+    description: The exact cache key, for the save step at the end of the job.
+    value: ${{ steps.key.outputs.key }}
+  paths:
+    description: The directories the cache holds, for the save step.
+    value: ${{ steps.key.outputs.paths }}
+  cache-hit:
+    description: Whether the exact key was restored, in which case there is nothing to save.
+    value: ${{ steps.restore.outputs.cache-hit }}
+
+runs:
+  using: composite
+  steps:
+    - id: version
+      shell: bash
+      run: |
+        set -euo pipefail
+        go=$(awk '$1 == "golang" { print $2 }' .tool-versions)
+        [ -n "$go" ] || { echo "golang missing from .tool-versions" >&2; exit 1; }
+        echo "go=$go" >> "$GITHUB_OUTPUT"
+
+    # cache: false for the same reason as in tix: setup-go's own cache saves
+    # from every run that misses, pull requests included.
+    - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e  # v7.0.0
+      with:
+        go-version: ${{ steps.version.outputs.go }}
+        cache: false
+
+    # cgo needs gcc or clang. The Windows runner image ships mingw-w64; say so
+    # plainly here rather than letting the hook skip the engine and the
+    # artifact check fail later.
+    - if: runner.os == 'Windows'
+      shell: bash
+      run: |
+        set -euo pipefail
+        if ! command -v gcc >/dev/null; then
+          echo "::error::no gcc (mingw-w64) on PATH; cgo cannot build libtix" >&2
+          exit 1
+        fi
+        gcc --version | head -1
+
+    - id: key
+      shell: bash
+      env:
+        TARGET: ${{ inputs.target }}
+        LOCK: ${{ hashFiles('tix.lock', 'hook/**') }}
+      run: |
+        set -euo pipefail
+        if [ "$RUNNER_OS" = Windows ]; then
+          cache="$LOCALAPPDATA\\tix-mobile\\libtix"
+        else
+          cache="$HOME/.cache/tix-mobile/libtix"
+        fi
+        prefix="libtix-${RUNNER_OS}-${RUNNER_ARCH}-${TARGET}-"
+        {
+          echo "prefix=${prefix}"
+          echo "key=${prefix}${LOCK}"
+          echo "paths<<EOF"
+          echo "$cache"
+          go env GOMODCACHE
+          go env GOCACHE
+          echo "EOF"
+        } >> "$GITHUB_OUTPUT"
+
+    - id: restore
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
+      with:
+        path: ${{ steps.key.outputs.paths }}
+        key: ${{ steps.key.outputs.key }}
+        restore-keys: ${{ steps.key.outputs.prefix }}
