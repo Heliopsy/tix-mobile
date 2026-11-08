@@ -112,6 +112,9 @@ All in `lib/src/core/design/components/`. Each has a doc comment saying when to 
 | `TaskRow` | A task in any list: tick, star, title, status, priority, tags, assignee, project, due, snooze, reference, project stripe |
 | `TaskCard` | A task on a board or in lanes |
 | `TaskCheck` | The completion circle, on its own |
+| `InboxRow` | An inbox item: who did what, the task, the excerpt or the move, when; unread dot |
+| `UpdatedMark`, `FreshHighlight` | A list refreshed itself from a live event; a row that just arrived |
+| `ChangedElsewhereBanner` | What the person is editing changed elsewhere: keep editing or reload, never a silent reload |
 | `StatusPill` | A task status. The only filled mark on a row. `framed` makes it a control |
 | `PriorityMark` | A priority, caret and word |
 | `TagChip`, `MoreMark` | Tags, and the count of the ones left out |
@@ -223,6 +226,37 @@ await runOptimistic(
 
 The change shows at once. A refusal rolls it back, buzzes, and shows the server's reason in a danger toast. A
 success shows a toast with Undo, which rolls back locally and calls `undo`.
+
+## Live updates and notifications
+
+Lists follow tix's event stream through `refreshOn` and `onEvents` (`core/events`). A list that refreshes in
+place marks the new rows with `FreshHighlight` and shows `UpdatedMark` for a few seconds; it never moves the
+scroll position. A screen with unsaved input never reloads under the person: it listens for events about its
+item (`EventTopics.taskDetail`, matching the subject) and shows `ChangedElsewhereBanner` instead.
+
+New inbox items become local notifications (`core/notifications`, over `flutter_local_notifications`) while the
+app runs or was put away a moment ago, on Android, iOS, macOS, Linux and Windows. They are off until the person
+turns them on, per context; the platform's permission is asked at that moment and never at start. Each item
+notifies once; items already there when the app starts never do. A tap opens the task and marks the item read.
+
+### What real push would need
+
+A closed app hears nothing: there is no push service, and the app does not pretend otherwise. Push through FCM
+(Android) and APNs (Apple platforms) would need, from tix:
+
+1. **Device registration**: a route for the app to register a push token per device, actor and tenant
+   (`POST /devices`, `DELETE /devices/{id}`), scoped like the inbox (the caller's own, `task:read`), listed and
+   revocable from the web as personal channels are.
+2. **A sender**: tix delivering each inbox item to the actor's devices, beside the channel dispatcher it already
+   has (same queue, retries and network guard), with FCM service-account and APNs key configuration per
+   installation. A self-hosted tix cannot use the app's own FCM project and APNs key without a relay, so either
+   each installation configures its own (and ships its own build), or a relay run for the public app forwards
+   opaque payloads.
+3. **A payload with no content**: the item id and tenant only, the app fetching the text over its own connection
+   when woken, so neither Google nor Apple, nor a relay, sees task titles or comments.
+4. **Mute and kind rules applied server side**, as channels already do, so a muted kind costs no wake-up.
+
+Until then, personal channels (ntfy in particular) are how a person is reached when the app is closed.
 
 ## UX rules
 
