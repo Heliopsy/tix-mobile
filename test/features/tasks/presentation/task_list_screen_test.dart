@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
+import 'package:tix_mobile/src/features/quick/presentation/quick_actions_host.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_list_screen.dart';
 
@@ -161,7 +162,10 @@ void main() {
   });
 
   testWidgets('quick add creates the task and confirms it', (tester) async {
-    await pump(tester, const TaskListScreen(projectKey: 'infra'));
+    await pump(
+      tester,
+      const QuickActionsHost(child: TaskListScreen(projectKey: 'infra')),
+    );
     await tester.tap(find.byKey(const Key('tasks.quickAdd')));
     await tester.pumpAndSettle();
     await tester.enterText(
@@ -173,7 +177,9 @@ void main() {
     expect(find.text('Created infra-3'), findsOneWidget);
     expect(find.byKey(const Key('quickAdd.line')), findsNothing);
     expect(find.text('Ship it'), findsOneWidget);
-    final post = server.requests.singleWhere((r) => r.method == 'POST');
+    final post = server
+        .requestsTo('/api/v1/tasks')
+        .singleWhere((r) => r.method == 'POST');
     expect(post.data, {
       'title': 'Ship it !high #release',
       'project_ref': 'infra',
@@ -184,7 +190,10 @@ void main() {
   testWidgets('a refused quick add keeps the line and says why', (
     tester,
   ) async {
-    await pump(tester, const TaskListScreen(projectKey: 'infra'));
+    await pump(
+      tester,
+      const QuickActionsHost(child: TaskListScreen(projectKey: 'infra')),
+    );
     await tester.tap(find.byKey(const Key('tasks.quickAdd')));
     await tester.pumpAndSettle();
     server.override = FakeResponse(
@@ -203,11 +212,17 @@ void main() {
   });
 
   testWidgets('an empty quick add sends nothing', (tester) async {
-    await pump(tester, const TaskListScreen(projectKey: 'infra'));
+    await pump(
+      tester,
+      const QuickActionsHost(child: TaskListScreen(projectKey: 'infra')),
+    );
     await tester.tap(find.byKey(const Key('tasks.quickAdd')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('quickAdd.submit')));
     await tester.pumpAndSettle();
-    expect(server.requests.where((r) => r.method == 'POST'), isEmpty);
+    expect(
+      server.requestsTo('/api/v1/tasks').where((r) => r.method == 'POST'),
+      isEmpty,
+    );
   });
 }

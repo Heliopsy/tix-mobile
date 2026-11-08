@@ -107,7 +107,7 @@ void main() {
   });
 
   test('tags and actors are read for completions', () async {
-    expect((await repo.tags()).map((t) => t.name), ['auth', 'release', 'ui']);
+    expect((await repo.tags()).map((t) => t.name), ['auth', 'ops', 'backend']);
     final actors = await repo.actors();
     expect(actors.map((a) => a.handle), containsAll(['ana', 'raj']));
     expect(

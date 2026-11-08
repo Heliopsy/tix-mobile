@@ -1101,9 +1101,6 @@ class FakeTix {
   /// Templates by id, in the shape tix answers with.
   final templates = <String, Map<String, Object?>>{};
 
-  /// Tag names.
-  List<String> tagNames = ['auth', 'release', 'ui'];
-
   /// Dry-run rows by line, recorded from a real tix; a line not listed
   /// becomes a plain row titled as typed.
   final previews = <String, Map<String, Object?>>{
@@ -1174,12 +1171,6 @@ class FakeTix {
         ? o.data as Map<String, dynamic>
         : const <String, dynamic>{};
     switch ((o.method, path)) {
-      case ('GET', '/api/v1/tags'):
-        return FakeResponse(200, {
-          'items': [
-            for (final t in tagNames) {'id': 'tag-$t', 'name': t},
-          ],
-        });
       case ('GET', '/api/v1/actors'):
         return FakeResponse(200, {'items': actors.values.toList()});
       case ('GET', '/api/v1/templates'):

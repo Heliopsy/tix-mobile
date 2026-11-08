@@ -2564,6 +2564,456 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Assign to…'**
   String get boardAssignTo;
+
+  /// No description provided for @quickAddProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Project'**
+  String get quickAddProject;
+
+  /// No description provided for @quickAddPickProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a project'**
+  String get quickAddPickProject;
+
+  /// No description provided for @quickAddNoProjects.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no project to add to yet.'**
+  String get quickAddNoProjects;
+
+  /// No description provided for @quickAddAnother.
+  ///
+  /// In en, this message translates to:
+  /// **'Add another'**
+  String get quickAddAnother;
+
+  /// No description provided for @quickAddAnotherHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay open for the next line'**
+  String get quickAddAnotherHelp;
+
+  /// No description provided for @quickAddPreviewRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'The server would refuse this: {reason}'**
+  String quickAddPreviewRefused(String reason);
+
+  /// No description provided for @quickAddPreviewOff.
+  ///
+  /// In en, this message translates to:
+  /// **'This connection cannot preview lines; adding still works.'**
+  String get quickAddPreviewOff;
+
+  /// No description provided for @quickAddOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Adding needs a connection to the server. The line is kept; try again when you are online.'**
+  String get quickAddOffline;
+
+  /// No description provided for @quickAddChipPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'priority'**
+  String get quickAddChipPriority;
+
+  /// No description provided for @quickAddChipTag.
+  ///
+  /// In en, this message translates to:
+  /// **'tag'**
+  String get quickAddChipTag;
+
+  /// No description provided for @quickAddChipAssignee.
+  ///
+  /// In en, this message translates to:
+  /// **'assignee'**
+  String get quickAddChipAssignee;
+
+  /// No description provided for @quickAddChipDue.
+  ///
+  /// In en, this message translates to:
+  /// **'due'**
+  String get quickAddChipDue;
+
+  /// No description provided for @quickAddChipStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'status'**
+  String get quickAddChipStatus;
+
+  /// No description provided for @quickAddChipParent.
+  ///
+  /// In en, this message translates to:
+  /// **'parent'**
+  String get quickAddChipParent;
+
+  /// No description provided for @quickAddChipTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'title'**
+  String get quickAddChipTitle;
+
+  /// No description provided for @quickAddSuggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions'**
+  String get quickAddSuggestions;
+
+  /// No description provided for @quickAddTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'From a template'**
+  String get quickAddTemplates;
+
+  /// No description provided for @quickAddManageTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'Templates'**
+  String get quickAddManageTemplates;
+
+  /// No description provided for @quickAddPaste.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick add from the clipboard'**
+  String get quickAddPaste;
+
+  /// No description provided for @quickAddClipboardEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'The clipboard holds no text.'**
+  String get quickAddClipboardEmpty;
+
+  /// No description provided for @paletteGroupProjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Projects'**
+  String get paletteGroupProjects;
+
+  /// No description provided for @paletteGroupRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent tasks'**
+  String get paletteGroupRecent;
+
+  /// No description provided for @paletteGroupContexts.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to'**
+  String get paletteGroupContexts;
+
+  /// No description provided for @paletteGroupTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get paletteGroupTheme;
+
+  /// No description provided for @paletteGroupTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'Templates'**
+  String get paletteGroupTemplates;
+
+  /// No description provided for @paletteOpenTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Open {ref}'**
+  String paletteOpenTask(String ref);
+
+  /// No description provided for @paletteGoInbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to inbox'**
+  String get paletteGoInbox;
+
+  /// No description provided for @paletteGoMyWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to my work'**
+  String get paletteGoMyWork;
+
+  /// No description provided for @paletteGoTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to templates'**
+  String get paletteGoTemplates;
+
+  /// No description provided for @paletteThemeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light theme'**
+  String get paletteThemeLight;
+
+  /// No description provided for @paletteThemeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark theme'**
+  String get paletteThemeDark;
+
+  /// No description provided for @paletteThemeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme of the system'**
+  String get paletteThemeSystem;
+
+  /// No description provided for @paletteUseTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'New task from {name}'**
+  String paletteUseTemplate(String name);
+
+  /// No description provided for @templatesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Templates'**
+  String get templatesTitle;
+
+  /// No description provided for @templatesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks you add often, one tap away'**
+  String get templatesSubtitle;
+
+  /// No description provided for @templateNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New template'**
+  String get templateNew;
+
+  /// No description provided for @templatesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No templates yet.'**
+  String get templatesEmpty;
+
+  /// No description provided for @templatesEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Save a task as a template to add it again in one tap.'**
+  String get templatesEmptyBody;
+
+  /// No description provided for @templateEveryProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Every project'**
+  String get templateEveryProject;
+
+  /// No description provided for @templateUses.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Never used} =1{Used once} other{Used {count} times}}'**
+  String templateUses(int count);
+
+  /// No description provided for @templateSubtasks.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 subtask} other{{count} subtasks}}'**
+  String templateSubtasks(int count);
+
+  /// No description provided for @templateUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Use'**
+  String get templateUse;
+
+  /// No description provided for @templateEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit template'**
+  String get templateEdit;
+
+  /// No description provided for @templateDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete template'**
+  String get templateDelete;
+
+  /// No description provided for @templateDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {name}?'**
+  String templateDeleteTitle(String name);
+
+  /// No description provided for @templateDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks made from it stay.'**
+  String get templateDeleteBody;
+
+  /// No description provided for @templateDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted {name}'**
+  String templateDeleted(String name);
+
+  /// No description provided for @templateSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved {name}'**
+  String templateSaved(String name);
+
+  /// No description provided for @templateName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get templateName;
+
+  /// No description provided for @templateNameHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Unique in the tenant, at most 100 characters.'**
+  String get templateNameHelp;
+
+  /// No description provided for @templateFromTask.
+  ///
+  /// In en, this message translates to:
+  /// **'From a task'**
+  String get templateFromTask;
+
+  /// No description provided for @templateFromScratch.
+  ///
+  /// In en, this message translates to:
+  /// **'From scratch'**
+  String get templateFromScratch;
+
+  /// No description provided for @templateTaskRef.
+  ///
+  /// In en, this message translates to:
+  /// **'Task'**
+  String get templateTaskRef;
+
+  /// No description provided for @templateTaskRefHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The reference of the task to keep, such as ops-12.'**
+  String get templateTaskRefHelp;
+
+  /// No description provided for @templateWithSubtasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep its subtasks'**
+  String get templateWithSubtasks;
+
+  /// No description provided for @templateTenantWide.
+  ///
+  /// In en, this message translates to:
+  /// **'Share with every project'**
+  String get templateTenantWide;
+
+  /// No description provided for @templateDueIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Due after'**
+  String get templateDueIn;
+
+  /// No description provided for @templateDueInHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'How long after a use the task falls due, such as 3d or 2w. Empty for none.'**
+  String get templateDueInHelp;
+
+  /// No description provided for @templateScratchNote.
+  ///
+  /// In en, this message translates to:
+  /// **'tix keeps templates from tasks, so this also adds the task to the project.'**
+  String get templateScratchNote;
+
+  /// No description provided for @templateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get templateTitle;
+
+  /// No description provided for @templateTitleHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}, {n} and {project} are filled in on each use.'**
+  String templateTitleHelp(String date, String n, String project);
+
+  /// No description provided for @templateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get templateBody;
+
+  /// No description provided for @templatePriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority'**
+  String get templatePriority;
+
+  /// No description provided for @templateTags.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get templateTags;
+
+  /// No description provided for @templateTagsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Separated by spaces or commas.'**
+  String get templateTagsHelp;
+
+  /// No description provided for @templateRecurrence.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeats'**
+  String get templateRecurrence;
+
+  /// No description provided for @templateRecurrenceHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Such as every 2 weeks. Empty for none.'**
+  String get templateRecurrenceHelp;
+
+  /// No description provided for @templateSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get templateSave;
+
+  /// No description provided for @templateCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Save template'**
+  String get templateCreate;
+
+  /// No description provided for @templateRecentTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently opened'**
+  String get templateRecentTasks;
+
+  /// No description provided for @appShortcutInbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox'**
+  String get appShortcutInbox;
+
+  /// No description provided for @appShortcutMyWork.
+  ///
+  /// In en, this message translates to:
+  /// **'My work'**
+  String get appShortcutMyWork;
+
+  /// No description provided for @templateDeleteAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get templateDeleteAction;
+
+  /// No description provided for @templateMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More actions'**
+  String get templateMore;
+
+  /// No description provided for @templateGeneralError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save: {reason}'**
+  String templateGeneralError(String reason);
 }
 
 class _AppLocalizationsDelegate
