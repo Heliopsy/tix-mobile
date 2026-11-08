@@ -94,6 +94,7 @@ void main() {
         GalleryBlock(title: 'States', child: GalleryStates()),
       ],
     ),
+    'record': () => const GalleryBlock(title: 'Record', child: GalleryRecord()),
   };
 
   for (final brightness in Brightness.values) {
