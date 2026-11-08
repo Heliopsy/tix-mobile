@@ -29,6 +29,20 @@ updates:
         patterns:
           - "*"
 
+  # fastlane, which only the release workflow runs (Gemfile, Gemfile.lock).
+  - package-ecosystem: bundler
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 2
+    commit-message:
+      prefix: build
+      include: scope
+    groups:
+      bundler:
+        patterns:
+          - "*"
+
 # No gradle entry. The Android Gradle plugin, Kotlin and the Gradle wrapper in
 # android/ are pinned by `flutter create` to versions the Flutter tool supports,
 # and it warns when they fall out of that range. Bumping them on Dependabot's

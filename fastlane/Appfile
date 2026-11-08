@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: tix-mobile contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# The store identities. Android's application id and the Apple bundle id
+# differ because `flutter create` wrote them that way and both are now
+# published identifiers; see docs/releasing.md.
+
+for_platform :android do
+  package_name("red.tix.tix_mobile")
+end
+
+for_platform :ios do
+  app_identifier("red.tix.tixMobile")
+end

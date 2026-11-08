@@ -1,0 +1,14 @@
+name: fastlane
+description: >-
+  Install Ruby and the fastlane bundle from Gemfile.lock, for the release
+  jobs that upload to Google Play and TestFlight. Nothing else uses Ruby.
+
+runs:
+  using: composite
+  steps:
+    # bundler-cache installs exactly what Gemfile.lock pins and caches it per
+    # lockfile, so a release does not resolve gems afresh.
+    - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199  # v1.338.0
+      with:
+        ruby-version: "3.4"
+        bundler-cache: true

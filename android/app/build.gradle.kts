@@ -77,6 +77,15 @@ android {
         }
     }
 
+    // AGP writes a list of the app's dependencies into every APK and bundle,
+    // encrypted with a key only Google can read. Google Play reads it from the
+    // bundle; in an APK it is an opaque blob that F-Droid's scanner rejects and
+    // nobody else can check, so APKs (GitHub releases, F-Droid) go without.
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = true
+    }
+
     buildTypes {
         release {
             signingConfig =
