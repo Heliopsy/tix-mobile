@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- Home screen widget text drawn before the app has written any. Keys match in every language; test/core/l10n/native_strings_test.dart checks. -->
+<resources>
+    <string name="widget_my_work">My work</string>
+    <string name="widget_my_work_description">Your next tasks, overdue first. Tick to complete.</string>
+    <string name="widget_inbox">Inbox</string>
+    <string name="widget_inbox_description">Unread count and the latest items.</string>
+    <string name="widget_quick_add">Quick add</string>
+    <string name="widget_quick_add_description">One tap to add a task.</string>
+    <string name="widget_project">Project</string>
+    <string name="widget_project_description">A project\'s open tasks by status.</string>
+    <string name="widget_add_task">Add a task</string>
+    <string name="widget_open_app">Open tix to load this widget</string>
+    <string name="widget_update_app">Open tix to update</string>
+    <string name="widget_signed_out">Sign in to tix</string>
+    <string name="widget_updated">Updated</string>
+    <string name="widget_local_stale">Refreshes when tix is open</string>
+    <string name="widget_overdue">Overdue</string>
+    <string name="widget_today">Today</string>
+    <string name="widget_complete">Complete</string>
+    <string name="widget_nothing_due">Nothing assigned to you</string>
+    <string name="widget_all_read">All caught up</string>
+    <string name="widget_no_open_tasks">No open tasks</string>
+    <string name="widget_project_missing">Not in this context</string>
+    <string name="widget_pick_project">Pick a project</string>
+    <string name="widget_no_projects">No projects yet. Open tix first.</string>
+    <string name="widget_configure">tix widget</string>
+    <string name="widget_configure_context">Show</string>
+    <string name="widget_follow_active">Follow the active context</string>
+</resources>

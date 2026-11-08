@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- Home screen widget text drawn before the app has written any. Keys match in every language; test/core/l10n/native_strings_test.dart checks. -->
+<resources>
+    <string name="widget_my_work">Meine Arbeit</string>
+    <string name="widget_my_work_description">Ihre nächsten Aufgaben, Überfälliges zuerst. Abhaken zum Erledigen.</string>
+    <string name="widget_inbox">Posteingang</string>
+    <string name="widget_inbox_description">Anzahl ungelesener und neueste Einträge.</string>
+    <string name="widget_quick_add">Schnell hinzufügen</string>
+    <string name="widget_quick_add_description">Ein Tippen, um eine Aufgabe hinzuzufügen.</string>
+    <string name="widget_project">Projekt</string>
+    <string name="widget_project_description">Offene Aufgaben eines Projekts nach Status.</string>
+    <string name="widget_add_task">Aufgabe hinzufügen</string>
+    <string name="widget_open_app">Öffnen Sie tix, um dieses Widget zu laden</string>
+    <string name="widget_update_app">Öffnen Sie tix zum Aktualisieren</string>
+    <string name="widget_signed_out">Melden Sie sich bei tix an</string>
+    <string name="widget_updated">Aktualisiert</string>
+    <string name="widget_local_stale">Wird aktualisiert, wenn tix geöffnet ist</string>
+    <string name="widget_overdue">Überfällig</string>
+    <string name="widget_today">Heute</string>
+    <string name="widget_complete">Erledigen</string>
+    <string name="widget_nothing_due">Nichts ist Ihnen zugewiesen</string>
+    <string name="widget_all_read">Alles gelesen</string>
+    <string name="widget_no_open_tasks">Keine offenen Aufgaben</string>
+    <string name="widget_project_missing">Nicht in diesem Kontext</string>
+    <string name="widget_pick_project">Projekt wählen</string>
+    <string name="widget_no_projects">Noch keine Projekte. Öffnen Sie zuerst tix.</string>
+    <string name="widget_configure">tix-Widget</string>
+    <string name="widget_configure_context">Anzeigen</string>
+    <string name="widget_follow_active">Dem aktiven Kontext folgen</string>
+</resources>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- Home screen widget text drawn before the app has written any. Keys match in every language; test/core/l10n/native_strings_test.dart checks. -->
+<resources>
+    <string name="widget_my_work">Моята работа</string>
+    <string name="widget_my_work_description">Следващите ви задачи, първо просрочените. Отметнете, за да завършите.</string>
+    <string name="widget_inbox">Входящи</string>
+    <string name="widget_inbox_description">Брой непрочетени и последните елементи.</string>
+    <string name="widget_quick_add">Бързо добавяне</string>
+    <string name="widget_quick_add_description">Едно докосване, за да добавите задача.</string>
+    <string name="widget_project">Проект</string>
+    <string name="widget_project_description">Отворените задачи на проект по статус.</string>
+    <string name="widget_add_task">Добави задача</string>
+    <string name="widget_open_app">Отворете tix, за да заредите тази джаджа</string>
+    <string name="widget_update_app">Отворете tix, за да обновите</string>
+    <string name="widget_signed_out">Влезте в tix</string>
+    <string name="widget_updated">Обновено</string>
+    <string name="widget_local_stale">Обновява се, когато tix е отворено</string>
+    <string name="widget_overdue">Просрочено</string>
+    <string name="widget_today">Днес</string>
+    <string name="widget_complete">Завърши</string>
+    <string name="widget_nothing_due">Нищо не е възложено на вас</string>
+    <string name="widget_all_read">Всичко е прочетено</string>
+    <string name="widget_no_open_tasks">Няма отворени задачи</string>
+    <string name="widget_project_missing">Няма го в този контекст</string>
+    <string name="widget_pick_project">Изберете проект</string>
+    <string name="widget_no_projects">Още няма проекти. Първо отворете tix.</string>
+    <string name="widget_configure">Джаджа на tix</string>
+    <string name="widget_configure_context">Показване</string>
+    <string name="widget_follow_active">Следвай активния контекст</string>
+</resources>
