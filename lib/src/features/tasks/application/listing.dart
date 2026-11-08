@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tix_mobile/src/core/quick/quick_add.dart';
 import 'package:tix_mobile/src/core/cache/cached.dart';
 import 'package:tix_mobile/src/core/cache/optimistic.dart';
 import 'package:tix_mobile/src/core/clock/clock.dart';
@@ -157,6 +158,7 @@ class TaskListing extends _$TaskListing {
   @override
   Future<Paged<Task>> build(TaskQuery query) async {
     _keepFor(ref, listingCacheFor);
+    ref.watch(tasksChangedProvider);
     refreshOn(ref, {...EventTopics.tasks, ...EventTopics.tags});
     final context = await ref.watch(taskContextProvider.future);
     final request = (
