@@ -142,6 +142,7 @@ class LocalEngines {
   final _resting = <String>{};
   final _stopping = <String, Future<void>>{};
   final _timers = <String, Timer>{};
+  final _busy = <String, int>{};
   final _findings = <String, SyncFindings>{};
   var _lifecycle = Future<void>.value();
   final _moved = StreamController<String>.broadcast();
@@ -281,12 +282,38 @@ class LocalEngines {
     _changed();
   }
 
-  /// Marks a request to [instanceId]'s engine: the idle timer starts over.
+  /// Marks a request to [instanceId]'s engine: the idle timer starts over,
+  /// unless a request is still in flight.
   void touch(String instanceId) {
     _timers.remove(instanceId)?.cancel();
     final idle = _idleAfter;
-    if (idle == null || !_running.containsKey(instanceId)) return;
+    if (idle == null ||
+        !_running.containsKey(instanceId) ||
+        (_busy[instanceId] ?? 0) > 0) {
+      return;
+    }
     _timers[instanceId] = Timer(idle, () => unawaited(rest(instanceId)));
+  }
+
+  /// The engine serving [instance], started if needed, held awake until
+  /// [done] says the request that needed it has finished.
+  Future<LocalHandle> wake(Instance instance) async {
+    final h = await ensure(instance);
+    _busy[instance.id] = (_busy[instance.id] ?? 0) + 1;
+    _timers.remove(instance.id)?.cancel();
+    return h;
+  }
+
+  /// Ends a request [wake] started; the idle timer starts over when it was
+  /// the last one.
+  void done(String instanceId) {
+    final n = (_busy[instanceId] ?? 1) - 1;
+    if (n <= 0) {
+      _busy.remove(instanceId);
+    } else {
+      _busy[instanceId] = n;
+    }
+    touch(instanceId);
   }
 
   /// Stops the engine of [instanceId] and remembers its address, so the

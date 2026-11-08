@@ -265,8 +265,10 @@ flowchart LR
   engine, and a remote context stops them all. Phones suspend engines on pause and resume them on the same
   address. An engine that served no request for the idle timeout (10 minutes by default, `settings.local_idle_minutes`,
   0 for never) rests: it stops and remembers its address. The session's client for a local instance carries a
-  `LocalWakeInterceptor`, which calls `LocalEngines.ensure` before every request and rewrites its base URL, so a
-  resting engine starts again, on the same address when it is free, before the request goes out. The Instances
+  `LocalWakeInterceptor`, which calls `LocalEngines.wake` before every request and rewrites its base URL, so a
+  resting engine starts again, on the same address when it is free, before the request goes out. A request in
+  flight holds the engine awake, and requests to the engine do not reuse connections, since a pooled socket to an
+  engine that stopped and came back on the same port is dead. The Instances
   screen shows each engine's state from `localEngineStatusesProvider`, with a Stop button that rests it.
 - **Talking to it.** Once started, a local instance is an ordinary server on loopback: the same `TixApi`, the same
   errors. Android allows cleartext HTTP to `127.0.0.1` only; Apple platforms set `NSAllowsLocalNetworking`.

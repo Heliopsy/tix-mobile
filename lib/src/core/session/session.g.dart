@@ -263,7 +263,7 @@ final class SessionApiProvider
   }
 }
 
-String _$sessionApiHash() => r'cc8192b974a76b2ad7106c4f580199b8de7f6a9c';
+String _$sessionApiHash() => r'164fcfa28303a92f8d349e20af2019c7650a7304';
 
 /// The response cache of the active context. Reads are best effort, so a
 /// cache that cannot be opened behaves as an empty one.
