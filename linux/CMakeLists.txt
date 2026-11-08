@@ -106,6 +106,17 @@ foreach(bundled_library ${PLUGIN_BUNDLED_LIBRARIES})
     COMPONENT Runtime)
 endforeach(bundled_library)
 
+# The window icon, read at runtime from beside the binary, and the hicolor
+# icons and .desktop entry for whoever installs the bundle system-wide.
+set(PACKAGING_DIR "${CMAKE_CURRENT_SOURCE_DIR}/packaging")
+install(FILES "${PACKAGING_DIR}/icons/hicolor/256x256/apps/${APPLICATION_ID}.png"
+  DESTINATION "${INSTALL_BUNDLE_DATA_DIR}" RENAME "icon.png"
+  COMPONENT Runtime)
+install(DIRECTORY "${PACKAGING_DIR}/icons"
+  DESTINATION "${CMAKE_INSTALL_PREFIX}/share" COMPONENT Runtime)
+install(FILES "${PACKAGING_DIR}/${APPLICATION_ID}.desktop"
+  DESTINATION "${CMAKE_INSTALL_PREFIX}/share/applications" COMPONENT Runtime)
+
 # Copy the native assets provided by the build.dart from all packages.
 set(NATIVE_ASSETS_DIR "${PROJECT_BUILD_DIR}native_assets/linux/")
 install(DIRECTORY "${NATIVE_ASSETS_DIR}"
