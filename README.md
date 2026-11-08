@@ -122,6 +122,12 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 - **Home screen widgets**: My work (tick to complete), Inbox, Quick add and Project, natively on Android (Glance),
   iOS and macOS (WidgetKit), following the active context or pinned to one, with the inbox count on the iPhone lock
   screen. See [docs/widgets.md](docs/widgets.md).
+- **People and access**: the tenant's users with their roles, invite links, role changes, disabling and
+  deleting; API tokens issued with scopes and an expiry, shown once, listed with their last use and revoked; your
+  account, tenants and history; the private calendar feed for Google, Apple or Outlook. Each shows only when your
+  role or token allows it.
+- **Export and import**: a project's tasks, or a filtered part of them, as CSV, JSON, NDJSON or Markdown with the
+  columns you choose, a snapshot of the whole tenant, and importing a file of tasks after a dry run.
 - **Settings**: system, light, dark or OLED black theme, English, Bulgarian, French or German, and the saved
   instances.
 - **About**: the app, engine and server versions, links to the site, source, roadmap and changelog, and a bug
