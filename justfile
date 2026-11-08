@@ -246,7 +246,10 @@ secrets:
       echo "in CI, give the checkout step fetch-depth: 0." >&2
       exit 1
     fi
-    {{tool}} gitleaks git --log-opts=--all --config=.gitleaks.toml --redact --no-banner .
+    # The history being checked, not every ref (gitleaks defaults to --all):
+    # CI fetches every branch, and a fixture on someone else's open branch
+    # must not fail this one.
+    {{tool}} gitleaks git --log-opts=HEAD --config=.gitleaks.toml --redact --no-banner .
 
 # Validate every OpenSpec change and spec, strictly.
 [group('gates')]
