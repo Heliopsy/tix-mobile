@@ -5,11 +5,15 @@ import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tix_mobile/src/app.dart';
 import 'package:tix_mobile/src/core/config/config.dart';
+import 'package:tix_mobile/src/core/licences/binding.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/core/storage/stores.dart';
+import 'package:tix_mobile/src/data/local/ffi_local_engine.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  TixBinding.ensureInitialized(
+    engineBundled: () => FfiLocalTixEngine.load() != null,
+  );
   final prefs = await SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions(),
   );
