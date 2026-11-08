@@ -132,6 +132,9 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   instances.
 - **About**: the app, engine and server versions, links to the site, source, roadmap and changelog, and a bug
   report with the versions filled in.
+- **Administration**: tenant settings with a live theme preview, domains, the server's live connections, and for
+  a global admin every tenant, its users and the global admins. Your own second factor (recovery codes shown once)
+  and SSH keys under Settings, Security.
 - **Adaptive layout**: a bottom navigation bar on phones, a navigation rail and a two-pane list and detail on tablets
   and desktops.
 

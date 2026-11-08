@@ -74,7 +74,7 @@ final class TaskDetailControllerProvider
 }
 
 String _$taskDetailControllerHash() =>
-    r'1d16467fa3d1cf7584e869a97bd3e40f7510efef';
+    r'45adc8d8ed4b84570420a60a84dd57af903e5df4';
 
 /// One task, as the task screen edits it.
 ///

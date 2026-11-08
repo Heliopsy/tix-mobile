@@ -7224,6 +7224,1380 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Credentials for scripts, the CLI and agents'**
   String get settingsTokensHelp;
+
+  /// No description provided for @securityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get securityTitle;
+
+  /// No description provided for @securitySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your second factor and SSH keys'**
+  String get securitySubtitle;
+
+  /// No description provided for @totpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Second factor'**
+  String get totpTitle;
+
+  /// No description provided for @totpInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'A code from an authenticator app, asked for after your password. Recovery codes let you in when the app is not at hand.'**
+  String get totpInfo;
+
+  /// No description provided for @totpOn.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get totpOn;
+
+  /// No description provided for @totpOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get totpOff;
+
+  /// No description provided for @totpPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Not confirmed'**
+  String get totpPending;
+
+  /// No description provided for @totpSince.
+  ///
+  /// In en, this message translates to:
+  /// **'Since {date}'**
+  String totpSince(String date);
+
+  /// No description provided for @totpOnBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Signing in asks for a code from your authenticator app after your password.'**
+  String get totpOnBody;
+
+  /// No description provided for @totpOffBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Signing in asks only for your password.'**
+  String get totpOffBody;
+
+  /// No description provided for @totpPendingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup was started but never confirmed with a code. Set it up again to finish.'**
+  String get totpPendingBody;
+
+  /// No description provided for @totpRequiredOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tenant requires a second factor for: {surfaces}.'**
+  String totpRequiredOn(String surfaces);
+
+  /// No description provided for @totpSurfaceWeb.
+  ///
+  /// In en, this message translates to:
+  /// **'the browser'**
+  String get totpSurfaceWeb;
+
+  /// No description provided for @totpSurfaceCli.
+  ///
+  /// In en, this message translates to:
+  /// **'the command line'**
+  String get totpSurfaceCli;
+
+  /// No description provided for @totpSurfaceSsh.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH'**
+  String get totpSurfaceSsh;
+
+  /// No description provided for @totpCodesLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No recovery codes left} =1{1 recovery code left} other{{count} recovery codes left}}'**
+  String totpCodesLeft(int count);
+
+  /// No description provided for @totpLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many wrong codes. Codes are refused until {time}.'**
+  String totpLocked(String time);
+
+  /// No description provided for @totpSetUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up'**
+  String get totpSetUp;
+
+  /// No description provided for @totpNewCodes.
+  ///
+  /// In en, this message translates to:
+  /// **'New recovery codes'**
+  String get totpNewCodes;
+
+  /// No description provided for @totpNewCodesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current recovery codes stop working at once, used or not, and a new set is shown once.'**
+  String get totpNewCodesBody;
+
+  /// No description provided for @totpNewCodesConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace codes'**
+  String get totpNewCodesConfirm;
+
+  /// No description provided for @totpRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove second factor'**
+  String get totpRemove;
+
+  /// No description provided for @totpRemoveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Signing in will ask only for your password, and your recovery codes stop working. If your tenant requires a second factor, you will be asked to set one up again.'**
+  String get totpRemoveBody;
+
+  /// No description provided for @totpRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Second factor removed.'**
+  String get totpRemoved;
+
+  /// No description provided for @totpCodesHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Save these recovery codes now'**
+  String get totpCodesHeading;
+
+  /// No description provided for @totpCodesNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Each one signs you in once without your authenticator. They are shown once and cannot be read again; if you lose them, make a new set.'**
+  String get totpCodesNote;
+
+  /// No description provided for @totpCodesSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'I have saved them'**
+  String get totpCodesSaved;
+
+  /// No description provided for @totpConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get totpConfirm;
+
+  /// No description provided for @totpStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Add this key to your authenticator app, or open it there from this device.'**
+  String get totpStep1;
+
+  /// No description provided for @totpSecretHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Your authenticator key'**
+  String get totpSecretHeading;
+
+  /// No description provided for @totpSecretNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Account {account} at {issuer}. Keep it private: anyone holding it can make your codes.'**
+  String totpSecretNote(String account, String issuer);
+
+  /// No description provided for @totpOpenApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Open in authenticator app'**
+  String get totpOpenApp;
+
+  /// No description provided for @totpStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Enter the six-digit code the app shows.'**
+  String get totpStep2;
+
+  /// No description provided for @sshKeysTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH keys'**
+  String get sshKeysTitle;
+
+  /// No description provided for @sshKeysInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'A key enrolled here signs you in to tix\'s terminal interface over SSH, in this tenant. Revoked keys stay listed so you can tell why one stopped working.'**
+  String get sshKeysInfo;
+
+  /// No description provided for @sshKeysEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No SSH keys yet.'**
+  String get sshKeysEmpty;
+
+  /// No description provided for @sshKeyAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add SSH key'**
+  String get sshKeyAdd;
+
+  /// No description provided for @sshKeyAddSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Add key'**
+  String get sshKeyAddSubmit;
+
+  /// No description provided for @sshKeyAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH key added.'**
+  String get sshKeyAdded;
+
+  /// No description provided for @sshKeyUnlabelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlabelled key'**
+  String get sshKeyUnlabelled;
+
+  /// No description provided for @sshKeyRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoked'**
+  String get sshKeyRevoked;
+
+  /// No description provided for @sshKeyAddedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Added {date}'**
+  String sshKeyAddedOn(String date);
+
+  /// No description provided for @sshKeyLastUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Last used {date}'**
+  String sshKeyLastUsed(String date);
+
+  /// No description provided for @sshKeyNeverUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Never used'**
+  String get sshKeyNeverUsed;
+
+  /// No description provided for @sshKeyRevokedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoked {date}'**
+  String sshKeyRevokedOn(String date);
+
+  /// No description provided for @sshKeyRevoke.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke'**
+  String get sshKeyRevoke;
+
+  /// No description provided for @sshKeyRevokeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} stops signing in over SSH at once. This cannot be undone; enrol the key again to use it.'**
+  String sshKeyRevokeBody(String name);
+
+  /// No description provided for @sshKeyRevokedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH key revoked.'**
+  String get sshKeyRevokedToast;
+
+  /// No description provided for @sshKeyPublicKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Public key'**
+  String get sshKeyPublicKey;
+
+  /// No description provided for @sshKeyPublicKeyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The line from your .pub file, as ssh-keygen writes it.'**
+  String get sshKeyPublicKeyHelp;
+
+  /// No description provided for @sshKeyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Label (optional)'**
+  String get sshKeyLabel;
+
+  /// No description provided for @sshKeyLabelHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Tells this key from your others, such as the machine it lives on.'**
+  String get sshKeyLabelHelp;
+
+  /// No description provided for @sshKeyAllTenants.
+  ///
+  /// In en, this message translates to:
+  /// **'Every tenant I belong to'**
+  String get sshKeyAllTenants;
+
+  /// No description provided for @sshKeyAllTenantsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Enrols the key in each of your tenants, not only this one.'**
+  String get sshKeyAllTenantsHelp;
+
+  /// No description provided for @tenantSettingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tenant settings'**
+  String get tenantSettingsTitle;
+
+  /// No description provided for @tenantSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved.'**
+  String get tenantSaved;
+
+  /// No description provided for @tenantGeneralTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get tenantGeneralTitle;
+
+  /// No description provided for @tenantName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get tenantName;
+
+  /// No description provided for @tenantKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Key'**
+  String get tenantKey;
+
+  /// No description provided for @tenantKeyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Short and unique: letters, digits, hyphens and underscores, starting with a letter. It cannot change later.'**
+  String get tenantKeyHelp;
+
+  /// No description provided for @tenantTimezone.
+  ///
+  /// In en, this message translates to:
+  /// **'Time zone'**
+  String get tenantTimezone;
+
+  /// No description provided for @tenantTimezoneHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'An IANA zone people read dates in unless they chose their own. Empty uses the server\'s.'**
+  String get tenantTimezoneHelp;
+
+  /// No description provided for @tenantTimeFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Date format'**
+  String get tenantTimeFormat;
+
+  /// No description provided for @tenantServerDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Server default'**
+  String get tenantServerDefault;
+
+  /// No description provided for @tenantThemeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get tenantThemeTitle;
+
+  /// No description provided for @tenantThemeInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The colour the tenant shows on every surface: the web, the terminal and this app. Status and priority colours never change with it.'**
+  String get tenantThemeInfo;
+
+  /// No description provided for @tenantThemeDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'default'**
+  String get tenantThemeDefault;
+
+  /// No description provided for @tenantThemeCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom colour'**
+  String get tenantThemeCustom;
+
+  /// No description provided for @tenantThemeCustomHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'#rrggbb. tix adjusts it until text on it and around it stays readable.'**
+  String get tenantThemeCustomHelp;
+
+  /// No description provided for @tenantThemeCustomBad.
+  ///
+  /// In en, this message translates to:
+  /// **'Write the colour as #rrggbb, such as #0f766e.'**
+  String get tenantThemeCustomBad;
+
+  /// No description provided for @tenantThemePreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get tenantThemePreview;
+
+  /// No description provided for @tenantThemeSampleRow.
+  ///
+  /// In en, this message translates to:
+  /// **'A selected row'**
+  String get tenantThemeSampleRow;
+
+  /// No description provided for @tenantThemeSampleLink.
+  ///
+  /// In en, this message translates to:
+  /// **'A link'**
+  String get tenantThemeSampleLink;
+
+  /// No description provided for @tenantThemeSampleButton.
+  ///
+  /// In en, this message translates to:
+  /// **'New task'**
+  String get tenantThemeSampleButton;
+
+  /// No description provided for @tenantThemeSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme saved.'**
+  String get tenantThemeSaved;
+
+  /// No description provided for @tenantTotpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Second factor'**
+  String get tenantTotpTitle;
+
+  /// No description provided for @tenantTotpInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Require a code from an authenticator app when people sign in. Someone without one is taken through setting it up at sign-in, so turning this on cannot lock anyone out.'**
+  String get tenantTotpInfo;
+
+  /// No description provided for @tenantTotpWeb.
+  ///
+  /// In en, this message translates to:
+  /// **'Require it in the browser'**
+  String get tenantTotpWeb;
+
+  /// No description provided for @tenantTotpCli.
+  ///
+  /// In en, this message translates to:
+  /// **'Require it on the command line'**
+  String get tenantTotpCli;
+
+  /// No description provided for @tenantTotpSsh.
+  ///
+  /// In en, this message translates to:
+  /// **'Require it over SSH, on top of the key'**
+  String get tenantTotpSsh;
+
+  /// No description provided for @tenantTotpNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Not required'**
+  String get tenantTotpNone;
+
+  /// No description provided for @tenantTotpBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Second factor'**
+  String get tenantTotpBadge;
+
+  /// No description provided for @tenantLeaseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Claims'**
+  String get tenantLeaseTitle;
+
+  /// No description provided for @tenantLeaseInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'How long an agent\'s claim on a task lasts. A project, workflow or claim can ask for less; the server\'s ceiling always wins.'**
+  String get tenantLeaseInfo;
+
+  /// No description provided for @tenantLeaseDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default lease'**
+  String get tenantLeaseDefault;
+
+  /// No description provided for @tenantLeaseDefaultHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A duration such as 30m or 2h. Empty uses the server\'s.'**
+  String get tenantLeaseDefaultHelp;
+
+  /// No description provided for @tenantLeaseMax.
+  ///
+  /// In en, this message translates to:
+  /// **'Longest lease'**
+  String get tenantLeaseMax;
+
+  /// No description provided for @tenantLeaseMaxHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Caps every claim in this tenant. It can lower the server\'s ceiling, never raise it.'**
+  String get tenantLeaseMaxHelp;
+
+  /// No description provided for @tenantTrashTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Trash'**
+  String get tenantTrashTitle;
+
+  /// No description provided for @tenantTrashKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep deleted tasks in a trash'**
+  String get tenantTrashKeep;
+
+  /// No description provided for @tenantTrashOnBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted tasks can be restored until housekeeping empties the trash.'**
+  String get tenantTrashOnBody;
+
+  /// No description provided for @tenantTrashOffBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting a task is permanent. Tasks already in the trash stay there.'**
+  String get tenantTrashOffBody;
+
+  /// No description provided for @tenantTrashOnShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted tasks go to the trash'**
+  String get tenantTrashOnShort;
+
+  /// No description provided for @tenantTrashOffShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting is permanent'**
+  String get tenantTrashOffShort;
+
+  /// No description provided for @tenantDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete tenant'**
+  String get tenantDelete;
+
+  /// No description provided for @tenantDeleteHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Its data stops being reachable and its domains stop resolving.'**
+  String get tenantDeleteHelp;
+
+  /// No description provided for @tenantDeleteCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the tenant you are working in. Switch to another one to delete it.'**
+  String get tenantDeleteCurrent;
+
+  /// No description provided for @tenantDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ({key}) and everything in it stop being reachable, for everyone, and its domains stop resolving. Only the server\'s operator can bring it back.'**
+  String tenantDeleteBody(String name, String key);
+
+  /// No description provided for @tenantDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted {name}.'**
+  String tenantDeleted(String name);
+
+  /// No description provided for @tenantsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tenants'**
+  String get tenantsTitle;
+
+  /// No description provided for @tenantsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Every tenant on this server'**
+  String get tenantsSubtitle;
+
+  /// No description provided for @tenantsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No tenants.'**
+  String get tenantsEmpty;
+
+  /// No description provided for @tenantsEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Create one with its first admin.'**
+  String get tenantsEmptyBody;
+
+  /// No description provided for @tenantsPick.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a tenant to see it here.'**
+  String get tenantsPick;
+
+  /// No description provided for @tenantCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'New tenant'**
+  String get tenantCreate;
+
+  /// No description provided for @tenantCreateSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Create tenant'**
+  String get tenantCreateSubmit;
+
+  /// No description provided for @tenantCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Created {name}.'**
+  String tenantCreated(String name);
+
+  /// No description provided for @tenantFirstAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'First admin'**
+  String get tenantFirstAdmin;
+
+  /// No description provided for @tenantFirstAdminHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Becomes an admin of the new tenant. An address that already has an account keeps its password and second factor.'**
+  String get tenantFirstAdminHelp;
+
+  /// No description provided for @tenantPasswordHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 12 characters. Leave it empty and tix generates one, shown once.'**
+  String get tenantPasswordHelp;
+
+  /// No description provided for @tenantCredentialsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy these passwords now'**
+  String get tenantCredentialsHeading;
+
+  /// No description provided for @tenantCredentialsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'tix generated them and shows them once; nothing stores them. Hand each to its admin, who chooses a new one at first sign-in. If one is lost, set a new password.'**
+  String get tenantCredentialsNote;
+
+  /// No description provided for @tenantCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get tenantCurrent;
+
+  /// No description provided for @tenantMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Member'**
+  String get tenantMember;
+
+  /// No description provided for @tenantNoTrash.
+  ///
+  /// In en, this message translates to:
+  /// **'No trash'**
+  String get tenantNoTrash;
+
+  /// No description provided for @tenantOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get tenantOverview;
+
+  /// No description provided for @tenantCreatedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get tenantCreatedAt;
+
+  /// No description provided for @tenantSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to this tenant'**
+  String get tenantSwitch;
+
+  /// No description provided for @tenantJoinSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Join and switch'**
+  String get tenantJoinSwitch;
+
+  /// No description provided for @tenantJoinBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You are not a member of {name}. As a global admin you can add yourself as an admin and switch to it. The change is in your account log.'**
+  String tenantJoinBody(String name);
+
+  /// No description provided for @tenantJoinConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Join as admin'**
+  String get tenantJoinConfirm;
+
+  /// No description provided for @tenantSwitchPinned.
+  ///
+  /// In en, this message translates to:
+  /// **'This connection reaches one tenant only. Sign in with a switchable connection to move between tenants.'**
+  String get tenantSwitchPinned;
+
+  /// No description provided for @tenantUsersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Users'**
+  String get tenantUsersTitle;
+
+  /// No description provided for @tenantDomainsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No domains map to this tenant.'**
+  String get tenantDomainsEmpty;
+
+  /// No description provided for @domainsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Domains'**
+  String get domainsTitle;
+
+  /// No description provided for @domainsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hostnames that open this tenant'**
+  String get domainsSubtitle;
+
+  /// No description provided for @domainsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A request that arrives on one of these hostnames reaches this tenant without naming it.'**
+  String get domainsBody;
+
+  /// No description provided for @domainsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No domains yet.'**
+  String get domainsEmpty;
+
+  /// No description provided for @domainsEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Map a hostname so people reach this tenant at its own address.'**
+  String get domainsEmptyBody;
+
+  /// No description provided for @domainAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add domain'**
+  String get domainAdd;
+
+  /// No description provided for @domainAddSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Add domain'**
+  String get domainAddSubmit;
+
+  /// No description provided for @domainAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Domain added.'**
+  String get domainAdded;
+
+  /// No description provided for @domainHostname.
+  ///
+  /// In en, this message translates to:
+  /// **'Hostname'**
+  String get domainHostname;
+
+  /// No description provided for @domainHostnameHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Lowercased; any port or trailing dot is dropped.'**
+  String get domainHostnameHelp;
+
+  /// No description provided for @domainCertMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate'**
+  String get domainCertMode;
+
+  /// No description provided for @domainCertNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Terminated elsewhere'**
+  String get domainCertNone;
+
+  /// No description provided for @domainCertFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate file'**
+  String get domainCertFile;
+
+  /// No description provided for @domainCertNoneHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A proxy in front of tix holds the certificate, or the host is plain HTTP.'**
+  String get domainCertNoneHelp;
+
+  /// No description provided for @domainCertFileHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'tix serves TLS itself from PEM files on the server.'**
+  String get domainCertFileHelp;
+
+  /// No description provided for @domainCertPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate path on the server'**
+  String get domainCertPath;
+
+  /// No description provided for @domainKeyPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Private key path on the server'**
+  String get domainKeyPath;
+
+  /// No description provided for @domainVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get domainVerified;
+
+  /// No description provided for @domainShared.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared'**
+  String get domainShared;
+
+  /// No description provided for @domainSharedInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'A shared hostname also serves the tenant a credential or the X-Tix-Tenant header names, as a host no domain claims does. Only a global admin sets it.'**
+  String get domainSharedInfo;
+
+  /// No description provided for @domainRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove domain'**
+  String get domainRemove;
+
+  /// No description provided for @domainRemoveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Requests to {hostname} stop reaching this tenant. People who use that address have to use another one.'**
+  String domainRemoveBody(String hostname);
+
+  /// No description provided for @domainRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Domain removed.'**
+  String get domainRemoved;
+
+  /// No description provided for @serverTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Server'**
+  String get serverTitle;
+
+  /// No description provided for @serverVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'tix {version}'**
+  String serverVersion(String version);
+
+  /// No description provided for @serverStatusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get serverStatusTitle;
+
+  /// No description provided for @serverVersionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get serverVersionLabel;
+
+  /// No description provided for @serverHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get serverHealth;
+
+  /// No description provided for @serverAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get serverAddress;
+
+  /// No description provided for @serverId.
+  ///
+  /// In en, this message translates to:
+  /// **'Server process'**
+  String get serverId;
+
+  /// No description provided for @serverCountTenant.
+  ///
+  /// In en, this message translates to:
+  /// **'Live connections in this tenant'**
+  String get serverCountTenant;
+
+  /// No description provided for @serverCountEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Live update streams'**
+  String get serverCountEvents;
+
+  /// No description provided for @serverCountSsh.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH sessions'**
+  String get serverCountSsh;
+
+  /// No description provided for @serverCountProcess.
+  ///
+  /// In en, this message translates to:
+  /// **'Connections on this server'**
+  String get serverCountProcess;
+
+  /// No description provided for @serverCountProcessInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Every connection this server process holds, across all tenants. It is capacity, not a directory, so it names nobody.'**
+  String get serverCountProcessInfo;
+
+  /// No description provided for @connectionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Live connections'**
+  String get connectionsTitle;
+
+  /// No description provided for @connectionsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The live update streams and SSH sessions of this tenant that this server process holds. Ending one closes it; the client may connect again.'**
+  String get connectionsInfo;
+
+  /// No description provided for @connectionsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No live connections.'**
+  String get connectionsEmpty;
+
+  /// No description provided for @connectionEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Live updates'**
+  String get connectionEvents;
+
+  /// No description provided for @connectionSsh.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH'**
+  String get connectionSsh;
+
+  /// No description provided for @connectionSince.
+  ///
+  /// In en, this message translates to:
+  /// **'since {date}'**
+  String connectionSince(String date);
+
+  /// No description provided for @connectionEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get connectionEnd;
+
+  /// No description provided for @connectionEndBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The connection closes at once. A client that is still running may connect again; revoke its token or key to keep it out.'**
+  String get connectionEndBody;
+
+  /// No description provided for @connectionEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection ended.'**
+  String get connectionEnded;
+
+  /// No description provided for @globalAdminsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Global admins'**
+  String get globalAdminsTitle;
+
+  /// No description provided for @globalAdminsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'People who administer every tenant on this server'**
+  String get globalAdminsSubtitle;
+
+  /// No description provided for @globalAdminsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No global admins.'**
+  String get globalAdminsEmpty;
+
+  /// No description provided for @globalAdminGrant.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant global admin'**
+  String get globalAdminGrant;
+
+  /// No description provided for @globalAdminGrantSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant'**
+  String get globalAdminGrantSubmit;
+
+  /// No description provided for @globalAdminGrantHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The account with this email can then create tenants and administer every one of them.'**
+  String get globalAdminGrantHelp;
+
+  /// No description provided for @globalAdminGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'Global admin granted.'**
+  String get globalAdminGranted;
+
+  /// No description provided for @globalAdminRevoke.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke'**
+  String get globalAdminRevoke;
+
+  /// No description provided for @globalAdminRevokeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{email} stops administering every tenant at once. Their memberships stay as they are.'**
+  String globalAdminRevokeBody(String email);
+
+  /// No description provided for @globalAdminRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'Global admin revoked.'**
+  String get globalAdminRevoked;
+
+  /// No description provided for @globalAdminBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Global admin'**
+  String get globalAdminBadge;
+
+  /// No description provided for @adminRoleAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin'**
+  String get adminRoleAdmin;
+
+  /// No description provided for @adminRoleMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Member'**
+  String get adminRoleMember;
+
+  /// No description provided for @adminRoleViewer.
+  ///
+  /// In en, this message translates to:
+  /// **'Viewer'**
+  String get adminRoleViewer;
+
+  /// No description provided for @adminRoleNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No role'**
+  String get adminRoleNone;
+
+  /// No description provided for @adminUsersEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No users in this tenant.'**
+  String get adminUsersEmpty;
+
+  /// No description provided for @adminUsersEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a user, or add an account that already exists.'**
+  String get adminUsersEmptyBody;
+
+  /// No description provided for @adminUserCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'New user'**
+  String get adminUserCreate;
+
+  /// No description provided for @adminUserCreateSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Create user'**
+  String get adminUserCreateSubmit;
+
+  /// No description provided for @adminUserActions.
+  ///
+  /// In en, this message translates to:
+  /// **'User actions'**
+  String get adminUserActions;
+
+  /// No description provided for @adminUserEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get adminUserEdit;
+
+  /// No description provided for @adminUserEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit {email}'**
+  String adminUserEditTitle(String email);
+
+  /// No description provided for @adminUserDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete user'**
+  String get adminUserDelete;
+
+  /// No description provided for @adminUserDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{email} loses this tenant: their membership is revoked and their sessions and tokens here end. Their account stays for other tenants.'**
+  String adminUserDeleteBody(String email);
+
+  /// No description provided for @adminUserClearTotp.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear second factor'**
+  String get adminUserClearTotp;
+
+  /// No description provided for @adminUserClearTotpConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear it'**
+  String get adminUserClearTotpConfirm;
+
+  /// No description provided for @adminUserClearTotpBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{email} signs in with their password alone until they set up a second factor again. Do this only when they have lost their authenticator and their recovery codes.'**
+  String adminUserClearTotpBody(String email);
+
+  /// No description provided for @adminUserEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get adminUserEmail;
+
+  /// No description provided for @adminUserHandle.
+  ///
+  /// In en, this message translates to:
+  /// **'Handle'**
+  String get adminUserHandle;
+
+  /// No description provided for @adminUserHandleHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Their short name in this tenant. Empty uses the part of the email before the @.'**
+  String get adminUserHandleHelp;
+
+  /// No description provided for @adminUserDisplayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Display name'**
+  String get adminUserDisplayName;
+
+  /// No description provided for @adminUserPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get adminUserPassword;
+
+  /// No description provided for @adminUserPasswordHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 12 characters. Leave it empty for a user who signs in another way or is invited later.'**
+  String get adminUserPasswordHelp;
+
+  /// No description provided for @adminUserNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get adminUserNewPassword;
+
+  /// No description provided for @adminUserNewPasswordHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave it empty to keep the current one.'**
+  String get adminUserNewPasswordHelp;
+
+  /// No description provided for @adminUserRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get adminUserRole;
+
+  /// No description provided for @adminUserDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get adminUserDisabled;
+
+  /// No description provided for @adminUserDisabledSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get adminUserDisabledSwitch;
+
+  /// No description provided for @adminUserDisabledHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A disabled user cannot sign in; their sessions and tokens end at once.'**
+  String get adminUserDisabledHelp;
+
+  /// No description provided for @adminUserMustChangePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Must change password'**
+  String get adminUserMustChangePassword;
+
+  /// No description provided for @adminUserMustChangeSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a new password at next sign-in'**
+  String get adminUserMustChangeSwitch;
+
+  /// No description provided for @adminUserTotp.
+  ///
+  /// In en, this message translates to:
+  /// **'Second factor'**
+  String get adminUserTotp;
+
+  /// No description provided for @adminMemberAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add existing account'**
+  String get adminMemberAdd;
+
+  /// No description provided for @adminMemberAddSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to tenant'**
+  String get adminMemberAddSubmit;
+
+  /// No description provided for @adminMemberAddHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The person keeps their password and second factor and is not asked to accept.'**
+  String get adminMemberAddHelp;
+
+  /// No description provided for @adminAccountLogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account log'**
+  String get adminAccountLogTitle;
+
+  /// No description provided for @adminAccountLogEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing logged for this account.'**
+  String get adminAccountLogEmpty;
+
+  /// No description provided for @adminAccountLogEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes to its password, second factor, standing and memberships show here.'**
+  String get adminAccountLogEmptyBody;
+
+  /// No description provided for @adminAccountLogBy.
+  ///
+  /// In en, this message translates to:
+  /// **'by {who}'**
+  String adminAccountLogBy(String who);
+
+  /// No description provided for @adminAccountLogVia.
+  ///
+  /// In en, this message translates to:
+  /// **'via {channel}'**
+  String adminAccountLogVia(String channel);
+
+  /// No description provided for @adminAccountLogSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'the system'**
+  String get adminAccountLogSystem;
+
+  /// No description provided for @taskReclaim.
+  ///
+  /// In en, this message translates to:
+  /// **'Force-release claim'**
+  String get taskReclaim;
+
+  /// No description provided for @taskReclaimSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Release claim'**
+  String get taskReclaimSubmit;
+
+  /// No description provided for @taskReclaimBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends the lease another actor holds on this task, for when its worker died. That worker\'s next renewal is refused.'**
+  String get taskReclaimBody;
+
+  /// No description provided for @taskReclaimReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason (optional)'**
+  String get taskReclaimReason;
+
+  /// No description provided for @taskReclaimReasonHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept in the task\'s history.'**
+  String get taskReclaimReasonHelp;
+
+  /// No description provided for @taskReclaimed.
+  ///
+  /// In en, this message translates to:
+  /// **'Released the claim on {ref}.'**
+  String taskReclaimed(String ref);
+
+  /// No description provided for @totpWrongCode.
+  ///
+  /// In en, this message translates to:
+  /// **'That code is not right. Check the time on this device and try the next one.'**
+  String get totpWrongCode;
+
+  /// No description provided for @tenantThemeSampleStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Doing'**
+  String get tenantThemeSampleStatus;
+
+  /// No description provided for @tenantSettingsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Name, theme, second factor, claims and trash'**
+  String get tenantSettingsSubtitle;
+
+  /// No description provided for @serverSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Version and live connections'**
+  String get serverSubtitle;
 }
 
 class _AppLocalizationsDelegate

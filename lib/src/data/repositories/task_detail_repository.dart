@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:tix_mobile/src/core/config/config.dart';
+import 'package:tix_mobile/src/data/api/gen/models.gen.dart'
+    show ForceReclaimInput;
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/cache/response_cache.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
@@ -79,6 +81,12 @@ class TaskDetailRepository {
         hard: hard ? true : null,
         cascade: cascade ? true : null,
       );
+
+  /// Ends the lease another actor holds on [ref] (`claim.reclaim`).
+  Future<Task> reclaim(String ref, {String reason = ''}) => _api.claim.reclaim(
+    ref,
+    body: ForceReclaimInput(reason: reason.isEmpty ? null : reason),
+  );
 
   /// Brings [ref] back from the trash (`task.restore`).
   Future<Task> restore(String ref) => _api.task.restore(ref);

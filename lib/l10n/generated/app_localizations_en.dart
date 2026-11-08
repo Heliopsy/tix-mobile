@@ -4248,4 +4248,794 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsTokensHelp =>
       'Credentials for scripts, the CLI and agents';
+
+  @override
+  String get securityTitle => 'Security';
+
+  @override
+  String get securitySubtitle => 'Your second factor and SSH keys';
+
+  @override
+  String get totpTitle => 'Second factor';
+
+  @override
+  String get totpInfo =>
+      'A code from an authenticator app, asked for after your password. Recovery codes let you in when the app is not at hand.';
+
+  @override
+  String get totpOn => 'On';
+
+  @override
+  String get totpOff => 'Off';
+
+  @override
+  String get totpPending => 'Not confirmed';
+
+  @override
+  String totpSince(String date) {
+    return 'Since $date';
+  }
+
+  @override
+  String get totpOnBody =>
+      'Signing in asks for a code from your authenticator app after your password.';
+
+  @override
+  String get totpOffBody => 'Signing in asks only for your password.';
+
+  @override
+  String get totpPendingBody =>
+      'Setup was started but never confirmed with a code. Set it up again to finish.';
+
+  @override
+  String totpRequiredOn(String surfaces) {
+    return 'Your tenant requires a second factor for: $surfaces.';
+  }
+
+  @override
+  String get totpSurfaceWeb => 'the browser';
+
+  @override
+  String get totpSurfaceCli => 'the command line';
+
+  @override
+  String get totpSurfaceSsh => 'SSH';
+
+  @override
+  String totpCodesLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count recovery codes left',
+      one: '1 recovery code left',
+      zero: 'No recovery codes left',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String totpLocked(String time) {
+    return 'Too many wrong codes. Codes are refused until $time.';
+  }
+
+  @override
+  String get totpSetUp => 'Set up';
+
+  @override
+  String get totpNewCodes => 'New recovery codes';
+
+  @override
+  String get totpNewCodesBody =>
+      'Your current recovery codes stop working at once, used or not, and a new set is shown once.';
+
+  @override
+  String get totpNewCodesConfirm => 'Replace codes';
+
+  @override
+  String get totpRemove => 'Remove second factor';
+
+  @override
+  String get totpRemoveBody =>
+      'Signing in will ask only for your password, and your recovery codes stop working. If your tenant requires a second factor, you will be asked to set one up again.';
+
+  @override
+  String get totpRemoved => 'Second factor removed.';
+
+  @override
+  String get totpCodesHeading => 'Save these recovery codes now';
+
+  @override
+  String get totpCodesNote =>
+      'Each one signs you in once without your authenticator. They are shown once and cannot be read again; if you lose them, make a new set.';
+
+  @override
+  String get totpCodesSaved => 'I have saved them';
+
+  @override
+  String get totpConfirm => 'Confirm';
+
+  @override
+  String get totpStep1 =>
+      '1. Add this key to your authenticator app, or open it there from this device.';
+
+  @override
+  String get totpSecretHeading => 'Your authenticator key';
+
+  @override
+  String totpSecretNote(String account, String issuer) {
+    return 'Account $account at $issuer. Keep it private: anyone holding it can make your codes.';
+  }
+
+  @override
+  String get totpOpenApp => 'Open in authenticator app';
+
+  @override
+  String get totpStep2 => '2. Enter the six-digit code the app shows.';
+
+  @override
+  String get sshKeysTitle => 'SSH keys';
+
+  @override
+  String get sshKeysInfo =>
+      'A key enrolled here signs you in to tix\'s terminal interface over SSH, in this tenant. Revoked keys stay listed so you can tell why one stopped working.';
+
+  @override
+  String get sshKeysEmpty => 'No SSH keys yet.';
+
+  @override
+  String get sshKeyAdd => 'Add SSH key';
+
+  @override
+  String get sshKeyAddSubmit => 'Add key';
+
+  @override
+  String get sshKeyAdded => 'SSH key added.';
+
+  @override
+  String get sshKeyUnlabelled => 'Unlabelled key';
+
+  @override
+  String get sshKeyRevoked => 'Revoked';
+
+  @override
+  String sshKeyAddedOn(String date) {
+    return 'Added $date';
+  }
+
+  @override
+  String sshKeyLastUsed(String date) {
+    return 'Last used $date';
+  }
+
+  @override
+  String get sshKeyNeverUsed => 'Never used';
+
+  @override
+  String sshKeyRevokedOn(String date) {
+    return 'Revoked $date';
+  }
+
+  @override
+  String get sshKeyRevoke => 'Revoke';
+
+  @override
+  String sshKeyRevokeBody(String name) {
+    return '$name stops signing in over SSH at once. This cannot be undone; enrol the key again to use it.';
+  }
+
+  @override
+  String get sshKeyRevokedToast => 'SSH key revoked.';
+
+  @override
+  String get sshKeyPublicKey => 'Public key';
+
+  @override
+  String get sshKeyPublicKeyHelp =>
+      'The line from your .pub file, as ssh-keygen writes it.';
+
+  @override
+  String get sshKeyLabel => 'Label (optional)';
+
+  @override
+  String get sshKeyLabelHelp =>
+      'Tells this key from your others, such as the machine it lives on.';
+
+  @override
+  String get sshKeyAllTenants => 'Every tenant I belong to';
+
+  @override
+  String get sshKeyAllTenantsHelp =>
+      'Enrols the key in each of your tenants, not only this one.';
+
+  @override
+  String get tenantSettingsTitle => 'Tenant settings';
+
+  @override
+  String get tenantSaved => 'Saved.';
+
+  @override
+  String get tenantGeneralTitle => 'General';
+
+  @override
+  String get tenantName => 'Name';
+
+  @override
+  String get tenantKey => 'Key';
+
+  @override
+  String get tenantKeyHelp =>
+      'Short and unique: letters, digits, hyphens and underscores, starting with a letter. It cannot change later.';
+
+  @override
+  String get tenantTimezone => 'Time zone';
+
+  @override
+  String get tenantTimezoneHelp =>
+      'An IANA zone people read dates in unless they chose their own. Empty uses the server\'s.';
+
+  @override
+  String get tenantTimeFormat => 'Date format';
+
+  @override
+  String get tenantServerDefault => 'Server default';
+
+  @override
+  String get tenantThemeTitle => 'Theme';
+
+  @override
+  String get tenantThemeInfo =>
+      'The colour the tenant shows on every surface: the web, the terminal and this app. Status and priority colours never change with it.';
+
+  @override
+  String get tenantThemeDefault => 'default';
+
+  @override
+  String get tenantThemeCustom => 'Custom colour';
+
+  @override
+  String get tenantThemeCustomHelp =>
+      '#rrggbb. tix adjusts it until text on it and around it stays readable.';
+
+  @override
+  String get tenantThemeCustomBad =>
+      'Write the colour as #rrggbb, such as #0f766e.';
+
+  @override
+  String get tenantThemePreview => 'Preview';
+
+  @override
+  String get tenantThemeSampleRow => 'A selected row';
+
+  @override
+  String get tenantThemeSampleLink => 'A link';
+
+  @override
+  String get tenantThemeSampleButton => 'New task';
+
+  @override
+  String get tenantThemeSaved => 'Theme saved.';
+
+  @override
+  String get tenantTotpTitle => 'Second factor';
+
+  @override
+  String get tenantTotpInfo =>
+      'Require a code from an authenticator app when people sign in. Someone without one is taken through setting it up at sign-in, so turning this on cannot lock anyone out.';
+
+  @override
+  String get tenantTotpWeb => 'Require it in the browser';
+
+  @override
+  String get tenantTotpCli => 'Require it on the command line';
+
+  @override
+  String get tenantTotpSsh => 'Require it over SSH, on top of the key';
+
+  @override
+  String get tenantTotpNone => 'Not required';
+
+  @override
+  String get tenantTotpBadge => 'Second factor';
+
+  @override
+  String get tenantLeaseTitle => 'Claims';
+
+  @override
+  String get tenantLeaseInfo =>
+      'How long an agent\'s claim on a task lasts. A project, workflow or claim can ask for less; the server\'s ceiling always wins.';
+
+  @override
+  String get tenantLeaseDefault => 'Default lease';
+
+  @override
+  String get tenantLeaseDefaultHelp =>
+      'A duration such as 30m or 2h. Empty uses the server\'s.';
+
+  @override
+  String get tenantLeaseMax => 'Longest lease';
+
+  @override
+  String get tenantLeaseMaxHelp =>
+      'Caps every claim in this tenant. It can lower the server\'s ceiling, never raise it.';
+
+  @override
+  String get tenantTrashTitle => 'Trash';
+
+  @override
+  String get tenantTrashKeep => 'Keep deleted tasks in a trash';
+
+  @override
+  String get tenantTrashOnBody =>
+      'Deleted tasks can be restored until housekeeping empties the trash.';
+
+  @override
+  String get tenantTrashOffBody =>
+      'Deleting a task is permanent. Tasks already in the trash stay there.';
+
+  @override
+  String get tenantTrashOnShort => 'Deleted tasks go to the trash';
+
+  @override
+  String get tenantTrashOffShort => 'Deleting is permanent';
+
+  @override
+  String get tenantDelete => 'Delete tenant';
+
+  @override
+  String get tenantDeleteHelp =>
+      'Its data stops being reachable and its domains stop resolving.';
+
+  @override
+  String get tenantDeleteCurrent =>
+      'This is the tenant you are working in. Switch to another one to delete it.';
+
+  @override
+  String tenantDeleteBody(String name, String key) {
+    return '$name ($key) and everything in it stop being reachable, for everyone, and its domains stop resolving. Only the server\'s operator can bring it back.';
+  }
+
+  @override
+  String tenantDeleted(String name) {
+    return 'Deleted $name.';
+  }
+
+  @override
+  String get tenantsTitle => 'Tenants';
+
+  @override
+  String get tenantsSubtitle => 'Every tenant on this server';
+
+  @override
+  String get tenantsEmpty => 'No tenants.';
+
+  @override
+  String get tenantsEmptyBody => 'Create one with its first admin.';
+
+  @override
+  String get tenantsPick => 'Pick a tenant to see it here.';
+
+  @override
+  String get tenantCreate => 'New tenant';
+
+  @override
+  String get tenantCreateSubmit => 'Create tenant';
+
+  @override
+  String tenantCreated(String name) {
+    return 'Created $name.';
+  }
+
+  @override
+  String get tenantFirstAdmin => 'First admin';
+
+  @override
+  String get tenantFirstAdminHelp =>
+      'Becomes an admin of the new tenant. An address that already has an account keeps its password and second factor.';
+
+  @override
+  String get tenantPasswordHelp =>
+      'At least 12 characters. Leave it empty and tix generates one, shown once.';
+
+  @override
+  String get tenantCredentialsHeading => 'Copy these passwords now';
+
+  @override
+  String get tenantCredentialsNote =>
+      'tix generated them and shows them once; nothing stores them. Hand each to its admin, who chooses a new one at first sign-in. If one is lost, set a new password.';
+
+  @override
+  String get tenantCurrent => 'Current';
+
+  @override
+  String get tenantMember => 'Member';
+
+  @override
+  String get tenantNoTrash => 'No trash';
+
+  @override
+  String get tenantOverview => 'Overview';
+
+  @override
+  String get tenantCreatedAt => 'Created';
+
+  @override
+  String get tenantSwitch => 'Switch to this tenant';
+
+  @override
+  String get tenantJoinSwitch => 'Join and switch';
+
+  @override
+  String tenantJoinBody(String name) {
+    return 'You are not a member of $name. As a global admin you can add yourself as an admin and switch to it. The change is in your account log.';
+  }
+
+  @override
+  String get tenantJoinConfirm => 'Join as admin';
+
+  @override
+  String get tenantSwitchPinned =>
+      'This connection reaches one tenant only. Sign in with a switchable connection to move between tenants.';
+
+  @override
+  String get tenantUsersTitle => 'Users';
+
+  @override
+  String get tenantDomainsEmpty => 'No domains map to this tenant.';
+
+  @override
+  String get domainsTitle => 'Domains';
+
+  @override
+  String get domainsSubtitle => 'Hostnames that open this tenant';
+
+  @override
+  String get domainsBody =>
+      'A request that arrives on one of these hostnames reaches this tenant without naming it.';
+
+  @override
+  String get domainsEmpty => 'No domains yet.';
+
+  @override
+  String get domainsEmptyBody =>
+      'Map a hostname so people reach this tenant at its own address.';
+
+  @override
+  String get domainAdd => 'Add domain';
+
+  @override
+  String get domainAddSubmit => 'Add domain';
+
+  @override
+  String get domainAdded => 'Domain added.';
+
+  @override
+  String get domainHostname => 'Hostname';
+
+  @override
+  String get domainHostnameHelp =>
+      'Lowercased; any port or trailing dot is dropped.';
+
+  @override
+  String get domainCertMode => 'Certificate';
+
+  @override
+  String get domainCertNone => 'Terminated elsewhere';
+
+  @override
+  String get domainCertFile => 'Certificate file';
+
+  @override
+  String get domainCertNoneHelp =>
+      'A proxy in front of tix holds the certificate, or the host is plain HTTP.';
+
+  @override
+  String get domainCertFileHelp =>
+      'tix serves TLS itself from PEM files on the server.';
+
+  @override
+  String get domainCertPath => 'Certificate path on the server';
+
+  @override
+  String get domainKeyPath => 'Private key path on the server';
+
+  @override
+  String get domainVerified => 'Verified';
+
+  @override
+  String get domainShared => 'Shared';
+
+  @override
+  String get domainSharedInfo =>
+      'A shared hostname also serves the tenant a credential or the X-Tix-Tenant header names, as a host no domain claims does. Only a global admin sets it.';
+
+  @override
+  String get domainRemove => 'Remove domain';
+
+  @override
+  String domainRemoveBody(String hostname) {
+    return 'Requests to $hostname stop reaching this tenant. People who use that address have to use another one.';
+  }
+
+  @override
+  String get domainRemoved => 'Domain removed.';
+
+  @override
+  String get serverTitle => 'Server';
+
+  @override
+  String serverVersion(String version) {
+    return 'tix $version';
+  }
+
+  @override
+  String get serverStatusTitle => 'Status';
+
+  @override
+  String get serverVersionLabel => 'Version';
+
+  @override
+  String get serverHealth => 'Health';
+
+  @override
+  String get serverAddress => 'Address';
+
+  @override
+  String get serverId => 'Server process';
+
+  @override
+  String get serverCountTenant => 'Live connections in this tenant';
+
+  @override
+  String get serverCountEvents => 'Live update streams';
+
+  @override
+  String get serverCountSsh => 'SSH sessions';
+
+  @override
+  String get serverCountProcess => 'Connections on this server';
+
+  @override
+  String get serverCountProcessInfo =>
+      'Every connection this server process holds, across all tenants. It is capacity, not a directory, so it names nobody.';
+
+  @override
+  String get connectionsTitle => 'Live connections';
+
+  @override
+  String get connectionsInfo =>
+      'The live update streams and SSH sessions of this tenant that this server process holds. Ending one closes it; the client may connect again.';
+
+  @override
+  String get connectionsEmpty => 'No live connections.';
+
+  @override
+  String get connectionEvents => 'Live updates';
+
+  @override
+  String get connectionSsh => 'SSH';
+
+  @override
+  String connectionSince(String date) {
+    return 'since $date';
+  }
+
+  @override
+  String get connectionEnd => 'End';
+
+  @override
+  String get connectionEndBody =>
+      'The connection closes at once. A client that is still running may connect again; revoke its token or key to keep it out.';
+
+  @override
+  String get connectionEnded => 'Connection ended.';
+
+  @override
+  String get globalAdminsTitle => 'Global admins';
+
+  @override
+  String get globalAdminsSubtitle =>
+      'People who administer every tenant on this server';
+
+  @override
+  String get globalAdminsEmpty => 'No global admins.';
+
+  @override
+  String get globalAdminGrant => 'Grant global admin';
+
+  @override
+  String get globalAdminGrantSubmit => 'Grant';
+
+  @override
+  String get globalAdminGrantHelp =>
+      'The account with this email can then create tenants and administer every one of them.';
+
+  @override
+  String get globalAdminGranted => 'Global admin granted.';
+
+  @override
+  String get globalAdminRevoke => 'Revoke';
+
+  @override
+  String globalAdminRevokeBody(String email) {
+    return '$email stops administering every tenant at once. Their memberships stay as they are.';
+  }
+
+  @override
+  String get globalAdminRevoked => 'Global admin revoked.';
+
+  @override
+  String get globalAdminBadge => 'Global admin';
+
+  @override
+  String get adminRoleAdmin => 'Admin';
+
+  @override
+  String get adminRoleMember => 'Member';
+
+  @override
+  String get adminRoleViewer => 'Viewer';
+
+  @override
+  String get adminRoleNone => 'No role';
+
+  @override
+  String get adminUsersEmpty => 'No users in this tenant.';
+
+  @override
+  String get adminUsersEmptyBody =>
+      'Create a user, or add an account that already exists.';
+
+  @override
+  String get adminUserCreate => 'New user';
+
+  @override
+  String get adminUserCreateSubmit => 'Create user';
+
+  @override
+  String get adminUserActions => 'User actions';
+
+  @override
+  String get adminUserEdit => 'Edit';
+
+  @override
+  String adminUserEditTitle(String email) {
+    return 'Edit $email';
+  }
+
+  @override
+  String get adminUserDelete => 'Delete user';
+
+  @override
+  String adminUserDeleteBody(String email) {
+    return '$email loses this tenant: their membership is revoked and their sessions and tokens here end. Their account stays for other tenants.';
+  }
+
+  @override
+  String get adminUserClearTotp => 'Clear second factor';
+
+  @override
+  String get adminUserClearTotpConfirm => 'Clear it';
+
+  @override
+  String adminUserClearTotpBody(String email) {
+    return '$email signs in with their password alone until they set up a second factor again. Do this only when they have lost their authenticator and their recovery codes.';
+  }
+
+  @override
+  String get adminUserEmail => 'Email';
+
+  @override
+  String get adminUserHandle => 'Handle';
+
+  @override
+  String get adminUserHandleHelp =>
+      'Their short name in this tenant. Empty uses the part of the email before the @.';
+
+  @override
+  String get adminUserDisplayName => 'Display name';
+
+  @override
+  String get adminUserPassword => 'Password';
+
+  @override
+  String get adminUserPasswordHelp =>
+      'At least 12 characters. Leave it empty for a user who signs in another way or is invited later.';
+
+  @override
+  String get adminUserNewPassword => 'New password';
+
+  @override
+  String get adminUserNewPasswordHelp =>
+      'Leave it empty to keep the current one.';
+
+  @override
+  String get adminUserRole => 'Role';
+
+  @override
+  String get adminUserDisabled => 'Disabled';
+
+  @override
+  String get adminUserDisabledSwitch => 'Disabled';
+
+  @override
+  String get adminUserDisabledHelp =>
+      'A disabled user cannot sign in; their sessions and tokens end at once.';
+
+  @override
+  String get adminUserMustChangePassword => 'Must change password';
+
+  @override
+  String get adminUserMustChangeSwitch =>
+      'Choose a new password at next sign-in';
+
+  @override
+  String get adminUserTotp => 'Second factor';
+
+  @override
+  String get adminMemberAdd => 'Add existing account';
+
+  @override
+  String get adminMemberAddSubmit => 'Add to tenant';
+
+  @override
+  String get adminMemberAddHelp =>
+      'The person keeps their password and second factor and is not asked to accept.';
+
+  @override
+  String get adminAccountLogTitle => 'Account log';
+
+  @override
+  String get adminAccountLogEmpty => 'Nothing logged for this account.';
+
+  @override
+  String get adminAccountLogEmptyBody =>
+      'Changes to its password, second factor, standing and memberships show here.';
+
+  @override
+  String adminAccountLogBy(String who) {
+    return 'by $who';
+  }
+
+  @override
+  String adminAccountLogVia(String channel) {
+    return 'via $channel';
+  }
+
+  @override
+  String get adminAccountLogSystem => 'the system';
+
+  @override
+  String get taskReclaim => 'Force-release claim';
+
+  @override
+  String get taskReclaimSubmit => 'Release claim';
+
+  @override
+  String get taskReclaimBody =>
+      'Ends the lease another actor holds on this task, for when its worker died. That worker\'s next renewal is refused.';
+
+  @override
+  String get taskReclaimReason => 'Reason (optional)';
+
+  @override
+  String get taskReclaimReasonHelp => 'Kept in the task\'s history.';
+
+  @override
+  String taskReclaimed(String ref) {
+    return 'Released the claim on $ref.';
+  }
+
+  @override
+  String get totpWrongCode =>
+      'That code is not right. Check the time on this device and try the next one.';
+
+  @override
+  String get tenantThemeSampleStatus => 'Doing';
+
+  @override
+  String get tenantSettingsSubtitle =>
+      'Name, theme, second factor, claims and trash';
+
+  @override
+  String get serverSubtitle => 'Version and live connections';
 }

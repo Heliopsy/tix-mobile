@@ -121,4 +121,40 @@ abstract final class Routes {
   /// The task [ref] in the project [key].
   static String task(String key, String ref) =>
       '${project(key)}/tasks/${Uri.encodeComponent(ref)}';
+
+  // Wave 3: tenant and server administration, and the person's security.
+
+  /// The signed-in person's second factor and SSH keys.
+  static const security = '/settings/security';
+
+  /// The active tenant's settings.
+  static const manageTenant = '/manage/tenant';
+
+  /// The hostnames of the active tenant.
+  static const manageDomains = '/manage/domains';
+
+  /// The server's version and the tenant's live connections.
+  static const manageServer = '/manage/server';
+
+  /// Every tenant, for a global admin.
+  static const manageTenants = '/manage/tenants';
+
+  /// The global admins.
+  static const manageGlobalAdmins = '/manage/global-admins';
+
+  /// The tenant [key], for a global admin.
+  static String manageTenantDetail(String key) =>
+      '$manageTenants/${Uri.encodeComponent(key)}';
+
+  /// The settings of tenant [key].
+  static String manageTenantSettings(String key) =>
+      '${manageTenantDetail(key)}/settings';
+
+  /// The users of tenant [key].
+  static String manageTenantUsers(String key) =>
+      '${manageTenantDetail(key)}/users';
+
+  /// The log of the account [email].
+  static String accountLog(String email) =>
+      '/manage/accounts/${Uri.encodeComponent(email)}/log';
 }

@@ -4278,4 +4278,797 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get settingsTokensHelp =>
       'Identifiants pour les scripts, la CLI et les agents';
+
+  @override
+  String get securityTitle => 'Sécurité';
+
+  @override
+  String get securitySubtitle => 'Votre second facteur et vos clés SSH';
+
+  @override
+  String get totpTitle => 'Second facteur';
+
+  @override
+  String get totpInfo =>
+      'Un code d’une application d’authentification, demandé après votre mot de passe. Les codes de récupération vous laissent entrer quand l’application n’est pas à portée de main.';
+
+  @override
+  String get totpOn => 'Activé';
+
+  @override
+  String get totpOff => 'Désactivé';
+
+  @override
+  String get totpPending => 'Non confirmé';
+
+  @override
+  String totpSince(String date) {
+    return 'Depuis le $date';
+  }
+
+  @override
+  String get totpOnBody =>
+      'La connexion demande un code de votre application d’authentification après votre mot de passe.';
+
+  @override
+  String get totpOffBody => 'La connexion ne demande que votre mot de passe.';
+
+  @override
+  String get totpPendingBody =>
+      'La configuration a commencé mais n’a jamais été confirmée par un code. Recommencez pour la terminer.';
+
+  @override
+  String totpRequiredOn(String surfaces) {
+    return 'Votre espace exige un second facteur pour : $surfaces.';
+  }
+
+  @override
+  String get totpSurfaceWeb => 'le navigateur';
+
+  @override
+  String get totpSurfaceCli => 'la ligne de commande';
+
+  @override
+  String get totpSurfaceSsh => 'SSH';
+
+  @override
+  String totpCodesLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count codes de récupération restants',
+      one: '1 code de récupération restant',
+      zero: 'Plus aucun code de récupération',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String totpLocked(String time) {
+    return 'Trop de codes erronés. Les codes sont refusés jusqu’à $time.';
+  }
+
+  @override
+  String get totpSetUp => 'Configurer';
+
+  @override
+  String get totpNewCodes => 'Nouveaux codes de récupération';
+
+  @override
+  String get totpNewCodesBody =>
+      'Vos codes de récupération actuels cessent aussitôt de fonctionner, utilisés ou non, et un nouveau jeu s’affiche une seule fois.';
+
+  @override
+  String get totpNewCodesConfirm => 'Remplacer les codes';
+
+  @override
+  String get totpRemove => 'Retirer le second facteur';
+
+  @override
+  String get totpRemoveBody =>
+      'La connexion ne demandera plus que votre mot de passe, et vos codes de récupération cessent de fonctionner. Si votre espace exige un second facteur, il faudra en configurer un de nouveau.';
+
+  @override
+  String get totpRemoved => 'Second facteur retiré.';
+
+  @override
+  String get totpCodesHeading =>
+      'Enregistrez ces codes de récupération maintenant';
+
+  @override
+  String get totpCodesNote =>
+      'Chacun vous connecte une fois sans votre application d’authentification. Ils ne s’affichent qu’une fois et ne peuvent plus être relus ; si vous les perdez, créez-en un nouveau jeu.';
+
+  @override
+  String get totpCodesSaved => 'Je les ai enregistrés';
+
+  @override
+  String get totpConfirm => 'Confirmer';
+
+  @override
+  String get totpStep1 =>
+      '1. Ajoutez cette clé à votre application d’authentification, ou ouvrez-la dans celle-ci depuis cet appareil.';
+
+  @override
+  String get totpSecretHeading => 'Votre clé d’authentification';
+
+  @override
+  String totpSecretNote(String account, String issuer) {
+    return 'Compte $account sur $issuer. Gardez-la secrète : quiconque la détient peut produire vos codes.';
+  }
+
+  @override
+  String get totpOpenApp => 'Ouvrir dans l’application';
+
+  @override
+  String get totpStep2 =>
+      '2. Saisissez le code à six chiffres affiché par l’application.';
+
+  @override
+  String get sshKeysTitle => 'Clés SSH';
+
+  @override
+  String get sshKeysInfo =>
+      'Une clé enregistrée ici vous connecte à l’interface terminal de tix par SSH, dans cet espace. Les clés révoquées restent listées pour comprendre pourquoi l’une a cessé de fonctionner.';
+
+  @override
+  String get sshKeysEmpty => 'Aucune clé SSH pour l’instant.';
+
+  @override
+  String get sshKeyAdd => 'Ajouter une clé SSH';
+
+  @override
+  String get sshKeyAddSubmit => 'Ajouter la clé';
+
+  @override
+  String get sshKeyAdded => 'Clé SSH ajoutée.';
+
+  @override
+  String get sshKeyUnlabelled => 'Clé sans libellé';
+
+  @override
+  String get sshKeyRevoked => 'Révoquée';
+
+  @override
+  String sshKeyAddedOn(String date) {
+    return 'Ajoutée le $date';
+  }
+
+  @override
+  String sshKeyLastUsed(String date) {
+    return 'Utilisée le $date';
+  }
+
+  @override
+  String get sshKeyNeverUsed => 'Jamais utilisée';
+
+  @override
+  String sshKeyRevokedOn(String date) {
+    return 'Révoquée le $date';
+  }
+
+  @override
+  String get sshKeyRevoke => 'Révoquer';
+
+  @override
+  String sshKeyRevokeBody(String name) {
+    return '$name cesse aussitôt de vous connecter par SSH. C’est irréversible ; enregistrez de nouveau la clé pour l’utiliser.';
+  }
+
+  @override
+  String get sshKeyRevokedToast => 'Clé SSH révoquée.';
+
+  @override
+  String get sshKeyPublicKey => 'Clé publique';
+
+  @override
+  String get sshKeyPublicKeyHelp =>
+      'La ligne de votre fichier .pub, telle que ssh-keygen l’écrit.';
+
+  @override
+  String get sshKeyLabel => 'Libellé (facultatif)';
+
+  @override
+  String get sshKeyLabelHelp =>
+      'Distingue cette clé des autres, par exemple par la machine qui la porte.';
+
+  @override
+  String get sshKeyAllTenants => 'Tous mes espaces';
+
+  @override
+  String get sshKeyAllTenantsHelp =>
+      'Enregistre la clé dans chacun de vos espaces, pas seulement celui-ci.';
+
+  @override
+  String get tenantSettingsTitle => 'Paramètres de l’espace';
+
+  @override
+  String get tenantSaved => 'Enregistré.';
+
+  @override
+  String get tenantGeneralTitle => 'Général';
+
+  @override
+  String get tenantName => 'Nom';
+
+  @override
+  String get tenantKey => 'Clé';
+
+  @override
+  String get tenantKeyHelp =>
+      'Courte et unique : lettres, chiffres, tirets et tirets bas, commençant par une lettre. Elle ne pourra plus changer.';
+
+  @override
+  String get tenantTimezone => 'Fuseau horaire';
+
+  @override
+  String get tenantTimezoneHelp =>
+      'Une zone IANA dans laquelle on lit les dates, sauf choix personnel. Vide reprend celle du serveur.';
+
+  @override
+  String get tenantTimeFormat => 'Format des dates';
+
+  @override
+  String get tenantServerDefault => 'Par défaut du serveur';
+
+  @override
+  String get tenantThemeTitle => 'Thème';
+
+  @override
+  String get tenantThemeInfo =>
+      'La couleur de l’espace sur toutes les surfaces : le web, le terminal et cette application. Les couleurs des statuts et des priorités ne changent jamais avec elle.';
+
+  @override
+  String get tenantThemeDefault => 'par défaut';
+
+  @override
+  String get tenantThemeCustom => 'Couleur personnalisée';
+
+  @override
+  String get tenantThemeCustomHelp =>
+      '#rrggbb. tix l’ajuste jusqu’à ce que le texte dessus et autour reste lisible.';
+
+  @override
+  String get tenantThemeCustomBad =>
+      'Écrivez la couleur sous la forme #rrggbb, par exemple #0f766e.';
+
+  @override
+  String get tenantThemePreview => 'Aperçu';
+
+  @override
+  String get tenantThemeSampleRow => 'Une ligne sélectionnée';
+
+  @override
+  String get tenantThemeSampleLink => 'Un lien';
+
+  @override
+  String get tenantThemeSampleButton => 'Nouvelle tâche';
+
+  @override
+  String get tenantThemeSaved => 'Thème enregistré.';
+
+  @override
+  String get tenantTotpTitle => 'Second facteur';
+
+  @override
+  String get tenantTotpInfo =>
+      'Exige un code d’une application d’authentification à la connexion. Qui n’en a pas est guidé pour le configurer en se connectant, donc l’activer ne bloque personne.';
+
+  @override
+  String get tenantTotpWeb => 'L’exiger dans le navigateur';
+
+  @override
+  String get tenantTotpCli => 'L’exiger en ligne de commande';
+
+  @override
+  String get tenantTotpSsh => 'L’exiger par SSH, en plus de la clé';
+
+  @override
+  String get tenantTotpNone => 'Non exigé';
+
+  @override
+  String get tenantTotpBadge => 'Second facteur';
+
+  @override
+  String get tenantLeaseTitle => 'Réservations';
+
+  @override
+  String get tenantLeaseInfo =>
+      'Durée de la réservation d’une tâche par un agent. Un projet, un workflow ou la réservation peut demander moins ; le plafond du serveur l’emporte toujours.';
+
+  @override
+  String get tenantLeaseDefault => 'Durée par défaut';
+
+  @override
+  String get tenantLeaseDefaultHelp =>
+      'Une durée comme 30m ou 2h. Vide reprend celle du serveur.';
+
+  @override
+  String get tenantLeaseMax => 'Durée maximale';
+
+  @override
+  String get tenantLeaseMaxHelp =>
+      'Plafonne chaque réservation de cet espace. Elle peut abaisser le plafond du serveur, jamais le relever.';
+
+  @override
+  String get tenantTrashTitle => 'Corbeille';
+
+  @override
+  String get tenantTrashKeep =>
+      'Garder les tâches supprimées dans une corbeille';
+
+  @override
+  String get tenantTrashOnBody =>
+      'Les tâches supprimées peuvent être restaurées jusqu’à ce que l’entretien vide la corbeille.';
+
+  @override
+  String get tenantTrashOffBody =>
+      'Supprimer une tâche est définitif. Les tâches déjà dans la corbeille y restent.';
+
+  @override
+  String get tenantTrashOnShort =>
+      'Les tâches supprimées vont dans la corbeille';
+
+  @override
+  String get tenantTrashOffShort => 'La suppression est définitive';
+
+  @override
+  String get tenantDelete => 'Supprimer l’espace';
+
+  @override
+  String get tenantDeleteHelp =>
+      'Ses données deviennent inaccessibles et ses domaines ne répondent plus.';
+
+  @override
+  String get tenantDeleteCurrent =>
+      'C’est l’espace dans lequel vous travaillez. Passez à un autre pour le supprimer.';
+
+  @override
+  String tenantDeleteBody(String name, String key) {
+    return '$name ($key) et tout son contenu deviennent inaccessibles pour tout le monde, et ses domaines ne répondent plus. Seul l’opérateur du serveur peut le rétablir.';
+  }
+
+  @override
+  String tenantDeleted(String name) {
+    return '$name supprimé.';
+  }
+
+  @override
+  String get tenantsTitle => 'Espaces';
+
+  @override
+  String get tenantsSubtitle => 'Tous les espaces de ce serveur';
+
+  @override
+  String get tenantsEmpty => 'Aucun espace.';
+
+  @override
+  String get tenantsEmptyBody => 'Créez-en un avec son premier administrateur.';
+
+  @override
+  String get tenantsPick => 'Choisissez un espace pour l’afficher ici.';
+
+  @override
+  String get tenantCreate => 'Nouvel espace';
+
+  @override
+  String get tenantCreateSubmit => 'Créer l’espace';
+
+  @override
+  String tenantCreated(String name) {
+    return '$name créé.';
+  }
+
+  @override
+  String get tenantFirstAdmin => 'Premier administrateur';
+
+  @override
+  String get tenantFirstAdminHelp =>
+      'Devient administrateur du nouvel espace. Une adresse qui a déjà un compte garde son mot de passe et son second facteur.';
+
+  @override
+  String get tenantPasswordHelp =>
+      'Au moins 12 caractères. Laissez vide et tix en génère un, affiché une seule fois.';
+
+  @override
+  String get tenantCredentialsHeading => 'Copiez ces mots de passe maintenant';
+
+  @override
+  String get tenantCredentialsNote =>
+      'tix les a générés et ne les montre qu’une fois ; rien ne les conserve. Remettez chacun à son administrateur, qui en choisira un nouveau à la première connexion. En cas de perte, définissez un nouveau mot de passe.';
+
+  @override
+  String get tenantCurrent => 'Actuel';
+
+  @override
+  String get tenantMember => 'Membre';
+
+  @override
+  String get tenantNoTrash => 'Sans corbeille';
+
+  @override
+  String get tenantOverview => 'Vue d’ensemble';
+
+  @override
+  String get tenantCreatedAt => 'Créé';
+
+  @override
+  String get tenantSwitch => 'Passer à cet espace';
+
+  @override
+  String get tenantJoinSwitch => 'Rejoindre et y passer';
+
+  @override
+  String tenantJoinBody(String name) {
+    return 'Vous n’êtes pas membre de $name. En tant qu’administrateur global, vous pouvez vous y ajouter comme administrateur et y passer. Le changement figure dans le journal de votre compte.';
+  }
+
+  @override
+  String get tenantJoinConfirm => 'Rejoindre comme administrateur';
+
+  @override
+  String get tenantSwitchPinned =>
+      'Cette connexion n’atteint qu’un seul espace. Connectez-vous avec une connexion qui peut changer d’espace pour passer de l’un à l’autre.';
+
+  @override
+  String get tenantUsersTitle => 'Utilisateurs';
+
+  @override
+  String get tenantDomainsEmpty => 'Aucun domaine ne mène à cet espace.';
+
+  @override
+  String get domainsTitle => 'Domaines';
+
+  @override
+  String get domainsSubtitle => 'Les noms d’hôte qui ouvrent cet espace';
+
+  @override
+  String get domainsBody =>
+      'Une requête qui arrive sur l’un de ces noms d’hôte atteint cet espace sans avoir à le nommer.';
+
+  @override
+  String get domainsEmpty => 'Aucun domaine pour l’instant.';
+
+  @override
+  String get domainsEmptyBody =>
+      'Associez un nom d’hôte pour qu’on atteigne cet espace à sa propre adresse.';
+
+  @override
+  String get domainAdd => 'Ajouter un domaine';
+
+  @override
+  String get domainAddSubmit => 'Ajouter le domaine';
+
+  @override
+  String get domainAdded => 'Domaine ajouté.';
+
+  @override
+  String get domainHostname => 'Nom d’hôte';
+
+  @override
+  String get domainHostnameHelp =>
+      'Mis en minuscules ; un port ou un point final est retiré.';
+
+  @override
+  String get domainCertMode => 'Certificat';
+
+  @override
+  String get domainCertNone => 'Terminé ailleurs';
+
+  @override
+  String get domainCertFile => 'Fichier de certificat';
+
+  @override
+  String get domainCertNoneHelp =>
+      'Un proxy devant tix détient le certificat, ou l’hôte est en HTTP simple.';
+
+  @override
+  String get domainCertFileHelp =>
+      'tix sert lui-même le TLS depuis des fichiers PEM sur le serveur.';
+
+  @override
+  String get domainCertPath => 'Chemin du certificat sur le serveur';
+
+  @override
+  String get domainKeyPath => 'Chemin de la clé privée sur le serveur';
+
+  @override
+  String get domainVerified => 'Vérifié';
+
+  @override
+  String get domainShared => 'Partagé';
+
+  @override
+  String get domainSharedInfo =>
+      'Un nom d’hôte partagé sert aussi l’espace qu’indiquent l’identifiant ou l’en-tête X-Tix-Tenant, comme un hôte qu’aucun domaine ne revendique. Seul un administrateur global le règle.';
+
+  @override
+  String get domainRemove => 'Retirer le domaine';
+
+  @override
+  String domainRemoveBody(String hostname) {
+    return 'Les requêtes vers $hostname n’atteignent plus cet espace. Qui utilise cette adresse devra en prendre une autre.';
+  }
+
+  @override
+  String get domainRemoved => 'Domaine retiré.';
+
+  @override
+  String get serverTitle => 'Serveur';
+
+  @override
+  String serverVersion(String version) {
+    return 'tix $version';
+  }
+
+  @override
+  String get serverStatusTitle => 'État';
+
+  @override
+  String get serverVersionLabel => 'Version';
+
+  @override
+  String get serverHealth => 'Santé';
+
+  @override
+  String get serverAddress => 'Adresse';
+
+  @override
+  String get serverId => 'Processus serveur';
+
+  @override
+  String get serverCountTenant => 'Connexions actives dans cet espace';
+
+  @override
+  String get serverCountEvents => 'Flux de mises à jour en direct';
+
+  @override
+  String get serverCountSsh => 'Sessions SSH';
+
+  @override
+  String get serverCountProcess => 'Connexions sur ce serveur';
+
+  @override
+  String get serverCountProcessInfo =>
+      'Toutes les connexions que ce processus détient, tous espaces confondus. C’est une capacité, pas un annuaire : personne n’y est nommé.';
+
+  @override
+  String get connectionsTitle => 'Connexions actives';
+
+  @override
+  String get connectionsInfo =>
+      'Les flux de mises à jour en direct et les sessions SSH de cet espace que ce processus détient. En fermer une la coupe ; le client peut se reconnecter.';
+
+  @override
+  String get connectionsEmpty => 'Aucune connexion active.';
+
+  @override
+  String get connectionEvents => 'Mises à jour en direct';
+
+  @override
+  String get connectionSsh => 'SSH';
+
+  @override
+  String connectionSince(String date) {
+    return 'depuis le $date';
+  }
+
+  @override
+  String get connectionEnd => 'Fermer';
+
+  @override
+  String get connectionEndBody =>
+      'La connexion se ferme aussitôt. Un client encore actif peut se reconnecter ; révoquez son jeton ou sa clé pour l’en empêcher.';
+
+  @override
+  String get connectionEnded => 'Connexion fermée.';
+
+  @override
+  String get globalAdminsTitle => 'Administrateurs globaux';
+
+  @override
+  String get globalAdminsSubtitle =>
+      'Les personnes qui administrent tous les espaces de ce serveur';
+
+  @override
+  String get globalAdminsEmpty => 'Aucun administrateur global.';
+
+  @override
+  String get globalAdminGrant => 'Nommer administrateur global';
+
+  @override
+  String get globalAdminGrantSubmit => 'Nommer';
+
+  @override
+  String get globalAdminGrantHelp =>
+      'Le compte qui a cette adresse pourra créer des espaces et les administrer tous.';
+
+  @override
+  String get globalAdminGranted => 'Administrateur global nommé.';
+
+  @override
+  String get globalAdminRevoke => 'Retirer';
+
+  @override
+  String globalAdminRevokeBody(String email) {
+    return '$email cesse aussitôt d’administrer tous les espaces. Ses adhésions restent telles quelles.';
+  }
+
+  @override
+  String get globalAdminRevoked => 'Rôle d’administrateur global retiré.';
+
+  @override
+  String get globalAdminBadge => 'Administrateur global';
+
+  @override
+  String get adminRoleAdmin => 'Administrateur';
+
+  @override
+  String get adminRoleMember => 'Membre';
+
+  @override
+  String get adminRoleViewer => 'Lecteur';
+
+  @override
+  String get adminRoleNone => 'Aucun rôle';
+
+  @override
+  String get adminUsersEmpty => 'Aucun utilisateur dans cet espace.';
+
+  @override
+  String get adminUsersEmptyBody =>
+      'Créez un utilisateur, ou ajoutez un compte existant.';
+
+  @override
+  String get adminUserCreate => 'Nouvel utilisateur';
+
+  @override
+  String get adminUserCreateSubmit => 'Créer l’utilisateur';
+
+  @override
+  String get adminUserActions => 'Actions sur l’utilisateur';
+
+  @override
+  String get adminUserEdit => 'Modifier';
+
+  @override
+  String adminUserEditTitle(String email) {
+    return 'Modifier $email';
+  }
+
+  @override
+  String get adminUserDelete => 'Supprimer l’utilisateur';
+
+  @override
+  String adminUserDeleteBody(String email) {
+    return '$email perd cet espace : son adhésion est retirée et ses sessions et jetons ici prennent fin. Son compte reste pour les autres espaces.';
+  }
+
+  @override
+  String get adminUserClearTotp => 'Effacer le second facteur';
+
+  @override
+  String get adminUserClearTotpConfirm => 'L’effacer';
+
+  @override
+  String adminUserClearTotpBody(String email) {
+    return '$email se connecte avec son seul mot de passe jusqu’à configurer de nouveau un second facteur. Ne le faites que s’il a perdu son application et ses codes de récupération.';
+  }
+
+  @override
+  String get adminUserEmail => 'Adresse e-mail';
+
+  @override
+  String get adminUserHandle => 'Identifiant';
+
+  @override
+  String get adminUserHandleHelp =>
+      'Son nom court dans cet espace. Vide reprend la partie de l’adresse avant le @.';
+
+  @override
+  String get adminUserDisplayName => 'Nom affiché';
+
+  @override
+  String get adminUserPassword => 'Mot de passe';
+
+  @override
+  String get adminUserPasswordHelp =>
+      'Au moins 12 caractères. Laissez vide pour un utilisateur qui se connecte autrement ou sera invité plus tard.';
+
+  @override
+  String get adminUserNewPassword => 'Nouveau mot de passe';
+
+  @override
+  String get adminUserNewPasswordHelp => 'Laissez vide pour garder l’actuel.';
+
+  @override
+  String get adminUserRole => 'Rôle';
+
+  @override
+  String get adminUserDisabled => 'Désactivé';
+
+  @override
+  String get adminUserDisabledSwitch => 'Désactivé';
+
+  @override
+  String get adminUserDisabledHelp =>
+      'Un utilisateur désactivé ne peut pas se connecter ; ses sessions et jetons prennent fin aussitôt.';
+
+  @override
+  String get adminUserMustChangePassword => 'Doit changer de mot de passe';
+
+  @override
+  String get adminUserMustChangeSwitch =>
+      'Choisir un nouveau mot de passe à la prochaine connexion';
+
+  @override
+  String get adminUserTotp => 'Second facteur';
+
+  @override
+  String get adminMemberAdd => 'Ajouter un compte existant';
+
+  @override
+  String get adminMemberAddSubmit => 'Ajouter à l’espace';
+
+  @override
+  String get adminMemberAddHelp =>
+      'La personne garde son mot de passe et son second facteur, et on ne lui demande pas d’accepter.';
+
+  @override
+  String get adminAccountLogTitle => 'Journal du compte';
+
+  @override
+  String get adminAccountLogEmpty => 'Rien de consigné pour ce compte.';
+
+  @override
+  String get adminAccountLogEmptyBody =>
+      'Les changements de mot de passe, de second facteur, de statut et d’adhésions s’affichent ici.';
+
+  @override
+  String adminAccountLogBy(String who) {
+    return 'par $who';
+  }
+
+  @override
+  String adminAccountLogVia(String channel) {
+    return 'via $channel';
+  }
+
+  @override
+  String get adminAccountLogSystem => 'le système';
+
+  @override
+  String get taskReclaim => 'Forcer la libération';
+
+  @override
+  String get taskReclaimSubmit => 'Libérer la réservation';
+
+  @override
+  String get taskReclaimBody =>
+      'Met fin à la réservation qu’un autre acteur détient sur cette tâche, quand son agent est tombé. Son prochain renouvellement sera refusé.';
+
+  @override
+  String get taskReclaimReason => 'Raison (facultatif)';
+
+  @override
+  String get taskReclaimReasonHelp => 'Gardée dans l’historique de la tâche.';
+
+  @override
+  String taskReclaimed(String ref) {
+    return 'Réservation de $ref libérée.';
+  }
+
+  @override
+  String get totpWrongCode =>
+      'Ce code n’est pas le bon. Vérifiez l’heure de cet appareil et essayez le suivant.';
+
+  @override
+  String get tenantThemeSampleStatus => 'En cours';
+
+  @override
+  String get tenantSettingsSubtitle =>
+      'Nom, thème, second facteur, réservations et corbeille';
+
+  @override
+  String get serverSubtitle => 'Version et connexions actives';
 }
