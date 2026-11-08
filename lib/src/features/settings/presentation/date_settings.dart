@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
@@ -104,7 +106,9 @@ class DateFormatSetting extends ConsumerWidget {
             TixOption(name, timeFormatLabel(context, name, zone)),
         ],
         onChanged: (v) {
-          if (v != null && v != held) _save(context, ref, format: v);
+          if (v != null && v != held) {
+            unawaited(_save(context, ref, format: v));
+          }
         },
       ),
     );
@@ -138,10 +142,10 @@ class TimeZoneSetting extends ConsumerWidget {
       ),
       subtitle: Text(
         [
-          if (settings.personal)
-            held.isEmpty
-                ? l10n.settingsInheritValue(inherited)
-                : timeZoneLabel(l10n, held),
+          if (settings.personal && held.isEmpty)
+            l10n.settingsInheritValue(inherited)
+          else if (settings.personal)
+            timeZoneLabel(l10n, held),
           inUse,
         ].join('\n'),
       ),
