@@ -78,6 +78,33 @@ abstract final class Routes {
     queryParameters: {'url': url, if (email.isNotEmpty) 'email': email},
   ).toString();
 
+  /// The caller's profile, tenants and account history.
+  static const account = '/settings/account';
+
+  /// The caller's calendar feed.
+  static const calendar = '/settings/calendar';
+
+  /// The caller's own API tokens.
+  static const myTokens = '/settings/tokens';
+
+  /// The tenant's users, roles and invites.
+  static const users = '/manage/users';
+
+  /// The account [id] of the tenant.
+  static String user(String id) => '$users/${Uri.encodeComponent(id)}';
+
+  /// Every API token of the tenant.
+  static const tokens = '/manage/tokens';
+
+  /// Exports and imports.
+  static const transfer = '/manage/transfer';
+
+  /// The export screen opened on [project], filtered by [query].
+  static String exportTasks(String project, {String query = ''}) => Uri(
+    path: transfer,
+    queryParameters: {'project': project, if (query.isNotEmpty) 'q': query},
+  ).toString();
+
   /// The tasks of the project [key].
   static String project(String key) => '/projects/${Uri.encodeComponent(key)}';
 

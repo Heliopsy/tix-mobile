@@ -1939,5 +1939,547 @@
   "liveStatusUnavailable": "Not available",
   "liveStatusUnavailableInfo": "This connection may not follow live updates (it needs the event:subscribe scope). Pull down to refresh instead.",
   "copyToClipboard": "Copy",
-  "copiedToClipboard": "Copied."
+  "copiedToClipboard": "Copied.",
+  "secretShare": "Share",
+  "secretDone": "I have kept it",
+  "roleViewer": "viewer",
+  "roleMember": "member",
+  "roleAdmin": "admin",
+  "roleViewerHelp": "Reads tasks, projects and workflows.",
+  "roleMemberHelp": "Also creates, edits, claims and moves tasks, comments and exports.",
+  "roleAdminHelp": "May do everything in this tenant.",
+  "peopleTitle": "Users",
+  "peopleAdd": "Add user",
+  "peopleActive": "{count, plural, =1{1 active} other{{count} active}}",
+  "@peopleActive": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "peopleDisabledCount": "{count} disabled",
+  "@peopleDisabledCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "peopleAddMember": "Add a member",
+  "peopleAddMemberButton": "Add member",
+  "peopleAddMemberHelp": "Give an existing agent or account a role in this tenant.",
+  "peopleNoActors": "Every actor already belongs to this tenant.",
+  "peopleAgent": "agent",
+  "peoplePerson": "person",
+  "peopleEmpty": "No users yet.",
+  "peopleYou": "you",
+  "peopleNoRole": "no role",
+  "peopleDisabled": "disabled",
+  "peopleInvites": "Pending invites",
+  "peopleInvitesInfo": "Links issued and not used yet. Re-issuing stops the old link and gives you a new one to send; revoking stops it.",
+  "peopleInvited": "invited",
+  "peopleInvitedBy": "invited by {handle}",
+  "@peopleInvitedBy": {
+    "placeholders": {
+      "handle": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleInviteExpired": "expired",
+  "peopleInviteExpires": "expires {day}",
+  "@peopleInviteExpires": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleReissue": "Re-issue",
+  "peopleRevoke": "Revoke",
+  "peopleRevokeInviteTitle": "Revoke the invite for {email}?",
+  "@peopleRevokeInviteTitle": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleRevokeInviteBody": "The link stops working at once. The account stays, without a password, until you delete it or invite it again.",
+  "peopleInviteRevoked": "Invite for {email} revoked",
+  "@peopleInviteRevoked": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleSignInMode": "How they sign in",
+  "peopleSignInModeInfo": "An invite link lets the person choose their own password. It works once and expires; tix sends no email, so you pass the link on yourself.",
+  "peopleModeInvite": "Invite link",
+  "peopleModePassword": "Set a password",
+  "peopleDisplayName": "Display name",
+  "peopleDisplayNameHelp": "Empty shows the email instead.",
+  "peopleRole": "Role",
+  "peopleLinkExpires": "Link expires after",
+  "peopleDays": "{days, plural, =1{1 day} other{{days} days}}",
+  "@peopleDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "peopleYear": "1 year",
+  "peopleInviteHelp": "You get a link to send them. It works once, and they choose their own password with it.",
+  "peopleRequireChangeFirst": "Require a password change at first sign-in",
+  "peopleCreateInvite": "Create invite link",
+  "peopleCreateUser": "Create user",
+  "peopleCreated": "Created {email}",
+  "@peopleCreated": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleInviteLink": "Invite link",
+  "peopleSendLink": "Send this link to {email}",
+  "@peopleSendLink": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleLinkOnce": "It works once. tix does not send email, and the link is not shown again.",
+  "peopleLinkOnceUntil": "It works once and expires on {day}. tix does not send email, and the link is not shown again.",
+  "@peopleLinkOnceUntil": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleRename": "Change display name",
+  "peopleNoName": "Not set",
+  "peopleChangeRole": "Change role",
+  "peopleSignIn": "Signs in with",
+  "peopleSso": "Single sign-on ({provider})",
+  "@peopleSso": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "peoplePasswordSignIn": "A password",
+  "peopleSecondFactor": "Second factor",
+  "peopleTotpOn": "Enrolled",
+  "peopleTotpOff": "None",
+  "peopleCreatedAt": "Created",
+  "peopleAccess": "Access",
+  "peopleDisabledSwitch": "Disabled",
+  "peopleDisabledHelp": "A disabled account cannot sign in: its sessions end and its API tokens are revoked at once. Turning it back on does not bring the tokens back.",
+  "peopleDisabledToast": "{name} disabled",
+  "@peopleDisabledToast": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleEnabledToast": "{name} can sign in again",
+  "@peopleEnabledToast": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleRequireChange": "Ask to change the password at next sign-in",
+  "peopleRequireChangeHelp": "Their next sign-in with a password stops at a page asking for a new one. Open sessions and API tokens are not affected.",
+  "peopleSaved": "Saved",
+  "peopleSave": "Save",
+  "peopleRoleChanged": "{name} is now {role}",
+  "@peopleRoleChanged": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleDangerZone": "Danger zone",
+  "peopleRemoveMember": "Remove from this tenant",
+  "peopleRemoveMemberHelp": "Ends the membership and keeps the account.",
+  "peopleRemoveMemberButton": "Remove",
+  "peopleRemoveMemberTitle": "Remove {name} from this tenant?",
+  "@peopleRemoveMemberTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleRemoveMemberBody": "They stop acting here at once. The account stays and can be given a role again.",
+  "peopleMemberRemoved": "{name} removed from this tenant",
+  "@peopleMemberRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleDelete": "Delete {name}",
+  "@peopleDelete": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleDeleteHelp": "Deleting removes the account and its membership. Disabling is usually what you want, and can be undone.",
+  "peopleDeleteButton": "Delete",
+  "peopleDeleteTitle": "Delete {name}?",
+  "@peopleDeleteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleDeleteBody": "Deleting removes the account and its membership. It cannot be undone.",
+  "peopleDeleted": "{name} deleted",
+  "@peopleDeleted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensTitle": "API tokens",
+  "tokensMine": "My API tokens",
+  "tokensIssue": "Issue a token",
+  "tokensIssueButton": "Issue token",
+  "tokensWholeTenant": "Every token of this tenant",
+  "tokensOwn": "Your tokens",
+  "tokensWholeNote": "You hold tenant:admin, so this lists every token of the tenant and whose it is. Revoking somebody else's is recorded as such.",
+  "tokensIntro": "A token is the credential a script, the CLI or an agent presents instead of signing in. It carries its own scopes, and its value is shown once, when it is issued.",
+  "tokensEmpty": "No tokens.",
+  "tokensActive": "active",
+  "tokensExpired": "expired",
+  "tokensRevoked": "revoked",
+  "tokensRevoke": "Revoke",
+  "tokensOwner": "Owner: {name}",
+  "@tokensOwner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensOwnerYou": "Owner: {name} (you)",
+  "@tokensOwnerYou": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensCreated": "Created {day}",
+  "@tokensCreated": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensExpires": "Expires {day}",
+  "@tokensExpires": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensNeverExpires": "Never expires",
+  "tokensNotUsed": "Not used yet",
+  "tokensLastUsed": "Last used {when}",
+  "@tokensLastUsed": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensRevokeTitle": "Revoke {name}?",
+  "@tokensRevokeTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensRevokeBody": "Whatever holds this token stops authenticating at once. It cannot be undone, and the value cannot be recovered.",
+  "tokensRevokeOther": "This token is {name}'s, not yours, and the trail will record that you ended somebody else's.",
+  "@tokensRevokeOther": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensRevokeNamed": "Revoke {name}",
+  "@tokensRevokeNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensRevokedToast": "{name} revoked",
+  "@tokensRevokedToast": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensName": "Name",
+  "tokensNameHelp": "What you will choose by when you revoke it, such as ci or laptop. No two live tokens share a name.",
+  "tokensScopes": "Scopes",
+  "tokensNotHeld": "You do not hold this scope, so you cannot grant it.",
+  "tokensPresetAgent": "Agent",
+  "tokensPresetAgentNote": "Read, create and edit tasks, claim them, move them and comment.",
+  "tokensPresetRead": "Read only",
+  "tokensPresetReadNote": "Read tasks, projects and workflows, and follow the event stream.",
+  "tokensExpiry": "Expires",
+  "tokensExpiryInfo": "An expiry is the one control that limits the damage of a token that leaks without anybody noticing. Prefer the shortest window the work fits in.",
+  "tokensNever": "Never",
+  "tokensIssuedTitle": "Token {name} issued",
+  "@tokensIssuedTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensValue": "Copy this token now",
+  "tokensValueWarning": "Keep it somewhere safe. It is not shown again, and nothing can show it later.",
+  "scopeAll": "Everything but global admin and account history. Only for a credential you trust like yourself.",
+  "scopeGroupTasks": "Tasks",
+  "scopeGroupProjects": "Projects",
+  "scopeGroupWorkflows": "Workflows",
+  "scopeGroupComments": "Comments and artifacts",
+  "scopeGroupEvents": "Events",
+  "scopeGroupAdmin": "Administration",
+  "scopeGroupAccount": "Your account",
+  "scopeTaskRead": "Read tasks, their comments and history.",
+  "scopeTaskWrite": "Create and edit tasks.",
+  "scopeTaskTransition": "Move a task from one state to another.",
+  "scopeTaskClaim": "Claim tasks, renew the lease and release it.",
+  "scopeTaskDelete": "Delete tasks and restore them from the trash.",
+  "scopeTaskReclaim": "End a lease another worker holds.",
+  "scopeProjectRead": "Read projects.",
+  "scopeProjectWrite": "Create and change projects.",
+  "scopeWorkflowRead": "Read workflows.",
+  "scopeWorkflowWrite": "Create and change workflows.",
+  "scopeCommentWrite": "Comment on tasks.",
+  "scopeArtifactWrite": "Attach artifacts to tasks.",
+  "scopeEventSubscribe": "Follow the live event stream.",
+  "scopeUserAdmin": "Create, change and remove users.",
+  "scopeTotpAdmin": "Clear another person's second factor.",
+  "scopeTokenAdmin": "Issue and revoke API tokens.",
+  "scopeWebhookAdmin": "Manage outgoing webhooks.",
+  "scopeTenantAdmin": "Manage the tenant, its members and domains.",
+  "scopeSyncAdmin": "Manage and run imports from other trackers.",
+  "scopeAuditRead": "Read the audit log.",
+  "scopeExport": "Export tasks and a snapshot of the whole tenant.",
+  "scopeImport": "Import tasks and snapshots into the tenant.",
+  "scopeGlobalAdmin": "Administer every tenant on this server. Only a global admin's token can carry it.",
+  "scopeAccountRead": "Read your own account's history, which names every tenant you belong to. Only a token for your own account can carry it.",
+  "accountTitle": "Your account",
+  "accountKind": "Signed in as",
+  "accountKindToken": "An API token",
+  "accountKindAgent": "An agent",
+  "accountKindPerson": "A person",
+  "accountGlobalAdmin": "global admin",
+  "accountGlobalAdminYes": "Administers every tenant of this server",
+  "accountMemberships": "Your tenants",
+  "accountMembershipsHelp": "Every tenant this account belongs to, with its role there.",
+  "accountCurrent": "current",
+  "accountHistory": "Account history",
+  "accountHistoryHelp": "Every change to your password, second factor and memberships, in every tenant. Only you and global admins can read this.",
+  "accountHistoryEmpty": "Nothing has changed yet.",
+  "accountHistoryNotReadable": "This token cannot read your account's history: it needs the account:read scope, which only a token minted for your own account carries.",
+  "accountBy": "by {email}",
+  "@accountBy": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountBySystem": "by the system",
+  "calendarTitle": "Calendar feed",
+  "calendarLead": "Your due dates in Google, Apple or Outlook calendar",
+  "calendarUnavailable": "Nothing to manage here",
+  "calendarUnavailableBody": "A calendar feed reads tasks as you, and this credential cannot read tasks.",
+  "calendarCreate": "Create feed",
+  "calendarNone": "No calendar feed",
+  "calendarNoneBody": "A private address your calendar subscribes to, so your due dates appear beside the rest of your week.",
+  "calendarFeed": "Feed address",
+  "calendarFeedInfo": "Each task with a due date is an all-day event that links back here. Anybody holding the address can read what it lists, so treat it like a password. Only a hash of it is kept, so it cannot be shown again.",
+  "calendarActive": "Active",
+  "calendarCreatedOn": "Created {day}. The address was shown once; rotate to get a new one.",
+  "@calendarCreatedOn": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarShownOnce": "The address was shown once; rotate to get a new one.",
+  "calendarFilter": "Feed filter",
+  "calendarFilterDefault": "The tasks assigned to you that are not finished",
+  "calendarFilterHint": "project:infra tag:ops",
+  "calendarFilterHelp": "The task list's filter language. Empty means yours, not finished. Only tasks with a due date are listed.",
+  "calendarEditFilter": "Change filter",
+  "calendarSaveFilter": "Save filter",
+  "calendarFilterSaved": "Feed filter saved",
+  "calendarRotate": "Rotate the address",
+  "calendarRotateHelp": "A new address with the same filter; the old one stops at once.",
+  "calendarRotateButton": "Rotate",
+  "calendarRevoke": "Revoke the feed",
+  "calendarRevokeHelp": "The address stops answering. Subscribed calendars keep what they last fetched.",
+  "calendarRevokeButton": "Revoke",
+  "calendarRevokeTitle": "Revoke the calendar feed?",
+  "calendarRevokeBody": "The address stops at once. Remove the subscription from your calendar app too.",
+  "calendarRevoked": "Calendar feed revoked",
+  "calendarAddress": "Subscribe to this address",
+  "calendarOnce": "Add it in your calendar app. It is not shown again, so copy it now.",
+  "calendarRotatedOnce": "This address replaces the old one, which has stopped. Subscribe to it again wherever the old one was used. It is not shown again.",
+  "calendarLists": "Lists: {filter}",
+  "@calendarLists": {
+    "placeholders": {
+      "filter": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarListsDefault": "Lists the tasks assigned to you that are not finished.",
+  "calendarHowGoogle": "Google Calendar: Other calendars, then From URL, and paste the address.",
+  "calendarHowApple": "Apple Calendar: File, then New Calendar Subscription, or use Subscribe on this device.",
+  "calendarHowOutlook": "Outlook: Add calendar, then Subscribe from web, and paste the address.",
+  "calendarSubscribeHere": "Subscribe on this device",
+  "transferTitle": "Export and import",
+  "transferNoProjects": "Create a project before exporting or importing tasks.",
+  "transferExportTitle": "Export tasks",
+  "transferExportHelp": "One project's tasks, or the ones a filter picks, as a file.",
+  "transferQuery": "Filter",
+  "transferQueryHelp": "The task list's filter language. Empty exports every task.",
+  "transferFormat": "Format",
+  "transferFormatCsv": "CSV, for spreadsheets",
+  "transferFormatNdjson": "NDJSON, one task per line",
+  "transferFormatMarkdown": "Markdown table",
+  "transferColumns": "Columns",
+  "transferDates": "Dates",
+  "transferDatesIso": "Date and time (ISO)",
+  "transferDatesDay": "Day only",
+  "transferDelimiter": "Delimiter",
+  "transferDelimiterComma": "Comma",
+  "transferDelimiterSemicolon": "Semicolon",
+  "transferDelimiterTab": "Tab",
+  "transferDelimiterBar": "Vertical bar",
+  "transferFinished": "Include finished tasks",
+  "transferSubtasks": "Include subtasks",
+  "transferTrashed": "Include tasks in the trash",
+  "transferExportButton": "Export",
+  "transferExported": "Saved {name}",
+  "@transferExported": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "transferSnapshotTitle": "Snapshot",
+  "transferSnapshotHelp": "Everything in this tenant as one NDJSON file, which tix can import elsewhere.",
+  "transferSnapshotComments": "Include comments",
+  "transferSnapshotButton": "Export snapshot",
+  "transferImportTitle": "Import tasks",
+  "transferImportHelp": "A CSV, JSON or NDJSON file of tasks, including files Jira, GitHub, Trello and Linear write. You see what would happen before anything changes.",
+  "transferPick": "Choose a file",
+  "transferDryRun": "{rows} rows: {created} to create, {updated} to update, {skipped} skipped, {failed} failed.",
+  "@transferDryRun": {
+    "placeholders": {
+      "rows": {
+        "type": "int"
+      },
+      "created": {
+        "type": "int"
+      },
+      "updated": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "transferImportError": "Line {line}: {message}",
+  "@transferImportError": {
+    "placeholders": {
+      "line": {
+        "type": "int"
+      },
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "transferImportButton": "{count, plural, =1{Import 1 task} other{Import {count} tasks}}",
+  "@transferImportButton": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "transferImported": "Imported: {created} created, {updated} updated",
+  "@transferImported": {
+    "placeholders": {
+      "created": {
+        "type": "int"
+      },
+      "updated": {
+        "type": "int"
+      }
+    }
+  },
+  "columnRef": "Reference",
+  "columnTitle": "Title",
+  "columnParent": "Parent",
+  "columnDependsOn": "Depends on",
+  "columnRepeat": "Repeat",
+  "columnCreated": "Created",
+  "columnUpdated": "Updated",
+  "columnStarted": "Started",
+  "columnCompleted": "Completed",
+  "columnDeleted": "Deleted",
+  "columnCreator": "Creator",
+  "columnProject": "Project",
+  "columnId": "Identifier",
+  "columnComments": "Comments",
+  "columnHistory": "History",
+  "settingsAccountHelp": "Profile, tenants and history",
+  "settingsCalendarHelp": "Your due dates in your calendar app",
+  "settingsTokensHelp": "Credentials for scripts, the CLI and agents"
 }

@@ -10,6 +10,7 @@ import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
+import 'package:tix_mobile/src/core/session/people.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
@@ -34,6 +35,24 @@ class SettingsScreen extends ConsumerWidget {
     final locale = ref.watch(localeSettingProvider);
     final session = ref.watch(sessionControllerProvider).value;
     final count = ref.watch(contextDirectoryProvider).groups.length;
+    final access = session == null
+        ? null
+        : ref.watch(currentAccessProvider).value;
+    bool can(String scope) => access?.can(scope) ?? false;
+    Widget link(
+      String key,
+      IconData icon,
+      String title,
+      String help,
+      String to,
+    ) => ListTile(
+      key: Key(key),
+      leading: Icon(icon),
+      title: Text(title),
+      subtitle: Text(help),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () => context.push(to),
+    );
     Widget padded(Widget child) => Padding(
       padding: const EdgeInsets.all(TixSpace.s3),
       child: Align(alignment: AlignmentDirectional.centerStart, child: child),
@@ -172,6 +191,29 @@ class SettingsScreen extends ConsumerWidget {
             TixSection(
               title: l10n.accountLabel,
               children: [
+                link(
+                  'settings.account',
+                  Icons.person_outline,
+                  l10n.accountTitle,
+                  l10n.settingsAccountHelp,
+                  Routes.account,
+                ),
+                if (access == null || can(Scopes.taskRead))
+                  link(
+                    'settings.calendar',
+                    Icons.event_outlined,
+                    l10n.calendarTitle,
+                    l10n.settingsCalendarHelp,
+                    Routes.calendar,
+                  ),
+                if (can(Scopes.tokenAdmin))
+                  link(
+                    'settings.tokens',
+                    Icons.key_outlined,
+                    l10n.tokensMine,
+                    l10n.settingsTokensHelp,
+                    Routes.myTokens,
+                  ),
                 padded(
                   Wrap(
                     spacing: TixSpace.s3,

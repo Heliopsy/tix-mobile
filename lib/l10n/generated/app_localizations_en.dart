@@ -3312,4 +3312,940 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Copied.';
+
+  @override
+  String get secretShare => 'Share';
+
+  @override
+  String get secretDone => 'I have kept it';
+
+  @override
+  String get roleViewer => 'viewer';
+
+  @override
+  String get roleMember => 'member';
+
+  @override
+  String get roleAdmin => 'admin';
+
+  @override
+  String get roleViewerHelp => 'Reads tasks, projects and workflows.';
+
+  @override
+  String get roleMemberHelp =>
+      'Also creates, edits, claims and moves tasks, comments and exports.';
+
+  @override
+  String get roleAdminHelp => 'May do everything in this tenant.';
+
+  @override
+  String get peopleTitle => 'Users';
+
+  @override
+  String get peopleAdd => 'Add user';
+
+  @override
+  String peopleActive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count active',
+      one: '1 active',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String peopleDisabledCount(int count) {
+    return '$count disabled';
+  }
+
+  @override
+  String get peopleAddMember => 'Add a member';
+
+  @override
+  String get peopleAddMemberButton => 'Add member';
+
+  @override
+  String get peopleAddMemberHelp =>
+      'Give an existing agent or account a role in this tenant.';
+
+  @override
+  String get peopleNoActors => 'Every actor already belongs to this tenant.';
+
+  @override
+  String get peopleAgent => 'agent';
+
+  @override
+  String get peoplePerson => 'person';
+
+  @override
+  String get peopleEmpty => 'No users yet.';
+
+  @override
+  String get peopleYou => 'you';
+
+  @override
+  String get peopleNoRole => 'no role';
+
+  @override
+  String get peopleDisabled => 'disabled';
+
+  @override
+  String get peopleInvites => 'Pending invites';
+
+  @override
+  String get peopleInvitesInfo =>
+      'Links issued and not used yet. Re-issuing stops the old link and gives you a new one to send; revoking stops it.';
+
+  @override
+  String get peopleInvited => 'invited';
+
+  @override
+  String peopleInvitedBy(String handle) {
+    return 'invited by $handle';
+  }
+
+  @override
+  String get peopleInviteExpired => 'expired';
+
+  @override
+  String peopleInviteExpires(String day) {
+    return 'expires $day';
+  }
+
+  @override
+  String get peopleReissue => 'Re-issue';
+
+  @override
+  String get peopleRevoke => 'Revoke';
+
+  @override
+  String peopleRevokeInviteTitle(String email) {
+    return 'Revoke the invite for $email?';
+  }
+
+  @override
+  String get peopleRevokeInviteBody =>
+      'The link stops working at once. The account stays, without a password, until you delete it or invite it again.';
+
+  @override
+  String peopleInviteRevoked(String email) {
+    return 'Invite for $email revoked';
+  }
+
+  @override
+  String get peopleSignInMode => 'How they sign in';
+
+  @override
+  String get peopleSignInModeInfo =>
+      'An invite link lets the person choose their own password. It works once and expires; tix sends no email, so you pass the link on yourself.';
+
+  @override
+  String get peopleModeInvite => 'Invite link';
+
+  @override
+  String get peopleModePassword => 'Set a password';
+
+  @override
+  String get peopleDisplayName => 'Display name';
+
+  @override
+  String get peopleDisplayNameHelp => 'Empty shows the email instead.';
+
+  @override
+  String get peopleRole => 'Role';
+
+  @override
+  String get peopleLinkExpires => 'Link expires after';
+
+  @override
+  String peopleDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get peopleYear => '1 year';
+
+  @override
+  String get peopleInviteHelp =>
+      'You get a link to send them. It works once, and they choose their own password with it.';
+
+  @override
+  String get peopleRequireChangeFirst =>
+      'Require a password change at first sign-in';
+
+  @override
+  String get peopleCreateInvite => 'Create invite link';
+
+  @override
+  String get peopleCreateUser => 'Create user';
+
+  @override
+  String peopleCreated(String email) {
+    return 'Created $email';
+  }
+
+  @override
+  String get peopleInviteLink => 'Invite link';
+
+  @override
+  String peopleSendLink(String email) {
+    return 'Send this link to $email';
+  }
+
+  @override
+  String get peopleLinkOnce =>
+      'It works once. tix does not send email, and the link is not shown again.';
+
+  @override
+  String peopleLinkOnceUntil(String day) {
+    return 'It works once and expires on $day. tix does not send email, and the link is not shown again.';
+  }
+
+  @override
+  String get peopleRename => 'Change display name';
+
+  @override
+  String get peopleNoName => 'Not set';
+
+  @override
+  String get peopleChangeRole => 'Change role';
+
+  @override
+  String get peopleSignIn => 'Signs in with';
+
+  @override
+  String peopleSso(String provider) {
+    return 'Single sign-on ($provider)';
+  }
+
+  @override
+  String get peoplePasswordSignIn => 'A password';
+
+  @override
+  String get peopleSecondFactor => 'Second factor';
+
+  @override
+  String get peopleTotpOn => 'Enrolled';
+
+  @override
+  String get peopleTotpOff => 'None';
+
+  @override
+  String get peopleCreatedAt => 'Created';
+
+  @override
+  String get peopleAccess => 'Access';
+
+  @override
+  String get peopleDisabledSwitch => 'Disabled';
+
+  @override
+  String get peopleDisabledHelp =>
+      'A disabled account cannot sign in: its sessions end and its API tokens are revoked at once. Turning it back on does not bring the tokens back.';
+
+  @override
+  String peopleDisabledToast(String name) {
+    return '$name disabled';
+  }
+
+  @override
+  String peopleEnabledToast(String name) {
+    return '$name can sign in again';
+  }
+
+  @override
+  String get peopleRequireChange =>
+      'Ask to change the password at next sign-in';
+
+  @override
+  String get peopleRequireChangeHelp =>
+      'Their next sign-in with a password stops at a page asking for a new one. Open sessions and API tokens are not affected.';
+
+  @override
+  String get peopleSaved => 'Saved';
+
+  @override
+  String get peopleSave => 'Save';
+
+  @override
+  String peopleRoleChanged(String name, String role) {
+    return '$name is now $role';
+  }
+
+  @override
+  String get peopleDangerZone => 'Danger zone';
+
+  @override
+  String get peopleRemoveMember => 'Remove from this tenant';
+
+  @override
+  String get peopleRemoveMemberHelp =>
+      'Ends the membership and keeps the account.';
+
+  @override
+  String get peopleRemoveMemberButton => 'Remove';
+
+  @override
+  String peopleRemoveMemberTitle(String name) {
+    return 'Remove $name from this tenant?';
+  }
+
+  @override
+  String get peopleRemoveMemberBody =>
+      'They stop acting here at once. The account stays and can be given a role again.';
+
+  @override
+  String peopleMemberRemoved(String name) {
+    return '$name removed from this tenant';
+  }
+
+  @override
+  String peopleDelete(String name) {
+    return 'Delete $name';
+  }
+
+  @override
+  String get peopleDeleteHelp =>
+      'Deleting removes the account and its membership. Disabling is usually what you want, and can be undone.';
+
+  @override
+  String get peopleDeleteButton => 'Delete';
+
+  @override
+  String peopleDeleteTitle(String name) {
+    return 'Delete $name?';
+  }
+
+  @override
+  String get peopleDeleteBody =>
+      'Deleting removes the account and its membership. It cannot be undone.';
+
+  @override
+  String peopleDeleted(String name) {
+    return '$name deleted';
+  }
+
+  @override
+  String get tokensTitle => 'API tokens';
+
+  @override
+  String get tokensMine => 'My API tokens';
+
+  @override
+  String get tokensIssue => 'Issue a token';
+
+  @override
+  String get tokensIssueButton => 'Issue token';
+
+  @override
+  String get tokensWholeTenant => 'Every token of this tenant';
+
+  @override
+  String get tokensOwn => 'Your tokens';
+
+  @override
+  String get tokensWholeNote =>
+      'You hold tenant:admin, so this lists every token of the tenant and whose it is. Revoking somebody else\'s is recorded as such.';
+
+  @override
+  String get tokensIntro =>
+      'A token is the credential a script, the CLI or an agent presents instead of signing in. It carries its own scopes, and its value is shown once, when it is issued.';
+
+  @override
+  String get tokensEmpty => 'No tokens.';
+
+  @override
+  String get tokensActive => 'active';
+
+  @override
+  String get tokensExpired => 'expired';
+
+  @override
+  String get tokensRevoked => 'revoked';
+
+  @override
+  String get tokensRevoke => 'Revoke';
+
+  @override
+  String tokensOwner(String name) {
+    return 'Owner: $name';
+  }
+
+  @override
+  String tokensOwnerYou(String name) {
+    return 'Owner: $name (you)';
+  }
+
+  @override
+  String tokensCreated(String day) {
+    return 'Created $day';
+  }
+
+  @override
+  String tokensExpires(String day) {
+    return 'Expires $day';
+  }
+
+  @override
+  String get tokensNeverExpires => 'Never expires';
+
+  @override
+  String get tokensNotUsed => 'Not used yet';
+
+  @override
+  String tokensLastUsed(String when) {
+    return 'Last used $when';
+  }
+
+  @override
+  String tokensRevokeTitle(String name) {
+    return 'Revoke $name?';
+  }
+
+  @override
+  String get tokensRevokeBody =>
+      'Whatever holds this token stops authenticating at once. It cannot be undone, and the value cannot be recovered.';
+
+  @override
+  String tokensRevokeOther(String name) {
+    return 'This token is $name\'s, not yours, and the trail will record that you ended somebody else\'s.';
+  }
+
+  @override
+  String tokensRevokeNamed(String name) {
+    return 'Revoke $name';
+  }
+
+  @override
+  String tokensRevokedToast(String name) {
+    return '$name revoked';
+  }
+
+  @override
+  String get tokensName => 'Name';
+
+  @override
+  String get tokensNameHelp =>
+      'What you will choose by when you revoke it, such as ci or laptop. No two live tokens share a name.';
+
+  @override
+  String get tokensScopes => 'Scopes';
+
+  @override
+  String get tokensNotHeld =>
+      'You do not hold this scope, so you cannot grant it.';
+
+  @override
+  String get tokensPresetAgent => 'Agent';
+
+  @override
+  String get tokensPresetAgentNote =>
+      'Read, create and edit tasks, claim them, move them and comment.';
+
+  @override
+  String get tokensPresetRead => 'Read only';
+
+  @override
+  String get tokensPresetReadNote =>
+      'Read tasks, projects and workflows, and follow the event stream.';
+
+  @override
+  String get tokensExpiry => 'Expires';
+
+  @override
+  String get tokensExpiryInfo =>
+      'An expiry is the one control that limits the damage of a token that leaks without anybody noticing. Prefer the shortest window the work fits in.';
+
+  @override
+  String get tokensNever => 'Never';
+
+  @override
+  String tokensIssuedTitle(String name) {
+    return 'Token $name issued';
+  }
+
+  @override
+  String get tokensValue => 'Copy this token now';
+
+  @override
+  String get tokensValueWarning =>
+      'Keep it somewhere safe. It is not shown again, and nothing can show it later.';
+
+  @override
+  String get scopeAll =>
+      'Everything but global admin and account history. Only for a credential you trust like yourself.';
+
+  @override
+  String get scopeGroupTasks => 'Tasks';
+
+  @override
+  String get scopeGroupProjects => 'Projects';
+
+  @override
+  String get scopeGroupWorkflows => 'Workflows';
+
+  @override
+  String get scopeGroupComments => 'Comments and artifacts';
+
+  @override
+  String get scopeGroupEvents => 'Events';
+
+  @override
+  String get scopeGroupAdmin => 'Administration';
+
+  @override
+  String get scopeGroupAccount => 'Your account';
+
+  @override
+  String get scopeTaskRead => 'Read tasks, their comments and history.';
+
+  @override
+  String get scopeTaskWrite => 'Create and edit tasks.';
+
+  @override
+  String get scopeTaskTransition => 'Move a task from one state to another.';
+
+  @override
+  String get scopeTaskClaim => 'Claim tasks, renew the lease and release it.';
+
+  @override
+  String get scopeTaskDelete => 'Delete tasks and restore them from the trash.';
+
+  @override
+  String get scopeTaskReclaim => 'End a lease another worker holds.';
+
+  @override
+  String get scopeProjectRead => 'Read projects.';
+
+  @override
+  String get scopeProjectWrite => 'Create and change projects.';
+
+  @override
+  String get scopeWorkflowRead => 'Read workflows.';
+
+  @override
+  String get scopeWorkflowWrite => 'Create and change workflows.';
+
+  @override
+  String get scopeCommentWrite => 'Comment on tasks.';
+
+  @override
+  String get scopeArtifactWrite => 'Attach artifacts to tasks.';
+
+  @override
+  String get scopeEventSubscribe => 'Follow the live event stream.';
+
+  @override
+  String get scopeUserAdmin => 'Create, change and remove users.';
+
+  @override
+  String get scopeTotpAdmin => 'Clear another person\'s second factor.';
+
+  @override
+  String get scopeTokenAdmin => 'Issue and revoke API tokens.';
+
+  @override
+  String get scopeWebhookAdmin => 'Manage outgoing webhooks.';
+
+  @override
+  String get scopeTenantAdmin => 'Manage the tenant, its members and domains.';
+
+  @override
+  String get scopeSyncAdmin => 'Manage and run imports from other trackers.';
+
+  @override
+  String get scopeAuditRead => 'Read the audit log.';
+
+  @override
+  String get scopeExport => 'Export tasks and a snapshot of the whole tenant.';
+
+  @override
+  String get scopeImport => 'Import tasks and snapshots into the tenant.';
+
+  @override
+  String get scopeGlobalAdmin =>
+      'Administer every tenant on this server. Only a global admin\'s token can carry it.';
+
+  @override
+  String get scopeAccountRead =>
+      'Read your own account\'s history, which names every tenant you belong to. Only a token for your own account can carry it.';
+
+  @override
+  String get accountTitle => 'Your account';
+
+  @override
+  String get accountKind => 'Signed in as';
+
+  @override
+  String get accountKindToken => 'An API token';
+
+  @override
+  String get accountKindAgent => 'An agent';
+
+  @override
+  String get accountKindPerson => 'A person';
+
+  @override
+  String get accountGlobalAdmin => 'global admin';
+
+  @override
+  String get accountGlobalAdminYes => 'Administers every tenant of this server';
+
+  @override
+  String get accountMemberships => 'Your tenants';
+
+  @override
+  String get accountMembershipsHelp =>
+      'Every tenant this account belongs to, with its role there.';
+
+  @override
+  String get accountCurrent => 'current';
+
+  @override
+  String get accountHistory => 'Account history';
+
+  @override
+  String get accountHistoryHelp =>
+      'Every change to your password, second factor and memberships, in every tenant. Only you and global admins can read this.';
+
+  @override
+  String get accountHistoryEmpty => 'Nothing has changed yet.';
+
+  @override
+  String get accountHistoryNotReadable =>
+      'This token cannot read your account\'s history: it needs the account:read scope, which only a token minted for your own account carries.';
+
+  @override
+  String accountBy(String email) {
+    return 'by $email';
+  }
+
+  @override
+  String get accountBySystem => 'by the system';
+
+  @override
+  String get calendarTitle => 'Calendar feed';
+
+  @override
+  String get calendarLead =>
+      'Your due dates in Google, Apple or Outlook calendar';
+
+  @override
+  String get calendarUnavailable => 'Nothing to manage here';
+
+  @override
+  String get calendarUnavailableBody =>
+      'A calendar feed reads tasks as you, and this credential cannot read tasks.';
+
+  @override
+  String get calendarCreate => 'Create feed';
+
+  @override
+  String get calendarNone => 'No calendar feed';
+
+  @override
+  String get calendarNoneBody =>
+      'A private address your calendar subscribes to, so your due dates appear beside the rest of your week.';
+
+  @override
+  String get calendarFeed => 'Feed address';
+
+  @override
+  String get calendarFeedInfo =>
+      'Each task with a due date is an all-day event that links back here. Anybody holding the address can read what it lists, so treat it like a password. Only a hash of it is kept, so it cannot be shown again.';
+
+  @override
+  String get calendarActive => 'Active';
+
+  @override
+  String calendarCreatedOn(String day) {
+    return 'Created $day. The address was shown once; rotate to get a new one.';
+  }
+
+  @override
+  String get calendarShownOnce =>
+      'The address was shown once; rotate to get a new one.';
+
+  @override
+  String get calendarFilter => 'Feed filter';
+
+  @override
+  String get calendarFilterDefault =>
+      'The tasks assigned to you that are not finished';
+
+  @override
+  String get calendarFilterHint => 'project:infra tag:ops';
+
+  @override
+  String get calendarFilterHelp =>
+      'The task list\'s filter language. Empty means yours, not finished. Only tasks with a due date are listed.';
+
+  @override
+  String get calendarEditFilter => 'Change filter';
+
+  @override
+  String get calendarSaveFilter => 'Save filter';
+
+  @override
+  String get calendarFilterSaved => 'Feed filter saved';
+
+  @override
+  String get calendarRotate => 'Rotate the address';
+
+  @override
+  String get calendarRotateHelp =>
+      'A new address with the same filter; the old one stops at once.';
+
+  @override
+  String get calendarRotateButton => 'Rotate';
+
+  @override
+  String get calendarRevoke => 'Revoke the feed';
+
+  @override
+  String get calendarRevokeHelp =>
+      'The address stops answering. Subscribed calendars keep what they last fetched.';
+
+  @override
+  String get calendarRevokeButton => 'Revoke';
+
+  @override
+  String get calendarRevokeTitle => 'Revoke the calendar feed?';
+
+  @override
+  String get calendarRevokeBody =>
+      'The address stops at once. Remove the subscription from your calendar app too.';
+
+  @override
+  String get calendarRevoked => 'Calendar feed revoked';
+
+  @override
+  String get calendarAddress => 'Subscribe to this address';
+
+  @override
+  String get calendarOnce =>
+      'Add it in your calendar app. It is not shown again, so copy it now.';
+
+  @override
+  String get calendarRotatedOnce =>
+      'This address replaces the old one, which has stopped. Subscribe to it again wherever the old one was used. It is not shown again.';
+
+  @override
+  String calendarLists(String filter) {
+    return 'Lists: $filter';
+  }
+
+  @override
+  String get calendarListsDefault =>
+      'Lists the tasks assigned to you that are not finished.';
+
+  @override
+  String get calendarHowGoogle =>
+      'Google Calendar: Other calendars, then From URL, and paste the address.';
+
+  @override
+  String get calendarHowApple =>
+      'Apple Calendar: File, then New Calendar Subscription, or use Subscribe on this device.';
+
+  @override
+  String get calendarHowOutlook =>
+      'Outlook: Add calendar, then Subscribe from web, and paste the address.';
+
+  @override
+  String get calendarSubscribeHere => 'Subscribe on this device';
+
+  @override
+  String get transferTitle => 'Export and import';
+
+  @override
+  String get transferNoProjects =>
+      'Create a project before exporting or importing tasks.';
+
+  @override
+  String get transferExportTitle => 'Export tasks';
+
+  @override
+  String get transferExportHelp =>
+      'One project\'s tasks, or the ones a filter picks, as a file.';
+
+  @override
+  String get transferQuery => 'Filter';
+
+  @override
+  String get transferQueryHelp =>
+      'The task list\'s filter language. Empty exports every task.';
+
+  @override
+  String get transferFormat => 'Format';
+
+  @override
+  String get transferFormatCsv => 'CSV, for spreadsheets';
+
+  @override
+  String get transferFormatNdjson => 'NDJSON, one task per line';
+
+  @override
+  String get transferFormatMarkdown => 'Markdown table';
+
+  @override
+  String get transferColumns => 'Columns';
+
+  @override
+  String get transferDates => 'Dates';
+
+  @override
+  String get transferDatesIso => 'Date and time (ISO)';
+
+  @override
+  String get transferDatesDay => 'Day only';
+
+  @override
+  String get transferDelimiter => 'Delimiter';
+
+  @override
+  String get transferDelimiterComma => 'Comma';
+
+  @override
+  String get transferDelimiterSemicolon => 'Semicolon';
+
+  @override
+  String get transferDelimiterTab => 'Tab';
+
+  @override
+  String get transferDelimiterBar => 'Vertical bar';
+
+  @override
+  String get transferFinished => 'Include finished tasks';
+
+  @override
+  String get transferSubtasks => 'Include subtasks';
+
+  @override
+  String get transferTrashed => 'Include tasks in the trash';
+
+  @override
+  String get transferExportButton => 'Export';
+
+  @override
+  String transferExported(String name) {
+    return 'Saved $name';
+  }
+
+  @override
+  String get transferSnapshotTitle => 'Snapshot';
+
+  @override
+  String get transferSnapshotHelp =>
+      'Everything in this tenant as one NDJSON file, which tix can import elsewhere.';
+
+  @override
+  String get transferSnapshotComments => 'Include comments';
+
+  @override
+  String get transferSnapshotButton => 'Export snapshot';
+
+  @override
+  String get transferImportTitle => 'Import tasks';
+
+  @override
+  String get transferImportHelp =>
+      'A CSV, JSON or NDJSON file of tasks, including files Jira, GitHub, Trello and Linear write. You see what would happen before anything changes.';
+
+  @override
+  String get transferPick => 'Choose a file';
+
+  @override
+  String transferDryRun(
+    int rows,
+    int created,
+    int updated,
+    int skipped,
+    int failed,
+  ) {
+    return '$rows rows: $created to create, $updated to update, $skipped skipped, $failed failed.';
+  }
+
+  @override
+  String transferImportError(int line, String message) {
+    return 'Line $line: $message';
+  }
+
+  @override
+  String transferImportButton(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Import $count tasks',
+      one: 'Import 1 task',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String transferImported(int created, int updated) {
+    return 'Imported: $created created, $updated updated';
+  }
+
+  @override
+  String get columnRef => 'Reference';
+
+  @override
+  String get columnTitle => 'Title';
+
+  @override
+  String get columnParent => 'Parent';
+
+  @override
+  String get columnDependsOn => 'Depends on';
+
+  @override
+  String get columnRepeat => 'Repeat';
+
+  @override
+  String get columnCreated => 'Created';
+
+  @override
+  String get columnUpdated => 'Updated';
+
+  @override
+  String get columnStarted => 'Started';
+
+  @override
+  String get columnCompleted => 'Completed';
+
+  @override
+  String get columnDeleted => 'Deleted';
+
+  @override
+  String get columnCreator => 'Creator';
+
+  @override
+  String get columnProject => 'Project';
+
+  @override
+  String get columnId => 'Identifier';
+
+  @override
+  String get columnComments => 'Comments';
+
+  @override
+  String get columnHistory => 'History';
+
+  @override
+  String get settingsAccountHelp => 'Profile, tenants and history';
+
+  @override
+  String get settingsCalendarHelp => 'Your due dates in your calendar app';
+
+  @override
+  String get settingsTokensHelp =>
+      'Credentials for scripts, the CLI and agents';
 }

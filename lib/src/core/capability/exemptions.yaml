@@ -58,35 +58,13 @@ pending:
     - time.settings
   # Wave 2, team: projects, workflows, fields, users, members, invites, tokens, calendar, export.
   wave2:
-    - account.log
     - bundle.export
     - bundle.import
-    - calendar.create
-    - calendar.filter
-    - calendar.revoke
-    - calendar.rotate
-    - calendar.show
     - invite.accept
-    - invite.create
-    - invite.list
     - invite.preview
-    - invite.reissue
-    - invite.revoke
-    - member.add
-    - member.list
-    - member.remove
-    - snapshot.export
     - snapshot.import
     - status.read
-    - task.export
-    - token.create
-    - token.list
-    - token.revoke
     - token.rotate
-    - user.create
-    - user.delete
-    - user.list
-    - user.update
   # Wave 3, admin: tenants, global admin, domains, webhooks, sync, retention, audit, second factor, SSH keys.
   wave3:
     - account.log.any

@@ -3314,4 +3314,938 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Копирано.';
+
+  @override
+  String get secretShare => 'Сподели';
+
+  @override
+  String get secretDone => 'Запазих го';
+
+  @override
+  String get roleViewer => 'наблюдател';
+
+  @override
+  String get roleMember => 'член';
+
+  @override
+  String get roleAdmin => 'администратор';
+
+  @override
+  String get roleViewerHelp => 'Чете задачи, проекти и работни потоци.';
+
+  @override
+  String get roleMemberHelp =>
+      'Освен това създава, редактира, поема и мести задачи, коментира и експортира.';
+
+  @override
+  String get roleAdminHelp => 'Може всичко в този тенант.';
+
+  @override
+  String get peopleTitle => 'Потребители';
+
+  @override
+  String get peopleAdd => 'Добави потребител';
+
+  @override
+  String peopleActive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count активни',
+      one: '1 активен',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String peopleDisabledCount(int count) {
+    return '$count изключени';
+  }
+
+  @override
+  String get peopleAddMember => 'Добави член';
+
+  @override
+  String get peopleAddMemberButton => 'Добави';
+
+  @override
+  String get peopleAddMemberHelp =>
+      'Дайте роля в този тенант на съществуващ агент или акаунт.';
+
+  @override
+  String get peopleNoActors => 'Всички вече са членове на този тенант.';
+
+  @override
+  String get peopleAgent => 'агент';
+
+  @override
+  String get peoplePerson => 'човек';
+
+  @override
+  String get peopleEmpty => 'Още няма потребители.';
+
+  @override
+  String get peopleYou => 'вие';
+
+  @override
+  String get peopleNoRole => 'без роля';
+
+  @override
+  String get peopleDisabled => 'изключен';
+
+  @override
+  String get peopleInvites => 'Чакащи покани';
+
+  @override
+  String get peopleInvitesInfo =>
+      'Издадени и още неизползвани връзки. Повторното издаване спира старата връзка и дава нова; отмяната я спира.';
+
+  @override
+  String get peopleInvited => 'поканен';
+
+  @override
+  String peopleInvitedBy(String handle) {
+    return 'поканен от $handle';
+  }
+
+  @override
+  String get peopleInviteExpired => 'изтекла';
+
+  @override
+  String peopleInviteExpires(String day) {
+    return 'изтича на $day';
+  }
+
+  @override
+  String get peopleReissue => 'Издай отново';
+
+  @override
+  String get peopleRevoke => 'Отмени';
+
+  @override
+  String peopleRevokeInviteTitle(String email) {
+    return 'Да се отмени ли поканата за $email?';
+  }
+
+  @override
+  String get peopleRevokeInviteBody =>
+      'Връзката спира да работи веднага. Акаунтът остава без парола, докато не го изтриете или поканите отново.';
+
+  @override
+  String peopleInviteRevoked(String email) {
+    return 'Поканата за $email е отменена';
+  }
+
+  @override
+  String get peopleSignInMode => 'Как влизат';
+
+  @override
+  String get peopleSignInModeInfo =>
+      'Връзката с покана позволява на човека сам да избере парола. Работи веднъж и изтича; tix не праща имейли, затова я предавате сами.';
+
+  @override
+  String get peopleModeInvite => 'Връзка с покана';
+
+  @override
+  String get peopleModePassword => 'Задай парола';
+
+  @override
+  String get peopleDisplayName => 'Показвано име';
+
+  @override
+  String get peopleDisplayNameHelp => 'Ако е празно, се показва имейлът.';
+
+  @override
+  String get peopleRole => 'Роля';
+
+  @override
+  String get peopleLinkExpires => 'Връзката изтича след';
+
+  @override
+  String peopleDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days дни',
+      one: '1 ден',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get peopleYear => '1 година';
+
+  @override
+  String get peopleInviteHelp =>
+      'Получавате връзка, която да им изпратите. Работи веднъж и с нея те избират своя парола.';
+
+  @override
+  String get peopleRequireChangeFirst =>
+      'Изисквай смяна на паролата при първо влизане';
+
+  @override
+  String get peopleCreateInvite => 'Създай връзка';
+
+  @override
+  String get peopleCreateUser => 'Създай потребител';
+
+  @override
+  String peopleCreated(String email) {
+    return 'Създаден е $email';
+  }
+
+  @override
+  String get peopleInviteLink => 'Връзка с покана';
+
+  @override
+  String peopleSendLink(String email) {
+    return 'Изпратете тази връзка на $email';
+  }
+
+  @override
+  String get peopleLinkOnce =>
+      'Работи веднъж. tix не праща имейли и връзката няма да се покаже отново.';
+
+  @override
+  String peopleLinkOnceUntil(String day) {
+    return 'Работи веднъж и изтича на $day. tix не праща имейли и връзката няма да се покаже отново.';
+  }
+
+  @override
+  String get peopleRename => 'Промени показваното име';
+
+  @override
+  String get peopleNoName => 'Не е зададено';
+
+  @override
+  String get peopleChangeRole => 'Промени ролята';
+
+  @override
+  String get peopleSignIn => 'Влиза с';
+
+  @override
+  String peopleSso(String provider) {
+    return 'Единен вход ($provider)';
+  }
+
+  @override
+  String get peoplePasswordSignIn => 'Парола';
+
+  @override
+  String get peopleSecondFactor => 'Втори фактор';
+
+  @override
+  String get peopleTotpOn => 'Настроен';
+
+  @override
+  String get peopleTotpOff => 'Няма';
+
+  @override
+  String get peopleCreatedAt => 'Създаден';
+
+  @override
+  String get peopleAccess => 'Достъп';
+
+  @override
+  String get peopleDisabledSwitch => 'Изключен';
+
+  @override
+  String get peopleDisabledHelp =>
+      'Изключен акаунт не може да влиза: сесиите му приключват и API токените му се отменят веднага. Включването не ги връща.';
+
+  @override
+  String peopleDisabledToast(String name) {
+    return '$name е изключен';
+  }
+
+  @override
+  String peopleEnabledToast(String name) {
+    return '$name отново може да влиза';
+  }
+
+  @override
+  String get peopleRequireChange =>
+      'Поискай смяна на паролата при следващото влизане';
+
+  @override
+  String get peopleRequireChangeHelp =>
+      'Следващото им влизане с парола спира на страница, която иска нова. Отворените сесии и API токените не се засягат.';
+
+  @override
+  String get peopleSaved => 'Запазено';
+
+  @override
+  String get peopleSave => 'Запази';
+
+  @override
+  String peopleRoleChanged(String name, String role) {
+    return '$name вече е $role';
+  }
+
+  @override
+  String get peopleDangerZone => 'Опасна зона';
+
+  @override
+  String get peopleRemoveMember => 'Премахни от този тенант';
+
+  @override
+  String get peopleRemoveMemberHelp =>
+      'Прекратява членството и запазва акаунта.';
+
+  @override
+  String get peopleRemoveMemberButton => 'Премахни';
+
+  @override
+  String peopleRemoveMemberTitle(String name) {
+    return 'Да се премахне ли $name от този тенант?';
+  }
+
+  @override
+  String get peopleRemoveMemberBody =>
+      'Спира да действа тук веднага. Акаунтът остава и може отново да получи роля.';
+
+  @override
+  String peopleMemberRemoved(String name) {
+    return '$name е премахнат от този тенант';
+  }
+
+  @override
+  String peopleDelete(String name) {
+    return 'Изтрий $name';
+  }
+
+  @override
+  String get peopleDeleteHelp =>
+      'Изтриването премахва акаунта и членството му. Обикновено искате изключване, което може да се отмени.';
+
+  @override
+  String get peopleDeleteButton => 'Изтрий';
+
+  @override
+  String peopleDeleteTitle(String name) {
+    return 'Да се изтрие ли $name?';
+  }
+
+  @override
+  String get peopleDeleteBody =>
+      'Изтриването премахва акаунта и членството му. Не може да се отмени.';
+
+  @override
+  String peopleDeleted(String name) {
+    return '$name е изтрит';
+  }
+
+  @override
+  String get tokensTitle => 'API токени';
+
+  @override
+  String get tokensMine => 'Моите API токени';
+
+  @override
+  String get tokensIssue => 'Издай токен';
+
+  @override
+  String get tokensIssueButton => 'Издай';
+
+  @override
+  String get tokensWholeTenant => 'Всички токени на този тенант';
+
+  @override
+  String get tokensOwn => 'Вашите токени';
+
+  @override
+  String get tokensWholeNote =>
+      'Имате tenant:admin, затова тук са всички токени на тенанта и чии са. Отмяната на чужд токен се записва като такава.';
+
+  @override
+  String get tokensIntro =>
+      'Токенът е идентификацията, която скрипт, CLI или агент представя вместо вход. Има свои права и стойността му се показва веднъж, при издаване.';
+
+  @override
+  String get tokensEmpty => 'Няма токени.';
+
+  @override
+  String get tokensActive => 'активен';
+
+  @override
+  String get tokensExpired => 'изтекъл';
+
+  @override
+  String get tokensRevoked => 'отменен';
+
+  @override
+  String get tokensRevoke => 'Отмени';
+
+  @override
+  String tokensOwner(String name) {
+    return 'Собственик: $name';
+  }
+
+  @override
+  String tokensOwnerYou(String name) {
+    return 'Собственик: $name (вие)';
+  }
+
+  @override
+  String tokensCreated(String day) {
+    return 'Създаден на $day';
+  }
+
+  @override
+  String tokensExpires(String day) {
+    return 'Изтича на $day';
+  }
+
+  @override
+  String get tokensNeverExpires => 'Не изтича';
+
+  @override
+  String get tokensNotUsed => 'Още неизползван';
+
+  @override
+  String tokensLastUsed(String when) {
+    return 'Последно ползван $when';
+  }
+
+  @override
+  String tokensRevokeTitle(String name) {
+    return 'Да се отмени ли $name?';
+  }
+
+  @override
+  String get tokensRevokeBody =>
+      'Каквото държи този токен спира да се удостоверява веднага. Не може да се отмени и стойността не може да се възстанови.';
+
+  @override
+  String tokensRevokeOther(String name) {
+    return 'Този токен е на $name, не ваш, и дневникът ще запише, че сте прекратили чужд токен.';
+  }
+
+  @override
+  String tokensRevokeNamed(String name) {
+    return 'Отмени $name';
+  }
+
+  @override
+  String tokensRevokedToast(String name) {
+    return '$name е отменен';
+  }
+
+  @override
+  String get tokensName => 'Име';
+
+  @override
+  String get tokensNameHelp =>
+      'По него ще го изберете при отмяна, например ci или laptop. Два активни токена не може да имат едно име.';
+
+  @override
+  String get tokensScopes => 'Права';
+
+  @override
+  String get tokensNotHeld => 'Нямате това право, затова не може да го дадете.';
+
+  @override
+  String get tokensPresetAgent => 'Агент';
+
+  @override
+  String get tokensPresetAgentNote =>
+      'Чете, създава и редактира задачи, поема ги, мести ги и коментира.';
+
+  @override
+  String get tokensPresetRead => 'Само четене';
+
+  @override
+  String get tokensPresetReadNote =>
+      'Чете задачи, проекти и работни потоци и следи потока от събития.';
+
+  @override
+  String get tokensExpiry => 'Изтича';
+
+  @override
+  String get tokensExpiryInfo =>
+      'Срокът е единственото, което ограничава щетите от токен, изтекъл незабелязано. Изберете най-краткия срок, който стига.';
+
+  @override
+  String get tokensNever => 'Никога';
+
+  @override
+  String tokensIssuedTitle(String name) {
+    return 'Токенът $name е издаден';
+  }
+
+  @override
+  String get tokensValue => 'Копирайте този токен сега';
+
+  @override
+  String get tokensValueWarning =>
+      'Пазете го на сигурно място. Няма да се покаже отново и нищо не може да го покаже по-късно.';
+
+  @override
+  String get scopeAll =>
+      'Всичко без глобален администратор и история на акаунта. Само за токен, на който вярвате като на себе си.';
+
+  @override
+  String get scopeGroupTasks => 'Задачи';
+
+  @override
+  String get scopeGroupProjects => 'Проекти';
+
+  @override
+  String get scopeGroupWorkflows => 'Работни потоци';
+
+  @override
+  String get scopeGroupComments => 'Коментари и артефакти';
+
+  @override
+  String get scopeGroupEvents => 'Събития';
+
+  @override
+  String get scopeGroupAdmin => 'Администрация';
+
+  @override
+  String get scopeGroupAccount => 'Вашият акаунт';
+
+  @override
+  String get scopeTaskRead => 'Чете задачи, коментарите и историята им.';
+
+  @override
+  String get scopeTaskWrite => 'Създава и редактира задачи.';
+
+  @override
+  String get scopeTaskTransition => 'Мести задача от едно състояние в друго.';
+
+  @override
+  String get scopeTaskClaim => 'Поема задачи, подновява и освобождава наема.';
+
+  @override
+  String get scopeTaskDelete => 'Изтрива задачи и ги връща от кошчето.';
+
+  @override
+  String get scopeTaskReclaim => 'Прекратява наем, държан от друг изпълнител.';
+
+  @override
+  String get scopeProjectRead => 'Чете проекти.';
+
+  @override
+  String get scopeProjectWrite => 'Създава и променя проекти.';
+
+  @override
+  String get scopeWorkflowRead => 'Чете работни потоци.';
+
+  @override
+  String get scopeWorkflowWrite => 'Създава и променя работни потоци.';
+
+  @override
+  String get scopeCommentWrite => 'Коментира задачи.';
+
+  @override
+  String get scopeArtifactWrite => 'Прикача артефакти към задачи.';
+
+  @override
+  String get scopeEventSubscribe => 'Следи потока от събития на живо.';
+
+  @override
+  String get scopeUserAdmin => 'Създава, променя и премахва потребители.';
+
+  @override
+  String get scopeTotpAdmin => 'Изчиства втория фактор на друг човек.';
+
+  @override
+  String get scopeTokenAdmin => 'Издава и отменя API токени.';
+
+  @override
+  String get scopeWebhookAdmin => 'Управлява изходящи уебкуки.';
+
+  @override
+  String get scopeTenantAdmin => 'Управлява тенанта, членовете и домейните му.';
+
+  @override
+  String get scopeSyncAdmin => 'Управлява и пуска внасяне от други системи.';
+
+  @override
+  String get scopeAuditRead => 'Чете одитния дневник.';
+
+  @override
+  String get scopeExport => 'Експортира задачи и снимка на целия тенант.';
+
+  @override
+  String get scopeImport => 'Внася задачи и снимки в тенанта.';
+
+  @override
+  String get scopeGlobalAdmin =>
+      'Администрира всички тенанти на сървъра. Само токен на глобален администратор може да го има.';
+
+  @override
+  String get scopeAccountRead =>
+      'Чете историята на вашия акаунт, която назовава всеки тенант, към който принадлежите. Само токен за вашия акаунт може да го има.';
+
+  @override
+  String get accountTitle => 'Вашият акаунт';
+
+  @override
+  String get accountKind => 'Вписан като';
+
+  @override
+  String get accountKindToken => 'API токен';
+
+  @override
+  String get accountKindAgent => 'Агент';
+
+  @override
+  String get accountKindPerson => 'Човек';
+
+  @override
+  String get accountGlobalAdmin => 'глобален администратор';
+
+  @override
+  String get accountGlobalAdminYes => 'Администрира всички тенанти на сървъра';
+
+  @override
+  String get accountMemberships => 'Вашите тенанти';
+
+  @override
+  String get accountMembershipsHelp =>
+      'Всеки тенант, към който принадлежи акаунтът, с ролята му там.';
+
+  @override
+  String get accountCurrent => 'текущ';
+
+  @override
+  String get accountHistory => 'История на акаунта';
+
+  @override
+  String get accountHistoryHelp =>
+      'Всяка промяна на паролата, втория фактор и членствата ви във всеки тенант. Само вие и глобалните администратори я виждате.';
+
+  @override
+  String get accountHistoryEmpty => 'Още нищо не е променено.';
+
+  @override
+  String get accountHistoryNotReadable =>
+      'Този токен не може да чете историята на акаунта ви: нужно е правото account:read, което има само токен, издаден за вашия акаунт.';
+
+  @override
+  String accountBy(String email) {
+    return 'от $email';
+  }
+
+  @override
+  String get accountBySystem => 'от системата';
+
+  @override
+  String get calendarTitle => 'Календарен канал';
+
+  @override
+  String get calendarLead =>
+      'Сроковете ви в календара на Google, Apple или Outlook';
+
+  @override
+  String get calendarUnavailable => 'Тук няма какво да се управлява';
+
+  @override
+  String get calendarUnavailableBody =>
+      'Календарният канал чете задачи от ваше име, а тази идентификация не може да чете задачи.';
+
+  @override
+  String get calendarCreate => 'Създай канал';
+
+  @override
+  String get calendarNone => 'Няма календарен канал';
+
+  @override
+  String get calendarNoneBody =>
+      'Личен адрес, за който календарът ви се абонира, за да виждате сроковете си до останалата седмица.';
+
+  @override
+  String get calendarFeed => 'Адрес на канала';
+
+  @override
+  String get calendarFeedInfo =>
+      'Всяка задача със срок е събитие за цял ден с връзка обратно. Всеки с адреса може да чете какво изброява, затова го пазете като парола. Пази се само хеш, затова не може да се покаже отново.';
+
+  @override
+  String get calendarActive => 'Активен';
+
+  @override
+  String calendarCreatedOn(String day) {
+    return 'Създаден на $day. Адресът беше показан веднъж; завъртете го за нов.';
+  }
+
+  @override
+  String get calendarShownOnce =>
+      'Адресът беше показан веднъж; завъртете го за нов.';
+
+  @override
+  String get calendarFilter => 'Филтър на канала';
+
+  @override
+  String get calendarFilterDefault =>
+      'Задачите, възложени на вас, които не са приключени';
+
+  @override
+  String get calendarFilterHint => 'project:infra tag:ops';
+
+  @override
+  String get calendarFilterHelp =>
+      'Езикът за филтриране на задачи. Празно означава вашите, неприключени. Изброяват се само задачи със срок.';
+
+  @override
+  String get calendarEditFilter => 'Промени филтъра';
+
+  @override
+  String get calendarSaveFilter => 'Запази филтъра';
+
+  @override
+  String get calendarFilterSaved => 'Филтърът е запазен';
+
+  @override
+  String get calendarRotate => 'Завърти адреса';
+
+  @override
+  String get calendarRotateHelp =>
+      'Нов адрес със същия филтър; старият спира веднага.';
+
+  @override
+  String get calendarRotateButton => 'Завърти';
+
+  @override
+  String get calendarRevoke => 'Отмени канала';
+
+  @override
+  String get calendarRevokeHelp =>
+      'Адресът спира да отговаря. Абонираните календари пазят последно изтегленото.';
+
+  @override
+  String get calendarRevokeButton => 'Отмени';
+
+  @override
+  String get calendarRevokeTitle => 'Да се отмени ли календарният канал?';
+
+  @override
+  String get calendarRevokeBody =>
+      'Адресът спира веднага. Премахнете абонамента и от календара си.';
+
+  @override
+  String get calendarRevoked => 'Календарният канал е отменен';
+
+  @override
+  String get calendarAddress => 'Абонирайте се за този адрес';
+
+  @override
+  String get calendarOnce =>
+      'Добавете го в календара си. Няма да се покаже отново, затова го копирайте сега.';
+
+  @override
+  String get calendarRotatedOnce =>
+      'Този адрес заменя стария, който спря. Абонирайте се отново навсякъде, където е ползван старият. Няма да се покаже отново.';
+
+  @override
+  String calendarLists(String filter) {
+    return 'Изброява: $filter';
+  }
+
+  @override
+  String get calendarListsDefault =>
+      'Изброява задачите, възложени на вас, които не са приключени.';
+
+  @override
+  String get calendarHowGoogle =>
+      'Google Calendar: Други календари, после От URL адрес, и поставете адреса.';
+
+  @override
+  String get calendarHowApple =>
+      'Apple Calendar: Файл, после Нов абонамент за календар, или Абонирай на това устройство.';
+
+  @override
+  String get calendarHowOutlook =>
+      'Outlook: Добавяне на календар, после Абониране от уеб, и поставете адреса.';
+
+  @override
+  String get calendarSubscribeHere => 'Абонирай на това устройство';
+
+  @override
+  String get transferTitle => 'Експорт и внасяне';
+
+  @override
+  String get transferNoProjects =>
+      'Създайте проект, преди да експортирате или внасяте задачи.';
+
+  @override
+  String get transferExportTitle => 'Експорт на задачи';
+
+  @override
+  String get transferExportHelp =>
+      'Задачите на един проект или избраните от филтър, като файл.';
+
+  @override
+  String get transferQuery => 'Филтър';
+
+  @override
+  String get transferQueryHelp =>
+      'Езикът за филтриране на задачи. Празно експортира всички.';
+
+  @override
+  String get transferFormat => 'Формат';
+
+  @override
+  String get transferFormatCsv => 'CSV, за таблици';
+
+  @override
+  String get transferFormatNdjson => 'NDJSON, по задача на ред';
+
+  @override
+  String get transferFormatMarkdown => 'Таблица в Markdown';
+
+  @override
+  String get transferColumns => 'Колони';
+
+  @override
+  String get transferDates => 'Дати';
+
+  @override
+  String get transferDatesIso => 'Дата и час (ISO)';
+
+  @override
+  String get transferDatesDay => 'Само ден';
+
+  @override
+  String get transferDelimiter => 'Разделител';
+
+  @override
+  String get transferDelimiterComma => 'Запетая';
+
+  @override
+  String get transferDelimiterSemicolon => 'Точка и запетая';
+
+  @override
+  String get transferDelimiterTab => 'Табулация';
+
+  @override
+  String get transferDelimiterBar => 'Вертикална черта';
+
+  @override
+  String get transferFinished => 'Включи приключените задачи';
+
+  @override
+  String get transferSubtasks => 'Включи подзадачите';
+
+  @override
+  String get transferTrashed => 'Включи задачите в кошчето';
+
+  @override
+  String get transferExportButton => 'Експортирай';
+
+  @override
+  String transferExported(String name) {
+    return 'Запазен е $name';
+  }
+
+  @override
+  String get transferSnapshotTitle => 'Снимка';
+
+  @override
+  String get transferSnapshotHelp =>
+      'Всичко в този тенант като един NDJSON файл, който tix може да внесе другаде.';
+
+  @override
+  String get transferSnapshotComments => 'Включи коментарите';
+
+  @override
+  String get transferSnapshotButton => 'Експортирай снимка';
+
+  @override
+  String get transferImportTitle => 'Внасяне на задачи';
+
+  @override
+  String get transferImportHelp =>
+      'Файл със задачи в CSV, JSON или NDJSON, включително от Jira, GitHub, Trello и Linear. Виждате какво ще стане, преди да се промени нещо.';
+
+  @override
+  String get transferPick => 'Избери файл';
+
+  @override
+  String transferDryRun(
+    int rows,
+    int created,
+    int updated,
+    int skipped,
+    int failed,
+  ) {
+    return '$rows реда: $created за създаване, $updated за обновяване, $skipped пропуснати, $failed неуспешни.';
+  }
+
+  @override
+  String transferImportError(int line, String message) {
+    return 'Ред $line: $message';
+  }
+
+  @override
+  String transferImportButton(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Внеси $count задачи',
+      one: 'Внеси 1 задача',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String transferImported(int created, int updated) {
+    return 'Внесено: $created създадени, $updated обновени';
+  }
+
+  @override
+  String get columnRef => 'Номер';
+
+  @override
+  String get columnTitle => 'Заглавие';
+
+  @override
+  String get columnParent => 'Родител';
+
+  @override
+  String get columnDependsOn => 'Зависи от';
+
+  @override
+  String get columnRepeat => 'Повторение';
+
+  @override
+  String get columnCreated => 'Създадена';
+
+  @override
+  String get columnUpdated => 'Обновена';
+
+  @override
+  String get columnStarted => 'Започната';
+
+  @override
+  String get columnCompleted => 'Завършена';
+
+  @override
+  String get columnDeleted => 'Изтрита';
+
+  @override
+  String get columnCreator => 'Създател';
+
+  @override
+  String get columnProject => 'Проект';
+
+  @override
+  String get columnId => 'Идентификатор';
+
+  @override
+  String get columnComments => 'Коментари';
+
+  @override
+  String get columnHistory => 'История';
+
+  @override
+  String get settingsAccountHelp => 'Профил, тенанти и история';
+
+  @override
+  String get settingsCalendarHelp => 'Сроковете ви в календара';
+
+  @override
+  String get settingsTokensHelp => 'Токени за скриптове, CLI и агенти';
 }
