@@ -22,6 +22,22 @@ Coding standards for tix-mobile. Terse by design. Read before writing code.
 - Layout adapts to window width, never to `Platform.isX`. Platform checks are for platform services only.
 - Generated code is committed and never edited by hand. `just gen-check` fails while it is stale.
 
+## UI rules
+
+[docs/design.md](docs/design.md) is the contract for every screen. In short:
+
+- Build from `lib/src/core/design/` (`import '.../core/design/design.dart'`). A missing component is added there,
+  with a doc comment, a gallery entry and a golden, never styled inside a feature.
+- No colour, size or duration literals in screens. Tokens only: `context.tix`, `TixSpace`, `TixText`, `TixRadius`,
+  `TixMotion`. Status and priority colours never follow the tenant accent.
+- Every screen is a `TixPage`. Its create action is the one primary button (plus icon and a label) and opens
+  its form with `showTixSheet`. Empty lists carry the same action.
+- No expanders for actions or settings: settings are `TixSection`s. Destructive actions are `TixButton.danger`
+  then `confirmDestructive`. Explanations are visible text or an `InfoTip`.
+- Every state has a way back. Lists load with a skeleton, fail with `ErrorState`, and say when they are empty.
+- 48 dp targets, semantics labels on icon-only controls, nothing clipped at 200% text. Check 400 and 1280 wide,
+  light and dark, and a non-default accent in the gallery (`/gallery`).
+
 ## Dart style
 
 - `dart format`. No exceptions.

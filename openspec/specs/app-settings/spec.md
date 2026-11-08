@@ -24,13 +24,3 @@ and Bulgarian, each language named as its own readers write it, and SHALL rememb
 
 - **WHEN** a person picks Български
 - **THEN** the app's own text is Bulgarian at once
-
-### Requirement: Colours follow the platform
-
-The app SHALL use Material 3 and take its colour scheme from the platform's dynamic colour where the
-platform offers one, falling back to a scheme seeded from the tix accent.
-
-#### Scenario: No dynamic colour
-
-- **WHEN** the platform offers no dynamic colour
-- **THEN** the scheme is seeded from the tix accent
