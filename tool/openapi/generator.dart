@@ -467,6 +467,7 @@ class _Generator {
         if (op.method == 'get' && _isPage(op) && _ndjson(op) != null) {
           _method(out, op, stream: true);
         }
+        if (_isMultiMedia(op)) _method(out, op, file: true);
       }
       out
         ..writeln('}')
@@ -511,7 +512,25 @@ class _Generator {
     op.id,
   );
 
-  void _method(StringBuffer out, _Op op, {bool stream = false}) {
+  /// Whether [op] answers JSON or a document format its request picks (CSV,
+  /// Markdown), and takes no raw body: such an operation gets a `…File` twin
+  /// returning the bytes as the server wrote them. A listing that also
+  /// streams NDJSON is not one; it has its `…Stream` twin.
+  bool _isMultiMedia(_Op op) {
+    final content = (_success(op)?['content'] as Map?)?.keys ?? const [];
+    return content.length > 1 &&
+        content.any(
+          (m) => m != 'application/json' && m != 'application/x-ndjson',
+        ) &&
+        _body(op)?.raw == null;
+  }
+
+  void _method(
+    StringBuffer out,
+    _Op op, {
+    bool stream = false,
+    bool file = false,
+  }) {
     final params = (op.raw['parameters'] as List? ?? const [])
         .cast<Map<String, Object?>>();
     final pathParams = [
@@ -549,8 +568,12 @@ class _Generator {
       named.add('Map<String, String>? ${_prefixParam(prefix)}');
     }
 
-    final ret = _returnType(op, stream: stream);
-    final name = stream ? '${op.member}Stream' : op.member;
+    final ret = file ? 'Future<Uint8List>' : _returnType(op, stream: stream);
+    final name = stream
+        ? '${op.member}Stream'
+        : file
+        ? '${op.member}File'
+        : op.member;
 
     out.writeln();
     final summary = op.raw['summary'] as String? ?? '';
@@ -561,6 +584,7 @@ class _Generator {
       ..writeln(
         '  /// `${op.method.toUpperCase()} ${op.path}` (`${op.id}`)'
         '${stream ? ' as NDJSON, one item per line' : ''}'
+        '${file ? ' as the bytes of the format the request asks for' : ''}'
         '${scopes.isEmpty ? '' : ', scope ${_scopes(scopes)}'}.',
       );
     final args = [
@@ -597,7 +621,7 @@ class _Generator {
     }
     out
       ..writeln(' async {')
-      ..writeln('    ${_bodyFor(op, call)}')
+      ..writeln('    ${file ? 'return _t.bytes($call);' : _bodyFor(op, call)}')
       ..writeln('  }');
   }
 
