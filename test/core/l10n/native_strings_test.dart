@@ -13,7 +13,7 @@ Map<String, String> _androidStrings(String dir) {
       .readAsStringSync();
   return {
     for (final m in RegExp(
-      r'<string name="([^"]+)">(.*?)</string>',
+      '<string name="([^"]+)">(.*?)</string>',
     ).allMatches(text))
       m.group(1)!: m.group(2)!,
   };

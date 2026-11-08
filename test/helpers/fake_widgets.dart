@@ -19,7 +19,7 @@ class FakeWidgetBridge implements WidgetBridge {
   final written = <String>[];
 
   /// How many times widgets were asked to draw.
-  var redraws = 0;
+  int redraws = 0;
 
   /// The link that started the app.
   Uri? launch;
