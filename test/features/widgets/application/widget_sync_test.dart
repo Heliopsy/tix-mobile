@@ -314,7 +314,7 @@ void main() {
       expect(server.requestsTo('/api/v1/inbox/i1/read'), isNotEmpty);
     });
 
-    test('quick add opens a draft in the widget\'s project', () async {
+    test("quick add opens a draft in the widget's project", () async {
       final c = await synced();
       final route = await c
           .read(widgetSyncProvider.notifier)

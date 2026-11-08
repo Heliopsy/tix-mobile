@@ -105,7 +105,7 @@ void main() {
       expect(row.colour!.light, isNot(row.colour!.dark));
     });
 
-    test('the accent is the tenant\'s, checked per scheme', () {
+    test("the accent is the tenant's, checked per scheme", () {
       final snap = build(accent: TixAccent.resolve('#ffcc00')).myWork();
       expect(snap.accent.light, isNot('#ffcc00'));
       expect(snap.accent.onLight, anyOf('#ffffff', '#08231a'));
