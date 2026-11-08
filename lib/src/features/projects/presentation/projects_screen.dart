@@ -50,7 +50,7 @@ class ProjectsScreen extends ConsumerWidget {
 
 /// One project in the list: its mark in its colour, its name and key, and
 /// its description.
-class ProjectTile extends StatelessWidget {
+class ProjectTile extends ConsumerWidget {
   /// Draws [project].
   const ProjectTile({required this.project, super.key});
 
@@ -58,9 +58,10 @@ class ProjectTile extends StatelessWidget {
   final Project project;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = context.tix;
     final name = project.name.isEmpty ? project.key : project.name;
+    final open = ref.watch(projectOpenCountProvider(project.key)).value;
     final stripe = t.projectColour(project.color);
     return InkWell(
       onTap: () => context.go(Routes.project(project.key)),
@@ -110,6 +111,23 @@ class ProjectTile extends StatelessWidget {
                 ],
               ),
             ),
+            if (open != null)
+              Semantics(
+                label: context.l10n.projectOpenCount(open),
+                excludeSemantics: true,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: TixSpace.s2),
+                  child: Text(
+                    '$open',
+                    key: Key('project.${project.key}.open'),
+                    style: TextStyle(
+                      fontSize: TixText.sm,
+                      fontWeight: FontWeight.w600,
+                      color: t.muted,
+                    ),
+                  ),
+                ),
+              ),
             Icon(Icons.chevron_right, color: t.lineStrong),
           ],
         ),

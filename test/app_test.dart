@@ -56,7 +56,7 @@ void main() {
     expect(find.byType(NavigationRail), findsNothing);
     await tester.tap(find.text('Infrastructure'));
     await tester.pumpAndSettle();
-    expect(find.text('infra'), findsOneWidget);
+    expect(find.byKey(const Key('project.switch')), findsOneWidget);
     await tester.tap(find.text('Fix login'));
     await tester.pumpAndSettle();
     expect(find.byType(TaskDetailScreen), findsOneWidget);

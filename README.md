@@ -85,13 +85,21 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   with no server anywhere. Linux and Windows open the file where it is; Android, iOS and macOS import a copy into
   the app and export it back through the share sheet or a save dialog. The engine costs about 32 MB per Android
   ABI and 34 MB on desktop.
-- **Projects** visible to the active connection.
-- **Task lists** with pull to refresh and keyset pagination, so a long list loads a page at a time and stays stable
-  while tasks are being added.
+- **Projects** visible to the active connection, each in its colour with its open task count, and a switcher in
+  the project's title.
 - **Task detail** where every attribute the web edits is edited in place: title, Markdown description with a
   checklist you tick, workflow moves, priority, assignee, due date, tags, custom fields and the repeat rule;
   subtasks, dependencies, comments with `@` mentions, history and attached files; star, snooze, copy and delete
   with Undo. Keys on a keyboard, haptics on a phone, the properties beside the description on a wide screen.
+- **Task lists** with pull to refresh and keyset pagination, so a long list loads a page at a time and stays stable
+  while tasks are being added. Sort, group by status or project, swipe to complete or snooze, star in place, and
+  pick many tasks for one bulk move, priority, tag, assignee, star, copy or delete with a single Undo.
+- **Board and lanes**: a workflow's columns with drag and drop, or one lane per project, each column and lane
+  starred, collapsed, moved or hidden the way tix keeps it for your account.
+- **Filters and search** in tix's filter language, one-tap chips (mine, starred, snoozed, blocked, due windows,
+  finished), and saved filters, your own and shared ones.
+- **My work**: your open tasks under Overdue, Today, This week, Later and No date.
+- **Keyboard**: `j` and `k` to move, Enter to open, `x` to pick, `/` to filter, `v` to switch the view.
 - **Quick add** in tix's one-line syntax: `Fix login !high #auth @raj due:fri`. The server parses the line, so the
   app understands exactly what the CLI and the browser understand.
 - **Settings**: light, dark or system theme, English or Bulgarian, and the saved instances.

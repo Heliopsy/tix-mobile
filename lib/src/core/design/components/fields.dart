@@ -158,8 +158,12 @@ class TixSearchField extends StatefulWidget {
     this.onSubmitted,
     this.controller,
     this.fieldKey,
+    this.focusNode,
     super.key,
   });
+
+  /// The field's focus, when the caller moves focus to it.
+  final FocusNode? focusNode;
 
   /// The example query.
   final String hint;
@@ -197,6 +201,7 @@ class _TixSearchFieldState extends State<TixSearchField> {
     builder: (context, _) => TextField(
       key: widget.fieldKey,
       controller: _text,
+      focusNode: widget.focusNode,
       onChanged: widget.onChanged,
       onSubmitted: widget.onSubmitted,
       textInputAction: TextInputAction.search,

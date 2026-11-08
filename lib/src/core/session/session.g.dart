@@ -419,3 +419,109 @@ final class TaskDetailRepositoryProvider
 
 String _$taskDetailRepositoryHash() =>
     r'aa1e8a555b0e7d640d1eef45546f10cfc40c4a05';
+
+/// Listings, quick and bulk actions and workflows for the active session.
+
+@ProviderFor(taskListRepository)
+final taskListRepositoryProvider = TaskListRepositoryProvider._();
+
+/// Listings, quick and bulk actions and workflows for the active session.
+
+final class TaskListRepositoryProvider
+    extends
+        $FunctionalProvider<
+          TaskListRepository,
+          TaskListRepository,
+          TaskListRepository
+        >
+    with $Provider<TaskListRepository> {
+  /// Listings, quick and bulk actions and workflows for the active session.
+  TaskListRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'taskListRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$taskListRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<TaskListRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  TaskListRepository create(Ref ref) {
+    return taskListRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(TaskListRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<TaskListRepository>(value),
+    );
+  }
+}
+
+String _$taskListRepositoryHash() =>
+    r'3d494889773e0ece6aee791be1483799ce903381';
+
+/// View arrangements and saved filters for the active session.
+
+@ProviderFor(viewPrefsRepository)
+final viewPrefsRepositoryProvider = ViewPrefsRepositoryProvider._();
+
+/// View arrangements and saved filters for the active session.
+
+final class ViewPrefsRepositoryProvider
+    extends
+        $FunctionalProvider<
+          ViewPrefsRepository,
+          ViewPrefsRepository,
+          ViewPrefsRepository
+        >
+    with $Provider<ViewPrefsRepository> {
+  /// View arrangements and saved filters for the active session.
+  ViewPrefsRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'viewPrefsRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$viewPrefsRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<ViewPrefsRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  ViewPrefsRepository create(Ref ref) {
+    return viewPrefsRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ViewPrefsRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ViewPrefsRepository>(value),
+    );
+  }
+}
+
+String _$viewPrefsRepositoryHash() =>
+    r'457916fcc7421ccd7812933e9cd6d4e73596cbcd';

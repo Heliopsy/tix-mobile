@@ -15,6 +15,7 @@ import 'package:tix_mobile/src/features/shell/presentation/home_shell.dart';
 import 'package:tix_mobile/src/features/shell/presentation/splash_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_list_screen.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/task_screen.dart';
 
 export 'package:tix_mobile/src/core/router/routes.dart';
 
@@ -90,6 +91,22 @@ GoRouter router(Ref ref) {
                     ],
                   ),
                 ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.tasks,
+                builder: (_, _) => const TasksScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.myWork,
+                builder: (_, _) => const MyWorkScreen(),
               ),
             ],
           ),

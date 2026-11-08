@@ -63,3 +63,81 @@ abstract class _$Projects extends $AsyncNotifier<Paged<Project>> {
     return element.handleCreate(ref, build);
   }
 }
+
+/// How many of project [key]'s tasks are still open.
+
+@ProviderFor(projectOpenCount)
+final projectOpenCountProvider = ProjectOpenCountFamily._();
+
+/// How many of project [key]'s tasks are still open.
+
+final class ProjectOpenCountProvider
+    extends $FunctionalProvider<AsyncValue<int>, int, FutureOr<int>>
+    with $FutureModifier<int>, $FutureProvider<int> {
+  /// How many of project [key]'s tasks are still open.
+  ProjectOpenCountProvider._({
+    required ProjectOpenCountFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'projectOpenCountProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$projectOpenCountHash();
+
+  @override
+  String toString() {
+    return r'projectOpenCountProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<int> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<int> create(Ref ref) {
+    final argument = this.argument as String;
+    return projectOpenCount(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ProjectOpenCountProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$projectOpenCountHash() => r'84539ab512d47dee3a41455cefc69e0c0b8f80e2';
+
+/// How many of project [key]'s tasks are still open.
+
+final class ProjectOpenCountFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<int>, String> {
+  ProjectOpenCountFamily._()
+    : super(
+        retry: null,
+        name: r'projectOpenCountProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// How many of project [key]'s tasks are still open.
+
+  ProjectOpenCountProvider call(String key) =>
+      ProjectOpenCountProvider._(argument: key, from: this);
+
+  @override
+  String toString() => r'projectOpenCountProvider';
+}

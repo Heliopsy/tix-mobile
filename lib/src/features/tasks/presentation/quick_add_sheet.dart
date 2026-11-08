@@ -53,8 +53,8 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
     });
     try {
       final task = await ref
-          .read(projectTasksProvider(widget.projectKey).notifier)
-          .quickAdd(line);
+          .read(taskCreatorProvider.notifier)
+          .quickAdd(widget.projectKey, line);
       if (mounted) Navigator.of(context).pop(task);
     } on Object catch (e) {
       if (mounted) {

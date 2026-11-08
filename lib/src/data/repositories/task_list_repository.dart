@@ -1,0 +1,171 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+import 'dart:convert';
+
+import 'package:tix_mobile/src/core/errors/tix_exception.dart';
+import 'package:tix_mobile/src/data/api/gen/models.gen.dart' show SnoozeInput;
+import 'package:tix_mobile/src/data/api/tix_api.dart';
+import 'package:tix_mobile/src/data/cache/response_cache.dart';
+import 'package:tix_mobile/src/data/models/actor.dart';
+import 'package:tix_mobile/src/data/models/bulk.dart';
+import 'package:tix_mobile/src/data/models/page.dart';
+import 'package:tix_mobile/src/data/models/task.dart';
+import 'package:tix_mobile/src/data/models/workflow.dart';
+import 'package:tix_mobile/src/data/query/filter_expression.dart';
+
+/// One listing request: the filter's parameters and the order.
+typedef ListingRequest = ({
+  TaskParams params,
+  String? sort,
+  String? direction,
+  int limit,
+});
+
+/// Listings, quick actions and bulk actions over tasks, and the workflows
+/// that say where a task may go. First pages and workflows are kept in the
+/// cache, each with a `cached…` twin for a screen to draw at once.
+class TaskListRepository {
+  /// Reads through [_api], keeping copies in [_cache].
+  TaskListRepository(this._api, this._cache);
+
+  final TixApi _api;
+  final ResponseCache _cache;
+
+  static String _key(ListingRequest l) {
+    final keys = l.params.keys.toList()..sort();
+    final shape = {
+      for (final k in keys) k: l.params[k],
+      's': l.sort,
+      'd': l.direction,
+      'n': l.limit,
+    };
+    return 'tasks?${jsonEncode(shape)}';
+  }
+
+  static Page<Task> _tasks(Object? json) => Page.fromJson(
+    json! as Map<String, dynamic>,
+    (e) => Task.fromJson(e! as Map<String, dynamic>),
+  );
+
+  /// One page of the tasks [listing] selects.
+  Future<Page<Task>> list(ListingRequest listing, {String? cursor}) {
+    final fresh = _send(listing, cursor);
+    if (cursor != null) return fresh;
+    return _cache.remember(
+      _key(listing),
+      fresh,
+      (p) => p.toJson((e) => e.toJson()),
+    );
+  }
+
+  /// The first page of [listing] as last read, null when never read.
+  Future<Page<Task>?> cachedList(ListingRequest listing) =>
+      _cache.peek(_key(listing), _tasks);
+
+  Future<Page<Task>> _send(ListingRequest l, String? cursor) {
+    final p = l.params;
+    List<String>? all(String k) => p[k];
+    String? one(String k) => p[k]?.last;
+    List<int>? ints(String k) => p[k]?.map(int.parse).toList();
+    bool? flag(String k) => p[k] == null ? null : p[k]!.last == 'true';
+    DateTime? time(String k) =>
+        p[k] == null ? null : DateTime.parse(p[k]!.last);
+    final fields = {
+      for (final e in p.entries)
+        if (e.key.startsWith('field.')) e.key.substring(6): e.value.last,
+    };
+    return _api.task.list(
+      limit: int.tryParse(one('limit') ?? '') ?? l.limit,
+      cursor: cursor,
+      sort: one('sort') ?? l.sort,
+      direction: l.direction,
+      project: all('project'),
+      status: all('status'),
+      tag: all('tag'),
+      assignee: all('assignee'),
+      creator: all('creator'),
+      claimedBy: all('claimed_by'),
+      parentId: one('parent_id'),
+      q: one('q'),
+      rootOnly: flag('root_only'),
+      includeDeleted: flag('include_deleted'),
+      claimed: one('claimed'),
+      starred: one('starred'),
+      blocked: one('blocked'),
+      recurring: one('recurring'),
+      checklist: one('checklist'),
+      checklistOpen: one('checklist_open'),
+      trashed: one('trashed'),
+      snoozed: one('snoozed'),
+      priority: ints('priority'),
+      notProject: all('not_project'),
+      notStatus: all('not_status'),
+      notTag: all('not_tag'),
+      notAssignee: all('not_assignee'),
+      notCreator: all('not_creator'),
+      notClaimedBy: all('not_claimed_by'),
+      notPriority: ints('not_priority'),
+      text: all('text'),
+      dueBefore: time('due_before'),
+      dueAfter: time('due_after'),
+      fieldFilters: fields.isEmpty ? null : fields,
+    );
+  }
+
+  /// Applies one action to many tasks.
+  Future<BulkResult> bulk(BulkTaskInput request) => _api.task.bulk(request);
+
+  /// Moves [ref] to [status] by its workflow's shortest route.
+  Future<void> move(String ref, String status) =>
+      _one(BulkTaskInput(action: BulkAction.move, refs: [ref], to: status));
+
+  /// Assigns [ref] to [actorId], or clears it when empty.
+  Future<void> assign(String ref, String actorId) => _one(
+    BulkTaskInput(
+      action: BulkAction.assign,
+      refs: [ref],
+      assigneeActorId: actorId,
+    ),
+  );
+
+  Future<void> _one(BulkTaskInput request) async {
+    final refused = (await _api.task.bulk(request)).refusals;
+    if (refused.isNotEmpty) throw refusalError(refused.first);
+  }
+
+  /// Stars [ref] for the caller.
+  Future<void> star(String ref) => _api.task.star(ref);
+
+  /// Takes the caller's star off [ref].
+  Future<void> unstar(String ref) => _api.task.unstar(ref);
+
+  /// Hides [ref] until [until].
+  Future<Task> snooze(String ref, DateTime until) =>
+      _api.task.snooze(ref, SnoozeInput(until: until.toUtc()));
+
+  /// Wakes [ref].
+  Future<Task> unsnooze(String ref) => _api.task.unsnooze(ref);
+
+  /// Every workflow in the tenant.
+  Future<List<Workflow>> workflows() async => (await _cache.remember(
+    'workflows',
+    _api.workflow.list(),
+    (p) => p.toJson((e) => e.toJson()),
+  )).items;
+
+  /// The workflows as last read, null when never read.
+  Future<List<Workflow>?> cachedWorkflows() async => (await _cache.peek(
+    'workflows',
+    (json) => Page.fromJson(
+      json! as Map<String, dynamic>,
+      (e) => Workflow.fromJson(e! as Map<String, dynamic>),
+    ),
+  ))?.items;
+
+  /// Who the caller is.
+  Future<Actor> me() => _api.identity.whoami();
+}
+
+/// The error a refused bulk outcome stands for.
+TixException refusalError(BulkOutcome outcome) =>
+    TixException.fromEngine({'code': outcome.code, 'message': outcome.error});

@@ -34,11 +34,25 @@ class HomeShell extends StatelessWidget {
             run: () => _select(0),
           ),
           TixCommand(
+            id: 'go.tasks',
+            label: l10n.goTasks,
+            group: l10n.commandsNavigate,
+            icon: Icons.checklist,
+            run: () => _select(1),
+          ),
+          TixCommand(
+            id: 'go.myWork',
+            label: l10n.goMyWork,
+            group: l10n.commandsNavigate,
+            icon: Icons.person_outline,
+            run: () => _select(2),
+          ),
+          TixCommand(
             id: 'go.settings',
             label: l10n.goSettings,
             group: l10n.commandsNavigate,
             icon: Icons.settings_outlined,
-            run: () => _select(1),
+            run: () => _select(3),
           ),
           TixCommand(
             id: 'go.instances',
@@ -66,6 +80,8 @@ class HomeShell extends StatelessWidget {
     final width = MediaQuery.sizeOf(context).width;
     final destinations = [
       (Icons.folder_outlined, Icons.folder, l10n.projectsTitle),
+      (Icons.checklist, Icons.checklist, l10n.tasksTitle),
+      (Icons.person_outline, Icons.person, l10n.myWorkTitle),
       (Icons.settings_outlined, Icons.settings, l10n.settingsTitle),
     ];
     if (width < compactMaxWidth) {

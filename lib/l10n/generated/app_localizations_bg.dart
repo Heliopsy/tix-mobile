@@ -1057,4 +1057,421 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get taskDetailYes => 'Да';
+
+  @override
+  String get boardAllEmpty => 'Още няма задачи.';
+
+  @override
+  String get boardAllEmptyBody => 'Тук се показват задачите от всички проекти.';
+
+  @override
+  String get boardArrangement => 'Подредба';
+
+  @override
+  String get boardAssignMe => 'Възложи на мен';
+
+  @override
+  String boardAssignedToMe(String ref) {
+    return '$ref е възложена на вас';
+  }
+
+  @override
+  String get boardCollapse => 'Свий';
+
+  @override
+  String get boardColumnEmpty => 'Няма нищо';
+
+  @override
+  String boardCompleted(String ref) {
+    return '$ref е завършена';
+  }
+
+  @override
+  String boardCount(int count, String more) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count$more задачи',
+      one: '1$more задача',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get boardExpand => 'Разгъни';
+
+  @override
+  String boardGroupMenu(String group) {
+    return 'Подреди $group';
+  }
+
+  @override
+  String boardHiddenCount(int count) {
+    return 'Скрити: $count';
+  }
+
+  @override
+  String get boardHide => 'Скрий';
+
+  @override
+  String get boardLoadMore => 'Зареди още';
+
+  @override
+  String get boardMoveDown => 'Премести надолу';
+
+  @override
+  String get boardMoveLeft => 'Премести наляво';
+
+  @override
+  String get boardMoveRight => 'Премести надясно';
+
+  @override
+  String boardMoveTitle(String ref) {
+    return 'Премести $ref в';
+  }
+
+  @override
+  String get boardMoveTo => 'Премести в…';
+
+  @override
+  String get boardMoveUp => 'Премести нагоре';
+
+  @override
+  String boardMoved(String ref, String status) {
+    return '$ref е преместена в $status';
+  }
+
+  @override
+  String get boardNext => 'Следваща задача';
+
+  @override
+  String boardNoRoute(String ref) {
+    return 'Работният поток на $ref не позволява това';
+  }
+
+  @override
+  String get boardOpen => 'Отвори';
+
+  @override
+  String get boardPrevious => 'Предишна задача';
+
+  @override
+  String get boardRefused =>
+      'Тези проекти следват различни работни потоци и не могат да имат обща дъска. Стеснете филтъра до проектите на един поток, за да видите дъска.';
+
+  @override
+  String boardRefusedGroup(String workflow, String projects) {
+    return '$workflow: $projects';
+  }
+
+  @override
+  String boardReopened(String ref) {
+    return '$ref е отворена отново';
+  }
+
+  @override
+  String get boardResetArrangement => 'Нулирай подредбата';
+
+  @override
+  String boardShowGroup(String group) {
+    return 'Покажи $group';
+  }
+
+  @override
+  String get boardSnoozeLater => 'По-късно днес';
+
+  @override
+  String boardSnoozeTitle(String ref) {
+    return 'Отложи $ref до';
+  }
+
+  @override
+  String get boardSnoozeTomorrow => 'Утре сутринта';
+
+  @override
+  String get boardSnoozeWeek => 'Следващата седмица';
+
+  @override
+  String boardSnoozed(String ref) {
+    return '$ref е отложена';
+  }
+
+  @override
+  String boardStarred(String ref) {
+    return '$ref е отбелязана';
+  }
+
+  @override
+  String boardStrays(String refs) {
+    return 'Извън колоните на тази дъска: $refs';
+  }
+
+  @override
+  String get boardSwitchProject => 'Смени проекта';
+
+  @override
+  String boardUnstarred(String ref) {
+    return 'Отбелязването на $ref е премахнато';
+  }
+
+  @override
+  String get boardWake => 'Събуди сега';
+
+  @override
+  String boardWoken(String ref) {
+    return '$ref е събудена';
+  }
+
+  @override
+  String get bulkClear => 'Изчисти избора';
+
+  @override
+  String get bulkCopy => 'Копирай в…';
+
+  @override
+  String bulkCopyTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Копирай $count задачи в',
+      one: 'Копирай 1 задача в',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bulkDelete => 'Изтрий';
+
+  @override
+  String get bulkDeleteBody => 'Отиват в кошчето, а Отмени ги връща.';
+
+  @override
+  String bulkDeleteTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Да се изтрият ли $count задачи?',
+      one: 'Да се изтрие ли 1 задача?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bulkDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count задачи са променени',
+      one: '1 задача е променена',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bulkMove => 'Премести';
+
+  @override
+  String bulkMoveTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Премести $count задачи в',
+      one: 'Премести 1 задача в',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bulkPartly(int count, String refused) {
+    return '$count са променени. Отказани: $refused';
+  }
+
+  @override
+  String get bulkSelect => 'Избери';
+
+  @override
+  String get bulkSelectAll => 'Избери всички';
+
+  @override
+  String bulkSelected(int count) {
+    return '$count избрани';
+  }
+
+  @override
+  String get bulkTagAdd => 'Добави етикет';
+
+  @override
+  String get bulkTagRemove => 'Премахни етикет';
+
+  @override
+  String get filterBlocked => 'Блокирани';
+
+  @override
+  String get filterClear => 'Изчисти';
+
+  @override
+  String get filterDelete => 'Изтрий филтъра';
+
+  @override
+  String get filterDeleteBody => 'Изчезва и за всички, с които е споделен.';
+
+  @override
+  String filterDeleteTitle(String name) {
+    return 'Да се изтрие ли $name?';
+  }
+
+  @override
+  String get filterDueToday => 'Срок днес';
+
+  @override
+  String get filterDueWeek => 'Срок тази седмица';
+
+  @override
+  String get filterFinished => 'Завършени';
+
+  @override
+  String get filterFocus => 'Филтрирай задачите';
+
+  @override
+  String get filterMine => 'Мои';
+
+  @override
+  String get filterName => 'Име';
+
+  @override
+  String get filterNoMatch => 'Нищо не отговаря на този филтър.';
+
+  @override
+  String get filterNoMatchBody => 'Променете филтъра или го изчистете.';
+
+  @override
+  String get filterOverdue => 'Просрочени';
+
+  @override
+  String get filterRename => 'Преименувай';
+
+  @override
+  String get filterSave => 'Запази филтъра';
+
+  @override
+  String get filterSaveTitle => 'Запазване на филтъра';
+
+  @override
+  String filterSaved(String name) {
+    return '$name е запазен';
+  }
+
+  @override
+  String get filterShare => 'Сподели с всички';
+
+  @override
+  String get filterShared => 'Сподели с всички в наемателя';
+
+  @override
+  String get filterSharedHelp =>
+      'Другите го виждат сред запазените си филтри; само вие и администраторите можете да го променяте.';
+
+  @override
+  String get filterSnoozed => 'Отложени';
+
+  @override
+  String get filterUnshare => 'Спри споделянето';
+
+  @override
+  String get goMyWork => 'Към Моята работа';
+
+  @override
+  String get goTasks => 'Към Задачи';
+
+  @override
+  String get groupNone => 'Без групиране';
+
+  @override
+  String get groupProject => 'Групирай по проект';
+
+  @override
+  String get groupStatus => 'Групирай по статус';
+
+  @override
+  String get lanesEmpty => 'Няма задачи';
+
+  @override
+  String get myWorkEmpty => 'Нищо не ви е възложено.';
+
+  @override
+  String get myWorkEmptyBody =>
+      'Тук се показват отворените задачи, възложени на вас, по срок.';
+
+  @override
+  String get myWorkLater => 'По-късно';
+
+  @override
+  String get myWorkNoDate => 'Без срок';
+
+  @override
+  String get myWorkOverdue => 'Просрочени';
+
+  @override
+  String get myWorkTitle => 'Моята работа';
+
+  @override
+  String get myWorkToday => 'Днес';
+
+  @override
+  String get myWorkWeek => 'Тази седмица';
+
+  @override
+  String projectOpenCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count отворени задачи',
+      one: '1 отворена задача',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sortCreated => 'Създадена';
+
+  @override
+  String get sortDescending => 'Низходящо';
+
+  @override
+  String get sortMenu => 'Подреждане и групиране';
+
+  @override
+  String get sortNumber => 'Номер';
+
+  @override
+  String get sortTitle => 'Заглавие';
+
+  @override
+  String get sortUpdated => 'Променена';
+
+  @override
+  String get sortUrgency => 'Спешност';
+
+  @override
+  String get tasksTitle => 'Задачи';
+
+  @override
+  String get viewBoard => 'Дъска';
+
+  @override
+  String get viewLanes => 'Ленти';
+
+  @override
+  String get viewList => 'Списък';
+
+  @override
+  String get viewSwitch => 'Смени изгледа';
+
+  @override
+  String boardAssigned(String ref) {
+    return '$ref е възложена';
+  }
+
+  @override
+  String get boardAssignTo => 'Възложи на…';
 }

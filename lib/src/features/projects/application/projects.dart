@@ -39,3 +39,8 @@ class Projects extends _$Projects {
     idOf: (project) => project.id,
   );
 }
+
+/// How many of project [key]'s tasks are still open.
+@riverpod
+Future<int> projectOpenCount(Ref ref, String key) =>
+    ref.watch(tasksRepositoryProvider).projectOpenCount(key);

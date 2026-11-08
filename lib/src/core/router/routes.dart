@@ -24,6 +24,12 @@ abstract final class Routes {
   /// Every project.
   static const projects = '/projects';
 
+  /// Every task, as a list, a board or lanes.
+  static const tasks = '/tasks';
+
+  /// The reader's open assigned work by deadline.
+  static const myWork = '/mine';
+
   /// Theme, language and instances.
   static const settings = '/settings';
 
