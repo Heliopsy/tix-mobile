@@ -12,6 +12,7 @@ import 'package:tix_mobile/src/features/about/presentation/about_screen.dart';
 
 import '../../../helpers/app.dart';
 import '../../../helpers/attachments.dart';
+import '../../../helpers/design.dart';
 import '../../../helpers/fake_tix.dart';
 
 const _token = 'tok-do-not-leak-7f3a';
@@ -164,4 +165,18 @@ void main() {
     await tap(tester, 'about.licences');
     expect(find.byType(LicensePage), findsOneWidget);
   });
+
+  for (final locale in textLocales) {
+    for (final MapEntry(key: width, value: size) in widths.entries) {
+      testWidgets('$width, $locale: fits at twice the text size', (
+        tester,
+      ) async {
+        tester.platformDispatcher.textScaleFactorTestValue = 2;
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        await pump(tester, size: size, locale: locale);
+        await tap(tester, 'about.licences');
+        expect(tester.takeException(), isNull);
+      });
+    }
+  }
 }

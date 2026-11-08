@@ -487,14 +487,17 @@ class DueMark extends StatelessWidget {
           ),
           const SizedBox(width: TixSpace.s1),
         ],
-        Text(
-          text,
-          maxLines: 1,
-          softWrap: false,
-          style: TextStyle(
-            fontSize: TixText.xs,
-            fontWeight: dot ? FontWeight.w600 : FontWeight.w400,
-            color: colour,
+        Flexible(
+          child: Text(
+            text,
+            maxLines: 1,
+            softWrap: false,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: TixText.xs,
+              fontWeight: dot ? FontWeight.w600 : FontWeight.w400,
+              color: colour,
+            ),
           ),
         ),
       ],

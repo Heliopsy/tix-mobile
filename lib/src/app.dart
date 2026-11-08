@@ -37,6 +37,7 @@ class App extends ConsumerWidget {
         ...GlobalMaterialLocalizations.delegates,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
+      localeListResolutionCallback: resolveLocale,
       routerConfig: router,
     );
   }

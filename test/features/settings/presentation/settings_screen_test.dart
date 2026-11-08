@@ -11,13 +11,18 @@ import 'package:tix_mobile/src/features/settings/application/settings.dart';
 import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';
 
 import '../../../helpers/app.dart';
+import '../../../helpers/design.dart';
 import '../../../helpers/fake_tix.dart';
 import '../../../helpers/stores.dart';
 
 void main() {
   late ({MemoryKeyValueStore settings, MemorySecretStore secrets}) stores;
 
-  Future<ProviderContainer> pump(WidgetTester tester) {
+  Future<ProviderContainer> pump(
+    WidgetTester tester, {
+    Size size = const Size(500, 1000),
+    Locale locale = const Locale('en'),
+  }) {
     final s = signedInStores();
     s.settings.values['contexts'] = jsonEncode([
       {
@@ -33,7 +38,8 @@ void main() {
     return pumpScreen(
       tester,
       const SettingsScreen(),
-      size: const Size(500, 1000),
+      size: size,
+      locale: locale,
       overrides: fakeOverrides(
         FakeTix(),
         settings: s.settings,
@@ -140,4 +146,28 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('route:/settings/about'), findsOneWidget);
   });
+
+  testWidgets('every language is offered in its own name', (tester) async {
+    await pump(tester);
+    for (final name in ['English', 'Български', 'Français', 'Deutsch']) {
+      expect(find.text(name), findsOneWidget);
+    }
+    await tester.tap(find.text('Deutsch'));
+    await tester.pumpAndSettle();
+    expect(stores.settings.values['settings.locale'], 'de');
+  });
+
+  for (final locale in textLocales) {
+    for (final MapEntry(key: width, value: size) in widths.entries) {
+      testWidgets('$width, $locale: fits at twice the text size', (
+        tester,
+      ) async {
+        tester.platformDispatcher.textScaleFactorTestValue = 2;
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        await pump(tester, size: size, locale: locale);
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+      });
+    }
+  }
 }

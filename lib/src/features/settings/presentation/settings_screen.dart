@@ -13,7 +13,12 @@ import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
 
 /// Language names as their own readers write them, as tix's web app does.
-const languageNames = {'en': 'English', 'bg': 'Български'};
+const languageNames = {
+  'en': 'English',
+  'bg': 'Български',
+  'fr': 'Français',
+  'de': 'Deutsch',
+};
 
 /// Theme, language and the saved instances.
 class SettingsScreen extends ConsumerWidget {
