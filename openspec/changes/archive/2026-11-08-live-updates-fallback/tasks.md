@@ -2,7 +2,7 @@
 
 ## 1. Data
 
-- [x] 1.1 `TixEventPoller` over the transport, 404/405 as `EventPollUnsupported`, cancellable
+- [x] 1.1 `TixEventPoller` over the generated `event.poll`, 404/405 as `EventPollUnsupported`, cancellable; bump `tix.lock`
 - [x] 1.2 `TixEventStream` resumes from a starting cursor and reports an expired one
 - [x] 1.3 `LiveEvents`: WebSocket, polling, periodic refresh, probes, pause, cursor handover
 

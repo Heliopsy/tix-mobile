@@ -3,7 +3,8 @@
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
-import 'package:tix_mobile/src/data/api/transport.dart';
+import 'package:tix_mobile/src/data/api/gen/client.gen.dart';
+import 'package:tix_mobile/src/data/api/gen/models.gen.dart' show Event;
 import 'package:tix_mobile/src/data/events/tix_event.dart';
 
 /// One answer of `GET /api/v1/events/poll`.
@@ -15,7 +16,8 @@ class EventPollPage {
   /// The events, in `seq` order.
   final List<TixEvent> events;
 
-  /// The highest `seq` the server examined: the next `since_seq`.
+  /// The last `seq` the server read, past the last event when later ones
+  /// were filtered out: the next `since_seq`.
   final int nextSeq;
 }
 
@@ -42,16 +44,25 @@ abstract interface class EventPoller {
   });
 }
 
-/// [EventPoller] over a connection's [TixTransport], so the request carries
-/// that connection's credential.
-// TODO(live): call the generated `api.event.poll` once tix.lock pins a tix
-// whose openapi.yaml has the route, and drop this hand-written request.
+/// [EventPoller] over the generated `event.poll`, on a client of its own so
+/// the request carries that connection's credential and can be cancelled.
 class TixEventPoller implements EventPoller {
-  /// Polls through [transport].
-  TixEventPoller(this.transport);
+  /// Polls through [api], which no one else may share: its Dio gets the
+  /// interceptor that hands each poll its [CancelToken].
+  TixEventPoller(this.api) {
+    api.transport.dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          options.cancelToken ??= _cancel;
+          handler.next(options);
+        },
+      ),
+    );
+  }
 
-  /// The connection's transport.
-  final TixTransport transport;
+  /// The connection's client.
+  final TixClient api;
+  CancelToken? _cancel;
 
   @override
   Future<EventPollPage> poll({
@@ -61,36 +72,42 @@ class TixEventPoller implements EventPoller {
     int limit = 200,
     CancelToken? cancel,
   }) async {
-    final Map<String, dynamic> body;
+    _cancel = cancel;
     try {
-      body = await transport.json(
-        'GET',
-        '/api/v1/events/poll',
-        query: {
-          if (sinceSeq > 0) 'since_seq': sinceSeq,
-          if (types.isNotEmpty) 'types': types.join(','),
-          'limit': limit,
-          if (wait > Duration.zero) 'wait': '${wait.inSeconds}s',
-        },
-        cancel: cancel,
+      final page = await api.event.poll(
+        sinceSeq: sinceSeq > 0 ? sinceSeq : null,
+        types: types.isEmpty ? null : types,
+        limit: limit,
+        wait: wait > Duration.zero ? '${wait.inSeconds}s' : null,
+      );
+      return EventPollPage(
+        events: [
+          for (final e in page.events)
+            if (e.type != null) _event(e),
+        ],
+        nextSeq: page.nextSeq,
       );
     } on TixException catch (e) {
       if (e.status == 404 || e.status == 405) {
         throw const EventPollUnsupported();
       }
       rethrow;
+    } finally {
+      _cancel = null;
     }
-    final raw = body['events'];
-    final next = body['next_seq'];
-    if (raw is! List || next is! num) {
-      throw const TixException(TixErrorKind.notTix, status: 200);
-    }
-    return EventPollPage(
-      events: [
-        for (final e in raw)
-          if (e is Map<String, dynamic>) TixEvent.fromJson(e),
-      ],
-      nextSeq: next.toInt(),
-    );
   }
+
+  static TixEvent _event(Event e) => TixEvent(
+    seq: e.seq,
+    type: e.type!.value,
+    id: e.id,
+    tenantId: e.tenantId,
+    projectId: e.projectId,
+    subjectType: e.subjectType,
+    subjectId: e.subjectId,
+    actorId: e.actorId,
+    payload: e.payload,
+    via: e.via,
+    occurredAt: e.occurredAt,
+  );
 }

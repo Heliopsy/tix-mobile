@@ -15,9 +15,7 @@ void main() {
   setUp(() {
     server = FakeTix();
     poller = TixEventPoller(
-      server
-          .factory('https://tix.example', const BearerCredential('tok'))
-          .transport,
+      server.factory('https://tix.example', const BearerCredential('tok')),
     );
   });
 
@@ -71,7 +69,7 @@ void main() {
   });
 
   test('an answer that is not a page is not tix', () async {
-    server.pollAnswer = const FakeResponse(200, {'items': <Object?>[]});
+    server.pollAnswer = const FakeResponse(200, <Object?>[]);
     await expectLater(
       poller.poll(sinceSeq: 1),
       throwsA(

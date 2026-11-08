@@ -166,6 +166,7 @@ class LiveEvents {
   CancelToken? _pollCancel;
   Timer? _pollTimer;
   var _pollAttempt = 0;
+  late Duration _pollWait = config.pollWait;
   var _pollFresh = false;
 
   Timer? _refreshTimer;
@@ -336,7 +337,7 @@ class LiveEvents {
       final page = await _poller.poll(
         sinceSeq: since,
         types: _types,
-        wait: config.pollWait,
+        wait: _pollWait,
         limit: config.pollLimit,
         cancel: cancel,
       );
@@ -362,11 +363,13 @@ class LiveEvents {
     if (_pollFresh && since == 0 && _hadLive) _gap();
     _pollFresh = false;
     _hadLive = true;
+    final before = _cursor;
     page.events.forEach(_deliver);
     if (page.nextSeq > _cursor) _cursor = page.nextSeq;
     _set(LiveMode.polling);
     if (recovered) _probeNow();
-    _schedulePoll(Duration.zero);
+    final idle = page.events.isEmpty && _cursor == before;
+    _schedulePoll(idle ? _idlePause : Duration.zero);
   }
 
   void _pollFailed(TixException e) {
@@ -380,6 +383,13 @@ class LiveEvents {
       _cursor = 0;
       _pollFresh = false;
       _gap();
+      _schedulePoll(Duration.zero);
+      return;
+    }
+    if (e.kind == TixErrorKind.invalid &&
+        e.message.contains('wait') &&
+        _pollWait > _shorterWait) {
+      _pollWait = _shorterWait;
       _schedulePoll(Duration.zero);
       return;
     }
@@ -472,6 +482,13 @@ class LiveEvents {
     _mode = mode;
     if (!_statuses.isClosed) _statuses.add(next);
   }
+
+  // A server that answers an empty poll at once, ignoring the wait, is
+  // not asked again in a tight loop.
+  static const _idlePause = Duration(seconds: 1);
+
+  // A server whose request timeout is below the default refuses a 25 s wait.
+  static const _shorterWait = Duration(seconds: 10);
 
   static bool _isNetwork(Object? error) => switch (error) {
     SocketException() || TimeoutException() => true,

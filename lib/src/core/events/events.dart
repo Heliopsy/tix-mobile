@@ -85,7 +85,7 @@ LiveEvents? tixEventStream(Ref ref) {
   final live = LiveEvents(
     baseUrl: baseUrl,
     headers: credential.headers,
-    poller: TixEventPoller(api.transport),
+    poller: TixEventPoller(api),
     connector: ref.watch(eventSocketConnectorProvider),
     config: ref.watch(liveConfigProvider),
   );

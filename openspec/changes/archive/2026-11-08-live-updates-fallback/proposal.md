@@ -23,5 +23,5 @@ failing.
 
 - `live-updates`: new requirements for the fallback, the indicator and the diagnostics provider.
 - `design-system`: a `LiveIndicator` component.
-- The poll endpoint is not in the vendored spec yet, so the app calls it by hand through the transport until
-  `tix.lock` is bumped.
+- `tix.lock` moves to the tix that adds `event.poll` (and `token.rotate`, pending for wave 3); `event.poll` is bound
+  in the parity registry.
