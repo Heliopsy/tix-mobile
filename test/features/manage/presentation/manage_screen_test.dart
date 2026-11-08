@@ -137,4 +137,18 @@ void main() {
     );
     expect(people.dy, greaterThan(fields.dy));
   });
+
+  testWidgets('people, access and transfer follow their scopes', (
+    tester,
+  ) async {
+    final server = FakeTix()
+      ..identity = {
+        'scopes': ['user:admin', 'export'],
+      };
+    await pump(tester, server);
+    expect(find.byKey(const Key('manage.people.users')), findsOneWidget);
+    expect(find.byKey(const Key('manage.tenant.transfer')), findsOneWidget);
+    expect(find.byKey(const Key('manage.access.tokens')), findsNothing);
+    expect(find.byKey(const Key('manage.group.projects')), findsNothing);
+  });
 }
