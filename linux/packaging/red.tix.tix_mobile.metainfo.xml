@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-FileCopyrightText: tix-mobile contributors -->
+<!-- SPDX-License-Identifier: CC0-1.0 -->
+<!--
+  AppStream metadata for software centres and Flathub. The <releases> block is
+  generated from CHANGELOG.md by scripts/metainfo-releases.py (`just metainfo`),
+  and the Flatpak build regenerates it from the tagged source.
+-->
+<component type="desktop-application">
+  <id>red.tix.tix_mobile</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>AGPL-3.0-or-later</project_license>
+  <name>tix</name>
+  <summary>Self-hosted task tracker client</summary>
+  <summary xml:lang="bg">Задачи от собствен сървър</summary>
+  <summary xml:lang="fr">Vos tâches auto-hébergées</summary>
+  <summary xml:lang="de">Selbst gehostete Aufgaben verwalten</summary>
+  <developer id="red.tix">
+    <name>tix-mobile contributors</name>
+  </developer>
+  <description>
+    <p>tix is task management for humans and AI agents: a self-hosted server with a CLI, a terminal board, an HTTP API and a web UI. This is a native desktop client for it. It uses the same API as the CLI, so a task an agent claims in a terminal shows up in the window next to it a second later.</p>
+    <p>Connect to one or more tix servers with an API token or an email and password sign-in, or open a local tix database file directly. The tix engine is built into the app, so a local .db file needs no server at all.</p>
+    <p>On a wide window, tasks and their details sit side by side, and the app is meant to be driven from the keyboard. API tokens and sessions are kept in the system keyring (libsecret) and passwords are not stored.</p>
+    <ul>
+      <li>Projects, task lists, a board with drag and drop, and My work by due date</li>
+      <li>Edit every task attribute in place, with Markdown descriptions, comments and attachments</li>
+      <li>Quick add in tix's one-line syntax with a live preview (Ctrl+N)</li>
+      <li>Command palette (Ctrl+K) and keyboard navigation with j, k, x and /</li>
+      <li>Filters, saved filters and an inbox with notifications while the app runs</li>
+      <li>English, Bulgarian, French and German, with light, dark and OLED black themes</li>
+    </ul>
+    <p xml:lang="bg">tix е система за управление на задачи за хора и AI агенти: сървър, който хоствате сами, с CLI, табло в терминала, HTTP API и уеб интерфейс. Това е десктоп клиент за него. Използва същото API като CLI, така че задача, която агент поеме в терминала, след секунда се появява и в съседния прозорец.</p>
+    <p xml:lang="bg">Свържете се с един или повече tix сървъри чрез API токен или с имейл и парола, или отворете директно локален файл с tix база данни. Двигателят на tix е вграден в приложението, така че за локален .db файл не е нужен сървър.</p>
+    <p xml:lang="bg">В широк прозорец задачите и детайлите им стоят една до друга, а приложението е удобно за работа изцяло от клавиатурата. API токените и сесиите се пазят в системния ключодържател (libsecret), а паролите не се съхраняват.</p>
+    <ul xml:lang="bg">
+      <li>Проекти, списъци със задачи, табло с влачене и „Моята работа“ по крайни срокове</li>
+      <li>Редакция на всяко поле на задачата на място, с описание в Markdown, коментари и прикачени файлове</li>
+      <li>Бързо добавяне със синтаксиса на tix на един ред и преглед на живо (Ctrl+N)</li>
+      <li>Палитра с команди (Ctrl+K) и навигация с клавишите j, k, x и /</li>
+      <li>Филтри, запазени филтри и входящи с известия, докато приложението работи</li>
+      <li>Английски, български, френски и немски, светла, тъмна и черна OLED тема</li>
+    </ul>
+    <p xml:lang="fr">tix est un gestionnaire de tâches pensé pour les humains comme pour les agents IA : un serveur auto-hébergé avec une CLI, un tableau dans le terminal, une API HTTP et une interface web. Voici son client de bureau natif. Il utilise la même API que la CLI : une tâche prise en charge par un agent dans un terminal apparaît dans la fenêtre d'à côté une seconde plus tard.</p>
+    <p xml:lang="fr">Connectez-vous à un ou plusieurs serveurs tix avec un jeton d'API ou avec votre e-mail et votre mot de passe, ou ouvrez directement un fichier de base de données tix local. Le moteur tix est intégré à l'application : un fichier .db local ne demande aucun serveur.</p>
+    <p xml:lang="fr">Dans une fenêtre large, la liste des tâches et leur détail s'affichent côte à côte, et tout se pilote au clavier. Les jetons d'API et les sessions sont conservés dans le trousseau du système (libsecret) et les mots de passe ne sont pas enregistrés.</p>
+    <ul xml:lang="fr">
+      <li>Projets, listes de tâches, tableau en glisser-déposer et Mon travail par échéance</li>
+      <li>Modification sur place de chaque attribut, avec description en Markdown, commentaires et pièces jointes</li>
+      <li>Ajout rapide dans la syntaxe sur une ligne de tix, avec aperçu en direct (Ctrl+N)</li>
+      <li>Palette de commandes (Ctrl+K) et navigation au clavier avec j, k, x et /</li>
+      <li>Filtres, filtres enregistrés et boîte de réception avec notifications tant que l'application tourne</li>
+      <li>Anglais, bulgare, français et allemand, thèmes clair, sombre et noir OLED</li>
+    </ul>
+    <p xml:lang="de">tix ist Aufgabenverwaltung für Menschen und KI-Agenten: ein selbst gehosteter Server mit CLI, Terminal-Board, HTTP-API und Weboberfläche. Dies ist ein nativer Desktop-Client dafür. Er spricht dieselbe API wie die CLI, eine Aufgabe, die ein Agent im Terminal übernimmt, erscheint also eine Sekunde später im Fenster daneben.</p>
+    <p xml:lang="de">Verbinden Sie sich per API-Token oder mit E-Mail und Passwort mit einem oder mehreren tix-Servern, oder öffnen Sie direkt eine lokale tix-Datenbankdatei. Die tix-Engine ist in die App eingebaut, für eine lokale .db-Datei braucht es also keinen Server.</p>
+    <p xml:lang="de">In einem breiten Fenster stehen Aufgabenliste und Details nebeneinander, und die App lässt sich komplett über die Tastatur bedienen. API-Tokens und Sitzungen liegen im Schlüsselbund des Systems (libsecret), Passwörter werden nicht gespeichert.</p>
+    <ul xml:lang="de">
+      <li>Projekte, Aufgabenlisten, Board mit Drag and Drop und Meine Arbeit nach Fälligkeit</li>
+      <li>Jedes Aufgabenfeld direkt bearbeiten, mit Markdown-Beschreibung, Kommentaren und Anhängen</li>
+      <li>Schnellerfassung in der Einzeilen-Syntax von tix mit Live-Vorschau (Strg+N)</li>
+      <li>Befehlspalette (Strg+K) und Tastaturnavigation mit j, k, x und /</li>
+      <li>Filter, gespeicherte Filter und ein Eingang mit Benachrichtigungen, solange die App läuft</li>
+      <li>Englisch, Bulgarisch, Französisch und Deutsch, helles, dunkles und OLED-schwarzes Design</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">red.tix.tix_mobile.desktop</launchable>
+  <url type="homepage">https://github.com/heliopsy/tix-mobile</url>
+  <url type="bugtracker">https://github.com/heliopsy/tix-mobile/issues</url>
+  <url type="vcs-browser">https://github.com/heliopsy/tix-mobile</url>
+  <url type="contribute">https://github.com/heliopsy/tix-mobile/blob/main/CONTRIBUTING.md</url>
+  <categories>
+    <category>Office</category>
+    <category>ProjectManagement</category>
+  </categories>
+  <keywords>
+    <keyword>tasks</keyword>
+    <keyword>todo</keyword>
+    <keyword>tickets</keyword>
+    <keyword>kanban</keyword>
+  </keywords>
+  <provides>
+    <binary>tix_mobile</binary>
+  </provides>
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+  </supports>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.4.0" date="2026-11-08">
+      <url>https://github.com/heliopsy/tix-mobile/releases/tag/v0.4.0</url>
+      <description>
+        <ul>
+          <li>an About screen with versions, project links and a bug report</li>
+          <li>an OLED black theme, and the system theme can go black too</li>
+          <li>board, lanes, filters, saved filters, My work and bulk actions</li>
+          <li>edit every task attribute from the task screen</li>
+          <li>French and German for quick actions, templates, the inbox and notifications</li>
+          <li>French and German for the board, filters and bulk actions</li>
+          <li>French and German, with a test that keeps every language complete</li>
+          <li>inbox with live updates, local notifications and personal channels</li>
+          <li>switch to OLED black from the command palette</li>
+          <li>tasks: keep an edit when the task changes elsewhere and offer Reload</li>
+          <li>templates, quick add from anywhere, share intake and a global command palette</li>
+          <li>the project list's New task opens the shared quick add</li>
+          <li>tasks: refresh listings after a quick add from the shared sheet</li>
+          <li>tasks: resync the list when a bulk undo is refused</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.3.0" date="2026-11-08">
+      <url>https://github.com/heliopsy/tix-mobile/releases/tag/v0.3.0</url>
+      <description>
+        <ul>
+          <li>generate the tix API client from the spec tix.lock pins</li>
+          <li>list only the licences of what ships</li>
+          <li>restyle the screens with the design system</li>
+          <li>run local databases on the embedded tix engine</li>
+          <li>tix design tokens, the tenant accent and a component library</li>
+          <li>leave unconditional public domain dedications off the Licenses page</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.2.0" date="2026-11-08">
+      <url>https://github.com/heliopsy/tix-mobile/releases/tag/v0.2.0</url>
+      <description>
+        <ul>
+          <li>several instances, sign-in and switching between tenants</li>
+          <li>show the tix mark on the connect screen and in About</li>
+          <li>tix icons, launch screens and name on every platform</li>
+          <li>android: ship one APK per ABI instead of a universal APK</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.1.0" date="2026-11-08">
+      <url>https://github.com/heliopsy/tix-mobile/releases/tag/v0.1.0</url>
+      <description>
+        <ul>
+          <li>connect, browse projects and tasks, quick add and settings</li>
+          <li>data: tix API client, models and repositories</li>
+          <li>add the justfile and pin the gate tools</li>
+          <li>android: sign release builds from env or key.properties</li>
+          <li>pin the app stack, strict lints and codegen config</li>
+          <li>run dart analyze for analyzer plugins, drop removed build_runner flag</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+</component>

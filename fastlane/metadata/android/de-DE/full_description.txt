@@ -1,0 +1,31 @@
+tix ist Aufgabenverwaltung für Menschen und KI-Agenten: ein selbst gehosteter Server mit CLI, Terminal-Board, HTTP-API und Weboberfläche. Diese App ist ein nativer Client dafür. Sie spricht dieselbe API wie die CLI, eine Aufgabe, die ein Agent im Terminal übernimmt, sehen Sie also eine Sekunde später auf dem Handy.
+
+Sie können die App auf zwei Arten nutzen:
+- Mit einem eigenen tix-Server verbinden (https://github.com/heliopsy/tix), per API-Token oder mit E-Mail und Passwort (inklusive zweitem Faktor). Sie können mehrere Server hinzufügen und von jedem Bildschirm aus zwischen ihnen und ihren Mandanten wechseln.
+- Eine lokale tix-Datenbank auf dem Gerät öffnen. Die tix-Engine ist in die App eingebaut und stellt eine .db-Datei ganz ohne Server bereit. Sie importieren eine Kopie in die App und exportieren sie über das Teilen-Menü wieder.
+
+Was die App kann:
+- Projekte mit ihrer Farbe und der Zahl offener Aufgaben
+- Aufgabenlisten mit Ziehen zum Aktualisieren, Sortierung, Gruppierung nach Status oder Projekt, Wischen zum Erledigen oder Zurückstellen und Sammeländerungen mit einem einzigen Rückgängig
+- Aufgabendetails, in denen Sie alles direkt bearbeiten: Titel, Markdown-Beschreibung mit Checklisten, Workflow-Schritt, Priorität, Zuständige, Fälligkeit, Tags, eigene Felder und Wiederholungsregel, dazu Unteraufgaben, Abhängigkeiten, Kommentare mit @-Erwähnungen, Verlauf und Anhänge
+- Board mit Drag and Drop zwischen den Workflow-Spalten oder einer Bahn pro Projekt
+- Filter und Suche in der Filtersprache von tix, Schnellfilter mit einem Tipp und gespeicherte Filter
+- Meine Arbeit: Ihre offenen Aufgaben unter Überfällig, Heute, Diese Woche, Später und Ohne Datum
+- Schnellerfassung in der Einzeilen-Syntax von tix, etwa „Fix login !high #auth @raj due:fri“, mit einer Live-Vorschau dessen, was der Server aus der Zeile macht. Der Server wertet die Zeile aus, die App versteht also genau das, was auch CLI und Browser verstehen.
+- Aufgabenvorlagen
+- Mit tix teilen: geteilte Texte und Links öffnen die Schnellerfassung als Entwurf. Launcher-Verknüpfungen für Schnellerfassung, Eingang und Meine Arbeit.
+- Eingang für Erwähnungen, Zuweisungen, Kommentare und Statusänderungen, mit Zähler für Ungelesenes
+- Benachrichtigungen über neue Einträge im Eingang, solange die App läuft
+- Design nach System, hell, dunkel oder OLED-Schwarz
+- Englisch, Bulgarisch, Französisch und Deutsch
+- Layouts für Handy und Tablet, auf breiten Bildschirmen mit Liste und Details nebeneinander
+
+Datenschutz:
+Der Server bleibt die maßgebliche Quelle. Die App speichert keine eigenen Daten außer den hinzugefügten Servern und ein paar Einstellungen. API-Tokens und Anmeldesitzungen liegen im Android Keystore und landen nie in Logs oder Einstellungen. Passwörter werden gar nicht gespeichert. Die App enthält keine Bibliotheken für Analyse, Werbung oder Absturzberichte.
+
+Erste Schritte:
+Erzeugen Sie auf dem Rechner mit tix ein Token mit „tix token create phone --scope task:read --scope task:write --scope project:read“ und tragen Sie dann die Adresse des Servers und das Token in der App ein. Ein Handy erreicht keinen Server, der auf einem anderen Rechner nur an localhost lauscht. Stellen Sie tix deshalb per HTTPS bereit, direkt oder hinter einem Reverse Proxy.
+
+Die App ist noch früh dran und nicht offiziell veröffentlicht. Sie deckt einen Teil der tix-API ab, bis Version 1.0 ist mit Ecken und Kanten und mit Änderungen zu rechnen.
+
+tix-mobile ist freie Software unter der Lizenz AGPL-3.0-or-later. Quellcode, Issue-Tracker und Roadmap: https://github.com/heliopsy/tix-mobile

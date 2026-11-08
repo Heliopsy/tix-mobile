@@ -1,0 +1,31 @@
+tix is task management for humans and AI agents: a self-hosted server with a CLI, a terminal board, an HTTP API and a web UI. This app is a native client for it. It talks to the same API the CLI uses, so a task an agent claims from a terminal is the task you read on your phone a second later.
+
+You can use it in two ways:
+- Connect to a tix server you run (https://github.com/heliopsy/tix) with an API token, or sign in with email and password (second factor included). You can add several servers and switch between them and their tenants from any screen.
+- Open a local tix database on the device. The tix engine is built into the app and serves a .db file with no server anywhere. You import a copy into the app and export it back through the share sheet.
+
+What it does:
+- Projects with their colours and open task counts
+- Task lists with pull to refresh, sorting, grouping by status or project, swipe to complete or snooze, and bulk changes with a single Undo
+- Task detail where you edit everything in place: title, Markdown description with checklists, workflow, priority, assignee, due date, tags, custom fields and repeat rule, plus subtasks, dependencies, comments with @ mentions, history and attached files
+- Board view with drag and drop between workflow columns, or one lane per project
+- Filters and search in tix's filter language, one-tap chips and saved filters
+- My work: your open tasks under Overdue, Today, This week, Later and No date
+- Quick add in tix's one-line syntax, for example "Fix login !high #auth @raj due:fri", with a live preview of what the server makes of the line. The server parses it, so the app understands exactly what the CLI and the browser understand.
+- Task templates
+- Share to tix: shared text and links open quick add as a draft. Launcher shortcuts for Quick add, Inbox and My work.
+- Inbox for mentions, assignments, comments and status changes, with an unread badge
+- Notifications for new inbox items while the app is running
+- System, light, dark or OLED black theme
+- English, Bulgarian, French and German
+- Phone and tablet layouts, with a two-pane list and detail on wide screens
+
+Privacy:
+The server stays the source of truth. The app keeps no data of its own beyond the servers you added and a few preferences. API tokens and sign-in sessions are kept in the Android Keystore and are never written to logs or preferences. Passwords are not stored at all. The app contains no analytics, advertising or crash-reporting libraries.
+
+Getting started:
+On the machine running tix, mint a token with "tix token create phone --scope task:read --scope task:write --scope project:read", then add the server's URL and the token in the app. A phone cannot reach a server bound to localhost on another machine, so serve tix over HTTPS, either directly or behind a reverse proxy.
+
+The app is early and pre-release. It covers part of what the tix API offers, and you should expect rough edges and changes before 1.0.
+
+tix-mobile is free software under the AGPL-3.0-or-later licence. Source code, issue tracker and roadmap: https://github.com/heliopsy/tix-mobile
