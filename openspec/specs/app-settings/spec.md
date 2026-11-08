@@ -63,3 +63,13 @@ cases and at least the English plural's explicit and `other` cases. A test SHALL
 
 - **WHEN** a change adds a key to `app_en.arb` and not to `app_fr.arb`
 - **THEN** the test suite fails naming the key
+
+### Requirement: Widget privacy is chosen
+
+Settings SHALL offer a switch, on by default and remembered on this device, that limits widgets on the lock screen
+to counts.
+
+#### Scenario: Turned off
+
+- **WHEN** a person turns counts only off
+- **THEN** the lock screen inbox widget may show the newest item's text
