@@ -3,6 +3,10 @@
 # still applies.
 default: true
 MD013: false
+# `openspec archive` writes baseline specs with "## Purpose" directly above
+# its paragraph. Linting the tool's own output format would mean hand-editing
+# every archive, so blank lines around headings are not required here.
+MD022: false
 MD024:
   siblings_only: true
 MD033: false
