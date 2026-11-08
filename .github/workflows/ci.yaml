@@ -159,9 +159,35 @@ jobs:
   # Runner labels are exact images rather than *-latest: a label that moves
   # when GitHub promotes a new image is how a green build starts failing on a
   # morning nobody pushed anything.
+  # Pull requests and the merge queue build Android and Linux only, which keeps
+  # them under ten minutes. iOS, macOS and Windows build on every push to main,
+  # so a break there shows up right after the merge. The platform list lives in
+  # .github/build-matrix.json; entries marked main_only are dropped here.
+  plan:
+    name: Plan builds
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    outputs:
+      matrix: ${{ steps.pick.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/build-matrix.json
+          sparse-checkout-cone-mode: false
+      - id: pick
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          matrix=$(jq -c --arg ev "$EVENT" 'map(select($ev == "push" or (.main_only | not)) | del(.main_only))' .github/build-matrix.json)
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          echo "$matrix" | jq -r '.[].name'
+
   build:
     name: Build (${{ matrix.name }})
-    needs: [gate, lint]
+    needs: [gate, lint, plan]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     permissions:
@@ -169,53 +195,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Pull requests and the merge queue build Android and Linux only, which
-        # keeps them under ten minutes. iOS, macOS and Windows build on every
-        # push to main, so a break there shows up right after the merge.
-        exclude: ${{ fromJSON(github.event_name == 'push' && '[]' || '[{"main_only":true}]') }}
-        include:
-          - name: Android
-            os: ubuntu-24.04
-            java: true
-            recipe: build-apk
-            target: android
-            check: android
-            artifact: build/app/outputs/flutter-apk/app-*-release.apk
-          - name: Linux x64
-            os: ubuntu-24.04
-            linux: true
-            recipe: build-linux
-            target: linux
-            check: bundle
-            artifact: build/linux/x64/release/bundle/
-          - name: Linux arm64
-            os: ubuntu-24.04-arm
-            linux: true
-            recipe: build-linux
-            target: linux
-            check: bundle
-            artifact: build/linux/arm64/release/bundle/
-          - name: iOS
-            main_only: true
-            os: macos-15
-            recipe: build-ios
-            target: ios
-            check: bundle
-            artifact: build/ios/iphoneos/Runner.app/
-          - name: macOS
-            main_only: true
-            os: macos-15
-            recipe: build-macos
-            target: macos
-            check: bundle
-            artifact: build/macos/Build/Products/Release/
-          - name: Windows
-            main_only: true
-            os: windows-2025
-            recipe: build-windows
-            target: windows
-            check: bundle
-            artifact: build/windows/x64/runner/Release/
+        include: ${{ fromJSON(needs.plan.outputs.matrix) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
@@ -278,7 +258,7 @@ jobs:
   ci-ok:
     name: CI ok
     if: always()
-    needs: [gate, lint, test, build]
+    needs: [gate, lint, test, plan, build]
     runs-on: ubuntu-24.04
     permissions: {}
     steps:
