@@ -67,14 +67,17 @@ The same scope as Wear OS: today's tasks and marking one done.
 
 ## Store releases
 
-Today releases are files on GitHub. The goal is the stores people already use:
+Today releases are files on GitHub. The goal is the stores people already use. The pipeline for each is in the
+repository and skipped until its account exists; [docs/releasing.md](docs/releasing.md#store-channels) lists what
+each still needs from the maintainer.
 
-| Store | Needs |
-| --- | --- |
-| Google Play | A developer account, the upload key already used for release builds, a listing, and the review |
-| App Store | iOS signing in CI, App Store Connect, a privacy manifest, and the review |
-| F-Droid | A reproducible build from source with no proprietary dependencies, and inclusion in their build server |
-| Flathub | A Flatpak manifest building from source, and a reviewed submission |
+| Store | In the repository | Still needs |
+| --- | --- | --- |
+| Google Play | Store text in four languages, internal-track upload | A developer account, the listing's forms, screenshots, the review |
+| App Store | Signed IPA and TestFlight upload | An Apple developer account, a privacy manifest, screenshots, the review |
+| macOS (direct download) | Developer ID signing and notarisation | The Developer ID certificate |
+| F-Droid | Recipe, tix srclib, a CI check for non-free code | Submission to fdroiddata |
+| Flathub | Manifest, AppStream metainfo | Generated offline sources, a test build, screenshots, the submission |
 
 The [CLA](CLA.md) is what lets the maintainer accept app-store terms that sit awkwardly with the AGPL alone.
 
