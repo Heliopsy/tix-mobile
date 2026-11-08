@@ -3,6 +3,9 @@ name: Dependency Review
 on:
   pull_request:
     branches: [main]
+  # Required checks must report in the merge queue too; the review itself
+  # only means something on a pull request, so the job skips there.
+  merge_group:
 
 permissions: read-all
 
@@ -11,6 +14,7 @@ jobs:
   # request that adds a dependency with a known high or critical advisory.
   review:
     name: Dependency Review
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     permissions:
       contents: read

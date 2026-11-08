@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  merge_group:
   workflow_dispatch:
 
 permissions: read-all
@@ -168,6 +169,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # Pull requests and the merge queue build Android and Linux only, which
+        # keeps them under ten minutes. iOS, macOS and Windows build on every
+        # push to main, so a break there shows up right after the merge.
+        exclude: ${{ fromJSON(github.event_name == 'push' && '[]' || '[{"main_only":true}]') }}
         include:
           - name: Android
             os: ubuntu-24.04
@@ -191,18 +196,21 @@ jobs:
             check: bundle
             artifact: build/linux/arm64/release/bundle/
           - name: iOS
+            main_only: true
             os: macos-15
             recipe: build-ios
             target: ios
             check: bundle
             artifact: build/ios/iphoneos/Runner.app/
           - name: macOS
+            main_only: true
             os: macos-15
             recipe: build-macos
             target: macos
             check: bundle
             artifact: build/macos/Build/Products/Release/
           - name: Windows
+            main_only: true
             os: windows-2025
             recipe: build-windows
             target: windows
