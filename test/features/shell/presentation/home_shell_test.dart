@@ -85,6 +85,45 @@ void main() {
         secrets: stores.secrets,
       ),
     );
-    expect(find.text('projects,tasks,myWork,manage,settings'), findsOneWidget);
+    expect(
+      find.text('projects,tasks,myWork,inbox,manage,settings'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('a decorated destination keeps its badge on the bar or on More', (
+    tester,
+  ) async {
+    final all = make(6);
+    Widget decorate(ShellDestination d, Widget icon) =>
+        d.id == 'd2' || d.id == 'd5'
+        ? Badge(key: Key('badge.${d.id}'), child: icon)
+        : icon;
+    await pumpScreen(
+      tester,
+      Scaffold(
+        bottomNavigationBar: ShellBottomBar(
+          destinations: all,
+          currentIndex: 0,
+          onSelect: (_) {},
+          decorate: decorate,
+        ),
+      ),
+      overrides: fakeOverrides(FakeTix()),
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('nav.d2')),
+        matching: find.byKey(const Key('badge.d2')),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('nav.more')),
+        matching: find.byKey(const Key('badge.d5')),
+      ),
+      findsOneWidget,
+    );
   });
 }
