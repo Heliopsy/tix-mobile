@@ -1,0 +1,89 @@
+name: Flutter
+description: >-
+  Install the Flutter SDK and just at the versions .tool-versions names, with
+  the SDK and pub caches, optionally a JDK for Android, then fetch packages.
+
+inputs:
+  java:
+    description: Also install the JDK the Android Gradle plugin needs.
+    required: false
+    default: "false"
+
+runs:
+  using: composite
+  steps:
+    # .tool-versions is the one place a version lives. tix repeated its just
+    # version in every job and its Go version in go.mod; reading both from the
+    # file asdf already uses means a bump is one line and CI cannot lag behind
+    # a laptop.
+    - id: versions
+      shell: bash
+      run: |
+        set -euo pipefail
+        flutter=$(awk '$1 == "flutter" { print $2 }' .tool-versions)
+        just=$(awk '$1 == "just" { print $2 }' .tool-versions)
+        [ -n "$flutter" ] && [ -n "$just" ] || { echo "flutter or just missing from .tool-versions" >&2; exit 1; }
+        {
+          echo "flutter=${flutter%-*}"
+          # asdf writes "3.47.9-stable"; a bare version means stable.
+          if [ "${flutter#*-}" != "$flutter" ]; then echo "channel=${flutter#*-}"; else echo "channel=stable"; fi
+          echo "just=$just"
+        } >> "$GITHUB_OUTPUT"
+
+    # Flutter publishes no Linux arm64 archive, so the setup action cannot
+    # install one on ubuntu-24.04-arm. A clone of the release tag bootstraps
+    # itself instead: the first `flutter` run downloads the Dart SDK and engine
+    # for the host it finds itself on.
+    - if: runner.os != 'Linux' || runner.arch != 'ARM64'
+      uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2  # v2.23.0
+      with:
+        flutter-version: ${{ steps.versions.outputs.flutter }}
+        channel: ${{ steps.versions.outputs.channel }}
+        cache: true
+        pub-cache: true
+
+    - if: runner.os == 'Linux' && runner.arch == 'ARM64'
+      id: arm-cache
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
+      with:
+        path: |
+          ~/flutter-sdk
+          ~/.pub-cache
+        key: flutter-linux-arm64-${{ steps.versions.outputs.flutter }}-${{ hashFiles('pubspec.lock') }}
+        restore-keys: flutter-linux-arm64-${{ steps.versions.outputs.flutter }}-
+
+    - if: runner.os == 'Linux' && runner.arch == 'ARM64'
+      shell: bash
+      env:
+        FLUTTER_VERSION: ${{ steps.versions.outputs.flutter }}
+      run: |
+        set -euo pipefail
+        if [ ! -x ~/flutter-sdk/bin/flutter ]; then
+          git clone --depth 1 --branch "$FLUTTER_VERSION" https://github.com/flutter/flutter.git ~/flutter-sdk
+        fi
+        echo "$HOME/flutter-sdk/bin" >> "$GITHUB_PATH"
+        ~/flutter-sdk/bin/flutter --version
+
+    # Temurin 21: AGP 9 and Gradle 9 need at least 17, and 21 is the LTS the
+    # Flutter docs and Android Studio ship.
+    - if: inputs.java == 'true'
+      uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78  # v6.2.0
+      with:
+        distribution: temurin
+        java-version: "21"
+        cache: gradle
+        cache-dependency-path: |
+          android/*.gradle*
+          android/**/gradle-wrapper.properties
+
+    # An exact just version, because an empty one makes the action list every
+    # release and pick the newest, and that lookup has failed mid-run in tix.
+    - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3  # v4.0.0
+      with:
+        just-version: ${{ steps.versions.outputs.just }}
+
+    - shell: bash
+      run: |
+        flutter config --no-analytics >/dev/null
+        dart --disable-analytics >/dev/null
+        just get

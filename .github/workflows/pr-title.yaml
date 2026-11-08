@@ -1,0 +1,22 @@
+name: PR Title
+
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened]
+
+permissions: read-all
+
+jobs:
+  conventional:
+    name: Conventional commit title
+    runs-on: ubuntu-24.04
+    permissions:
+      pull-requests: read
+    steps:
+      # release-please derives the version bump from commit types, so a
+      # non-conventional squash-merge title would silently break versioning.
+      # Nothing is checked out: under pull_request_target that would run a
+      # stranger's code with this repository's token.
+      - uses: amannn/action-semantic-pull-request@2252a14e810aa9b85c2d560bd7070c802206ecf6  # v6.1.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

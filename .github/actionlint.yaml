@@ -1,0 +1,6 @@
+# actionlint knows GitHub's hosted runner labels and rejects anything else,
+# since a typo in runs-on is a job that silently never starts. Declare a
+# self-hosted label here before using one. There are none: this repository is
+# public, and a pull request must never run a stranger's code on our hardware.
+self-hosted-runner:
+  labels: []

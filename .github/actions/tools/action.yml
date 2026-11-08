@@ -1,0 +1,68 @@
+name: Gate tools
+description: >-
+  Install the pinned lint and scan tools onto PATH (Linux x64), at the
+  versions scripts/tool.sh reports, plus just and node for the npx tools.
+
+runs:
+  using: composite
+  steps:
+    - id: versions
+      shell: bash
+      run: |
+        set -euo pipefail
+        {
+          for t in actionlint shellcheck yamllint gitleaks reuse; do
+            echo "$t=$(scripts/tool.sh version "$t")"
+          done
+          echo "just=$(awk '$1 == "just" { print $2 }' .tool-versions)"
+        } >> "$GITHUB_OUTPUT"
+
+    - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3  # v4.0.0
+      with:
+        just-version: ${{ steps.versions.outputs.just }}
+
+    # markdownlint and openspec run through npx at the versions scripts/tool.sh
+    # pins; this only fixes which node runs them.
+    - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1  # v7.1.0
+      with:
+        node-version: 22
+        package-manager-cache: false
+
+    # TOOL_MODE=path makes scripts/tool.sh fail rather than fall back to a
+    # container or another version: here the exact versions are installed, so
+    # anything else on PATH would be a bug in this action and should say so.
+    - shell: bash
+      env:
+        ACTIONLINT: ${{ steps.versions.outputs.actionlint }}
+        SHELLCHECK: ${{ steps.versions.outputs.shellcheck }}
+        YAMLLINT: ${{ steps.versions.outputs.yamllint }}
+        GITLEAKS: ${{ steps.versions.outputs.gitleaks }}
+        REUSE: ${{ steps.versions.outputs.reuse }}
+      run: |
+        set -euo pipefail
+        bin="$RUNNER_TEMP/tools/bin"
+        mkdir -p "$bin"
+        cd "$RUNNER_TEMP/tools"
+
+        fetch() { curl -fsSL --retry 3 -o "$2" "https://github.com/$1"; }
+
+        fetch "rhysd/actionlint/releases/download/v${ACTIONLINT}/actionlint_${ACTIONLINT}_linux_amd64.tar.gz" \
+          actionlint.tgz
+        tar -xzf actionlint.tgz -C "$bin" actionlint
+
+        fetch "koalaman/shellcheck/releases/download/v${SHELLCHECK}/shellcheck-v${SHELLCHECK}.linux.x86_64.tar.xz" \
+          shellcheck.txz
+        tar -xJf shellcheck.txz --strip-components=1 -C "$bin" "shellcheck-v${SHELLCHECK}/shellcheck"
+
+        fetch "gitleaks/gitleaks/releases/download/v${GITLEAKS}/gitleaks_${GITLEAKS}_linux_x64.tar.gz" \
+          gitleaks.tgz
+        tar -xzf gitleaks.tgz -C "$bin" gitleaks
+
+        pipx install --quiet "yamllint==${YAMLLINT}"
+        pipx install --quiet "reuse==${REUSE}"
+
+        echo "$bin" >> "$GITHUB_PATH"
+        {
+          echo "TOOL_MODE=path"
+          echo "OPENSPEC_TELEMETRY=0"
+        } >> "$GITHUB_ENV"
