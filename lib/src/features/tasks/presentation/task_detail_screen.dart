@@ -108,7 +108,23 @@ class _TaskHub extends ConsumerStatefulWidget {
 class _TaskHubState extends ConsumerState<_TaskHub> {
   ActivityTab _tab = ActivityTab.comments;
   var _editingTitle = false;
+  var _titleChanged = false;
   final _composer = FocusNode();
+
+  @override
+  void didUpdateWidget(_TaskHub old) {
+    super.didUpdateWidget(old);
+    if (_editingTitle &&
+        old.task.version != widget.task.version &&
+        old.task.title != widget.task.title) {
+      _titleChanged = true;
+    }
+  }
+
+  void _editTitle(bool editing) => setState(() {
+    _editingTitle = editing;
+    _titleChanged = false;
+  });
 
   @override
   void dispose() {
@@ -291,7 +307,7 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
     if (!mounted || choice == null) return;
     switch (choice) {
       case 'rename':
-        setState(() => _editingTitle = true);
+        _editTitle(true);
       case 'move':
         await ref.moveTask(context, task);
       case 'star':
@@ -338,7 +354,7 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
         l10n.taskDetailRename,
         Icons.title,
         LogicalKeyboardKey.keyE,
-        () => setState(() => _editingTitle = true),
+        () => _editTitle(true),
       ),
       cmd(
         'describe',
@@ -428,8 +444,10 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
       task: task,
       showRef: widget.showRef,
       editingTitle: _editingTitle,
+      titleChanged: _titleChanged,
+      onKeepTitle: () => setState(() => _titleChanged = false),
       snoozed: _snoozed,
-      onEditTitle: (v) => setState(() => _editingTitle = v),
+      onEditTitle: _editTitle,
       onMenu: _menu,
     );
     final props = TaskProperties(task: task);
@@ -501,6 +519,8 @@ class _Header extends ConsumerWidget {
     required this.task,
     required this.showRef,
     required this.editingTitle,
+    required this.titleChanged,
+    required this.onKeepTitle,
     required this.snoozed,
     required this.onEditTitle,
     required this.onMenu,
@@ -509,6 +529,12 @@ class _Header extends ConsumerWidget {
   final Task task;
   final bool showRef;
   final bool editingTitle;
+
+  /// Whether the title changed elsewhere while it is being edited.
+  final bool titleChanged;
+
+  /// Hides the changed-elsewhere banner and keeps the edit.
+  final VoidCallback onKeepTitle;
   final bool snoozed;
   final ValueChanged<bool> onEditTitle;
   final VoidCallback onMenu;
@@ -565,6 +591,15 @@ class _Header extends ConsumerWidget {
             ),
           ],
         ),
+        if (editingTitle && titleChanged)
+          Padding(
+            padding: const EdgeInsets.only(bottom: TixSpace.s2),
+            child: ChangedElsewhereBanner(
+              key: const Key('title.changed'),
+              onReload: () => onEditTitle(false),
+              onDismiss: onKeepTitle,
+            ),
+          ),
         if (editingTitle)
           _TitleField(
             task: task,

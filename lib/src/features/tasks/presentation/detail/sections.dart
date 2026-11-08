@@ -20,12 +20,14 @@ Future<void> editDescription(
   WidgetRef ref,
   Task task,
 ) async {
-  final body = await showTixSheet<String>(
+  final edit = await showTixSheet<(String, Task)>(
     context,
-    builder: (context) => _DescriptionEditor(initial: task.body),
+    builder: (context) => _DescriptionEditor(task: task),
   );
-  if (body == null || body == task.body || !context.mounted) return;
-  await patchTask(context, ref, task, TaskPatch.body(body), checkVersion: true);
+  if (edit == null || !context.mounted) return;
+  final (body, base) = edit;
+  if (body == base.body) return;
+  await patchTask(context, ref, base, TaskPatch.body(body), checkVersion: true);
 }
 
 /// The description as Markdown, its checklist ticked in place.
@@ -84,17 +86,22 @@ class DescriptionSection extends ConsumerWidget {
   }
 }
 
-class _DescriptionEditor extends StatefulWidget {
-  const _DescriptionEditor({required this.initial});
+// Edits the description of a task that may change elsewhere meanwhile.
+// The person's text is never replaced under them: a newer version shows
+// ChangedElsewhereBanner, and saving goes against the version they chose to
+// keep editing over, so tix's version check still catches anything later.
+class _DescriptionEditor extends ConsumerStatefulWidget {
+  const _DescriptionEditor({required this.task});
 
-  final String initial;
+  final Task task;
 
   @override
-  State<_DescriptionEditor> createState() => _DescriptionEditorState();
+  ConsumerState<_DescriptionEditor> createState() => _DescriptionEditorState();
 }
 
-class _DescriptionEditorState extends State<_DescriptionEditor> {
-  late final _controller = TextEditingController(text: widget.initial);
+class _DescriptionEditorState extends ConsumerState<_DescriptionEditor> {
+  late final _controller = TextEditingController(text: widget.task.body);
+  late Task _base = widget.task;
   var _preview = false;
 
   @override
@@ -103,11 +110,19 @@ class _DescriptionEditorState extends State<_DescriptionEditor> {
     super.dispose();
   }
 
-  void _save() => Navigator.of(context).pop(_controller.text);
+  void _save() => Navigator.of(context).pop((_controller.text, _base));
+
+  void _reload(Task latest) => setState(() {
+    _base = latest;
+    _controller.text = latest.body;
+  });
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final latest = ref
+        .watch(taskDetailControllerProvider(widget.task.ref))
+        .value;
     return TixSheetBody(
       title: l10n.taskDetailEditDescription,
       actions: [
@@ -125,6 +140,16 @@ class _DescriptionEditorState extends State<_DescriptionEditor> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (latest != null &&
+              latest.version != _base.version &&
+              latest.body != _base.body) ...[
+            ChangedElsewhereBanner(
+              key: const Key('description.changed'),
+              onReload: () => _reload(latest),
+              onDismiss: () => setState(() => _base = latest),
+            ),
+            const SizedBox(height: TixSpace.s3),
+          ],
           Align(
             alignment: AlignmentDirectional.centerStart,
             child: SegmentedButton<bool>(
