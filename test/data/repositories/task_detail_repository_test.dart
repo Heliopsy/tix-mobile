@@ -37,8 +37,21 @@ void main() {
     expect(last().body, {'priority': 2, 'version': 1});
     expect(t.priority, 2);
     expect(t.version, 2);
-    await repo.update('infra-1', TaskPatch.due(null));
-    expect(last().body, {'due_at': null});
+  });
+
+  test('clearing a due date sends an explicit null', () async {
+    await repo.update('infra-1', TaskPatch.due(null), version: 1);
+    expect(last().method, 'PATCH');
+    expect(last().uri.path, '/api/v1/tasks/infra-1');
+    expect(last().body, {'due_at': null, 'version': 1});
+  });
+
+  test('clearing a custom field sends its key with a null', () async {
+    await repo.update('infra-1', TaskPatch.field('k', null));
+    expect(last().method, 'PATCH');
+    expect(last().body, {
+      'custom_fields': {'k': null},
+    });
   });
 
   test('check sends the item, the state and the version', () async {

@@ -5341,7 +5341,8 @@ abstract class UpdateTaskInput with _$UpdateTaskInput {
 
     /// DueAt sets the due time, an RFC 3339 timestamp; null clears it and omitted
     /// leaves it.
-    @JsonKey(name: 'due_at') @TixDateTime() DateTime? dueAt,
+    @JsonKey(name: 'due_at', includeFromJson: false, includeToJson: false)
+    Patch<DateTime>? dueAt,
 
     /// Lease sets how long a claim on the task holds; a pointer to zero clears it
     /// back to the project's.
@@ -5373,6 +5374,15 @@ abstract class UpdateTaskInput with _$UpdateTaskInput {
   /// Reads a [UpdateTaskInput] from its JSON object.
   factory UpdateTaskInput.fromJson(Map<String, dynamic> json) =>
       _$UpdateTaskInputFromJson(json);
+}
+
+/// The request body of a [UpdateTaskInput], cleared fields included.
+extension UpdateTaskInputBody on UpdateTaskInput {
+  /// [UpdateTaskInput.toJson] plus every [Patch] field that is set.
+  Map<String, dynamic> toBody() => {
+    ...toJson(),
+    if (dueAt case final p?) 'due_at': p.encode(const TixDateTime().toJson),
+  };
 }
 
 /// UpdateTemplateInput changes a template. A nil field is left as it is.

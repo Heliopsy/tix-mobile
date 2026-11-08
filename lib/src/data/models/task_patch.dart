@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:meta/meta.dart';
+import 'package:tix_mobile/src/data/api/json.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 
 /// A change to some of a task's attributes: the body of `PATCH /tasks/{ref}`.
@@ -51,14 +52,15 @@ class TaskPatch {
   /// The JSON body.
   Map<String, Object?> toJson() => {..._fields};
 
-  /// The body as the generated client sends it. It cannot carry a JSON null,
-  /// so a cleared due date is [clearsDue] instead.
-  UpdateTaskInput toInput({int? version}) =>
-      UpdateTaskInput.fromJson({..._fields, 'version': ?version});
-
-  /// Whether the change clears the due date, which needs `"due_at": null`.
-  bool get clearsDue =>
-      _fields.containsKey('due_at') && _fields['due_at'] == null;
+  /// The body as the generated client sends it, a cleared due date included.
+  UpdateTaskInput toInput({int? version}) {
+    final input = UpdateTaskInput.fromJson({..._fields, 'version': ?version});
+    if (!_fields.containsKey('due_at')) return input;
+    final due = _fields['due_at'] as String?;
+    return input.copyWith(
+      dueAt: due == null ? const Patch.clear() : Patch(DateTime.parse(due)),
+    );
+  }
 
   /// [task] as it would be after the change.
   Task applyTo(Task task) {

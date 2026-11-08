@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tix_mobile/src/data/api/json.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/models/task_patch.dart';
 
@@ -40,6 +41,16 @@ void main() {
     expect(TaskPatch.due(DateTime.utc(2026, 11, 2, 9)).toJson(), {
       'due_at': '2026-11-02T09:00:00.000Z',
     });
+  });
+
+  test('toInput carries a due date as a Patch', () {
+    expect(TaskPatch.due(null).toInput().dueAt, const Patch<DateTime>.clear());
+    expect(
+      TaskPatch.due(DateTime.utc(2026, 11, 2, 9)).toInput(version: 4),
+      UpdateTaskInput(dueAt: Patch(DateTime.utc(2026, 11, 2, 9)), version: 4),
+    );
+    expect(TaskPatch.title('New').toInput().dueAt, isNull);
+    expect(TaskPatch.field('env', null).toInput().customFields, {'env': null});
   });
 
   test('applyTo changes a local task as the server would', () {

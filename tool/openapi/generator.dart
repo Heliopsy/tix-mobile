@@ -13,9 +13,14 @@
 //
 // Models fall in two groups. A schema reachable from a request body is an
 // input: every field is nullable, so leaving one out sends nothing, which is
-// what a PATCH needs. Every other schema is a response: strings, numbers and
-// booleans the server always writes default to their zero value, lists and
-// maps to empty, and only what the document marks nullable is nullable.
+// what a PATCH needs. An input field whose description says null clears it
+// is a `Patch<T>?` instead, kept out of toJson and added back by the class's
+// generated `toBody()`, which the client sends; so such a class may only be a
+// request body itself, never nested in another schema.
+//
+// Every other schema is a response: strings, numbers and booleans the server
+// always writes default to their zero value, lists and maps to empty, and
+// only what the document marks nullable is nullable.
 
 import 'package:yaml/yaml.dart';
 
@@ -96,6 +101,17 @@ class _Generator {
   final Map<String, Map<String, Object?>> schemas;
   final inputs = <String>{};
 
+  /// Input schemas referenced from inside another schema, not only as a body.
+  final nested = <String>{};
+
+  /// The keys of each input schema's fields that a JSON null clears.
+  final clearable = <String, List<String>>{};
+
+  static final _clears = RegExp(
+    r'\bnull\s+(clears|removes|unsets)\b',
+    caseSensitive: false,
+  );
+
   static const _methods = ['get', 'post', 'put', 'patch', 'delete'];
 
   Iterable<_Op> get operations sync* {
@@ -111,26 +127,48 @@ class _Generator {
   // ------------------------------------------------------------ schemas
 
   void _findInputs() {
-    void visit(Object? schema) {
+    void visit(Object? schema, {required bool top}) {
       if (schema is! Map) return;
       final ref = schema[r'$ref'];
       if (ref is String) {
         final name = ref.split('/').last;
-        if (inputs.add(name)) visit(schemas[name]);
+        if (!top) nested.add(name);
+        if (inputs.add(name)) visit(schemas[name], top: true);
         return;
       }
       for (final key in ['items', 'additionalProperties']) {
-        visit(schema[key]);
+        visit(schema[key], top: false);
       }
-      ((schema['allOf'] as List?) ?? const []).forEach(visit);
-      ((schema['properties'] as Map?) ?? const {}).values.forEach(visit);
+      for (final s in (schema['allOf'] as List?) ?? const []) {
+        visit(s, top: false);
+      }
+      for (final s in ((schema['properties'] as Map?) ?? const {}).values) {
+        visit(s, top: false);
+      }
     }
 
     for (final op in operations) {
       final content = (op.raw['requestBody'] as Map?)?['content'] as Map?;
       for (final media in (content ?? const {}).values) {
-        visit((media as Map)['schema']);
+        visit((media as Map)['schema'], top: true);
       }
+    }
+
+    for (final name in inputs) {
+      final props = ((schemas[name]?['properties'] as Map?) ?? const {})
+          .cast<String, Map<String, Object?>>();
+      final keys = [
+        for (final MapEntry(:key, :value) in props.entries)
+          if (_clears.hasMatch(value['description'] as String? ?? '')) key,
+      ]..sort();
+      if (keys.isEmpty) continue;
+      if (nested.contains(name)) {
+        throw FormatException(
+          '$name has fields a null clears (${keys.join(', ')}) but is nested '
+          'in another schema, whose toJson would drop them',
+        );
+      }
+      clearable[name] = keys;
     }
   }
 
@@ -210,6 +248,8 @@ class _Generator {
   void _class(StringBuffer out, String name, Map<String, Object?> s) {
     final cls = className(name);
     final input = inputs.contains(name);
+    final clears = clearable[name] ?? const <String>[];
+    final patches = <String>[];
     final props = ((s['properties'] as Map?) ?? const {})
         .cast<String, Map<String, Object?>>();
     _doc(out, s['description'] as String?, '');
@@ -229,8 +269,17 @@ class _Generator {
         while (!used.add(field)) {
           field = _suffixed(field);
         }
-        final f = _field(p, input: input, where: '$name.$key');
         _doc(out, p['description'] as String?, '    ');
+        if (clears.contains(key)) {
+          final (type, encode) = _patch(p, '$name.$key');
+          patches.add('if ($field case final p?) ${_str(key)}: $encode');
+          out.writeln(
+            '    @JsonKey(name: ${_str(key)}, includeFromJson: false, '
+            'includeToJson: false) Patch<$type>? $field,',
+          );
+          continue;
+        }
+        final f = _field(p, input: input, where: '$name.$key');
         out.writeln(
           '    @JsonKey(name: ${_str(key)}${f.keyArgs}) '
           '${f.annotations}${f.type} $field,',
@@ -247,6 +296,46 @@ class _Generator {
       )
       ..writeln('}')
       ..writeln();
+    if (patches.isEmpty) return;
+    out
+      ..writeln('/// The request body of a [$cls], cleared fields included.')
+      ..writeln('extension ${cls}Body on $cls {')
+      ..writeln('  /// [$cls.toJson] plus every [Patch] field that is set.')
+      ..writeln('  Map<String, dynamic> toBody() => {')
+      ..writeln('    ...toJson(),');
+    for (final p in patches) {
+      out.writeln('    $p,');
+    }
+    out
+      ..writeln('  };')
+      ..writeln('}')
+      ..writeln();
+  }
+
+  /// The type a clearable field wraps in a `Patch`, and the expression that
+  /// encodes the `Patch` held in `p`.
+  (String, String) _patch(Map<String, Object?> p, String where) {
+    final ref = p[r'$ref'] as String?;
+    if (ref != null) {
+      final target = ref.split('/').last;
+      return isEnum(target)
+          ? (className(target), 'p.encode((v) => v.value)')
+          : (className(target), 'p.encode((v) => v.toJson())');
+    }
+    final (types, _) = _types(p);
+    switch (types.singleOrNull) {
+      case 'string' when p['format'] == 'date-time':
+        return ('DateTime', 'p.encode(const TixDateTime().toJson)');
+      case 'string':
+        return ('String', 'p.value');
+      case 'boolean':
+        return ('bool', 'p.value');
+      case 'integer':
+        return ('int', 'p.value');
+      case 'number':
+        return ('double', 'p.value');
+    }
+    throw FormatException('$where: a clearable ${p['type']} is not supported');
   }
 
   _Field _field(
@@ -497,9 +586,8 @@ class _Generator {
         ? ''
         : body.raw != null
         ? ', body: body, contentType: ${_str(body.raw!)}'
-        : body.required
-        ? ', body: body.toJson()'
-        : ', body: body?.toJson()';
+        : ', body: body${body.required ? '' : '?'}.'
+              '${clearable.containsKey(body.schema) ? 'toBody' : 'toJson'}()';
     final call = "$m, '$pathExpr'$q$b";
 
     if (stream) {
@@ -584,7 +672,8 @@ class _Generator {
     if (json != null) {
       final ref = (json['schema']! as Map)[r'$ref'] as String?;
       if (ref == null) throw FormatException('${op.id}: inline JSON body');
-      return _Body(className(ref.split('/').last), required: required);
+      final schema = ref.split('/').last;
+      return _Body(className(schema), required: required, schema: schema);
     }
     final MapEntry(key: media, value: m) = content.entries.single;
     if ((m['schema']! as Map)['type'] != 'string') {
@@ -665,9 +754,12 @@ class _Field {
 }
 
 class _Body {
-  const _Body(this.type, {required this.required, this.raw});
+  const _Body(this.type, {required this.required, this.raw, this.schema});
 
   final String type;
+
+  /// The component schema of a JSON body.
+  final String? schema;
   final bool required;
 
   /// The media type of a body sent as a raw string, null for JSON.
