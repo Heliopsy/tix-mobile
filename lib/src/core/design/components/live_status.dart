@@ -114,18 +114,21 @@ class LiveIndicator extends StatelessWidget {
                 dot,
                 if (state != LiveState.live) ...[
                   const SizedBox(width: TixSpace.s1),
-                  Text(
-                    label,
-                    maxLines: 1,
-                    softWrap: false,
-                    style: TextStyle(
-                      fontSize: TixText.xs,
-                      fontWeight: FontWeight.w600,
-                      color:
-                          state == LiveState.connecting ||
-                              state == LiveState.unavailable
-                          ? t.muted
-                          : colour,
+                  Flexible(
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: TixText.xs,
+                        fontWeight: FontWeight.w600,
+                        color:
+                            state == LiveState.connecting ||
+                                state == LiveState.unavailable
+                            ? t.muted
+                            : colour,
+                      ),
                     ),
                   ),
                 ],
