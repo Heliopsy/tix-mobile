@@ -101,33 +101,30 @@ final class AppResumedProvider
 
 String _$appResumedHash() => r'a48e02764c6328223e6f2e16cbf9f6bc79a70526';
 
-/// Fires each time the app goes out of sight, the moment a home screen and
-/// its widgets come back into view.
+/// Fires each time the app goes to the background.
 
-@ProviderFor(appHidden)
-final appHiddenProvider = AppHiddenProvider._();
+@ProviderFor(appPaused)
+final appPausedProvider = AppPausedProvider._();
 
-/// Fires each time the app goes out of sight, the moment a home screen and
-/// its widgets come back into view.
+/// Fires each time the app goes to the background.
 
-final class AppHiddenProvider
+final class AppPausedProvider
     extends $FunctionalProvider<AsyncValue<void>, void, Stream<void>>
     with $FutureModifier<void>, $StreamProvider<void> {
-  /// Fires each time the app goes out of sight, the moment a home screen and
-  /// its widgets come back into view.
-  AppHiddenProvider._()
+  /// Fires each time the app goes to the background.
+  AppPausedProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'appHiddenProvider',
+        name: r'appPausedProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$appHiddenHash();
+  String debugGetCreateSourceHash() => _$appPausedHash();
 
   @$internal
   @override
@@ -136,30 +133,125 @@ final class AppHiddenProvider
 
   @override
   Stream<void> create(Ref ref) {
-    return appHidden(ref);
+    return appPaused(ref);
   }
 }
 
-String _$appHiddenHash() => r'e5ccc5451e58cfa6fb5785aedcb6ae00783dae73';
+String _$appPausedHash() => r'436e416d5171d1e0d65d7d1522b52f18ffef592c';
 
-/// The event stream of the active context, null while there is none or it
-/// cannot be reached. Rebuilt, with a fresh cursor, when the context
-/// changes.
+/// Whether polling stops while the app is in the background. Phones
+/// suspend a backgrounded app anyway; desktops keep running when minimised.
+
+@ProviderFor(livePausesInBackground)
+final livePausesInBackgroundProvider = LivePausesInBackgroundProvider._();
+
+/// Whether polling stops while the app is in the background. Phones
+/// suspend a backgrounded app anyway; desktops keep running when minimised.
+
+final class LivePausesInBackgroundProvider
+    extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  /// Whether polling stops while the app is in the background. Phones
+  /// suspend a backgrounded app anyway; desktops keep running when minimised.
+  LivePausesInBackgroundProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'livePausesInBackgroundProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$livePausesInBackgroundHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return livePausesInBackground(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$livePausesInBackgroundHash() =>
+    r'1520200188d9bc1ad68d6b4a0d3d38b0a35fe9ea';
+
+/// The thresholds and timings of live updates; tests shorten them.
+
+@ProviderFor(liveConfig)
+final liveConfigProvider = LiveConfigProvider._();
+
+/// The thresholds and timings of live updates; tests shorten them.
+
+final class LiveConfigProvider
+    extends $FunctionalProvider<LiveConfig, LiveConfig, LiveConfig>
+    with $Provider<LiveConfig> {
+  /// The thresholds and timings of live updates; tests shorten them.
+  LiveConfigProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'liveConfigProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$liveConfigHash();
+
+  @$internal
+  @override
+  $ProviderElement<LiveConfig> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  LiveConfig create(Ref ref) {
+    return liveConfig(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LiveConfig value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LiveConfig>(value),
+    );
+  }
+}
+
+String _$liveConfigHash() => r'855e2b51cb6141525a09de035f38b2af55e0f09b';
+
+/// Live updates of the active context, null while there is none or it
+/// cannot be reached: the WebSocket, or the HTTP fallback when it keeps
+/// failing. Rebuilt, with a fresh cursor, when the context changes.
 
 @ProviderFor(tixEventStream)
 final tixEventStreamProvider = TixEventStreamProvider._();
 
-/// The event stream of the active context, null while there is none or it
-/// cannot be reached. Rebuilt, with a fresh cursor, when the context
-/// changes.
+/// Live updates of the active context, null while there is none or it
+/// cannot be reached: the WebSocket, or the HTTP fallback when it keeps
+/// failing. Rebuilt, with a fresh cursor, when the context changes.
 
 final class TixEventStreamProvider
-    extends
-        $FunctionalProvider<TixEventStream?, TixEventStream?, TixEventStream?>
-    with $Provider<TixEventStream?> {
-  /// The event stream of the active context, null while there is none or it
-  /// cannot be reached. Rebuilt, with a fresh cursor, when the context
-  /// changes.
+    extends $FunctionalProvider<LiveEvents?, LiveEvents?, LiveEvents?>
+    with $Provider<LiveEvents?> {
+  /// Live updates of the active context, null while there is none or it
+  /// cannot be reached: the WebSocket, or the HTTP fallback when it keeps
+  /// failing. Rebuilt, with a fresh cursor, when the context changes.
   TixEventStreamProvider._()
     : super(
         from: null,
@@ -176,33 +268,31 @@ final class TixEventStreamProvider
 
   @$internal
   @override
-  $ProviderElement<TixEventStream?> $createElement($ProviderPointer pointer) =>
+  $ProviderElement<LiveEvents?> $createElement($ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  TixEventStream? create(Ref ref) {
+  LiveEvents? create(Ref ref) {
     return tixEventStream(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(TixEventStream? value) {
+  Override overrideWithValue(LiveEvents? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<TixEventStream?>(value),
+      providerOverride: $SyncValueProvider<LiveEvents?>(value),
     );
   }
 }
 
-String _$tixEventStreamHash() => r'658f02c3ae81a2dd3c1954f804bec5a6dcadd295';
+String _$tixEventStreamHash() => r'34bd5729a9e2252a42f6f3bbe461326a17a29fbe';
 
-/// Every update of the active context's event stream, for anything that
-/// shows whether updates are live.
+/// Every update of the active context's live events.
 
 @ProviderFor(tixEvents)
 final tixEventsProvider = TixEventsProvider._();
 
-/// Every update of the active context's event stream, for anything that
-/// shows whether updates are live.
+/// Every update of the active context's live events.
 
 final class TixEventsProvider
     extends
@@ -214,8 +304,7 @@ final class TixEventsProvider
     with
         $FutureModifier<EventStreamUpdate>,
         $StreamProvider<EventStreamUpdate> {
-  /// Every update of the active context's event stream, for anything that
-  /// shows whether updates are live.
+  /// Every update of the active context's live events.
   TixEventsProvider._()
     : super(
         from: null,
@@ -244,46 +333,49 @@ final class TixEventsProvider
 
 String _$tixEventsHash() => r'e21ae7a0d600c9cc935a332a0e8496d67779de3a';
 
-/// Where the active context's event stream stands.
+/// How live updates reach the active context and the last error, for the
+/// live indicator and diagnostics. Null while there is no context.
 
-@ProviderFor(eventStreamState)
-final eventStreamStateProvider = EventStreamStateProvider._();
+@ProviderFor(liveStatus)
+final liveStatusProvider = LiveStatusProvider._();
 
-/// Where the active context's event stream stands.
+/// How live updates reach the active context and the last error, for the
+/// live indicator and diagnostics. Null while there is no context.
 
-final class EventStreamStateProvider
+final class LiveStatusProvider
     extends
         $FunctionalProvider<
-          AsyncValue<EventStreamState>,
-          EventStreamState,
-          Stream<EventStreamState>
+          AsyncValue<LiveStatus?>,
+          LiveStatus?,
+          Stream<LiveStatus?>
         >
-    with $FutureModifier<EventStreamState>, $StreamProvider<EventStreamState> {
-  /// Where the active context's event stream stands.
-  EventStreamStateProvider._()
+    with $FutureModifier<LiveStatus?>, $StreamProvider<LiveStatus?> {
+  /// How live updates reach the active context and the last error, for the
+  /// live indicator and diagnostics. Null while there is no context.
+  LiveStatusProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'eventStreamStateProvider',
+        name: r'liveStatusProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$eventStreamStateHash();
+  String debugGetCreateSourceHash() => _$liveStatusHash();
 
   @$internal
   @override
-  $StreamProviderElement<EventStreamState> $createElement(
+  $StreamProviderElement<LiveStatus?> $createElement(
     $ProviderPointer pointer,
   ) => $StreamProviderElement(pointer);
 
   @override
-  Stream<EventStreamState> create(Ref ref) {
-    return eventStreamState(ref);
+  Stream<LiveStatus?> create(Ref ref) {
+    return liveStatus(ref);
   }
 }
 
-String _$eventStreamStateHash() => r'ea7bd0078148260ae7fb3986bf0026be49c52b76';
+String _$liveStatusHash() => r'96c27d4b12cf6a847927a40dc04952d0480f25e4';

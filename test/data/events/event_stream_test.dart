@@ -168,6 +168,37 @@ void main() {
     expect(seqs(), [3, 4001]);
   });
 
+  test('a starting cursor resumes, and reports it when expired', () async {
+    final resumed = TixEventStream(
+      baseUrl: 'https://tix.example',
+      headers: const {},
+      connector: sockets.connect,
+      backoff: fast,
+      since: 9,
+    );
+    final got = <EventStreamUpdate>[];
+    final s2 = resumed.updates.listen(got.add);
+    addTearDown(() async {
+      await s2.cancel();
+      await resumed.close();
+    });
+    await settle();
+    expect(sockets.last.sent.single['since_seq'], 9);
+    sockets.last.push({
+      'type': 'error',
+      'id': 's1',
+      'error': {
+        'code': 'invalid',
+        'message': 'cursor 9 is no longer available',
+      },
+    });
+    await settle();
+    sockets.last.ack();
+    await settle();
+    expect(got.whereType<EventsMissed>(), hasLength(1));
+    expect(resumed.state, EventStreamState.live);
+  });
+
   test('a refused credential is unavailable and never retried', () async {
     sockets.refuse = 403;
     start();
