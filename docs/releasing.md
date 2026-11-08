@@ -9,8 +9,10 @@ Releases are cut by [release-please](https://github.com/googleapis/release-pleas
    or a `BREAKING CHANGE:` footer a major.
 2. The `release-please` workflow keeps one open release pull request that bumps the version in `pubspec.yaml`,
    updates `CHANGELOG.md`, and lists what will ship.
-3. Merging that pull request tags the commit (`vX.Y.Z`) and creates the GitHub release.
-4. The `release` workflow builds every artifact for that tag and attaches them to the release.
+3. The release pull request goes through the merge queue like any other. Merging it tags the commit (`vX.Y.Z`)
+   and creates the GitHub release as a draft.
+4. The `release` workflow builds every artifact for that tag, attaches them, publishes the release, and then
+   hands the builds to whichever stores are set up (see [Store channels](#store-channels)).
 
 Merge agent branches with `--ff-only` so their commits land on `main` individually. release-please reads only a
 merge commit's own subject, so the commits inside a `--no-ff` merge never reach the changelog.
@@ -43,7 +45,43 @@ sha256sum --check --ignore-missing SHA256SUMS
 gh attestation verify <file> --repo heliopsy/tix-mobile
 ```
 
-No iOS artifact is published until iOS signing exists.
+Nothing iOS is attached to a release: an App Store signed IPA installs only through TestFlight or the App Store,
+and an unsigned app installs nowhere.
+
+## The release GitHub App
+
+A pull request opened with the workflow's own `GITHUB_TOKEN` gets its checks held for approval, so the merge
+queue cannot take it without an admin. release-please uses a GitHub App's token instead when two secrets exist,
+and then the release pull request runs its checks and is enqueued like any other. Without the App it still
+works, with the checks approved by hand (see [When a release goes wrong](#when-a-release-goes-wrong)).
+
+Owner, once:
+
+1. Create the App: **Settings → Developer settings → GitHub Apps → New GitHub App** on the account that owns the
+   repository (for an organisation, the organisation's settings).
+   - Name: anything unique, e.g. `tix-mobile-release`. Homepage: the repository URL.
+   - Webhook: untick **Active**. The App never receives events.
+   - Repository permissions:
+     - **Contents: Read and write** (release branch, tags, draft releases)
+     - **Pull requests: Read and write** (open and update the release pull request)
+     - **Issues: Read and write** (release-please labels the pull request `autorelease: pending` through the
+       issues API and creates the labels the first time)
+     - **Metadata: Read-only** (mandatory)
+     - Nothing else. No checks, workflows or actions permission is needed: release-please never touches
+       `.github/workflows/`, and the release build is dispatched with `GITHUB_TOKEN`.
+   - Where can this App be installed: **Only on this account**.
+2. On the App's page, note the **Client ID** and **Generate a private key** (a `.pem` file downloads).
+3. **Install App** → only select repositories → `heliopsy/tix-mobile`.
+4. Repository secrets (**Settings → Secrets and variables → Actions**):
+
+   | Secret | Value |
+   | --- | --- |
+   | `RELEASE_APP_CLIENT_ID` | The Client ID (`Iv23...`), not the numeric App ID |
+   | `RELEASE_APP_PRIVATE_KEY` | The whole `.pem` file, header and footer lines included |
+
+Verify: push anything to `main`. The `release-please` run no longer prints "No release App credentials", the
+release pull request's author is `<app-name>[bot]`, and its checks start without an approval button. Enqueue it;
+it merges without an admin. The `cla` check passes on its own because the CLA workflow skips release branches.
 
 ## Signing
 
@@ -70,28 +108,218 @@ base64 -w0 upload.jks    # value for ANDROID_KEYSTORE_BASE64
 A fork has none of these secrets, so it cannot produce a build signed with the project's key. That is the point:
 an APK that updates an installed tix-mobile can only come from this repository.
 
-### iOS
+### iOS and macOS
 
-Not set up yet. It needs an Apple developer account, a distribution certificate and provisioning profile stored as
-secrets, and an App Store Connect API key for upload. Until then `just build-ipa` works only on a Mac with signing
-configured in Xcode, and nothing iOS is attached to a release.
+Both use the Apple Developer account and one App Store Connect API key; the steps are under
+[TestFlight](#testflight-ios) and [macOS notarisation](#macos-notarisation). Until the secrets exist, iOS builds
+unsigned and the macOS app is ad-hoc signed, so Gatekeeper warns on first launch.
 
-### macOS and Windows
+### Windows
 
-The macOS and Windows archives are not code-signed or notarised yet. macOS Gatekeeper and Windows SmartScreen warn
-on first launch; the checksum and provenance attestation are the way to check a download until signing lands.
+The Windows archive is not code-signed. SmartScreen warns on first launch; the checksum and provenance
+attestation are the way to check a download.
 
 ## When a release goes wrong
 
 - **No artifacts on a release.** A tag created with the workflow's own `GITHUB_TOKEN` cannot start another
   workflow. Dispatch the `release` workflow by hand with the tag; it rebuilds an existing tag.
-- **The release pull request's checks never run.** A pull request opened by `GITHUB_TOKEN` gets its checks held for
-  approval. Approve only the runs whose head is the current commit; approving a stale run replays it with the
-  workflow file it was created against.
+- **The release pull request's checks never run.** Without the [release App](#the-release-github-app), a pull
+  request opened by `GITHUB_TOKEN` gets its checks held for approval. Approve only the runs whose head is the
+  current commit (approving a stale run replays it with the workflow file it was created against), then enqueue
+  it. Setting up the App ends this.
 - **The release pull request predates a workflow fix.** release-please does not rebase its branch when the release
   content has not changed. Close it and let the next push to `main` open a fresh one.
 
-## Store releases
+## Store channels
 
-Google Play, the App Store, F-Droid and Flathub are on the [roadmap](../ROADMAP.md#store-releases), not part of the
-release flow today.
+Every channel below is wired into `release.yaml` and skipped while its secrets are absent. Each job starts with
+`scripts/release-secrets.sh`: none of a channel's secrets set is a notice ("skipped: ... not set"), some set is a
+warning naming the missing ones. A skipped channel never fails the release.
+
+Secrets go in **Settings → Secrets and variables → Actions → Secrets**. To base64 a file without line breaks:
+`base64 -w0 FILE` on Linux, `base64 -i FILE` on macOS.
+
+| Channel | State without owner action | Owner creates |
+| --- | --- | --- |
+| [Release App](#the-release-github-app) | Checks approved by hand | A GitHub App |
+| [Google Play](#google-play) | Skipped | Play Console account, app, service account |
+| [TestFlight](#testflight-ios) | Unsigned iOS build only | Apple Developer account, App ID, certificate, profile, API key |
+| [macOS notarisation](#macos-notarisation) | Ad-hoc signed zip | Developer ID Application certificate (same Apple account) |
+| [F-Droid](#f-droid) | Recipe in `fdroid/`, not submitted | A merge request to fdroiddata |
+| [Flathub](#flathub) | Manifest in `flatpak/`, not submitted | A submission pull request to Flathub |
+
+### Store text
+
+`fastlane/metadata/android/<locale>/` holds `title.txt` (30 characters at most), `short_description.txt` (80) and
+`full_description.txt` (4000) in `en-US`, `bg`, `fr-FR` and `de-DE`. Google Play gets it on every upload and
+F-Droid reads it from the tagged source. Keep it to what the README says.
+
+`changelogs/<versionCode>.txt` is not committed. The `play` job writes it at upload time from the version's
+`CHANGELOG.md` section (`just store-changelog VERSION CODE`), links and hashes dropped, cut at 500 characters.
+
+`images/icon.png` is the 512 px icon. Screenshots are not committed yet. Real ones go in
+`images/phoneScreenshots/` and `images/tenInchScreenshots/` (PNG or JPEG, 2 to 8 each, named `1.png`, `2.png`,
+...) and are used by F-Droid at once; Play needs at least two phone screenshots and a 1024 x 500
+`images/featureGraphic.png`, uploaded by hand in the Play Console until the upload step stops skipping images
+(`skip_upload_images` in `fastlane/Fastfile`). Take them from a build against a throwaway server
+(`tix demo seed`), never real work.
+
+### Google Play
+
+Owner, once:
+
+1. A Google Play developer account (one-off fee, identity verification).
+2. **Create app**: name `tix`, app, free. Fill in the store listing's required forms (privacy policy URL, data
+   safety: no data collected or shared, content rating, target audience, ads: none).
+3. Play App Signing: accept it. The key in `ANDROID_KEYSTORE_*` becomes the upload key.
+4. Upload the first App Bundle by hand: Play does not accept API uploads for an app that never had one. Take
+   `tix-mobile-X.Y.Z-android.aab` from a release built with the Android signing secrets (no `-debug-signed` in
+   the name) and add it to an internal testing release.
+5. A service account: in Google Cloud, create a project, enable the **Google Play Android Developer API**, create a
+   service account and a JSON key for it. In the Play Console, **Users and permissions → Invite new users**, the
+   service account's email, with **Release apps to testing tracks** and **Manage store presence** for this app.
+
+| Secret or variable | Value |
+| --- | --- |
+| `PLAY_SERVICE_ACCOUNT_JSON` (secret) | The JSON key file's contents |
+| `ANDROID_KEYSTORE_*` (secrets) | Already described under [Android](#android); without them the bundle is debug-signed and the upload is skipped |
+| `PLAY_RELEASE_STATUS` (variable, optional) | `draft` (default) until the app has passed its first review, then `completed` |
+
+What runs: after the release is published, the `play` job uploads the bundle to the **internal** track with the
+store text and the changelog. Promote to closed, open or production testing in the Play Console.
+
+Verify: the release's `Google Play (internal track)` job is green and the Play Console shows the version code
+(`MAJOR*1000000 + MINOR*1000 + PATCH`) under internal testing. Re-running a release after a successful upload
+fails that job, because Play takes a version code once; that is expected.
+
+### TestFlight (iOS)
+
+Bundle id `red.tix.tixMobile` (from `ios/Runner.xcodeproj`). Android's id is `red.tix.tix_mobile`; they stay
+different because both are already in use.
+
+Owner, once:
+
+1. An Apple Developer Program membership. Note the **Team ID** (Membership details).
+2. **Certificates, Identifiers & Profiles → Identifiers**: register the App ID `red.tix.tixMobile`.
+3. **Certificates**: an **Apple Distribution** certificate. Create the CSR in Keychain Access, download the
+   certificate, and export it with its private key as a `.p12` with a password.
+4. **Profiles**: an **App Store Connect** distribution profile for `red.tix.tixMobile` with that certificate.
+5. App Store Connect → **Apps → New App**: iOS, name `tix`, bundle id `red.tix.tixMobile`. Answer export
+   compliance on the first build (the app uses HTTPS and the Go standard library's TLS).
+6. App Store Connect → **Users and Access → Integrations → App Store Connect API**: a **Team** key with the
+   **App Manager** role. Download the `.p8` (only once) and note the Key ID and the Issuer ID.
+
+Why plain secrets and not fastlane match: match needs a second private repository or bucket and a passphrase to
+keep, which pays off for a team sharing certificates. One maintainer with one certificate is the same shape as
+the Android keystore.
+
+| Secret | Value |
+| --- | --- |
+| `APPLE_TEAM_ID` | The 10-character Team ID |
+| `IOS_CERT_P12_BASE64` | The distribution `.p12`, base64 |
+| `IOS_CERT_PASSWORD` | Its export password |
+| `IOS_PROFILE_BASE64` | The `.mobileprovision`, base64 |
+| `APP_STORE_CONNECT_KEY_ID` | The API key's Key ID |
+| `APP_STORE_CONNECT_ISSUER_ID` | The Issuer ID |
+| `APP_STORE_CONNECT_KEY_BASE64` | The `.p8` file, base64 |
+
+What runs: the iOS job imports the certificate and profile into a throwaway keychain, switches the Runner
+target's Release configuration to manual signing on the runner (the committed project keeps automatic signing),
+fills the team and profile into `ios/ExportOptions.plist`, runs `just build-ipa`, checks libtix is in the archive
+and uploads to TestFlight (`fastlane/Fastfile`, lanes `ios ipa` and `ios testflight`).
+
+Verify: the iOS job's log shows `Successfully uploaded`, and the build appears in App Store Connect → TestFlight
+after processing. Before an App Store submission the app also needs a privacy manifest; see the
+[roadmap](../ROADMAP.md#store-releases). The certificate expires after a year and the profile with it; replace both
+secrets when Apple says so.
+
+### macOS notarisation
+
+Owner, once (same Apple account):
+
+1. **Certificates → Developer ID Application** (only the account holder can create it). Export it with its
+   private key as a `.p12`.
+2. The App Store Connect API key from [TestFlight](#testflight-ios) is reused for `notarytool`.
+
+| Secret | Value |
+| --- | --- |
+| `MACOS_CERT_P12_BASE64` | The Developer ID Application `.p12`, base64 |
+| `MACOS_CERT_PASSWORD` | Its export password |
+| `APP_STORE_CONNECT_KEY_ID`, `APP_STORE_CONNECT_ISSUER_ID`, `APP_STORE_CONNECT_KEY_BASE64` | Shared with TestFlight |
+
+What runs: `scripts/macos-notarize.sh` re-signs every nested framework and dylib, then the app, with the hardened
+runtime, a timestamp and `macos/Runner/Release.entitlements`, submits it with `notarytool --wait`, staples the
+ticket and checks it with `spctl`. The zip asset keeps its name and now holds the notarised app.
+
+Verify: on a Mac, unzip the release asset and run `spctl --assess --type execute --verbose tix.app` (prints
+`source=Notarized Developer ID`) and `xcrun stapler validate tix.app`. It opens with a double-click.
+
+### F-Droid
+
+F-Droid builds from source and signs with its own key, so there are no secrets. Nothing in the app is non-free,
+so there is no separate Gradle flavour: CI fails any APK that carries Play services, Firebase, Play Core or the
+other SDKs F-Droid's scanner rejects (`just fdroid-check`), and APKs leave out AGP's encrypted dependency
+metadata, which F-Droid also rejects (`dependenciesInfo` in `android/app/build.gradle.kts`).
+
+- `fdroid/red.tix.tix_mobile.yml` is the recipe for fdroiddata's `metadata/`, and `fdroid/srclibs/tix.yml` the
+  srclib for the engine. The embedded engine is tix, AGPL Go, built from the commit `tix.lock` pins: the recipe
+  checks that commit out as the `tix` srclib, places it where `hook/build.dart` looks for a cached checkout, and
+  installs Go from go.dev with its checksum, so the build fetches nothing unpinned apart from Go modules.
+- Three builds per release, one per ABI, with version codes from the `+N` release-please increments in
+  `pubspec.yaml` plus Flutter's per-ABI offset (1000+N, 2000+N, 4000+N), which F-Droid's update checker reads
+  from the tag (`VercodeOperation`). `just build-fdroid` runs the same build locally.
+- Reproducible builds: not claimed yet. Both Flutter and libtix strip paths (`-trimpath` for Go), but our
+  release APKs use different version codes and our signature, so F-Droid publishes its own build. Matching them
+  would mean F-Droid building the GitHub APK's exact inputs and `Binaries:` plus `AllowedAPKSigningKeys` in the
+  recipe; worth doing once a release has been compared byte for byte.
+
+Owner, once: replace the placeholder version in the recipe (v0.4.0 predates this) with the first release that
+carries it, check it with `fdroid lint` and `fdroid build -v -l red.tix.tix_mobile` in a clone of fdroiddata,
+and open a merge request to <https://gitlab.com/fdroid/fdroiddata> with both files. After that, F-Droid picks up
+new tags on its own.
+
+Verify: the app appears at `https://f-droid.org/packages/red.tix.tix_mobile/` a few days after the merge request
+lands.
+
+### Flathub
+
+The app id is `red.tix.tix_mobile`, the id the GTK application, desktop entry and icons already have. Renaming
+it to something like `red.tix.TixMobile` would move every Linux user's data directory.
+
+- `linux/packaging/red.tix.tix_mobile.metainfo.xml` is the AppStream metadata, installed with the Linux bundle.
+  Its `<releases>` come from `CHANGELOG.md` (`just metainfo` refreshes the committed copy, and the Flatpak build
+  regenerates it from the tag). `just metainfo` also runs `appstreamcli validate`.
+- `flatpak/red.tix.tix_mobile.yml` builds the app and libtix from source on the GNOME runtime, with Go from
+  go.dev; `flatpak/build.sh` is its build. It requests network, Wayland/X11, the GPU, the secret service (tokens)
+  and notifications, and no filesystem access: files go through the portals.
+
+Flathub builds offline, so before submitting, the offline sources are generated next to the manifest (the
+manifest names them under `generated/`; rename to match what the tools write):
+
+- The Flutter SDK's engine artifacts and every pub package `pubspec.lock` pins, with
+  [flatpak-flutter](https://github.com/TheAppgineer/flatpak-flutter), run on the manifest.
+- tix's Go modules, unpacked as `tix-src/vendor`, with [flatpak-go-mod](https://github.com/dennwc/flatpak-go-mod)
+  run on a tix checkout at the `tix.lock` commit.
+
+Neither has been run yet, and the manifest has not been built: that needs `flatpak-builder` and the generated
+files, and is the first step below.
+
+Owner, once:
+
+1. Decide the id. `red.tix.*` needs the `tix.red` domain verified on Flathub; without it, an
+   `io.github.heliopsy.*` id is the alternative, at the cost of the data directory move above.
+2. Set the manifest's tag and commit to the first release that carries `flatpak/build.sh`, generate the sources,
+   and build locally: `flatpak-builder --user --install --force-clean build-dir flatpak/red.tix.tix_mobile.yml`.
+3. Add screenshots to the metainfo (Flathub requires them; hosted at a stable URL such as a tagged raw GitHub
+   file).
+4. Follow <https://docs.flathub.org/docs/for-app-authors/submission>: a pull request to `flathub/flathub` on the
+   `new-pr` branch with the manifest and generated files.
+
+Verify: `flatpak run red.tix.tix_mobile` starts, signs in, and keeps the token across restarts (the secret
+service), and Flathub's linter (`flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest
+flatpak/red.tix.tix_mobile.yml`) passes.
+
+### Not wired yet
+
+- **App Store** (beyond TestFlight): a privacy manifest, screenshots and the review.
+- **Windows** signing: needs a code-signing certificate; nothing is wired.
