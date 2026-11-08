@@ -262,13 +262,22 @@ class SkeletonBox extends StatelessWidget {
 /// that breathe, never a spinner. Still when motion is reduced.
 class SkeletonList extends StatefulWidget {
   /// [rows] placeholder rows; [leading] draws a square before each.
-  const SkeletonList({this.rows = 8, this.leading = true, super.key});
+  const SkeletonList({
+    this.rows = 8,
+    this.leading = true,
+    this.inline = false,
+    super.key,
+  });
 
   /// How many rows.
   final int rows;
 
   /// Whether each row starts with a mark, as project rows do.
   final bool leading;
+
+  /// Whether it sits inside a scrolling column, as a section's placeholder,
+  /// taking only the height of its rows.
+  final bool inline;
 
   @override
   State<SkeletonList> createState() => _SkeletonListState();
@@ -312,6 +321,7 @@ class _SkeletonListState extends State<SkeletonList>
           opacity: _pulse,
           child: ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: widget.inline,
             itemCount: widget.rows,
             itemBuilder: (context, i) => Container(
               padding: const EdgeInsets.symmetric(

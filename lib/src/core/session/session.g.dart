@@ -366,3 +366,56 @@ final class TasksRepositoryProvider
 }
 
 String _$tasksRepositoryHash() => r'72846e1303a9b1f6af595bfdb4e5895f14cd51cd';
+
+/// What the task screen reads and changes, for the active session.
+
+@ProviderFor(taskDetailRepository)
+final taskDetailRepositoryProvider = TaskDetailRepositoryProvider._();
+
+/// What the task screen reads and changes, for the active session.
+
+final class TaskDetailRepositoryProvider
+    extends
+        $FunctionalProvider<
+          TaskDetailRepository,
+          TaskDetailRepository,
+          TaskDetailRepository
+        >
+    with $Provider<TaskDetailRepository> {
+  /// What the task screen reads and changes, for the active session.
+  TaskDetailRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'taskDetailRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$taskDetailRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<TaskDetailRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  TaskDetailRepository create(Ref ref) {
+    return taskDetailRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(TaskDetailRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<TaskDetailRepository>(value),
+    );
+  }
+}
+
+String _$taskDetailRepositoryHash() =>
+    r'aa1e8a555b0e7d640d1eef45546f10cfc40c4a05';

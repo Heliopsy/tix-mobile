@@ -23,6 +23,7 @@ import 'package:tix_mobile/src/data/models/instance.dart';
 import 'package:tix_mobile/src/data/models/membership.dart';
 import 'package:tix_mobile/src/data/repositories/auth_repository.dart';
 import 'package:tix_mobile/src/data/repositories/instances_repository.dart';
+import 'package:tix_mobile/src/data/repositories/task_detail_repository.dart';
 import 'package:tix_mobile/src/data/repositories/tasks_repository.dart';
 
 part 'session.g.dart';
@@ -612,6 +613,13 @@ ResponseCache responseCache(Ref ref) {
 /// Projects and tasks for the active session.
 @riverpod
 TasksRepository tasksRepository(Ref ref) => TasksRepository(
+  ref.watch(sessionApiProvider),
+  ref.watch(responseCacheProvider),
+);
+
+/// What the task screen reads and changes, for the active session.
+@riverpod
+TaskDetailRepository taskDetailRepository(Ref ref) => TaskDetailRepository(
   ref.watch(sessionApiProvider),
   ref.watch(responseCacheProvider),
 );

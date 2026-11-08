@@ -50,17 +50,6 @@ pending:
   # Wave 1, daily work: tasks, comments, fields, tags, dependencies, artifacts,
   # time, views, filters, inbox, search, stars, snooze, templates, bulk.
   wave1:
-    - actor.list
-    - artifact.list
-    - artifact.put
-    - comment.add
-    - comment.delete
-    - comment.edit
-    - comment.list
-    - dependency.add
-    - dependency.list
-    - dependency.remove
-    - field.list
     - filter.delete
     - filter.list
     - filter.order
@@ -81,25 +70,10 @@ pending:
     - inbox.read
     - inbox.read_all
     - inbox.unread
-    - tag.add
-    - tag.list
-    - tag.remove
-    - task.audit
     - task.bulk
-    - task.check
-    - task.copy
-    - task.delete
     - task.lease
-    - task.restore
-    - task.route
-    - task.snooze
-    - task.star
     - task.tags
     - task.transition
-    - task.tree
-    - task.unsnooze
-    - task.unstar
-    - task.update
     - template.delete
     - template.list
     - template.save
@@ -108,7 +82,6 @@ pending:
     - template.use
     - time.prefs.set
     - time.settings
-    - trash.status
     - view.group.set
     - view.groups
     - view.order
@@ -138,7 +111,6 @@ pending:
     - project.delete
     - project.delete-plan
     - project.icon
-    - project.show
     - project.update
     - snapshot.export
     - snapshot.import
@@ -154,7 +126,6 @@ pending:
     - user.list
     - user.update
     - workflow.delete
-    - workflow.get
     - workflow.list
     - workflow.put
     - workflow.put_by_key
