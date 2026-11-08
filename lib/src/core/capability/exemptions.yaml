@@ -1,0 +1,208 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Every operation in api/tix-openapi.yaml that lib/src/core/capability/
+# registry.dart does not bind is listed here, exactly once:
+#
+#   exempt   the app deliberately never offers it; say why.
+#   pending  planned, by wave. Binding one moves it from here to registry.dart.
+#
+# test/core/capability/operations_test.dart fails on an operation in neither
+# place, in both, or named here but gone from the spec. `just parity` reports
+# coverage per wave.
+#
+# Waves: 1 daily work, 2 team, 3 admin.
+
+exempt:
+  api.spec:
+    reason: the OpenAPI document the client is generated from at build time; nothing to show at run time
+  calendar.read:
+    reason: >-
+      the feed is iCalendar for a calendar app, read without a credential; the app hands out its address
+      (calendar.show)
+  claim.next:
+    reason: claiming is the agent work queue; a person picks a task by name instead
+  claim.release:
+    reason: a lease is released by the worker holding its token, which the app never holds
+  claim.renew:
+    reason: a lease is renewed by the worker holding its token, which the app never holds
+  claim.sweep:
+    reason: lease sweeping is a background maintenance loop, not an action a person takes
+  claim.task:
+    reason: claiming is the agent work queue; the lease token it returns belongs to a worker, not a person
+  domain.resolve:
+    reason: hostname resolution runs before any screen is chosen, on the server; tix exempts it from the web UI too
+  server.ready:
+    reason: a readiness probe for a load balancer; server.health already tells the app a server is tix
+  session.ssh_challenge:
+    reason: SSH key sign-in signs a challenge with ssh-agent or a private key, which the app does not hold
+  session.ssh_login:
+    reason: SSH key sign-in signs a challenge with ssh-agent or a private key, which the app does not hold
+  task.wake:
+    reason: waking snoozed tasks is a background loop beside the lease sweep, not an action a person takes
+  totp.verify:
+    reason: a sign-in proves its second factor by posting the ticket and code to session.login, as the web UI does
+  user.show:
+    reason: >-
+      the user administration list already shows every field a single user screen would; tix exempts it from the
+      web UI too
+
+pending:
+  # Wave 1, daily work: tasks, comments, fields, tags, dependencies, artifacts,
+  # time, views, filters, inbox, search, stars, snooze, templates, bulk.
+  wave1:
+    - actor.list
+    - artifact.list
+    - artifact.put
+    - comment.add
+    - comment.delete
+    - comment.edit
+    - comment.list
+    - dependency.add
+    - dependency.list
+    - dependency.remove
+    - field.list
+    - filter.delete
+    - filter.list
+    - filter.order
+    - filter.save
+    - filter.show
+    - filter.update
+    - inbox.channel.add
+    - inbox.channel.deliveries
+    - inbox.channel.edit
+    - inbox.channel.list
+    - inbox.channel.redeliver
+    - inbox.channel.rm
+    - inbox.channel.test
+    - inbox.count
+    - inbox.list
+    - inbox.prefs
+    - inbox.prefs.set
+    - inbox.read
+    - inbox.read_all
+    - inbox.unread
+    - tag.add
+    - tag.list
+    - tag.remove
+    - task.audit
+    - task.bulk
+    - task.check
+    - task.copy
+    - task.delete
+    - task.lease
+    - task.restore
+    - task.route
+    - task.snooze
+    - task.star
+    - task.tags
+    - task.transition
+    - task.tree
+    - task.unsnooze
+    - task.unstar
+    - task.update
+    - template.delete
+    - template.list
+    - template.save
+    - template.show
+    - template.update
+    - template.use
+    - time.prefs.set
+    - time.settings
+    - trash.status
+    - view.group.set
+    - view.groups
+    - view.order
+    - view.reset
+  # Wave 2, team: projects, workflows, fields, users, members, invites, tokens, calendar, export.
+  wave2:
+    - account.log
+    - bundle.export
+    - bundle.import
+    - calendar.create
+    - calendar.filter
+    - calendar.revoke
+    - calendar.rotate
+    - calendar.show
+    - field.delete
+    - field.put
+    - invite.accept
+    - invite.create
+    - invite.list
+    - invite.preview
+    - invite.reissue
+    - invite.revoke
+    - member.add
+    - member.list
+    - member.remove
+    - project.create
+    - project.delete
+    - project.delete-plan
+    - project.icon
+    - project.show
+    - project.update
+    - snapshot.export
+    - snapshot.import
+    - stats.read
+    - status.read
+    - task.export
+    - task.import
+    - token.create
+    - token.list
+    - token.revoke
+    - user.create
+    - user.delete
+    - user.list
+    - user.update
+    - workflow.delete
+    - workflow.get
+    - workflow.list
+    - workflow.put
+    - workflow.put_by_key
+  # Wave 3, admin: tenants, global admin, domains, webhooks, sync, retention, audit, second factor, SSH keys.
+  wave3:
+    - account.log.any
+    - audit.list
+    - claim.reclaim
+    - connection.end
+    - connection.list
+    - domain.add
+    - domain.list
+    - domain.remove
+    - domain.update
+    - global_admin.grant
+    - global_admin.list
+    - global_admin.revoke
+    - housekeeping.get
+    - housekeeping.put
+    - housekeeping.run
+    - retention.get
+    - retention.prune
+    - retention.put
+    - sshkey.enrol
+    - sshkey.list
+    - sshkey.revoke
+    - sync.run
+    - sync.source.delete
+    - sync.source.list
+    - sync.source.put
+    - tenant.create
+    - tenant.delete
+    - tenant.domain.list
+    - tenant.list
+    - tenant.member.add
+    - tenant.update
+    - tenant.user.create
+    - tenant.user.delete
+    - tenant.user.list
+    - tenant.user.update
+    - totp.clear
+    - totp.codes
+    - totp.confirm
+    - totp.enrol
+    - totp.remove
+    - totp.status
+    - webhook.delete
+    - webhook.deliveries
+    - webhook.list
+    - webhook.put
+    - webhook.redeliver
