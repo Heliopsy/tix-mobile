@@ -1,0 +1,28 @@
+# The hard floor is `just cover-check` (cov_min in the justfile), which fails CI.
+# Codecov's statuses are advisory on top: a project drop of more than two points,
+# or a patch that is mostly untested, shows up on the pull request.
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 2%
+    patch:
+      default:
+        target: 70%
+        informational: true
+
+# Generated code; kept in step with scripts/coverage.sh, which already drops it
+# from the uploaded report. Listed here too so a raw upload cannot count it.
+ignore:
+  - "**/*.g.dart"
+  - "**/*.freezed.dart"
+  - "**/*.gr.dart"
+  - "**/*.mocks.dart"
+  - "**/*.config.dart"
+  - "lib/l10n/**"
+  - "lib/generated/**"
+
+comment:
+  layout: "diff, files"
+  require_changes: true

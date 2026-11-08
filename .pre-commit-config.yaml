@@ -1,0 +1,28 @@
+# Optional local hooks: `pre-commit install --hook-type commit-msg --hook-type pre-push`.
+# CI enforces all of this anyway; the hooks only move the failure earlier.
+repos:
+  # release-please derives versions from commit types, so a message it cannot
+  # parse is a change it leaves out of the changelog.
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: 33b50eb042bee26eac0ee96ad84aa9c1b4dccdd8  # v4.5.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: [feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert]
+
+  - repo: local
+    hooks:
+      - id: fmt-check
+        name: dart format
+        entry: just fmt-check
+        language: system
+        pass_filenames: false
+        types: [dart]
+        stages: [pre-commit]
+      - id: check
+        name: just check
+        entry: just check
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]

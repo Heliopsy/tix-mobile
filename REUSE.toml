@@ -1,0 +1,76 @@
+version = 1
+SPDX-PackageName = "tix-mobile"
+SPDX-PackageSupplier = "tix-mobile contributors"
+SPDX-PackageDownloadLocation = "https://github.com/heliopsy/tix-mobile"
+
+# Hand-written Dart under lib/ and test/ states its own licence in an SPDX
+# header and gets only its copyright line from here (the last annotation), so
+# `just reuse` still catches a new source file that forgot the header. The rest
+# below cannot hold a header, is generated, or is scaffolding `flutter create`
+# wrote and regenerates.
+#
+# precedence = "closest" (the default) lets a header inside one of these files
+# win over the annotation, so adding one is never wrong.
+
+# Hand-written Dart: copyright only, on purpose. Each file states its licence
+# itself with `// SPDX-License-Identifier: AGPL-3.0-or-later` on its first
+# line; this supplies the copyright line so the header can stay one line. A
+# file without that header still fails `just reuse` for want of a licence,
+# which is the check worth keeping.
+#
+# It comes first because the last matching annotation wins, and the generated
+# Dart below (*.g.dart, lib/l10n/) has to get its licence from there.
+[[annotations]]
+path = ["lib/**.dart", "test/**.dart", "integration_test/**.dart"]
+SPDX-FileCopyrightText = "tix-mobile contributors"
+
+# Platform scaffolding from `flutter create`: Gradle, Xcode projects, CMake,
+# runners, plists, icons and launch images.
+[[annotations]]
+path = ["android/**", "ios/**", "macos/**", "linux/**", "windows/**", "web/**"]
+SPDX-FileCopyrightText = "tix-mobile contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+# Generated Dart: build_runner output and the localizations gen-l10n writes,
+# plus the ARB files beside them, which are JSON and cannot hold a comment.
+[[annotations]]
+path = [
+  "**/*.g.dart",
+  "**/*.freezed.dart",
+  "**/*.gr.dart",
+  "**/*.mocks.dart",
+  "**/*.config.dart",
+  "lib/l10n/**",
+  "lib/generated/**",
+]
+SPDX-FileCopyrightText = "tix-mobile contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+# Documentation, specs, assets and agent tooling.
+[[annotations]]
+path = ["**/*.md", "docs/**", "openspec/**", "assets/**", ".claude/**", "screenshots/**"]
+SPDX-FileCopyrightText = "tix-mobile contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+# Repository configuration: package manifests, lint and CI config, editor and
+# tool settings. Most are JSON, YAML or dotfiles where a header is either
+# impossible or noise.
+[[annotations]]
+path = [
+  ".github/**",
+  "pubspec.yaml",
+  "pubspec.lock",
+  "*.yaml",
+  "*.yml",
+  "*.json",
+  "*.toml",
+  ".metadata",
+  ".tool-versions",
+  ".gitignore",
+  ".gitattributes",
+  ".editorconfig",
+  ".vscode/**",
+  "**/.gitkeep",
+]
+SPDX-FileCopyrightText = "tix-mobile contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
