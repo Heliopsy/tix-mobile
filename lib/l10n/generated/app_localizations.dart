@@ -462,7 +462,7 @@ abstract class AppLocalizations {
   /// No description provided for @localUnavailableNote.
   ///
   /// In en, this message translates to:
-  /// **'Databases on this device need tix built into the app, which is not in this build yet.'**
+  /// **'Databases on this device need the tix engine built into the app, and this build was made without it.'**
   String get localUnavailableNote;
 
   /// No description provided for @methodToken.
@@ -804,8 +804,44 @@ abstract class AppLocalizations {
   /// No description provided for @errorEngineUnavailable.
   ///
   /// In en, this message translates to:
-  /// **'Databases on this device are not available in this build yet.'**
+  /// **'Databases on this device are not available: this build was made without the tix engine.'**
   String get errorEngineUnavailable;
+
+  /// No description provided for @localIntroImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new tix database or import one. The app works on its own copy, kept inside the app; export it to take your changes elsewhere.'**
+  String get localIntroImport;
+
+  /// No description provided for @localOpenInPlace.
+  ///
+  /// In en, this message translates to:
+  /// **'The file stays where it is, and changes are saved straight to it.'**
+  String get localOpenInPlace;
+
+  /// No description provided for @localImportFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Import a database file…'**
+  String get localImportFile;
+
+  /// No description provided for @exportDatabase.
+  ///
+  /// In en, this message translates to:
+  /// **'Export database…'**
+  String get exportDatabase;
+
+  /// No description provided for @databaseExported.
+  ///
+  /// In en, this message translates to:
+  /// **'Database exported.'**
+  String get databaseExported;
+
+  /// No description provided for @localCopyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy kept in the app'**
+  String get localCopyNote;
 }
 
 class _AppLocalizationsDelegate

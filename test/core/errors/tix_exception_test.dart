@@ -107,4 +107,18 @@ void main() {
       'TixException(network)',
     );
   });
+
+  test('reads the engine error object', () {
+    final e = TixException.fromEngine({
+      'code': 'not_found',
+      'message': 'no such file',
+    });
+    expect(e.kind, TixErrorKind.notFound);
+    expect(e.message, 'no such file');
+    expect(
+      TixException.fromEngine({'code': 'weird'}).kind,
+      TixErrorKind.unknown,
+    );
+    expect(TixException.fromEngine(const {}).message, '');
+  });
 }

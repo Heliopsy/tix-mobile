@@ -222,7 +222,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get localUnavailableNote =>
-      'Базите данни на това устройство изискват вграден в приложението tix, който още не е в тази версия.';
+      'Базите данни на това устройство изискват вградения в приложението tix, а тази версия е създадена без него.';
 
   @override
   String get methodToken => 'Токен';
@@ -419,5 +419,25 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get errorEngineUnavailable =>
-      'Базите данни на това устройство още не са налични в тази версия.';
+      'Базите данни на това устройство не са налични: тази версия е създадена без вградения tix.';
+
+  @override
+  String get localIntroImport =>
+      'Създайте нова tix база данни или внесете съществуваща. Приложението работи със собствено копие, пазено в него; изнесете го, за да вземете промените си другаде.';
+
+  @override
+  String get localOpenInPlace =>
+      'Файлът остава там, където е, и промените се записват направо в него.';
+
+  @override
+  String get localImportFile => 'Внасяне на файл с база данни…';
+
+  @override
+  String get exportDatabase => 'Изнасяне на базата данни…';
+
+  @override
+  String get databaseExported => 'Базата данни е изнесена.';
+
+  @override
+  String get localCopyNote => 'Копие, пазено в приложението';
 }

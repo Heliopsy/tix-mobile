@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'dart:async';
+import 'dart:ui' show Rect;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
@@ -8,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
+import 'package:tix_mobile/src/core/platform/files.dart';
 import 'package:tix_mobile/src/core/session/api.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
@@ -115,6 +117,10 @@ class SessionController extends _$SessionController {
       );
     }
     ref.read(localEngineLifecycleProvider);
+    final moved = engines.moved.listen((id) {
+      if (id == instance.id) ref.invalidateSelf();
+    });
+    ref.onDispose(moved.cancel);
     try {
       final handle = await engines.ensure(instance);
       return _refreshed(
@@ -273,7 +279,7 @@ class SessionController extends _$SessionController {
           dbPath: dbPath,
           createdAt: DateTime.now(),
         );
-    ref.read(localEnginesProvider).adopt(instance.id, handle);
+    ref.read(localEnginesProvider).adopt(instance, handle);
     final saved = await repo.save(
       instance: instance,
       connection: Connection(
@@ -367,6 +373,27 @@ class SessionController extends _$SessionController {
     await repo.removeInstance(id);
     ref.invalidateSelf();
     await future;
+  }
+
+  /// Hands a copy of the local instance [id]'s database to the person. Its
+  /// engine stops first, so the copy holds every write, and starts again
+  /// afterwards if it was running. Whether the copy went anywhere.
+  Future<bool> exportLocal(String id, {Rect? origin}) async {
+    final instance = ref.read(instancesRepositoryProvider).instance(id);
+    if (instance == null || instance.kind != InstanceKind.local) return false;
+    final engines = ref.read(localEnginesProvider);
+    final running = engines.running.contains(id);
+    await engines.stop(id);
+    try {
+      return await ref
+          .read(filePickingProvider)
+          .exportDatabase(instance.dbPath, origin: origin);
+    } finally {
+      if (running) {
+        ref.invalidateSelf();
+        await future;
+      }
+    }
   }
 
   Future<void> _endSession(Connection connection) async {

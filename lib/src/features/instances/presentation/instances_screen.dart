@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/platform/files.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/widgets/confirm.dart';
@@ -41,7 +42,7 @@ class InstancesScreen extends ConsumerWidget {
   }
 }
 
-enum _InstanceAction { addConnection, remove }
+enum _InstanceAction { addConnection, export, remove }
 
 enum _ConnectionAction { use, pin, unpin, reconnect, remove }
 
@@ -70,6 +71,20 @@ class InstanceCard extends ConsumerWidget {
     switch (action) {
       case _InstanceAction.addConnection:
         context.go(Routes.addConnection(instance.id));
+      case _InstanceAction.export:
+        final messenger = ScaffoldMessenger.of(context);
+        final box = context.findRenderObject() as RenderBox?;
+        final origin = box == null
+            ? null
+            : box.localToGlobal(Offset.zero) & box.size;
+        final done = await ref
+            .read(sessionControllerProvider.notifier)
+            .exportLocal(instance.id, origin: origin);
+        if (done) {
+          messenger.showSnackBar(
+            SnackBar(content: Text(l10n.databaseExported)),
+          );
+        }
       case _InstanceAction.remove:
         final ok = await confirmDestructive(
           context,
@@ -118,6 +133,7 @@ class InstanceCard extends ConsumerWidget {
     final l10n = context.l10n;
     final instance = group.instance;
     final local = instance.kind == InstanceKind.local;
+    final copy = local && !ref.watch(filePickingProvider).opensInPlace;
     return Card(
       key: Key('instances.instance.${instance.id}'),
       margin: const EdgeInsets.symmetric(vertical: 4),
@@ -126,7 +142,11 @@ class InstanceCard extends ConsumerWidget {
           ListTile(
             leading: Icon(local ? Icons.storage : Icons.cloud_outlined),
             title: Text(instance.name),
-            subtitle: Text(instance.location),
+            subtitle: Text(
+              copy
+                  ? '${l10n.localCopyNote} · ${instance.location}'
+                  : instance.location,
+            ),
             trailing: PopupMenuButton<_InstanceAction>(
               key: Key('instances.instance.${instance.id}.menu'),
               onSelected: (a) => _onInstance(context, ref, a),
@@ -135,6 +155,11 @@ class InstanceCard extends ConsumerWidget {
                   value: _InstanceAction.addConnection,
                   child: Text(local ? l10n.openTenant : l10n.addConnection),
                 ),
+                if (copy)
+                  PopupMenuItem(
+                    value: _InstanceAction.export,
+                    child: Text(l10n.exportDatabase),
+                  ),
                 PopupMenuItem(
                   value: _InstanceAction.remove,
                   child: Text(l10n.removeInstance),

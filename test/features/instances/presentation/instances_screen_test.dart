@@ -54,17 +54,21 @@ void main() {
     server.tokens['tok-acme'] = 'acme';
   });
 
-  Future<ProviderContainer> pump(WidgetTester tester, {Size size = phone}) =>
-      pumpScreen(
-        tester,
-        const InstancesScreen(),
-        size: size,
-        overrides: fakeOverrides(
-          server,
-          settings: stores.settings,
-          secrets: stores.secrets,
-        ),
-      );
+  Future<ProviderContainer> pump(
+    WidgetTester tester, {
+    Size size = phone,
+    FakeFilePicking? files,
+  }) => pumpScreen(
+    tester,
+    const InstancesScreen(),
+    size: size,
+    overrides: fakeOverrides(
+      server,
+      settings: stores.settings,
+      secrets: stores.secrets,
+      files: files,
+    ),
+  );
 
   Finder inConnection(String id, Finder f) => find.descendant(
     of: find.byKey(Key('instances.connection.$id')),
@@ -161,6 +165,40 @@ void main() {
     await tester.pumpAndSettle();
     await menu(tester, 'instances.instance.i1.menu', 'Add a connection');
     expect(find.text('route:/connect?instance=i1'), findsOneWidget);
+  });
+
+  testWidgets('a copy kept in the app says so and can be exported', (
+    tester,
+  ) async {
+    final files = FakeFilePicking(desktop: false);
+    await pump(tester, files: files);
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('instances.instance.i2')),
+        matching: find.text('Copy kept in the app · /home/ana/tix.db'),
+      ),
+      findsOneWidget,
+    );
+    await menu(tester, 'instances.instance.i2.menu', 'Export database…');
+    expect(files.exports, ['/home/ana/tix.db']);
+    expect(find.text('Database exported.'), findsOneWidget);
+  });
+
+  testWidgets('a file used in place offers no export', (tester) async {
+    final files = FakeFilePicking();
+    await pump(tester, files: files);
+    expect(find.text('/home/ana/tix.db'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('instances.instance.i2.menu')));
+    await tester.pumpAndSettle();
+    expect(find.text('Export database…'), findsNothing);
+  });
+
+  testWidgets('a cancelled export says nothing', (tester) async {
+    final files = FakeFilePicking(desktop: false, exported: false);
+    await pump(tester, files: files);
+    await menu(tester, 'instances.instance.i2.menu', 'Export database…');
+    expect(files.exports, ['/home/ana/tix.db']);
+    expect(find.text('Database exported.'), findsNothing);
   });
 
   testWidgets('removing a connection asks first', (tester) async {

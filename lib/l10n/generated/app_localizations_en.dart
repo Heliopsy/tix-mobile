@@ -221,7 +221,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get localUnavailableNote =>
-      'Databases on this device need tix built into the app, which is not in this build yet.';
+      'Databases on this device need the tix engine built into the app, and this build was made without it.';
 
   @override
   String get methodToken => 'Token';
@@ -416,5 +416,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorEngineUnavailable =>
-      'Databases on this device are not available in this build yet.';
+      'Databases on this device are not available: this build was made without the tix engine.';
+
+  @override
+  String get localIntroImport =>
+      'Create a new tix database or import one. The app works on its own copy, kept inside the app; export it to take your changes elsewhere.';
+
+  @override
+  String get localOpenInPlace =>
+      'The file stays where it is, and changes are saved straight to it.';
+
+  @override
+  String get localImportFile => 'Import a database file…';
+
+  @override
+  String get exportDatabase => 'Export database…';
+
+  @override
+  String get databaseExported => 'Database exported.';
+
+  @override
+  String get localCopyNote => 'Copy kept in the app';
 }

@@ -155,14 +155,17 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
   );
 
   Future<void> _openFile() async {
-    final path = await ref.read(filePickingProvider).openDatabase();
+    final files = ref.read(filePickingProvider);
+    final path = files.opensInPlace
+        ? await files.openDatabase()
+        : await files.importDatabase();
     if (path == null) return;
     await _run(() => _flow.openLocal(path: path, name: _name.text));
   }
 
   Future<void> _newFile() async {
     final files = ref.read(filePickingProvider);
-    final path = files.canChooseNewFile
+    final path = files.opensInPlace
         ? await files.newDatabase(_dbName.text)
         : await files.documentsDatabase(_dbName.text);
     if (path == null) return;
@@ -420,9 +423,9 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
         ),
       ];
     }
-    final desktop = ref.watch(filePickingProvider).canChooseNewFile;
+    final desktop = ref.watch(filePickingProvider).opensInPlace;
     return [
-      Text(l10n.localIntro),
+      Text(desktop ? l10n.localIntro : l10n.localIntroImport),
       const SizedBox(height: 16),
       _NameField(controller: _name, enabled: !_busy),
       const SizedBox(height: 24),
@@ -451,9 +454,17 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
       OutlinedButton.icon(
         key: const Key('connect.openDb'),
         onPressed: _busy ? null : _openFile,
-        icon: const Icon(Icons.folder_open),
-        label: Text(l10n.localOpenFile),
+        icon: Icon(desktop ? Icons.folder_open : Icons.file_download_outlined),
+        label: Text(desktop ? l10n.localOpenFile : l10n.localImportFile),
       ),
+      if (desktop) ...[
+        const SizedBox(height: 8),
+        Text(
+          l10n.localOpenInPlace,
+          key: const Key('connect.inPlaceNote'),
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+      ],
     ];
   }
 

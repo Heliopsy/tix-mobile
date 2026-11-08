@@ -118,6 +118,15 @@ class TixException implements Exception {
     );
   }
 
+  /// Reads the engine's `{"code", "message"}` error object.
+  factory TixException.fromEngine(Map<String, Object?> error) {
+    final message = error['message'];
+    return TixException(
+      _codes[error['code']] ?? TixErrorKind.unknown,
+      message: message is String ? message : '',
+    );
+  }
+
   /// The error's classification.
   final TixErrorKind kind;
 
