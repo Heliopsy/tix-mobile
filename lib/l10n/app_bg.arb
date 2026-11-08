@@ -636,5 +636,6 @@
   "aboutLicenceBody": "tix-mobile е свободен софтуер под GNU AGPL, версия 3 или по-нова. Приносите се приемат съгласно споразумението за принос на проекта (CLA).",
   "aboutLicences": "Лицензи",
   "aboutLicencesHelp": "Софтуерът с отворен код в това приложение",
-  "aboutOpenFailed": "Връзката не може да се отвори."
+  "aboutOpenFailed": "Връзката не може да се отвори.",
+  "paletteThemeOled": "OLED черна тема"
 }

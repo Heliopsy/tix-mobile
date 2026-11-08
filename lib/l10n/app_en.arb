@@ -1326,5 +1326,9 @@
   "aboutLicenceBody": "tix-mobile is free software under the GNU AGPL, version 3 or later. Contributions are accepted under the project's contributor licence agreement (CLA).",
   "aboutLicences": "Licences",
   "aboutLicencesHelp": "The open source software inside this app",
-  "aboutOpenFailed": "Could not open the link."
+  "aboutOpenFailed": "Could not open the link.",
+  "paletteThemeOled": "OLED black theme",
+  "@paletteThemeOled": {
+    "description": "Command palette entry that switches to the OLED black theme."
+  }
 }

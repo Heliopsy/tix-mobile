@@ -142,6 +142,8 @@ void main() {
       find.descendant(of: about, matching: find.byType(TixMark)),
       findsOneWidget,
     );
+    await tester.ensureVisible(about);
+    await tester.pumpAndSettle();
     await tester.tap(about);
     await tester.pumpAndSettle();
     expect(find.text('route:/settings/about'), findsOneWidget);
