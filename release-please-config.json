@@ -1,9 +1,10 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
   "_comment": [
-    "The manifest starts at 0.0.0 rather than using release-as. release-please",
-    "treats a manifest version with no matching release as the last release, and",
-    "bump-minor-pre-major turns the first feat on top of 0.0.0 into 0.1.0. A",
+    "initial-version sets the first release to 0.1.0. With no release tag yet,",
+    "release-please ignores the 0.0.0 in the manifest and falls back to its own",
+    "default of 1.0.0 (it proposed exactly that in #4). initial-version only",
+    "applies while no release exists, so it needs no cleanup after 0.1.0. A",
     "release-as would have to be removed again after 0.1.0, and a Release-As",
     "commit footer is worse: it stays in the history and tix had it proposed",
     "again, as a downgrade, five times. No last-release-sha either: nothing to",
@@ -75,6 +76,7 @@
       "changelog-path": "CHANGELOG.md",
       "bump-minor-pre-major": true,
       "bump-patch-for-minor-pre-major": false,
+      "initial-version": "0.1.0",
       "include-component-in-tag": false,
       "draft": true
     }
