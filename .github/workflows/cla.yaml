@@ -33,7 +33,7 @@ jobs:
       # being revoked after the fact.
       - name: CLA assistant
         if: >-
-          github.head_ref != 'release-please--branches--main' &&
+          !startsWith(github.head_ref, 'release-please--branches--main') &&
           (github.event_name == 'pull_request_target' ||
           github.event.comment.body == 'recheck' ||
           github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA')
