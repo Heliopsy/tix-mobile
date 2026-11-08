@@ -1479,6 +1479,699 @@ class AppLocalizationsFr extends AppLocalizations {
   String get boardAssignTo => 'Assigner à…';
 
   @override
+  String get quickAddProject => 'Projet';
+
+  @override
+  String get quickAddPickProject => 'Choisir un projet';
+
+  @override
+  String get quickAddNoProjects => 'Il n’y a encore aucun projet où ajouter.';
+
+  @override
+  String get quickAddAnother => 'Ajouter une autre';
+
+  @override
+  String get quickAddAnotherHelp => 'Rester ouvert pour la ligne suivante';
+
+  @override
+  String quickAddPreviewRefused(String reason) {
+    return 'Le serveur refuserait ceci : $reason';
+  }
+
+  @override
+  String get quickAddPreviewOff =>
+      'Cette connexion ne peut pas prévisualiser les lignes ; l’ajout fonctionne quand même.';
+
+  @override
+  String get quickAddOffline =>
+      'L’ajout nécessite une connexion au serveur. La ligne est conservée ; réessayez une fois en ligne.';
+
+  @override
+  String get quickAddChipPriority => 'priorité';
+
+  @override
+  String get quickAddChipTag => 'tag';
+
+  @override
+  String get quickAddChipAssignee => 'responsable';
+
+  @override
+  String get quickAddChipDue => 'échéance';
+
+  @override
+  String get quickAddChipStatus => 'statut';
+
+  @override
+  String get quickAddChipParent => 'parent';
+
+  @override
+  String get quickAddChipTitle => 'titre';
+
+  @override
+  String get quickAddSuggestions => 'Suggestions';
+
+  @override
+  String get quickAddTemplates => 'À partir d’un modèle';
+
+  @override
+  String get quickAddManageTemplates => 'Modèles';
+
+  @override
+  String get quickAddPaste => 'Ajout rapide depuis le presse-papiers';
+
+  @override
+  String get quickAddClipboardEmpty =>
+      'Le presse-papiers ne contient pas de texte.';
+
+  @override
+  String get paletteGroupProjects => 'Projets';
+
+  @override
+  String get paletteGroupRecent => 'Tâches récentes';
+
+  @override
+  String get paletteGroupContexts => 'Basculer vers';
+
+  @override
+  String get paletteGroupTheme => 'Thème';
+
+  @override
+  String get paletteGroupTemplates => 'Modèles';
+
+  @override
+  String paletteOpenTask(String ref) {
+    return 'Ouvrir $ref';
+  }
+
+  @override
+  String get paletteGoInbox => 'Aller à la boîte de réception';
+
+  @override
+  String get paletteGoMyWork => 'Aller à Mon travail';
+
+  @override
+  String get paletteGoTemplates => 'Aller aux modèles';
+
+  @override
+  String get paletteThemeLight => 'Thème clair';
+
+  @override
+  String get paletteThemeDark => 'Thème sombre';
+
+  @override
+  String get paletteThemeSystem => 'Thème du système';
+
+  @override
+  String paletteUseTemplate(String name) {
+    return 'Nouvelle tâche à partir de $name';
+  }
+
+  @override
+  String get templatesTitle => 'Modèles';
+
+  @override
+  String get templatesSubtitle =>
+      'Les tâches que vous ajoutez souvent, à portée de main';
+
+  @override
+  String get templateNew => 'Nouveau modèle';
+
+  @override
+  String get templatesEmpty => 'Aucun modèle pour l’instant.';
+
+  @override
+  String get templatesEmptyBody =>
+      'Enregistrez une tâche comme modèle pour la rajouter d’une simple touche.';
+
+  @override
+  String get templateEveryProject => 'Tous les projets';
+
+  @override
+  String templateUses(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Utilisé $count fois',
+      one: 'Utilisé une fois',
+      zero: 'Jamais utilisé',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String templateSubtasks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sous-tâches',
+      one: '1 sous-tâche',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get templateUse => 'Utiliser';
+
+  @override
+  String get templateEdit => 'Modifier le modèle';
+
+  @override
+  String get templateDelete => 'Supprimer le modèle';
+
+  @override
+  String templateDeleteTitle(String name) {
+    return 'Supprimer $name ?';
+  }
+
+  @override
+  String get templateDeleteBody =>
+      'Les tâches créées à partir de ce modèle sont conservées.';
+
+  @override
+  String templateDeleted(String name) {
+    return '$name supprimé';
+  }
+
+  @override
+  String templateSaved(String name) {
+    return '$name enregistré';
+  }
+
+  @override
+  String get templateName => 'Nom';
+
+  @override
+  String get templateNameHelp =>
+      'Unique dans l’espace, 100 caractères maximum.';
+
+  @override
+  String get templateFromTask => 'À partir d’une tâche';
+
+  @override
+  String get templateFromScratch => 'Partir de zéro';
+
+  @override
+  String get templateTaskRef => 'Tâche';
+
+  @override
+  String get templateTaskRefHelp =>
+      'La référence de la tâche à conserver, par exemple ops-12.';
+
+  @override
+  String get templateWithSubtasks => 'Conserver ses sous-tâches';
+
+  @override
+  String get templateTenantWide => 'Partager avec tous les projets';
+
+  @override
+  String get templateDueIn => 'Échéance après';
+
+  @override
+  String get templateDueInHelp =>
+      'Délai entre l’utilisation et l’échéance de la tâche, par exemple 3d ou 2w. Vide pour aucune.';
+
+  @override
+  String get templateScratchNote =>
+      'tix crée les modèles à partir de tâches : la tâche est donc aussi ajoutée au projet.';
+
+  @override
+  String get templateTitle => 'Titre';
+
+  @override
+  String templateTitleHelp(String date, String n, String project) {
+    return '$date, $n et $project sont remplis à chaque utilisation.';
+  }
+
+  @override
+  String get templateBody => 'Description';
+
+  @override
+  String get templatePriority => 'Priorité';
+
+  @override
+  String get templateTags => 'Tags';
+
+  @override
+  String get templateTagsHelp => 'Séparés par des espaces ou des virgules.';
+
+  @override
+  String get templateRecurrence => 'Répétition';
+
+  @override
+  String get templateRecurrenceHelp =>
+      'Par exemple every 2 weeks. Vide pour aucune.';
+
+  @override
+  String get templateSave => 'Enregistrer';
+
+  @override
+  String get templateCreate => 'Enregistrer le modèle';
+
+  @override
+  String get templateRecentTasks => 'Ouvertes récemment';
+
+  @override
+  String get appShortcutInbox => 'Boîte de réception';
+
+  @override
+  String get appShortcutMyWork => 'Mon travail';
+
+  @override
+  String get templateDeleteAction => 'Supprimer';
+
+  @override
+  String get templateMore => 'Plus d’actions';
+
+  @override
+  String templateGeneralError(String reason) {
+    return 'Enregistrement impossible : $reason';
+  }
+
+  @override
+  String get goInbox => 'Aller à la boîte de réception';
+
+  @override
+  String get inboxTitle => 'Boîte de réception';
+
+  @override
+  String get inboxAll => 'Tout';
+
+  @override
+  String get inboxUnreadFilter => 'Non lus';
+
+  @override
+  String get inboxShowUnread => 'Afficher les non lus uniquement';
+
+  @override
+  String get inboxUnread => 'non lu';
+
+  @override
+  String get inboxAllCaughtUp => 'Vous êtes à jour';
+
+  @override
+  String inboxUnreadCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count non lus',
+      one: '1 non lu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxToday => 'Aujourd’hui';
+
+  @override
+  String get inboxYesterday => 'Hier';
+
+  @override
+  String get inboxEarlier => 'Plus tôt';
+
+  @override
+  String get inboxEmpty => 'Rien ici pour l’instant.';
+
+  @override
+  String get inboxEmptyBody =>
+      'Quand quelqu’un vous mentionne, vous assigne une tâche ou commente une tâche que vous suivez, cela apparaît ici.';
+
+  @override
+  String get inboxEmptyUnread => 'Rien de non lu.';
+
+  @override
+  String get inboxEmptyFiltered => 'Rien de ces types.';
+
+  @override
+  String get inboxSomebody => 'Quelqu’un';
+
+  @override
+  String inboxWhatMention(String who) {
+    return '$who vous a mentionné';
+  }
+
+  @override
+  String inboxWhatAssigned(String who) {
+    return '$who vous a assigné';
+  }
+
+  @override
+  String inboxWhatComment(String who) {
+    return '$who a commenté';
+  }
+
+  @override
+  String inboxWhatStatus(String who) {
+    return '$who l’a déplacée';
+  }
+
+  @override
+  String inboxWhatOther(String who) {
+    return '$who l’a modifiée';
+  }
+
+  @override
+  String get inboxMovedTo => 'déplacée vers';
+
+  @override
+  String get inboxTaskGone => 'Une tâche supprimée';
+
+  @override
+  String get inboxNow => 'maintenant';
+
+  @override
+  String inboxMinutesAgo(int n) {
+    return '$n min';
+  }
+
+  @override
+  String inboxHoursAgo(int n) {
+    return '$n h';
+  }
+
+  @override
+  String get inboxItemActions => 'Actions';
+
+  @override
+  String get inboxOpenTask => 'Ouvrir la tâche';
+
+  @override
+  String get inboxMarkRead => 'Marquer comme lu';
+
+  @override
+  String get inboxMarkUnread => 'Marquer comme non lu';
+
+  @override
+  String get inboxMarkAllRead => 'Tout marquer comme lu';
+
+  @override
+  String inboxMarkedAll(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count éléments marqués comme lus',
+      one: '1 élément marqué comme lu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inboxMuteKind(String kind) {
+    return 'Ne plus recevoir « $kind » dans la boîte de réception';
+  }
+
+  @override
+  String inboxMuted(String kind) {
+    return '« $kind » n’arrivent plus dans votre boîte de réception';
+  }
+
+  @override
+  String get inboxKindMention => 'Mentions';
+
+  @override
+  String get inboxKindAssigned => 'Assignations';
+
+  @override
+  String get inboxKindComment => 'Commentaires';
+
+  @override
+  String get inboxKindStatus => 'Changements de statut';
+
+  @override
+  String get inboxKindMentionHelp =>
+      'Quelqu’un écrit @vous dans un commentaire ou une description.';
+
+  @override
+  String get inboxKindAssignedHelp => 'Une tâche vous est assignée.';
+
+  @override
+  String get inboxKindCommentHelp =>
+      'Quelqu’un commente une tâche qui vous est assignée ou que vous avez en favori.';
+
+  @override
+  String get inboxKindStatusHelp =>
+      'Une tâche qui vous est assignée passe à un autre statut.';
+
+  @override
+  String get inboxKindsTitle => 'Boîte de réception';
+
+  @override
+  String get inboxKindsSubtitle =>
+      'Ce qui crée un élément dans votre boîte de réception, sur tous vos appareils.';
+
+  @override
+  String get inboxKindsInfo =>
+      'Enregistré sur le serveur, comme dans Paramètres, Boîte de réception de l’application web. Désactivé, un type ne crée aucun élément ; ceux déjà présents restent. Vos propres modifications n’apparaissent jamais.';
+
+  @override
+  String get inboxSummaryOverdue => 'En retard';
+
+  @override
+  String get inboxSummaryDueToday => 'Échéance aujourd’hui';
+
+  @override
+  String get inboxSummaryOpen => 'Ouvertes';
+
+  @override
+  String get inboxSummaryDoneWeek => 'Terminées en 7 jours';
+
+  @override
+  String inboxCategory(String category) {
+    String _temp0 = intl.Intl.selectLogic(category, {
+      'todo': 'À faire',
+      'inProgress': 'En cours',
+      'blocked': 'Bloquée',
+      'waiting': 'En attente',
+      'other': 'Autre',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxChannelsTitle => 'Canaux';
+
+  @override
+  String get inboxChannelsSubtitle =>
+      'Recevez votre boîte de réception sur Slack, Discord, ntfy ou n’importe quelle URL.';
+
+  @override
+  String get inboxChannelsInfo =>
+      'Un canal n’appartient qu’à vous : il ne reçoit que vos éléments, des types qu’il liste, et rien d’un type que vous avez désactivé plus haut. Le serveur envoie chaque élément dès qu’il est créé.';
+
+  @override
+  String get inboxChannelsEmpty => 'Aucun canal pour l’instant.';
+
+  @override
+  String get inboxChannelAdd => 'Ajouter un canal';
+
+  @override
+  String get inboxChannelEdit => 'Modifier le canal';
+
+  @override
+  String get inboxChannelSave => 'Enregistrer';
+
+  @override
+  String get inboxChannelSaved => 'Canal enregistré';
+
+  @override
+  String inboxChannelAdded(String name) {
+    return '$name ajouté';
+  }
+
+  @override
+  String get inboxChannelName => 'Nom';
+
+  @override
+  String get inboxChannelNameHint => 'Mon Slack';
+
+  @override
+  String get inboxChannelUrl => 'Adresse';
+
+  @override
+  String get inboxChannelUrlHelp =>
+      'L’URL du webhook ou du topic. Elle doit être en https.';
+
+  @override
+  String get inboxChannelFormat => 'Format';
+
+  @override
+  String get inboxChannelFormatGeneric => 'JSON signé';
+
+  @override
+  String get inboxChannelKinds => 'Types';
+
+  @override
+  String get inboxChannelAllKinds => 'Tous les types';
+
+  @override
+  String get inboxChannelOff => 'Désactivé';
+
+  @override
+  String get inboxChannelSecretTitle => 'Secret de signature';
+
+  @override
+  String get inboxChannelSecretBody =>
+      'tix signe chaque message JSON signé avec ce secret. Copiez-le maintenant : il ne sera plus affiché.';
+
+  @override
+  String get inboxChannelSecretCopy => 'Copier';
+
+  @override
+  String get inboxChannelSecretDone => 'Terminé';
+
+  @override
+  String get inboxChannelAbout => 'Canal';
+
+  @override
+  String get inboxChannelActive => 'Activé';
+
+  @override
+  String get inboxChannelActiveHelp => 'Désactivé, le canal ne reçoit rien.';
+
+  @override
+  String get inboxChannelTest => 'Envoyer un test';
+
+  @override
+  String get inboxChannelTestQueued => 'Message de test en file d’attente';
+
+  @override
+  String get inboxChannelDeliveries => 'Envois';
+
+  @override
+  String get inboxChannelDeliveriesSubtitle => 'Les plus récents d’abord.';
+
+  @override
+  String get inboxChannelNoDeliveries => 'Rien d’envoyé pour l’instant.';
+
+  @override
+  String get inboxChannelGone => 'Ce canal n’existe plus.';
+
+  @override
+  String get inboxChannelDangerZone => 'Zone de danger';
+
+  @override
+  String get inboxChannelDelete => 'Supprimer le canal';
+
+  @override
+  String inboxChannelDeleteTitle(String name) {
+    return 'Supprimer $name ?';
+  }
+
+  @override
+  String get inboxChannelDeleteBody =>
+      'Le canal et son historique d’envoi sont supprimés. Action irréversible.';
+
+  @override
+  String inboxChannelDeleted(String name) {
+    return '$name supprimé';
+  }
+
+  @override
+  String get inboxDeliveryDelivered => 'envoyé';
+
+  @override
+  String get inboxDeliveryFailed => 'échec';
+
+  @override
+  String get inboxDeliveryPending => 'en attente';
+
+  @override
+  String get inboxDeliveryTest => 'Message de test';
+
+  @override
+  String get inboxDeliveryItem => 'Élément de la boîte de réception';
+
+  @override
+  String inboxDeliveryAttempts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tentatives',
+      one: '1 tentative',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxDeliveryRedeliver => 'Renvoyer';
+
+  @override
+  String get inboxDeliveryRequeued => 'Remis en file d’attente';
+
+  @override
+  String get liveUpdated => 'Mis à jour';
+
+  @override
+  String get liveChangedElsewhere =>
+      'Cet élément a été modifié ailleurs. Vos modifications sont conservées.';
+
+  @override
+  String liveChangedElsewhereBy(String handle) {
+    return '@$handle a modifié cet élément. Vos modifications sont conservées.';
+  }
+
+  @override
+  String get liveKeepEditing => 'Continuer à modifier';
+
+  @override
+  String get liveReload => 'Recharger';
+
+  @override
+  String get notifSettingsTitle => 'Notifications';
+
+  @override
+  String get notifSettingsSubtitle =>
+      'Sur cet appareil, types et canaux de la boîte de réception';
+
+  @override
+  String get notifDeviceTitle => 'Sur cet appareil';
+
+  @override
+  String get notifDeviceSubtitle => 'Pour l’instance et l’espace actifs.';
+
+  @override
+  String get notifDeviceInfo =>
+      'Affichées tant que l’application est ouverte ou vient d’être mise en arrière-plan. Une application fermée ne peut pas être prévenue : tix n’a pas encore de service push. Les canaux ci-dessous fonctionnent partout.';
+
+  @override
+  String get notifEnabled =>
+      'M’avertir des nouveaux éléments de la boîte de réception';
+
+  @override
+  String get notifEnabledHelp =>
+      'Touchez une notification pour ouvrir la tâche.';
+
+  @override
+  String get notifBlocked => 'Les notifications sont bloquées pour tix.';
+
+  @override
+  String get notifBlockedHelp =>
+      'Autorisez les notifications pour tix dans les paramètres du système, puis réactivez cette option.';
+
+  @override
+  String get notifNudge =>
+      'Recevez une notification quand un nouvel élément arrive dans votre boîte de réception.';
+
+  @override
+  String get notifTurnOn => 'Activer';
+
+  @override
+  String get notifNotNow => 'Plus tard';
+
+  @override
+  String notifMore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count autres éléments dans la boîte de réception',
+      one: '1 autre élément dans la boîte de réception',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notifMoreBody => 'Ouvrez la boîte de réception pour les voir.';
+
+  @override
   String get themeOled => 'Noir OLED';
 
   @override

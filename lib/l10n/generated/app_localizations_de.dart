@@ -1482,6 +1482,699 @@ class AppLocalizationsDe extends AppLocalizations {
   String get boardAssignTo => 'Zuweisen an…';
 
   @override
+  String get quickAddProject => 'Projekt';
+
+  @override
+  String get quickAddPickProject => 'Projekt wählen';
+
+  @override
+  String get quickAddNoProjects =>
+      'Es gibt noch kein Projekt, zu dem Sie etwas hinzufügen können.';
+
+  @override
+  String get quickAddAnother => 'Weitere hinzufügen';
+
+  @override
+  String get quickAddAnotherHelp => 'Für die nächste Zeile geöffnet lassen';
+
+  @override
+  String quickAddPreviewRefused(String reason) {
+    return 'Der Server würde das ablehnen: $reason';
+  }
+
+  @override
+  String get quickAddPreviewOff =>
+      'Diese Verbindung kann keine Vorschau anzeigen; Hinzufügen funktioniert trotzdem.';
+
+  @override
+  String get quickAddOffline =>
+      'Zum Hinzufügen ist eine Verbindung zum Server nötig. Die Zeile bleibt erhalten; versuchen Sie es erneut, wenn Sie online sind.';
+
+  @override
+  String get quickAddChipPriority => 'Priorität';
+
+  @override
+  String get quickAddChipTag => 'Tag';
+
+  @override
+  String get quickAddChipAssignee => 'zuständig';
+
+  @override
+  String get quickAddChipDue => 'fällig';
+
+  @override
+  String get quickAddChipStatus => 'Status';
+
+  @override
+  String get quickAddChipParent => 'übergeordnet';
+
+  @override
+  String get quickAddChipTitle => 'Titel';
+
+  @override
+  String get quickAddSuggestions => 'Vorschläge';
+
+  @override
+  String get quickAddTemplates => 'Aus Vorlage';
+
+  @override
+  String get quickAddManageTemplates => 'Vorlagen';
+
+  @override
+  String get quickAddPaste => 'Aus Zwischenablage hinzufügen';
+
+  @override
+  String get quickAddClipboardEmpty =>
+      'Die Zwischenablage enthält keinen Text.';
+
+  @override
+  String get paletteGroupProjects => 'Projekte';
+
+  @override
+  String get paletteGroupRecent => 'Letzte Aufgaben';
+
+  @override
+  String get paletteGroupContexts => 'Wechseln zu';
+
+  @override
+  String get paletteGroupTheme => 'Design';
+
+  @override
+  String get paletteGroupTemplates => 'Vorlagen';
+
+  @override
+  String paletteOpenTask(String ref) {
+    return '$ref öffnen';
+  }
+
+  @override
+  String get paletteGoInbox => 'Zum Posteingang';
+
+  @override
+  String get paletteGoMyWork => 'Zu „Meine Arbeit“';
+
+  @override
+  String get paletteGoTemplates => 'Zu Vorlagen';
+
+  @override
+  String get paletteThemeLight => 'Helles Design';
+
+  @override
+  String get paletteThemeDark => 'Dunkles Design';
+
+  @override
+  String get paletteThemeSystem => 'Systemdesign';
+
+  @override
+  String paletteUseTemplate(String name) {
+    return 'Neue Aufgabe aus $name';
+  }
+
+  @override
+  String get templatesTitle => 'Vorlagen';
+
+  @override
+  String get templatesSubtitle => 'Häufige Aufgaben, nur einen Tipp entfernt';
+
+  @override
+  String get templateNew => 'Neue Vorlage';
+
+  @override
+  String get templatesEmpty => 'Noch keine Vorlagen.';
+
+  @override
+  String get templatesEmptyBody =>
+      'Speichern Sie eine Aufgabe als Vorlage, um sie mit einem Tipp erneut hinzuzufügen.';
+
+  @override
+  String get templateEveryProject => 'Alle Projekte';
+
+  @override
+  String templateUses(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count-mal verwendet',
+      one: 'Einmal verwendet',
+      zero: 'Nie verwendet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String templateSubtasks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Unteraufgaben',
+      one: '1 Unteraufgabe',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get templateUse => 'Verwenden';
+
+  @override
+  String get templateEdit => 'Vorlage bearbeiten';
+
+  @override
+  String get templateDelete => 'Vorlage löschen';
+
+  @override
+  String templateDeleteTitle(String name) {
+    return '$name löschen?';
+  }
+
+  @override
+  String get templateDeleteBody =>
+      'Daraus erstellte Aufgaben bleiben erhalten.';
+
+  @override
+  String templateDeleted(String name) {
+    return '$name gelöscht';
+  }
+
+  @override
+  String templateSaved(String name) {
+    return '$name gespeichert';
+  }
+
+  @override
+  String get templateName => 'Name';
+
+  @override
+  String get templateNameHelp =>
+      'Eindeutig im Mandanten, höchstens 100 Zeichen.';
+
+  @override
+  String get templateFromTask => 'Aus Aufgabe';
+
+  @override
+  String get templateFromScratch => 'Neu erstellen';
+
+  @override
+  String get templateTaskRef => 'Aufgabe';
+
+  @override
+  String get templateTaskRefHelp =>
+      'Die Referenz der Aufgabe, die als Vorlage dient, z. B. ops-12.';
+
+  @override
+  String get templateWithSubtasks => 'Unteraufgaben übernehmen';
+
+  @override
+  String get templateTenantWide => 'Für alle Projekte freigeben';
+
+  @override
+  String get templateDueIn => 'Fällig nach';
+
+  @override
+  String get templateDueInHelp =>
+      'Wie lange nach der Verwendung die Aufgabe fällig wird, z. B. 3d oder 2w. Leer für keine Frist.';
+
+  @override
+  String get templateScratchNote =>
+      'tix speichert Vorlagen als Aufgaben, daher wird die Aufgabe auch dem Projekt hinzugefügt.';
+
+  @override
+  String get templateTitle => 'Titel';
+
+  @override
+  String templateTitleHelp(String date, String n, String project) {
+    return '$date, $n und $project werden bei jeder Verwendung ausgefüllt.';
+  }
+
+  @override
+  String get templateBody => 'Beschreibung';
+
+  @override
+  String get templatePriority => 'Priorität';
+
+  @override
+  String get templateTags => 'Tags';
+
+  @override
+  String get templateTagsHelp => 'Durch Leerzeichen oder Kommas getrennt.';
+
+  @override
+  String get templateRecurrence => 'Wiederholung';
+
+  @override
+  String get templateRecurrenceHelp =>
+      'Z. B. every 2 weeks. Leer für keine Wiederholung.';
+
+  @override
+  String get templateSave => 'Speichern';
+
+  @override
+  String get templateCreate => 'Vorlage speichern';
+
+  @override
+  String get templateRecentTasks => 'Zuletzt geöffnet';
+
+  @override
+  String get appShortcutInbox => 'Posteingang';
+
+  @override
+  String get appShortcutMyWork => 'Meine Arbeit';
+
+  @override
+  String get templateDeleteAction => 'Löschen';
+
+  @override
+  String get templateMore => 'Weitere Aktionen';
+
+  @override
+  String templateGeneralError(String reason) {
+    return 'Speichern fehlgeschlagen: $reason';
+  }
+
+  @override
+  String get goInbox => 'Zum Posteingang';
+
+  @override
+  String get inboxTitle => 'Posteingang';
+
+  @override
+  String get inboxAll => 'Alle';
+
+  @override
+  String get inboxUnreadFilter => 'Ungelesen';
+
+  @override
+  String get inboxShowUnread => 'Nur ungelesene anzeigen';
+
+  @override
+  String get inboxUnread => 'ungelesen';
+
+  @override
+  String get inboxAllCaughtUp => 'Alles erledigt';
+
+  @override
+  String inboxUnreadCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ungelesen',
+      one: '1 ungelesen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxToday => 'Heute';
+
+  @override
+  String get inboxYesterday => 'Gestern';
+
+  @override
+  String get inboxEarlier => 'Früher';
+
+  @override
+  String get inboxEmpty => 'Noch nichts da.';
+
+  @override
+  String get inboxEmptyBody =>
+      'Wenn jemand Sie erwähnt, Ihnen eine Aufgabe zuweist oder eine Aufgabe kommentiert, der Sie folgen, erscheint das hier.';
+
+  @override
+  String get inboxEmptyUnread => 'Nichts Ungelesenes.';
+
+  @override
+  String get inboxEmptyFiltered => 'Nichts von diesen Arten.';
+
+  @override
+  String get inboxSomebody => 'Jemand';
+
+  @override
+  String inboxWhatMention(String who) {
+    return '$who hat Sie erwähnt';
+  }
+
+  @override
+  String inboxWhatAssigned(String who) {
+    return '$who hat Ihnen etwas zugewiesen';
+  }
+
+  @override
+  String inboxWhatComment(String who) {
+    return '$who hat kommentiert';
+  }
+
+  @override
+  String inboxWhatStatus(String who) {
+    return '$who hat sie verschoben';
+  }
+
+  @override
+  String inboxWhatOther(String who) {
+    return '$who hat sie geändert';
+  }
+
+  @override
+  String get inboxMovedTo => 'verschoben nach';
+
+  @override
+  String get inboxTaskGone => 'Eine gelöschte Aufgabe';
+
+  @override
+  String get inboxNow => 'jetzt';
+
+  @override
+  String inboxMinutesAgo(int n) {
+    return '$n Min.';
+  }
+
+  @override
+  String inboxHoursAgo(int n) {
+    return '$n Std.';
+  }
+
+  @override
+  String get inboxItemActions => 'Aktionen';
+
+  @override
+  String get inboxOpenTask => 'Aufgabe öffnen';
+
+  @override
+  String get inboxMarkRead => 'Als gelesen markieren';
+
+  @override
+  String get inboxMarkUnread => 'Als ungelesen markieren';
+
+  @override
+  String get inboxMarkAllRead => 'Alle als gelesen markieren';
+
+  @override
+  String inboxMarkedAll(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Einträge als gelesen markiert',
+      one: '1 Eintrag als gelesen markiert',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inboxMuteKind(String kind) {
+    return '„$kind“ nicht mehr im Posteingang';
+  }
+
+  @override
+  String inboxMuted(String kind) {
+    return '„$kind“ erscheinen nicht mehr in Ihrem Posteingang';
+  }
+
+  @override
+  String get inboxKindMention => 'Erwähnungen';
+
+  @override
+  String get inboxKindAssigned => 'Zuweisungen';
+
+  @override
+  String get inboxKindComment => 'Kommentare';
+
+  @override
+  String get inboxKindStatus => 'Statusänderungen';
+
+  @override
+  String get inboxKindMentionHelp =>
+      'Jemand erwähnt Sie mit @ in einem Kommentar oder einer Beschreibung.';
+
+  @override
+  String get inboxKindAssignedHelp => 'Ihnen wird eine Aufgabe zugewiesen.';
+
+  @override
+  String get inboxKindCommentHelp =>
+      'Jemand kommentiert eine Aufgabe, die Ihnen zugewiesen ist oder die Sie als Favorit markiert haben.';
+
+  @override
+  String get inboxKindStatusHelp =>
+      'Eine Ihnen zugewiesene Aufgabe wechselt den Status.';
+
+  @override
+  String get inboxKindsTitle => 'Posteingang';
+
+  @override
+  String get inboxKindsSubtitle =>
+      'Was einen Eintrag in Ihrem Posteingang erzeugt, auf allen Geräten.';
+
+  @override
+  String get inboxKindsInfo =>
+      'Auf dem Server gespeichert, wie in der Web-App unter „Einstellungen“, „Posteingang“. Eine ausgeschaltete Art erzeugt keine Einträge; vorhandene Einträge bleiben. Eigene Änderungen erscheinen nie.';
+
+  @override
+  String get inboxSummaryOverdue => 'Überfällig';
+
+  @override
+  String get inboxSummaryDueToday => 'Heute fällig';
+
+  @override
+  String get inboxSummaryOpen => 'Offen';
+
+  @override
+  String get inboxSummaryDoneWeek => 'Erledigt in 7 Tagen';
+
+  @override
+  String inboxCategory(String category) {
+    String _temp0 = intl.Intl.selectLogic(category, {
+      'todo': 'Zu erledigen',
+      'inProgress': 'In Arbeit',
+      'blocked': 'Blockiert',
+      'waiting': 'Wartend',
+      'other': 'Sonstige',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxChannelsTitle => 'Kanäle';
+
+  @override
+  String get inboxChannelsSubtitle =>
+      'Posteingang an Slack, Discord, ntfy oder eine beliebige URL senden.';
+
+  @override
+  String get inboxChannelsInfo =>
+      'Ein Kanal gehört nur Ihnen: Er erhält nur Ihre Einträge der aufgeführten Arten und nichts von einer Art, die Sie oben ausgeschaltet haben. Der Server sendet jeden Eintrag, sobald er entsteht.';
+
+  @override
+  String get inboxChannelsEmpty => 'Noch keine Kanäle.';
+
+  @override
+  String get inboxChannelAdd => 'Kanal hinzufügen';
+
+  @override
+  String get inboxChannelEdit => 'Kanal bearbeiten';
+
+  @override
+  String get inboxChannelSave => 'Speichern';
+
+  @override
+  String get inboxChannelSaved => 'Kanal gespeichert';
+
+  @override
+  String inboxChannelAdded(String name) {
+    return '$name hinzugefügt';
+  }
+
+  @override
+  String get inboxChannelName => 'Name';
+
+  @override
+  String get inboxChannelNameHint => 'Mein Slack';
+
+  @override
+  String get inboxChannelUrl => 'Adresse';
+
+  @override
+  String get inboxChannelUrlHelp =>
+      'Die Webhook- oder Topic-URL. Sie muss https verwenden.';
+
+  @override
+  String get inboxChannelFormat => 'Format';
+
+  @override
+  String get inboxChannelFormatGeneric => 'Signiertes JSON';
+
+  @override
+  String get inboxChannelKinds => 'Arten';
+
+  @override
+  String get inboxChannelAllKinds => 'Alle Arten';
+
+  @override
+  String get inboxChannelOff => 'Aus';
+
+  @override
+  String get inboxChannelSecretTitle => 'Signaturschlüssel';
+
+  @override
+  String get inboxChannelSecretBody =>
+      'tix signiert jede signierte JSON-Nachricht mit diesem Schlüssel. Kopieren Sie ihn jetzt: Er wird nicht erneut angezeigt.';
+
+  @override
+  String get inboxChannelSecretCopy => 'Kopieren';
+
+  @override
+  String get inboxChannelSecretDone => 'Fertig';
+
+  @override
+  String get inboxChannelAbout => 'Kanal';
+
+  @override
+  String get inboxChannelActive => 'An';
+
+  @override
+  String get inboxChannelActiveHelp => 'Ausgeschaltet erhält der Kanal nichts.';
+
+  @override
+  String get inboxChannelTest => 'Test senden';
+
+  @override
+  String get inboxChannelTestQueued => 'Testnachricht eingereiht';
+
+  @override
+  String get inboxChannelDeliveries => 'Zustellungen';
+
+  @override
+  String get inboxChannelDeliveriesSubtitle => 'Neueste zuerst.';
+
+  @override
+  String get inboxChannelNoDeliveries => 'Noch nichts zugestellt.';
+
+  @override
+  String get inboxChannelGone => 'Dieser Kanal existiert nicht mehr.';
+
+  @override
+  String get inboxChannelDangerZone => 'Gefahrenbereich';
+
+  @override
+  String get inboxChannelDelete => 'Kanal löschen';
+
+  @override
+  String inboxChannelDeleteTitle(String name) {
+    return '$name löschen?';
+  }
+
+  @override
+  String get inboxChannelDeleteBody =>
+      'Der Kanal und sein Zustellprotokoll werden entfernt. Das kann nicht rückgängig gemacht werden.';
+
+  @override
+  String inboxChannelDeleted(String name) {
+    return '$name gelöscht';
+  }
+
+  @override
+  String get inboxDeliveryDelivered => 'zugestellt';
+
+  @override
+  String get inboxDeliveryFailed => 'fehlgeschlagen';
+
+  @override
+  String get inboxDeliveryPending => 'ausstehend';
+
+  @override
+  String get inboxDeliveryTest => 'Testnachricht';
+
+  @override
+  String get inboxDeliveryItem => 'Posteingangseintrag';
+
+  @override
+  String inboxDeliveryAttempts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Versuche',
+      one: '1 Versuch',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxDeliveryRedeliver => 'Erneut zustellen';
+
+  @override
+  String get inboxDeliveryRequeued => 'Erneut eingereiht';
+
+  @override
+  String get liveUpdated => 'Aktualisiert';
+
+  @override
+  String get liveChangedElsewhere =>
+      'Das wurde anderswo geändert. Ihre Bearbeitungen bleiben erhalten.';
+
+  @override
+  String liveChangedElsewhereBy(String handle) {
+    return '@$handle hat das geändert. Ihre Bearbeitungen bleiben erhalten.';
+  }
+
+  @override
+  String get liveKeepEditing => 'Weiter bearbeiten';
+
+  @override
+  String get liveReload => 'Neu laden';
+
+  @override
+  String get notifSettingsTitle => 'Benachrichtigungen';
+
+  @override
+  String get notifSettingsSubtitle =>
+      'Auf diesem Gerät, Posteingangsarten und Kanäle';
+
+  @override
+  String get notifDeviceTitle => 'Auf diesem Gerät';
+
+  @override
+  String get notifDeviceSubtitle =>
+      'Für die aktive Instanz und den aktiven Mandanten.';
+
+  @override
+  String get notifDeviceInfo =>
+      'Werden angezeigt, solange die App geöffnet ist oder gerade erst in den Hintergrund ging. Eine geschlossene App kann nicht benachrichtigt werden: tix hat noch keinen Push-Dienst. Die Kanäle unten stellen überall zu.';
+
+  @override
+  String get notifEnabled => 'Bei neuen Posteingangseinträgen benachrichtigen';
+
+  @override
+  String get notifEnabledHelp =>
+      'Tippen Sie auf eine Benachrichtigung, um die Aufgabe zu öffnen.';
+
+  @override
+  String get notifBlocked => 'Benachrichtigungen für tix sind blockiert.';
+
+  @override
+  String get notifBlockedHelp =>
+      'Erlauben Sie Benachrichtigungen für tix in den Systemeinstellungen und schalten Sie dies dann wieder ein.';
+
+  @override
+  String get notifNudge =>
+      'Lassen Sie sich benachrichtigen, wenn etwas Neues in Ihrem Posteingang ankommt.';
+
+  @override
+  String get notifTurnOn => 'Einschalten';
+
+  @override
+  String get notifNotNow => 'Nicht jetzt';
+
+  @override
+  String notifMore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count weitere Posteingangseinträge',
+      one: '1 weiterer Posteingangseintrag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notifMoreBody => 'Öffnen Sie den Posteingang, um sie zu sehen.';
+
+  @override
   String get themeOled => 'OLED-Schwarz';
 
   @override
