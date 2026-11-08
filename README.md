@@ -100,8 +100,14 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   finished), and saved filters, your own and shared ones.
 - **My work**: your open tasks under Overdue, Today, This week, Later and No date.
 - **Keyboard**: `j` and `k` to move, Enter to open, `x` to pick, `/` to filter, `v` to switch the view.
-- **Quick add** in tix's one-line syntax: `Fix login !high #auth @raj due:fri`. The server parses the line, so the
-  app understands exactly what the CLI and the browser understand.
+- **Quick add** in tix's one-line syntax: `Fix login !high #auth @raj due:fri`, from any screen (Ctrl+N or Cmd+N),
+  with a live preview of what the server makes of the line, completions for projects, tags and people, and "add
+  another". The server parses the line, so the app understands exactly what the CLI and the browser understand.
+- **Templates**: save a task as a template, edit or delete it, and create a task from one in one tap.
+- **Share to tix** on Android: shared text and links open quick add as a draft. Launcher shortcuts for Quick add,
+  Inbox and My work on Android and iOS.
+- **Command palette** (Ctrl+K or Cmd+K): every command, projects, recent tasks and any task by reference; `?` lists
+  the shortcuts.
 - **Settings**: light, dark or system theme, English or Bulgarian, and the saved instances.
 - **Adaptive layout**: a bottom navigation bar on phones, a navigation rail and a two-pane list and detail on tablets
   and desktops.
