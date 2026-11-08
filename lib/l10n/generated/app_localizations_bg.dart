@@ -5038,4 +5038,716 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get serverSubtitle => 'Версия и живи връзки';
+
+  @override
+  String get webhooksTitle => 'Уебкукички';
+
+  @override
+  String get webhooksSubtitle =>
+      'tix изпраща всяко събитие на тези адреси, подписано с тайната на крайната точка.';
+
+  @override
+  String get webhookNew => 'Нова крайна точка';
+
+  @override
+  String get webhookEdit => 'Редактиране на крайната точка';
+
+  @override
+  String get webhookEndpoints => 'Крайни точки';
+
+  @override
+  String get webhookEndpointsInfo =>
+      'Крайната точка получава всяко събитие или само изброените типове. Неактивната не получава нищо, докато не бъде включена отново.';
+
+  @override
+  String get webhooksEmpty => 'Още няма крайни точки.';
+
+  @override
+  String get webhooksEmptyBody =>
+      'Добавете https адрес и tix ще изпраща събитията към него, щом се случат.';
+
+  @override
+  String get webhookEveryEvent => 'Всяко събитие';
+
+  @override
+  String get webhookActive => 'Активна';
+
+  @override
+  String get webhookInactive => 'Неактивна';
+
+  @override
+  String get webhookActiveHelp => 'Неактивната крайна точка не получава нищо.';
+
+  @override
+  String get webhookShowDeliveries => 'Покажи доставките ѝ';
+
+  @override
+  String get webhookDelete => 'Изтрий крайната точка';
+
+  @override
+  String get webhookDeleteTitle => 'Да се изтрие ли крайната точка?';
+
+  @override
+  String webhookDeleteBody(String url) {
+    return '$url спира да получава събития, а чакащите доставки се отказват. Това не може да се отмени.';
+  }
+
+  @override
+  String get webhookDeleted => 'Крайната точка е изтрита.';
+
+  @override
+  String get webhookUrl => 'Адрес';
+
+  @override
+  String get webhookUrlHelp =>
+      'Трябва да е https, освен ако не е локален адрес.';
+
+  @override
+  String get webhookEvents => 'Типове събития';
+
+  @override
+  String get webhookEventsHelp =>
+      'Разделени със запетаи; типът може да завършва на *. Празно изпраща всяко събитие.';
+
+  @override
+  String get webhookSecret => 'Тайна за подписване';
+
+  @override
+  String get webhookSecretNewHelp =>
+      'Оставете празно и приложението ще създаде тайна и ще я покаже веднъж.';
+
+  @override
+  String get webhookSecretKeepHelp =>
+      'Оставете празно, за да запазите текущата тайна.';
+
+  @override
+  String get webhookSave => 'Запази крайната точка';
+
+  @override
+  String get webhookSaved => 'Крайната точка е запазена.';
+
+  @override
+  String get webhookSecretHeading => 'Копирайте тайната за подписване сега';
+
+  @override
+  String get webhookSecretNote =>
+      'Показва се веднъж и не може да бъде прочетена отново. Въведете я в получаващата страна; ако я загубите, запазете крайната точка отново със своя тайна.';
+
+  @override
+  String get webhookSecretDone => 'Копирах я';
+
+  @override
+  String get webhookDeliveries => 'Доставки';
+
+  @override
+  String get webhookDeliveriesAll => 'Всички крайни точки, най-новите първо.';
+
+  @override
+  String webhookDeliveriesFor(String url) {
+    return 'За $url, най-новите първо.';
+  }
+
+  @override
+  String get webhookDeliveriesShowAll => 'Покажи всички';
+
+  @override
+  String get webhookDeliveriesEmpty => 'Няма доставки.';
+
+  @override
+  String get webhookDeliveriesEmptyBody =>
+      'Доставките се появяват тук, щом събитията бъдат изпратени.';
+
+  @override
+  String get webhookStatusAny => 'Всички';
+
+  @override
+  String get webhookStatusPending => 'Чакащи';
+
+  @override
+  String get webhookStatusDelivered => 'Доставени';
+
+  @override
+  String get webhookStatusFailed => 'Неуспешни';
+
+  @override
+  String get webhookStatusUnknown => 'Неизвестно';
+
+  @override
+  String webhookEvent(int seq) {
+    return 'Събитие $seq';
+  }
+
+  @override
+  String webhookAttempts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count опита',
+      one: '1 опит',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String webhookHttpStatus(int code) {
+    return 'HTTP $code';
+  }
+
+  @override
+  String webhookNextAttempt(String when) {
+    return 'следващ опит $when';
+  }
+
+  @override
+  String get webhookRedeliver => 'Изпрати пак';
+
+  @override
+  String get webhookRedelivered => 'Добавена е за нов опит.';
+
+  @override
+  String get syncTitle => 'Външна синхронизация';
+
+  @override
+  String get syncSubtitle =>
+      'Внасяне от Jira, OpenProject или файл. Изпълнява се на сървъра.';
+
+  @override
+  String get syncNew => 'Нов източник';
+
+  @override
+  String get syncSources => 'Източници';
+
+  @override
+  String get syncSourcesInfo =>
+      'Всеки източник пази докъде е стигнал, така че изпълнението внася само промененото от предишното. Пълното изпълнение започва отначало.';
+
+  @override
+  String get syncEmpty => 'Още няма източници.';
+
+  @override
+  String get syncEmptyBody =>
+      'Добавете източник, за да внасяте задачи от друга система.';
+
+  @override
+  String get syncStatusOk => 'Последно: успешно';
+
+  @override
+  String get syncStatusFailed => 'Последно: неуспешно';
+
+  @override
+  String get syncStatusRunning => 'Изпълнява се';
+
+  @override
+  String get syncStatusNever => 'Не е изпълняван';
+
+  @override
+  String get syncNeverRun => 'Още не е изпълняван.';
+
+  @override
+  String syncLastRun(String when) {
+    return 'Последно изпълнение: $when.';
+  }
+
+  @override
+  String syncStoredCredentials(String names) {
+    return 'Запазени данни за достъп: $names';
+  }
+
+  @override
+  String get syncMissing => 'Изпълнението се отказва, докато сървърът няма:';
+
+  @override
+  String get syncReady => 'Готов за изпълнение.';
+
+  @override
+  String get syncRunNow => 'Изпълни сега';
+
+  @override
+  String get syncPreview => 'Преглед';
+
+  @override
+  String get syncEdit => 'Редактирай';
+
+  @override
+  String get syncDelete => 'Изтрий източника';
+
+  @override
+  String get syncDeleteTitle => 'Да се изтрие ли източникът?';
+
+  @override
+  String syncDeleteBody(String name) {
+    return '$name и докъде е стигнал се премахват. Вече внесените задачи остават. Това не може да се отмени.';
+  }
+
+  @override
+  String get syncDeleted => 'Източникът е изтрит.';
+
+  @override
+  String syncSaved(String name) {
+    return '$name е запазен.';
+  }
+
+  @override
+  String syncRunTitle(String name) {
+    return 'Изпълнение на $name';
+  }
+
+  @override
+  String get syncRunBody =>
+      'Прегледът отчита какво би направило изпълнението, без да променя нищо.';
+
+  @override
+  String get syncFull => 'Пълно изпълнение';
+
+  @override
+  String get syncFullHelp =>
+      'Прочита всичко отначало вместо оттам, докъдето е стигнало предишното изпълнение.';
+
+  @override
+  String get syncPreviewTitle => 'Преглед';
+
+  @override
+  String get syncDoneTitle => 'Изпълнението приключи';
+
+  @override
+  String get syncPreviewNote => 'Нищо не е променено.';
+
+  @override
+  String syncCounts(int created, int updated, int skipped, int deleted) {
+    return '$created създадени · $updated обновени · $skipped пропуснати · $deleted изтрити';
+  }
+
+  @override
+  String get syncUnmatched => 'Хора без съответствие тук';
+
+  @override
+  String get syncWarnings => 'Предупреждения';
+
+  @override
+  String syncWarningCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count предупреждения',
+      one: '1 предупреждение',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncRuns => 'История на изпълненията';
+
+  @override
+  String get syncRunsEmpty => 'Няма завършени изпълнения.';
+
+  @override
+  String get syncRunsEmptyBody =>
+      'Неуспешно изпълнение не се показва тук; вижда се при източника.';
+
+  @override
+  String syncEditTitle(String name) {
+    return 'Редактиране на $name';
+  }
+
+  @override
+  String get syncFormIntro =>
+      'Настройките и съответствията се пазят на сървъра. Данните за достъп се запечатват там и не се показват повече.';
+
+  @override
+  String get syncName => 'Име';
+
+  @override
+  String get syncNameHelp => 'Име на източника в неговата система.';
+
+  @override
+  String get syncMapping => 'Документ със съответствия (YAML)';
+
+  @override
+  String get syncMappingHelp => 'Ако е празно, запазеният документ остава.';
+
+  @override
+  String get syncMappingPath => 'Файл със съответствия на сървъра';
+
+  @override
+  String get syncMappingPathHelp =>
+      'Чете се само от папката на организацията в sync.file_root на сървъра.';
+
+  @override
+  String get syncCredentials => 'Данни за достъп';
+
+  @override
+  String get syncCredentialsHelp =>
+      'Само за запис. Всяко от тях заменя запазените; оставете всички празни, за да ги запазите.';
+
+  @override
+  String get syncToken => 'Токен';
+
+  @override
+  String get syncUser => 'Потребител';
+
+  @override
+  String get syncPassword => 'Парола или API ключ';
+
+  @override
+  String get syncClearCredentials => 'Премахни запазените данни за достъп';
+
+  @override
+  String get syncCheck => 'Провери';
+
+  @override
+  String get syncSave => 'Запази източника';
+
+  @override
+  String syncMappingFrom(String origin) {
+    return 'Съответствия: $origin';
+  }
+
+  @override
+  String syncCredentialsFrom(String origin) {
+    return 'Данни за достъп: $origin';
+  }
+
+  @override
+  String get syncFromStored => 'запазени при източника';
+
+  @override
+  String get syncFromEnv => 'от средата';
+
+  @override
+  String get syncFromMappingPath => 'файл на сървъра';
+
+  @override
+  String get syncFromNone => 'не са нужни';
+
+  @override
+  String get syncFromMissing => 'липсват';
+
+  @override
+  String syncSummaryProject(String project) {
+    return 'Влиза в проект $project';
+  }
+
+  @override
+  String syncSummaryIdentity(String field) {
+    return 'Съпоставя се по $field';
+  }
+
+  @override
+  String get retentionTitle => 'Съхранение';
+
+  @override
+  String get retentionSubtitle =>
+      'Колко дълго организацията пази дневниците си.';
+
+  @override
+  String get retentionWindows => 'Пазене';
+
+  @override
+  String get retentionWindowsHelp =>
+      'В дни. По-старите записи се премахват при почистване.';
+
+  @override
+  String get retentionEvents => 'Събития';
+
+  @override
+  String get retentionEventsHelp =>
+      'Потокът с обновявания на живо. По подразбиране 30 дни.';
+
+  @override
+  String get retentionAudit => 'Записи в одита';
+
+  @override
+  String get retentionAuditHelp =>
+      'Кой какво е променил. По подразбиране 365 дни.';
+
+  @override
+  String get retentionDeliveries => 'Доставки на уебкукички';
+
+  @override
+  String get retentionDeliveriesHelp =>
+      'Дневникът на доставките. По подразбиране 30 дни.';
+
+  @override
+  String get retentionSave => 'Запази';
+
+  @override
+  String get retentionSaved => 'Съхранението е запазено.';
+
+  @override
+  String get retentionPruneSection => 'Почистване сега';
+
+  @override
+  String get retentionPruneHelp =>
+      'Премахва веднага всичко извън срока, вместо да се чака сървърът.';
+
+  @override
+  String get retentionPreview => 'Преглед';
+
+  @override
+  String get retentionPrune => 'Почисти';
+
+  @override
+  String get retentionPruneTitle => 'Да се почистят ли старите записи?';
+
+  @override
+  String get retentionPruneBody =>
+      'Събитията, записите в одита и доставките извън срока се изтриват завинаги.';
+
+  @override
+  String get retentionPruned => 'Почистено.';
+
+  @override
+  String retentionWouldPrune(int events, int audit, int deliveries) {
+    return 'Ще бъдат премахнати $events събития, $audit записа в одита и $deliveries доставки.';
+  }
+
+  @override
+  String retentionDidPrune(int events, int audit, int deliveries) {
+    return 'Премахнати са $events събития, $audit записа в одита и $deliveries доставки.';
+  }
+
+  @override
+  String retentionKeptForSubscribers(int count) {
+    return '$count събития извън срока се пазят, докато абонат не ги прочете.';
+  }
+
+  @override
+  String get housekeepingTitle => 'Поддръжка';
+
+  @override
+  String get housekeepingSubtitle =>
+      'Изчиства завършената работа от списъците и изпразва кошчето.';
+
+  @override
+  String get housekeepingPaused =>
+      'Поддръжката е на пауза, докато кошчето е изключено: нито едно правило не се изпълнява.';
+
+  @override
+  String get housekeepingRules => 'Правила';
+
+  @override
+  String get housekeepingRulesHelp =>
+      'Брой дни или off. Проектите могат да ги променят.';
+
+  @override
+  String get housekeepingDone => 'Завършените задачи отиват в кошчето след';
+
+  @override
+  String get housekeepingDoneHelp => 'Дни след завършването.';
+
+  @override
+  String get housekeepingCancelled => 'Отказаните задачи отиват в кошчето след';
+
+  @override
+  String get housekeepingCancelledHelp => 'Дни след отказването.';
+
+  @override
+  String get housekeepingTrash => 'Кошчето изтрива задачите завинаги след';
+
+  @override
+  String get housekeepingTrashHelp => 'Дни в кошчето.';
+
+  @override
+  String housekeepingPending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count задачи за сега.',
+      one: '1 задача за сега.',
+      zero: 'Няма нищо за сега.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get housekeepingSave => 'Запази правилата';
+
+  @override
+  String get housekeepingSaved => 'Правилата са запазени.';
+
+  @override
+  String get housekeepingRunSection => 'Изпълнение сега';
+
+  @override
+  String get housekeepingRunHelp =>
+      'Прилага правилата веднъж, на части, вместо да се чака следващото минаване на сървъра.';
+
+  @override
+  String get housekeepingPreview => 'Преглед';
+
+  @override
+  String get housekeepingRun => 'Изпълни поддръжката';
+
+  @override
+  String get housekeepingRunTitle => 'Да се изпълни ли поддръжката сега?';
+
+  @override
+  String get housekeepingRunBody =>
+      'Завършените задачи извън срока отиват в кошчето, а задачите извън срока на кошчето се изтриват завинаги.';
+
+  @override
+  String housekeepingWould(int done, int cancelled, int trash) {
+    return 'Ще премести $done завършени и $cancelled отказани задачи в кошчето и ще изтрие $trash завинаги.';
+  }
+
+  @override
+  String housekeepingDid(int done, int cancelled, int trash) {
+    return 'Преместени са $done завършени и $cancelled отказани задачи в кошчето, а $trash са изтрити завинаги.';
+  }
+
+  @override
+  String get trashTitle => 'Кошче';
+
+  @override
+  String get trashSubtitle =>
+      'Изтритите задачи, докато поддръжката не ги изчисти.';
+
+  @override
+  String get trashExplain =>
+      'Възстановяването връща задачата на мястото ѝ. tix изтрива окончателно задачите от кошчето само чрез правилото за кошчето в поддръжката.';
+
+  @override
+  String get trashEmpty => 'Кошчето е празно.';
+
+  @override
+  String get trashEmptyBody =>
+      'Изтритите задачи чакат тук и могат да бъдат възстановени.';
+
+  @override
+  String get trashRestore => 'Възстанови';
+
+  @override
+  String trashRestored(String ref) {
+    return '$ref е възстановена.';
+  }
+
+  @override
+  String trashDeletedAt(String when) {
+    return 'изтрита $when';
+  }
+
+  @override
+  String get auditTitle => 'Одит';
+
+  @override
+  String get auditSubtitle =>
+      'Всяка промяна в организацията, най-новите първо.';
+
+  @override
+  String get auditSearch => 'Търсене в действия, записи и стойности';
+
+  @override
+  String get auditVia => 'Канал';
+
+  @override
+  String get auditSource => 'Повърхност';
+
+  @override
+  String get auditMoreFilters => 'Още филтри';
+
+  @override
+  String auditMoreFiltersCount(int count) {
+    return 'Още филтри ($count)';
+  }
+
+  @override
+  String get auditClear => 'Изчисти филтрите';
+
+  @override
+  String get auditFilters => 'Филтриране на одита';
+
+  @override
+  String get auditApply => 'Приложи';
+
+  @override
+  String get auditActor => 'Извършител';
+
+  @override
+  String get auditActorHelp => 'Идентификаторът на извършителя.';
+
+  @override
+  String get auditAction => 'Действие';
+
+  @override
+  String get auditToken => 'API токен';
+
+  @override
+  String get auditTokenHelp => 'Името на токена.';
+
+  @override
+  String auditSince(String day) {
+    return 'От $day';
+  }
+
+  @override
+  String auditUntil(String day) {
+    return 'До $day';
+  }
+
+  @override
+  String get auditAnyTime => 'всяко време';
+
+  @override
+  String get auditEmpty => 'Още няма записи.';
+
+  @override
+  String get auditEmptyBody =>
+      'Промените се появяват тук, щом хората и агентите ги направят.';
+
+  @override
+  String get auditNoMatch => 'Няма съвпадащи записи.';
+
+  @override
+  String get auditNoMatchBody => 'Разхлабете или изчистете филтрите.';
+
+  @override
+  String get auditPick => 'Изберете запис';
+
+  @override
+  String get auditPickBody => 'Подробностите се показват тук.';
+
+  @override
+  String get auditSeq => 'Запис';
+
+  @override
+  String get auditWhen => 'Кога';
+
+  @override
+  String get auditSystem => 'системата';
+
+  @override
+  String get auditSubject => 'Обект';
+
+  @override
+  String get auditTokenId => 'Идентификатор на токена';
+
+  @override
+  String get auditSession => 'Сесия';
+
+  @override
+  String get auditKey => 'SSH ключ';
+
+  @override
+  String get auditClient => 'Адрес на клиента';
+
+  @override
+  String get auditOrigin => 'Произход';
+
+  @override
+  String get auditHost => 'Машина';
+
+  @override
+  String get auditOsUser => 'Системен потребител';
+
+  @override
+  String get auditJob => 'Задание';
+
+  @override
+  String get auditUserAgent => 'Клиентска програма';
+
+  @override
+  String get auditBefore => 'Преди';
+
+  @override
+  String get auditAfter => 'След';
 }

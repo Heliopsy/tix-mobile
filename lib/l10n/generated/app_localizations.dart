@@ -8598,6 +8598,1206 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Version and live connections'**
   String get serverSubtitle;
+
+  /// No description provided for @webhooksTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Webhooks'**
+  String get webhooksTitle;
+
+  /// No description provided for @webhooksSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'tix posts each event to these addresses, signed with the endpoint\'s secret.'**
+  String get webhooksSubtitle;
+
+  /// No description provided for @webhookNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New endpoint'**
+  String get webhookNew;
+
+  /// No description provided for @webhookEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit endpoint'**
+  String get webhookEdit;
+
+  /// No description provided for @webhookEndpoints.
+  ///
+  /// In en, this message translates to:
+  /// **'Endpoints'**
+  String get webhookEndpoints;
+
+  /// No description provided for @webhookEndpointsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'An endpoint receives every event, or only the types it names. An inactive one receives nothing until it is turned back on.'**
+  String get webhookEndpointsInfo;
+
+  /// No description provided for @webhooksEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No webhook endpoints yet.'**
+  String get webhooksEmpty;
+
+  /// No description provided for @webhooksEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an https address and tix will post events to it as they happen.'**
+  String get webhooksEmptyBody;
+
+  /// No description provided for @webhookEveryEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Every event'**
+  String get webhookEveryEvent;
+
+  /// No description provided for @webhookActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get webhookActive;
+
+  /// No description provided for @webhookInactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get webhookInactive;
+
+  /// No description provided for @webhookActiveHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'An inactive endpoint receives nothing.'**
+  String get webhookActiveHelp;
+
+  /// No description provided for @webhookShowDeliveries.
+  ///
+  /// In en, this message translates to:
+  /// **'Show its deliveries'**
+  String get webhookShowDeliveries;
+
+  /// No description provided for @webhookDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete endpoint'**
+  String get webhookDelete;
+
+  /// No description provided for @webhookDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this endpoint?'**
+  String get webhookDeleteTitle;
+
+  /// No description provided for @webhookDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{url} stops receiving events, and its pending deliveries are dropped. This cannot be undone.'**
+  String webhookDeleteBody(String url);
+
+  /// No description provided for @webhookDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Endpoint deleted.'**
+  String get webhookDeleted;
+
+  /// No description provided for @webhookUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get webhookUrl;
+
+  /// No description provided for @webhookUrlHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Must use https, unless it is a loopback address.'**
+  String get webhookUrlHelp;
+
+  /// No description provided for @webhookEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Event types'**
+  String get webhookEvents;
+
+  /// No description provided for @webhookEventsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Separated by commas; a type may end in *. Empty sends every event.'**
+  String get webhookEventsHelp;
+
+  /// No description provided for @webhookSecret.
+  ///
+  /// In en, this message translates to:
+  /// **'Signing secret'**
+  String get webhookSecret;
+
+  /// No description provided for @webhookSecretNewHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave it empty and the app generates one and shows it once.'**
+  String get webhookSecretNewHelp;
+
+  /// No description provided for @webhookSecretKeepHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave it empty to keep the current secret.'**
+  String get webhookSecretKeepHelp;
+
+  /// No description provided for @webhookSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save endpoint'**
+  String get webhookSave;
+
+  /// No description provided for @webhookSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Endpoint saved.'**
+  String get webhookSaved;
+
+  /// No description provided for @webhookSecretHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy this signing secret now'**
+  String get webhookSecretHeading;
+
+  /// No description provided for @webhookSecretNote.
+  ///
+  /// In en, this message translates to:
+  /// **'It is shown once and cannot be read back. Configure it on the receiving end; if you lose it, save the endpoint again with a secret of your own.'**
+  String get webhookSecretNote;
+
+  /// No description provided for @webhookSecretDone.
+  ///
+  /// In en, this message translates to:
+  /// **'I have copied it'**
+  String get webhookSecretDone;
+
+  /// No description provided for @webhookDeliveries.
+  ///
+  /// In en, this message translates to:
+  /// **'Deliveries'**
+  String get webhookDeliveries;
+
+  /// No description provided for @webhookDeliveriesAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Every endpoint, newest first.'**
+  String get webhookDeliveriesAll;
+
+  /// No description provided for @webhookDeliveriesFor.
+  ///
+  /// In en, this message translates to:
+  /// **'For {url}, newest first.'**
+  String webhookDeliveriesFor(String url);
+
+  /// No description provided for @webhookDeliveriesShowAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Show every endpoint'**
+  String get webhookDeliveriesShowAll;
+
+  /// No description provided for @webhookDeliveriesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No deliveries.'**
+  String get webhookDeliveriesEmpty;
+
+  /// No description provided for @webhookDeliveriesEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Deliveries appear here as events are sent.'**
+  String get webhookDeliveriesEmptyBody;
+
+  /// No description provided for @webhookStatusAny.
+  ///
+  /// In en, this message translates to:
+  /// **'Any'**
+  String get webhookStatusAny;
+
+  /// No description provided for @webhookStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get webhookStatusPending;
+
+  /// No description provided for @webhookStatusDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get webhookStatusDelivered;
+
+  /// No description provided for @webhookStatusFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get webhookStatusFailed;
+
+  /// No description provided for @webhookStatusUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get webhookStatusUnknown;
+
+  /// No description provided for @webhookEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Event {seq}'**
+  String webhookEvent(int seq);
+
+  /// No description provided for @webhookAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 attempt} other{{count} attempts}}'**
+  String webhookAttempts(int count);
+
+  /// No description provided for @webhookHttpStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'HTTP {code}'**
+  String webhookHttpStatus(int code);
+
+  /// No description provided for @webhookNextAttempt.
+  ///
+  /// In en, this message translates to:
+  /// **'next attempt {when}'**
+  String webhookNextAttempt(String when);
+
+  /// No description provided for @webhookRedeliver.
+  ///
+  /// In en, this message translates to:
+  /// **'Redeliver'**
+  String get webhookRedeliver;
+
+  /// No description provided for @webhookRedelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Queued for another attempt.'**
+  String get webhookRedelivered;
+
+  /// No description provided for @syncTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'External sync'**
+  String get syncTitle;
+
+  /// No description provided for @syncSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import work from Jira, OpenProject or a file. Runs happen on the server.'**
+  String get syncSubtitle;
+
+  /// No description provided for @syncNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New source'**
+  String get syncNew;
+
+  /// No description provided for @syncSources.
+  ///
+  /// In en, this message translates to:
+  /// **'Sources'**
+  String get syncSources;
+
+  /// No description provided for @syncSourcesInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Each source keeps a cursor, so a run imports only what changed since the last one. A full run starts again from the beginning.'**
+  String get syncSourcesInfo;
+
+  /// No description provided for @syncEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No sync sources yet.'**
+  String get syncEmpty;
+
+  /// No description provided for @syncEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a source to import tasks from another tracker.'**
+  String get syncEmptyBody;
+
+  /// No description provided for @syncStatusOk.
+  ///
+  /// In en, this message translates to:
+  /// **'Last run ok'**
+  String get syncStatusOk;
+
+  /// No description provided for @syncStatusFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Last run failed'**
+  String get syncStatusFailed;
+
+  /// No description provided for @syncStatusRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Running'**
+  String get syncStatusRunning;
+
+  /// No description provided for @syncStatusNever.
+  ///
+  /// In en, this message translates to:
+  /// **'Never run'**
+  String get syncStatusNever;
+
+  /// No description provided for @syncNeverRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Not run yet.'**
+  String get syncNeverRun;
+
+  /// No description provided for @syncLastRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Last run {when}.'**
+  String syncLastRun(String when);
+
+  /// No description provided for @syncStoredCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Stored credentials: {names}'**
+  String syncStoredCredentials(String names);
+
+  /// No description provided for @syncMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'A run is refused until the server has:'**
+  String get syncMissing;
+
+  /// No description provided for @syncReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to run.'**
+  String get syncReady;
+
+  /// No description provided for @syncRunNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Run now'**
+  String get syncRunNow;
+
+  /// No description provided for @syncPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get syncPreview;
+
+  /// No description provided for @syncEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get syncEdit;
+
+  /// No description provided for @syncDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete source'**
+  String get syncDelete;
+
+  /// No description provided for @syncDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this source?'**
+  String get syncDeleteTitle;
+
+  /// No description provided for @syncDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} and how far it had read are removed. Tasks it already imported stay. This cannot be undone.'**
+  String syncDeleteBody(String name);
+
+  /// No description provided for @syncDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Source deleted.'**
+  String get syncDeleted;
+
+  /// No description provided for @syncSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved {name}.'**
+  String syncSaved(String name);
+
+  /// No description provided for @syncRunTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Run {name}'**
+  String syncRunTitle(String name);
+
+  /// No description provided for @syncRunBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview counts what a run would do and changes nothing.'**
+  String get syncRunBody;
+
+  /// No description provided for @syncFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Full run'**
+  String get syncFull;
+
+  /// No description provided for @syncFullHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Read everything again from the beginning instead of from where the last run stopped.'**
+  String get syncFullHelp;
+
+  /// No description provided for @syncPreviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get syncPreviewTitle;
+
+  /// No description provided for @syncDoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Run finished'**
+  String get syncDoneTitle;
+
+  /// No description provided for @syncPreviewNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing was changed.'**
+  String get syncPreviewNote;
+
+  /// No description provided for @syncCounts.
+  ///
+  /// In en, this message translates to:
+  /// **'{created} created · {updated} updated · {skipped} skipped · {deleted} deleted'**
+  String syncCounts(int created, int updated, int skipped, int deleted);
+
+  /// No description provided for @syncUnmatched.
+  ///
+  /// In en, this message translates to:
+  /// **'People with no match here'**
+  String get syncUnmatched;
+
+  /// No description provided for @syncWarnings.
+  ///
+  /// In en, this message translates to:
+  /// **'Warnings'**
+  String get syncWarnings;
+
+  /// No description provided for @syncWarningCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 warning} other{{count} warnings}}'**
+  String syncWarningCount(int count);
+
+  /// No description provided for @syncRuns.
+  ///
+  /// In en, this message translates to:
+  /// **'Run history'**
+  String get syncRuns;
+
+  /// No description provided for @syncRunsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No finished runs.'**
+  String get syncRunsEmpty;
+
+  /// No description provided for @syncRunsEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A run that fails is not listed here; the source shows it.'**
+  String get syncRunsEmptyBody;
+
+  /// No description provided for @syncEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit {name}'**
+  String syncEditTitle(String name);
+
+  /// No description provided for @syncFormIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings and the mapping are stored on the server. Credentials are sealed there and never shown again.'**
+  String get syncFormIntro;
+
+  /// No description provided for @syncName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get syncName;
+
+  /// No description provided for @syncNameHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Names the source within its system.'**
+  String get syncNameHelp;
+
+  /// No description provided for @syncMapping.
+  ///
+  /// In en, this message translates to:
+  /// **'Mapping document (YAML)'**
+  String get syncMapping;
+
+  /// No description provided for @syncMappingHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Left empty, the stored document is kept.'**
+  String get syncMappingHelp;
+
+  /// No description provided for @syncMappingPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Mapping file on the server'**
+  String get syncMappingPath;
+
+  /// No description provided for @syncMappingPathHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Only read from this tenant\'s directory under the server\'s sync.file_root.'**
+  String get syncMappingPathHelp;
+
+  /// No description provided for @syncCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Credentials'**
+  String get syncCredentials;
+
+  /// No description provided for @syncCredentialsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Write only. Any of them replaces the stored set; leave all empty to keep it.'**
+  String get syncCredentialsHelp;
+
+  /// No description provided for @syncToken.
+  ///
+  /// In en, this message translates to:
+  /// **'Token'**
+  String get syncToken;
+
+  /// No description provided for @syncUser.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get syncUser;
+
+  /// No description provided for @syncPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password or API key'**
+  String get syncPassword;
+
+  /// No description provided for @syncClearCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the stored credentials'**
+  String get syncClearCredentials;
+
+  /// No description provided for @syncCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Check'**
+  String get syncCheck;
+
+  /// No description provided for @syncSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save source'**
+  String get syncSave;
+
+  /// No description provided for @syncMappingFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Mapping: {origin}'**
+  String syncMappingFrom(String origin);
+
+  /// No description provided for @syncCredentialsFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Credentials: {origin}'**
+  String syncCredentialsFrom(String origin);
+
+  /// No description provided for @syncFromStored.
+  ///
+  /// In en, this message translates to:
+  /// **'stored on the source'**
+  String get syncFromStored;
+
+  /// No description provided for @syncFromEnv.
+  ///
+  /// In en, this message translates to:
+  /// **'from the environment'**
+  String get syncFromEnv;
+
+  /// No description provided for @syncFromMappingPath.
+  ///
+  /// In en, this message translates to:
+  /// **'file on the server'**
+  String get syncFromMappingPath;
+
+  /// No description provided for @syncFromNone.
+  ///
+  /// In en, this message translates to:
+  /// **'not needed'**
+  String get syncFromNone;
+
+  /// No description provided for @syncFromMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'missing'**
+  String get syncFromMissing;
+
+  /// No description provided for @syncSummaryProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Lands in project {project}'**
+  String syncSummaryProject(String project);
+
+  /// No description provided for @syncSummaryIdentity.
+  ///
+  /// In en, this message translates to:
+  /// **'Matched by {field}'**
+  String syncSummaryIdentity(String field);
+
+  /// No description provided for @retentionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Retention'**
+  String get retentionTitle;
+
+  /// No description provided for @retentionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How long this tenant keeps its logs.'**
+  String get retentionSubtitle;
+
+  /// No description provided for @retentionWindows.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep for'**
+  String get retentionWindows;
+
+  /// No description provided for @retentionWindowsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'In days. Older records are removed when the log is pruned.'**
+  String get retentionWindowsHelp;
+
+  /// No description provided for @retentionEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Events'**
+  String get retentionEvents;
+
+  /// No description provided for @retentionEventsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The live update stream. Default 30 days.'**
+  String get retentionEventsHelp;
+
+  /// No description provided for @retentionAudit.
+  ///
+  /// In en, this message translates to:
+  /// **'Audit entries'**
+  String get retentionAudit;
+
+  /// No description provided for @retentionAuditHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Who changed what. Default 365 days.'**
+  String get retentionAuditHelp;
+
+  /// No description provided for @retentionDeliveries.
+  ///
+  /// In en, this message translates to:
+  /// **'Webhook deliveries'**
+  String get retentionDeliveries;
+
+  /// No description provided for @retentionDeliveriesHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The delivery log. Default 30 days.'**
+  String get retentionDeliveriesHelp;
+
+  /// No description provided for @retentionSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save retention'**
+  String get retentionSave;
+
+  /// No description provided for @retentionSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Retention saved.'**
+  String get retentionSaved;
+
+  /// No description provided for @retentionPruneSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Prune now'**
+  String get retentionPruneSection;
+
+  /// No description provided for @retentionPruneHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Removes everything past its window at once, instead of waiting for the server to do it.'**
+  String get retentionPruneHelp;
+
+  /// No description provided for @retentionPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get retentionPreview;
+
+  /// No description provided for @retentionPrune.
+  ///
+  /// In en, this message translates to:
+  /// **'Prune'**
+  String get retentionPrune;
+
+  /// No description provided for @retentionPruneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Prune old records?'**
+  String get retentionPruneTitle;
+
+  /// No description provided for @retentionPruneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Events, audit entries and webhook deliveries past their window are deleted for good.'**
+  String get retentionPruneBody;
+
+  /// No description provided for @retentionPruned.
+  ///
+  /// In en, this message translates to:
+  /// **'Pruned.'**
+  String get retentionPruned;
+
+  /// No description provided for @retentionWouldPrune.
+  ///
+  /// In en, this message translates to:
+  /// **'Would remove {events} events, {audit} audit entries and {deliveries} deliveries.'**
+  String retentionWouldPrune(int events, int audit, int deliveries);
+
+  /// No description provided for @retentionDidPrune.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed {events} events, {audit} audit entries and {deliveries} deliveries.'**
+  String retentionDidPrune(int events, int audit, int deliveries);
+
+  /// No description provided for @retentionKeptForSubscribers.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} events past their window are kept until a subscriber has read them.'**
+  String retentionKeptForSubscribers(int count);
+
+  /// No description provided for @housekeepingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Housekeeping'**
+  String get housekeepingTitle;
+
+  /// No description provided for @housekeepingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clears finished work out of the lists and empties the trash.'**
+  String get housekeepingSubtitle;
+
+  /// No description provided for @housekeepingPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Housekeeping is paused while the trash is off: no rule runs.'**
+  String get housekeepingPaused;
+
+  /// No description provided for @housekeepingRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Rules'**
+  String get housekeepingRules;
+
+  /// No description provided for @housekeepingRulesHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A number of days, or off. Projects can override these.'**
+  String get housekeepingRulesHelp;
+
+  /// No description provided for @housekeepingDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done tasks move to the trash after'**
+  String get housekeepingDone;
+
+  /// No description provided for @housekeepingDoneHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Days since they were done.'**
+  String get housekeepingDoneHelp;
+
+  /// No description provided for @housekeepingCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled tasks move to the trash after'**
+  String get housekeepingCancelled;
+
+  /// No description provided for @housekeepingCancelledHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Days since they were cancelled.'**
+  String get housekeepingCancelledHelp;
+
+  /// No description provided for @housekeepingTrash.
+  ///
+  /// In en, this message translates to:
+  /// **'The trash deletes tasks for good after'**
+  String get housekeepingTrash;
+
+  /// No description provided for @housekeepingTrashHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Days in the trash.'**
+  String get housekeepingTrashHelp;
+
+  /// No description provided for @housekeepingPending.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nothing due now.} =1{1 task due now.} other{{count} tasks due now.}}'**
+  String housekeepingPending(int count);
+
+  /// No description provided for @housekeepingSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save rules'**
+  String get housekeepingSave;
+
+  /// No description provided for @housekeepingSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Rules saved.'**
+  String get housekeepingSaved;
+
+  /// No description provided for @housekeepingRunSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Run now'**
+  String get housekeepingRunSection;
+
+  /// No description provided for @housekeepingRunHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Applies the rules once, in batches, instead of waiting for the server\'s next pass.'**
+  String get housekeepingRunHelp;
+
+  /// No description provided for @housekeepingPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get housekeepingPreview;
+
+  /// No description provided for @housekeepingRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Run housekeeping'**
+  String get housekeepingRun;
+
+  /// No description provided for @housekeepingRunTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Run housekeeping now?'**
+  String get housekeepingRunTitle;
+
+  /// No description provided for @housekeepingRunBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Finished tasks past their rule move to the trash, and tasks past the trash rule are deleted for good.'**
+  String get housekeepingRunBody;
+
+  /// No description provided for @housekeepingWould.
+  ///
+  /// In en, this message translates to:
+  /// **'Would move {done} done and {cancelled} cancelled tasks to the trash, and delete {trash} for good.'**
+  String housekeepingWould(int done, int cancelled, int trash);
+
+  /// No description provided for @housekeepingDid.
+  ///
+  /// In en, this message translates to:
+  /// **'Moved {done} done and {cancelled} cancelled tasks to the trash, and deleted {trash} for good.'**
+  String housekeepingDid(int done, int cancelled, int trash);
+
+  /// No description provided for @trashTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Trash'**
+  String get trashTitle;
+
+  /// No description provided for @trashSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted tasks, until housekeeping empties them.'**
+  String get trashSubtitle;
+
+  /// No description provided for @trashExplain.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore puts a task back where it was. tix deletes trashed tasks for good only through the housekeeping trash rule.'**
+  String get trashExplain;
+
+  /// No description provided for @trashEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'The trash is empty.'**
+  String get trashEmpty;
+
+  /// No description provided for @trashEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted tasks wait here and can be restored.'**
+  String get trashEmptyBody;
+
+  /// No description provided for @trashRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get trashRestore;
+
+  /// No description provided for @trashRestored.
+  ///
+  /// In en, this message translates to:
+  /// **'Restored {ref}.'**
+  String trashRestored(String ref);
+
+  /// No description provided for @trashDeletedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'deleted {when}'**
+  String trashDeletedAt(String when);
+
+  /// No description provided for @auditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Audit log'**
+  String get auditTitle;
+
+  /// No description provided for @auditSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Every change in this tenant, newest first.'**
+  String get auditSubtitle;
+
+  /// No description provided for @auditSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search actions, records and values'**
+  String get auditSearch;
+
+  /// No description provided for @auditVia.
+  ///
+  /// In en, this message translates to:
+  /// **'Channel'**
+  String get auditVia;
+
+  /// No description provided for @auditSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Surface'**
+  String get auditSource;
+
+  /// No description provided for @auditMoreFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'More filters'**
+  String get auditMoreFilters;
+
+  /// No description provided for @auditMoreFiltersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'More filters ({count})'**
+  String auditMoreFiltersCount(int count);
+
+  /// No description provided for @auditClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get auditClear;
+
+  /// No description provided for @auditFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter the audit log'**
+  String get auditFilters;
+
+  /// No description provided for @auditApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get auditApply;
+
+  /// No description provided for @auditActor.
+  ///
+  /// In en, this message translates to:
+  /// **'Actor'**
+  String get auditActor;
+
+  /// No description provided for @auditActorHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The actor\'s id.'**
+  String get auditActorHelp;
+
+  /// No description provided for @auditAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Action'**
+  String get auditAction;
+
+  /// No description provided for @auditToken.
+  ///
+  /// In en, this message translates to:
+  /// **'API token'**
+  String get auditToken;
+
+  /// No description provided for @auditTokenHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The token\'s name.'**
+  String get auditTokenHelp;
+
+  /// No description provided for @auditSince.
+  ///
+  /// In en, this message translates to:
+  /// **'From {day}'**
+  String auditSince(String day);
+
+  /// No description provided for @auditUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'To {day}'**
+  String auditUntil(String day);
+
+  /// No description provided for @auditAnyTime.
+  ///
+  /// In en, this message translates to:
+  /// **'any time'**
+  String get auditAnyTime;
+
+  /// No description provided for @auditEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing recorded yet.'**
+  String get auditEmpty;
+
+  /// No description provided for @auditEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes appear here as people and agents make them.'**
+  String get auditEmptyBody;
+
+  /// No description provided for @auditNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No entries match.'**
+  String get auditNoMatch;
+
+  /// No description provided for @auditNoMatchBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Loosen or clear the filters.'**
+  String get auditNoMatchBody;
+
+  /// No description provided for @auditPick.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick an entry'**
+  String get auditPick;
+
+  /// No description provided for @auditPickBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Its detail shows here.'**
+  String get auditPickBody;
+
+  /// No description provided for @auditSeq.
+  ///
+  /// In en, this message translates to:
+  /// **'Entry'**
+  String get auditSeq;
+
+  /// No description provided for @auditWhen.
+  ///
+  /// In en, this message translates to:
+  /// **'When'**
+  String get auditWhen;
+
+  /// No description provided for @auditSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'the system'**
+  String get auditSystem;
+
+  /// No description provided for @auditSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Record'**
+  String get auditSubject;
+
+  /// No description provided for @auditTokenId.
+  ///
+  /// In en, this message translates to:
+  /// **'Token id'**
+  String get auditTokenId;
+
+  /// No description provided for @auditSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Session'**
+  String get auditSession;
+
+  /// No description provided for @auditKey.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH key'**
+  String get auditKey;
+
+  /// No description provided for @auditClient.
+  ///
+  /// In en, this message translates to:
+  /// **'Client address'**
+  String get auditClient;
+
+  /// No description provided for @auditOrigin.
+  ///
+  /// In en, this message translates to:
+  /// **'Origin'**
+  String get auditOrigin;
+
+  /// No description provided for @auditHost.
+  ///
+  /// In en, this message translates to:
+  /// **'Host'**
+  String get auditHost;
+
+  /// No description provided for @auditOsUser.
+  ///
+  /// In en, this message translates to:
+  /// **'System user'**
+  String get auditOsUser;
+
+  /// No description provided for @auditJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Job'**
+  String get auditJob;
+
+  /// No description provided for @auditUserAgent.
+  ///
+  /// In en, this message translates to:
+  /// **'User agent'**
+  String get auditUserAgent;
+
+  /// No description provided for @auditBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'Before'**
+  String get auditBefore;
+
+  /// No description provided for @auditAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'After'**
+  String get auditAfter;
 }
 
 class _AppLocalizationsDelegate

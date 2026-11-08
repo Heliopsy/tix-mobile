@@ -67,19 +67,3 @@ pending:
     - token.rotate
   # Wave 3, admin: tenants, global admin, domains, webhooks, sync, retention, audit, second factor, SSH keys.
   wave3:
-    - audit.list
-    - housekeeping.get
-    - housekeeping.put
-    - housekeeping.run
-    - retention.get
-    - retention.prune
-    - retention.put
-    - sync.run
-    - sync.source.delete
-    - sync.source.list
-    - sync.source.put
-    - webhook.delete
-    - webhook.deliveries
-    - webhook.list
-    - webhook.put
-    - webhook.redeliver

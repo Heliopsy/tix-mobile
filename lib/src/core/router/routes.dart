@@ -61,6 +61,24 @@ abstract final class Routes {
   /// What the app is, its versions, links and the bug report.
   static const about = '/settings/about';
 
+  /// The tenant's webhook endpoints and delivery log.
+  static const webhooks = '/manage/webhooks';
+
+  /// The tenant's external sync sources and runs.
+  static const sync = '/manage/sync';
+
+  /// How long the tenant keeps its logs.
+  static const retention = '/manage/retention';
+
+  /// The tenant's housekeeping rules.
+  static const housekeeping = '/manage/housekeeping';
+
+  /// The tenant's trash.
+  static const trash = '/manage/trash';
+
+  /// The tenant's audit log.
+  static const audit = '/manage/audit';
+
   /// The query parameters that open the connect screen beside a session.
   static const connectParams = {'add', 'instance', 'connection', 'url'};
 

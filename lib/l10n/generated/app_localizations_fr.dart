@@ -5071,4 +5071,721 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get serverSubtitle => 'Version et connexions actives';
+
+  @override
+  String get webhooksTitle => 'Webhooks';
+
+  @override
+  String get webhooksSubtitle =>
+      'tix envoie chaque évènement à ces adresses, signé avec le secret du point d’accès.';
+
+  @override
+  String get webhookNew => 'Nouveau point d’accès';
+
+  @override
+  String get webhookEdit => 'Modifier le point d’accès';
+
+  @override
+  String get webhookEndpoints => 'Points d’accès';
+
+  @override
+  String get webhookEndpointsInfo =>
+      'Un point d’accès reçoit chaque évènement, ou seulement les types qu’il nomme. Un point inactif ne reçoit rien tant qu’il n’est pas réactivé.';
+
+  @override
+  String get webhooksEmpty => 'Aucun point d’accès pour l’instant.';
+
+  @override
+  String get webhooksEmptyBody =>
+      'Ajoutez une adresse https et tix y enverra les évènements au fil de l’eau.';
+
+  @override
+  String get webhookEveryEvent => 'Tous les évènements';
+
+  @override
+  String get webhookActive => 'Actif';
+
+  @override
+  String get webhookInactive => 'Inactif';
+
+  @override
+  String get webhookActiveHelp => 'Un point d’accès inactif ne reçoit rien.';
+
+  @override
+  String get webhookShowDeliveries => 'Voir ses envois';
+
+  @override
+  String get webhookDelete => 'Supprimer le point d’accès';
+
+  @override
+  String get webhookDeleteTitle => 'Supprimer ce point d’accès ?';
+
+  @override
+  String webhookDeleteBody(String url) {
+    return '$url ne reçoit plus d’évènements, et ses envois en attente sont abandonnés. C’est irréversible.';
+  }
+
+  @override
+  String get webhookDeleted => 'Point d’accès supprimé.';
+
+  @override
+  String get webhookUrl => 'Adresse';
+
+  @override
+  String get webhookUrlHelp =>
+      'Doit utiliser https, sauf pour une adresse de bouclage.';
+
+  @override
+  String get webhookEvents => 'Types d’évènements';
+
+  @override
+  String get webhookEventsHelp =>
+      'Séparés par des virgules ; un type peut finir par *. Vide envoie tous les évènements.';
+
+  @override
+  String get webhookSecret => 'Secret de signature';
+
+  @override
+  String get webhookSecretNewHelp =>
+      'Laissez vide et l’application en génère un, affiché une seule fois.';
+
+  @override
+  String get webhookSecretKeepHelp =>
+      'Laissez vide pour garder le secret actuel.';
+
+  @override
+  String get webhookSave => 'Enregistrer le point d’accès';
+
+  @override
+  String get webhookSaved => 'Point d’accès enregistré.';
+
+  @override
+  String get webhookSecretHeading => 'Copiez ce secret de signature maintenant';
+
+  @override
+  String get webhookSecretNote =>
+      'Il ne s’affiche qu’une fois et ne peut pas être relu. Configurez-le côté réception ; si vous le perdez, enregistrez de nouveau le point d’accès avec un secret de votre choix.';
+
+  @override
+  String get webhookSecretDone => 'Je l’ai copié';
+
+  @override
+  String get webhookDeliveries => 'Envois';
+
+  @override
+  String get webhookDeliveriesAll =>
+      'Tous les points d’accès, les plus récents d’abord.';
+
+  @override
+  String webhookDeliveriesFor(String url) {
+    return 'Pour $url, les plus récents d’abord.';
+  }
+
+  @override
+  String get webhookDeliveriesShowAll => 'Voir tous les points d’accès';
+
+  @override
+  String get webhookDeliveriesEmpty => 'Aucun envoi.';
+
+  @override
+  String get webhookDeliveriesEmptyBody =>
+      'Les envois apparaissent ici à mesure que les évènements partent.';
+
+  @override
+  String get webhookStatusAny => 'Tous';
+
+  @override
+  String get webhookStatusPending => 'En attente';
+
+  @override
+  String get webhookStatusDelivered => 'Remis';
+
+  @override
+  String get webhookStatusFailed => 'Échoué';
+
+  @override
+  String get webhookStatusUnknown => 'Inconnu';
+
+  @override
+  String webhookEvent(int seq) {
+    return 'Évènement $seq';
+  }
+
+  @override
+  String webhookAttempts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tentatives',
+      one: '1 tentative',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String webhookHttpStatus(int code) {
+    return 'HTTP $code';
+  }
+
+  @override
+  String webhookNextAttempt(String when) {
+    return 'prochaine tentative $when';
+  }
+
+  @override
+  String get webhookRedeliver => 'Renvoyer';
+
+  @override
+  String get webhookRedelivered => 'Remis en file pour une nouvelle tentative.';
+
+  @override
+  String get syncTitle => 'Synchronisation externe';
+
+  @override
+  String get syncSubtitle =>
+      'Importez le travail depuis Jira, OpenProject ou un fichier. Les exécutions ont lieu sur le serveur.';
+
+  @override
+  String get syncNew => 'Nouvelle source';
+
+  @override
+  String get syncSources => 'Sources';
+
+  @override
+  String get syncSourcesInfo =>
+      'Chaque source garde un curseur, si bien qu’une exécution n’importe que ce qui a changé depuis la précédente. Une exécution complète repart du début.';
+
+  @override
+  String get syncEmpty => 'Aucune source pour l’instant.';
+
+  @override
+  String get syncEmptyBody =>
+      'Ajoutez une source pour importer des tâches d’un autre outil de suivi.';
+
+  @override
+  String get syncStatusOk => 'Dernière exécution réussie';
+
+  @override
+  String get syncStatusFailed => 'Dernière exécution échouée';
+
+  @override
+  String get syncStatusRunning => 'En cours';
+
+  @override
+  String get syncStatusNever => 'Jamais exécutée';
+
+  @override
+  String get syncNeverRun => 'Pas encore exécutée.';
+
+  @override
+  String syncLastRun(String when) {
+    return 'Dernière exécution $when.';
+  }
+
+  @override
+  String syncStoredCredentials(String names) {
+    return 'Identifiants enregistrés : $names';
+  }
+
+  @override
+  String get syncMissing =>
+      'Une exécution est refusée tant que le serveur n’a pas :';
+
+  @override
+  String get syncReady => 'Prête à être exécutée.';
+
+  @override
+  String get syncRunNow => 'Exécuter maintenant';
+
+  @override
+  String get syncPreview => 'Aperçu';
+
+  @override
+  String get syncEdit => 'Modifier';
+
+  @override
+  String get syncDelete => 'Supprimer la source';
+
+  @override
+  String get syncDeleteTitle => 'Supprimer cette source ?';
+
+  @override
+  String syncDeleteBody(String name) {
+    return '$name et sa position de lecture sont supprimés. Les tâches déjà importées restent. C’est irréversible.';
+  }
+
+  @override
+  String get syncDeleted => 'Source supprimée.';
+
+  @override
+  String syncSaved(String name) {
+    return '$name enregistrée.';
+  }
+
+  @override
+  String syncRunTitle(String name) {
+    return 'Exécuter $name';
+  }
+
+  @override
+  String get syncRunBody =>
+      'L’aperçu compte ce qu’une exécution ferait et ne change rien.';
+
+  @override
+  String get syncFull => 'Exécution complète';
+
+  @override
+  String get syncFullHelp =>
+      'Tout relire depuis le début au lieu de reprendre là où la dernière exécution s’est arrêtée.';
+
+  @override
+  String get syncPreviewTitle => 'Aperçu';
+
+  @override
+  String get syncDoneTitle => 'Exécution terminée';
+
+  @override
+  String get syncPreviewNote => 'Rien n’a été modifié.';
+
+  @override
+  String syncCounts(int created, int updated, int skipped, int deleted) {
+    return '$created créées · $updated mises à jour · $skipped ignorées · $deleted supprimées';
+  }
+
+  @override
+  String get syncUnmatched => 'Personnes sans correspondance ici';
+
+  @override
+  String get syncWarnings => 'Avertissements';
+
+  @override
+  String syncWarningCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count avertissements',
+      one: '1 avertissement',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncRuns => 'Historique des exécutions';
+
+  @override
+  String get syncRunsEmpty => 'Aucune exécution terminée.';
+
+  @override
+  String get syncRunsEmptyBody =>
+      'Une exécution qui échoue n’est pas listée ici ; la source l’indique.';
+
+  @override
+  String syncEditTitle(String name) {
+    return 'Modifier $name';
+  }
+
+  @override
+  String get syncFormIntro =>
+      'Les réglages et la correspondance sont stockés sur le serveur. Les identifiants y sont scellés et ne sont plus jamais affichés.';
+
+  @override
+  String get syncName => 'Nom';
+
+  @override
+  String get syncNameHelp => 'Nomme la source au sein de son système.';
+
+  @override
+  String get syncMapping => 'Document de correspondance (YAML)';
+
+  @override
+  String get syncMappingHelp =>
+      'Laissé vide, le document enregistré est conservé.';
+
+  @override
+  String get syncMappingPath => 'Fichier de correspondance sur le serveur';
+
+  @override
+  String get syncMappingPathHelp =>
+      'Lu uniquement dans le dossier de cet espace sous sync.file_root du serveur.';
+
+  @override
+  String get syncCredentials => 'Identifiants';
+
+  @override
+  String get syncCredentialsHelp =>
+      'En écriture seule. N’importe lequel remplace le jeu enregistré ; laissez tout vide pour le garder.';
+
+  @override
+  String get syncToken => 'Jeton';
+
+  @override
+  String get syncUser => 'Utilisateur';
+
+  @override
+  String get syncPassword => 'Mot de passe ou clé d’API';
+
+  @override
+  String get syncClearCredentials => 'Retirer les identifiants enregistrés';
+
+  @override
+  String get syncCheck => 'Vérifier';
+
+  @override
+  String get syncSave => 'Enregistrer la source';
+
+  @override
+  String syncMappingFrom(String origin) {
+    return 'Correspondance : $origin';
+  }
+
+  @override
+  String syncCredentialsFrom(String origin) {
+    return 'Identifiants : $origin';
+  }
+
+  @override
+  String get syncFromStored => 'enregistrés sur la source';
+
+  @override
+  String get syncFromEnv => 'depuis l’environnement';
+
+  @override
+  String get syncFromMappingPath => 'fichier sur le serveur';
+
+  @override
+  String get syncFromNone => 'inutile';
+
+  @override
+  String get syncFromMissing => 'manquant';
+
+  @override
+  String syncSummaryProject(String project) {
+    return 'Arrive dans le projet $project';
+  }
+
+  @override
+  String syncSummaryIdentity(String field) {
+    return 'Rapproché par $field';
+  }
+
+  @override
+  String get retentionTitle => 'Rétention';
+
+  @override
+  String get retentionSubtitle =>
+      'Combien de temps cet espace garde ses journaux.';
+
+  @override
+  String get retentionWindows => 'Conserver pendant';
+
+  @override
+  String get retentionWindowsHelp =>
+      'En jours. Les enregistrements plus anciens sont retirés quand le journal est purgé.';
+
+  @override
+  String get retentionEvents => 'Évènements';
+
+  @override
+  String get retentionEventsHelp =>
+      'Le flux de mises à jour en direct. 30 jours par défaut.';
+
+  @override
+  String get retentionAudit => 'Entrées d’audit';
+
+  @override
+  String get retentionAuditHelp => 'Qui a changé quoi. 365 jours par défaut.';
+
+  @override
+  String get retentionDeliveries => 'Envois de webhooks';
+
+  @override
+  String get retentionDeliveriesHelp =>
+      'Le journal des envois. 30 jours par défaut.';
+
+  @override
+  String get retentionSave => 'Enregistrer la rétention';
+
+  @override
+  String get retentionSaved => 'Rétention enregistrée.';
+
+  @override
+  String get retentionPruneSection => 'Purger maintenant';
+
+  @override
+  String get retentionPruneHelp =>
+      'Retire d’un coup tout ce qui dépasse sa durée, sans attendre que le serveur le fasse.';
+
+  @override
+  String get retentionPreview => 'Aperçu';
+
+  @override
+  String get retentionPrune => 'Purger';
+
+  @override
+  String get retentionPruneTitle => 'Purger les anciens enregistrements ?';
+
+  @override
+  String get retentionPruneBody =>
+      'Les évènements, entrées d’audit et envois de webhooks au-delà de leur durée sont supprimés définitivement.';
+
+  @override
+  String get retentionPruned => 'Purge effectuée.';
+
+  @override
+  String retentionWouldPrune(int events, int audit, int deliveries) {
+    return 'Retirerait $events évènements, $audit entrées d’audit et $deliveries envois.';
+  }
+
+  @override
+  String retentionDidPrune(int events, int audit, int deliveries) {
+    return '$events évènements, $audit entrées d’audit et $deliveries envois retirés.';
+  }
+
+  @override
+  String retentionKeptForSubscribers(int count) {
+    return '$count évènements au-delà de leur durée sont gardés jusqu’à ce qu’un abonné les ait lus.';
+  }
+
+  @override
+  String get housekeepingTitle => 'Entretien';
+
+  @override
+  String get housekeepingSubtitle =>
+      'Retire le travail terminé des listes et vide la corbeille.';
+
+  @override
+  String get housekeepingPaused =>
+      'L’entretien est suspendu tant que la corbeille est désactivée : aucune règle ne s’applique.';
+
+  @override
+  String get housekeepingRules => 'Règles';
+
+  @override
+  String get housekeepingRulesHelp =>
+      'Un nombre de jours, ou désactivé. Les projets peuvent les remplacer.';
+
+  @override
+  String get housekeepingDone =>
+      'Les tâches terminées vont à la corbeille après';
+
+  @override
+  String get housekeepingDoneHelp => 'Jours depuis leur achèvement.';
+
+  @override
+  String get housekeepingCancelled =>
+      'Les tâches annulées vont à la corbeille après';
+
+  @override
+  String get housekeepingCancelledHelp => 'Jours depuis leur annulation.';
+
+  @override
+  String get housekeepingTrash =>
+      'La corbeille supprime définitivement les tâches après';
+
+  @override
+  String get housekeepingTrashHelp => 'Jours passés dans la corbeille.';
+
+  @override
+  String housekeepingPending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tâches échues maintenant.',
+      one: '1 tâche échue maintenant.',
+      zero: 'Rien d’échu pour l’instant.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get housekeepingSave => 'Enregistrer les règles';
+
+  @override
+  String get housekeepingSaved => 'Règles enregistrées.';
+
+  @override
+  String get housekeepingRunSection => 'Lancer maintenant';
+
+  @override
+  String get housekeepingRunHelp =>
+      'Applique les règles une fois, par lots, sans attendre le prochain passage du serveur.';
+
+  @override
+  String get housekeepingPreview => 'Aperçu';
+
+  @override
+  String get housekeepingRun => 'Lancer l’entretien';
+
+  @override
+  String get housekeepingRunTitle => 'Lancer l’entretien maintenant ?';
+
+  @override
+  String get housekeepingRunBody =>
+      'Les tâches terminées au-delà de leur règle vont à la corbeille, et celles au-delà de la règle de corbeille sont supprimées définitivement.';
+
+  @override
+  String housekeepingWould(int done, int cancelled, int trash) {
+    return 'Déplacerait $done tâches terminées et $cancelled annulées vers la corbeille, et en supprimerait $trash définitivement.';
+  }
+
+  @override
+  String housekeepingDid(int done, int cancelled, int trash) {
+    return '$done tâches terminées et $cancelled annulées déplacées vers la corbeille, $trash supprimées définitivement.';
+  }
+
+  @override
+  String get trashTitle => 'Corbeille';
+
+  @override
+  String get trashSubtitle =>
+      'Les tâches supprimées, jusqu’à ce que l’entretien les efface.';
+
+  @override
+  String get trashExplain =>
+      'Restaurer remet une tâche là où elle était. tix ne supprime définitivement les tâches de la corbeille que par la règle de corbeille de l’entretien.';
+
+  @override
+  String get trashEmpty => 'La corbeille est vide.';
+
+  @override
+  String get trashEmptyBody =>
+      'Les tâches supprimées attendent ici et peuvent être restaurées.';
+
+  @override
+  String get trashRestore => 'Restaurer';
+
+  @override
+  String trashRestored(String ref) {
+    return '$ref restaurée.';
+  }
+
+  @override
+  String trashDeletedAt(String when) {
+    return 'supprimée $when';
+  }
+
+  @override
+  String get auditTitle => 'Journal d’audit';
+
+  @override
+  String get auditSubtitle =>
+      'Chaque changement dans cet espace, les plus récents d’abord.';
+
+  @override
+  String get auditSearch => 'Chercher actions, enregistrements et valeurs';
+
+  @override
+  String get auditVia => 'Canal';
+
+  @override
+  String get auditSource => 'Surface';
+
+  @override
+  String get auditMoreFilters => 'Plus de filtres';
+
+  @override
+  String auditMoreFiltersCount(int count) {
+    return 'Plus de filtres ($count)';
+  }
+
+  @override
+  String get auditClear => 'Effacer les filtres';
+
+  @override
+  String get auditFilters => 'Filtrer le journal d’audit';
+
+  @override
+  String get auditApply => 'Appliquer';
+
+  @override
+  String get auditActor => 'Acteur';
+
+  @override
+  String get auditActorHelp => 'L’identifiant de l’acteur.';
+
+  @override
+  String get auditAction => 'Action';
+
+  @override
+  String get auditToken => 'Jeton d’API';
+
+  @override
+  String get auditTokenHelp => 'Le nom du jeton.';
+
+  @override
+  String auditSince(String day) {
+    return 'Depuis le $day';
+  }
+
+  @override
+  String auditUntil(String day) {
+    return 'Jusqu’au $day';
+  }
+
+  @override
+  String get auditAnyTime => 'n’importe quand';
+
+  @override
+  String get auditEmpty => 'Rien d’enregistré pour l’instant.';
+
+  @override
+  String get auditEmptyBody =>
+      'Les changements apparaissent ici à mesure que personnes et agents les font.';
+
+  @override
+  String get auditNoMatch => 'Aucune entrée ne correspond.';
+
+  @override
+  String get auditNoMatchBody => 'Assouplissez ou effacez les filtres.';
+
+  @override
+  String get auditPick => 'Choisissez une entrée';
+
+  @override
+  String get auditPickBody => 'Son détail s’affiche ici.';
+
+  @override
+  String get auditSeq => 'Entrée';
+
+  @override
+  String get auditWhen => 'Quand';
+
+  @override
+  String get auditSystem => 'le système';
+
+  @override
+  String get auditSubject => 'Enregistrement';
+
+  @override
+  String get auditTokenId => 'Identifiant du jeton';
+
+  @override
+  String get auditSession => 'Session';
+
+  @override
+  String get auditKey => 'Clé SSH';
+
+  @override
+  String get auditClient => 'Adresse du client';
+
+  @override
+  String get auditOrigin => 'Origine';
+
+  @override
+  String get auditHost => 'Hôte';
+
+  @override
+  String get auditOsUser => 'Utilisateur système';
+
+  @override
+  String get auditJob => 'Tâche de fond';
+
+  @override
+  String get auditUserAgent => 'Agent utilisateur';
+
+  @override
+  String get auditBefore => 'Avant';
+
+  @override
+  String get auditAfter => 'Après';
 }

@@ -17,6 +17,7 @@ import 'package:tix_mobile/src/features/admin/presentation/tenant_detail.dart';
 import 'package:tix_mobile/src/features/admin/presentation/tenant_settings_screen.dart';
 import 'package:tix_mobile/src/features/admin/presentation/tenant_users_screen.dart';
 import 'package:tix_mobile/src/features/admin/presentation/tenants_screen.dart';
+import 'package:tix_mobile/src/features/audit/presentation/audit_screen.dart';
 import 'package:tix_mobile/src/features/connect/presentation/connect_screen.dart';
 import 'package:tix_mobile/src/features/gallery/presentation/gallery_screen.dart';
 import 'package:tix_mobile/src/features/inbox/presentation/channel_screen.dart';
@@ -29,6 +30,11 @@ import 'package:tix_mobile/src/features/people/presentation/user_screen.dart';
 import 'package:tix_mobile/src/features/people/presentation/users_screen.dart';
 import 'package:tix_mobile/src/features/projects/presentation/fields_screen.dart';
 import 'package:tix_mobile/src/features/projects/presentation/project_settings_screen.dart';
+import 'package:tix_mobile/src/features/integrations/presentation/sync_screen.dart';
+import 'package:tix_mobile/src/features/integrations/presentation/webhooks_screen.dart';
+import 'package:tix_mobile/src/features/maintenance/presentation/housekeeping_screen.dart';
+import 'package:tix_mobile/src/features/maintenance/presentation/retention_screen.dart';
+import 'package:tix_mobile/src/features/maintenance/presentation/trash_screen.dart';
 import 'package:tix_mobile/src/features/projects/presentation/projects_screen.dart';
 import 'package:tix_mobile/src/features/quick/presentation/quick_actions_host.dart';
 import 'package:tix_mobile/src/features/security/presentation/security_screen.dart';
@@ -208,6 +214,7 @@ GoRouter router(Ref ref) {
                   ),
                   ...manageRoutes,
                   ...adminRoutes,
+                  ...upkeepRoutes,
                 ],
               ),
             ],
@@ -300,6 +307,16 @@ final manageRoutes = [
       query: state.uri.queryParameters['q'] ?? '',
     ),
   ),
+];
+
+/// Integrations and upkeep of the tenant (wave 3), under Manage.
+final upkeepRoutes = <RouteBase>[
+  GoRoute(path: 'webhooks', builder: (_, _) => const WebhooksScreen()),
+  GoRoute(path: 'sync', builder: (_, _) => const SyncScreen()),
+  GoRoute(path: 'retention', builder: (_, _) => const RetentionScreen()),
+  GoRoute(path: 'housekeeping', builder: (_, _) => const HousekeepingScreen()),
+  GoRoute(path: 'trash', builder: (_, _) => const TrashScreen()),
+  GoRoute(path: 'audit', builder: (_, _) => const AuditScreen()),
 ];
 
 /// Tenant and server administration (wave 3), under Manage.
