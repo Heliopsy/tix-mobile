@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
 
 /// Sign in to a tix server with its address and an API token.
 class ConnectScreen extends ConsumerStatefulWidget {
@@ -73,6 +74,8 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
               child: ListView(
                 padding: const EdgeInsets.all(24),
                 children: [
+                  const Center(child: TixMark()),
+                  const SizedBox(height: 24),
                   Text(l10n.connectIntro),
                   const SizedBox(height: 24),
                   TextField(

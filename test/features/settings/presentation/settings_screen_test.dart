@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
 import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';
 
@@ -91,5 +92,22 @@ void main() {
     expect(stores.secrets.values.containsKey('token.c1'), isFalse);
     expect(c.read(sessionControllerProvider).value!.context.id, 'c2');
     expect(find.byKey(const Key('settings.server.c1')), findsNothing);
+  });
+
+  testWidgets('about shows the tix mark beside the app name', (tester) async {
+    await pump(tester);
+    final about = find.byKey(const Key('settings.about'));
+    await tester.scrollUntilVisible(about, 100);
+    await tester.tap(about);
+    await tester.pumpAndSettle();
+    final dialog = find.byType(AboutDialog);
+    expect(
+      find.descendant(of: dialog, matching: find.byType(TixMark)),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: dialog, matching: find.text('tix')),
+      findsOneWidget,
+    );
   });
 }

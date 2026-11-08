@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
 import 'package:tix_mobile/src/features/connect/presentation/connect_screen.dart';
 
 import '../../../helpers/app.dart';
@@ -26,6 +27,21 @@ void main() {
     await tester.tap(find.byKey(const Key('connect.submit')));
     await tester.pumpAndSettle();
   }
+
+  testWidgets('the tix mark heads the screen', (tester) async {
+    await pumpScreen(
+      tester,
+      const ConnectScreen(),
+      overrides: fakeOverrides(server, secrets: secrets),
+    );
+    expect(
+      find.descendant(
+        of: find.byType(ListView),
+        matching: find.byType(TixMark),
+      ),
+      findsOneWidget,
+    );
+  });
 
   testWidgets('a good token signs in and lands in secure storage', (
     tester,

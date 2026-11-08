@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
 
 /// Language names as their own readers write them, as tix's web app does.
@@ -109,6 +110,12 @@ class SettingsScreen extends ConsumerWidget {
                   : Text(l10n.signedInAs('@${session.context.handle}')),
               onTap: () => _confirmSignOut(context, ref, session.context.name),
             ),
+          AboutListTile(
+            key: const Key('settings.about'),
+            icon: const TixMark(size: 24),
+            applicationName: l10n.appTitle,
+            applicationIcon: const TixMark(size: 48),
+          ),
         ],
       ),
     );
