@@ -1,0 +1,95 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+import 'dart:convert';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/features/connect/application/session.dart';
+import 'package:tix_mobile/src/features/settings/application/settings.dart';
+import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';
+
+import '../../../helpers/app.dart';
+import '../../../helpers/fake_tix.dart';
+import '../../../helpers/stores.dart';
+
+void main() {
+  late ({MemoryKeyValueStore settings, MemorySecretStore secrets}) stores;
+
+  Future<ProviderContainer> pump(WidgetTester tester) {
+    final s = signedInStores();
+    s.settings.values['contexts'] = jsonEncode([
+      {
+        'id': 'c1',
+        'name': 'Work',
+        'base_url': 'https://tix.example',
+        'handle': 'ana',
+      },
+      {'id': 'c2', 'name': 'Home', 'base_url': 'https://home.example'},
+    ]);
+    s.secrets.values['token.c2'] = 'tok';
+    stores = (settings: s.settings, secrets: s.secrets);
+    return pumpScreen(
+      tester,
+      const SettingsScreen(),
+      size: const Size(500, 1000),
+      overrides: fakeOverrides(
+        FakeTix(),
+        settings: s.settings,
+        secrets: s.secrets,
+      ),
+    );
+  }
+
+  testWidgets('theme and language are chosen and remembered', (tester) async {
+    final c = await pump(tester);
+    await tester.tap(find.text('Dark'));
+    await tester.tap(find.text('Български'));
+    await tester.pumpAndSettle();
+    expect(c.read(themeModeSettingProvider), ThemeMode.dark);
+    expect(c.read(localeSettingProvider), const Locale('bg'));
+    expect(stores.settings.values['settings.theme'], 'dark');
+    expect(stores.settings.values['settings.locale'], 'bg');
+    await tester.tap(find.text('System').last);
+    await tester.pumpAndSettle();
+    expect(c.read(localeSettingProvider), isNull);
+  });
+
+  testWidgets('lists the servers and switches between them', (tester) async {
+    final c = await pump(tester);
+    expect(find.text('@ana · https://tix.example'), findsOneWidget);
+    expect(find.text('https://home.example'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('settings.server.c1')));
+    await tester.pumpAndSettle();
+    expect(c.read(sessionControllerProvider).value!.context.id, 'c1');
+    await tester.tap(find.byKey(const Key('settings.server.c2')));
+    await tester.pumpAndSettle();
+    expect(c.read(sessionControllerProvider).value!.context.id, 'c2');
+  });
+
+  testWidgets('add a server goes to connect', (tester) async {
+    await pump(tester);
+    await tester.tap(find.text('Add a server'));
+    await tester.pumpAndSettle();
+    expect(find.text('route:/connect?add=1'), findsOneWidget);
+  });
+
+  testWidgets('sign out asks first and forgets the token', (tester) async {
+    final c = await pump(tester);
+    expect(find.text('Signed in as @ana'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('settings.signOut')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(stores.secrets.values.containsKey('token.c1'), isTrue);
+
+    await tester.tap(find.byKey(const Key('settings.signOut')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('forgets the token for Work'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('settings.signOut.confirm')));
+    await tester.pumpAndSettle();
+    expect(stores.secrets.values.containsKey('token.c1'), isFalse);
+    expect(c.read(sessionControllerProvider).value!.context.id, 'c2');
+    expect(find.byKey(const Key('settings.server.c1')), findsNothing);
+  });
+}
