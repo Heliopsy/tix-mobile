@@ -301,14 +301,6 @@ class _QuickActionsHostState extends ConsumerState<QuickActionsHost> {
             icon: Icons.inbox_outlined,
             run: () => _router?.go(Routes.inbox),
           ),
-        if (_routes(Routes.myWork))
-          TixCommand(
-            id: 'go.mine',
-            label: l10n.paletteGoMyWork,
-            group: l10n.commandsNavigate,
-            icon: Icons.person_outline,
-            run: () => _router?.go(Routes.myWork),
-          ),
       ],
       sources: [_taskByRef, _recentTasks, _projects, _templates],
       child: widget.child,

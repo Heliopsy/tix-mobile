@@ -1474,4 +1474,269 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get boardAssignTo => 'Възложи на…';
+
+  @override
+  String get quickAddProject => 'Проект';
+
+  @override
+  String get quickAddPickProject => 'Изберете проект';
+
+  @override
+  String get quickAddNoProjects => 'Все още няма проект, в който да добавите.';
+
+  @override
+  String get quickAddAnother => 'Добавяне на още';
+
+  @override
+  String get quickAddAnotherHelp => 'Остава отворено за следващия ред';
+
+  @override
+  String quickAddPreviewRefused(String reason) {
+    return 'Сървърът би отказал: $reason';
+  }
+
+  @override
+  String get quickAddPreviewOff =>
+      'Тази връзка не може да показва преглед; добавянето работи.';
+
+  @override
+  String get quickAddOffline =>
+      'Добавянето изисква връзка със сървъра. Редът е запазен; опитайте отново, когато сте онлайн.';
+
+  @override
+  String get quickAddChipPriority => 'приоритет';
+
+  @override
+  String get quickAddChipTag => 'етикет';
+
+  @override
+  String get quickAddChipAssignee => 'изпълнител';
+
+  @override
+  String get quickAddChipDue => 'срок';
+
+  @override
+  String get quickAddChipStatus => 'статус';
+
+  @override
+  String get quickAddChipParent => 'родител';
+
+  @override
+  String get quickAddChipTitle => 'заглавие';
+
+  @override
+  String get quickAddSuggestions => 'Предложения';
+
+  @override
+  String get quickAddTemplates => 'От шаблон';
+
+  @override
+  String get quickAddManageTemplates => 'Шаблони';
+
+  @override
+  String get quickAddPaste => 'Бързо добавяне от клипборда';
+
+  @override
+  String get quickAddClipboardEmpty => 'В клипборда няма текст.';
+
+  @override
+  String get paletteGroupProjects => 'Проекти';
+
+  @override
+  String get paletteGroupRecent => 'Скорошни задачи';
+
+  @override
+  String get paletteGroupContexts => 'Превключване към';
+
+  @override
+  String get paletteGroupTheme => 'Тема';
+
+  @override
+  String get paletteGroupTemplates => 'Шаблони';
+
+  @override
+  String paletteOpenTask(String ref) {
+    return 'Отваряне на $ref';
+  }
+
+  @override
+  String get paletteGoInbox => 'Към входящите';
+
+  @override
+  String get paletteGoMyWork => 'Към моята работа';
+
+  @override
+  String get paletteGoTemplates => 'Към шаблоните';
+
+  @override
+  String get paletteThemeLight => 'Светла тема';
+
+  @override
+  String get paletteThemeDark => 'Тъмна тема';
+
+  @override
+  String get paletteThemeSystem => 'Тема на системата';
+
+  @override
+  String paletteUseTemplate(String name) {
+    return 'Нова задача от $name';
+  }
+
+  @override
+  String get templatesTitle => 'Шаблони';
+
+  @override
+  String get templatesSubtitle => 'Задачи, които добавяте често, на един допир';
+
+  @override
+  String get templateNew => 'Нов шаблон';
+
+  @override
+  String get templatesEmpty => 'Все още няма шаблони.';
+
+  @override
+  String get templatesEmptyBody =>
+      'Запазете задача като шаблон, за да я добавяте с един допир.';
+
+  @override
+  String get templateEveryProject => 'Всички проекти';
+
+  @override
+  String templateUses(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Използван $count пъти',
+      one: 'Използван веднъж',
+      zero: 'Неизползван',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String templateSubtasks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count подзадачи',
+      one: '1 подзадача',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get templateUse => 'Използване';
+
+  @override
+  String get templateEdit => 'Редактиране на шаблона';
+
+  @override
+  String get templateDelete => 'Изтриване на шаблона';
+
+  @override
+  String templateDeleteTitle(String name) {
+    return 'Изтриване на $name?';
+  }
+
+  @override
+  String get templateDeleteBody => 'Задачите, създадени от него, остават.';
+
+  @override
+  String templateDeleted(String name) {
+    return 'Изтрит е $name';
+  }
+
+  @override
+  String templateSaved(String name) {
+    return 'Запазен е $name';
+  }
+
+  @override
+  String get templateName => 'Име';
+
+  @override
+  String get templateNameHelp => 'Уникално в организацията, до 100 знака.';
+
+  @override
+  String get templateFromTask => 'От задача';
+
+  @override
+  String get templateFromScratch => 'От нулата';
+
+  @override
+  String get templateTaskRef => 'Задача';
+
+  @override
+  String get templateTaskRefHelp =>
+      'Референцията на задачата, такава като ops-12.';
+
+  @override
+  String get templateWithSubtasks => 'Със подзадачите';
+
+  @override
+  String get templateTenantWide => 'Споделяне с всички проекти';
+
+  @override
+  String get templateDueIn => 'Срок след';
+
+  @override
+  String get templateDueInHelp =>
+      'Колко време след използване е срокът, например 3d или 2w. Празно за без срок.';
+
+  @override
+  String get templateScratchNote =>
+      'tix пази шаблони от задачи, затова задачата се добавя и в проекта.';
+
+  @override
+  String get templateTitle => 'Заглавие';
+
+  @override
+  String templateTitleHelp(String date, String n, String project) {
+    return '$date, $n и $project се попълват при всяко използване.';
+  }
+
+  @override
+  String get templateBody => 'Описание';
+
+  @override
+  String get templatePriority => 'Приоритет';
+
+  @override
+  String get templateTags => 'Етикети';
+
+  @override
+  String get templateTagsHelp => 'Разделени с интервали или запетаи.';
+
+  @override
+  String get templateRecurrence => 'Повтаряне';
+
+  @override
+  String get templateRecurrenceHelp =>
+      'Например every 2 weeks. Празно за без повтаряне.';
+
+  @override
+  String get templateSave => 'Запазване';
+
+  @override
+  String get templateCreate => 'Запазване на шаблона';
+
+  @override
+  String get templateRecentTasks => 'Скоро отваряни';
+
+  @override
+  String get appShortcutInbox => 'Входящи';
+
+  @override
+  String get appShortcutMyWork => 'Моята работа';
+
+  @override
+  String get templateDeleteAction => 'Изтриване';
+
+  @override
+  String get templateMore => 'Още действия';
+
+  @override
+  String templateGeneralError(String reason) {
+    return 'Не можа да се запази: $reason';
+  }
 }

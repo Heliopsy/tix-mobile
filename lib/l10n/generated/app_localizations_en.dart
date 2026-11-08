@@ -1470,4 +1470,269 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get boardAssignTo => 'Assign to…';
+
+  @override
+  String get quickAddProject => 'Project';
+
+  @override
+  String get quickAddPickProject => 'Choose a project';
+
+  @override
+  String get quickAddNoProjects => 'There is no project to add to yet.';
+
+  @override
+  String get quickAddAnother => 'Add another';
+
+  @override
+  String get quickAddAnotherHelp => 'Stay open for the next line';
+
+  @override
+  String quickAddPreviewRefused(String reason) {
+    return 'The server would refuse this: $reason';
+  }
+
+  @override
+  String get quickAddPreviewOff =>
+      'This connection cannot preview lines; adding still works.';
+
+  @override
+  String get quickAddOffline =>
+      'Adding needs a connection to the server. The line is kept; try again when you are online.';
+
+  @override
+  String get quickAddChipPriority => 'priority';
+
+  @override
+  String get quickAddChipTag => 'tag';
+
+  @override
+  String get quickAddChipAssignee => 'assignee';
+
+  @override
+  String get quickAddChipDue => 'due';
+
+  @override
+  String get quickAddChipStatus => 'status';
+
+  @override
+  String get quickAddChipParent => 'parent';
+
+  @override
+  String get quickAddChipTitle => 'title';
+
+  @override
+  String get quickAddSuggestions => 'Suggestions';
+
+  @override
+  String get quickAddTemplates => 'From a template';
+
+  @override
+  String get quickAddManageTemplates => 'Templates';
+
+  @override
+  String get quickAddPaste => 'Quick add from the clipboard';
+
+  @override
+  String get quickAddClipboardEmpty => 'The clipboard holds no text.';
+
+  @override
+  String get paletteGroupProjects => 'Projects';
+
+  @override
+  String get paletteGroupRecent => 'Recent tasks';
+
+  @override
+  String get paletteGroupContexts => 'Switch to';
+
+  @override
+  String get paletteGroupTheme => 'Theme';
+
+  @override
+  String get paletteGroupTemplates => 'Templates';
+
+  @override
+  String paletteOpenTask(String ref) {
+    return 'Open $ref';
+  }
+
+  @override
+  String get paletteGoInbox => 'Go to inbox';
+
+  @override
+  String get paletteGoMyWork => 'Go to my work';
+
+  @override
+  String get paletteGoTemplates => 'Go to templates';
+
+  @override
+  String get paletteThemeLight => 'Light theme';
+
+  @override
+  String get paletteThemeDark => 'Dark theme';
+
+  @override
+  String get paletteThemeSystem => 'Theme of the system';
+
+  @override
+  String paletteUseTemplate(String name) {
+    return 'New task from $name';
+  }
+
+  @override
+  String get templatesTitle => 'Templates';
+
+  @override
+  String get templatesSubtitle => 'Tasks you add often, one tap away';
+
+  @override
+  String get templateNew => 'New template';
+
+  @override
+  String get templatesEmpty => 'No templates yet.';
+
+  @override
+  String get templatesEmptyBody =>
+      'Save a task as a template to add it again in one tap.';
+
+  @override
+  String get templateEveryProject => 'Every project';
+
+  @override
+  String templateUses(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Used $count times',
+      one: 'Used once',
+      zero: 'Never used',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String templateSubtasks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count subtasks',
+      one: '1 subtask',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get templateUse => 'Use';
+
+  @override
+  String get templateEdit => 'Edit template';
+
+  @override
+  String get templateDelete => 'Delete template';
+
+  @override
+  String templateDeleteTitle(String name) {
+    return 'Delete $name?';
+  }
+
+  @override
+  String get templateDeleteBody => 'Tasks made from it stay.';
+
+  @override
+  String templateDeleted(String name) {
+    return 'Deleted $name';
+  }
+
+  @override
+  String templateSaved(String name) {
+    return 'Saved $name';
+  }
+
+  @override
+  String get templateName => 'Name';
+
+  @override
+  String get templateNameHelp =>
+      'Unique in the tenant, at most 100 characters.';
+
+  @override
+  String get templateFromTask => 'From a task';
+
+  @override
+  String get templateFromScratch => 'From scratch';
+
+  @override
+  String get templateTaskRef => 'Task';
+
+  @override
+  String get templateTaskRefHelp =>
+      'The reference of the task to keep, such as ops-12.';
+
+  @override
+  String get templateWithSubtasks => 'Keep its subtasks';
+
+  @override
+  String get templateTenantWide => 'Share with every project';
+
+  @override
+  String get templateDueIn => 'Due after';
+
+  @override
+  String get templateDueInHelp =>
+      'How long after a use the task falls due, such as 3d or 2w. Empty for none.';
+
+  @override
+  String get templateScratchNote =>
+      'tix keeps templates from tasks, so this also adds the task to the project.';
+
+  @override
+  String get templateTitle => 'Title';
+
+  @override
+  String templateTitleHelp(String date, String n, String project) {
+    return '$date, $n and $project are filled in on each use.';
+  }
+
+  @override
+  String get templateBody => 'Description';
+
+  @override
+  String get templatePriority => 'Priority';
+
+  @override
+  String get templateTags => 'Tags';
+
+  @override
+  String get templateTagsHelp => 'Separated by spaces or commas.';
+
+  @override
+  String get templateRecurrence => 'Repeats';
+
+  @override
+  String get templateRecurrenceHelp => 'Such as every 2 weeks. Empty for none.';
+
+  @override
+  String get templateSave => 'Save';
+
+  @override
+  String get templateCreate => 'Save template';
+
+  @override
+  String get templateRecentTasks => 'Recently opened';
+
+  @override
+  String get appShortcutInbox => 'Inbox';
+
+  @override
+  String get appShortcutMyWork => 'My work';
+
+  @override
+  String get templateDeleteAction => 'Delete';
+
+  @override
+  String get templateMore => 'More actions';
+
+  @override
+  String templateGeneralError(String reason) {
+    return 'Could not save: $reason';
+  }
 }
