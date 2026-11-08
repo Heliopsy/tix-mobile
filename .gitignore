@@ -46,3 +46,16 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Repo tooling
+/dist/
+/.worktrees/
+coverage/lcov.raw.info
+
+# Release signing material. android/.gitignore covers key.properties and
+# keystores under android/; these catch one dropped anywhere else.
+*.jks
+*.keystore
+*.p12
+*.mobileprovision
+key.properties

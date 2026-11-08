@@ -1,0 +1,10 @@
+# gitleaks configuration for tix-mobile.
+#
+# The default ruleset is kept in full. Add an allowlist entry only for a finding
+# that is deliberately not a secret, and say in its description why, so the
+# entry is a claim someone can check rather than a way to make the scanner quiet.
+# Match by path and shape, never by a blanket path alone, so a real credential
+# pasted into the same file is still reported.
+
+[extend]
+useDefault = true
