@@ -26,12 +26,24 @@ void main() {
         return const Page(items: [2], nextCursor: 'c2');
       },
       emit: states.add,
+      idOf: (i) => i,
     );
     expect(asked, 'c1');
     expect(states.first.loadingMore, isTrue);
     expect(states.last.items, [1, 2]);
     expect(states.last.cursor, 'c2');
     expect(states.last.loadingMore, isFalse);
+  });
+
+  test('loadNextPage drops a row that moved into the next page', () async {
+    final states = <Paged<int>>[];
+    await loadNextPage<int>(
+      current: const Paged(items: [1, 2], cursor: 'c1'),
+      fetch: (_) async => const Page(items: [2, 3, 3]),
+      emit: states.add,
+      idOf: (i) => i,
+    );
+    expect(states.last.items, [1, 2, 3]);
   });
 
   test('loadNextPage keeps the rows and records a failure', () async {
@@ -41,6 +53,7 @@ void main() {
       current: const Paged(items: [1], cursor: 'c1'),
       fetch: (_) async => throw error,
       emit: states.add,
+      idOf: (i) => i,
     );
     expect(states.last.items, [1]);
     expect(states.last.cursor, 'c1');
@@ -59,13 +72,20 @@ void main() {
       current: const Paged(items: [1]),
       fetch: fetch,
       emit: (_) {},
+      idOf: (i) => i,
     );
     await loadNextPage<int>(
       current: const Paged(items: [1], cursor: 'c', loadingMore: true),
       fetch: fetch,
       emit: (_) {},
+      idOf: (i) => i,
     );
-    await loadNextPage<int>(current: null, fetch: fetch, emit: (_) {});
+    await loadNextPage<int>(
+      current: null,
+      fetch: fetch,
+      emit: (_) {},
+      idOf: (i) => i,
+    );
     expect(calls, 0);
   });
 }

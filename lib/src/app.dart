@@ -9,9 +9,9 @@ import 'package:tix_mobile/src/core/theme/theme.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
 
 /// The tix app: router, theme and localisation.
-class TixApp extends ConsumerWidget {
+class App extends ConsumerWidget {
   /// Creates the app.
-  const TixApp({super.key});
+  const App({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

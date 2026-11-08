@@ -9,14 +9,17 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/config/config.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/session/api.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
-import 'package:tix_mobile/src/data/api/providers.dart';
 
 import 'fake_tix.dart';
 import 'stores.dart';
 
 const phone = Size(400, 800);
 const desktop = Size(1280, 800);
+
+/// The compact and expanded widths every screen is tested at.
+const Map<String, Size> widths = {'compact': phone, 'expanded': desktop};
 
 /// Stores with one saved, active context for [FakeTix]'s default token.
 ({MemoryKeyValueStore settings, MemorySecretStore secrets}) signedInStores({
@@ -63,6 +66,7 @@ Future<ProviderContainer> pumpScreen(
   List<Override> overrides = const [],
   Size size = phone,
   Locale locale = const Locale('en'),
+  bool settle = true,
 }) async {
   await setSize(tester, size);
   Widget stub(BuildContext _, GoRouterState s) =>
@@ -101,6 +105,10 @@ Future<ProviderContainer> pumpScreen(
       ),
     ),
   );
-  await tester.pumpAndSettle();
+  if (settle) {
+    await tester.pumpAndSettle();
+  } else {
+    await tester.pump();
+  }
   return ProviderScope.containerOf(tester.element(find.byWidget(screen)));
 }

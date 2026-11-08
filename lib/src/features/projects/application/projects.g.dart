@@ -38,7 +38,7 @@ final class ProjectsProvider
   Projects create() => Projects();
 }
 
-String _$projectsHash() => r'ee87fc03e283838db01c14b94439e14cd2ce8390';
+String _$projectsHash() => r'ba817380e723d4d2afcd1fecf7ed34612791deeb';
 
 /// The projects on the active server, a page at a time.
 

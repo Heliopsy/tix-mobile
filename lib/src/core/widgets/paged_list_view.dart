@@ -55,7 +55,12 @@ class PagedListView<T> extends StatelessWidget {
               physics: const AlwaysScrollableScrollPhysics(),
               itemCount: items.length + (footer ? 1 : 0),
               itemBuilder: (context, i) {
-                if (i >= items.length) return _footer(context);
+                if (i >= items.length) {
+                  return _PageFooter(
+                    error: paged.moreError,
+                    onRetry: onLoadMore,
+                  );
+                }
                 if (i >= items.length - prefetchRows &&
                     paged.hasMore &&
                     !paged.loadingMore &&
@@ -69,9 +74,17 @@ class PagedListView<T> extends StatelessWidget {
             ),
     );
   }
+}
 
-  Widget _footer(BuildContext context) {
-    final error = paged.moreError;
+class _PageFooter extends StatelessWidget {
+  const _PageFooter({required this.error, required this.onRetry});
+
+  final Object? error;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final error = this.error;
     if (error == null) {
       return const Padding(
         padding: EdgeInsets.all(16),
@@ -83,7 +96,7 @@ class PagedListView<T> extends StatelessWidget {
       leading: const Icon(Icons.error_outline),
       title: Text(l10n.loadMoreFailed),
       subtitle: Text(errorMessage(l10n, error)),
-      trailing: TextButton(onPressed: onLoadMore, child: Text(l10n.retry)),
+      trailing: TextButton(onPressed: onRetry, child: Text(l10n.retry)),
     );
   }
 }

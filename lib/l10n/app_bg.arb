@@ -58,5 +58,6 @@
   "errorNotTix": "Този адрес не отговаря като tix сървър.",
   "errorBadUrl": "Въведете адрес на сървър, например https://tix.example.com.",
   "errorTokenRequired": "Въведете API токен.",
-  "errorUnknown": "Нещо се обърка."
+  "errorUnknown": "Нещо се обърка.",
+  "errorRequestId": "Заявка {id}."
 }

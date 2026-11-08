@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:tix_mobile/src/data/api/providers.dart';
+import 'package:tix_mobile/src/core/session/api.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 
 /// A canned HTTP answer.
@@ -116,6 +116,9 @@ class FakeTix {
   /// Answers every request with this when set, for failure paths.
   FakeResponse? override;
 
+  /// Holds every answer until completed, for loading states.
+  Completer<void>? gate;
+
   /// Rows per page, so tests can force pagination.
   int pageSize = 50;
 
@@ -128,7 +131,9 @@ class FakeTix {
 
   List<RequestOptions> get requests => adapter.requests;
 
-  FakeResponse _handle(RequestOptions o) {
+  Future<FakeResponse> _handle(RequestOptions o) async {
+    final held = gate;
+    if (held != null) await held.future;
     final forced = override;
     if (forced != null) return forced;
     final path = o.uri.path.replaceFirst(

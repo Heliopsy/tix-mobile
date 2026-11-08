@@ -47,12 +47,14 @@ class Paged<T> {
 /// Appends the page after [current] through [emit], fetched with [fetch].
 ///
 /// Does nothing when there is no next page or one is already in flight. A
-/// failure is kept on the state as [Paged.moreError] rather than replacing
-/// the rows already shown.
+/// row whose [idOf] is already loaded is dropped: keyset pages can repeat a
+/// row that moved while someone scrolled. A failure is kept on the state as
+/// [Paged.moreError] rather than replacing the rows already shown.
 Future<void> loadNextPage<T>({
   required Paged<T>? current,
   required Future<Page<T>> Function(String cursor) fetch,
   required void Function(Paged<T>) emit,
+  required Object Function(T item) idOf,
 }) async {
   if (current == null || current.loadingMore) return;
   final cursor = current.cursor;
@@ -60,9 +62,13 @@ Future<void> loadNextPage<T>({
   emit(current.copyWith(loadingMore: true));
   try {
     final page = await fetch(cursor);
+    final seen = {for (final item in current.items) idOf(item)};
     emit(
       current.copyWith(
-        items: [...current.items, ...page.items],
+        items: [
+          ...current.items,
+          ...page.items.where((item) => seen.add(idOf(item))),
+        ],
         cursor: () => page.nextCursor,
         loadingMore: false,
       ),

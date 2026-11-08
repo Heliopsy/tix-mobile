@@ -19,12 +19,18 @@ and key, and SHALL open a project's tasks when one is tapped.
 
 Every list SHALL request pages with `limit` and pass each page's `next_cursor` back as `cursor`, stopping when
 `next_cursor` is empty or absent. The next page SHALL be requested as the end of the list comes into view.
-A failed next page SHALL keep the rows already shown and offer a retry.
+A failed next page SHALL keep the rows already shown and offer a retry. A row already loaded SHALL NOT be
+appended again when it moved into a later page.
 
 #### Scenario: Scrolling to the end
 
 - **WHEN** a list has more rows than one page and a person scrolls to its end
 - **THEN** the app requests the next page with the previous page's cursor and appends it
+
+#### Scenario: A row moves while scrolling
+
+- **WHEN** the next page repeats a task already in the list
+- **THEN** the task is listed once
 
 #### Scenario: Next page fails
 

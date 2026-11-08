@@ -27,7 +27,7 @@ void main() {
       ProviderScope(
         retry: noRetry,
         overrides: fakeOverrides(server, settings: settings, secrets: secrets),
-        child: const TixApp(),
+        child: const App(),
       ),
     );
     await tester.pumpAndSettle();

@@ -3,8 +3,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
+import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/models/server_context.dart';
-import 'package:tix_mobile/src/features/connect/application/session.dart';
 
 import '../../helpers/container.dart';
 import '../../helpers/fake_tix.dart';

@@ -2,20 +2,32 @@
 
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/data/repositories/settings_repository.dart';
 
 part 'settings.g.dart';
+
+/// Theme and language choices.
+@Riverpod(keepAlive: true)
+SettingsRepository settingsRepository(Ref ref) =>
+    SettingsRepository(ref.watch(keyValueStoreProvider));
 
 /// The chosen theme mode.
 @Riverpod(keepAlive: true)
 class ThemeModeSetting extends _$ThemeModeSetting {
   @override
-  ThemeMode build() => ref.watch(settingsRepositoryProvider).themeMode();
+  ThemeMode build() {
+    final name = ref.watch(settingsRepositoryProvider).themeMode();
+    return ThemeMode.values.firstWhere(
+      (m) => m.name == name,
+      orElse: () => ThemeMode.system,
+    );
+  }
 
   /// Switches to [mode] and remembers it.
   Future<void> set(ThemeMode mode) async {
     state = mode;
-    await ref.read(settingsRepositoryProvider).setThemeMode(mode);
+    await ref.read(settingsRepositoryProvider).setThemeMode(mode.name);
   }
 }
 

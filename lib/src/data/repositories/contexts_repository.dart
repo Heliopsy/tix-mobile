@@ -2,12 +2,8 @@
 
 import 'dart:convert';
 
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/core/storage/stores.dart';
 import 'package:tix_mobile/src/data/models/server_context.dart';
-
-part 'contexts_repository.g.dart';
 
 /// Saved servers in settings, their tokens in secure storage.
 class ContextsRepository {
@@ -81,10 +77,3 @@ class ContextsRepository {
   Future<void> _writeList(List<ServerContext> list) =>
       _settings.write(_listKey, jsonEncode([for (final c in list) c.toJson()]));
 }
-
-/// The saved servers.
-@Riverpod(keepAlive: true)
-ContextsRepository contextsRepository(Ref ref) => ContextsRepository(
-  ref.watch(keyValueStoreProvider),
-  ref.watch(secretStoreProvider),
-);

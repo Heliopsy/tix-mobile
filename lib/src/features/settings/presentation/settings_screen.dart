@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
-import 'package:tix_mobile/src/features/connect/application/session.dart';
+import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
 
 /// Language names as their own readers write them, as tix's web app does.
@@ -24,20 +24,11 @@ class SettingsScreen extends ConsumerWidget {
     final locale = ref.watch(localeSettingProvider);
     final session = ref.watch(sessionControllerProvider).value;
     final contexts = ref.watch(savedContextsProvider);
-    Widget heading(String text) => Padding(
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
-      child: Text(
-        text,
-        style: theme.textTheme.titleSmall?.copyWith(
-          color: theme.colorScheme.primary,
-        ),
-      ),
-    );
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: ListView(
         children: [
-          heading(l10n.themeLabel),
+          _SectionHeading(l10n.themeLabel),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: SegmentedButton<ThemeMode>(
@@ -64,7 +55,7 @@ class SettingsScreen extends ConsumerWidget {
                   ref.read(themeModeSettingProvider.notifier).set(s.first),
             ),
           ),
-          heading(l10n.languageLabel),
+          _SectionHeading(l10n.languageLabel),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: SegmentedButton<String>(
@@ -80,7 +71,7 @@ class SettingsScreen extends ConsumerWidget {
                   .set(s.first.isEmpty ? null : Locale(s.first)),
             ),
           ),
-          heading(l10n.serversLabel),
+          _SectionHeading(l10n.serversLabel),
           for (final c in contexts)
             ListTile(
               key: Key('settings.server.${c.id}'),
@@ -154,5 +145,25 @@ class SettingsScreen extends ConsumerWidget {
     if (ok ?? false) {
       await ref.read(sessionControllerProvider.notifier).signOut();
     }
+  }
+}
+
+class _SectionHeading extends StatelessWidget {
+  const _SectionHeading(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+      child: Text(
+        text,
+        style: theme.textTheme.titleSmall?.copyWith(
+          color: theme.colorScheme.primary,
+        ),
+      ),
+    );
   }
 }

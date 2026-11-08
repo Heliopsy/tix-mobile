@@ -45,6 +45,21 @@ void main() {
     expect(msg(TixErrorKind.notFound), en.errorNotFound);
   });
 
+  test(
+    'a server failure names its request id so the log line can be found',
+    () {
+      expect(
+        errorMessage(
+          en,
+          const TixException(TixErrorKind.internal, requestId: 'r-42'),
+        ),
+        '${en.errorServer} Request r-42.',
+      );
+      expect(msg(TixErrorKind.internal), en.errorServer);
+      expect(msg(TixErrorKind.unknown, 'new thing'), contains('new thing'));
+    },
+  );
+
   test('a token refusal does not echo the server text', () {
     expect(
       msg(TixErrorKind.unauthenticated, 'secret'),

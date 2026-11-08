@@ -214,4 +214,9 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get errorUnknown => 'Нещо се обърка.';
+
+  @override
+  String errorRequestId(String id) {
+    return 'Заявка $id.';
+  }
 }

@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-part of 'providers.dart';
+part of 'api.dart';
 
 // **************************************************************************
 // RiverpodGenerator

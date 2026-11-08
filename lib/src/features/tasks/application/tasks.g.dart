@@ -55,7 +55,7 @@ final class ProjectTasksProvider
   }
 }
 
-String _$projectTasksHash() => r'fa2a3762472c0c30c31813e7c217b488c6058082';
+String _$projectTasksHash() => r'd7d7d846f14868dcb9d2d76e9e235e41d558a52c';
 
 /// The tasks of one project, most urgent first, a page at a time.
 

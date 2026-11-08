@@ -20,12 +20,17 @@ transport failure as a timeout or a network error.
 
 Every error kind SHALL map to a message in the app's language. Where the server's message is the reason (an
 invalid request, a failed precondition, a missing record) it SHALL be included; a refused token SHALL NOT
-echo the server's text. Every error view SHALL offer a retry.
+echo the server's text. A server failure SHALL name its `X-Request-Id`. Every error view SHALL offer a retry.
 
 #### Scenario: Invalid request
 
 - **WHEN** the server refuses a request with `invalid` and `unknown project`
 - **THEN** the message shown includes `unknown project`
+
+#### Scenario: Server failure
+
+- **WHEN** the server answers `500` with request id `r-42`
+- **THEN** the message says the server had a problem and names `r-42`
 
 #### Scenario: Retry after failure
 

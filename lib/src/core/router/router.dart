@@ -3,8 +3,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
-import 'package:tix_mobile/src/features/connect/application/session.dart';
 import 'package:tix_mobile/src/features/connect/presentation/connect_screen.dart';
 import 'package:tix_mobile/src/features/projects/presentation/projects_screen.dart';
 import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';

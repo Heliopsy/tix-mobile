@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
-import 'package:tix_mobile/src/features/connect/application/session.dart';
+import 'package:tix_mobile/src/core/session/session.dart';
 
 /// Sign in to a tix server with its address and an API token.
 class ConnectScreen extends ConsumerStatefulWidget {
