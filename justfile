@@ -264,7 +264,7 @@ release-files-check HEAD_REF="":
 # Android APK (release). Signed when android/key.properties or ANDROID_KEYSTORE_PATH is set, debug-signed otherwise.
 [group('build')]
 build-apk *ARGS:
-    flutter build apk --release {{build_args}} {{ARGS}}
+    flutter build apk --release --split-per-abi {{build_args}} {{ARGS}}
 
 # Android App Bundle (release), signed as build-apk is.
 [group('build')]
@@ -321,7 +321,11 @@ package-android:
     suffix=""
     if [ -z "${ANDROID_KEYSTORE_PATH:-}" ] && [ ! -f android/key.properties ]; then suffix="-debug-signed"; fi
     mkdir -p dist
-    cp build/app/outputs/flutter-apk/app-release.apk "dist/{{app}}-{{version}}-android${suffix}.apk"
+    # One APK per ABI instead of a universal one, which carries all three
+    # engines and is several times the size of what a phone needs.
+    for abi in arm64-v8a armeabi-v7a x86_64; do
+        cp "build/app/outputs/flutter-apk/app-${abi}-release.apk" "dist/{{app}}-{{version}}-android-${abi}${suffix}.apk"
+    done
     cp build/app/outputs/bundle/release/app-release.aab "dist/{{app}}-{{version}}-android${suffix}.aab"
     ls -l dist
 
