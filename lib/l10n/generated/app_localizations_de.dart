@@ -2297,4 +2297,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get aboutOpenFailed => 'Der Link lässt sich nicht öffnen.';
+
+  @override
+  String get paletteThemeOled => 'Design OLED-Schwarz';
 }

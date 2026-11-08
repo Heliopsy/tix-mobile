@@ -3924,6 +3924,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not open the link.'**
   String get aboutOpenFailed;
+
+  /// Command palette entry that switches to the OLED black theme.
+  ///
+  /// In en, this message translates to:
+  /// **'OLED black theme'**
+  String get paletteThemeOled;
 }
 
 class _AppLocalizationsDelegate

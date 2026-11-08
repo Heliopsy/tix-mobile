@@ -2283,4 +2283,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get aboutOpenFailed => 'Връзката не може да се отвори.';
+
+  @override
+  String get paletteThemeOled => 'OLED черна тема';
 }

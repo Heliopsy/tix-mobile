@@ -250,14 +250,19 @@ class SettingsCommands extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final theme = ref.read(themeModeSettingProvider.notifier);
+    final theme = ref.read(themeSettingProvider.notifier);
     return CommandScope(
       commands: [
         for (final (mode, label, icon) in [
-          (ThemeMode.light, l10n.paletteThemeLight, Icons.light_mode_outlined),
-          (ThemeMode.dark, l10n.paletteThemeDark, Icons.dark_mode_outlined),
           (
-            ThemeMode.system,
+            ThemeChoice.light,
+            l10n.paletteThemeLight,
+            Icons.light_mode_outlined,
+          ),
+          (ThemeChoice.dark, l10n.paletteThemeDark, Icons.dark_mode_outlined),
+          (ThemeChoice.oled, l10n.paletteThemeOled, Icons.contrast),
+          (
+            ThemeChoice.system,
             l10n.paletteThemeSystem,
             Icons.brightness_auto_outlined,
           ),

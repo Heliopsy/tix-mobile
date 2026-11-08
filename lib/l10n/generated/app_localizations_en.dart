@@ -2280,4 +2280,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aboutOpenFailed => 'Could not open the link.';
+
+  @override
+  String get paletteThemeOled => 'OLED black theme';
 }

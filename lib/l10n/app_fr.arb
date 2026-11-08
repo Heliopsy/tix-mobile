@@ -636,5 +636,6 @@
   "aboutLicenceBody": "tix-mobile est un logiciel libre sous GNU AGPL, version 3 ou ultérieure. Les contributions sont acceptées selon l’accord de licence de contributeur du projet (CLA).",
   "aboutLicences": "Licences",
   "aboutLicencesHelp": "Les logiciels open source inclus dans l’application",
-  "aboutOpenFailed": "Impossible d’ouvrir le lien."
+  "aboutOpenFailed": "Impossible d’ouvrir le lien.",
+  "paletteThemeOled": "Thème noir OLED"
 }

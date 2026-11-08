@@ -75,8 +75,14 @@ void main() {
     await palette(tester, 'dark theme');
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
-    expect(c.read(themeModeSettingProvider), ThemeMode.dark);
+    expect(c.read(themeSettingProvider), ThemeChoice.dark);
     expect(stores.settings.values.values, contains('dark'));
+
+    await palette(tester, 'OLED black');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    expect(c.read(themeSettingProvider), ThemeChoice.oled);
+    expect(stores.settings.values['settings.theme'], 'oled');
   });
 
   for (final MapEntry(key: width, value: size) in widths.entries) {
