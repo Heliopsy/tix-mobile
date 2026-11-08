@@ -842,6 +842,234 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copy kept in the app'**
   String get localCopyNote;
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
+  /// No description provided for @undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading'**
+  String get loading;
+
+  /// No description provided for @moreInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'More information'**
+  String get moreInfo;
+
+  /// No description provided for @dueOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'overdue'**
+  String get dueOverdue;
+
+  /// No description provided for @dueToday.
+  ///
+  /// In en, this message translates to:
+  /// **'due today'**
+  String get dueToday;
+
+  /// No description provided for @dueOn.
+  ///
+  /// In en, this message translates to:
+  /// **'due {date}'**
+  String dueOn(String date);
+
+  /// No description provided for @snoozedUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'snoozed until {date}'**
+  String snoozedUntil(String date);
+
+  /// No description provided for @blockedByOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting on another task'**
+  String get blockedByOther;
+
+  /// No description provided for @starred.
+  ///
+  /// In en, this message translates to:
+  /// **'Starred'**
+  String get starred;
+
+  /// No description provided for @star.
+  ///
+  /// In en, this message translates to:
+  /// **'Star'**
+  String get star;
+
+  /// No description provided for @unstar.
+  ///
+  /// In en, this message translates to:
+  /// **'Unstar'**
+  String get unstar;
+
+  /// No description provided for @complete.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get complete;
+
+  /// No description provided for @reopen.
+  ///
+  /// In en, this message translates to:
+  /// **'Reopen'**
+  String get reopen;
+
+  /// No description provided for @snooze.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze'**
+  String get snooze;
+
+  /// No description provided for @assign.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign'**
+  String get assign;
+
+  /// No description provided for @filterHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter, for example status:todo tag:ops'**
+  String get filterHint;
+
+  /// No description provided for @shortcutsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keyboard shortcuts'**
+  String get shortcutsTitle;
+
+  /// No description provided for @showShortcuts.
+  ///
+  /// In en, this message translates to:
+  /// **'Show keyboard shortcuts'**
+  String get showShortcuts;
+
+  /// No description provided for @openCommandPalette.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the command palette'**
+  String get openCommandPalette;
+
+  /// No description provided for @commandSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a command'**
+  String get commandSearchHint;
+
+  /// No description provided for @commandNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No command matches.'**
+  String get commandNone;
+
+  /// No description provided for @goProjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to projects'**
+  String get goProjects;
+
+  /// No description provided for @goSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to settings'**
+  String get goSettings;
+
+  /// No description provided for @goInstances.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to instances'**
+  String get goInstances;
+
+  /// No description provided for @commandsNavigate.
+  ///
+  /// In en, this message translates to:
+  /// **'Navigate'**
+  String get commandsNavigate;
+
+  /// No description provided for @commandsTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks'**
+  String get commandsTasks;
+
+  /// No description provided for @newTask.
+  ///
+  /// In en, this message translates to:
+  /// **'New task'**
+  String get newTask;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @projectsEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Projects are created on the server, in the browser or with tix project add.'**
+  String get projectsEmptyBody;
+
+  /// No description provided for @tasksEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a task with one line: a title, then !high, #tag, @handle or due:fri.'**
+  String get tasksEmptyBody;
+
+  /// No description provided for @instancesEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the tix server you work on, or a database on this device.'**
+  String get instancesEmptyBody;
+
+  /// No description provided for @projectsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Every project in {tenant}'**
+  String projectsSubtitle(String tenant);
+
+  /// No description provided for @aboutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get aboutTitle;
+
+  /// No description provided for @appearanceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearanceLabel;
+
+  /// No description provided for @accountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get accountLabel;
+
+  /// No description provided for @galleryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Components'**
+  String get galleryTitle;
 }
 
 class _AppLocalizationsDelegate

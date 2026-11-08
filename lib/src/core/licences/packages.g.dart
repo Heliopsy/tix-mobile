@@ -16,7 +16,6 @@ const runtimePackages = <String>{
   'cupertino_ui',
   'dio',
   'dio_web_adapter',
-  'dynamic_color',
   'fake_async',
   'ffi',
   'ffi_leak_tracker',

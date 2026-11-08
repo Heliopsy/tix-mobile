@@ -200,5 +200,64 @@
   "localImportFile": "Import a database file…",
   "exportDatabase": "Export database…",
   "databaseExported": "Database exported.",
-  "localCopyNote": "Copy kept in the app"
+  "localCopyNote": "Copy kept in the app",
+  "back": "Back",
+  "undo": "Undo",
+  "close": "Close",
+  "loading": "Loading",
+  "moreInfo": "More information",
+  "dueOverdue": "overdue",
+  "dueToday": "due today",
+  "dueOn": "due {date}",
+  "@dueOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "snoozedUntil": "snoozed until {date}",
+  "@snoozedUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "blockedByOther": "Waiting on another task",
+  "starred": "Starred",
+  "star": "Star",
+  "unstar": "Unstar",
+  "complete": "Complete",
+  "reopen": "Reopen",
+  "snooze": "Snooze",
+  "assign": "Assign",
+  "filterHint": "Filter, for example status:todo tag:ops",
+  "shortcutsTitle": "Keyboard shortcuts",
+  "showShortcuts": "Show keyboard shortcuts",
+  "openCommandPalette": "Open the command palette",
+  "commandSearchHint": "Type a command",
+  "commandNone": "No command matches.",
+  "goProjects": "Go to projects",
+  "goSettings": "Go to settings",
+  "goInstances": "Go to instances",
+  "commandsNavigate": "Navigate",
+  "commandsTasks": "Tasks",
+  "newTask": "New task",
+  "refresh": "Refresh",
+  "projectsEmptyBody": "Projects are created on the server, in the browser or with tix project add.",
+  "tasksEmptyBody": "Add a task with one line: a title, then !high, #tag, @handle or due:fri.",
+  "instancesEmptyBody": "Add the tix server you work on, or a database on this device.",
+  "projectsSubtitle": "Every project in {tenant}",
+  "@projectsSubtitle": {
+    "placeholders": {
+      "tenant": {
+        "type": "String"
+      }
+    }
+  },
+  "aboutTitle": "About",
+  "appearanceLabel": "Appearance",
+  "accountLabel": "Account",
+  "galleryTitle": "Components"
 }

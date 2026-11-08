@@ -437,4 +437,127 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get localCopyNote => 'Copy kept in the app';
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String get undo => 'Undo';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get loading => 'Loading';
+
+  @override
+  String get moreInfo => 'More information';
+
+  @override
+  String get dueOverdue => 'overdue';
+
+  @override
+  String get dueToday => 'due today';
+
+  @override
+  String dueOn(String date) {
+    return 'due $date';
+  }
+
+  @override
+  String snoozedUntil(String date) {
+    return 'snoozed until $date';
+  }
+
+  @override
+  String get blockedByOther => 'Waiting on another task';
+
+  @override
+  String get starred => 'Starred';
+
+  @override
+  String get star => 'Star';
+
+  @override
+  String get unstar => 'Unstar';
+
+  @override
+  String get complete => 'Complete';
+
+  @override
+  String get reopen => 'Reopen';
+
+  @override
+  String get snooze => 'Snooze';
+
+  @override
+  String get assign => 'Assign';
+
+  @override
+  String get filterHint => 'Filter, for example status:todo tag:ops';
+
+  @override
+  String get shortcutsTitle => 'Keyboard shortcuts';
+
+  @override
+  String get showShortcuts => 'Show keyboard shortcuts';
+
+  @override
+  String get openCommandPalette => 'Open the command palette';
+
+  @override
+  String get commandSearchHint => 'Type a command';
+
+  @override
+  String get commandNone => 'No command matches.';
+
+  @override
+  String get goProjects => 'Go to projects';
+
+  @override
+  String get goSettings => 'Go to settings';
+
+  @override
+  String get goInstances => 'Go to instances';
+
+  @override
+  String get commandsNavigate => 'Navigate';
+
+  @override
+  String get commandsTasks => 'Tasks';
+
+  @override
+  String get newTask => 'New task';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get projectsEmptyBody =>
+      'Projects are created on the server, in the browser or with tix project add.';
+
+  @override
+  String get tasksEmptyBody =>
+      'Add a task with one line: a title, then !high, #tag, @handle or due:fri.';
+
+  @override
+  String get instancesEmptyBody =>
+      'Add the tix server you work on, or a database on this device.';
+
+  @override
+  String projectsSubtitle(String tenant) {
+    return 'Every project in $tenant';
+  }
+
+  @override
+  String get aboutTitle => 'About';
+
+  @override
+  String get appearanceLabel => 'Appearance';
+
+  @override
+  String get accountLabel => 'Account';
+
+  @override
+  String get galleryTitle => 'Components';
 }

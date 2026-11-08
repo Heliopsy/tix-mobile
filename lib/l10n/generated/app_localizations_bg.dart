@@ -440,4 +440,127 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get localCopyNote => 'Копие, пазено в приложението';
+
+  @override
+  String get back => 'Назад';
+
+  @override
+  String get undo => 'Отмени';
+
+  @override
+  String get close => 'Затвори';
+
+  @override
+  String get loading => 'Зареждане';
+
+  @override
+  String get moreInfo => 'Още информация';
+
+  @override
+  String get dueOverdue => 'просрочена';
+
+  @override
+  String get dueToday => 'срок днес';
+
+  @override
+  String dueOn(String date) {
+    return 'срок $date';
+  }
+
+  @override
+  String snoozedUntil(String date) {
+    return 'отложена до $date';
+  }
+
+  @override
+  String get blockedByOther => 'Чака друга задача';
+
+  @override
+  String get starred => 'Със звезда';
+
+  @override
+  String get star => 'Отбележи със звезда';
+
+  @override
+  String get unstar => 'Махни звездата';
+
+  @override
+  String get complete => 'Завърши';
+
+  @override
+  String get reopen => 'Отвори отново';
+
+  @override
+  String get snooze => 'Отложи';
+
+  @override
+  String get assign => 'Възложи';
+
+  @override
+  String get filterHint => 'Филтър, например status:todo tag:ops';
+
+  @override
+  String get shortcutsTitle => 'Клавишни комбинации';
+
+  @override
+  String get showShortcuts => 'Покажи клавишните комбинации';
+
+  @override
+  String get openCommandPalette => 'Отвори палитрата с команди';
+
+  @override
+  String get commandSearchHint => 'Напишете команда';
+
+  @override
+  String get commandNone => 'Няма такава команда.';
+
+  @override
+  String get goProjects => 'Към проектите';
+
+  @override
+  String get goSettings => 'Към настройките';
+
+  @override
+  String get goInstances => 'Към инстанциите';
+
+  @override
+  String get commandsNavigate => 'Навигация';
+
+  @override
+  String get commandsTasks => 'Задачи';
+
+  @override
+  String get newTask => 'Нова задача';
+
+  @override
+  String get refresh => 'Опресни';
+
+  @override
+  String get projectsEmptyBody =>
+      'Проектите се създават на сървъра, в браузъра или с tix project add.';
+
+  @override
+  String get tasksEmptyBody =>
+      'Добавете задача с един ред: заглавие, после !high, #етикет, @потребител или due:fri.';
+
+  @override
+  String get instancesEmptyBody =>
+      'Добавете сървъра tix, на който работите, или база данни на това устройство.';
+
+  @override
+  String projectsSubtitle(String tenant) {
+    return 'Всички проекти в $tenant';
+  }
+
+  @override
+  String get aboutTitle => 'Относно';
+
+  @override
+  String get appearanceLabel => 'Изглед';
+
+  @override
+  String get accountLabel => 'Профил';
+
+  @override
+  String get galleryTitle => 'Компоненти';
 }

@@ -25,6 +25,7 @@ abstract class Task with _$Task {
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? completedAt,
+    DateTime? snoozedUntil,
   }) = _Task;
 
   factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
