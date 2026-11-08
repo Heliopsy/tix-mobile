@@ -501,11 +501,11 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
     final l10n = context.l10n;
     final base = Uri.parse(step.draft.baseUrl);
     final here = [
-      for (final m in step.me.memberships)
+      for (final m in step.memberships)
         if (!m.servedElsewhere(base.host)) m,
     ];
     final elsewhere = [
-      for (final m in step.me.memberships)
+      for (final m in step.memberships)
         if (m.servedElsewhere(base.host)) m,
     ];
     final chosen = _tenant ?? step.me.tenantKey;

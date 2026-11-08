@@ -1,71 +1,93 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
-import 'package:tix_mobile/src/data/models/actor.dart';
-import 'package:tix_mobile/src/data/models/page.dart';
-import 'package:tix_mobile/src/data/models/project.dart';
-import 'package:tix_mobile/src/data/models/task.dart';
+import 'package:tix_mobile/src/data/cache/response_cache.dart';
 import 'package:tix_mobile/src/data/repositories/tasks_repository.dart';
 
-class MockTixApi extends Mock implements TixApi;
+import '../../helpers/fake_tix.dart';
 
 void main() {
-  late MockTixApi api;
+  late FakeTix server;
+  late MemoryCacheStore store;
   late TasksRepository repo;
 
-  setUpAll(() => registerFallbackValue(const CreateTaskRequest(title: '')));
+  TasksRepository fresh() => TasksRepository(
+    server.factory('https://tix.example', const BearerCredential('tok')),
+    ResponseCache(store, const CacheScope('c1', 'default')),
+  );
 
   setUp(() {
-    api = MockTixApi();
-    repo = TasksRepository(api);
+    server = FakeTix();
+    store = MemoryCacheStore();
+    repo = fresh();
   });
 
   test('lists pass the cursor through', () async {
-    when(() => api.projects(cursor: 'c')).thenAnswer(
-      (_) async => const Page(
-        items: [Project(id: 'p', key: 'k')],
-      ),
+    server.pageSize = 1;
+    final first = await repo.projects();
+    expect(first.items.single.key, 'infra');
+    final next = await repo.projects(cursor: first.nextCursor);
+    expect(next.items.single.key, 'web');
+    expect(server.requests.last.uri.queryParameters['cursor'], '1');
+    expect((await repo.tasks('infra')).items.first.ref, 'infra-1');
+    expect(server.requests.last.uri.queryParametersAll['project'], ['infra']);
+    expect((await repo.task('infra-2')).title, 'Rotate keys');
+  });
+
+  test('first pages and records are kept and read back once', () async {
+    await repo.projects();
+    await repo.tasks('infra');
+    await repo.task('infra-1');
+    final later = fresh();
+    expect((await later.cachedProjects())!.items.map((p) => p.key), [
+      'infra',
+      'web',
+    ]);
+    expect((await later.cachedTasks('infra'))!.items.first.title, 'Fix login');
+    expect(
+      (await later.cachedTask('infra-1'))!.dueAt,
+      DateTime.utc(2026, 11, 20),
     );
-    when(() => api.tasks(project: 'k', cursor: 'd'))
-        .thenAnswer((_) async => const Page(items: []));
-    when(() => api.task('k-1'))
-        .thenAnswer((_) async => const Task(id: 'i', ref: 'k-1', title: 't'));
-    expect((await repo.projects(cursor: 'c')).items.single.key, 'k');
-    expect((await repo.tasks('k', cursor: 'd')).items, isEmpty);
-    expect((await repo.task('k-1')).title, 't');
+    expect(await later.cachedProjects(), isNull, reason: 'served once');
+    expect(await later.cachedTasks('web'), isNull, reason: 'never read');
+  });
+
+  test('a later page is not cached over the first', () async {
+    server.pageSize = 1;
+    final first = await repo.projects();
+    await repo.projects(cursor: first.nextCursor);
+    final cached = await fresh().cachedProjects();
+    expect(cached!.items.single.key, 'infra');
+  });
+
+  test('a cache in another context sees nothing', () async {
+    await repo.projects();
+    final other = ResponseCache(store, const CacheScope('c1', 'acme'));
+    expect(await other.peek('projects', (j) => j), isNull);
   });
 
   test('an actor is fetched once', () async {
-    when(() => api.actor('a'))
-        .thenAnswer((_) async => const Actor(id: 'a', handle: 'raj'));
-    await repo.actor('a');
-    await repo.actor('a');
-    verify(() => api.actor('a')).called(1);
+    await repo.actor('a1');
+    await repo.actor('a1');
+    expect(server.requestsTo('/actors/a1'), hasLength(1));
   });
 
   test('a failed actor lookup is tried again next time', () async {
-    var calls = 0;
-    when(() => api.actor('a')).thenAnswer((_) async {
-      if (calls++ == 0) throw const TixException(TixErrorKind.network);
-      return const Actor(id: 'a');
-    });
-    await expectLater(repo.actor('a'), throwsA(isA<TixException>()));
-    expect((await repo.actor('a')).id, 'a');
+    server.override = FakeResponse(500, envelope('internal', 'boom'));
+    await expectLater(repo.actor('a1'), throwsA(isA<TixException>()));
+    server.override = null;
+    expect((await repo.actor('a1')).handle, 'raj');
   });
 
   test('quickAdd asks the server to parse the line in the project', () async {
-    when(() => api.createTask(any())).thenAnswer(
-      (_) async => const Task(id: 'i', ref: 'web-3', title: 'Fix login'),
-    );
-    await repo.quickAdd('web', 'Fix login !high');
-    final sent =
-        verify(() => api.createTask(captureAny())).captured.single
-            as CreateTaskRequest;
-    expect(sent.title, 'Fix login !high');
-    expect(sent.projectRef, 'web');
-    expect(sent.parse, isTrue);
+    final task = await repo.quickAdd('web', 'Fix login !high');
+    expect(task.ref, 'web-1');
+    expect(server.requests.single.body, {
+      'title': 'Fix login !high',
+      'project_ref': 'web',
+      'parse': true,
+    });
   });
 }

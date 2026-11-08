@@ -1,0 +1,98 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:tix_mobile/src/data/events/event_stream.dart';
+
+/// A connector that refuses every socket as tix refuses a credential without
+/// `event:subscribe`: the stream goes unavailable and never retries. The
+/// default in widget tests, which have no live updates.
+Future<EventSocket> refusingEventSocket(
+  Uri url,
+  Map<String, String> headers,
+) async => throw const WebSocketException('not upgraded', 403);
+
+/// One fake socket: what the client sent, and a way to answer it.
+class FakeSocket implements EventSocket {
+  FakeSocket(this.url, this.headers);
+
+  final Uri url;
+  final Map<String, String> headers;
+  final sent = <Map<String, Object?>>[];
+  final _incoming = StreamController<Object?>();
+  bool closed = false;
+
+  @override
+  Stream<Object?> get messages => _incoming.stream;
+
+  @override
+  void send(String text) => sent.add(jsonDecode(text) as Map<String, Object?>);
+
+  @override
+  Future<void> close() async {
+    closed = true;
+    if (!_incoming.isClosed) await _incoming.close();
+  }
+
+  /// Sends the server frame [msg].
+  void push(Map<String, Object?> msg) => _incoming.add(jsonEncode(msg));
+
+  /// Acknowledges the last subscription, echoing its `since_seq`.
+  void ack() {
+    final sub = sent.lastWhere((m) => m['type'] == 'subscribe');
+    push({
+      'type': 'subscribed',
+      'id': sub['id'],
+      if (sub['since_seq'] != null) 'since_seq': sub['since_seq'],
+    });
+  }
+
+  /// Delivers an event with [seq] and [type].
+  void event(
+    int seq,
+    String type, {
+    String subjectId = 'id-infra-1',
+    String projectId = 'p1',
+  }) => push({
+    'type': 'event',
+    'id': 's1',
+    'event': {
+      'seq': seq,
+      'type': type,
+      'subject_type': type.split('.').first,
+      'subject_id': subjectId,
+      'project_id': projectId,
+      'occurred_at': '2026-11-08T10:00:00Z',
+    },
+  });
+
+  /// Drops the connection as a network failure would.
+  Future<void> drop() => _incoming.close();
+}
+
+/// Hands out [FakeSocket]s and records them; [refuse] makes the next
+/// connection fail with that HTTP status, [fail] with a network error.
+class FakeEventSockets {
+  final sockets = <FakeSocket>[];
+  int? refuse;
+  bool fail = false;
+  final _opened = StreamController<FakeSocket>.broadcast();
+
+  /// Each socket as it opens.
+  Stream<FakeSocket> get opened => _opened.stream;
+
+  /// The newest socket.
+  FakeSocket get last => sockets.last;
+
+  Future<EventSocket> connect(Uri url, Map<String, String> headers) async {
+    final status = refuse;
+    if (status != null) throw WebSocketException('not upgraded', status);
+    if (fail) throw const SocketException('refused');
+    final s = FakeSocket(url, headers);
+    sockets.add(s);
+    _opened.add(s);
+    return s;
+  }
+}

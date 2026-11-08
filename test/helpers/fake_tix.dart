@@ -193,8 +193,12 @@ class FakeTix {
 
   /// A factory override that sends every client to this server.
   TixApiFactory get factory =>
-      (baseUrl, credential) =>
-          TixApi(baseUrl: baseUrl, credential: credential, adapter: adapter);
+      (baseUrl, credential, {tenant}) => TixApi(
+        baseUrl: baseUrl,
+        credential: credential,
+        tenant: tenant,
+        adapter: adapter,
+      );
 
   List<RequestOptions> get requests => adapter.requests;
 

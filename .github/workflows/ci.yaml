@@ -50,6 +50,9 @@ jobs:
       - name: Generated code is committed and current
         if: success() || failure()
         run: just gen-check
+      - name: The vendored tix API matches tix.lock
+        if: success() || failure()
+        run: just openapi-check
 
   # The repository side of the gate, which needs no Flutter at all.
   lint:

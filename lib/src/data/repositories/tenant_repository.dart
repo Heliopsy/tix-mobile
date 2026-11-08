@@ -23,7 +23,7 @@ class TenantRepository {
   /// `tenant:admin`).
   Future<String?> theme(String tenant) async {
     try {
-      return (await _api.tenant(tenant)).theme;
+      return (await _api.tenant.show(tenant)).theme;
     } on TixException catch (e) {
       if (e.kind == TixErrorKind.forbidden || e.kind == TixErrorKind.notFound) {
         return null;

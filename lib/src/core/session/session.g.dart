@@ -137,7 +137,7 @@ final class SessionControllerProvider
   SessionController create() => SessionController();
 }
 
-String _$sessionControllerHash() => r'682d2c1352117aded9286280b4a763a22dd97d84';
+String _$sessionControllerHash() => r'00416a9e4eb019164f924ad103923b6cc2191af9';
 
 /// The active session: null until someone connects.
 
@@ -256,6 +256,70 @@ final class SessionApiProvider
 
 String _$sessionApiHash() => r'd2d66389916b5d81e7b2160c39e498ad23f77d50';
 
+/// The response cache of the active context. Reads are best effort, so a
+/// cache that cannot be opened behaves as an empty one.
+///
+/// A connection reaches one tenant unless it is a switchable sign-in, so
+/// only that kind names its tenant in the scope. The rest leave it empty,
+/// which keeps the scope stable while a background `whoami` fills in the
+/// tenant's key.
+
+@ProviderFor(responseCache)
+final responseCacheProvider = ResponseCacheProvider._();
+
+/// The response cache of the active context. Reads are best effort, so a
+/// cache that cannot be opened behaves as an empty one.
+///
+/// A connection reaches one tenant unless it is a switchable sign-in, so
+/// only that kind names its tenant in the scope. The rest leave it empty,
+/// which keeps the scope stable while a background `whoami` fills in the
+/// tenant's key.
+
+final class ResponseCacheProvider
+    extends $FunctionalProvider<ResponseCache, ResponseCache, ResponseCache>
+    with $Provider<ResponseCache> {
+  /// The response cache of the active context. Reads are best effort, so a
+  /// cache that cannot be opened behaves as an empty one.
+  ///
+  /// A connection reaches one tenant unless it is a switchable sign-in, so
+  /// only that kind names its tenant in the scope. The rest leave it empty,
+  /// which keeps the scope stable while a background `whoami` fills in the
+  /// tenant's key.
+  ResponseCacheProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'responseCacheProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$responseCacheHash();
+
+  @$internal
+  @override
+  $ProviderElement<ResponseCache> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ResponseCache create(Ref ref) {
+    return responseCache(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ResponseCache value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ResponseCache>(value),
+    );
+  }
+}
+
+String _$responseCacheHash() => r'8d9babb91c30510d7d9a8353fb0baf15978ce81b';
+
 /// Projects and tasks for the active session.
 
 @ProviderFor(tasksRepository)
@@ -301,4 +365,4 @@ final class TasksRepositoryProvider
   }
 }
 
-String _$tasksRepositoryHash() => r'd331437a90a2c203b484bf4caa76785b3e062f18';
+String _$tasksRepositoryHash() => r'72846e1303a9b1f6af595bfdb4e5895f14cd51cd';

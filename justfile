@@ -26,7 +26,7 @@ build_args := env("BUILD_ARGS", "")
 
 # Generated Dart, excluded from formatting and coverage. Kept in step with
 # scripts/coverage.sh and codecov.yml.
-generated := '(\.g\.dart|\.freezed\.dart|\.gr\.dart|\.mocks\.dart|\.config\.dart)$|^lib/l10n/.*\.dart$|^lib/generated/'
+generated := '(\.g\.dart|\.gen\.dart|\.freezed\.dart|\.gr\.dart|\.mocks\.dart|\.config\.dart)$|^lib/l10n/.*\.dart$|^lib/generated/'
 
 tool := "scripts/tool.sh run"
 
@@ -80,7 +80,7 @@ get:
 run *ARGS:
     flutter run {{ARGS}}
 
-# Run build_runner once.
+# Generate the API client from api/tix-openapi.yaml, then run build_runner once.
 [group('dev')]
 gen:
     #!/usr/bin/env bash
@@ -89,6 +89,7 @@ gen:
       echo "build_runner is not in pubspec.yaml, nothing to generate"
       exit 0
     fi
+    dart run tool/openapi.dart gen
     dart run build_runner build
     dart run tool/licences.dart gen
 
@@ -426,6 +427,28 @@ engine-check KIND +PATHS:
 engine-clean:
     rm -rf "${LOCALAPPDATA:-$HOME/.cache}/tix-mobile/libtix"
 
+# ---------------------------------------------------------------- api
+#
+# The tix API is pinned by tix.lock, like the engine: api/tix-openapi.yaml is
+# tix's api/openapi.yaml at that commit, and lib/src/data/api/gen/ is
+# generated from it by `just gen`. Bumping tix.lock and running
+# `just openapi-sync gen` moves both.
+
+# Fetch tix's OpenAPI document at the commit tix.lock pins (TIX_SOURCE=<checkout> reads a local clone).
+[group('api')]
+openapi-sync:
+    dart run tool/openapi.dart sync
+
+# Fail if api/tix-openapi.yaml is not tix's document at the pinned commit.
+[group('api')]
+openapi-check:
+    dart run tool/openapi.dart check
+
+# How much of the tix API the app covers, per wave.
+[group('api')]
+parity:
+    dart run tool/parity.dart
+
 # ---------------------------------------------------------------- maintenance
 
 # Show outdated packages.
@@ -452,4 +475,4 @@ check: fmt-check analyze test spec
 
 # Everything CI runs that this host can run.
 [group('aggregate')]
-ci: fmt-check analyze gen-check spec actionlint yamllint mdlint shellcheck reuse secrets release-files-check cover-check build-all
+ci: fmt-check analyze gen-check openapi-check spec actionlint yamllint mdlint shellcheck reuse secrets release-files-check cover-check build-all

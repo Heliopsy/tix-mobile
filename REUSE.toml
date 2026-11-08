@@ -37,6 +37,7 @@ SPDX-License-Identifier = "AGPL-3.0-or-later"
 path = [
   "**/*.g.dart",
   "**/*.freezed.dart",
+  "**/*.gen.dart",
   "**/*.gr.dart",
   "**/*.mocks.dart",
   "**/*.config.dart",
@@ -82,5 +83,18 @@ SPDX-License-Identifier = "AGPL-3.0-or-later"
 [[annotations]]
 path = ["build.yaml", "l10n.yaml"]
 precedence = "override"
+SPDX-FileCopyrightText = "tix-mobile contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+# tix's OpenAPI document, vendored byte for byte from the commit tix.lock pins.
+[[annotations]]
+path = ["api/tix-openapi.yaml"]
+precedence = "override"
+SPDX-FileCopyrightText = "tix contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+# Data files the parity guard reads.
+[[annotations]]
+path = ["lib/**/*.yaml"]
 SPDX-FileCopyrightText = "tix-mobile contributors"
 SPDX-License-Identifier = "AGPL-3.0-or-later"

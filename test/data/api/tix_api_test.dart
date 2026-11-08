@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
+import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/auth.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 
@@ -24,6 +25,7 @@ void main() {
   test('health is read without a token from the server root', () async {
     final health = await server
         .factory('https://tix.example/sub', null)
+        .server
         .health();
     expect(health.version, 'v1.2.3');
     final sent = server.requests.single;
@@ -32,7 +34,7 @@ void main() {
   });
 
   test('whoami sends the bearer token under /api/v1', () async {
-    final me = await api.whoami();
+    final me = await api.identity.whoami();
     expect(me.handle, 'ana');
     final sent = server.requests.single;
     expect(sent.uri.path, '/sub/api/v1/whoami');
@@ -43,10 +45,13 @@ void main() {
     'projects pass the cursor back and stop on an empty next_cursor',
     () async {
       server.pageSize = 1;
-      final first = await api.projects();
+      final first = await api.project.list(limit: 50);
       expect(first.items.map((p) => p.key), ['infra']);
       expect(first.nextCursor, '1');
-      final second = await api.projects(cursor: first.nextCursor);
+      final second = await api.project.list(
+        cursor: first.nextCursor,
+        limit: 50,
+      );
       expect(second.items.map((p) => p.key), ['web']);
       expect(second.hasMore, isFalse);
       expect(server.requests.first.uri.queryParameters, {'limit': '50'});
@@ -55,7 +60,7 @@ void main() {
   );
 
   test('tasks are filtered by project and parsed', () async {
-    final page = await api.tasks(project: 'infra');
+    final page = await api.task.list(project: ['infra']);
     expect(server.requests.single.uri.queryParameters['project'], 'infra');
     final task = page.items.first;
     expect(task.ref, 'infra-1');
@@ -66,14 +71,14 @@ void main() {
   });
 
   test('task and actor escape their path segment', () async {
-    await expectLater(api.task('a/b'), throwsA(isA<TixException>()));
+    await expectLater(api.task.show('a/b'), throwsA(isA<TixException>()));
     expect(server.requests.single.uri.toString(), endsWith('/tasks/a%2Fb'));
-    final actor = await api.actor('a1');
+    final actor = await api.actor.show('a1');
     expect(actor.label, 'Raj');
   });
 
   test('createTask posts the quick-add line with parse set', () async {
-    final task = await api.createTask(
+    final task = await api.task.create(
       const CreateTaskRequest(
         title: 'Ship it !high',
         projectRef: 'web',
@@ -97,7 +102,7 @@ void main() {
           'details': {'version': 3},
         },
       });
-      final error = await api.whoami().then<Object?>(
+      final error = await api.identity.whoami().then<Object?>(
         (_) => null,
         onError: (Object e) => e,
       );
@@ -116,7 +121,7 @@ void main() {
         const BearerCredential('nope'),
       );
       await expectLater(
-        wrong.whoami(),
+        wrong.identity.whoami(),
         throwsA(
           isA<TixException>().having(
             (e) => e.kind,
@@ -130,7 +135,7 @@ void main() {
     test('a non-JSON answer is not tix', () async {
       server.override = const FakeResponse(200, '<html></html>', 'text/html');
       await expectLater(
-        api.health(),
+        api.server.health(),
         throwsA(
           isA<TixException>().having(
             (e) => e.kind,
@@ -152,7 +157,7 @@ void main() {
         ),
       );
       await expectLater(
-        api.health(),
+        api.server.health(),
         throwsA(
           isA<TixException>().having(
             (e) => e.kind,
@@ -168,7 +173,14 @@ void main() {
     test('login posts the email, password and cli surface', () async {
       final result = await server
           .factory('https://tix.example', null)
-          .login(const LoginRequest(email: 'ana@example.com', password: 'pw'));
+          .session
+          .login(
+            const LoginRequest(
+              email: 'ana@example.com',
+              password: 'pw',
+              surface: Surface.cli,
+            ),
+          );
       expect(result.session!.token, startsWith('sess-'));
       expect(result.challenge, isNull);
       final sent = server.requests.single;
@@ -185,9 +197,16 @@ void main() {
       server.requireCode = true;
       final result = await server
           .factory('https://tix.example', null)
-          .login(const LoginRequest(email: 'ana@example.com', password: 'pw'));
+          .session
+          .login(
+            const LoginRequest(
+              email: 'ana@example.com',
+              password: 'pw',
+              surface: Surface.cli,
+            ),
+          );
       expect(result.session, isNull);
-      expect(result.challenge!.kind, 'code');
+      expect(result.challenge!.kind, TOTPChallengeKind.code);
       expect(result.challenge!.ticket, 'ticket-1');
     });
 
@@ -195,6 +214,7 @@ void main() {
       final session = server.startSession('ana@example.com', 'default');
       final me = await server
           .factory('https://tix.example', SessionCredential(session))
+          .identity
           .whoami();
       expect(me.memberships.single.tenantKey, 'default');
       final sent = server.requests.single;
@@ -214,7 +234,13 @@ void main() {
         'https://tix.example',
         SessionCredential(session),
       );
-      final result = await api.switchTenant('acme', code: '1');
+      final result = await api.session.switchTenant(
+        const SwitchTenantInput(
+          tenant: 'acme',
+          code: '1',
+          surface: Surface.cli,
+        ),
+      );
       expect(server.requests.single.data, {
         'tenant': 'acme',
         'code': '1',
@@ -224,6 +250,7 @@ void main() {
       final next = result.session!.token;
       await server
           .factory('https://tix.example', SessionCredential(next))
+          .session
           .logout();
       expect(server.sessions.containsKey(next), isFalse);
     });
@@ -232,6 +259,7 @@ void main() {
       await expectLater(
         server
             .factory('https://tix.example', const SessionCredential('gone'))
+            .session
             .logout(),
         throwsA(
           isA<TixException>().having(
