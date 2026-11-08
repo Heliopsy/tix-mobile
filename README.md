@@ -134,6 +134,9 @@ live in `screenshots/` ([conventions](docs/development.md#screenshots)).
 
 ## Install
 
+[tix.red/en/apps](https://tix.red/en/apps/) has every download with install steps, Obtainium for Android included,
+and [the app section of tix's docs](https://tix.red/en/docs/#app) covers tokens, local databases and troubleshooting.
+
 ### From a release
 
 Download the file for your platform from the [latest release](https://github.com/heliopsy/tix-mobile/releases/latest).
