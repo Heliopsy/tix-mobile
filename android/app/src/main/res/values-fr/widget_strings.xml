@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- Home screen widget text drawn before the app has written any. Keys match in every language; test/core/l10n/native_strings_test.dart checks. -->
+<resources>
+    <string name="widget_my_work">Mon travail</string>
+    <string name="widget_my_work_description">Vos prochaines tâches, les retards d\'abord. Cochez pour terminer.</string>
+    <string name="widget_inbox">Boîte de réception</string>
+    <string name="widget_inbox_description">Nombre de non lus et derniers éléments.</string>
+    <string name="widget_quick_add">Ajout rapide</string>
+    <string name="widget_quick_add_description">Un appui pour ajouter une tâche.</string>
+    <string name="widget_project">Projet</string>
+    <string name="widget_project_description">Les tâches ouvertes d\'un projet par statut.</string>
+    <string name="widget_add_task">Ajouter une tâche</string>
+    <string name="widget_open_app">Ouvrez tix pour charger ce widget</string>
+    <string name="widget_update_app">Ouvrez tix pour mettre à jour</string>
+    <string name="widget_signed_out">Connectez-vous à tix</string>
+    <string name="widget_updated">Mis à jour</string>
+    <string name="widget_local_stale">Se met à jour quand tix est ouvert</string>
+    <string name="widget_overdue">En retard</string>
+    <string name="widget_today">Aujourd\'hui</string>
+    <string name="widget_complete">Terminer</string>
+    <string name="widget_nothing_due">Rien ne vous est assigné</string>
+    <string name="widget_all_read">Tout est lu</string>
+    <string name="widget_no_open_tasks">Aucune tâche ouverte</string>
+    <string name="widget_project_missing">Absent de ce contexte</string>
+    <string name="widget_pick_project">Choisissez un projet</string>
+    <string name="widget_no_projects">Aucun projet pour l\'instant. Ouvrez d\'abord tix.</string>
+    <string name="widget_configure">Widget tix</string>
+    <string name="widget_configure_context">Afficher</string>
+    <string name="widget_follow_active">Suivre le contexte actif</string>
+</resources>

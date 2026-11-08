@@ -2,6 +2,7 @@ import java.util.Properties
 
 plugins {
     id("com.android.application")
+    id("org.jetbrains.kotlin.plugin.compose")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -71,6 +72,10 @@ android {
     // is mapped straight from the APK, 16 KB aligned by AGP 8.5.1+, which
     // Google Play requires for Android 15 devices with 16 KB pages.
     // scripts/engine-check.sh verifies both in CI.
+    buildFeatures {
+        compose = true
+    }
+
     packaging {
         jniLibs {
             useLegacyPackaging = false
@@ -132,4 +137,10 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    // Home screen widgets; the versions home_widget itself builds against.
+    implementation("androidx.glance:glance-appwidget:1.2.0")
+    implementation("androidx.work:work-runtime-ktx:2.11.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.json:json:20250517")
 }
