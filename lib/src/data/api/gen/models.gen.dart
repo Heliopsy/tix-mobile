@@ -40,7 +40,8 @@ abstract class APIToken with _$APIToken {
     @JsonKey(name: 'project_id') @Default('') String projectId,
 
     /// RevokedAt is when the token was revoked, RFC 3339. A revoked token never
-    /// authenticates again.
+    /// authenticates again. A time still to come is a rotated token's grace window:
+    /// it works until then.
     @JsonKey(name: 'revoked_at') @TixDateTime() DateTime? revokedAt,
 
     /// Scopes are the permissions the token carries; a request outside them is
@@ -1622,6 +1623,137 @@ abstract class ErrorEnvelope with _$ErrorEnvelope {
       _$ErrorEnvelopeFromJson(json);
 }
 
+/// Event is one durable record in the outbox.
+@freezed
+abstract class Event with _$Event {
+  /// Creates a [Event].
+  const factory Event({
+    /// ActorID is the actor who caused the event. Empty for a system event.
+    @JsonKey(name: 'actor_id') @Default('') String actorId,
+
+    /// ID is the event's unique identifier.
+    @JsonKey(name: 'id') @Default('') String id,
+
+    /// OccurredAt is when the event happened, RFC 3339.
+    @JsonKey(name: 'occurred_at') @TixDateTime() DateTime? occurredAt,
+
+    /// Payload carries event-specific details, including the subject's ref when it
+    /// has one.
+    @JsonKey(name: 'payload')
+    @Default(<String, Object?>{})
+    Map<String, Object?> payload,
+
+    /// ProjectID is the project the event concerns. Empty for a tenant-level event.
+    @JsonKey(name: 'project_id') @Default('') String projectId,
+
+    /// Seq is the event's position in the tenant's stream, increasing. Resume a
+    /// stream after the last Seq seen.
+    @JsonKey(name: 'seq') @Default(0) int seq,
+
+    /// SubjectID is the ID of the record the event is about.
+    @JsonKey(name: 'subject_id') @Default('') String subjectId,
+
+    /// SubjectType is the kind of record the event is about, such as "task".
+    @JsonKey(name: 'subject_type') @Default('') String subjectType,
+
+    /// TenantID is the tenant the event belongs to.
+    @JsonKey(name: 'tenant_id') @Default('') String tenantId,
+
+    /// Type is the kind of event.
+    @JsonKey(name: 'type', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
+    EventType? type,
+
+    /// Via is the access channel the change arrived through: its kind and the
+    /// token's name. Network details stay in the audit log.
+    @JsonKey(name: 'via') Via? via,
+  }) = _Event;
+
+  /// Reads a [Event] from its JSON object.
+  factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);
+}
+
+/// EventPage is one poll's events in sequence order and the cursor that resumes
+/// after them.
+@freezed
+abstract class EventPage with _$EventPage {
+  /// Creates a [EventPage].
+  const factory EventPage({
+    @JsonKey(name: 'events') @Default(<Event>[]) List<Event> events,
+    @JsonKey(name: 'next_seq') @Default(0) int nextSeq,
+  }) = _EventPage;
+
+  /// Reads a [EventPage] from its JSON object.
+  factory EventPage.fromJson(Map<String, dynamic> json) =>
+      _$EventPageFromJson(json);
+}
+
+/// EventType names a kind of domain event.
+enum EventType {
+  @JsonValue('task.created')
+  taskCreated('task.created'),
+  @JsonValue('task.updated')
+  taskUpdated('task.updated'),
+  @JsonValue('task.transitioned')
+  taskTransitioned('task.transitioned'),
+  @JsonValue('task.claimed')
+  taskClaimed('task.claimed'),
+  @JsonValue('task.released')
+  taskReleased('task.released'),
+  @JsonValue('task.lease_expired')
+  taskLeaseExpired('task.lease_expired'),
+  @JsonValue('task.reclaimed')
+  taskReclaimed('task.reclaimed'),
+  @JsonValue('task.deleted')
+  taskDeleted('task.deleted'),
+  @JsonValue('task.starred')
+  taskStarred('task.starred'),
+  @JsonValue('task.unstarred')
+  taskUnstarred('task.unstarred'),
+  @JsonValue('task.snoozed')
+  taskSnoozed('task.snoozed'),
+  @JsonValue('task.unsnoozed')
+  taskUnsnoozed('task.unsnoozed'),
+  @JsonValue('task.woke')
+  taskWoke('task.woke'),
+  @JsonValue('comment.added')
+  commentAdded('comment.added'),
+  @JsonValue('artifact.added')
+  artifactAdded('artifact.added'),
+  @JsonValue('dependency.added')
+  dependencyAdded('dependency.added'),
+  @JsonValue('tag.added')
+  tagAdded('tag.added'),
+  @JsonValue('project.created')
+  projectCreated('project.created'),
+  @JsonValue('project.updated')
+  projectUpdated('project.updated'),
+  @JsonValue('workflow.updated')
+  workflowUpdated('workflow.updated'),
+  @JsonValue('field.updated')
+  fieldUpdated('field.updated'),
+  @JsonValue('webhook.delivered')
+  webhookDelivered('webhook.delivered'),
+  @JsonValue('import.completed')
+  importCompleted('import.completed'),
+  @JsonValue('view.arranged')
+  viewArranged('view.arranged'),
+  @JsonValue('filter.saved')
+  filterSaved('filter.saved'),
+  @JsonValue('filter.updated')
+  filterUpdated('filter.updated'),
+  @JsonValue('filter.deleted')
+  filterDeleted('filter.deleted'),
+  @JsonValue('inbox.updated')
+  inboxUpdated('inbox.updated'),
+  @JsonValue('template.updated')
+  templateUpdated('template.updated');
+
+  const EventType(this.value);
+
+  /// The value on the wire.
+  final String value;
+}
+
 /// ExportInput selects what to export.
 @freezed
 abstract class ExportInput with _$ExportInput {
@@ -2617,7 +2749,8 @@ abstract class IssuedToken with _$IssuedToken {
     @JsonKey(name: 'project_id') @Default('') String projectId,
 
     /// RevokedAt is when the token was revoked, RFC 3339. A revoked token never
-    /// authenticates again.
+    /// authenticates again. A time still to come is a rotated token's grace window:
+    /// it works until then.
     @JsonKey(name: 'revoked_at') @TixDateTime() DateTime? revokedAt,
 
     /// Scopes are the permissions the token carries; a request outside them is
@@ -3089,6 +3222,26 @@ enum Role {
 
   /// The value on the wire.
   final String value;
+}
+
+/// RotateTokenInput replaces a live token with a new one of the same name,
+/// scopes and project.
+@freezed
+abstract class RotateTokenInput with _$RotateTokenInput {
+  /// Creates a [RotateTokenInput].
+  const factory RotateTokenInput({
+    /// ActorID, when set, is the actor the token must belong to, by identifier or
+    /// handle; a token of anybody else is reported missing.
+    @JsonKey(name: 'actor_id') String? actorId,
+
+    /// Grace is how long the old token keeps working beside the new one, from 0 (it
+    /// stops at once, the default) up to 24h.
+    @JsonKey(name: 'grace') String? grace,
+  }) = _RotateTokenInput;
+
+  /// Reads a [RotateTokenInput] from its JSON object.
+  factory RotateTokenInput.fromJson(Map<String, dynamic> json) =>
+      _$RotateTokenInputFromJson(json);
 }
 
 /// RouteInput moves a task along a route, one ordinary transition per hop. A

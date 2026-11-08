@@ -827,6 +827,33 @@ class EventOps {
 
   final TixTransport _t;
 
+  /// PollEvents returns the committed events after since_seq that match the types
+  /// and project_ids filters, in sequence order and at most limit (default 200,
+  /// at most 1000), with next_seq to pass back as since_seq.
+  ///
+  /// `GET /api/v1/events/poll` (`event.poll`), scope `event:subscribe`.
+  Future<EventPage> poll({
+    int? sinceSeq,
+    List<String>? types,
+    List<String>? projectIds,
+    int? limit,
+    String? wait,
+  }) async {
+    return EventPage.fromJson(
+      await _t.json(
+        'GET',
+        '/api/v1/events/poll',
+        query: {
+          'since_seq': sinceSeq,
+          'types': types,
+          'project_ids': projectIds,
+          'limit': limit,
+          'wait': wait,
+        },
+      ),
+    );
+  }
+
   /// Subscribe streams committed events matching the filter, from the given
   /// sequence number or from now.
   ///
@@ -2761,6 +2788,21 @@ class TokenOps {
   /// `DELETE /api/v1/tokens/{id}` (`token.revoke`), scope `token:admin`.
   Future<void> revoke(String id) async {
     await _t.empty('DELETE', '/api/v1/tokens/${_t.segment(id)}');
+  }
+
+  /// RotateToken replaces a live API token, addressed by identifier or name, with
+  /// a new one of the same name, scopes and project and the same lifetime counted
+  /// from now, and returns its value once.
+  ///
+  /// `POST /api/v1/tokens/{id}/rotate` (`token.rotate`).
+  Future<IssuedToken> rotate(String id, {RotateTokenInput? body}) async {
+    return IssuedToken.fromJson(
+      await _t.json(
+        'POST',
+        '/api/v1/tokens/${_t.segment(id)}/rotate',
+        body: body?.toJson(),
+      ),
+    );
   }
 }
 

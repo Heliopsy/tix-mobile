@@ -55,6 +55,11 @@ const bindings = <String, Binding>{
     action: 'live-updates',
     wave: 0,
   ),
+  'event.poll': Binding(
+    feature: 'core/events',
+    action: 'live-updates-fallback',
+    wave: 1,
+  ),
   'task.update': Binding(feature: 'tasks', action: 'edit', wave: 1),
   'task.check': Binding(feature: 'tasks', action: 'tick-checklist', wave: 1),
   'task.route': Binding(feature: 'tasks', action: 'move', wave: 1),
