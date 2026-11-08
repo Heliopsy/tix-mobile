@@ -18,6 +18,8 @@ import 'package:tix_mobile/src/features/admin/presentation/tenant_settings_scree
 import 'package:tix_mobile/src/features/admin/presentation/tenant_users_screen.dart';
 import 'package:tix_mobile/src/features/admin/presentation/tenants_screen.dart';
 import 'package:tix_mobile/src/features/audit/presentation/audit_screen.dart';
+import 'package:tix_mobile/src/features/bundles/presentation/bundles_screen.dart';
+import 'package:tix_mobile/src/features/bundles/presentation/snapshot_import_screen.dart';
 import 'package:tix_mobile/src/features/connect/presentation/connect_screen.dart';
 import 'package:tix_mobile/src/features/gallery/presentation/gallery_screen.dart';
 import 'package:tix_mobile/src/features/inbox/presentation/channel_screen.dart';
@@ -42,6 +44,7 @@ import 'package:tix_mobile/src/features/settings/presentation/settings_screen.da
 import 'package:tix_mobile/src/features/settings/presentation/time_settings_screen.dart';
 import 'package:tix_mobile/src/features/shell/presentation/home_shell.dart';
 import 'package:tix_mobile/src/features/shell/presentation/splash_screen.dart';
+import 'package:tix_mobile/src/features/status/presentation/status_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_list_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_screen.dart';
@@ -203,6 +206,18 @@ GoRouter router(Ref ref) {
                         ),
                       ),
                     ],
+                  ),
+                  GoRoute(
+                    path: 'status',
+                    builder: (_, _) => const StatusScreen(),
+                  ),
+                  GoRoute(
+                    path: 'bundles',
+                    builder: (_, _) => const BundlesScreen(),
+                  ),
+                  GoRoute(
+                    path: 'import',
+                    builder: (_, _) => const SnapshotImportScreen(),
                   ),
                   GoRoute(
                     path: 'fields',

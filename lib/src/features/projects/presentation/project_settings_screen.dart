@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
+import 'package:tix_mobile/src/core/l10n/durations.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/access.dart';
@@ -220,6 +221,14 @@ class _EditorState extends ConsumerState<_Editor> {
     final write = widget.canWrite;
     final error = _error;
     final name = _p.name.isEmpty ? _p.key : _p.name;
+    final workflows = ref.watch(workflowChoicesProvider).value ?? const [];
+    final inheritedLease =
+        workflows
+            .where((w) => w.id == _workflow || w.key == _workflow)
+            .firstOrNull
+            ?.definition
+            ?.defaultLease ??
+        '';
     return TixPage(
       title: l10n.projectSettingsTitle,
       subtitle: name,
@@ -355,8 +364,16 @@ class _EditorState extends ConsumerState<_Editor> {
                             label: l10n.projectLeaseDefault,
                             controller: _leaseDefault,
                             enabled: write,
-                            hint: l10n.manageInherited,
-                            help: l10n.manageDurationHelp,
+                            hint: inheritedLease.isEmpty
+                                ? l10n.manageInherited
+                                : l10n.manageInheritedValue(
+                                    humanDuration(l10n, inheritedLease),
+                                  ),
+                            help: _p.leaseDefault.isEmpty
+                                ? l10n.manageDurationHelp
+                                : l10n.manageDurationSaved(
+                                    humanDuration(l10n, _p.leaseDefault),
+                                  ),
                           ),
                           TixTextField(
                             fieldKey: const Key('project.leaseMax'),
@@ -364,7 +381,11 @@ class _EditorState extends ConsumerState<_Editor> {
                             controller: _leaseMax,
                             enabled: write,
                             hint: l10n.manageInherited,
-                            help: l10n.projectLeaseMaxHelp,
+                            help: _p.leaseMax.isEmpty
+                                ? l10n.projectLeaseMaxHelp
+                                : l10n.manageDurationSaved(
+                                    humanDuration(l10n, _p.leaseMax),
+                                  ),
                           ),
                         ],
                       ),

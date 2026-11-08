@@ -46,6 +46,7 @@ class ProjectsScreen extends ConsumerWidget {
         onRetry: () => ref.invalidate(projectsProvider),
         data: (paged) => PagedListView(
           paged: paged,
+          header: const _ArchivedFilter(),
           empty: EmptyState(
             icon: Icons.folder_outlined,
             title: l10n.projectsEmpty,
@@ -55,6 +56,32 @@ class ProjectsScreen extends ConsumerWidget {
           onRefresh: () => ref.refresh(projectsProvider.future),
           onLoadMore: () => ref.read(projectsProvider.notifier).loadMore(),
           itemBuilder: (context, project) => ProjectTile(project: project),
+        ),
+      ),
+    );
+  }
+}
+
+class _ArchivedFilter extends ConsumerWidget {
+  const _ArchivedFilter();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final on = ref.watch(showArchivedProjectsProvider);
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: TixSpace.s4,
+        vertical: TixSpace.s2,
+      ),
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: TixFilterChip(
+          key: const Key('projects.archived'),
+          label: context.l10n.projectsShowArchived,
+          icon: Icons.inventory_2_outlined,
+          selected: on,
+          onSelected: (_) =>
+              ref.read(showArchivedProjectsProvider.notifier).toggle(),
         ),
       ),
     );
