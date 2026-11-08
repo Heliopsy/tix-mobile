@@ -235,10 +235,39 @@ flowchart LR
 - **Calling.** `FfiLocalTixEngine` binds the seven `Tix*` functions with `@Native`. Every call blocks inside tix, so
   each runs on a short-lived isolate; every returned string is freed with `TixFree`, and the JSON error object
   becomes a `TixException`. Tests use `InMemoryLocalTixEngine`, and one integration test drives the real library.
-- **Files.** SQLite needs a real path and writes `-wal` and `-shm` files beside the database. Linux and Windows
-  work on the picked file in place. Android and iOS pickers hand over a copy, and the macOS sandbox does not let the
-  app create files beside one the person picked, so those platforms import a copy into the documents folder and
-  export it (engine stopped, so the file is whole) through the share sheet or a save dialog.
+- **Files.** SQLite needs a real path and writes `-wal` and `-shm` files beside the database. Android and iOS
+  pickers hand over a copy, and the macOS sandbox does not let the app create files beside one the person picked,
+  so by default those platforms import a copy into the documents folder and export it (engine stopped, so the file
+  is whole) through the share sheet or a save dialog.
+- **Open in place.** An advanced choice on the add-instance screen uses a database where it is, and saves the
+  instance with `inPlace` (and a `bookmark` on Apple platforms). `LocalFileAccess` (`core/platform/local_access.dart`)
+  hides how each platform gets there:
+
+  | Platform | How | Stored |
+  | --- | --- | --- |
+  | Linux, Windows | The system open dialog | the path |
+  | Android | "All files access", then an in-app browser of shared storage | the path |
+  | iOS, macOS | A native folder picker, a security-scoped bookmark of the folder | the path and the bookmark |
+
+  Apple platforms bookmark the folder because SQLite must create files beside the database. The bookmark is
+  resolved and access started before the engine starts and released after it stops; a stale one is renewed and
+  saved through `LocalEngines.renewed`. On Android `MANAGE_EXTERNAL_STORAGE` lives in an overlay manifest
+  (`android/app/src/allFilesAccess/`) that Gradle merges unless the build passes `-PtixAllFilesAccess=false`, which a
+  Google Play build should, since Play restricts the permission; the app offers open in place only when the
+  permission is declared. SAF content URIs are never used: SQLite cannot lock through them.
+- **Sync safety.** Before opening in place, `probeInPlace` (`data/local/in_place.dart`) checks the folder takes new
+  files, the file starts with the SQLite header and can be locked; an iCloud file not yet downloaded is refused.
+  Conflict copies (`name (conflicted copy ...).db`, `name.sync-conflict-....db`, `name (1).db`, `name 2.db`) and a
+  leftover `-wal` are looked for whenever the engine starts and shown on the connect screen and the Instances card.
+  In-place engines rest whenever the app is hidden, on every platform: tix closes the database on stop, SQLite
+  checkpoints the log into the file and removes `-wal`, and the sync client sees one whole file.
+- **Lifecycle.** `LocalEngines` runs at most one engine: activating any context stops every other instance's
+  engine, and a remote context stops them all. Phones suspend engines on pause and resume them on the same
+  address. An engine that served no request for the idle timeout (10 minutes by default, `settings.local_idle_minutes`,
+  0 for never) rests: it stops and remembers its address. The session's client for a local instance carries a
+  `LocalWakeInterceptor`, which calls `LocalEngines.ensure` before every request and rewrites its base URL, so a
+  resting engine starts again, on the same address when it is free, before the request goes out. The Instances
+  screen shows each engine's state from `localEngineStatusesProvider`, with a Stop button that rests it.
 - **Talking to it.** Once started, a local instance is an ordinary server on loopback: the same `TixApi`, the same
   errors. Android allows cleartext HTTP to `127.0.0.1` only; Apple platforms set `NSAllowsLocalNetworking`.
 
