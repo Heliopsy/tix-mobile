@@ -89,7 +89,7 @@ session. Without one there is nowhere safe to keep the token, and the app does n
 
 | Recipe | Output |
 | --- | --- |
-| `just build-apk` | Android APK |
+| `just build-apk` | Android APKs, one per ABI (`arm64-v8a`, `armeabi-v7a`, `x86_64`) |
 | `just build-aab` | Android App Bundle |
 | `just build-ios` | iOS app, unsigned unless signing is configured locally |
 | `just build-ipa` | iOS archive for distribution; needs signing |
@@ -97,7 +97,7 @@ session. Without one there is nowhere safe to keep the token, and the app does n
 | `just build-macos` | macOS app |
 | `just build-windows` | Windows desktop bundle |
 | `just build-all` | Every target the current host can build |
-| `just package-android` | Collect the APK and AAB into `dist/` |
+| `just package-android` | Collect the per-ABI APKs and the AAB into `dist/` |
 | `just package-linux ARCH` | Tar the Linux bundle into `dist/` (`x64` or `arm64`) |
 | `just package-macos` | Zip the macOS app into `dist/` |
 | `just package-windows` | Zip the Windows runner output into `dist/` |

@@ -66,7 +66,7 @@ for the CLI.
 
 | Platform | Minimum | Release artifact | Token stored in |
 | --- | --- | --- | --- |
-| Android | 7.0, API 24 (Flutter's default `minSdk`) | APK, AAB | Android Keystore |
+| Android | 7.0, API 24 (Flutter's default `minSdk`) | APK per ABI, AAB | Android Keystore |
 | iOS | 15.0 | None yet, build from source | Keychain |
 | macOS | 12.0 | `.zip` | Keychain |
 | Linux | x64 and arm64 desktop with GTK 3 | `.tar.gz` | libsecret (GNOME Keyring, KWallet) |
@@ -103,8 +103,8 @@ live in `screenshots/` ([conventions](docs/development.md#screenshots)).
 ### From a release
 
 Download the file for your platform from the [latest release](https://github.com/heliopsy/tix-mobile/releases/latest).
-Every release attaches the Android APK and AAB, Linux `.tar.gz` files for x64 and arm64, a macOS `.zip`, a
-Windows `.zip`, and a `SHA256SUMS` file. Each file carries GitHub build provenance, and the checksums file a
+Every release attaches Android APKs (one per ABI: take `arm64-v8a` for any phone from the last several years)
+and an AAB, Linux `.tar.gz` files for x64 and arm64, a macOS `.zip`, a Windows `.zip`, and a `SHA256SUMS` file. Each file carries GitHub build provenance, and the checksums file a
 cosign signature, so you can check where a download came from:
 
 ```sh

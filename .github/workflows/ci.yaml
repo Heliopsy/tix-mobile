@@ -154,7 +154,7 @@ jobs:
             os: ubuntu-24.04
             java: true
             recipe: build-apk
-            artifact: build/app/outputs/flutter-apk/app-release.apk
+            artifact: build/app/outputs/flutter-apk/app-*-release.apk
           - name: Linux x64
             os: ubuntu-24.04
             linux: true
