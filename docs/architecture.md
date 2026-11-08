@@ -178,9 +178,10 @@ The steps for a screen that performs an operation, say `task.star`:
 2. **Repository.** Add a method to the repository for the area (or a new one in `data/repositories/`, built in
    `core/session/session.dart` from `sessionApiProvider` and `responseCacheProvider`). Reads that open a screen use
    `_cache.remember(key, fresh, encode)` and get a `cached…` twin; first pages only, never a page after a cursor.
-   Never cache anything carrying a secret (tokens, sessions, recovery codes, invite links). A value tix shows once (a token, an invite
-   link, a calendar address) goes from the notifier method straight back to the widget that shows it in a
-   `OneTimeSecret`; `test/core/session/secrets_test.dart` checks none reaches the cache, the log or provider state.
+   Never cache anything carrying a secret (tokens, sessions, recovery codes, invite links). A value tix shows once
+   (a token, an invite link, a calendar address) goes from the notifier method straight back to the widget that
+   shows it in a `OneTimeSecret`; `test/core/session/secrets_test.dart` checks none reaches the cache, the log or
+   provider state.
 3. **Provider.** In `features/<feature>/application/`, an `AsyncNotifier`:
    - load with `cachedFirst(ref: ref, cached: repo.cachedX(), fresh: repo.x, onFresh: (v) => state = AsyncData(v))`;
    - declare live updates with `refreshOn(ref, EventTopics.<topic>, where: ...)`;
