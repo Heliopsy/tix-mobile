@@ -608,15 +608,16 @@ TixApi sessionApi(Ref ref) {
         s.value?.baseUrl,
         s.value?.credential,
         s.value?.problem,
-        s.value?.instance,
+        s.value?.instance.kind == InstanceKind.local,
       ),
     ),
   );
-  final (baseUrl, credential, problem, instance) = target;
+  final (baseUrl, credential, problem, local) = target;
   if (problem != null) throw problem;
   if (baseUrl == null) throw StateError('no active session');
   final api = ref.watch(tixApiFactoryProvider)(baseUrl, credential);
-  if (instance != null && instance.kind == InstanceKind.local) {
+  final instance = ref.read(sessionControllerProvider).value?.instance;
+  if (local && instance != null) {
     final engines = ref.watch(localEnginesProvider);
     api.transport.dio.interceptors.insert(
       0,
