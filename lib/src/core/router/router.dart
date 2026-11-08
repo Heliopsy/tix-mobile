@@ -27,6 +27,7 @@ import 'package:tix_mobile/src/features/tasks/presentation/task_list_screen.dart
 import 'package:tix_mobile/src/features/tasks/presentation/task_screen.dart';
 import 'package:tix_mobile/src/features/templates/presentation/templates_commands.dart';
 import 'package:tix_mobile/src/features/templates/presentation/templates_screen.dart';
+import 'package:tix_mobile/src/features/widgets/presentation/home_widgets_scope.dart';
 import 'package:tix_mobile/src/features/workflows/presentation/workflow_editor_screen.dart';
 import 'package:tix_mobile/src/features/workflows/presentation/workflows_screen.dart';
 
@@ -86,13 +87,15 @@ GoRouter router(Ref ref) {
       if (Routes.galleryEnabled)
         GoRoute(path: Routes.gallery, builder: (_, _) => const GalleryScreen()),
       StatefulShellRoute.indexedStack(
-        builder: (_, _, shell) => InboxAlertsScope(
-          child: QuickActionsHost(
-            child: TemplatesCommands(
-              child: SettingsCommands(
-                child: HomeShell(
-                  shell: shell,
-                  inboxIcon: (icon) => InboxNavIcon(icon: icon),
+        builder: (_, _, shell) => HomeWidgetsScope(
+          child: InboxAlertsScope(
+            child: QuickActionsHost(
+              child: TemplatesCommands(
+                child: SettingsCommands(
+                  child: HomeShell(
+                    shell: shell,
+                    inboxIcon: (icon) => InboxNavIcon(icon: icon),
+                  ),
                 ),
               ),
             ),

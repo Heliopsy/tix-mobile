@@ -3196,4 +3196,87 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get localInstanceWalLeftOver =>
       'Un journal d’écriture anticipée (write-ahead log) se trouvait déjà à côté de ce fichier. Un autre programme l’a peut-être ouvert, ou un client de synchronisation en a copié un depuis un autre appareil.';
+
+  @override
+  String get widgetMyWork => 'Mon travail';
+
+  @override
+  String get widgetInbox => 'Boîte de réception';
+
+  @override
+  String get widgetQuickAdd => 'Ajout rapide';
+
+  @override
+  String get widgetAddTask => 'Ajouter une tâche';
+
+  @override
+  String get widgetNothingDue => 'Rien ne vous est assigné';
+
+  @override
+  String get widgetAllRead => 'Tout est lu';
+
+  @override
+  String get widgetNoOpenTasks => 'Aucune tâche ouverte';
+
+  @override
+  String get widgetUpdated => 'Mis à jour';
+
+  @override
+  String get widgetOpenApp => 'Ouvrez tix pour charger ce widget';
+
+  @override
+  String get widgetLocalStale => 'Se met à jour quand tix est ouvert';
+
+  @override
+  String get widgetOverdue => 'En retard';
+
+  @override
+  String get widgetToday => 'Aujourd\'hui';
+
+  @override
+  String get widgetComplete => 'Terminer';
+
+  @override
+  String get widgetProjectMissing => 'Absent de ce contexte';
+
+  @override
+  String get widgetSignedOut => 'Connectez-vous à tix';
+
+  @override
+  String widgetMore(int count) {
+    return '+$count de plus';
+  }
+
+  @override
+  String widgetUnread(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count non lus',
+      one: '1 non lu',
+      zero: 'Rien de non lu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsWidgets => 'Widgets de l\'écran d\'accueil';
+
+  @override
+  String get settingsWidgetLockCounts =>
+      'Seulement les nombres sur l\'écran verrouillé';
+
+  @override
+  String get settingsWidgetLockCountsHelp =>
+      'Sur l\'écran verrouillé, les widgets indiquent combien, pas quoi.';
+
+  @override
+  String get settingsWidgetsHelp =>
+      'Ajoutez les widgets tix depuis votre écran d\'accueil. Ils montrent ce que l\'application a lu en dernier, et une coche attend l\'application si le serveur est injoignable.';
+
+  @override
+  String get widgetOpenUpdate => 'Ouvrez tix pour mettre à jour';
+
+  @override
+  String get widgetPickProject => 'Choisissez un projet';
 }

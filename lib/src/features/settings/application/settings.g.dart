@@ -99,7 +99,7 @@ final class ThemeSettingProvider
   }
 }
 
-String _$themeSettingHash() => r'1b44393a5071fc4125b3f3d5f846648b0f2ea91f';
+String _$themeSettingHash() => r'f334ffab8d93ffe33f8e20655c7b4716417f7a4e';
 
 /// The chosen theme.
 
@@ -158,7 +158,7 @@ final class SystemBlackSettingProvider
 }
 
 String _$systemBlackSettingHash() =>
-    r'6c72cd380dc1e7fca245e1937a222a743f5300ea';
+    r'5ef2f05e0c3faeca8fb5cd6e427f3703db0aa663';
 
 /// Whether the system theme goes pure black when the platform is dark.
 
@@ -261,7 +261,7 @@ final class LocaleSettingProvider
   }
 }
 
-String _$localeSettingHash() => r'6ae7248e6311223b285f08d855a705be774827f8';
+String _$localeSettingHash() => r'e3c6fab350efdff7d74f5c05c276013de2c3f387';
 
 /// The chosen language, null to follow the system.
 
@@ -276,6 +276,65 @@ abstract class _$LocaleSetting extends $Notifier<Locale?> {
             as $ClassProviderElement<
               AnyNotifier<Locale?, Locale?>,
               Locale?,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
+/// Whether widgets on the lock screen show counts only.
+
+@ProviderFor(WidgetLockCountsSetting)
+final widgetLockCountsSettingProvider = WidgetLockCountsSettingProvider._();
+
+/// Whether widgets on the lock screen show counts only.
+final class WidgetLockCountsSettingProvider
+    extends $NotifierProvider<WidgetLockCountsSetting, bool> {
+  /// Whether widgets on the lock screen show counts only.
+  WidgetLockCountsSettingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'widgetLockCountsSettingProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$widgetLockCountsSettingHash();
+
+  @$internal
+  @override
+  WidgetLockCountsSetting create() => WidgetLockCountsSetting();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$widgetLockCountsSettingHash() =>
+    r'6a2975127aa0aab0d2c26cf3c94f6cf0cebf1077';
+
+/// Whether widgets on the lock screen show counts only.
+
+abstract class _$WidgetLockCountsSetting extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
               Object?,
               Object?
             >;

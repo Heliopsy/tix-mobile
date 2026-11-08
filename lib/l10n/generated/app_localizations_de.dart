@@ -3201,4 +3201,86 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get localInstanceWalLeftOver =>
       'Neben dieser Datei lag bereits ein Write-Ahead-Log. Ein anderes Programm hat sie vielleicht geöffnet, oder ein Sync-Client hat eines von einem anderen Gerät kopiert.';
+
+  @override
+  String get widgetMyWork => 'Meine Arbeit';
+
+  @override
+  String get widgetInbox => 'Posteingang';
+
+  @override
+  String get widgetQuickAdd => 'Schnell hinzufügen';
+
+  @override
+  String get widgetAddTask => 'Aufgabe hinzufügen';
+
+  @override
+  String get widgetNothingDue => 'Nichts ist Ihnen zugewiesen';
+
+  @override
+  String get widgetAllRead => 'Alles gelesen';
+
+  @override
+  String get widgetNoOpenTasks => 'Keine offenen Aufgaben';
+
+  @override
+  String get widgetUpdated => 'Aktualisiert';
+
+  @override
+  String get widgetOpenApp => 'Öffnen Sie tix, um dieses Widget zu laden';
+
+  @override
+  String get widgetLocalStale => 'Wird aktualisiert, wenn tix geöffnet ist';
+
+  @override
+  String get widgetOverdue => 'Überfällig';
+
+  @override
+  String get widgetToday => 'Heute';
+
+  @override
+  String get widgetComplete => 'Erledigen';
+
+  @override
+  String get widgetProjectMissing => 'Nicht in diesem Kontext';
+
+  @override
+  String get widgetSignedOut => 'Melden Sie sich bei tix an';
+
+  @override
+  String widgetMore(int count) {
+    return '+$count weitere';
+  }
+
+  @override
+  String widgetUnread(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ungelesen',
+      one: '1 ungelesen',
+      zero: 'Nichts ungelesen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsWidgets => 'Startbildschirm-Widgets';
+
+  @override
+  String get settingsWidgetLockCounts => 'Nur Anzahlen auf dem Sperrbildschirm';
+
+  @override
+  String get settingsWidgetLockCountsHelp =>
+      'Widgets auf dem Sperrbildschirm zeigen, wie viele, nicht was.';
+
+  @override
+  String get settingsWidgetsHelp =>
+      'Fügen Sie tix-Widgets auf Ihrem Startbildschirm hinzu. Sie zeigen, was die App zuletzt gelesen hat, und ein Haken wartet auf die App, wenn der Server nicht erreichbar ist.';
+
+  @override
+  String get widgetOpenUpdate => 'Öffnen Sie tix zum Aktualisieren';
+
+  @override
+  String get widgetPickProject => 'Projekt wählen';
 }

@@ -3176,4 +3176,86 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get localInstanceWalLeftOver =>
       'A write-ahead log was already beside this file. Another program may have it open, or a sync client copied one from another device.';
+
+  @override
+  String get widgetMyWork => 'My work';
+
+  @override
+  String get widgetInbox => 'Inbox';
+
+  @override
+  String get widgetQuickAdd => 'Quick add';
+
+  @override
+  String get widgetAddTask => 'Add a task';
+
+  @override
+  String get widgetNothingDue => 'Nothing assigned to you';
+
+  @override
+  String get widgetAllRead => 'All caught up';
+
+  @override
+  String get widgetNoOpenTasks => 'No open tasks';
+
+  @override
+  String get widgetUpdated => 'Updated';
+
+  @override
+  String get widgetOpenApp => 'Open tix to load this widget';
+
+  @override
+  String get widgetLocalStale => 'Refreshes when tix is open';
+
+  @override
+  String get widgetOverdue => 'Overdue';
+
+  @override
+  String get widgetToday => 'Today';
+
+  @override
+  String get widgetComplete => 'Complete';
+
+  @override
+  String get widgetProjectMissing => 'Not in this context';
+
+  @override
+  String get widgetSignedOut => 'Sign in to tix';
+
+  @override
+  String widgetMore(int count) {
+    return '+$count more';
+  }
+
+  @override
+  String widgetUnread(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count unread',
+      one: '1 unread',
+      zero: 'Nothing unread',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsWidgets => 'Home screen widgets';
+
+  @override
+  String get settingsWidgetLockCounts => 'Counts only on the lock screen';
+
+  @override
+  String get settingsWidgetLockCountsHelp =>
+      'Widgets on the lock screen say how many, not what.';
+
+  @override
+  String get settingsWidgetsHelp =>
+      'Add tix widgets from your home screen. They show what the app last read, and a tick waits for the app if it cannot reach the server.';
+
+  @override
+  String get widgetOpenUpdate => 'Open tix to update';
+
+  @override
+  String get widgetPickProject => 'Pick a project';
 }

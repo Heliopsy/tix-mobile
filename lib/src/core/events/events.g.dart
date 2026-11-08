@@ -101,6 +101,47 @@ final class AppResumedProvider
 
 String _$appResumedHash() => r'a48e02764c6328223e6f2e16cbf9f6bc79a70526';
 
+/// Fires each time the app goes out of sight, the moment a home screen and
+/// its widgets come back into view.
+
+@ProviderFor(appHidden)
+final appHiddenProvider = AppHiddenProvider._();
+
+/// Fires each time the app goes out of sight, the moment a home screen and
+/// its widgets come back into view.
+
+final class AppHiddenProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, Stream<void>>
+    with $FutureModifier<void>, $StreamProvider<void> {
+  /// Fires each time the app goes out of sight, the moment a home screen and
+  /// its widgets come back into view.
+  AppHiddenProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appHiddenProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appHiddenHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<void> create(Ref ref) {
+    return appHidden(ref);
+  }
+}
+
+String _$appHiddenHash() => r'e5ccc5451e58cfa6fb5785aedcb6ae00783dae73';
+
 /// The event stream of the active context, null while there is none or it
 /// cannot be reached. Rebuilt, with a fresh cursor, when the context
 /// changes.

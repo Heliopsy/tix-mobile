@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
@@ -115,6 +116,28 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ],
           ),
+          if (ref.watch(widgetBridgeProvider).supported)
+            TixSection(
+              key: const Key('settings.widgets'),
+              title: l10n.settingsWidgets,
+              children: [
+                padded(
+                  Text(
+                    l10n.settingsWidgetsHelp,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+                TixSwitchRow(
+                  key: const Key('settings.widgetLockCounts'),
+                  title: l10n.settingsWidgetLockCounts,
+                  subtitle: l10n.settingsWidgetLockCountsHelp,
+                  value: ref.watch(widgetLockCountsSettingProvider),
+                  onChanged: (on) => ref
+                      .read(widgetLockCountsSettingProvider.notifier)
+                      .set(on: on),
+                ),
+              ],
+            ),
           TixSection(
             title: l10n.instancesTitle,
             trailing: TixButton.primary(
