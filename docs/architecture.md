@@ -252,9 +252,9 @@ flowchart LR
   Apple platforms bookmark the folder because SQLite must create files beside the database. The bookmark is
   resolved and access started before the engine starts and released after it stops; a stale one is renewed and
   saved through `LocalEngines.renewed`. On Android `MANAGE_EXTERNAL_STORAGE` lives in an overlay manifest
-  (`android/app/src/allFilesAccess/`) that Gradle merges unless the build passes `-PtixAllFilesAccess=false`, which a
-  Google Play build should, since Play restricts the permission; the app offers open in place only when the
-  permission is declared. SAF content URIs are never used: SQLite cannot lock through them.
+  (`android/app/src/allFilesAccess/`) that Gradle merges unless the build passes `-PtixAllFilesAccess=false`, which
+  `just build-aab` (the Google Play bundle) does, since Play restricts the permission; the app offers open in place
+  only when the permission is declared. SAF content URIs are never used: SQLite cannot lock through them.
 - **Sync safety.** Before opening in place, `probeInPlace` (`data/local/in_place.dart`) checks the folder takes new
   files, the file starts with the SQLite header and can be locked; an iCloud file not yet downloaded is refused.
   Conflict copies (`name (conflicted copy ...).db`, `name.sync-conflict-....db`, `name (1).db`, `name 2.db`) and a
