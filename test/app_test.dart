@@ -109,6 +109,8 @@ void main() {
     await tester.tap(find.text('Български'));
     await tester.pumpAndSettle();
     expect(find.text('Настройки'), findsWidgets);
+    await tester.ensureVisible(find.byKey(const Key('settings.signOut')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('settings.signOut')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('confirm.ok')));

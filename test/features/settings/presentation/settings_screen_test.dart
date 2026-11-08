@@ -155,12 +155,16 @@ void main() {
   testWidgets('sign out asks first and forgets the token', (tester) async {
     final c = await pump(tester);
     expect(find.text('Signed in as @ana'), findsOneWidget);
+    await tester.ensureVisible(find.byKey(const Key('settings.signOut')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('settings.signOut')));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Cancel'));
     await tester.pumpAndSettle();
     expect(stores.secrets.values.containsKey('token.c1'), isTrue);
 
+    await tester.ensureVisible(find.byKey(const Key('settings.signOut')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('settings.signOut')));
     await tester.pumpAndSettle();
     expect(
