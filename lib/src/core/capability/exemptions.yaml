@@ -68,12 +68,6 @@ pending:
     - task.lease
     - task.tags
     - task.transition
-    - template.delete
-    - template.list
-    - template.save
-    - template.show
-    - template.update
-    - template.use
     - time.prefs.set
     - time.settings
   # Wave 2, team: projects, workflows, fields, users, members, invites, tokens, calendar, export.
@@ -106,7 +100,6 @@ pending:
     - snapshot.import
     - status.read
     - task.export
-    - task.import
     - token.create
     - token.list
     - token.revoke

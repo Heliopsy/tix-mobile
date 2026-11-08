@@ -27,6 +27,12 @@ abstract final class Routes {
   /// Every task, as a list, a board or lanes.
   static const tasks = '/tasks';
 
+  /// Task templates.
+  static const templates = '/templates';
+
+  /// The inbox, once it is routed.
+  static const inbox = '/inbox';
+
   /// The reader's open assigned work by deadline.
   static const myWork = '/mine';
 

@@ -233,11 +233,15 @@ class QuickAddField extends StatelessWidget {
     this.preview = const [],
     this.fieldKey,
     this.submitKey,
+    this.focusNode,
     super.key,
   });
 
   /// The line.
   final TextEditingController controller;
+
+  /// The field's focus, to keep typing after a send.
+  final FocusNode? focusNode;
 
   /// Sends the line.
   final VoidCallback onSubmit;
@@ -280,6 +284,7 @@ class QuickAddField extends StatelessWidget {
               child: TextField(
                 key: fieldKey,
                 controller: controller,
+                focusNode: focusNode,
                 autofocus: autofocus,
                 enabled: !busy,
                 textInputAction: TextInputAction.done,

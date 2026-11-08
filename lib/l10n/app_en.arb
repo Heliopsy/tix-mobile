@@ -882,5 +882,156 @@
       }
     }
   },
-  "boardAssignTo": "Assign to…"
+  "boardAssignTo": "Assign to…",
+  "quickAddProject": "Project",
+  "quickAddPickProject": "Choose a project",
+  "quickAddNoProjects": "There is no project to add to yet.",
+  "quickAddAnother": "Add another",
+  "quickAddAnotherHelp": "Stay open for the next line",
+  "quickAddPreviewRefused": "The server would refuse this: {reason}",
+  "@quickAddPreviewRefused": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "quickAddPreviewOff": "This connection cannot preview lines; adding still works.",
+  "quickAddOffline": "Adding needs a connection to the server. The line is kept; try again when you are online.",
+  "quickAddChipPriority": "priority",
+  "quickAddChipTag": "tag",
+  "quickAddChipAssignee": "assignee",
+  "quickAddChipDue": "due",
+  "quickAddChipStatus": "status",
+  "quickAddChipParent": "parent",
+  "quickAddChipTitle": "title",
+  "quickAddSuggestions": "Suggestions",
+  "quickAddTemplates": "From a template",
+  "quickAddManageTemplates": "Templates",
+  "quickAddPaste": "Quick add from the clipboard",
+  "quickAddClipboardEmpty": "The clipboard holds no text.",
+  "paletteGroupProjects": "Projects",
+  "paletteGroupRecent": "Recent tasks",
+  "paletteGroupContexts": "Switch to",
+  "paletteGroupTheme": "Theme",
+  "paletteGroupTemplates": "Templates",
+  "paletteOpenTask": "Open {ref}",
+  "@paletteOpenTask": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteGoInbox": "Go to inbox",
+  "paletteGoMyWork": "Go to my work",
+  "paletteGoTemplates": "Go to templates",
+  "paletteThemeLight": "Light theme",
+  "paletteThemeDark": "Dark theme",
+  "paletteThemeSystem": "Theme of the system",
+  "paletteUseTemplate": "New task from {name}",
+  "@paletteUseTemplate": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "templatesTitle": "Templates",
+  "templatesSubtitle": "Tasks you add often, one tap away",
+  "templateNew": "New template",
+  "templatesEmpty": "No templates yet.",
+  "templatesEmptyBody": "Save a task as a template to add it again in one tap.",
+  "templateEveryProject": "Every project",
+  "templateUses": "{count, plural, =0{Never used} =1{Used once} other{Used {count} times}}",
+  "@templateUses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "templateSubtasks": "{count, plural, =1{1 subtask} other{{count} subtasks}}",
+  "@templateSubtasks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "templateUse": "Use",
+  "templateEdit": "Edit template",
+  "templateDelete": "Delete template",
+  "templateDeleteTitle": "Delete {name}?",
+  "@templateDeleteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "templateDeleteBody": "Tasks made from it stay.",
+  "templateDeleted": "Deleted {name}",
+  "@templateDeleted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "templateSaved": "Saved {name}",
+  "@templateSaved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "templateName": "Name",
+  "templateNameHelp": "Unique in the tenant, at most 100 characters.",
+  "templateFromTask": "From a task",
+  "templateFromScratch": "From scratch",
+  "templateTaskRef": "Task",
+  "templateTaskRefHelp": "The reference of the task to keep, such as ops-12.",
+  "templateWithSubtasks": "Keep its subtasks",
+  "templateTenantWide": "Share with every project",
+  "templateDueIn": "Due after",
+  "templateDueInHelp": "How long after a use the task falls due, such as 3d or 2w. Empty for none.",
+  "templateScratchNote": "tix keeps templates from tasks, so this also adds the task to the project.",
+  "templateTitle": "Title",
+  "templateTitleHelp": "{date}, {n} and {project} are filled in on each use.",
+  "@templateTitleHelp": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "n": {
+        "type": "String"
+      },
+      "project": {
+        "type": "String"
+      }
+    }
+  },
+  "templateBody": "Description",
+  "templatePriority": "Priority",
+  "templateTags": "Tags",
+  "templateTagsHelp": "Separated by spaces or commas.",
+  "templateRecurrence": "Repeats",
+  "templateRecurrenceHelp": "Such as every 2 weeks. Empty for none.",
+  "templateSave": "Save",
+  "templateCreate": "Save template",
+  "templateRecentTasks": "Recently opened",
+  "appShortcutInbox": "Inbox",
+  "appShortcutMyWork": "My work",
+  "templateDeleteAction": "Delete",
+  "templateMore": "More actions",
+  "templateGeneralError": "Could not save: {reason}",
+  "@templateGeneralError": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  }
 }
