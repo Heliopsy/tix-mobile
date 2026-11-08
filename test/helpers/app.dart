@@ -22,8 +22,8 @@ import 'package:tix_mobile/src/data/cache/cache_store.dart';
 import 'package:tix_mobile/src/data/local/local_engine.dart';
 
 import 'fake_events.dart';
-import 'fake_notes.dart';
 import 'fake_local_access.dart';
+import 'fake_notes.dart';
 import 'fake_tix.dart';
 import 'stores.dart';
 
