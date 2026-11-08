@@ -74,3 +74,13 @@ path = [
 ]
 SPDX-FileCopyrightText = "tix-mobile contributors"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+# Generator configs that carry the SPDX header they stamp onto generated Dart
+# as a quoted string. reuse reads that string, closing quote included, as this
+# file's own (invalid) licence expression, so the file's contents are
+# overridden rather than parsed.
+[[annotations]]
+path = ["build.yaml", "l10n.yaml"]
+precedence = "override"
+SPDX-FileCopyrightText = "tix-mobile contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
