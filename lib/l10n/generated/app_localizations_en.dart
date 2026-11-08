@@ -2167,4 +2167,117 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get themeSystemBlackHelp =>
       'Uses OLED black whenever the system is dark. Saves battery on OLED screens.';
+
+  @override
+  String get goAbout => 'About tix';
+
+  @override
+  String get aboutTagline => 'The tix client for phones and desktops';
+
+  @override
+  String aboutVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get aboutIntro =>
+      'tix-mobile is the app for tix, the open source task tracker. It works with any tix server, or runs tix on this device with no server at all. The server decides what happens to your work, so tasks behave exactly as they do in tix\'s web app and on the command line.';
+
+  @override
+  String get aboutVersions => 'Versions';
+
+  @override
+  String get aboutAppVersion => 'App';
+
+  @override
+  String get aboutEngineVersion => 'Embedded engine';
+
+  @override
+  String get aboutEngineNone => 'Not in this build';
+
+  @override
+  String get aboutServerVersion => 'Server';
+
+  @override
+  String get aboutServerNone => 'Not connected';
+
+  @override
+  String get aboutServerUnknown => 'Could not be read';
+
+  @override
+  String get aboutLinks => 'Links';
+
+  @override
+  String get aboutWebsite => 'Website';
+
+  @override
+  String get aboutSource => 'Source code';
+
+  @override
+  String get aboutSourceHelp =>
+      'The complete source of this app, as the AGPL offers it';
+
+  @override
+  String get aboutRoadmap => 'Roadmap';
+
+  @override
+  String get aboutRoadmapHelp => 'What is planned next';
+
+  @override
+  String get aboutChangelog => 'Changelog';
+
+  @override
+  String get aboutChangelogHelp => 'What changed in each release';
+
+  @override
+  String get aboutServerProject => 'tix server';
+
+  @override
+  String get aboutServerProjectHelp =>
+      'The server, the web app and the command line';
+
+  @override
+  String get aboutSecurity => 'Security policy';
+
+  @override
+  String get aboutSecurityHelp => 'How to report a vulnerability privately';
+
+  @override
+  String get aboutHelp => 'Something wrong?';
+
+  @override
+  String get aboutReportBug => 'Report a bug';
+
+  @override
+  String get aboutReportBugHelp =>
+      'Opens a new GitHub issue with the versions above filled in. Never paste an API token.';
+
+  @override
+  String get aboutCopyDiagnostics => 'Copy diagnostics';
+
+  @override
+  String get aboutDiagnosticsCopied => 'Diagnostics copied.';
+
+  @override
+  String get aboutIncludeServer => 'Include the server address';
+
+  @override
+  String get aboutIncludeServerHelp =>
+      'Off keeps a private server\'s address out of what you copy.';
+
+  @override
+  String get aboutLicence => 'Licence';
+
+  @override
+  String get aboutLicenceBody =>
+      'tix-mobile is free software under the GNU AGPL, version 3 or later. Contributions are accepted under the project\'s contributor licence agreement (CLA).';
+
+  @override
+  String get aboutLicences => 'Licences';
+
+  @override
+  String get aboutLicencesHelp => 'The open source software inside this app';
+
+  @override
+  String get aboutOpenFailed => 'Could not open the link.';
 }

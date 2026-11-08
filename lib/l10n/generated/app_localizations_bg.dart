@@ -2170,4 +2170,117 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String get themeSystemBlackHelp =>
       'Използва OLED черна тема, когато системата е тъмна. Пести батерия на OLED екрани.';
+
+  @override
+  String get goAbout => 'За tix';
+
+  @override
+  String get aboutTagline => 'Клиентът на tix за телефони и компютри';
+
+  @override
+  String aboutVersion(String version) {
+    return 'Версия $version';
+  }
+
+  @override
+  String get aboutIntro =>
+      'tix-mobile е приложението за tix, проследяването на задачи с отворен код. Работи с всеки tix сървър или пуска tix на това устройство изобщо без сървър. Сървърът решава какво става с работата ви, така че задачите се държат точно както в уеб приложението и командния ред на tix.';
+
+  @override
+  String get aboutVersions => 'Версии';
+
+  @override
+  String get aboutAppVersion => 'Приложение';
+
+  @override
+  String get aboutEngineVersion => 'Вграден двигател';
+
+  @override
+  String get aboutEngineNone => 'Не е в тази версия';
+
+  @override
+  String get aboutServerVersion => 'Сървър';
+
+  @override
+  String get aboutServerNone => 'Няма връзка';
+
+  @override
+  String get aboutServerUnknown => 'Не може да се прочете';
+
+  @override
+  String get aboutLinks => 'Връзки';
+
+  @override
+  String get aboutWebsite => 'Уебсайт';
+
+  @override
+  String get aboutSource => 'Изходен код';
+
+  @override
+  String get aboutSourceHelp =>
+      'Пълният изходен код на приложението, както го предлага AGPL';
+
+  @override
+  String get aboutRoadmap => 'Пътна карта';
+
+  @override
+  String get aboutRoadmapHelp => 'Какво предстои';
+
+  @override
+  String get aboutChangelog => 'Промени';
+
+  @override
+  String get aboutChangelogHelp => 'Какво е ново във всяка версия';
+
+  @override
+  String get aboutServerProject => 'Сървърът tix';
+
+  @override
+  String get aboutServerProjectHelp =>
+      'Сървърът, уеб приложението и командният ред';
+
+  @override
+  String get aboutSecurity => 'Политика за сигурност';
+
+  @override
+  String get aboutSecurityHelp => 'Как да съобщите за уязвимост поверително';
+
+  @override
+  String get aboutHelp => 'Нещо не е наред?';
+
+  @override
+  String get aboutReportBug => 'Съобщете за грешка';
+
+  @override
+  String get aboutReportBugHelp =>
+      'Отваря нов проблем в GitHub с горните версии вече попълнени. Никога не поставяйте API токен.';
+
+  @override
+  String get aboutCopyDiagnostics => 'Копиране на диагностика';
+
+  @override
+  String get aboutDiagnosticsCopied => 'Диагностиката е копирана.';
+
+  @override
+  String get aboutIncludeServer => 'Включване на адреса на сървъра';
+
+  @override
+  String get aboutIncludeServerHelp =>
+      'Изключено пази адреса на частен сървър извън копираното.';
+
+  @override
+  String get aboutLicence => 'Лиценз';
+
+  @override
+  String get aboutLicenceBody =>
+      'tix-mobile е свободен софтуер под GNU AGPL, версия 3 или по-нова. Приносите се приемат съгласно споразумението за принос на проекта (CLA).';
+
+  @override
+  String get aboutLicences => 'Лицензи';
+
+  @override
+  String get aboutLicencesHelp => 'Софтуерът с отворен код в това приложение';
+
+  @override
+  String get aboutOpenFailed => 'Връзката не може да се отвори.';
 }

@@ -3710,6 +3710,216 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Uses OLED black whenever the system is dark. Saves battery on OLED screens.'**
   String get themeSystemBlackHelp;
+
+  /// Command palette entry that opens the About screen.
+  ///
+  /// In en, this message translates to:
+  /// **'About tix'**
+  String get goAbout;
+
+  /// No description provided for @aboutTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'The tix client for phones and desktops'**
+  String get aboutTagline;
+
+  /// No description provided for @aboutVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String aboutVersion(String version);
+
+  /// No description provided for @aboutIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'tix-mobile is the app for tix, the open source task tracker. It works with any tix server, or runs tix on this device with no server at all. The server decides what happens to your work, so tasks behave exactly as they do in tix\'s web app and on the command line.'**
+  String get aboutIntro;
+
+  /// No description provided for @aboutVersions.
+  ///
+  /// In en, this message translates to:
+  /// **'Versions'**
+  String get aboutVersions;
+
+  /// No description provided for @aboutAppVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'App'**
+  String get aboutAppVersion;
+
+  /// No description provided for @aboutEngineVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Embedded engine'**
+  String get aboutEngineVersion;
+
+  /// No description provided for @aboutEngineNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Not in this build'**
+  String get aboutEngineNone;
+
+  /// No description provided for @aboutServerVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Server'**
+  String get aboutServerVersion;
+
+  /// No description provided for @aboutServerNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected'**
+  String get aboutServerNone;
+
+  /// No description provided for @aboutServerUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not be read'**
+  String get aboutServerUnknown;
+
+  /// No description provided for @aboutLinks.
+  ///
+  /// In en, this message translates to:
+  /// **'Links'**
+  String get aboutLinks;
+
+  /// No description provided for @aboutWebsite.
+  ///
+  /// In en, this message translates to:
+  /// **'Website'**
+  String get aboutWebsite;
+
+  /// No description provided for @aboutSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Source code'**
+  String get aboutSource;
+
+  /// No description provided for @aboutSourceHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The complete source of this app, as the AGPL offers it'**
+  String get aboutSourceHelp;
+
+  /// No description provided for @aboutRoadmap.
+  ///
+  /// In en, this message translates to:
+  /// **'Roadmap'**
+  String get aboutRoadmap;
+
+  /// No description provided for @aboutRoadmapHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'What is planned next'**
+  String get aboutRoadmapHelp;
+
+  /// No description provided for @aboutChangelog.
+  ///
+  /// In en, this message translates to:
+  /// **'Changelog'**
+  String get aboutChangelog;
+
+  /// No description provided for @aboutChangelogHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'What changed in each release'**
+  String get aboutChangelogHelp;
+
+  /// No description provided for @aboutServerProject.
+  ///
+  /// In en, this message translates to:
+  /// **'tix server'**
+  String get aboutServerProject;
+
+  /// No description provided for @aboutServerProjectHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The server, the web app and the command line'**
+  String get aboutServerProjectHelp;
+
+  /// No description provided for @aboutSecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Security policy'**
+  String get aboutSecurity;
+
+  /// No description provided for @aboutSecurityHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'How to report a vulnerability privately'**
+  String get aboutSecurityHelp;
+
+  /// No description provided for @aboutHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Something wrong?'**
+  String get aboutHelp;
+
+  /// No description provided for @aboutReportBug.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a bug'**
+  String get aboutReportBug;
+
+  /// No description provided for @aboutReportBugHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens a new GitHub issue with the versions above filled in. Never paste an API token.'**
+  String get aboutReportBugHelp;
+
+  /// No description provided for @aboutCopyDiagnostics.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy diagnostics'**
+  String get aboutCopyDiagnostics;
+
+  /// No description provided for @aboutDiagnosticsCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Diagnostics copied.'**
+  String get aboutDiagnosticsCopied;
+
+  /// No description provided for @aboutIncludeServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Include the server address'**
+  String get aboutIncludeServer;
+
+  /// No description provided for @aboutIncludeServerHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Off keeps a private server\'s address out of what you copy.'**
+  String get aboutIncludeServerHelp;
+
+  /// No description provided for @aboutLicence.
+  ///
+  /// In en, this message translates to:
+  /// **'Licence'**
+  String get aboutLicence;
+
+  /// No description provided for @aboutLicenceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'tix-mobile is free software under the GNU AGPL, version 3 or later. Contributions are accepted under the project\'s contributor licence agreement (CLA).'**
+  String get aboutLicenceBody;
+
+  /// No description provided for @aboutLicences.
+  ///
+  /// In en, this message translates to:
+  /// **'Licences'**
+  String get aboutLicences;
+
+  /// No description provided for @aboutLicencesHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The open source software inside this app'**
+  String get aboutLicencesHelp;
+
+  /// No description provided for @aboutOpenFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open the link.'**
+  String get aboutOpenFailed;
 }
 
 class _AppLocalizationsDelegate

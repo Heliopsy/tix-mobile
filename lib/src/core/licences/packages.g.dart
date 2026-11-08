@@ -79,6 +79,8 @@ const runtimePackages = <String>{
   'mime',
   'objective_c',
   'package_config',
+  'package_info_plus',
+  'package_info_plus_platform_interface',
   'path',
   'path_provider',
   'path_provider_android',

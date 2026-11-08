@@ -120,7 +120,7 @@ void main() {
     expect(find.textContaining('1 instance · Home'), findsOneWidget);
   });
 
-  testWidgets('about shows the tix mark beside the app name', (tester) async {
+  testWidgets('about opens the About screen', (tester) async {
     await pump(tester);
     final about = find.byKey(const Key('settings.about'));
     await tester.scrollUntilVisible(
@@ -132,16 +132,12 @@ void main() {
           )
           .first,
     );
+    expect(
+      find.descendant(of: about, matching: find.byType(TixMark)),
+      findsOneWidget,
+    );
     await tester.tap(about);
     await tester.pumpAndSettle();
-    final dialog = find.byType(AboutDialog);
-    expect(
-      find.descendant(of: dialog, matching: find.byType(TixMark)),
-      findsOneWidget,
-    );
-    expect(
-      find.descendant(of: dialog, matching: find.text('tix')),
-      findsOneWidget,
-    );
+    expect(find.text('route:/settings/about'), findsOneWidget);
   });
 }
