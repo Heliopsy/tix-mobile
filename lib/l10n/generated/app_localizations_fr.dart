@@ -3279,4 +3279,52 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get widgetPickProject => 'Choisissez un projet';
+
+  @override
+  String liveStatusLabel(String state) {
+    return 'Mises à jour en direct : $state';
+  }
+
+  @override
+  String get liveStatusLive => 'En direct';
+
+  @override
+  String get liveStatusLiveInfo =>
+      'Les modifications faites ailleurs apparaissent ici dès qu’elles ont lieu.';
+
+  @override
+  String get liveStatusConnecting => 'Connexion';
+
+  @override
+  String get liveStatusConnectingInfo =>
+      'Connexion aux mises à jour en direct. Les modifications apparaîtront une fois la connexion établie.';
+
+  @override
+  String get liveStatusPolling => 'Interrogation';
+
+  @override
+  String get liveStatusPollingInfo =>
+      'La connexion en direct échoue sans cesse sur ce réseau, les mises à jour passent donc par HTTP. Elles peuvent arriver quelques secondes plus tard.';
+
+  @override
+  String get liveStatusRefreshing => 'Actualisation';
+
+  @override
+  String liveStatusRefreshingInfo(int seconds) {
+    return 'Les mises à jour en direct ne passent pas et ce serveur est trop ancien pour être interrogé, l’écran se recharge donc toutes les $seconds secondes.';
+  }
+
+  @override
+  String get liveStatusOffline => 'Hors ligne';
+
+  @override
+  String get liveStatusOfflineInfo =>
+      'Le serveur est injoignable. L’application réessaie et rattrapera son retard dès son retour.';
+
+  @override
+  String get liveStatusUnavailable => 'Indisponible';
+
+  @override
+  String get liveStatusUnavailableInfo =>
+      'Cette connexion ne peut pas suivre les mises à jour en direct (il lui faut la portée event:subscribe). Tirez vers le bas pour actualiser.';
 }

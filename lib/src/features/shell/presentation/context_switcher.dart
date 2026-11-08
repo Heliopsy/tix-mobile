@@ -11,6 +11,7 @@ import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/widgets/confirm.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
+import 'package:tix_mobile/src/features/shell/presentation/live_status.dart';
 
 /// "Instance › Tenant" for [session].
 String contextTitle(Session session) {
@@ -86,7 +87,17 @@ class ContextSwitcherButton extends ConsumerWidget {
               width: 64,
               child: Column(
                 children: [
-                  avatar,
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      avatar,
+                      const Positioned(
+                        right: -2,
+                        bottom: -2,
+                        child: LiveStatusIndicator(compact: true),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 4),
                   Text(
                     session.connection.tenantLabel.isEmpty
@@ -145,6 +156,7 @@ class ContextSwitcherButton extends ConsumerWidget {
                       ],
                     ),
                   ),
+                  const LiveStatusIndicator(),
                   const Icon(Icons.unfold_more),
                 ],
               ),

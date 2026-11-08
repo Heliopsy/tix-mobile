@@ -908,5 +908,18 @@
   "settingsWidgetLockCountsHelp": "Widgets auf dem Sperrbildschirm zeigen, wie viele, nicht was.",
   "settingsWidgetsHelp": "Fügen Sie tix-Widgets auf Ihrem Startbildschirm hinzu. Sie zeigen, was die App zuletzt gelesen hat, und ein Haken wartet auf die App, wenn der Server nicht erreichbar ist.",
   "widgetOpenUpdate": "Öffnen Sie tix zum Aktualisieren",
-  "widgetPickProject": "Projekt wählen"
+  "widgetPickProject": "Projekt wählen",
+  "liveStatusLabel": "Live-Aktualisierungen: {state}",
+  "liveStatusLive": "Live",
+  "liveStatusLiveInfo": "Änderungen von anderswo erscheinen hier, sobald sie passieren.",
+  "liveStatusConnecting": "Verbinden",
+  "liveStatusConnectingInfo": "Verbindung zu Live-Aktualisierungen wird aufgebaut. Änderungen erscheinen, sobald sie steht.",
+  "liveStatusPolling": "Abfrage",
+  "liveStatusPollingInfo": "Die Live-Verbindung bricht in diesem Netz immer wieder ab, daher kommen Aktualisierungen über einfaches HTTP. Sie können einige Sekunden später eintreffen.",
+  "liveStatusRefreshing": "Aktualisierung",
+  "liveStatusRefreshingInfo": "Live-Aktualisierungen kommen nicht durch und dieser Server ist zu alt für Abfragen, daher lädt der Bildschirm alle {seconds} Sekunden neu.",
+  "liveStatusOffline": "Offline",
+  "liveStatusOfflineInfo": "Der Server ist nicht erreichbar. Die App versucht es weiter und holt auf, sobald er wieder da ist.",
+  "liveStatusUnavailable": "Nicht verfügbar",
+  "liveStatusUnavailableInfo": "Diese Verbindung darf keine Live-Aktualisierungen verfolgen (sie braucht den Scope event:subscribe). Zum Aktualisieren nach unten ziehen."
 }

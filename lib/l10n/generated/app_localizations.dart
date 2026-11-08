@@ -5556,6 +5556,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pick a project'**
   String get widgetPickProject;
+
+  /// No description provided for @liveStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Live updates: {state}'**
+  String liveStatusLabel(String state);
+
+  /// No description provided for @liveStatusLive.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get liveStatusLive;
+
+  /// No description provided for @liveStatusLiveInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes made elsewhere show up here as they happen.'**
+  String get liveStatusLiveInfo;
+
+  /// No description provided for @liveStatusConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting'**
+  String get liveStatusConnecting;
+
+  /// No description provided for @liveStatusConnectingInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting to live updates. Changes show up once it is through.'**
+  String get liveStatusConnectingInfo;
+
+  /// No description provided for @liveStatusPolling.
+  ///
+  /// In en, this message translates to:
+  /// **'Polling'**
+  String get liveStatusPolling;
+
+  /// No description provided for @liveStatusPollingInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The live connection keeps failing on this network, so updates come over plain HTTP instead. They can take a few seconds longer.'**
+  String get liveStatusPollingInfo;
+
+  /// No description provided for @liveStatusRefreshing.
+  ///
+  /// In en, this message translates to:
+  /// **'Refreshing'**
+  String get liveStatusRefreshing;
+
+  /// No description provided for @liveStatusRefreshingInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Live updates do not get through and this server is too old to poll, so the screen reloads every {seconds} seconds.'**
+  String liveStatusRefreshingInfo(int seconds);
+
+  /// No description provided for @liveStatusOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get liveStatusOffline;
+
+  /// No description provided for @liveStatusOfflineInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The server cannot be reached. The app keeps trying and catches up when it is back.'**
+  String get liveStatusOfflineInfo;
+
+  /// No description provided for @liveStatusUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Not available'**
+  String get liveStatusUnavailable;
+
+  /// No description provided for @liveStatusUnavailableInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'This connection may not follow live updates (it needs the event:subscribe scope). Pull down to refresh instead.'**
+  String get liveStatusUnavailableInfo;
 }
 
 class _AppLocalizationsDelegate

@@ -908,5 +908,18 @@
   "settingsWidgetLockCountsHelp": "Sur l'écran verrouillé, les widgets indiquent combien, pas quoi.",
   "settingsWidgetsHelp": "Ajoutez les widgets tix depuis votre écran d'accueil. Ils montrent ce que l'application a lu en dernier, et une coche attend l'application si le serveur est injoignable.",
   "widgetOpenUpdate": "Ouvrez tix pour mettre à jour",
-  "widgetPickProject": "Choisissez un projet"
+  "widgetPickProject": "Choisissez un projet",
+  "liveStatusLabel": "Mises à jour en direct : {state}",
+  "liveStatusLive": "En direct",
+  "liveStatusLiveInfo": "Les modifications faites ailleurs apparaissent ici dès qu’elles ont lieu.",
+  "liveStatusConnecting": "Connexion",
+  "liveStatusConnectingInfo": "Connexion aux mises à jour en direct. Les modifications apparaîtront une fois la connexion établie.",
+  "liveStatusPolling": "Interrogation",
+  "liveStatusPollingInfo": "La connexion en direct échoue sans cesse sur ce réseau, les mises à jour passent donc par HTTP. Elles peuvent arriver quelques secondes plus tard.",
+  "liveStatusRefreshing": "Actualisation",
+  "liveStatusRefreshingInfo": "Les mises à jour en direct ne passent pas et ce serveur est trop ancien pour être interrogé, l’écran se recharge donc toutes les {seconds} secondes.",
+  "liveStatusOffline": "Hors ligne",
+  "liveStatusOfflineInfo": "Le serveur est injoignable. L’application réessaie et rattrapera son retard dès son retour.",
+  "liveStatusUnavailable": "Indisponible",
+  "liveStatusUnavailableInfo": "Cette connexion ne peut pas suivre les mises à jour en direct (il lui faut la portée event:subscribe). Tirez vers le bas pour actualiser."
 }

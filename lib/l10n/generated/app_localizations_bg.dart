@@ -3260,4 +3260,52 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get widgetPickProject => 'Изберете проект';
+
+  @override
+  String liveStatusLabel(String state) {
+    return 'Обновявания на живо: $state';
+  }
+
+  @override
+  String get liveStatusLive => 'На живо';
+
+  @override
+  String get liveStatusLiveInfo =>
+      'Промените, направени другаде, се появяват тук веднага.';
+
+  @override
+  String get liveStatusConnecting => 'Свързване';
+
+  @override
+  String get liveStatusConnectingInfo =>
+      'Свързване към обновяванията на живо. Промените ще се появят, щом връзката се осъществи.';
+
+  @override
+  String get liveStatusPolling => 'Запитване';
+
+  @override
+  String get liveStatusPollingInfo =>
+      'Връзката на живо не се задържа в тази мрежа, затова обновяванията идват по обикновен HTTP. Може да закъсняват с няколко секунди.';
+
+  @override
+  String get liveStatusRefreshing => 'Опресняване';
+
+  @override
+  String liveStatusRefreshingInfo(int seconds) {
+    return 'Обновяванията на живо не достигат до приложението, а сървърът е твърде стар за запитвания, затова екранът се презарежда на всеки $seconds секунди.';
+  }
+
+  @override
+  String get liveStatusOffline => 'Няма връзка';
+
+  @override
+  String get liveStatusOfflineInfo =>
+      'Сървърът не е достъпен. Приложението продължава да опитва и ще навакса, щом се върне.';
+
+  @override
+  String get liveStatusUnavailable => 'Недостъпно';
+
+  @override
+  String get liveStatusUnavailableInfo =>
+      'Тази връзка няма право да следи обновяванията на живо (нужен е обхватът event:subscribe). Дръпнете надолу, за да опресните.';
 }

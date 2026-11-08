@@ -96,17 +96,39 @@ serves what, and keeps cached copies (below) without the providers noticing.
 
 ```mermaid
 flowchart LR
-  WS["tix /api/v1/events"] -- "subscribe, since_seq" --> ES["TixEventStream<br/>cursor, backoff"]
-  ES --> P["tixEventStreamProvider<br/>one per active context"]
+  WS["tix /api/v1/events<br/>WebSocket"] --> LE["LiveEvents<br/>cursor, transport"]
+  HP["tix /api/v1/events/poll<br/>long poll"] --> LE
+  LE --> P["tixEventStreamProvider<br/>one per active context"]
   P --> R["refreshOn / onEvents<br/>in a provider's build"]
   R -- "invalidateSelf" --> L["lists and pages"]
+  LE --> S["liveStatusProvider<br/>indicator, diagnostics"]
 ```
 
-`TixEventStream` (`data/events`) holds one WebSocket per active context, presenting the connection's credential.
-It subscribes, delivers each event once in `seq` order, and on a dropped connection retries after 1, 2, 4 … 60
-seconds (plus jitter), resuming with `since_seq`. Coming back to the foreground skips the wait. A refused
-handshake or subscription (a token without `event:subscribe`) makes it unavailable, with no retries. A cursor tix
-no longer keeps, or a reconnect before any event arrived, is reported as `EventsMissed`.
+`LiveEvents` (`data/events/live_events.dart`) owns live updates for the active context and the `seq` cursor, so
+each event is delivered once and in order whichever transport carried it.
+
+- **WebSocket first.** `TixEventStream` holds the socket, presenting the connection's credential. It subscribes,
+  and on a dropped connection retries after 1, 2, 4 … 60 seconds (plus jitter), resuming with `since_seq`.
+- **Polling when it keeps failing.** Three failed connects or abnormal closes within two minutes switch to long
+  polling `GET /api/v1/events/poll?since_seq=N&wait=25s` from the same cursor, back to back, backing off on
+  errors. Every two to five minutes a WebSocket is tried in the background; once its subscription is
+  acknowledged, polling stops and the socket carries on from the cursor. Anything both delivered is dropped by
+  `seq`.
+- **Periodic refresh without the endpoint.** A server older than the poll endpoint answers 404 or 405; then a gap
+  is reported every 45 seconds while in the foreground, which reloads every provider that called `refreshOn`
+  (what is on screen). The WebSocket keeps being tried.
+- **Unavailable.** A refused handshake, subscription or poll (401, 403, a token without `event:subscribe`) stops
+  everything, with no retries.
+- **Background.** On phones polling, refresh and the background tries stop while the app is paused, cancelling
+  the request in flight; coming back to the foreground retries everything at once from the cursor.
+
+A cursor tix no longer keeps, or a handover without a cursor after having been live, is reported as
+`EventsMissed`. The thresholds and timings are `LiveConfig` (`liveConfigProvider`). `liveStatusProvider` gives the
+mode (`connecting`, `websocket`, `polling`, `refreshing`, `offline`, `unavailable`) and the last error; the
+`LiveIndicator` beside the context switcher shows it.
+
+The poll endpoint is not in the spec `tix.lock` pins yet, so `TixEventPoller` calls it by hand through the
+transport. When `tix.lock` moves to a tix that has it, switch to the generated method and drop the TODO.
 
 A provider declares what it depends on in `build`:
 
