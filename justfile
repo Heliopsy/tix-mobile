@@ -300,10 +300,11 @@ release-files-check HEAD_REF="":
 build-apk *ARGS:
     flutter build apk --release --split-per-abi {{build_args}} {{ARGS}}
 
-# Android App Bundle (release), signed as build-apk is.
+# Android App Bundle (release), signed as build-apk is. The bundle goes to Google Play, which restricts All files
+# access, so it is built without the permission and offers no open in place (docs/architecture.md).
 [group('build')]
 build-aab *ARGS:
-    flutter build appbundle --release {{build_args}} {{ARGS}}
+    ORG_GRADLE_PROJECT_tixAllFilesAccess=false flutter build appbundle --release {{build_args}} {{ARGS}}
 
 # The APKs F-Droid builds: per ABI, version code from pubspec.yaml rather than BUILD_ARGS (docs/releasing.md#f-droid).
 [group('build')]
