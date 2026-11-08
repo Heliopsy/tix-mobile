@@ -63,7 +63,7 @@ setup:
 [group('setup')]
 setup-linux:
     sudo apt-get update -q
-    sudo apt-get install -y -q --no-install-recommends clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libsecret-1-dev libjsoncpp-dev
+    sudo apt-get install -y -q --no-install-recommends clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libsecret-1-dev
 
 # flutter doctor -v.
 [group('setup')]
@@ -89,12 +89,12 @@ gen:
       echo "build_runner is not in pubspec.yaml, nothing to generate"
       exit 0
     fi
-    dart run build_runner build --delete-conflicting-outputs
+    dart run build_runner build
 
 # Run build_runner in watch mode.
 [group('dev')]
 gen-watch:
-    dart run build_runner watch --delete-conflicting-outputs
+    dart run build_runner watch
 
 # Generate the localizations from the ARB files.
 [group('dev')]
@@ -133,10 +133,14 @@ fmt:
 fmt-check:
     git ls-files -co --exclude-standard '*.dart' | grep -vE '{{generated}}' | xargs -r dart format --output=none --set-exit-if-changed
 
-# flutter analyze, failing on infos as well as warnings.
+# Both analyzers, failing on infos. `flutter analyze` does not run analyzer
+# plugins (riverpod_lint is one, declared under `plugins:` in
+# analysis_options.yaml); `dart analyze` does, so it runs too.
+[doc("flutter analyze and dart analyze (for analyzer plugins), failing on infos.")]
 [group('gates')]
 analyze:
     flutter analyze --fatal-infos --fatal-warnings
+    dart analyze --fatal-infos
 
 # Run the tests; arguments go to flutter test.
 [group('test')]
