@@ -77,21 +77,23 @@ on the [roadmap](ROADMAP.md), not available today.
 
 ## Features
 
-The initial scope, and all of it:
-
-- **Connect to a tix server** with its URL and an API token. Save more than one and switch between them, the way
-  `tix ctx` does on the command line.
-- **Projects** visible to that token.
+- **Several tix servers**, each with one or more connections: an API token, or a sign-in with email and password
+  (second factor included). A sign-in can follow you between your tenants on that server or stay pinned to one.
+- **A switcher on every screen** showing Instance › Tenant, recent ones first.
+- **Local databases** (preview): the screens to create or open a `.db` file on this device are in place behind the
+  `TIX_LOCAL_INSTANCES` build flag, but the embedded tix engine that serves it is not in this build yet.
+- **Projects** visible to the active connection.
 - **Task lists** with pull to refresh and keyset pagination, so a long list loads a page at a time and stays stable
   while tasks are being added.
 - **Task detail** for a single task.
 - **Quick add** in tix's one-line syntax: `Fix login !high #auth @raj due:fri`. The server parses the line, so the
   app understands exactly what the CLI and the browser understand.
-- **Settings**: light, dark or system theme, English or Bulgarian, and the saved servers.
+- **Settings**: light, dark or system theme, English or Bulgarian, and the saved instances.
 - **Adaptive layout**: a bottom navigation bar on phones, a navigation rail and a two-pane list and detail on tablets
   and desktops.
 
-The API token is kept in the platform's secure storage and is never written to logs or preferences.
+API tokens and sign-in sessions are kept in the platform's secure storage and are never written to logs or
+preferences. Passwords are not stored at all; a sign-in session lasts about 12 hours.
 
 ## Screenshots
 
@@ -137,7 +139,8 @@ The token is printed once. Those three scopes cover everything the app does toda
 shows what the server refused. `tix token create` defaults to a 90-day expiry, and `tix token rm ID` revokes the
 token if the device is lost. The **Connect an agent** screen in tix's web UI issues tokens too.
 
-In the app, add a server with a name, its URL and the token. That is the whole setup.
+In the app, add an instance with its URL and the token, or sign in with your email and password. That is the
+whole setup.
 
 A phone cannot reach `127.0.0.1` on your laptop, and tix refuses to bind anything but loopback without TLS. For a
 real device, serve tix over TLS, in tix itself or behind a reverse proxy, and give the app the `https://` address
@@ -169,9 +172,9 @@ flowchart LR
     UI["Widgets<br/>features/*/presentation"] --> P["Riverpod providers<br/>features/*/application"]
     P --> R["Repositories<br/>data/"]
     R --> C["API client<br/>data/"]
-    R -.-> S[("Secure storage<br/>API tokens")]
+    R -.-> S[("Secure storage<br/>tokens, sessions")]
   end
-  C -- "HTTPS, bearer token" --> API["tix HTTP API<br/>/api/v1"]
+  C -- "HTTPS, token or session" --> API["tix HTTP API<br/>/api/v1"]
   C -. "planned" .-> WS["tix event stream<br/>WebSocket /api/v1/events"]
 ```
 
