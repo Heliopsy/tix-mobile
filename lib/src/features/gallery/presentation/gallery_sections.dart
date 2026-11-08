@@ -3,6 +3,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/markdown/checklist.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 
 // Sample content in English only: the gallery is a debug tool for
@@ -582,6 +583,76 @@ class GalleryOverlays extends StatelessWidget {
       TixButton(
         label: 'Shortcut help',
         onPressed: () => showShortcutHelp(context, registry.commands),
+      ),
+    ],
+  );
+}
+
+/// A record's properties and a Markdown description with its checklist.
+class GalleryRecord extends StatefulWidget {
+  /// Creates the samples.
+  const GalleryRecord({super.key});
+
+  @override
+  State<GalleryRecord> createState() => _GalleryRecordState();
+}
+
+class _GalleryRecordState extends State<GalleryRecord> {
+  var _body = '''
+Rotate the **edge** certificates before they expire. See [the runbook](https://example.com).
+
+- [x] Issue the new certificates
+- [ ] Roll them out
+  - [ ] staging
+  - [ ] production
+
+```
+openssl x509 -enddate -noout
+```
+''';
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 360),
+        child: TixPropertyList(
+          children: [
+            TixPropertyRow(
+              label: 'Status',
+              onTap: () {},
+              child: const Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: StatusPill(label: 'doing'),
+              ),
+            ),
+            TixPropertyRow(
+              label: 'Priority',
+              onTap: () {},
+              child: const Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: PriorityMark(priority: 2, emphasizeNormal: true),
+              ),
+            ),
+            TixPropertyRow(
+              label: 'Repeats',
+              info: 'Finishing it creates the next one.',
+              onTap: () {},
+              child: const Text('every week'),
+            ),
+            const TixPropertyRow(
+              label: 'Project',
+              child: Text('Infrastructure'),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: TixSpace.s4),
+      TixMarkdown(
+        data: _body,
+        onToggle: (item, {required done}) =>
+            setState(() => _body = setChecklistItem(_body, item, done: done)),
       ),
     ],
   );

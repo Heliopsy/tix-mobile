@@ -560,4 +560,496 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get galleryTitle => 'Components';
+
+  @override
+  String taskDetailActionsFor(String ref) {
+    return 'Actions for $ref';
+  }
+
+  @override
+  String get taskDetailActorSearch => 'Search by name or handle';
+
+  @override
+  String get taskDetailAdd => 'Add';
+
+  @override
+  String get taskDetailAddDependency => 'Add dependency';
+
+  @override
+  String get taskDetailAddSubtask => 'Add subtask';
+
+  @override
+  String get taskDetailAddTag => 'Add tag';
+
+  @override
+  String get taskDetailArtifactFile => 'file';
+
+  @override
+  String get taskDetailArtifactLog => 'log';
+
+  @override
+  String get taskDetailArtifactMetric => 'metric';
+
+  @override
+  String get taskDetailArtifactResult => 'result';
+
+  @override
+  String get taskDetailArtifacts => 'Artifacts';
+
+  @override
+  String get taskDetailArtifactSave => 'Save';
+
+  @override
+  String get taskDetailArtifactShow => 'Show';
+
+  @override
+  String get taskDetailArtifactUnreadable =>
+      'This artifact\'s content cannot be read.';
+
+  @override
+  String get taskDetailAssigneeTitle => 'Assign';
+
+  @override
+  String taskDetailAttached(String name) {
+    return 'Attached $name.';
+  }
+
+  @override
+  String get taskDetailAttachFile => 'Attach file';
+
+  @override
+  String get taskDetailBlocked =>
+      'Blocked: it waits for a task that is not finished.';
+
+  @override
+  String taskDetailChecklist(int done, int total) {
+    return '$done of $total done';
+  }
+
+  @override
+  String get taskDetailClear => 'Clear';
+
+  @override
+  String get taskDetailCommands => 'Task';
+
+  @override
+  String get taskDetailCommentActions => 'Comment actions';
+
+  @override
+  String get taskDetailCommentAdded => 'Comment added.';
+
+  @override
+  String get taskDetailCommentDelete => 'Delete comment';
+
+  @override
+  String get taskDetailCommentDeleteBody =>
+      'It disappears for everyone. This cannot be undone here.';
+
+  @override
+  String get taskDetailCommentDeleted => 'Comment deleted.';
+
+  @override
+  String get taskDetailCommentDeleteTitle => 'Delete this comment?';
+
+  @override
+  String get taskDetailCommentEdit => 'Edit comment';
+
+  @override
+  String get taskDetailCommentHint => 'Markdown works. @ names someone.';
+
+  @override
+  String get taskDetailCommentLabel => 'Comment';
+
+  @override
+  String get taskDetailComments => 'Comments';
+
+  @override
+  String get taskDetailCommentSend => 'Comment';
+
+  @override
+  String taskDetailCopied(String ref) {
+    return 'Copied as $ref.';
+  }
+
+  @override
+  String get taskDetailCopiedFrom => 'Copied from';
+
+  @override
+  String get taskDetailCopyAction => 'Copy';
+
+  @override
+  String get taskDetailCopyComments => 'Copy its comments';
+
+  @override
+  String get taskDetailCopyDependencies => 'Copy its dependencies';
+
+  @override
+  String get taskDetailCopyKeepStatus => 'Keep its status';
+
+  @override
+  String get taskDetailCopyLink => 'Link the copy to this task';
+
+  @override
+  String get taskDetailCopyNewTitle => 'Title of the copy';
+
+  @override
+  String get taskDetailCopyProject => 'Project';
+
+  @override
+  String get taskDetailCopyRef => 'Copy reference';
+
+  @override
+  String get taskDetailCopySubtasks => 'Copy its subtasks';
+
+  @override
+  String taskDetailCopyTitle(String ref) {
+    return 'Copy $ref';
+  }
+
+  @override
+  String get taskDetailCopyTo => 'Copy to…';
+
+  @override
+  String taskDetailCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks',
+      one: '1 task',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get taskDetailCreated => 'Created';
+
+  @override
+  String get taskDetailCurrent => 'Current';
+
+  @override
+  String get taskDetailDelete => 'Delete';
+
+  @override
+  String taskDetailDeleted(String ref) {
+    return 'Deleted $ref.';
+  }
+
+  @override
+  String get taskDetailDeleteForGood => 'Delete permanently';
+
+  @override
+  String get taskDetailDeletePermanentBody =>
+      'It is removed for good, with its comments and history.';
+
+  @override
+  String taskDetailDeleteSubtasksBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Its $count subtasks are deleted with it.',
+      one: 'Its subtask is deleted with it.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String taskDetailDeleteTitle(String ref) {
+    return 'Delete $ref?';
+  }
+
+  @override
+  String get taskDetailDeleteTrashBody =>
+      'It goes to the trash and can be restored.';
+
+  @override
+  String get taskDetailDependencies => 'Waits for';
+
+  @override
+  String get taskDetailDependenciesInfo =>
+      'This task counts as blocked until each task listed here reaches a finished state.';
+
+  @override
+  String taskDetailDependencyAdded(String ref) {
+    return 'Now waits for $ref.';
+  }
+
+  @override
+  String taskDetailDependencyRemoved(String ref) {
+    return 'No longer waits for $ref.';
+  }
+
+  @override
+  String get taskDetailDependsOn => 'Depends on';
+
+  @override
+  String get taskDetailDependsOnHint => 'A reference, for example infra-2';
+
+  @override
+  String get taskDetailDescriptionHint =>
+      'Markdown. - [ ] makes a checklist item.';
+
+  @override
+  String get taskDetailDueClear => 'No due date';
+
+  @override
+  String get taskDetailDueNextWeek => 'Next week';
+
+  @override
+  String get taskDetailDueTitle => 'Due date';
+
+  @override
+  String get taskDetailDueToday => 'Today';
+
+  @override
+  String get taskDetailDueTomorrow => 'Tomorrow';
+
+  @override
+  String get taskDetailEdit => 'Edit';
+
+  @override
+  String get taskDetailEditDescription => 'Edit description';
+
+  @override
+  String get taskDetailEdited => 'edited';
+
+  @override
+  String taskDetailEditField(String name) {
+    return 'Change $name';
+  }
+
+  @override
+  String get taskDetailFileTooBig => 'Files over 1 MiB cannot be attached.';
+
+  @override
+  String get taskDetailHistory => 'History';
+
+  @override
+  String taskDetailHistoryChanged(String fields) {
+    return 'changed $fields';
+  }
+
+  @override
+  String get taskDetailHistoryCreated => 'created the task';
+
+  @override
+  String get taskDetailHistoryDeleted => 'deleted the task';
+
+  @override
+  String get taskDetailHistoryMore => 'Show older';
+
+  @override
+  String taskDetailHistoryMoved(String from, String to) {
+    return 'moved it from $from to $to';
+  }
+
+  @override
+  String get taskDetailHistoryRestored => 'restored the task';
+
+  @override
+  String get taskDetailJsonHelp =>
+      'A JSON value: a number, a string in quotes, a list or an object';
+
+  @override
+  String get taskDetailMove => 'Move';
+
+  @override
+  String get taskDetailMoveComment => 'Comment';
+
+  @override
+  String get taskDetailMoveCommentHelp =>
+      'This move needs a comment saying why.';
+
+  @override
+  String taskDetailMoved(String ref, String status) {
+    return 'Moved $ref to $status.';
+  }
+
+  @override
+  String get taskDetailMoveFrom => 'From';
+
+  @override
+  String get taskDetailMoveNeedsComment => 'Needs a comment';
+
+  @override
+  String taskDetailMoveStopped(String state, String reason) {
+    return 'Stopped before $state: $reason';
+  }
+
+  @override
+  String get taskDetailMoveTitle => 'Move';
+
+  @override
+  String taskDetailMoveTo(String state) {
+    return 'Move to $state';
+  }
+
+  @override
+  String taskDetailMoveVia(String states) {
+    return 'via $states';
+  }
+
+  @override
+  String get taskDetailNo => 'No';
+
+  @override
+  String get taskDetailNoArtifacts => 'No artifacts.';
+
+  @override
+  String get taskDetailNoComments => 'No comments yet.';
+
+  @override
+  String get taskDetailNoDependencies => 'Waits for nothing.';
+
+  @override
+  String get taskDetailNoHistory => 'No history.';
+
+  @override
+  String get taskDetailNoMoves => 'The workflow allows no move from here.';
+
+  @override
+  String get taskDetailNoRepeat => 'Does not repeat';
+
+  @override
+  String get taskDetailNoSubtasks => 'No subtasks.';
+
+  @override
+  String get taskDetailOpen => 'Open';
+
+  @override
+  String get taskDetailParent => 'Subtask of';
+
+  @override
+  String get taskDetailPickDate => 'Pick a date…';
+
+  @override
+  String get taskDetailPickDateTime => 'Pick a date and time…';
+
+  @override
+  String get taskDetailPreview => 'Preview';
+
+  @override
+  String get taskDetailPriorityTitle => 'Priority';
+
+  @override
+  String get taskDetailProject => 'Project';
+
+  @override
+  String get taskDetailRefCopied => 'Reference copied.';
+
+  @override
+  String taskDetailRemoveDependency(String ref) {
+    return 'Stop waiting for $ref';
+  }
+
+  @override
+  String taskDetailRemoveTag(String tag) {
+    return 'Remove $tag';
+  }
+
+  @override
+  String get taskDetailRename => 'Rename';
+
+  @override
+  String get taskDetailRepeat => 'Repeats';
+
+  @override
+  String get taskDetailRepeatHelp =>
+      'every day, every 2 weeks on mon,thu, every month on day 31, 3 days after done';
+
+  @override
+  String get taskDetailRepeatHint => 'every week';
+
+  @override
+  String get taskDetailRepeatInfo =>
+      'Finishing a task with a rule creates the next one at once. Cancelling it does not. Empty stops the repeat.';
+
+  @override
+  String get taskDetailRepeats => 'Repeats';
+
+  @override
+  String get taskDetailRepeatTitle => 'Repeat rule';
+
+  @override
+  String get taskDetailSave => 'Save';
+
+  @override
+  String get taskDetailSaved => 'Saved.';
+
+  @override
+  String get taskDetailSnooze => 'Snooze';
+
+  @override
+  String taskDetailSnoozed(String when) {
+    return 'Snoozed until $when.';
+  }
+
+  @override
+  String get taskDetailSnoozeLater => 'Later today';
+
+  @override
+  String get taskDetailSnoozeNextWeek => 'Next week';
+
+  @override
+  String get taskDetailSnoozeTitle => 'Snooze until';
+
+  @override
+  String get taskDetailSnoozeTomorrow => 'Tomorrow morning';
+
+  @override
+  String get taskDetailStar => 'Star';
+
+  @override
+  String get taskDetailStarred => 'Starred.';
+
+  @override
+  String get taskDetailSubtaskAdded => 'Subtask added.';
+
+  @override
+  String get taskDetailSubtasks => 'Subtasks';
+
+  @override
+  String get taskDetailSystem => 'tix';
+
+  @override
+  String taskDetailTagAdded(String name) {
+    return 'Tagged $name.';
+  }
+
+  @override
+  String get taskDetailTagHint => 'A new name creates the tag';
+
+  @override
+  String taskDetailTagRemoved(String name) {
+    return 'Removed $name.';
+  }
+
+  @override
+  String get taskDetailTakePhoto => 'Take photo';
+
+  @override
+  String get taskDetailTitleLabel => 'Title';
+
+  @override
+  String get taskDetailUnassign => 'Unassign';
+
+  @override
+  String get taskDetailUnstar => 'Remove star';
+
+  @override
+  String get taskDetailUnstarred => 'Star removed.';
+
+  @override
+  String get taskDetailUpdated => 'Updated';
+
+  @override
+  String get taskDetailWake => 'Wake now';
+
+  @override
+  String get taskDetailWoken => 'Back in the lists.';
+
+  @override
+  String get taskDetailWrite => 'Write';
+
+  @override
+  String get taskDetailYes => 'Yes';
 }

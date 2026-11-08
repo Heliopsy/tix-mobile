@@ -259,5 +259,319 @@
   "aboutTitle": "About",
   "appearanceLabel": "Appearance",
   "accountLabel": "Account",
-  "galleryTitle": "Components"
+  "galleryTitle": "Components",
+  "taskDetailActionsFor": "Actions for {ref}",
+  "@taskDetailActionsFor": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailActorSearch": "Search by name or handle",
+  "taskDetailAdd": "Add",
+  "taskDetailAddDependency": "Add dependency",
+  "taskDetailAddSubtask": "Add subtask",
+  "taskDetailAddTag": "Add tag",
+  "taskDetailArtifactFile": "file",
+  "taskDetailArtifactLog": "log",
+  "taskDetailArtifactMetric": "metric",
+  "taskDetailArtifactResult": "result",
+  "taskDetailArtifacts": "Artifacts",
+  "taskDetailArtifactSave": "Save",
+  "taskDetailArtifactShow": "Show",
+  "taskDetailArtifactUnreadable": "This artifact's content cannot be read.",
+  "taskDetailAssigneeTitle": "Assign",
+  "taskDetailAttached": "Attached {name}.",
+  "@taskDetailAttached": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailAttachFile": "Attach file",
+  "taskDetailBlocked": "Blocked: it waits for a task that is not finished.",
+  "taskDetailChecklist": "{done} of {total} done",
+  "@taskDetailChecklist": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "taskDetailClear": "Clear",
+  "taskDetailCommands": "Task",
+  "taskDetailCommentActions": "Comment actions",
+  "taskDetailCommentAdded": "Comment added.",
+  "taskDetailCommentDelete": "Delete comment",
+  "taskDetailCommentDeleteBody": "It disappears for everyone. This cannot be undone here.",
+  "taskDetailCommentDeleted": "Comment deleted.",
+  "taskDetailCommentDeleteTitle": "Delete this comment?",
+  "taskDetailCommentEdit": "Edit comment",
+  "taskDetailCommentHint": "Markdown works. @ names someone.",
+  "taskDetailCommentLabel": "Comment",
+  "taskDetailComments": "Comments",
+  "taskDetailCommentSend": "Comment",
+  "taskDetailCopied": "Copied as {ref}.",
+  "@taskDetailCopied": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailCopiedFrom": "Copied from",
+  "taskDetailCopyAction": "Copy",
+  "taskDetailCopyComments": "Copy its comments",
+  "taskDetailCopyDependencies": "Copy its dependencies",
+  "taskDetailCopyKeepStatus": "Keep its status",
+  "taskDetailCopyLink": "Link the copy to this task",
+  "taskDetailCopyNewTitle": "Title of the copy",
+  "taskDetailCopyProject": "Project",
+  "taskDetailCopyRef": "Copy reference",
+  "taskDetailCopySubtasks": "Copy its subtasks",
+  "taskDetailCopyTitle": "Copy {ref}",
+  "@taskDetailCopyTitle": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailCopyTo": "Copy to…",
+  "taskDetailCount": "{count, plural, =1{1 task} other{{count} tasks}}",
+  "@taskDetailCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "taskDetailCreated": "Created",
+  "taskDetailCurrent": "Current",
+  "taskDetailDelete": "Delete",
+  "taskDetailDeleted": "Deleted {ref}.",
+  "@taskDetailDeleted": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailDeleteForGood": "Delete permanently",
+  "taskDetailDeletePermanentBody": "It is removed for good, with its comments and history.",
+  "taskDetailDeleteSubtasksBody": "{count, plural, =1{Its subtask is deleted with it.} other{Its {count} subtasks are deleted with it.}}",
+  "@taskDetailDeleteSubtasksBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "taskDetailDeleteTitle": "Delete {ref}?",
+  "@taskDetailDeleteTitle": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailDeleteTrashBody": "It goes to the trash and can be restored.",
+  "taskDetailDependencies": "Waits for",
+  "taskDetailDependenciesInfo": "This task counts as blocked until each task listed here reaches a finished state.",
+  "taskDetailDependencyAdded": "Now waits for {ref}.",
+  "@taskDetailDependencyAdded": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailDependencyRemoved": "No longer waits for {ref}.",
+  "@taskDetailDependencyRemoved": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailDependsOn": "Depends on",
+  "taskDetailDependsOnHint": "A reference, for example infra-2",
+  "taskDetailDescriptionHint": "Markdown. - [ ] makes a checklist item.",
+  "taskDetailDueClear": "No due date",
+  "taskDetailDueNextWeek": "Next week",
+  "taskDetailDueTitle": "Due date",
+  "taskDetailDueToday": "Today",
+  "taskDetailDueTomorrow": "Tomorrow",
+  "taskDetailEdit": "Edit",
+  "taskDetailEditDescription": "Edit description",
+  "taskDetailEdited": "edited",
+  "taskDetailEditField": "Change {name}",
+  "@taskDetailEditField": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailFileTooBig": "Files over 1 MiB cannot be attached.",
+  "taskDetailHistory": "History",
+  "taskDetailHistoryChanged": "changed {fields}",
+  "@taskDetailHistoryChanged": {
+    "placeholders": {
+      "fields": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailHistoryCreated": "created the task",
+  "taskDetailHistoryDeleted": "deleted the task",
+  "taskDetailHistoryMore": "Show older",
+  "taskDetailHistoryMoved": "moved it from {from} to {to}",
+  "@taskDetailHistoryMoved": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailHistoryRestored": "restored the task",
+  "taskDetailJsonHelp": "A JSON value: a number, a string in quotes, a list or an object",
+  "taskDetailMove": "Move",
+  "taskDetailMoveComment": "Comment",
+  "taskDetailMoveCommentHelp": "This move needs a comment saying why.",
+  "taskDetailMoved": "Moved {ref} to {status}.",
+  "@taskDetailMoved": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailMoveFrom": "From",
+  "taskDetailMoveNeedsComment": "Needs a comment",
+  "taskDetailMoveStopped": "Stopped before {state}: {reason}",
+  "@taskDetailMoveStopped": {
+    "placeholders": {
+      "state": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailMoveTitle": "Move",
+  "taskDetailMoveTo": "Move to {state}",
+  "@taskDetailMoveTo": {
+    "placeholders": {
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailMoveVia": "via {states}",
+  "@taskDetailMoveVia": {
+    "placeholders": {
+      "states": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailNo": "No",
+  "taskDetailNoArtifacts": "No artifacts.",
+  "taskDetailNoComments": "No comments yet.",
+  "taskDetailNoDependencies": "Waits for nothing.",
+  "taskDetailNoHistory": "No history.",
+  "taskDetailNoMoves": "The workflow allows no move from here.",
+  "taskDetailNoRepeat": "Does not repeat",
+  "taskDetailNoSubtasks": "No subtasks.",
+  "taskDetailOpen": "Open",
+  "taskDetailParent": "Subtask of",
+  "taskDetailPickDate": "Pick a date…",
+  "taskDetailPickDateTime": "Pick a date and time…",
+  "taskDetailPreview": "Preview",
+  "taskDetailPriorityTitle": "Priority",
+  "taskDetailProject": "Project",
+  "taskDetailRefCopied": "Reference copied.",
+  "taskDetailRemoveDependency": "Stop waiting for {ref}",
+  "@taskDetailRemoveDependency": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailRemoveTag": "Remove {tag}",
+  "@taskDetailRemoveTag": {
+    "placeholders": {
+      "tag": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailRename": "Rename",
+  "taskDetailRepeat": "Repeats",
+  "taskDetailRepeatHelp": "every day, every 2 weeks on mon,thu, every month on day 31, 3 days after done",
+  "taskDetailRepeatHint": "every week",
+  "taskDetailRepeatInfo": "Finishing a task with a rule creates the next one at once. Cancelling it does not. Empty stops the repeat.",
+  "taskDetailRepeats": "Repeats",
+  "taskDetailRepeatTitle": "Repeat rule",
+  "taskDetailSave": "Save",
+  "taskDetailSaved": "Saved.",
+  "taskDetailSnooze": "Snooze",
+  "taskDetailSnoozed": "Snoozed until {when}.",
+  "@taskDetailSnoozed": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailSnoozeLater": "Later today",
+  "taskDetailSnoozeNextWeek": "Next week",
+  "taskDetailSnoozeTitle": "Snooze until",
+  "taskDetailSnoozeTomorrow": "Tomorrow morning",
+  "taskDetailStar": "Star",
+  "taskDetailStarred": "Starred.",
+  "taskDetailSubtaskAdded": "Subtask added.",
+  "taskDetailSubtasks": "Subtasks",
+  "taskDetailSystem": "tix",
+  "taskDetailTagAdded": "Tagged {name}.",
+  "@taskDetailTagAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailTagHint": "A new name creates the tag",
+  "taskDetailTagRemoved": "Removed {name}.",
+  "@taskDetailTagRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailTakePhoto": "Take photo",
+  "taskDetailTitleLabel": "Title",
+  "taskDetailUnassign": "Unassign",
+  "taskDetailUnstar": "Remove star",
+  "taskDetailUnstarred": "Star removed.",
+  "taskDetailUpdated": "Updated",
+  "taskDetailWake": "Wake now",
+  "taskDetailWoken": "Back in the lists.",
+  "taskDetailWrite": "Write",
+  "taskDetailYes": "Yes"
 }

@@ -1070,6 +1070,852 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Components'**
   String get galleryTitle;
+
+  /// No description provided for @taskDetailActionsFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Actions for {ref}'**
+  String taskDetailActionsFor(String ref);
+
+  /// No description provided for @taskDetailActorSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name or handle'**
+  String get taskDetailActorSearch;
+
+  /// No description provided for @taskDetailAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get taskDetailAdd;
+
+  /// No description provided for @taskDetailAddDependency.
+  ///
+  /// In en, this message translates to:
+  /// **'Add dependency'**
+  String get taskDetailAddDependency;
+
+  /// No description provided for @taskDetailAddSubtask.
+  ///
+  /// In en, this message translates to:
+  /// **'Add subtask'**
+  String get taskDetailAddSubtask;
+
+  /// No description provided for @taskDetailAddTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Add tag'**
+  String get taskDetailAddTag;
+
+  /// No description provided for @taskDetailArtifactFile.
+  ///
+  /// In en, this message translates to:
+  /// **'file'**
+  String get taskDetailArtifactFile;
+
+  /// No description provided for @taskDetailArtifactLog.
+  ///
+  /// In en, this message translates to:
+  /// **'log'**
+  String get taskDetailArtifactLog;
+
+  /// No description provided for @taskDetailArtifactMetric.
+  ///
+  /// In en, this message translates to:
+  /// **'metric'**
+  String get taskDetailArtifactMetric;
+
+  /// No description provided for @taskDetailArtifactResult.
+  ///
+  /// In en, this message translates to:
+  /// **'result'**
+  String get taskDetailArtifactResult;
+
+  /// No description provided for @taskDetailArtifacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Artifacts'**
+  String get taskDetailArtifacts;
+
+  /// No description provided for @taskDetailArtifactSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get taskDetailArtifactSave;
+
+  /// No description provided for @taskDetailArtifactShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get taskDetailArtifactShow;
+
+  /// No description provided for @taskDetailArtifactUnreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'This artifact\'s content cannot be read.'**
+  String get taskDetailArtifactUnreadable;
+
+  /// No description provided for @taskDetailAssigneeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign'**
+  String get taskDetailAssigneeTitle;
+
+  /// No description provided for @taskDetailAttached.
+  ///
+  /// In en, this message translates to:
+  /// **'Attached {name}.'**
+  String taskDetailAttached(String name);
+
+  /// No description provided for @taskDetailAttachFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach file'**
+  String get taskDetailAttachFile;
+
+  /// No description provided for @taskDetailBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked: it waits for a task that is not finished.'**
+  String get taskDetailBlocked;
+
+  /// No description provided for @taskDetailChecklist.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} done'**
+  String taskDetailChecklist(int done, int total);
+
+  /// No description provided for @taskDetailClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get taskDetailClear;
+
+  /// No description provided for @taskDetailCommands.
+  ///
+  /// In en, this message translates to:
+  /// **'Task'**
+  String get taskDetailCommands;
+
+  /// No description provided for @taskDetailCommentActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment actions'**
+  String get taskDetailCommentActions;
+
+  /// No description provided for @taskDetailCommentAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment added.'**
+  String get taskDetailCommentAdded;
+
+  /// No description provided for @taskDetailCommentDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete comment'**
+  String get taskDetailCommentDelete;
+
+  /// No description provided for @taskDetailCommentDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It disappears for everyone. This cannot be undone here.'**
+  String get taskDetailCommentDeleteBody;
+
+  /// No description provided for @taskDetailCommentDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment deleted.'**
+  String get taskDetailCommentDeleted;
+
+  /// No description provided for @taskDetailCommentDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this comment?'**
+  String get taskDetailCommentDeleteTitle;
+
+  /// No description provided for @taskDetailCommentEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit comment'**
+  String get taskDetailCommentEdit;
+
+  /// No description provided for @taskDetailCommentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Markdown works. @ names someone.'**
+  String get taskDetailCommentHint;
+
+  /// No description provided for @taskDetailCommentLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment'**
+  String get taskDetailCommentLabel;
+
+  /// No description provided for @taskDetailComments.
+  ///
+  /// In en, this message translates to:
+  /// **'Comments'**
+  String get taskDetailComments;
+
+  /// No description provided for @taskDetailCommentSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment'**
+  String get taskDetailCommentSend;
+
+  /// No description provided for @taskDetailCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied as {ref}.'**
+  String taskDetailCopied(String ref);
+
+  /// No description provided for @taskDetailCopiedFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied from'**
+  String get taskDetailCopiedFrom;
+
+  /// No description provided for @taskDetailCopyAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get taskDetailCopyAction;
+
+  /// No description provided for @taskDetailCopyComments.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy its comments'**
+  String get taskDetailCopyComments;
+
+  /// No description provided for @taskDetailCopyDependencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy its dependencies'**
+  String get taskDetailCopyDependencies;
+
+  /// No description provided for @taskDetailCopyKeepStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep its status'**
+  String get taskDetailCopyKeepStatus;
+
+  /// No description provided for @taskDetailCopyLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Link the copy to this task'**
+  String get taskDetailCopyLink;
+
+  /// No description provided for @taskDetailCopyNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title of the copy'**
+  String get taskDetailCopyNewTitle;
+
+  /// No description provided for @taskDetailCopyProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Project'**
+  String get taskDetailCopyProject;
+
+  /// No description provided for @taskDetailCopyRef.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy reference'**
+  String get taskDetailCopyRef;
+
+  /// No description provided for @taskDetailCopySubtasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy its subtasks'**
+  String get taskDetailCopySubtasks;
+
+  /// No description provided for @taskDetailCopyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy {ref}'**
+  String taskDetailCopyTitle(String ref);
+
+  /// No description provided for @taskDetailCopyTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy to…'**
+  String get taskDetailCopyTo;
+
+  /// No description provided for @taskDetailCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task} other{{count} tasks}}'**
+  String taskDetailCount(int count);
+
+  /// No description provided for @taskDetailCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get taskDetailCreated;
+
+  /// No description provided for @taskDetailCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get taskDetailCurrent;
+
+  /// No description provided for @taskDetailDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get taskDetailDelete;
+
+  /// No description provided for @taskDetailDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted {ref}.'**
+  String taskDetailDeleted(String ref);
+
+  /// No description provided for @taskDetailDeleteForGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete permanently'**
+  String get taskDetailDeleteForGood;
+
+  /// No description provided for @taskDetailDeletePermanentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It is removed for good, with its comments and history.'**
+  String get taskDetailDeletePermanentBody;
+
+  /// No description provided for @taskDetailDeleteSubtasksBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Its subtask is deleted with it.} other{Its {count} subtasks are deleted with it.}}'**
+  String taskDetailDeleteSubtasksBody(int count);
+
+  /// No description provided for @taskDetailDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {ref}?'**
+  String taskDetailDeleteTitle(String ref);
+
+  /// No description provided for @taskDetailDeleteTrashBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It goes to the trash and can be restored.'**
+  String get taskDetailDeleteTrashBody;
+
+  /// No description provided for @taskDetailDependencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Waits for'**
+  String get taskDetailDependencies;
+
+  /// No description provided for @taskDetailDependenciesInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'This task counts as blocked until each task listed here reaches a finished state.'**
+  String get taskDetailDependenciesInfo;
+
+  /// No description provided for @taskDetailDependencyAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Now waits for {ref}.'**
+  String taskDetailDependencyAdded(String ref);
+
+  /// No description provided for @taskDetailDependencyRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'No longer waits for {ref}.'**
+  String taskDetailDependencyRemoved(String ref);
+
+  /// No description provided for @taskDetailDependsOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Depends on'**
+  String get taskDetailDependsOn;
+
+  /// No description provided for @taskDetailDependsOnHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A reference, for example infra-2'**
+  String get taskDetailDependsOnHint;
+
+  /// No description provided for @taskDetailDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Markdown. - [ ] makes a checklist item.'**
+  String get taskDetailDescriptionHint;
+
+  /// No description provided for @taskDetailDueClear.
+  ///
+  /// In en, this message translates to:
+  /// **'No due date'**
+  String get taskDetailDueClear;
+
+  /// No description provided for @taskDetailDueNextWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Next week'**
+  String get taskDetailDueNextWeek;
+
+  /// No description provided for @taskDetailDueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date'**
+  String get taskDetailDueTitle;
+
+  /// No description provided for @taskDetailDueToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get taskDetailDueToday;
+
+  /// No description provided for @taskDetailDueTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get taskDetailDueTomorrow;
+
+  /// No description provided for @taskDetailEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get taskDetailEdit;
+
+  /// No description provided for @taskDetailEditDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit description'**
+  String get taskDetailEditDescription;
+
+  /// No description provided for @taskDetailEdited.
+  ///
+  /// In en, this message translates to:
+  /// **'edited'**
+  String get taskDetailEdited;
+
+  /// No description provided for @taskDetailEditField.
+  ///
+  /// In en, this message translates to:
+  /// **'Change {name}'**
+  String taskDetailEditField(String name);
+
+  /// No description provided for @taskDetailFileTooBig.
+  ///
+  /// In en, this message translates to:
+  /// **'Files over 1 MiB cannot be attached.'**
+  String get taskDetailFileTooBig;
+
+  /// No description provided for @taskDetailHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get taskDetailHistory;
+
+  /// No description provided for @taskDetailHistoryChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'changed {fields}'**
+  String taskDetailHistoryChanged(String fields);
+
+  /// No description provided for @taskDetailHistoryCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'created the task'**
+  String get taskDetailHistoryCreated;
+
+  /// No description provided for @taskDetailHistoryDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'deleted the task'**
+  String get taskDetailHistoryDeleted;
+
+  /// No description provided for @taskDetailHistoryMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Show older'**
+  String get taskDetailHistoryMore;
+
+  /// No description provided for @taskDetailHistoryMoved.
+  ///
+  /// In en, this message translates to:
+  /// **'moved it from {from} to {to}'**
+  String taskDetailHistoryMoved(String from, String to);
+
+  /// No description provided for @taskDetailHistoryRestored.
+  ///
+  /// In en, this message translates to:
+  /// **'restored the task'**
+  String get taskDetailHistoryRestored;
+
+  /// No description provided for @taskDetailJsonHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A JSON value: a number, a string in quotes, a list or an object'**
+  String get taskDetailJsonHelp;
+
+  /// No description provided for @taskDetailMove.
+  ///
+  /// In en, this message translates to:
+  /// **'Move'**
+  String get taskDetailMove;
+
+  /// No description provided for @taskDetailMoveComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment'**
+  String get taskDetailMoveComment;
+
+  /// No description provided for @taskDetailMoveCommentHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'This move needs a comment saying why.'**
+  String get taskDetailMoveCommentHelp;
+
+  /// No description provided for @taskDetailMoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Moved {ref} to {status}.'**
+  String taskDetailMoved(String ref, String status);
+
+  /// No description provided for @taskDetailMoveFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get taskDetailMoveFrom;
+
+  /// No description provided for @taskDetailMoveNeedsComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs a comment'**
+  String get taskDetailMoveNeedsComment;
+
+  /// No description provided for @taskDetailMoveStopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopped before {state}: {reason}'**
+  String taskDetailMoveStopped(String state, String reason);
+
+  /// No description provided for @taskDetailMoveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Move'**
+  String get taskDetailMoveTitle;
+
+  /// No description provided for @taskDetailMoveTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to {state}'**
+  String taskDetailMoveTo(String state);
+
+  /// No description provided for @taskDetailMoveVia.
+  ///
+  /// In en, this message translates to:
+  /// **'via {states}'**
+  String taskDetailMoveVia(String states);
+
+  /// No description provided for @taskDetailNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get taskDetailNo;
+
+  /// No description provided for @taskDetailNoArtifacts.
+  ///
+  /// In en, this message translates to:
+  /// **'No artifacts.'**
+  String get taskDetailNoArtifacts;
+
+  /// No description provided for @taskDetailNoComments.
+  ///
+  /// In en, this message translates to:
+  /// **'No comments yet.'**
+  String get taskDetailNoComments;
+
+  /// No description provided for @taskDetailNoDependencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Waits for nothing.'**
+  String get taskDetailNoDependencies;
+
+  /// No description provided for @taskDetailNoHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'No history.'**
+  String get taskDetailNoHistory;
+
+  /// No description provided for @taskDetailNoMoves.
+  ///
+  /// In en, this message translates to:
+  /// **'The workflow allows no move from here.'**
+  String get taskDetailNoMoves;
+
+  /// No description provided for @taskDetailNoRepeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Does not repeat'**
+  String get taskDetailNoRepeat;
+
+  /// No description provided for @taskDetailNoSubtasks.
+  ///
+  /// In en, this message translates to:
+  /// **'No subtasks.'**
+  String get taskDetailNoSubtasks;
+
+  /// No description provided for @taskDetailOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get taskDetailOpen;
+
+  /// No description provided for @taskDetailParent.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtask of'**
+  String get taskDetailParent;
+
+  /// No description provided for @taskDetailPickDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a date…'**
+  String get taskDetailPickDate;
+
+  /// No description provided for @taskDetailPickDateTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a date and time…'**
+  String get taskDetailPickDateTime;
+
+  /// No description provided for @taskDetailPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get taskDetailPreview;
+
+  /// No description provided for @taskDetailPriorityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority'**
+  String get taskDetailPriorityTitle;
+
+  /// No description provided for @taskDetailProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Project'**
+  String get taskDetailProject;
+
+  /// No description provided for @taskDetailRefCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference copied.'**
+  String get taskDetailRefCopied;
+
+  /// No description provided for @taskDetailRemoveDependency.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop waiting for {ref}'**
+  String taskDetailRemoveDependency(String ref);
+
+  /// No description provided for @taskDetailRemoveTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {tag}'**
+  String taskDetailRemoveTag(String tag);
+
+  /// No description provided for @taskDetailRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get taskDetailRename;
+
+  /// No description provided for @taskDetailRepeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeats'**
+  String get taskDetailRepeat;
+
+  /// No description provided for @taskDetailRepeatHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'every day, every 2 weeks on mon,thu, every month on day 31, 3 days after done'**
+  String get taskDetailRepeatHelp;
+
+  /// No description provided for @taskDetailRepeatHint.
+  ///
+  /// In en, this message translates to:
+  /// **'every week'**
+  String get taskDetailRepeatHint;
+
+  /// No description provided for @taskDetailRepeatInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Finishing a task with a rule creates the next one at once. Cancelling it does not. Empty stops the repeat.'**
+  String get taskDetailRepeatInfo;
+
+  /// No description provided for @taskDetailRepeats.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeats'**
+  String get taskDetailRepeats;
+
+  /// No description provided for @taskDetailRepeatTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat rule'**
+  String get taskDetailRepeatTitle;
+
+  /// No description provided for @taskDetailSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get taskDetailSave;
+
+  /// No description provided for @taskDetailSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved.'**
+  String get taskDetailSaved;
+
+  /// No description provided for @taskDetailSnooze.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze'**
+  String get taskDetailSnooze;
+
+  /// No description provided for @taskDetailSnoozed.
+  ///
+  /// In en, this message translates to:
+  /// **'Snoozed until {when}.'**
+  String taskDetailSnoozed(String when);
+
+  /// No description provided for @taskDetailSnoozeLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later today'**
+  String get taskDetailSnoozeLater;
+
+  /// No description provided for @taskDetailSnoozeNextWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Next week'**
+  String get taskDetailSnoozeNextWeek;
+
+  /// No description provided for @taskDetailSnoozeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze until'**
+  String get taskDetailSnoozeTitle;
+
+  /// No description provided for @taskDetailSnoozeTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow morning'**
+  String get taskDetailSnoozeTomorrow;
+
+  /// No description provided for @taskDetailStar.
+  ///
+  /// In en, this message translates to:
+  /// **'Star'**
+  String get taskDetailStar;
+
+  /// No description provided for @taskDetailStarred.
+  ///
+  /// In en, this message translates to:
+  /// **'Starred.'**
+  String get taskDetailStarred;
+
+  /// No description provided for @taskDetailSubtaskAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtask added.'**
+  String get taskDetailSubtaskAdded;
+
+  /// No description provided for @taskDetailSubtasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtasks'**
+  String get taskDetailSubtasks;
+
+  /// No description provided for @taskDetailSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'tix'**
+  String get taskDetailSystem;
+
+  /// No description provided for @taskDetailTagAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Tagged {name}.'**
+  String taskDetailTagAdded(String name);
+
+  /// No description provided for @taskDetailTagHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A new name creates the tag'**
+  String get taskDetailTagHint;
+
+  /// No description provided for @taskDetailTagRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed {name}.'**
+  String taskDetailTagRemoved(String name);
+
+  /// No description provided for @taskDetailTakePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get taskDetailTakePhoto;
+
+  /// No description provided for @taskDetailTitleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get taskDetailTitleLabel;
+
+  /// No description provided for @taskDetailUnassign.
+  ///
+  /// In en, this message translates to:
+  /// **'Unassign'**
+  String get taskDetailUnassign;
+
+  /// No description provided for @taskDetailUnstar.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove star'**
+  String get taskDetailUnstar;
+
+  /// No description provided for @taskDetailUnstarred.
+  ///
+  /// In en, this message translates to:
+  /// **'Star removed.'**
+  String get taskDetailUnstarred;
+
+  /// No description provided for @taskDetailUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get taskDetailUpdated;
+
+  /// No description provided for @taskDetailWake.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake now'**
+  String get taskDetailWake;
+
+  /// No description provided for @taskDetailWoken.
+  ///
+  /// In en, this message translates to:
+  /// **'Back in the lists.'**
+  String get taskDetailWoken;
+
+  /// No description provided for @taskDetailWrite.
+  ///
+  /// In en, this message translates to:
+  /// **'Write'**
+  String get taskDetailWrite;
+
+  /// No description provided for @taskDetailYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get taskDetailYes;
 }
 
 class _AppLocalizationsDelegate

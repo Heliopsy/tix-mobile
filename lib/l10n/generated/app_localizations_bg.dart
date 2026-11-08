@@ -563,4 +563,498 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get galleryTitle => 'Компоненти';
+
+  @override
+  String taskDetailActionsFor(String ref) {
+    return 'Действия за $ref';
+  }
+
+  @override
+  String get taskDetailActorSearch => 'Търсене по име или потребител';
+
+  @override
+  String get taskDetailAdd => 'Добави';
+
+  @override
+  String get taskDetailAddDependency => 'Добави зависимост';
+
+  @override
+  String get taskDetailAddSubtask => 'Добави подзадача';
+
+  @override
+  String get taskDetailAddTag => 'Добави етикет';
+
+  @override
+  String get taskDetailArtifactFile => 'файл';
+
+  @override
+  String get taskDetailArtifactLog => 'журнал';
+
+  @override
+  String get taskDetailArtifactMetric => 'метрика';
+
+  @override
+  String get taskDetailArtifactResult => 'резултат';
+
+  @override
+  String get taskDetailArtifacts => 'Артефакти';
+
+  @override
+  String get taskDetailArtifactSave => 'Запази';
+
+  @override
+  String get taskDetailArtifactShow => 'Покажи';
+
+  @override
+  String get taskDetailArtifactUnreadable =>
+      'Съдържанието на този артефакт не може да бъде прочетено.';
+
+  @override
+  String get taskDetailAssigneeTitle => 'Възложи';
+
+  @override
+  String taskDetailAttached(String name) {
+    return '$name е прикачен.';
+  }
+
+  @override
+  String get taskDetailAttachFile => 'Прикачи файл';
+
+  @override
+  String get taskDetailBlocked =>
+      'Блокирана: чака задача, която не е завършена.';
+
+  @override
+  String taskDetailChecklist(int done, int total) {
+    return '$done от $total готови';
+  }
+
+  @override
+  String get taskDetailClear => 'Изчисти';
+
+  @override
+  String get taskDetailCommands => 'Задача';
+
+  @override
+  String get taskDetailCommentActions => 'Действия с коментара';
+
+  @override
+  String get taskDetailCommentAdded => 'Коментарът е добавен.';
+
+  @override
+  String get taskDetailCommentDelete => 'Изтрий коментара';
+
+  @override
+  String get taskDetailCommentDeleteBody =>
+      'Изчезва за всички. Това не може да бъде отменено тук.';
+
+  @override
+  String get taskDetailCommentDeleted => 'Коментарът е изтрит.';
+
+  @override
+  String get taskDetailCommentDeleteTitle => 'Да се изтрие ли коментарът?';
+
+  @override
+  String get taskDetailCommentEdit => 'Редактиране на коментар';
+
+  @override
+  String get taskDetailCommentHint => 'Поддържа Markdown. @ споменава някого.';
+
+  @override
+  String get taskDetailCommentLabel => 'Коментар';
+
+  @override
+  String get taskDetailComments => 'Коментари';
+
+  @override
+  String get taskDetailCommentSend => 'Коментирай';
+
+  @override
+  String taskDetailCopied(String ref) {
+    return 'Копирана като $ref.';
+  }
+
+  @override
+  String get taskDetailCopiedFrom => 'Копирана от';
+
+  @override
+  String get taskDetailCopyAction => 'Копирай';
+
+  @override
+  String get taskDetailCopyComments => 'Копирай коментарите';
+
+  @override
+  String get taskDetailCopyDependencies => 'Копирай зависимостите';
+
+  @override
+  String get taskDetailCopyKeepStatus => 'Запази статуса';
+
+  @override
+  String get taskDetailCopyLink => 'Свържи копието с тази задача';
+
+  @override
+  String get taskDetailCopyNewTitle => 'Заглавие на копието';
+
+  @override
+  String get taskDetailCopyProject => 'Проект';
+
+  @override
+  String get taskDetailCopyRef => 'Копирай референцията';
+
+  @override
+  String get taskDetailCopySubtasks => 'Копирай подзадачите';
+
+  @override
+  String taskDetailCopyTitle(String ref) {
+    return 'Копиране на $ref';
+  }
+
+  @override
+  String get taskDetailCopyTo => 'Копирай в…';
+
+  @override
+  String taskDetailCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count задачи',
+      one: '1 задача',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get taskDetailCreated => 'Създадена';
+
+  @override
+  String get taskDetailCurrent => 'Текуща';
+
+  @override
+  String get taskDetailDelete => 'Изтрий';
+
+  @override
+  String taskDetailDeleted(String ref) {
+    return '$ref е изтрита.';
+  }
+
+  @override
+  String get taskDetailDeleteForGood => 'Изтрий завинаги';
+
+  @override
+  String get taskDetailDeletePermanentBody =>
+      'Премахва се завинаги, заедно с коментарите и историята си.';
+
+  @override
+  String taskDetailDeleteSubtasksBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count-те ѝ подзадачи се изтриват с нея.',
+      one: 'Подзадачата ѝ се изтрива с нея.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String taskDetailDeleteTitle(String ref) {
+    return 'Да се изтрие ли $ref?';
+  }
+
+  @override
+  String get taskDetailDeleteTrashBody =>
+      'Отива в кошчето и може да бъде възстановена.';
+
+  @override
+  String get taskDetailDependencies => 'Чака';
+
+  @override
+  String get taskDetailDependenciesInfo =>
+      'Тази задача се води блокирана, докато всяка задача тук не стигне до завършено състояние.';
+
+  @override
+  String taskDetailDependencyAdded(String ref) {
+    return 'Вече чака $ref.';
+  }
+
+  @override
+  String taskDetailDependencyRemoved(String ref) {
+    return 'Вече не чака $ref.';
+  }
+
+  @override
+  String get taskDetailDependsOn => 'Зависи от';
+
+  @override
+  String get taskDetailDependsOnHint => 'Референция, например infra-2';
+
+  @override
+  String get taskDetailDescriptionHint =>
+      'Markdown. - [ ] създава елемент от списък за отметки.';
+
+  @override
+  String get taskDetailDueClear => 'Без краен срок';
+
+  @override
+  String get taskDetailDueNextWeek => 'Следващата седмица';
+
+  @override
+  String get taskDetailDueTitle => 'Краен срок';
+
+  @override
+  String get taskDetailDueToday => 'Днес';
+
+  @override
+  String get taskDetailDueTomorrow => 'Утре';
+
+  @override
+  String get taskDetailEdit => 'Редактирай';
+
+  @override
+  String get taskDetailEditDescription => 'Редактиране на описанието';
+
+  @override
+  String get taskDetailEdited => 'редактиран';
+
+  @override
+  String taskDetailEditField(String name) {
+    return 'Промяна на $name';
+  }
+
+  @override
+  String get taskDetailFileTooBig =>
+      'Файлове над 1 MiB не могат да бъдат прикачени.';
+
+  @override
+  String get taskDetailHistory => 'История';
+
+  @override
+  String taskDetailHistoryChanged(String fields) {
+    return 'промени $fields';
+  }
+
+  @override
+  String get taskDetailHistoryCreated => 'създаде задачата';
+
+  @override
+  String get taskDetailHistoryDeleted => 'изтри задачата';
+
+  @override
+  String get taskDetailHistoryMore => 'Покажи по-стари';
+
+  @override
+  String taskDetailHistoryMoved(String from, String to) {
+    return 'я премести от $from в $to';
+  }
+
+  @override
+  String get taskDetailHistoryRestored => 'възстанови задачата';
+
+  @override
+  String get taskDetailJsonHelp =>
+      'JSON стойност: число, низ в кавички, списък или обект';
+
+  @override
+  String get taskDetailMove => 'Премести';
+
+  @override
+  String get taskDetailMoveComment => 'Коментар';
+
+  @override
+  String get taskDetailMoveCommentHelp =>
+      'Това преместване изисква коментар защо.';
+
+  @override
+  String taskDetailMoved(String ref, String status) {
+    return '$ref е преместена в $status.';
+  }
+
+  @override
+  String get taskDetailMoveFrom => 'От';
+
+  @override
+  String get taskDetailMoveNeedsComment => 'Изисква коментар';
+
+  @override
+  String taskDetailMoveStopped(String state, String reason) {
+    return 'Спря преди $state: $reason';
+  }
+
+  @override
+  String get taskDetailMoveTitle => 'Премести';
+
+  @override
+  String taskDetailMoveTo(String state) {
+    return 'Преместване в $state';
+  }
+
+  @override
+  String taskDetailMoveVia(String states) {
+    return 'през $states';
+  }
+
+  @override
+  String get taskDetailNo => 'Не';
+
+  @override
+  String get taskDetailNoArtifacts => 'Няма артефакти.';
+
+  @override
+  String get taskDetailNoComments => 'Още няма коментари.';
+
+  @override
+  String get taskDetailNoDependencies => 'Не чака нищо.';
+
+  @override
+  String get taskDetailNoHistory => 'Няма история.';
+
+  @override
+  String get taskDetailNoMoves =>
+      'Работният процес не позволява преместване оттук.';
+
+  @override
+  String get taskDetailNoRepeat => 'Не се повтаря';
+
+  @override
+  String get taskDetailNoSubtasks => 'Няма подзадачи.';
+
+  @override
+  String get taskDetailOpen => 'Отвори';
+
+  @override
+  String get taskDetailParent => 'Подзадача на';
+
+  @override
+  String get taskDetailPickDate => 'Избери дата…';
+
+  @override
+  String get taskDetailPickDateTime => 'Избери дата и час…';
+
+  @override
+  String get taskDetailPreview => 'Преглед';
+
+  @override
+  String get taskDetailPriorityTitle => 'Приоритет';
+
+  @override
+  String get taskDetailProject => 'Проект';
+
+  @override
+  String get taskDetailRefCopied => 'Референцията е копирана.';
+
+  @override
+  String taskDetailRemoveDependency(String ref) {
+    return 'Спри да чакаш $ref';
+  }
+
+  @override
+  String taskDetailRemoveTag(String tag) {
+    return 'Премахни $tag';
+  }
+
+  @override
+  String get taskDetailRename => 'Преименувай';
+
+  @override
+  String get taskDetailRepeat => 'Повтаря се';
+
+  @override
+  String get taskDetailRepeatHelp =>
+      'every day, every 2 weeks on mon,thu, every month on day 31, 3 days after done';
+
+  @override
+  String get taskDetailRepeatHint => 'every week';
+
+  @override
+  String get taskDetailRepeatInfo =>
+      'Завършването на задача с правило създава следващата веднага. Отказването не. Празно спира повторението.';
+
+  @override
+  String get taskDetailRepeats => 'Повтаря се';
+
+  @override
+  String get taskDetailRepeatTitle => 'Правило за повторение';
+
+  @override
+  String get taskDetailSave => 'Запази';
+
+  @override
+  String get taskDetailSaved => 'Запазено.';
+
+  @override
+  String get taskDetailSnooze => 'Отложи';
+
+  @override
+  String taskDetailSnoozed(String when) {
+    return 'Отложена до $when.';
+  }
+
+  @override
+  String get taskDetailSnoozeLater => 'По-късно днес';
+
+  @override
+  String get taskDetailSnoozeNextWeek => 'Следващата седмица';
+
+  @override
+  String get taskDetailSnoozeTitle => 'Отложи до';
+
+  @override
+  String get taskDetailSnoozeTomorrow => 'Утре сутрин';
+
+  @override
+  String get taskDetailStar => 'Отбележи със звезда';
+
+  @override
+  String get taskDetailStarred => 'Отбелязана със звезда.';
+
+  @override
+  String get taskDetailSubtaskAdded => 'Подзадачата е добавена.';
+
+  @override
+  String get taskDetailSubtasks => 'Подзадачи';
+
+  @override
+  String get taskDetailSystem => 'tix';
+
+  @override
+  String taskDetailTagAdded(String name) {
+    return 'Добавен етикет $name.';
+  }
+
+  @override
+  String get taskDetailTagHint => 'Ново име създава етикета';
+
+  @override
+  String taskDetailTagRemoved(String name) {
+    return 'Премахнат $name.';
+  }
+
+  @override
+  String get taskDetailTakePhoto => 'Снимай';
+
+  @override
+  String get taskDetailTitleLabel => 'Заглавие';
+
+  @override
+  String get taskDetailUnassign => 'Без изпълнител';
+
+  @override
+  String get taskDetailUnstar => 'Премахни звездата';
+
+  @override
+  String get taskDetailUnstarred => 'Звездата е премахната.';
+
+  @override
+  String get taskDetailUpdated => 'Обновена';
+
+  @override
+  String get taskDetailWake => 'Събуди сега';
+
+  @override
+  String get taskDetailWoken => 'Отново е в списъците.';
+
+  @override
+  String get taskDetailWrite => 'Писане';
+
+  @override
+  String get taskDetailYes => 'Да';
 }

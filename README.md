@@ -88,7 +88,10 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 - **Projects** visible to the active connection.
 - **Task lists** with pull to refresh and keyset pagination, so a long list loads a page at a time and stays stable
   while tasks are being added.
-- **Task detail** for a single task.
+- **Task detail** where every attribute the web edits is edited in place: title, Markdown description with a
+  checklist you tick, workflow moves, priority, assignee, due date, tags, custom fields and the repeat rule;
+  subtasks, dependencies, comments with `@` mentions, history and attached files; star, snooze, copy and delete
+  with Undo. Keys on a keyboard, haptics on a phone, the properties beside the description on a wide screen.
 - **Quick add** in tix's one-line syntax: `Fix login !high #auth @raj due:fri`. The server parses the line, so the
   app understands exactly what the CLI and the browser understand.
 - **Settings**: light, dark or system theme, English or Bulgarian, and the saved instances.

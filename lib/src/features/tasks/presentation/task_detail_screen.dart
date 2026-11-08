@@ -1,15 +1,30 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
+import 'dart:async';
+
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/router/routes.dart';
+import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
-import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
-import 'package:tix_mobile/src/features/tasks/application/tasks.dart';
+import 'package:tix_mobile/src/features/tasks/application/task_detail.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/detail/actions.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/detail/activity.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/detail/editors.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/detail/properties.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/detail/sections.dart';
+
+export 'package:tix_mobile/src/features/tasks/presentation/detail/properties.dart'
+    show AssigneeName;
+
+/// From this pane width the properties sit beside the description.
+const sidePropertiesMinWidth = 760.0;
 
 /// One task on a screen of its own, as phones show it.
 class TaskDetailScreen extends StatelessWidget {
@@ -30,7 +45,8 @@ class TaskDetailScreen extends StatelessWidget {
   );
 }
 
-/// A task's fields and description, without a frame.
+/// A task, everything about it editable, without a frame: the hub the task
+/// screen and the wide list's second pane both show.
 class TaskDetailView extends ConsumerWidget {
   /// Shows the task [taskRef].
   const TaskDetailView({required this.taskRef, this.showRef = true, super.key});
@@ -43,15 +59,12 @@ class TaskDetailView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final provider = taskDetailProvider(taskRef);
+    final provider = taskDetailControllerProvider(taskRef);
     return AsyncBody(
       value: ref.watch(provider),
       onRetry: () => ref.invalidate(provider),
       loading: const _DetailSkeleton(),
-      data: (task) => RefreshIndicator(
-        onRefresh: () => ref.refresh(provider.future),
-        child: _TaskBody(task: task, showRef: showRef),
-      ),
+      data: (task) => _TaskHub(task: task, showRef: showRef),
     );
   }
 }
@@ -82,223 +95,574 @@ class _DetailSkeleton extends StatelessWidget {
   );
 }
 
-class _TaskBody extends StatelessWidget {
-  const _TaskBody({required this.task, required this.showRef});
+class _TaskHub extends ConsumerStatefulWidget {
+  const _TaskHub({required this.task, required this.showRef});
 
   final Task task;
   final bool showRef;
 
   @override
-  Widget build(BuildContext context) {
+  ConsumerState<_TaskHub> createState() => _TaskHubState();
+}
+
+class _TaskHubState extends ConsumerState<_TaskHub> {
+  ActivityTab _tab = ActivityTab.comments;
+  var _editingTitle = false;
+  final _composer = FocusNode();
+
+  @override
+  void dispose() {
+    _composer.dispose();
+    super.dispose();
+  }
+
+  Task get task => widget.task;
+
+  void _comment() {
+    setState(() => _tab = ActivityTab.comments);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _composer.requestFocus();
+    });
+  }
+
+  Future<void> _copy() async {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
-    final t = context.tix;
-    final locale = Localizations.localeOf(context).toLanguageTag();
-    final due = task.dueAt;
-    return ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(
-        TixSpace.s5,
-        TixSpace.s4,
-        TixSpace.s5,
-        TixSpace.s6,
-      ),
-      children: [
-        Align(
-          alignment: AlignmentDirectional.centerStart,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: TixMeasure.form),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (showRef) ...[
-                  RefText(task.ref, size: TixText.sm),
-                  const SizedBox(height: TixSpace.s1),
-                ],
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (task.starred)
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 3,
-                          right: TixSpace.s2,
-                        ),
-                        child: Icon(
-                          Icons.star_rounded,
-                          color: t.accent,
-                          semanticLabel: l10n.starred,
-                        ),
-                      ),
-                    Expanded(
-                      child: SelectableText(
-                        task.title,
-                        style: theme.textTheme.headlineSmall,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: TixSpace.s5),
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: t.line),
-                    borderRadius: BorderRadius.circular(TixRadius.lg),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: TixSpace.s4,
-                      vertical: TixSpace.s2,
-                    ),
-                    child: Column(
-                      children: [
-                        _Field(
-                          label: l10n.fieldStatus,
-                          child: Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: StatusPill(
-                              key: const Key('task.status'),
-                              label: task.status,
-                            ),
-                          ),
-                        ),
-                        _Field(
-                          label: l10n.fieldPriority,
-                          child: Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: PriorityMark(
-                              priority: task.priority,
-                              emphasizeNormal: true,
-                            ),
-                          ),
-                        ),
-                        _Field(
-                          label: l10n.fieldAssignee,
-                          child: task.assigneeActorId.isEmpty
-                              ? Text(
-                                  l10n.unassigned,
-                                  style: TextStyle(
-                                    color: t.muted,
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                )
-                              : AssigneeName(actorId: task.assigneeActorId),
-                        ),
-                        _Field(
-                          label: l10n.fieldDue,
-                          last: task.tags.isEmpty,
-                          child: Text(
-                            due == null
-                                ? l10n.noDueDate
-                                : DateFormat.yMMMEd(locale)
-                                      .add_Hm()
-                                      .format(due.toLocal()),
-                            style: due == null
-                                ? TextStyle(color: t.muted)
-                                : null,
-                          ),
-                        ),
-                        if (task.tags.isNotEmpty)
-                          _Field(
-                            label: l10n.fieldTags,
-                            last: true,
-                            child: Wrap(
-                              spacing: TixSpace.s2,
-                              runSpacing: TixSpace.s1,
-                              children: [
-                                for (final tag in task.tags) TagChip(tag),
-                              ],
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-                SectionHeader(
-                  title: l10n.fieldDescription,
-                  padding: const EdgeInsets.only(
-                    top: TixSpace.s5,
-                    bottom: TixSpace.s2,
-                  ),
-                ),
-                if (task.body.trim().isEmpty)
-                  Text(l10n.noDescription, style: TextStyle(color: t.muted))
-                else
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxWidth: TixMeasure.text,
-                    ),
-                    // flutter_markdown_plus still reads
-                    // package:flutter/material.dart's theme; the bridge
-                    // hands it ours until it moves to material_ui.
-                    // ignore: deprecated_member_use
-                    child: MaterialUiCompatibilityBridge(
-                      child: MarkdownBody(data: task.body, selectable: true),
-                    ),
-                  ),
-              ],
-            ),
-          ),
+    final request = await askCopy(context, task);
+    if (request == null || !mounted) return;
+    final controller = ref.read(
+      taskDetailControllerProvider(task.ref).notifier,
+    );
+    try {
+      final copy = await controller.copy(request);
+      if (!mounted) return;
+      final router = GoRouter.of(context);
+      showTixToast(
+        context,
+        l10n.taskDetailCopied(copy.ref),
+        actionLabel: l10n.taskDetailOpen,
+        onAction: () =>
+            router.go(Routes.task(projectKeyOf(copy.ref), copy.ref)),
+      );
+    } on Object catch (e) {
+      if (mounted) {
+        showTixToast(context, errorMessage(l10n, e), tone: TixTone.danger);
+      }
+    }
+  }
+
+  Future<void> _delete({bool hard = false}) async {
+    final l10n = context.l10n;
+    final container = ProviderScope.containerOf(context);
+    final router = GoRouter.of(context);
+    final root = Navigator.of(context, rootNavigator: true).context;
+    TrashStatus trash;
+    try {
+      trash = await ref.read(trashStatusProvider.future);
+    } on Object {
+      trash = const TrashStatus();
+    }
+    final subtasks = ref.read(taskSubtasksProvider(task.ref)).value ?? [];
+    final cascade = subtasks.isNotEmpty;
+    final permanent = hard || !trash.enabled;
+    if (!mounted) return;
+    if (permanent || cascade) {
+      final ok = await confirmDestructive(
+        context,
+        title: l10n.taskDetailDeleteTitle(task.ref),
+        body: [
+          if (permanent) l10n.taskDetailDeletePermanentBody,
+          if (!permanent) l10n.taskDetailDeleteTrashBody,
+          if (cascade) l10n.taskDetailDeleteSubtasksBody(subtasks.length),
+        ].join(' '),
+        action: permanent
+            ? l10n.taskDetailDeleteForGood
+            : l10n.taskDetailDelete,
+      );
+      if (!ok || !mounted) return;
+    }
+    final controller = ref.read(
+      taskDetailControllerProvider(task.ref).notifier,
+    );
+    final ok = await tryAction(
+      context,
+      () => controller.delete(hard: hard, cascade: cascade),
+    );
+    if (!ok) return;
+    unawaited(TixHaptics.confirm());
+    final taskRef = task.ref;
+    final key = projectKeyOf(taskRef);
+    router.go(Routes.project(key));
+    if (!root.mounted) return;
+    showTixToast(
+      root,
+      l10n.taskDetailDeleted(taskRef),
+      onUndo: permanent
+          ? null
+          : () async {
+              try {
+                await container
+                    .read(taskDetailRepositoryProvider)
+                    .restore(taskRef);
+                container.invalidate(taskDetailControllerProvider(taskRef));
+                router.go(Routes.task(key, taskRef));
+              } on Object catch (e) {
+                if (root.mounted) {
+                  showTixToast(
+                    root,
+                    errorMessage(l10n, e),
+                    tone: TixTone.danger,
+                  );
+                }
+              }
+            },
+    );
+  }
+
+  Future<void> _copyRef() async {
+    await Clipboard.setData(ClipboardData(text: task.ref));
+    if (mounted) showTixToast(context, context.l10n.taskDetailRefCopied);
+  }
+
+  Future<void> _menu() async {
+    final l10n = context.l10n;
+    final snoozed = _snoozed;
+    final choice = await showActionSheet<String>(
+      context,
+      title: l10n.taskDetailActionsFor(task.ref),
+      actions: [
+        TixSheetAction(
+          key: const Key('menu.rename'),
+          value: 'rename',
+          label: l10n.taskDetailRename,
+          icon: Icons.title,
+        ),
+        TixSheetAction(
+          key: const Key('menu.move'),
+          value: 'move',
+          label: l10n.taskDetailMoveTitle,
+          icon: Icons.swap_horiz,
+        ),
+        TixSheetAction(
+          key: const Key('menu.star'),
+          value: 'star',
+          label: task.starred ? l10n.taskDetailUnstar : l10n.taskDetailStar,
+          icon: task.starred ? Icons.star_rounded : Icons.star_border_rounded,
+        ),
+        TixSheetAction(
+          key: const Key('menu.snooze'),
+          value: 'snooze',
+          label: snoozed ? l10n.taskDetailWake : l10n.taskDetailSnooze,
+          icon: snoozed ? Icons.alarm_off : Icons.snooze,
+        ),
+        TixSheetAction(
+          key: const Key('menu.comment'),
+          value: 'comment',
+          label: l10n.taskDetailCommentLabel,
+          icon: Icons.chat_bubble_outline,
+        ),
+        TixSheetAction(
+          key: const Key('menu.copy'),
+          value: 'copy',
+          label: l10n.taskDetailCopyTo,
+          icon: Icons.copy_all_outlined,
+        ),
+        TixSheetAction(
+          key: const Key('menu.ref'),
+          value: 'ref',
+          label: l10n.taskDetailCopyRef,
+          icon: Icons.tag,
+        ),
+        TixSheetAction(
+          key: const Key('menu.delete'),
+          value: 'delete',
+          label: l10n.taskDetailDelete,
+          icon: Icons.delete_outline,
+          destructive: true,
+        ),
+        TixSheetAction(
+          key: const Key('menu.purge'),
+          value: 'purge',
+          label: l10n.taskDetailDeleteForGood,
+          icon: Icons.delete_forever_outlined,
+          destructive: true,
         ),
       ],
     );
+    if (!mounted || choice == null) return;
+    switch (choice) {
+      case 'rename':
+        setState(() => _editingTitle = true);
+      case 'move':
+        await ref.moveTask(context, task);
+      case 'star':
+        await ref.toggleStar(context, task);
+      case 'snooze':
+        await ref.snooze(context, task);
+      case 'comment':
+        _comment();
+      case 'copy':
+        await _copy();
+      case 'ref':
+        await _copyRef();
+      case 'delete':
+        await _delete();
+      case 'purge':
+        await _delete(hard: true);
+    }
   }
-}
 
-class _Field extends StatelessWidget {
-  const _Field({required this.label, required this.child, this.last = false});
+  bool get _snoozed {
+    final until = task.snoozedUntil;
+    return until != null && until.isAfter(ref.read(clockProvider)());
+  }
 
-  final String label;
-  final Widget child;
-  final bool last;
+  List<TixCommand> _commands(AppLocalizations l10n) {
+    final group = l10n.taskDetailCommands;
+    TixCommand cmd(
+      String id,
+      String label,
+      IconData icon,
+      LogicalKeyboardKey key,
+      VoidCallback run,
+    ) => TixCommand(
+      id: 'taskDetail.$id',
+      label: label,
+      group: group,
+      icon: icon,
+      shortcut: SingleActivator(key),
+      run: run,
+    );
+    return [
+      cmd(
+        'rename',
+        l10n.taskDetailRename,
+        Icons.title,
+        LogicalKeyboardKey.keyE,
+        () => setState(() => _editingTitle = true),
+      ),
+      cmd(
+        'describe',
+        l10n.taskDetailEditDescription,
+        Icons.notes,
+        LogicalKeyboardKey.keyD,
+        () => editDescription(context, ref, task),
+      ),
+      cmd(
+        'move',
+        l10n.taskDetailMoveTitle,
+        Icons.swap_horiz,
+        LogicalKeyboardKey.keyM,
+        () => ref.moveTask(context, task),
+      ),
+      cmd(
+        'priority',
+        l10n.taskDetailPriorityTitle,
+        Icons.flag_outlined,
+        LogicalKeyboardKey.keyP,
+        () => ref.setPriority(context, task),
+      ),
+      cmd(
+        'assign',
+        l10n.taskDetailAssigneeTitle,
+        Icons.person_outline,
+        LogicalKeyboardKey.keyA,
+        () => ref.setAssignee(context, task),
+      ),
+      cmd(
+        'due',
+        l10n.taskDetailDueTitle,
+        Icons.event_outlined,
+        LogicalKeyboardKey.keyU,
+        () => ref.setDue(context, task),
+      ),
+      cmd(
+        'tag',
+        l10n.taskDetailAddTag,
+        Icons.sell_outlined,
+        LogicalKeyboardKey.keyT,
+        () => ref.addTag(context, task),
+      ),
+      cmd(
+        'star',
+        task.starred ? l10n.taskDetailUnstar : l10n.taskDetailStar,
+        Icons.star_border_rounded,
+        LogicalKeyboardKey.keyS,
+        () => ref.toggleStar(context, task),
+      ),
+      cmd(
+        'snooze',
+        _snoozed ? l10n.taskDetailWake : l10n.taskDetailSnooze,
+        Icons.snooze,
+        LogicalKeyboardKey.keyZ,
+        () => ref.snooze(context, task),
+      ),
+      cmd(
+        'comment',
+        l10n.taskDetailCommentLabel,
+        Icons.chat_bubble_outline,
+        LogicalKeyboardKey.keyC,
+        _comment,
+      ),
+      cmd(
+        'copy',
+        l10n.taskDetailCopyTo,
+        Icons.copy_all_outlined,
+        LogicalKeyboardKey.keyY,
+        _copy,
+      ),
+      cmd(
+        'delete',
+        l10n.taskDetailDelete,
+        Icons.delete_outline,
+        LogicalKeyboardKey.delete,
+        _delete,
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
-    final t = context.tix;
-    return Container(
-      constraints: const BoxConstraints(minHeight: 40),
-      padding: const EdgeInsets.symmetric(vertical: TixSpace.s2),
-      decoration: BoxDecoration(
-        border: last ? null : Border(bottom: BorderSide(color: t.line)),
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: TixText.xs,
-                fontWeight: FontWeight.w500,
-                color: t.muted,
+    final l10n = context.l10n;
+    final controller = taskDetailControllerProvider(task.ref);
+    final header = _Header(
+      task: task,
+      showRef: widget.showRef,
+      editingTitle: _editingTitle,
+      snoozed: _snoozed,
+      onEditTitle: (v) => setState(() => _editingTitle = v),
+      onMenu: _menu,
+    );
+    final props = TaskProperties(task: task);
+    final main = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DescriptionSection(task: task),
+        SubtasksSection(task: task),
+        DependenciesSection(task: task),
+        ActivitySection(
+          task: task,
+          tab: _tab,
+          onTab: (t) => setState(() => _tab = t),
+          composerFocus: _composer,
+        ),
+      ],
+    );
+    return CommandScope(
+      commands: _commands(l10n),
+      child: RefreshIndicator(
+        onRefresh: () async {
+          ref
+            ..invalidate(taskCommentsProvider(task.ref))
+            ..invalidate(taskSubtasksProvider(task.ref))
+            ..invalidate(taskDependenciesProvider(task.ref))
+            ..invalidate(taskArtifactsProvider(task.ref))
+            ..invalidate(taskHistoryProvider(task.ref));
+          await ref.read(controller.notifier).reload();
+        },
+        child: LayoutBuilder(
+          builder: (context, box) {
+            final wide = box.maxWidth >= sidePropertiesMinWidth;
+            return ListView(
+              key: const Key('task.detail'),
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.fromLTRB(
+                wide ? TixSpace.s5 : TixSpace.s4,
+                TixSpace.s4,
+                wide ? TixSpace.s5 : TixSpace.s4,
+                TixSpace.s7,
               ),
-            ),
-          ),
-          Expanded(child: child),
-        ],
+              children: [
+                header,
+                const SizedBox(height: TixSpace.s4),
+                if (wide)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: main),
+                      const SizedBox(width: TixSpace.s5),
+                      SizedBox(width: 340, child: props),
+                    ],
+                  )
+                else ...[
+                  props,
+                  main,
+                ],
+              ],
+            );
+          },
+        ),
       ),
     );
   }
 }
 
-/// An actor's name with their avatar, looked up by id; the id stands in
-/// until it arrives.
-class AssigneeName extends ConsumerWidget {
-  /// Names the actor [actorId].
-  const AssigneeName({required this.actorId, super.key});
+class _Header extends ConsumerWidget {
+  const _Header({
+    required this.task,
+    required this.showRef,
+    required this.editingTitle,
+    required this.snoozed,
+    required this.onEditTitle,
+    required this.onMenu,
+  });
 
-  /// The actor's id.
-  final String actorId;
+  final Task task;
+  final bool showRef;
+  final bool editingTitle;
+  final bool snoozed;
+  final ValueChanged<bool> onEditTitle;
+  final VoidCallback onMenu;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final actor = ref.watch(actorProvider(actorId)).value;
-    final name = actor == null ? actorId : actor.label;
-    return Row(
+    final l10n = context.l10n;
+    final t = context.tix;
+    final theme = Theme.of(context);
+    final until = task.snoozedUntil;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TixAvatar(label: name, seed: actor?.handle ?? actorId, size: 22),
-        const SizedBox(width: TixSpace.s2),
-        Flexible(child: Text(name)),
+        Row(
+          children: [
+            if (showRef) RefText(task.ref, size: TixText.sm),
+            if (task.recurrence.isNotEmpty) ...[
+              const SizedBox(width: TixSpace.s2),
+              Icon(
+                Icons.repeat,
+                size: 14,
+                color: t.muted,
+                semanticLabel: l10n.taskDetailRepeats,
+              ),
+            ],
+            if (snoozed && until != null) ...[
+              const SizedBox(width: TixSpace.s2),
+              Flexible(child: SnoozeMark(until: until)),
+            ],
+            const Spacer(),
+            TixIconButton(
+              key: const Key('task.star'),
+              icon: task.starred
+                  ? Icons.star_rounded
+                  : Icons.star_border_rounded,
+              color: task.starred ? t.accent : null,
+              selected: task.starred,
+              tooltip: task.starred
+                  ? l10n.taskDetailUnstar
+                  : l10n.taskDetailStar,
+              onPressed: () => ref.toggleStar(context, task),
+            ),
+            TixIconButton(
+              key: const Key('task.snooze'),
+              icon: snoozed ? Icons.alarm_off : Icons.snooze,
+              tooltip: snoozed ? l10n.taskDetailWake : l10n.taskDetailSnooze,
+              onPressed: () => ref.snooze(context, task),
+            ),
+            TixIconButton(
+              key: const Key('task.menu'),
+              icon: Icons.more_vert,
+              tooltip: l10n.taskDetailActionsFor(task.ref),
+              onPressed: onMenu,
+            ),
+          ],
+        ),
+        if (editingTitle)
+          _TitleField(
+            task: task,
+            onDone: () => onEditTitle(false),
+            onSave: (title) =>
+                patchTask(context, ref, task, TaskPatch.title(title)),
+          )
+        else
+          Semantics(
+            button: true,
+            hint: l10n.taskDetailRename,
+            child: InkWell(
+              key: const Key('task.title'),
+              borderRadius: BorderRadius.circular(TixRadius.md),
+              onTap: () => onEditTitle(true),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: TixSize.target),
+                child: Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(task.title, style: theme.textTheme.headlineSmall),
+                ),
+              ),
+            ),
+          ),
       ],
+    );
+  }
+}
+
+class _TitleField extends StatefulWidget {
+  const _TitleField({
+    required this.task,
+    required this.onDone,
+    required this.onSave,
+  });
+
+  final Task task;
+  final VoidCallback onDone;
+  final ValueChanged<String> onSave;
+
+  @override
+  State<_TitleField> createState() => _TitleFieldState();
+}
+
+class _TitleFieldState extends State<_TitleField> {
+  late final _controller = TextEditingController(text: widget.task.title)
+    ..selection = TextSelection(
+      baseOffset: 0,
+      extentOffset: widget.task.title.length,
+    );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _save() {
+    final title = _controller.text.trim();
+    widget.onDone();
+    if (title.isEmpty || title == widget.task.title) return;
+    widget.onSave(title);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return CallbackShortcuts(
+      bindings: {
+        const SingleActivator(LogicalKeyboardKey.escape): widget.onDone,
+      },
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              key: const Key('title.field'),
+              controller: _controller,
+              autofocus: true,
+              style: Theme.of(context).textTheme.headlineSmall,
+              textInputAction: TextInputAction.done,
+              decoration: InputDecoration(labelText: l10n.taskDetailTitleLabel),
+              onSubmitted: (_) => _save(),
+            ),
+          ),
+          TixIconButton(
+            key: const Key('title.cancel'),
+            icon: Icons.close,
+            tooltip: l10n.cancel,
+            onPressed: widget.onDone,
+          ),
+          TixIconButton(
+            key: const Key('title.save'),
+            icon: Icons.check,
+            tooltip: l10n.taskDetailSave,
+            onPressed: _save,
+          ),
+        ],
+      ),
     );
   }
 }

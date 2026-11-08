@@ -124,6 +124,8 @@ All in `lib/src/core/design/components/`. Each has a doc comment saying when to 
 | `SkeletonList`, `SkeletonBox` | Loading. Never a spinner for a list's first page |
 | `SectionHeader`, `TixSection`, `InfoTip` | Headed, always-visible groups; a short explanation behind (i) |
 | `TixTextField`, `TixSearchField`, `TixSwitchRow` | Form inputs: label above, help and errors below, capped at the field measure |
+| `TixPropertyList`, `TixPropertyRow` | A record's attributes, each a 48 dp row that opens its editor; the label moves above the value at large text |
+| `TixMarkdown` | Descriptions and comments: images become links, only `http`, `https` and `mailto` open, and checklist items are ticks |
 | `TixFilterBar`, `TixFilterChip` | A list's query and toggles |
 | `QuickAddField`, `QuickChip` | One line that becomes a task; what the server made of it |
 | `showTixSheet`, `TixSheetBody` | Opening a form or chooser: a sheet on a phone, a dialog wider |
