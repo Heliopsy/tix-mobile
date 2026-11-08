@@ -62,6 +62,13 @@ String errorMessage(AppLocalizations l10n, Object error) {
     TixErrorKind.passwordChange => l10n.errorPasswordChange,
     TixErrorKind.tenantRequired => l10n.errorTenantRequired,
     TixErrorKind.engineUnavailable => l10n.errorEngineUnavailable,
+    TixErrorKind.localNotUsable => switch (error.details['reason']) {
+      'folderNotWritable' => l10n.localInstanceErrorFolder,
+      'notLockable' => l10n.localInstanceErrorLock,
+      'notDownloaded' => l10n.localInstanceErrorNotDownloaded,
+      _ => l10n.localInstanceErrorNotDatabase,
+    },
+    TixErrorKind.localAccessDenied => l10n.localInstanceErrorAccess,
     TixErrorKind.unknown =>
       message.isEmpty ? l10n.errorUnknown : '${l10n.errorUnknown} $message',
   };

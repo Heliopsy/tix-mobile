@@ -203,6 +203,12 @@ class InstancesRepository {
   /// Replaces the stored record of [connection], keeping its secret.
   Future<void> update(Connection connection) => _upsertConnection(connection);
 
+  /// Replaces the stored record of [instance], when it is still saved.
+  Future<void> updateInstance(Instance instance) async {
+    if (this.instance(instance.id) == null) return;
+    await _upsertInstance(instance);
+  }
+
   /// Makes [ref] the active context and the most recent one.
   Future<void> activate(ContextRef ref) async {
     final now = _now();

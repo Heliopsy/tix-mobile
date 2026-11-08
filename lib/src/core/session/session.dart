@@ -16,7 +16,9 @@ import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/cache/response_cache.dart';
+import 'package:tix_mobile/src/data/local/in_place.dart';
 import 'package:tix_mobile/src/data/local/local_engine.dart';
+import 'package:tix_mobile/src/data/local/local_wake.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
@@ -129,7 +131,10 @@ class SessionController extends _$SessionController {
     final moved = engines.moved.listen((id) {
       if (id == instance.id) ref.invalidateSelf();
     });
-    ref.onDispose(moved.cancel);
+    final renewed = engines.renewed.listen(repo.updateInstance);
+    ref
+      ..onDispose(moved.cancel)
+      ..onDispose(renewed.cancel);
     try {
       final handle = await engines.ensure(instance);
       return _refreshed(
@@ -272,25 +277,34 @@ class SessionController extends _$SessionController {
   }
 
   /// Saves a token minted by the engine [handle] for [tenant] of the local
-  /// database at [dbPath], and makes it active.
+  /// database at [dbPath], used [inPlace] through [bookmark] or not, and
+  /// makes it active.
   Future<void> saveLocal({
     required String dbPath,
     required LocalHandle handle,
     required TenantRef tenant,
     required String token,
     String name = '',
+    bool inPlace = false,
+    String bookmark = '',
+    SyncFindings found = SyncFindings.none,
   }) async {
     final repo = ref.read(instancesRepositoryProvider);
-    final instance =
-        repo.localAt(dbPath) ??
-        Instance(
-          id: InstancesRepository.newId(),
-          name: name.trim().isEmpty ? _fileName(dbPath) : name.trim(),
-          kind: InstanceKind.local,
-          dbPath: dbPath,
-          createdAt: DateTime.now(),
-        );
-    ref.read(localEnginesProvider).adopt(instance, handle);
+    final existing = repo.localAt(dbPath);
+    final instance = existing == null
+        ? Instance(
+            id: InstancesRepository.newId(),
+            name: name.trim().isEmpty ? _fileName(dbPath) : name.trim(),
+            kind: InstanceKind.local,
+            dbPath: dbPath,
+            inPlace: inPlace,
+            bookmark: bookmark,
+            createdAt: DateTime.now(),
+          )
+        : bookmark.isEmpty
+        ? existing
+        : existing.copyWith(bookmark: bookmark);
+    ref.read(localEnginesProvider).adopt(instance, handle, found: found);
     final saved = await repo.save(
       instance: instance,
       connection: Connection(
@@ -583,17 +597,36 @@ ContextDirectory contextDirectory(Ref ref) {
 }
 
 /// The API client for the active session.
+///
+/// A local instance's client wakes its engine before every request, so an
+/// engine stopped while idle comes back on its own.
 @riverpod
 TixApi sessionApi(Ref ref) {
   final target = ref.watch(
     sessionControllerProvider.select(
-      (s) => (s.value?.baseUrl, s.value?.credential, s.value?.problem),
+      (s) => (
+        s.value?.baseUrl,
+        s.value?.credential,
+        s.value?.problem,
+        s.value?.instance,
+      ),
     ),
   );
-  final (baseUrl, credential, problem) = target;
+  final (baseUrl, credential, problem, instance) = target;
   if (problem != null) throw problem;
   if (baseUrl == null) throw StateError('no active session');
-  return ref.watch(tixApiFactoryProvider)(baseUrl, credential);
+  final api = ref.watch(tixApiFactoryProvider)(baseUrl, credential);
+  if (instance != null && instance.kind == InstanceKind.local) {
+    final engines = ref.watch(localEnginesProvider);
+    api.transport.dio.interceptors.insert(
+      0,
+      LocalWakeInterceptor(
+        wake: () async => (await engines.ensure(instance)).baseUrl,
+        touch: () => engines.touch(instance.id),
+      ),
+    );
+  }
+  return api;
 }
 
 /// The response cache of the active context. Reads are best effort, so a

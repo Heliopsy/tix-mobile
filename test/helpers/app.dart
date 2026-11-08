@@ -14,6 +14,7 @@ import 'package:tix_mobile/src/core/events/events.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/notifications/local_notifier.dart';
 import 'package:tix_mobile/src/core/platform/files.dart';
+import 'package:tix_mobile/src/core/platform/local_access.dart';
 import 'package:tix_mobile/src/core/session/api.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
@@ -22,6 +23,7 @@ import 'package:tix_mobile/src/data/local/local_engine.dart';
 
 import 'fake_events.dart';
 import 'fake_notes.dart';
+import 'fake_local_access.dart';
 import 'fake_tix.dart';
 import 'stores.dart';
 
@@ -113,6 +115,7 @@ List<Override> fakeOverrides(
   MemorySecretStore? secrets,
   LocalTixEngine? engine,
   FilePicking? files,
+  LocalFileAccess? access,
   bool local = false,
   CacheStore? cache,
   EventSocketConnector events = refusingEventSocket,
@@ -124,6 +127,14 @@ List<Override> fakeOverrides(
   localTixEngineProvider.overrideWithValue(engine ?? InMemoryLocalTixEngine()),
   localInstancesEnabledProvider.overrideWithValue(local),
   filePickingProvider.overrideWithValue(files ?? FakeFilePicking()),
+  localFileAccessProvider.overrideWithValue(
+    access ??
+        FakeLocalFileAccess(
+          inPlace: (files?.opensInPlace ?? true)
+              ? InPlaceKind.dialogs
+              : InPlaceKind.none,
+        ),
+  ),
   clockProvider.overrideWithValue(() => fixedNow),
   cacheStoreProvider.overrideWithValue(cache ?? MemoryCacheStore()),
   eventSocketConnectorProvider.overrideWithValue(events),

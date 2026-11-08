@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Instance {
 
- String get id; String get name; InstanceKind get kind; DateTime get createdAt; String get baseUrl; String get dbPath; DateTime? get lastUsedAt;
+ String get id; String get name; InstanceKind get kind; DateTime get createdAt; String get baseUrl; String get dbPath; bool get inPlace; String get bookmark; DateTime? get lastUsedAt;
 /// Create a copy of Instance
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $InstanceCopyWith<Instance> get copyWith => _$InstanceCopyWithImpl<Instance>(thi
 @override
 bool operator ==(Object other) {
   final _this = this as Instance;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Instance&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.kind, _this.kind) || other.kind == _this.kind)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.baseUrl, _this.baseUrl) || other.baseUrl == _this.baseUrl)&&(identical(other.dbPath, _this.dbPath) || other.dbPath == _this.dbPath)&&(identical(other.lastUsedAt, _this.lastUsedAt) || other.lastUsedAt == _this.lastUsedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Instance&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.kind, _this.kind) || other.kind == _this.kind)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.baseUrl, _this.baseUrl) || other.baseUrl == _this.baseUrl)&&(identical(other.dbPath, _this.dbPath) || other.dbPath == _this.dbPath)&&(identical(other.inPlace, _this.inPlace) || other.inPlace == _this.inPlace)&&(identical(other.bookmark, _this.bookmark) || other.bookmark == _this.bookmark)&&(identical(other.lastUsedAt, _this.lastUsedAt) || other.lastUsedAt == _this.lastUsedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Instance;
-  return Object.hash(runtimeType,_this.id,_this.name,_this.kind,_this.createdAt,_this.baseUrl,_this.dbPath,_this.lastUsedAt);
+  return Object.hash(runtimeType,_this.id,_this.name,_this.kind,_this.createdAt,_this.baseUrl,_this.dbPath,_this.inPlace,_this.bookmark,_this.lastUsedAt);
 }
 
 @override
 String toString() {
   final _this = this as Instance;
-  return 'Instance(id: ${_this.id}, name: ${_this.name}, kind: ${_this.kind}, createdAt: ${_this.createdAt}, baseUrl: ${_this.baseUrl}, dbPath: ${_this.dbPath}, lastUsedAt: ${_this.lastUsedAt})';
+  return 'Instance(id: ${_this.id}, name: ${_this.name}, kind: ${_this.kind}, createdAt: ${_this.createdAt}, baseUrl: ${_this.baseUrl}, dbPath: ${_this.dbPath}, inPlace: ${_this.inPlace}, bookmark: ${_this.bookmark}, lastUsedAt: ${_this.lastUsedAt})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $InstanceCopyWith<$Res>  {
   factory $InstanceCopyWith(Instance value, $Res Function(Instance) _then) = _$InstanceCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, InstanceKind kind, DateTime createdAt, String baseUrl, String dbPath, DateTime? lastUsedAt
+ String id, String name, InstanceKind kind, DateTime createdAt, String baseUrl, String dbPath, bool inPlace, String bookmark, DateTime? lastUsedAt
 });
 
 
@@ -71,7 +71,7 @@ class _$InstanceCopyWithImpl<$Res>
 
 /// Create a copy of Instance
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? kind = null,Object? createdAt = null,Object? baseUrl = null,Object? dbPath = null,Object? lastUsedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? kind = null,Object? createdAt = null,Object? baseUrl = null,Object? dbPath = null,Object? inPlace = null,Object? bookmark = null,Object? lastUsedAt = freezed,}) {
   return _then(Instance(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -79,6 +79,8 @@ as String,kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non
 as InstanceKind,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,baseUrl: null == baseUrl ? _self.baseUrl : baseUrl // ignore: cast_nullable_to_non_nullable
 as String,dbPath: null == dbPath ? _self.dbPath : dbPath // ignore: cast_nullable_to_non_nullable
+as String,inPlace: null == inPlace ? _self.inPlace : inPlace // ignore: cast_nullable_to_non_nullable
+as bool,bookmark: null == bookmark ? _self.bookmark : bookmark // ignore: cast_nullable_to_non_nullable
 as String,lastUsedAt: freezed == lastUsedAt ? _self.lastUsedAt : lastUsedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
@@ -165,10 +167,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  InstanceKind kind,  DateTime createdAt,  String baseUrl,  String dbPath,  DateTime? lastUsedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  InstanceKind kind,  DateTime createdAt,  String baseUrl,  String dbPath,  bool inPlace,  String bookmark,  DateTime? lastUsedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Instance() when $default != null:
-return $default(_that.id,_that.name,_that.kind,_that.createdAt,_that.baseUrl,_that.dbPath,_that.lastUsedAt);case _:
+return $default(_that.id,_that.name,_that.kind,_that.createdAt,_that.baseUrl,_that.dbPath,_that.inPlace,_that.bookmark,_that.lastUsedAt);case _:
   return orElse();
 
 }
@@ -186,10 +188,10 @@ return $default(_that.id,_that.name,_that.kind,_that.createdAt,_that.baseUrl,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  InstanceKind kind,  DateTime createdAt,  String baseUrl,  String dbPath,  DateTime? lastUsedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  InstanceKind kind,  DateTime createdAt,  String baseUrl,  String dbPath,  bool inPlace,  String bookmark,  DateTime? lastUsedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Instance():
-return $default(_that.id,_that.name,_that.kind,_that.createdAt,_that.baseUrl,_that.dbPath,_that.lastUsedAt);case _:
+return $default(_that.id,_that.name,_that.kind,_that.createdAt,_that.baseUrl,_that.dbPath,_that.inPlace,_that.bookmark,_that.lastUsedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -206,10 +208,10 @@ return $default(_that.id,_that.name,_that.kind,_that.createdAt,_that.baseUrl,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  InstanceKind kind,  DateTime createdAt,  String baseUrl,  String dbPath,  DateTime? lastUsedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  InstanceKind kind,  DateTime createdAt,  String baseUrl,  String dbPath,  bool inPlace,  String bookmark,  DateTime? lastUsedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Instance() when $default != null:
-return $default(_that.id,_that.name,_that.kind,_that.createdAt,_that.baseUrl,_that.dbPath,_that.lastUsedAt);case _:
+return $default(_that.id,_that.name,_that.kind,_that.createdAt,_that.baseUrl,_that.dbPath,_that.inPlace,_that.bookmark,_that.lastUsedAt);case _:
   return null;
 
 }
@@ -221,7 +223,7 @@ return $default(_that.id,_that.name,_that.kind,_that.createdAt,_that.baseUrl,_th
 @JsonSerializable()
 
 class _Instance extends Instance {
-  const _Instance({required this.id, required this.name, required this.kind, required this.createdAt, this.baseUrl = '', this.dbPath = '', this.lastUsedAt}): super._();
+  const _Instance({required this.id, required this.name, required this.kind, required this.createdAt, this.baseUrl = '', this.dbPath = '', this.inPlace = false, this.bookmark = '', this.lastUsedAt}): super._();
   factory _Instance.fromJson(Map<String, dynamic> json) => _$InstanceFromJson(json);
 
 @override final  String id;
@@ -230,6 +232,8 @@ class _Instance extends Instance {
 @override final  DateTime createdAt;
 @override@JsonKey() final  String baseUrl;
 @override@JsonKey() final  String dbPath;
+@override@JsonKey() final  bool inPlace;
+@override@JsonKey() final  String bookmark;
 @override final  DateTime? lastUsedAt;
 
 /// Create a copy of Instance
@@ -245,18 +249,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Instance&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.baseUrl, baseUrl) || other.baseUrl == baseUrl)&&(identical(other.dbPath, dbPath) || other.dbPath == dbPath)&&(identical(other.lastUsedAt, lastUsedAt) || other.lastUsedAt == lastUsedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Instance&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.baseUrl, baseUrl) || other.baseUrl == baseUrl)&&(identical(other.dbPath, dbPath) || other.dbPath == dbPath)&&(identical(other.inPlace, inPlace) || other.inPlace == inPlace)&&(identical(other.bookmark, bookmark) || other.bookmark == bookmark)&&(identical(other.lastUsedAt, lastUsedAt) || other.lastUsedAt == lastUsedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,name,kind,createdAt,baseUrl,dbPath,lastUsedAt);
+    return Object.hash(runtimeType,id,name,kind,createdAt,baseUrl,dbPath,inPlace,bookmark,lastUsedAt);
 }
 
 @override
 String toString() {
-    return 'Instance(id: $id, name: $name, kind: $kind, createdAt: $createdAt, baseUrl: $baseUrl, dbPath: $dbPath, lastUsedAt: $lastUsedAt)';
+    return 'Instance(id: $id, name: $name, kind: $kind, createdAt: $createdAt, baseUrl: $baseUrl, dbPath: $dbPath, inPlace: $inPlace, bookmark: $bookmark, lastUsedAt: $lastUsedAt)';
 }
 
 
@@ -267,7 +271,7 @@ abstract mixin class _$InstanceCopyWith<$Res> implements $InstanceCopyWith<$Res>
   factory _$InstanceCopyWith(_Instance value, $Res Function(_Instance) _then) = __$InstanceCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, InstanceKind kind, DateTime createdAt, String baseUrl, String dbPath, DateTime? lastUsedAt
+ String id, String name, InstanceKind kind, DateTime createdAt, String baseUrl, String dbPath, bool inPlace, String bookmark, DateTime? lastUsedAt
 });
 
 
@@ -284,7 +288,7 @@ class __$InstanceCopyWithImpl<$Res>
 
 /// Create a copy of Instance
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? kind = null,Object? createdAt = null,Object? baseUrl = null,Object? dbPath = null,Object? lastUsedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? kind = null,Object? createdAt = null,Object? baseUrl = null,Object? dbPath = null,Object? inPlace = null,Object? bookmark = null,Object? lastUsedAt = freezed,}) {
   return _then(_Instance(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -292,6 +296,8 @@ as String,kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non
 as InstanceKind,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,baseUrl: null == baseUrl ? _self.baseUrl : baseUrl // ignore: cast_nullable_to_non_nullable
 as String,dbPath: null == dbPath ? _self.dbPath : dbPath // ignore: cast_nullable_to_non_nullable
+as String,inPlace: null == inPlace ? _self.inPlace : inPlace // ignore: cast_nullable_to_non_nullable
+as bool,bookmark: null == bookmark ? _self.bookmark : bookmark // ignore: cast_nullable_to_non_nullable
 as String,lastUsedAt: freezed == lastUsedAt ? _self.lastUsedAt : lastUsedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));

@@ -5,14 +5,17 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/files.dart';
+import 'package:tix_mobile/src/core/platform/local_access.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/widgets/sync_findings_note.dart';
 import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
 import 'package:tix_mobile/src/data/local/local_engine.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
 import 'package:tix_mobile/src/data/models/membership.dart';
 import 'package:tix_mobile/src/features/connect/application/connect_flow.dart';
+import 'package:tix_mobile/src/features/connect/presentation/in_place_browser.dart';
 
 /// How a remote connection proves who it is.
 enum ConnectMethod {
@@ -73,6 +76,7 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
   bool _busy = false;
   bool _showSecret = false;
   bool _pinned = false;
+  bool _accessRefused = false;
   String? _tenant;
   Object? _error;
 
@@ -172,6 +176,82 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
     await _run(
       () => _flow.openLocal(path: path, create: true, name: _name.text),
     );
+  }
+
+  Future<void> _openInPlace(InPlaceKind kind) async {
+    final access = ref.read(localFileAccessProvider);
+    setState(() {
+      _error = null;
+      _accessRefused = false;
+    });
+    switch (kind) {
+      case InPlaceKind.none:
+        return;
+      case InPlaceKind.dialogs:
+        final path = await ref.read(filePickingProvider).openDatabase();
+        if (path == null) return;
+        await _run(
+          () => _flow.openLocal(path: path, name: _name.text, inPlace: true),
+        );
+      case InPlaceKind.sharedStorage:
+        if (!await access.hasPermission()) {
+          if (!mounted || !await _explainPermission()) return;
+          if (!await access.requestPermission()) {
+            if (mounted) setState(() => _accessRefused = true);
+            return;
+          }
+        }
+        final root = await access.sharedRoot();
+        if (!mounted) return;
+        final pick = await showInPlaceBrowser(context, root: root);
+        if (pick == null) return;
+        await _run(
+          () => _flow.openLocal(
+            path: pick.path,
+            create: pick.create,
+            name: _name.text,
+            inPlace: true,
+          ),
+        );
+      case InPlaceKind.bookmark:
+        final folder = await access.pickFolder();
+        if (folder == null || !mounted) return;
+        final pick = await showInPlaceBrowser(context, root: folder.path);
+        await access.release(folder);
+        if (pick == null) return;
+        await _run(
+          () => _flow.openLocal(
+            path: pick.path,
+            create: pick.create,
+            name: _name.text,
+            inPlace: true,
+            bookmark: folder.bookmark,
+          ),
+        );
+    }
+  }
+
+  Future<bool> _explainPermission() async {
+    final l10n = context.l10n;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.localInstancePermissionTitle),
+        content: Text(l10n.localInstancePermissionBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            key: const Key('connect.permissionContinue'),
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(l10n.localInstancePermissionContinue),
+          ),
+        ],
+      ),
+    );
+    return ok ?? false;
   }
 
   void _back() {
@@ -424,8 +504,10 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
       ];
     }
     final desktop = ref.watch(filePickingProvider).opensInPlace;
+    final inPlace =
+        ref.watch(localInPlaceKindProvider).value ?? InPlaceKind.none;
     return [
-      Text(desktop ? l10n.localIntro : l10n.localIntroImport),
+      Text(desktop ? l10n.localInstanceDesktopIntro : l10n.localIntroImport),
       const SizedBox(height: 16),
       _NameField(controller: _name, enabled: !_busy),
       const SizedBox(height: 24),
@@ -450,20 +532,60 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
         icon: const Icon(Icons.add),
         label: Text(desktop ? l10n.localNewFile : l10n.localCreate),
       ),
-      const SizedBox(height: 12),
-      OutlinedButton.icon(
-        key: const Key('connect.openDb'),
-        onPressed: _busy ? null : _openFile,
-        icon: Icon(desktop ? Icons.folder_open : Icons.file_download_outlined),
-        label: Text(desktop ? l10n.localOpenFile : l10n.localImportFile),
-      ),
-      if (desktop) ...[
+      if (!desktop) ...[
+        const SizedBox(height: 12),
+        OutlinedButton.icon(
+          key: const Key('connect.openDb'),
+          onPressed: _busy ? null : _openFile,
+          icon: const Icon(Icons.file_download_outlined),
+          label: Text(l10n.localImportFile),
+        ),
+      ],
+      if (inPlace != InPlaceKind.none) ...[
+        const SizedBox(height: 32),
+        Text(
+          l10n.localInstanceAdvancedTitle,
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
+        const SizedBox(height: 8),
+        Text(l10n.localInstanceAdvancedBody),
+        const SizedBox(height: 8),
+        Text(
+          l10n.localInstanceSyncWarning,
+          key: const Key('connect.syncWarning'),
+          style: TextStyle(color: Theme.of(context).colorScheme.error),
+        ),
+        const SizedBox(height: 12),
+        OutlinedButton.icon(
+          key: const Key('connect.inPlace'),
+          onPressed: _busy ? null : () => _openInPlace(inPlace),
+          icon: const Icon(Icons.folder_open),
+          label: Text(
+            inPlace == InPlaceKind.dialogs
+                ? l10n.localOpenFile
+                : l10n.localInstanceOpenInPlace,
+          ),
+        ),
         const SizedBox(height: 8),
         Text(
           l10n.localOpenInPlace,
           key: const Key('connect.inPlaceNote'),
           style: Theme.of(context).textTheme.bodySmall,
         ),
+        if (_accessRefused) ...[
+          const SizedBox(height: 12),
+          Text(
+            l10n.localInstancePermissionRefused,
+            key: const Key('connect.accessRefused'),
+          ),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            key: const Key('connect.importInstead'),
+            onPressed: _busy ? null : _openFile,
+            icon: const Icon(Icons.file_download_outlined),
+            label: Text(l10n.localInstanceImportInstead),
+          ),
+        ],
       ],
     ];
   }
@@ -559,6 +681,11 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
     final l10n = context.l10n;
     return [
       Text(step.dbPath, style: Theme.of(context).textTheme.bodySmall),
+      if (step.inPlace)
+        SyncFindingsNote(
+          findings: step.findings,
+          key: const Key('connect.findings'),
+        ),
       const SizedBox(height: 16),
       Text(l10n.localTenantsIntro),
       const SizedBox(height: 8),

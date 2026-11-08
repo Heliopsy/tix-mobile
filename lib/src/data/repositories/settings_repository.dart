@@ -2,7 +2,7 @@
 
 import 'package:tix_mobile/src/core/storage/stores.dart';
 
-/// Theme and language choices, stored by name.
+/// Theme, language and local engine choices, stored by name.
 class SettingsRepository {
   /// Keeps the choices in [_store].
   SettingsRepository(this._store);
@@ -10,6 +10,7 @@ class SettingsRepository {
   static const _themeKey = 'settings.theme';
   static const _localeKey = 'settings.locale';
   static const _systemBlackKey = 'settings.systemBlack';
+  static const _idleKey = 'settings.local_idle_minutes';
 
   final KeyValueStore _store;
 
@@ -33,4 +34,12 @@ class SettingsRepository {
   /// Saves [code], or follows the system again when it is null.
   Future<void> setLanguageCode(String? code) =>
       code == null ? _store.delete(_localeKey) : _store.write(_localeKey, code);
+
+  /// Minutes a local engine may sit idle before it stops, 0 for never; null
+  /// when never chosen.
+  int? localIdleMinutes() => int.tryParse(_store.read(_idleKey) ?? '');
+
+  /// Saves [minutes] as the local engine idle timeout, 0 for never.
+  Future<void> setLocalIdleMinutes(int minutes) =>
+      _store.write(_idleKey, '$minutes');
 }

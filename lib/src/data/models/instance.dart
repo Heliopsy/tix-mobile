@@ -24,6 +24,8 @@ abstract class Instance with _$Instance {
     required DateTime createdAt,
     @Default('') String baseUrl,
     @Default('') String dbPath,
+    @Default(false) bool inPlace,
+    @Default('') String bookmark,
     DateTime? lastUsedAt,
   }) = _Instance;
 

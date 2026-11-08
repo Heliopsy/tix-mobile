@@ -93,6 +93,16 @@ void main() {
     );
   });
 
+  test('an error raised before the request is carried as it is', () {
+    const carried = TixException(TixErrorKind.localAccessDenied);
+    expect(
+      TixException.fromDio(
+        DioException(requestOptions: options, error: carried),
+      ),
+      same(carried),
+    );
+  });
+
   test('toString names the kind, status and message', () {
     expect(
       const TixException(

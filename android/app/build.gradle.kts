@@ -105,6 +105,21 @@ android {
     }
 }
 
+// Open in place on Android needs "All files access", which Google Play only
+// allows for apps whose core purpose is file management. The permission is in
+// an overlay manifest merged into every variant unless the build passes
+// -PtixAllFilesAccess=false; the app asks at runtime whether it was declared
+// and offers open in place only then.
+val allFilesAccess = (findProperty("tixAllFilesAccess") as String?)?.toBoolean() ?: true
+
+androidComponents {
+    onVariants { variant ->
+        if (allFilesAccess) {
+            variant.sources.manifests.addStaticManifestFile("src/allFilesAccess/AndroidManifest.xml")
+        }
+    }
+}
+
 kotlin {
     compilerOptions {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17

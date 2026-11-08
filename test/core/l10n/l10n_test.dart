@@ -31,6 +31,18 @@ void main() {
     );
   });
 
+  test('a file refused for open in place says why', () {
+    String refused(String reason) => errorMessage(
+      en,
+      TixException(TixErrorKind.localNotUsable, details: {'reason': reason}),
+    );
+    expect(refused('folderNotWritable'), en.localInstanceErrorFolder);
+    expect(refused('notLockable'), en.localInstanceErrorLock);
+    expect(refused('notDownloaded'), en.localInstanceErrorNotDownloaded);
+    expect(refused('notDatabase'), en.localInstanceErrorNotDatabase);
+    expect(msg(TixErrorKind.localAccessDenied), en.localInstanceErrorAccess);
+  });
+
   test("the server's message is shown where it explains the refusal", () {
     expect(
       msg(TixErrorKind.invalid, 'unknown project'),

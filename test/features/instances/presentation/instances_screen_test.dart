@@ -5,10 +5,14 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/data/local/in_place.dart';
+import 'package:tix_mobile/src/data/local/local_engine.dart';
 import 'package:tix_mobile/src/features/instances/presentation/instances_screen.dart';
 
 import '../../../helpers/app.dart';
+import '../../../helpers/fake_local_access.dart';
 import '../../../helpers/fake_tix.dart';
 import '../../../helpers/stores.dart';
 
@@ -58,6 +62,8 @@ void main() {
     WidgetTester tester, {
     Size size = phone,
     FakeFilePicking? files,
+    LocalTixEngine? engine,
+    FakeLocalFileAccess? access,
   }) => pumpScreen(
     tester,
     const InstancesScreen(),
@@ -67,8 +73,20 @@ void main() {
       settings: stores.settings,
       secrets: stores.secrets,
       files: files,
+      engine: engine,
+      access: access,
     ),
   );
+
+  void useInPlace() {
+    final instances =
+        jsonDecode(stores.settings.values['instances']!) as List<dynamic>;
+    (instances.last as Map<String, dynamic>)['in_place'] = true;
+    stores.settings.values['instances'] = jsonEncode(instances);
+  }
+
+  Finder inEngine(String id, Finder f) =>
+      find.descendant(of: find.byKey(Key('instances.engine.$id')), matching: f);
 
   Finder inConnection(String id, Finder f) => find.descendant(
     of: find.byKey(Key('instances.connection.$id')),
@@ -188,6 +206,56 @@ void main() {
     final files = FakeFilePicking();
     await pump(tester, files: files);
     expect(find.text('/home/ana/tix.db'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('instances.instance.i2.menu')));
+    await tester.pumpAndSettle();
+    expect(find.text('Export database…'), findsNothing);
+  });
+
+  testWidgets('a local engine shows its state and stops', (tester) async {
+    final engine = InMemoryLocalTixEngine(existing: ['/home/ana/tix.db']);
+    final c = await pump(tester, engine: engine);
+    expect(inEngine('i2', find.text('Stopped')), findsOneWidget);
+    expect(find.byKey(const Key('instances.engine.i2.stop')), findsNothing);
+    final instance = c.read(instancesRepositoryProvider).instance('i2')!;
+    final h = await c.read(localEnginesProvider).ensure(instance);
+    await tester.pumpAndSettle();
+    expect(
+      inEngine('i2', find.text('Running at ${Uri.parse(h.baseUrl).authority}')),
+      findsOneWidget,
+    );
+    await tester.tap(find.byKey(const Key('instances.engine.i2.stop')));
+    await tester.pumpAndSettle();
+    expect(engine.running, isEmpty);
+    expect(
+      inEngine('i2', find.text('Stopped, starts again when needed')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const Key('instances.engine.i2.stop')), findsNothing);
+  });
+
+  testWidgets('a file used in place says so, offers no export on a phone, '
+      'and names conflict copies', (tester) async {
+    useInPlace();
+    final engine = InMemoryLocalTixEngine(existing: ['/home/ana/tix.db']);
+    final access = FakeLocalFileAccess()
+      ..found = const SyncFindings(conflicts: ['tix (1).db']);
+    final c = await pump(
+      tester,
+      engine: engine,
+      access: access,
+      files: FakeFilePicking(desktop: false),
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('instances.instance.i2')),
+        matching: find.text('Used in place · /home/ana/tix.db'),
+      ),
+      findsOneWidget,
+    );
+    final instance = c.read(instancesRepositoryProvider).instance('i2')!;
+    await c.read(localEnginesProvider).ensure(instance);
+    await tester.pumpAndSettle();
+    expect(inEngine('i2', find.textContaining('tix (1).db')), findsOneWidget);
     await tester.tap(find.byKey(const Key('instances.instance.i2.menu')));
     await tester.pumpAndSettle();
     expect(find.text('Export database…'), findsNothing);

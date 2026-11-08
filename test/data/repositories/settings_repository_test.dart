@@ -21,4 +21,13 @@ void main() {
     await repo.setLanguageCode(null);
     expect(repo.languageCode(), isNull);
   });
+
+  test('the local idle timeout is unset until chosen', () async {
+    final repo = SettingsRepository(MemoryKeyValueStore());
+    expect(repo.localIdleMinutes(), isNull);
+    await repo.setLocalIdleMinutes(0);
+    expect(repo.localIdleMinutes(), 0);
+    await repo.setLocalIdleMinutes(30);
+    expect(repo.localIdleMinutes(), 30);
+  });
 }

@@ -5220,6 +5220,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Move tasks and whole tenants in and out'**
   String get manageTransferSubtitle;
+
+  /// No description provided for @localInstanceAdvancedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a database where it is, for example in a folder that Nextcloud, Syncthing or iCloud Drive keeps in sync, instead of a copy kept inside the app.'**
+  String get localInstanceAdvancedBody;
+
+  /// No description provided for @localInstanceAdvancedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced: open in place'**
+  String get localInstanceAdvancedTitle;
+
+  /// No description provided for @localInstanceBrowseCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create here'**
+  String get localInstanceBrowseCreate;
+
+  /// No description provided for @localInstanceBrowseEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No folders or databases here.'**
+  String get localInstanceBrowseEmpty;
+
+  /// No description provided for @localInstanceBrowseNewLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'New database in this folder'**
+  String get localInstanceBrowseNewLabel;
+
+  /// No description provided for @localInstanceBrowseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a database'**
+  String get localInstanceBrowseTitle;
+
+  /// No description provided for @localInstanceBrowseUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Up'**
+  String get localInstanceBrowseUp;
+
+  /// No description provided for @localInstanceConflicts.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync conflict copies next to this file: {names}. Check which one holds your latest work before you go on.'**
+  String localInstanceConflicts(String names);
+
+  /// No description provided for @localInstanceDesktopIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new tix database. To use one you already have, open it in place below.'**
+  String get localInstanceDesktopIntro;
+
+  /// No description provided for @localInstanceEngineResting.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopped, starts again when needed'**
+  String get localInstanceEngineResting;
+
+  /// No description provided for @localInstanceEngineRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Running at {address}'**
+  String localInstanceEngineRunning(String address);
+
+  /// No description provided for @localInstanceEngineStarting.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting'**
+  String get localInstanceEngineStarting;
+
+  /// No description provided for @localInstanceEngineStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get localInstanceEngineStop;
+
+  /// No description provided for @localInstanceEngineStopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopped'**
+  String get localInstanceEngineStopped;
+
+  /// No description provided for @localInstanceErrorAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'tix can no longer reach this file. Allow access again, or remove the instance and open the file again.'**
+  String get localInstanceErrorAccess;
+
+  /// No description provided for @localInstanceErrorFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'tix cannot create files in this folder, and SQLite needs to keep two files beside the database. Pick a folder you can write to.'**
+  String get localInstanceErrorFolder;
+
+  /// No description provided for @localInstanceErrorLock.
+  ///
+  /// In en, this message translates to:
+  /// **'This file cannot be locked, so SQLite cannot keep it safe here. It may be on a cloud provider that does not offer real files.'**
+  String get localInstanceErrorLock;
+
+  /// No description provided for @localInstanceErrorNotDatabase.
+  ///
+  /// In en, this message translates to:
+  /// **'This file is not a tix database on this device. If it is in a cloud folder, it may not be downloaded yet.'**
+  String get localInstanceErrorNotDatabase;
+
+  /// No description provided for @localInstanceErrorNotDownloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'This file is not downloaded to this device yet. Open it in the Files app to download it, then try again.'**
+  String get localInstanceErrorNotDownloaded;
+
+  /// No description provided for @localInstanceIdleHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'An engine that has served nothing for this long stops to save battery, and starts again the next time the app needs it.'**
+  String get localInstanceIdleHelp;
+
+  /// No description provided for @localInstanceIdleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop an idle engine after'**
+  String get localInstanceIdleLabel;
+
+  /// No description provided for @localInstanceIdleMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String localInstanceIdleMinutes(int minutes);
+
+  /// No description provided for @localInstanceIdleNever.
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get localInstanceIdleNever;
+
+  /// No description provided for @localInstanceIdleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Local databases'**
+  String get localInstanceIdleTitle;
+
+  /// No description provided for @localInstanceImportInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'Import a copy'**
+  String get localInstanceImportInstead;
+
+  /// No description provided for @localInstanceInPlaceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Used in place'**
+  String get localInstanceInPlaceNote;
+
+  /// No description provided for @localInstanceOpenInPlace.
+  ///
+  /// In en, this message translates to:
+  /// **'Open in place…'**
+  String get localInstanceOpenInPlace;
+
+  /// No description provided for @localInstancePermissionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'To open a database where it is, Android has to give tix \"All files access\". tix reads and writes only the database you pick and the files SQLite keeps beside it.'**
+  String get localInstancePermissionBody;
+
+  /// No description provided for @localInstancePermissionContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get localInstancePermissionContinue;
+
+  /// No description provided for @localInstancePermissionRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'All files access was not granted, so tix cannot open files in place. You can import a copy instead.'**
+  String get localInstancePermissionRefused;
+
+  /// No description provided for @localInstancePermissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow access to your files'**
+  String get localInstancePermissionTitle;
+
+  /// No description provided for @localInstanceSyncWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'A synced database must be open on one device at a time. Close tix on your other devices and let the sync finish first. tix stops the database whenever it goes to the background, so the sync client always finds a whole file.'**
+  String get localInstanceSyncWarning;
+
+  /// No description provided for @localInstanceWalLeftOver.
+  ///
+  /// In en, this message translates to:
+  /// **'A write-ahead log was already beside this file. Another program may have it open, or a sync client copied one from another device.'**
+  String get localInstanceWalLeftOver;
 }
 
 class _AppLocalizationsDelegate

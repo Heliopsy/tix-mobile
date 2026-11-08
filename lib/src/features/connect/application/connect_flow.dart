@@ -8,9 +8,11 @@ import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
+import 'package:tix_mobile/src/data/local/in_place.dart';
 import 'package:tix_mobile/src/data/local/local_engine.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/auth.dart';
+import 'package:tix_mobile/src/data/models/instance.dart';
 import 'package:tix_mobile/src/data/models/membership.dart';
 
 part 'connect_flow.g.dart';
@@ -110,10 +112,22 @@ final class LocalTenants extends ConnectStep {
     required this.handle,
     required this.tenants,
     this.name = '',
+    this.inPlace = false,
+    this.bookmark = '',
+    this.findings = SyncFindings.none,
   });
 
   /// The database file.
   final String dbPath;
+
+  /// Whether the file is used where it is.
+  final bool inPlace;
+
+  /// The bookmark of the file's folder, on iOS and macOS.
+  final String bookmark;
+
+  /// Conflict copies and a leftover log found next to a file used in place.
+  final SyncFindings findings;
 
   /// The engine serving it.
   final LocalHandle handle;
@@ -136,24 +150,28 @@ final class ConnectDone extends ConnectStep {
 @riverpod
 class ConnectFlow extends _$ConnectFlow {
   LocalHandle? _pending;
+  Instance? _pendingAccess;
 
   @override
   ConnectStep build(String key) {
-    final engine = ref.read(localEnginesProvider).engine;
-    ref.onDispose(() {
-      final pending = _pending;
-      if (pending != null) unawaited(engine.stop(pending));
-    });
+    final engines = ref.read(localEnginesProvider);
+    ref.onDispose(() => unawaited(_release(engines)));
     return const ConnectForm();
+  }
+
+  /// Stops an engine opened only for this flow and ends its file access.
+  Future<void> _release(LocalEngines engines) async {
+    final pending = _pending;
+    final access = _pendingAccess;
+    _pending = null;
+    _pendingAccess = null;
+    if (pending != null) await engines.engine.stop(pending);
+    if (access != null) await engines.access.close(access);
   }
 
   /// Back to the form, stopping an engine opened only for this flow.
   Future<void> restart() async {
-    final pending = _pending;
-    _pending = null;
-    if (pending != null) {
-      await ref.read(localEnginesProvider).engine.stop(pending);
-    }
+    await _release(ref.read(localEnginesProvider));
     state = const ConnectForm();
   }
 
@@ -302,30 +320,68 @@ class ConnectFlow extends _$ConnectFlow {
   }
 
   /// Opens the database at [path], creating it when [create], and lists its
-  /// tenants. With [instanceId] it opens that saved local instance.
+  /// tenants. With [instanceId] it opens that saved local instance. A file
+  /// used [inPlace] is reached through [bookmark] where one is needed and
+  /// checked first: one SQLite cannot use safely is refused.
   Future<void> openLocal({
     String path = '',
     bool create = false,
     String name = '',
     String? instanceId,
+    bool inPlace = false,
+    String bookmark = '',
   }) async {
     final engines = ref.read(localEnginesProvider);
     final saved = ref
         .read(instancesRepositoryProvider)
         .instance(instanceId ?? '');
-    final LocalHandle handle;
     if (saved != null) {
-      handle = await engines.ensure(saved);
-    } else {
-      handle = await engines.engine.start(dbPath: path, initIfMissing: create);
-      _pending = handle;
+      final handle = await engines.ensure(saved);
+      final tenants = await engines.engine.tenants(handle);
+      final status = engines.statuses[saved.id];
+      state = LocalTenants(
+        dbPath: status?.dbPath ?? saved.dbPath,
+        handle: handle,
+        tenants: tenants,
+        name: saved.name,
+        inPlace: saved.inPlace,
+        findings: status?.findings ?? SyncFindings.none,
+      );
+      return;
     }
+    await _release(engines);
+    var dbPath = path;
+    var found = SyncFindings.none;
+    if (inPlace) {
+      final pending = Instance(
+        id: '',
+        name: name,
+        kind: InstanceKind.local,
+        dbPath: path,
+        inPlace: true,
+        bookmark: bookmark,
+        createdAt: DateTime.now(),
+      );
+      final grant = await engines.access.open(pending);
+      _pendingAccess = pending.copyWith(dbPath: grant.dbPath);
+      dbPath = grant.dbPath;
+      await engines.access.checkUsable(dbPath, create: create);
+      found = await engines.access.findings(dbPath);
+    }
+    final handle = await engines.engine.start(
+      dbPath: dbPath,
+      initIfMissing: create,
+    );
+    _pending = handle;
     final tenants = await engines.engine.tenants(handle);
     state = LocalTenants(
-      dbPath: saved?.dbPath ?? path,
+      dbPath: dbPath,
       handle: handle,
       tenants: tenants,
-      name: saved?.name ?? name,
+      name: name,
+      inPlace: inPlace,
+      bookmark: bookmark,
+      findings: found,
     );
   }
 
@@ -347,8 +403,12 @@ class ConnectFlow extends _$ConnectFlow {
           tenant: tenant,
           token: token,
           name: step.name,
+          inPlace: step.inPlace,
+          bookmark: step.bookmark,
+          found: step.findings,
         );
     _pending = null;
+    _pendingAccess = null;
     state = const ConnectDone();
   }
 

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
+import 'package:tix_mobile/src/core/platform/local_access.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/api/credential.dart';
@@ -16,6 +17,7 @@ import 'package:tix_mobile/src/data/models/instance.dart';
 
 import '../../helpers/app.dart';
 import '../../helpers/container.dart';
+import '../../helpers/fake_local_access.dart';
 import '../../helpers/fake_tix.dart';
 import '../../helpers/stores.dart';
 
@@ -478,20 +480,14 @@ void main() {
   group('local', () {
     setUp(TestWidgetsFlutterBinding.ensureInitialized);
 
-    Future<({ProviderContainer c, InMemoryLocalTixEngine engine})>
-    localContainer({FakeFilePicking? files}) async {
-      final engine = InMemoryLocalTixEngine();
-      final c = makeContainer(
-        fakeOverrides(
-          server,
-          settings: settings,
-          secrets: secrets,
-          engine: engine,
-          files: files,
-        ),
-      );
-      await c.read(sessionControllerProvider.future);
-      final handle = await engine.start(dbPath: '/data/notes.db');
+    Future<void> addLocal(
+      ProviderContainer c,
+      InMemoryLocalTixEngine engine,
+      String dbPath, {
+      bool inPlace = false,
+      String bookmark = '',
+    }) async {
+      final handle = await engine.start(dbPath: dbPath);
       final token = await engine.token(
         handle,
         tenant: 'default',
@@ -501,13 +497,149 @@ void main() {
       await c
           .read(sessionControllerProvider.notifier)
           .saveLocal(
-            dbPath: '/data/notes.db',
+            dbPath: dbPath,
             handle: handle,
             tenant: const TenantRef(key: 'default', name: 'Default'),
             token: token,
+            inPlace: inPlace,
+            bookmark: bookmark,
           );
+    }
+
+    Future<({ProviderContainer c, InMemoryLocalTixEngine engine})>
+    localContainer({
+      FakeFilePicking? files,
+      FakeLocalFileAccess? access,
+      bool inPlace = false,
+    }) async {
+      final engine = InMemoryLocalTixEngine();
+      final c = makeContainer(
+        fakeOverrides(
+          server,
+          settings: settings,
+          secrets: secrets,
+          engine: engine,
+          files: files,
+          access: access,
+        ),
+      );
+      await c.read(sessionControllerProvider.future);
+      await addLocal(
+        c,
+        engine,
+        '/data/notes.db',
+        inPlace: inPlace,
+        bookmark: inPlace ? 'bm1' : '',
+      );
       return (c: c, engine: engine);
     }
+
+    ProviderContainer relaunch(InMemoryLocalTixEngine engine) => makeContainer(
+      fakeOverrides(
+        server,
+        settings: settings,
+        secrets: secrets,
+        engine: engine,
+      ),
+    );
+
+    test('switching between local instances stops the first', () async {
+      final (:c, :engine) = await localContainer();
+      final a = engine.running.single;
+      await addLocal(c, engine, '/data/b.db');
+      expect(engine.running, hasLength(1));
+      expect(engine.stopped.first.id, a);
+      final b = engine.running.single;
+      final first = c
+          .read(contextDirectoryProvider)
+          .groups
+          .first
+          .connections
+          .single;
+      await c.read(sessionControllerProvider.notifier).activate(first.ref);
+      expect(engine.stopped.map((h) => h.id), [a, b]);
+      expect(engine.running, hasLength(1));
+      expect(c.read(localEnginesProvider).running, [first.instanceId]);
+    });
+
+    test('launching with a remote context starts no engine', () async {
+      final (:c, engine: _) = await localContainer();
+      await c
+          .read(sessionControllerProvider.notifier)
+          .connect(url: 'tix.example', token: 'tok');
+      final fresh = InMemoryLocalTixEngine(existing: ['/data/notes.db']);
+      final again = relaunch(fresh);
+      final s = await again.read(sessionControllerProvider.future);
+      expect(s!.instance.kind, InstanceKind.remote);
+      expect(again.read(contextDirectoryProvider).groups, hasLength(2));
+      expect(fresh.started, isEmpty);
+    });
+
+    test('launching with a local context starts its engine', () async {
+      await localContainer();
+      final fresh = InMemoryLocalTixEngine(existing: ['/data/notes.db']);
+      final again = relaunch(fresh);
+      final s = await again.read(sessionControllerProvider.future);
+      expect(s!.instance.kind, InstanceKind.local);
+      expect(fresh.started, ['/data/notes.db']);
+    });
+
+    test('a resting engine starts again for the next request', () async {
+      final (:c, :engine) = await localContainer();
+      final s = c.read(sessionControllerProvider).value!;
+      final engines = c.read(localEnginesProvider);
+      await engines.rest(s.instance.id);
+      expect(engine.running, isEmpty);
+      final page = await c.read(tasksRepositoryProvider).projects();
+      expect(page.items, isNotEmpty);
+      expect(engine.running, hasLength(1));
+      expect(engine.started, ['/data/notes.db', '/data/notes.db']);
+      expect(
+        server.requestsTo('/api/v1/projects').single.uri.authority,
+        Uri.parse(s.baseUrl).authority,
+      );
+    });
+
+    test('an engine that will not wake fails the request', () async {
+      final access = FakeLocalFileAccess();
+      final (:c, :engine) = await localContainer(access: access, inPlace: true);
+      final s = c.read(sessionControllerProvider).value!;
+      await c.read(localEnginesProvider).rest(s.instance.id);
+      access.denied = const TixException(TixErrorKind.localAccessDenied);
+      await expectLater(
+        c.read(tasksRepositoryProvider).projects(),
+        throwsA(
+          isA<TixException>().having(
+            (e) => e.kind,
+            'kind',
+            TixErrorKind.localAccessDenied,
+          ),
+        ),
+      );
+      expect(engine.running, isEmpty);
+    });
+
+    test('a renewed bookmark is saved on the instance', () async {
+      final access = FakeLocalFileAccess();
+      final (:c, engine: _) = await localContainer(
+        access: access,
+        inPlace: true,
+      );
+      final s = c.read(sessionControllerProvider).value!;
+      expect(s.instance.inPlace, isTrue);
+      expect(s.instance.bookmark, 'bm1');
+      await c.read(localEnginesProvider).rest(s.instance.id);
+      access.grant = const AccessGrant(
+        dbPath: '/data/notes.db',
+        bookmark: 'bm2',
+      );
+      await c.read(tasksRepositoryProvider).projects();
+      await pumpEventQueue();
+      expect(
+        c.read(instancesRepositoryProvider).instance(s.instance.id)!.bookmark,
+        'bm2',
+      );
+    });
 
     test('a local instance is served by its engine', () async {
       final (:c, :engine) = await localContainer();

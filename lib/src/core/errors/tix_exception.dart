@@ -27,6 +27,8 @@ enum TixErrorKind {
   passwordChange,
   tenantRequired,
   engineUnavailable,
+  localNotUsable,
+  localAccessDenied,
   unknown,
 }
 
@@ -68,6 +70,7 @@ class TixException implements Exception {
 
   /// Maps a [DioException] to the tix error it carries.
   factory TixException.fromDio(DioException e) {
+    if (e.error case final TixException carried) return carried;
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
