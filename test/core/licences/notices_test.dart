@@ -72,6 +72,20 @@ void main() {
     expect(needsNoNotice(_cc0), isTrue);
     expect(needsNoNotice(_unlicense), isTrue);
     expect(needsNoNotice(_zeroBsd), isTrue);
+    expect(
+      needsNoNotice(
+        'The source code for SQLite is in the public domain. No claim of '
+        'copyright is made on any part of the core source code.',
+      ),
+      isTrue,
+    );
+    expect(
+      needsNoNotice(
+        'The Ahem font belongs to the public domain. In jurisdictions that '
+        'do not recognize public domain ownership, the following applies.',
+      ),
+      isFalse,
+    );
     expect(needsNoNotice(_isc), isFalse);
     expect(needsNoNotice(_bsd), isFalse);
     expect(needsNoNotice('something unknown'), isFalse);
