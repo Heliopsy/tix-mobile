@@ -49,7 +49,7 @@ final class BundleTransferProvider
   }
 }
 
-String _$bundleTransferHash() => r'3acf2db6de1db94f3296af7710a5728bccf750b0';
+String _$bundleTransferHash() => r'96d5eb3a6732195f83902a19413433bef908bf42';
 
 /// Bundles out and in, and snapshots in, for the screens. It holds nothing:
 /// each call is about one file.

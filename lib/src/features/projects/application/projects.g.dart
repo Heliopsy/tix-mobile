@@ -50,7 +50,7 @@ final class ShowArchivedProjectsProvider
 }
 
 String _$showArchivedProjectsHash() =>
-    r'f5d6e4bfaf9011ea314939861246c8962d31f3aa';
+    r'590493efb7a9d181ddead0e9f86ef967977f22b8';
 
 /// Whether the projects list includes archived projects; off until turned
 /// on, for as long as the app runs.
