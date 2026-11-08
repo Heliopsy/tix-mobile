@@ -30,10 +30,15 @@ List<Notice> parseFlutterNotices(String raw) => [
 ];
 
 /// Whether [text] is a licence that asks for no notice: CC0, the
-/// Unlicense, or 0BSD. Anything not recognised needs one.
+/// Unlicense, 0BSD, or an unconditional public domain dedication such as
+/// SQLite's. Anything not recognised needs one.
 bool needsNoNotice(String text) {
   final t = text.replaceAll(RegExp(r'\s+'), ' ');
   if (t.contains('CC0 1.0 Universal')) return true;
+  if (t.contains('is in the public domain. No claim of copyright') ||
+      t.contains('The author disclaims copyright to this source code')) {
+    return true;
+  }
   if (t.contains(
     'This is free and unencumbered software released into the '
     'public domain',
