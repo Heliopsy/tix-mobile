@@ -3306,4 +3306,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get liveStatusUnavailableInfo =>
       'This connection may not follow live updates (it needs the event:subscribe scope). Pull down to refresh instead.';
+
+  @override
+  String get copyToClipboard => 'Copy';
+
+  @override
+  String get copiedToClipboard => 'Copied.';
 }

@@ -3308,4 +3308,10 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String get liveStatusUnavailableInfo =>
       'Тази връзка няма право да следи обновяванията на живо (нужен е обхватът event:subscribe). Дръпнете надолу, за да опресните.';
+
+  @override
+  String get copyToClipboard => 'Копирай';
+
+  @override
+  String get copiedToClipboard => 'Копирано.';
 }

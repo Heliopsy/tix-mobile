@@ -161,6 +161,18 @@ Map<String, Object?> inboxJson(
   'read_at': read,
 };
 
+/// Who a request to [FakeTix] is: the tenant it reaches, and the account
+/// when it is a sign-in rather than a token.
+typedef FakeCaller = ({String tenant, String? email});
+
+/// One extra route on [FakeTix]: the answer for the request at [path], or
+/// null when the route does not serve it.
+typedef FakeRoute = FutureOr<FakeResponse?> Function(
+  RequestOptions o,
+  String path,
+  FakeCaller caller,
+);
+
 /// A person who can sign in: their password and their tenants.
 class FakeAccount {
   FakeAccount({
@@ -277,6 +289,10 @@ class FakeTix {
 
   /// Holds every answer until completed, for loading states.
   Completer<void>? gate;
+
+  /// Extra routes, asked in order before the built-in ones once the caller
+  /// is known. Each answers what it serves and returns null for the rest.
+  final routes = <FakeRoute>[];
 
   /// Rows per page, so tests can force pagination.
   int pageSize = 50;
@@ -522,6 +538,12 @@ class FakeTix {
     final q = o.uri.queryParameters;
     final failure = failing[path];
     if (failure != null) return failure;
+    for (final route in routes) {
+      final failure = failures['${o.method} $path'];
+      if (failure != null) return failure;
+      final answer = await route(o, path, caller);
+      if (answer != null) return answer;
+    }
     final inboxAnswer = _inbox(o, path, q);
     if (inboxAnswer != null) return inboxAnswer;
     final quick = await _quick(o, path);

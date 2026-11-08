@@ -159,6 +159,7 @@ All in `lib/src/core/design/components/`. Each has a doc comment saying when to 
 | `QuickAddField`, `QuickChip` | One line that becomes a task; what the server made of it |
 | `showTixSheet`, `TixSheetBody` | Opening a form or chooser: a sheet on a phone, a dialog wider |
 | `confirmDestructive` | Every action that cannot be undone |
+| `OneTimeSecret` | A value tix shows once (a generated password, a signing secret, recovery codes): heading, why, the values in mono, Copy. Never cached or logged |
 | `showActionSheet` | A row's actions on touch |
 | `showTixToast` | Saying what just happened, with Undo |
 | `runOptimistic` | Apply a change at once, send it, roll back with an error toast or undo |
