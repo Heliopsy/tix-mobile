@@ -1,42 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 
-/// Asks before a destructive [action] titled [title]; true when confirmed.
-Future<bool> confirmDestructive(
-  BuildContext context, {
-  required String title,
-  required String body,
-  required String action,
-}) async {
-  final ok = await showDialog<bool>(
-    context: context,
-    builder: (context) {
-      final scheme = Theme.of(context).colorScheme;
-      return AlertDialog(
-        title: Text(title),
-        content: Text(body),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(context.l10n.cancel),
-          ),
-          FilledButton(
-            key: const Key('confirm.ok'),
-            style: FilledButton.styleFrom(
-              backgroundColor: scheme.error,
-              foregroundColor: scheme.onError,
-            ),
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(action),
-          ),
-        ],
-      );
-    },
-  );
-  return ok ?? false;
-}
+export 'package:tix_mobile/src/core/design/components/dialogs.dart'
+    show confirmDestructive;
 
 /// Asks for a second factor code; null when cancelled.
 Future<String?> askForCode(BuildContext context) => showDialog<String>(
@@ -71,18 +40,19 @@ class _CodeDialogState extends State<_CodeDialog> {
         autofocus: true,
         keyboardType: TextInputType.number,
         autofillHints: const [AutofillHints.oneTimeCode],
+        style: tixMono(context, size: TixText.lg, color: context.tix.ink),
         decoration: InputDecoration(helperText: l10n.codeHelp),
         onSubmitted: (v) => Navigator.of(context).pop(v),
       ),
       actions: [
-        TextButton(
+        TixButton.quiet(
+          label: l10n.cancel,
           onPressed: () => Navigator.of(context).pop(),
-          child: Text(l10n.cancel),
         ),
-        FilledButton(
+        TixButton.primary(
           key: const Key('code.ok'),
+          label: l10n.verifyButton,
           onPressed: () => Navigator.of(context).pop(_code.text),
-          child: Text(l10n.verifyButton),
         ),
       ],
     );

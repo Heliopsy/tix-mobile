@@ -2,7 +2,9 @@
 
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/features/shell/presentation/context_switcher.dart';
 
@@ -21,6 +23,46 @@ class HomeShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    return TixShortcuts(
+      child: CommandScope(
+        commands: [
+          TixCommand(
+            id: 'go.projects',
+            label: l10n.goProjects,
+            group: l10n.commandsNavigate,
+            icon: Icons.folder_outlined,
+            run: () => _select(0),
+          ),
+          TixCommand(
+            id: 'go.settings',
+            label: l10n.goSettings,
+            group: l10n.commandsNavigate,
+            icon: Icons.settings_outlined,
+            run: () => _select(1),
+          ),
+          TixCommand(
+            id: 'go.instances',
+            label: l10n.goInstances,
+            group: l10n.commandsNavigate,
+            icon: Icons.dns_outlined,
+            run: () => context.go(Routes.instances),
+          ),
+          if (Routes.galleryEnabled)
+            TixCommand(
+              id: 'go.gallery',
+              label: l10n.galleryTitle,
+              group: l10n.commandsNavigate,
+              icon: Icons.widgets_outlined,
+              run: () => context.push(Routes.gallery),
+            ),
+        ],
+        child: _frame(context),
+      ),
+    );
+  }
+
+  Widget _frame(BuildContext context) {
+    final l10n = context.l10n;
     final width = MediaQuery.sizeOf(context).width;
     final destinations = [
       (Icons.folder_outlined, Icons.folder, l10n.projectsTitle),
@@ -33,6 +75,7 @@ class HomeShell extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const ContextSwitcherButton(),
+            const Divider(),
             NavigationBar(
               selectedIndex: shell.currentIndex,
               onDestinationSelected: _select,

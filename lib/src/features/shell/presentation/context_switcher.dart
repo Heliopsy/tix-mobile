@@ -3,6 +3,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
@@ -106,9 +107,8 @@ class ContextSwitcherButton extends ConsumerWidget {
       button: true,
       label: l10n.switchContext,
       child: Material(
-        color: rail
-            ? Colors.transparent
-            : Theme.of(context).colorScheme.surfaceContainer,
+        color: rail ? Colors.transparent : context.tix.surface,
+        shape: rail ? null : Border(top: BorderSide(color: context.tix.line)),
         child: InkWell(
           key: const Key('switcher.open'),
           onTap: () => _open(context, ref),
@@ -176,7 +176,11 @@ Future<void> activateEntry(
       await session.activate(entry.ref, code: code);
     }
   } on Object catch (e) {
-    messenger.showSnackBar(SnackBar(content: Text(errorMessage(l10n, e))));
+    if (context.mounted) {
+      showTixToast(context, errorMessage(l10n, e), tone: TixTone.danger);
+    } else {
+      messenger.showSnackBar(SnackBar(content: Text(errorMessage(l10n, e))));
+    }
   }
 }
 
@@ -265,8 +269,9 @@ class _Heading extends StatelessWidget {
         ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: theme.textTheme.titleSmall?.copyWith(
-          color: theme.colorScheme.primary,
+        style: theme.textTheme.labelMedium?.copyWith(
+          color: context.tix.muted,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );
@@ -306,9 +311,7 @@ class _EntryTile extends StatelessWidget {
               l10n.pinned,
           ].join(' · ');
     return ListTile(
-      leading: CircleAvatar(
-        child: Text(tenant.characters.take(1).toString().toUpperCase()),
-      ),
+      leading: TixAvatar(label: tenant, size: 32),
       title: Text(tenant),
       subtitle: Text(details, maxLines: 1, overflow: TextOverflow.ellipsis),
       selected: active,
@@ -329,17 +332,12 @@ class _ContextAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return CircleAvatar(
-      radius: 18,
-      backgroundColor: scheme.primaryContainer,
-      foregroundColor: scheme.onPrimaryContainer,
-      child: Icon(
-        instance.kind == InstanceKind.local
-            ? Icons.storage
-            : Icons.cloud_outlined,
-        size: 20,
-      ),
+    return TixAvatar(
+      label: instance.name,
+      size: 36,
+      icon: instance.kind == InstanceKind.local
+          ? Icons.storage
+          : Icons.cloud_outlined,
     );
   }
 }

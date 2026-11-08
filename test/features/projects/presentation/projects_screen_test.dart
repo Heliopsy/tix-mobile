@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/features/projects/presentation/projects_screen.dart';
 
 import '../../../helpers/app.dart';
@@ -35,11 +36,11 @@ void main() {
       testWidgets('loading, then data', (tester) async {
         final server = FakeTix()..gate = Completer<void>();
         await pump(tester, server, size: size, settle: false);
-        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        expect(find.byType(SkeletonList), findsOneWidget);
         expect(find.text('Infrastructure'), findsNothing);
         server.gate!.complete();
         await tester.pumpAndSettle();
-        expect(find.byType(CircularProgressIndicator), findsNothing);
+        expect(find.byType(SkeletonList), findsNothing);
         expect(find.text('Infrastructure'), findsOneWidget);
       });
 

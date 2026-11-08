@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/paging/paged.dart';
 
@@ -14,6 +15,8 @@ class PagedListView<T> extends StatelessWidget {
     required this.onRefresh,
     required this.onLoadMore,
     required this.empty,
+    this.header,
+    this.padding = EdgeInsets.zero,
     super.key,
   });
 
@@ -32,36 +35,50 @@ class PagedListView<T> extends StatelessWidget {
   /// Fetches the next page.
   final VoidCallback onLoadMore;
 
-  /// The text shown when there are no rows.
-  final String empty;
+  /// Shown when there are no rows, usually an [EmptyState].
+  final Widget empty;
+
+  /// Scrolls with the rows above the first one, such as a filter bar.
+  final Widget? header;
+
+  /// Space round the rows; leave room for a floating button at the end.
+  final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context) {
     final items = paged.items;
     final footer = paged.hasMore || paged.moreError != null;
+    final header = this.header;
+    final lead = header == null ? 0 : 1;
     return RefreshIndicator(
       onRefresh: onRefresh,
       child: items.isEmpty
-          ? ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(48),
-                  child: Text(empty, textAlign: TextAlign.center),
-                ),
-              ],
+          ? LayoutBuilder(
+              builder: (context, box) => ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: [
+                  ?header,
+                  ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: box.maxHeight * 0.8),
+                    child: empty,
+                  ),
+                ],
+              ),
             )
           : ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: items.length + (footer ? 1 : 0),
+              padding: padding,
+              itemCount: lead + items.length + (footer ? 1 : 0),
               itemBuilder: (context, i) {
-                if (i >= items.length) {
+                if (i < lead) return header;
+                final at = i - lead;
+                if (at >= items.length) {
                   return _PageFooter(
                     error: paged.moreError,
                     onRetry: onLoadMore,
                   );
                 }
-                if (i >= items.length - prefetchRows &&
+                if (at >= items.length - prefetchRows &&
                     paged.hasMore &&
                     !paged.loadingMore &&
                     paged.moreError == null) {
@@ -69,7 +86,7 @@ class PagedListView<T> extends StatelessWidget {
                     (_) => onLoadMore(),
                   );
                 }
-                return itemBuilder(context, items[i]);
+                return itemBuilder(context, items[at]);
               },
             ),
     );
@@ -87,16 +104,42 @@ class _PageFooter extends StatelessWidget {
     final error = this.error;
     if (error == null) {
       return const Padding(
-        padding: EdgeInsets.all(16),
-        child: Center(child: CircularProgressIndicator()),
+        padding: EdgeInsets.all(TixSpace.s4),
+        child: Center(
+          child: SizedBox.square(
+            dimension: 20,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ),
       );
     }
     final l10n = context.l10n;
-    return ListTile(
-      leading: const Icon(Icons.error_outline),
-      title: Text(l10n.loadMoreFailed),
-      subtitle: Text(errorMessage(l10n, error)),
-      trailing: TextButton(onPressed: onRetry, child: Text(l10n.retry)),
+    final t = context.tix;
+    return Padding(
+      padding: const EdgeInsets.all(TixSpace.s4),
+      child: Row(
+        children: [
+          Icon(Icons.error_outline, color: t.danger, size: 18),
+          const SizedBox(width: TixSpace.s2),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.loadMoreFailed),
+                Text(
+                  errorMessage(l10n, error),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ),
+          TixButton(
+            label: l10n.retry,
+            size: TixButtonSize.small,
+            onPressed: onRetry,
+          ),
+        ],
+      ),
     );
   }
 }
