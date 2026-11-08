@@ -1059,6 +1059,426 @@ class AppLocalizationsFr extends AppLocalizations {
   String get taskDetailYes => 'Oui';
 
   @override
+  String get boardAllEmpty => 'Aucune tâche pour l’instant.';
+
+  @override
+  String get boardAllEmptyBody =>
+      'Les tâches de tous les projets s’affichent ici.';
+
+  @override
+  String get boardArrangement => 'Disposition';
+
+  @override
+  String get boardAssignMe => 'M’assigner';
+
+  @override
+  String boardAssignedToMe(String ref) {
+    return '$ref vous est assignée';
+  }
+
+  @override
+  String get boardCollapse => 'Réduire';
+
+  @override
+  String get boardColumnEmpty => 'Rien ici';
+
+  @override
+  String boardCompleted(String ref) {
+    return '$ref terminée';
+  }
+
+  @override
+  String boardCount(int count, String more) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count$more tâches',
+      one: '1$more tâche',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get boardExpand => 'Développer';
+
+  @override
+  String boardGroupMenu(String group) {
+    return 'Disposer $group';
+  }
+
+  @override
+  String boardHiddenCount(int count) {
+    return 'Masquées : $count';
+  }
+
+  @override
+  String get boardHide => 'Masquer';
+
+  @override
+  String get boardLoadMore => 'Charger plus';
+
+  @override
+  String get boardMoveDown => 'Descendre';
+
+  @override
+  String get boardMoveLeft => 'Déplacer à gauche';
+
+  @override
+  String get boardMoveRight => 'Déplacer à droite';
+
+  @override
+  String boardMoveTitle(String ref) {
+    return 'Déplacer $ref vers';
+  }
+
+  @override
+  String get boardMoveTo => 'Déplacer vers…';
+
+  @override
+  String get boardMoveUp => 'Monter';
+
+  @override
+  String boardMoved(String ref, String status) {
+    return '$ref déplacée vers $status';
+  }
+
+  @override
+  String get boardNext => 'Tâche suivante';
+
+  @override
+  String boardNoRoute(String ref) {
+    return 'Le workflow de $ref ne permet pas d’y aller';
+  }
+
+  @override
+  String get boardOpen => 'Ouvrir';
+
+  @override
+  String get boardPrevious => 'Tâche précédente';
+
+  @override
+  String get boardRefused =>
+      'Ces projets suivent des workflows différents et ne peuvent donc pas partager un tableau. Restreignez le filtre aux projets d’un seul workflow pour afficher un tableau.';
+
+  @override
+  String boardRefusedGroup(String workflow, String projects) {
+    return '$workflow : $projects';
+  }
+
+  @override
+  String boardReopened(String ref) {
+    return '$ref rouverte';
+  }
+
+  @override
+  String get boardResetArrangement => 'Réinitialiser la disposition';
+
+  @override
+  String boardShowGroup(String group) {
+    return 'Afficher $group';
+  }
+
+  @override
+  String get boardSnoozeLater => 'Plus tard aujourd’hui';
+
+  @override
+  String boardSnoozeTitle(String ref) {
+    return 'Reporter $ref jusqu’à';
+  }
+
+  @override
+  String get boardSnoozeTomorrow => 'Demain matin';
+
+  @override
+  String get boardSnoozeWeek => 'La semaine prochaine';
+
+  @override
+  String boardSnoozed(String ref) {
+    return '$ref reportée';
+  }
+
+  @override
+  String boardStarred(String ref) {
+    return '$ref ajoutée aux favoris';
+  }
+
+  @override
+  String boardStrays(String refs) {
+    return 'Hors des colonnes de ce tableau : $refs';
+  }
+
+  @override
+  String get boardSwitchProject => 'Changer de projet';
+
+  @override
+  String boardUnstarred(String ref) {
+    return '$ref retirée des favoris';
+  }
+
+  @override
+  String get boardWake => 'Réactiver maintenant';
+
+  @override
+  String boardWoken(String ref) {
+    return '$ref est réactivée';
+  }
+
+  @override
+  String get bulkClear => 'Effacer la sélection';
+
+  @override
+  String get bulkCopy => 'Copier vers…';
+
+  @override
+  String bulkCopyTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Copier $count tâches vers',
+      one: 'Copier 1 tâche vers',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bulkDelete => 'Supprimer';
+
+  @override
+  String get bulkDeleteBody =>
+      'Elles vont dans la corbeille, et Annuler les fait revenir.';
+
+  @override
+  String bulkDeleteTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Supprimer $count tâches ?',
+      one: 'Supprimer 1 tâche ?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bulkDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tâches modifiées',
+      one: '1 tâche modifiée',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bulkMove => 'Déplacer';
+
+  @override
+  String bulkMoveTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Déplacer $count tâches vers',
+      one: 'Déplacer 1 tâche vers',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bulkPartly(int count, String refused) {
+    return 'Modifiées : $count. Refusées : $refused';
+  }
+
+  @override
+  String get bulkSelect => 'Sélectionner';
+
+  @override
+  String get bulkSelectAll => 'Tout sélectionner';
+
+  @override
+  String bulkSelected(int count) {
+    return 'Sélection : $count';
+  }
+
+  @override
+  String get bulkTagAdd => 'Ajouter un tag';
+
+  @override
+  String get bulkTagRemove => 'Retirer un tag';
+
+  @override
+  String get filterBlocked => 'Bloquées';
+
+  @override
+  String get filterClear => 'Effacer';
+
+  @override
+  String get filterDelete => 'Supprimer le filtre';
+
+  @override
+  String get filterDeleteBody =>
+      'Les personnes avec qui il était partagé le perdent aussi.';
+
+  @override
+  String filterDeleteTitle(String name) {
+    return 'Supprimer $name ?';
+  }
+
+  @override
+  String get filterDueToday => 'Échéance aujourd’hui';
+
+  @override
+  String get filterDueWeek => 'Échéance cette semaine';
+
+  @override
+  String get filterFinished => 'Terminées';
+
+  @override
+  String get filterFocus => 'Filtrer les tâches';
+
+  @override
+  String get filterMine => 'Les miennes';
+
+  @override
+  String get filterName => 'Nom';
+
+  @override
+  String get filterNoMatch => 'Rien ne correspond à ce filtre.';
+
+  @override
+  String get filterNoMatchBody => 'Modifiez le filtre ou effacez-le.';
+
+  @override
+  String get filterOverdue => 'En retard';
+
+  @override
+  String get filterRename => 'Renommer';
+
+  @override
+  String get filterSave => 'Enregistrer le filtre';
+
+  @override
+  String get filterSaveTitle => 'Enregistrer ce filtre';
+
+  @override
+  String filterSaved(String name) {
+    return '$name enregistré';
+  }
+
+  @override
+  String get filterShare => 'Partager avec tout le monde';
+
+  @override
+  String get filterShared => 'Partager avec tout l’espace';
+
+  @override
+  String get filterSharedHelp =>
+      'Les autres le voient dans leurs filtres enregistrés ; seuls vous et les administrateurs pouvez le modifier.';
+
+  @override
+  String get filterSnoozed => 'Reportées';
+
+  @override
+  String get filterUnshare => 'Ne plus partager';
+
+  @override
+  String get goMyWork => 'Aller à Mon travail';
+
+  @override
+  String get goTasks => 'Aller à Tâches';
+
+  @override
+  String get groupNone => 'Sans regroupement';
+
+  @override
+  String get groupProject => 'Regrouper par projet';
+
+  @override
+  String get groupStatus => 'Regrouper par statut';
+
+  @override
+  String get lanesEmpty => 'Aucune tâche';
+
+  @override
+  String get myWorkEmpty => 'Rien ne vous est assigné.';
+
+  @override
+  String get myWorkEmptyBody =>
+      'Les tâches ouvertes qui vous sont assignées s’affichent ici par échéance.';
+
+  @override
+  String get myWorkLater => 'Plus tard';
+
+  @override
+  String get myWorkNoDate => 'Sans date';
+
+  @override
+  String get myWorkOverdue => 'En retard';
+
+  @override
+  String get myWorkTitle => 'Mon travail';
+
+  @override
+  String get myWorkToday => 'Aujourd’hui';
+
+  @override
+  String get myWorkWeek => 'Cette semaine';
+
+  @override
+  String projectOpenCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tâches ouvertes',
+      one: '1 tâche ouverte',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sortCreated => 'Création';
+
+  @override
+  String get sortDescending => 'Décroissant';
+
+  @override
+  String get sortMenu => 'Trier et regrouper';
+
+  @override
+  String get sortNumber => 'Numéro';
+
+  @override
+  String get sortTitle => 'Titre';
+
+  @override
+  String get sortUpdated => 'Mise à jour';
+
+  @override
+  String get sortUrgency => 'Urgence';
+
+  @override
+  String get tasksTitle => 'Tâches';
+
+  @override
+  String get viewBoard => 'Tableau';
+
+  @override
+  String get viewLanes => 'Couloirs';
+
+  @override
+  String get viewList => 'Liste';
+
+  @override
+  String get viewSwitch => 'Changer de vue';
+
+  @override
+  String boardAssigned(String ref) {
+    return '$ref assignée';
+  }
+
+  @override
+  String get boardAssignTo => 'Assigner à…';
+
+  @override
   String get themeOled => 'Noir OLED';
 
   @override
