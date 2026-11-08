@@ -525,3 +525,50 @@ final class ViewPrefsRepositoryProvider
 
 String _$viewPrefsRepositoryHash() =>
     r'457916fcc7421ccd7812933e9cd6d4e73596cbcd';
+
+/// The inbox, personal channels and the summary for the active session.
+
+@ProviderFor(inboxRepository)
+final inboxRepositoryProvider = InboxRepositoryProvider._();
+
+/// The inbox, personal channels and the summary for the active session.
+
+final class InboxRepositoryProvider
+    extends
+        $FunctionalProvider<InboxRepository, InboxRepository, InboxRepository>
+    with $Provider<InboxRepository> {
+  /// The inbox, personal channels and the summary for the active session.
+  InboxRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'inboxRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$inboxRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<InboxRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  InboxRepository create(Ref ref) {
+    return inboxRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(InboxRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<InboxRepository>(value),
+    );
+  }
+}
+
+String _$inboxRepositoryHash() => r'6fd361e8fb5c9f4b72a4fec2c66a8ec3a5ffef3d';

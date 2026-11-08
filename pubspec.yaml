@@ -13,6 +13,7 @@ dependencies:
   file_selector: ^1.1.0
   flutter:
     sdk: flutter
+  flutter_local_notifications: ^23.0.0
   flutter_localizations:
     sdk: flutter
   flutter_markdown_plus: ^1.0.12

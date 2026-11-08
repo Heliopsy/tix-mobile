@@ -22,6 +22,7 @@ import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
 import 'package:tix_mobile/src/data/models/membership.dart';
 import 'package:tix_mobile/src/data/repositories/auth_repository.dart';
+import 'package:tix_mobile/src/data/repositories/inbox_repository.dart';
 import 'package:tix_mobile/src/data/repositories/instances_repository.dart';
 import 'package:tix_mobile/src/data/repositories/task_detail_repository.dart';
 import 'package:tix_mobile/src/data/repositories/task_list_repository.dart';
@@ -636,6 +637,13 @@ TaskListRepository taskListRepository(Ref ref) => TaskListRepository(
 /// View arrangements and saved filters for the active session.
 @riverpod
 ViewPrefsRepository viewPrefsRepository(Ref ref) => ViewPrefsRepository(
+  ref.watch(sessionApiProvider),
+  ref.watch(responseCacheProvider),
+);
+
+/// The inbox, personal channels and the summary for the active session.
+@riverpod
+InboxRepository inboxRepository(Ref ref) => InboxRepository(
   ref.watch(sessionApiProvider),
   ref.watch(responseCacheProvider),
 );

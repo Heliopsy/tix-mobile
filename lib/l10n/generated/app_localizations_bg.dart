@@ -1739,4 +1739,425 @@ class AppLocalizationsBg extends AppLocalizations {
   String templateGeneralError(String reason) {
     return 'Не можа да се запази: $reason';
   }
+
+  @override
+  String get goInbox => 'Към входящите';
+
+  @override
+  String get inboxTitle => 'Входящи';
+
+  @override
+  String get inboxAll => 'Всички';
+
+  @override
+  String get inboxUnreadFilter => 'Непрочетени';
+
+  @override
+  String get inboxShowUnread => 'Само непрочетените';
+
+  @override
+  String get inboxUnread => 'непрочетено';
+
+  @override
+  String get inboxAllCaughtUp => 'Няма непрочетени';
+
+  @override
+  String inboxUnreadCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count непрочетени',
+      one: '1 непрочетено',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxToday => 'Днес';
+
+  @override
+  String get inboxYesterday => 'Вчера';
+
+  @override
+  String get inboxEarlier => 'По-рано';
+
+  @override
+  String get inboxEmpty => 'Още няма нищо.';
+
+  @override
+  String get inboxEmptyBody =>
+      'Когато някой ви спомене, ви възложи задача или коментира такава, която следите, ще се появи тук.';
+
+  @override
+  String get inboxEmptyUnread => 'Няма непрочетени.';
+
+  @override
+  String get inboxEmptyFiltered => 'Нищо от тези видове.';
+
+  @override
+  String get inboxSomebody => 'Някой';
+
+  @override
+  String inboxWhatMention(String who) {
+    return '$who ви спомена';
+  }
+
+  @override
+  String inboxWhatAssigned(String who) {
+    return '$who ви възложи задача';
+  }
+
+  @override
+  String inboxWhatComment(String who) {
+    return '$who коментира';
+  }
+
+  @override
+  String inboxWhatStatus(String who) {
+    return '$who я премести';
+  }
+
+  @override
+  String inboxWhatOther(String who) {
+    return '$who я промени';
+  }
+
+  @override
+  String get inboxMovedTo => 'преместена в';
+
+  @override
+  String get inboxTaskGone => 'Задача, която е изтрита';
+
+  @override
+  String get inboxNow => 'сега';
+
+  @override
+  String inboxMinutesAgo(int n) {
+    return '$n мин';
+  }
+
+  @override
+  String inboxHoursAgo(int n) {
+    return '$n ч';
+  }
+
+  @override
+  String get inboxItemActions => 'Действия';
+
+  @override
+  String get inboxOpenTask => 'Отвори задачата';
+
+  @override
+  String get inboxMarkRead => 'Прочетено';
+
+  @override
+  String get inboxMarkUnread => 'Непрочетено';
+
+  @override
+  String get inboxMarkAllRead => 'Всички прочетени';
+
+  @override
+  String inboxMarkedAll(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count елемента са отбелязани като прочетени',
+      one: '1 елемент е отбелязан като прочетен',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inboxMuteKind(String kind) {
+    return 'Спри „$kind“ във входящите';
+  }
+
+  @override
+  String inboxMuted(String kind) {
+    return '„$kind“ вече не идват във входящите';
+  }
+
+  @override
+  String get inboxKindMention => 'Споменавания';
+
+  @override
+  String get inboxKindAssigned => 'Възлагания';
+
+  @override
+  String get inboxKindComment => 'Коментари';
+
+  @override
+  String get inboxKindStatus => 'Смени на статус';
+
+  @override
+  String get inboxKindMentionHelp =>
+      'Някой напише @вас в коментар или описание.';
+
+  @override
+  String get inboxKindAssignedHelp => 'Възложена ви е задача.';
+
+  @override
+  String get inboxKindCommentHelp =>
+      'Някой коментира задача, възложена на вас или отбелязана със звезда.';
+
+  @override
+  String get inboxKindStatusHelp =>
+      'Задача, възложена на вас, смени статуса си.';
+
+  @override
+  String get inboxKindsTitle => 'Входящи';
+
+  @override
+  String get inboxKindsSubtitle =>
+      'Какво създава елемент във входящите ви, на всяко устройство.';
+
+  @override
+  String get inboxKindsInfo =>
+      'Пази се на сървъра, както в Настройки, Входящи в уеб приложението. Изключен вид не създава елементи; вече получените остават. Собствените ви промени никога не се появяват.';
+
+  @override
+  String get inboxSummaryOverdue => 'Просрочени';
+
+  @override
+  String get inboxSummaryDueToday => 'За днес';
+
+  @override
+  String get inboxSummaryOpen => 'Отворени';
+
+  @override
+  String get inboxSummaryDoneWeek => 'Готови за 7 дни';
+
+  @override
+  String inboxCategory(String category) {
+    String _temp0 = intl.Intl.selectLogic(category, {
+      'todo': 'За правене',
+      'inProgress': 'В работа',
+      'blocked': 'Блокирани',
+      'waiting': 'Чакащи',
+      'other': 'Други',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxChannelsTitle => 'Канали';
+
+  @override
+  String get inboxChannelsSubtitle =>
+      'Препращайте входящите към Slack, Discord, ntfy или произволен адрес.';
+
+  @override
+  String get inboxChannelsInfo =>
+      'Каналът е само ваш: получава само вашите елементи от избраните видове и нищо от видовете, които сте спрели по-горе. Сървърът изпраща всеки елемент веднага.';
+
+  @override
+  String get inboxChannelsEmpty => 'Още няма канали.';
+
+  @override
+  String get inboxChannelAdd => 'Добави канал';
+
+  @override
+  String get inboxChannelEdit => 'Промени канала';
+
+  @override
+  String get inboxChannelSave => 'Запази';
+
+  @override
+  String get inboxChannelSaved => 'Каналът е запазен';
+
+  @override
+  String inboxChannelAdded(String name) {
+    return 'Добавен е $name';
+  }
+
+  @override
+  String get inboxChannelName => 'Име';
+
+  @override
+  String get inboxChannelNameHint => 'Моят Slack';
+
+  @override
+  String get inboxChannelUrl => 'Адрес';
+
+  @override
+  String get inboxChannelUrlHelp =>
+      'Адресът на webhook или тема. Трябва да е https.';
+
+  @override
+  String get inboxChannelFormat => 'Формат';
+
+  @override
+  String get inboxChannelFormatGeneric => 'Подписан JSON';
+
+  @override
+  String get inboxChannelKinds => 'Видове';
+
+  @override
+  String get inboxChannelAllKinds => 'Всички видове';
+
+  @override
+  String get inboxChannelOff => 'Изключен';
+
+  @override
+  String get inboxChannelSecretTitle => 'Ключ за подпис';
+
+  @override
+  String get inboxChannelSecretBody =>
+      'tix подписва всяко JSON съобщение с този ключ. Копирайте го сега: няма да бъде показан отново.';
+
+  @override
+  String get inboxChannelSecretCopy => 'Копирай';
+
+  @override
+  String get inboxChannelSecretDone => 'Готово';
+
+  @override
+  String get inboxChannelAbout => 'Канал';
+
+  @override
+  String get inboxChannelActive => 'Включен';
+
+  @override
+  String get inboxChannelActiveHelp => 'Изключен, каналът не получава нищо.';
+
+  @override
+  String get inboxChannelTest => 'Изпрати тест';
+
+  @override
+  String get inboxChannelTestQueued => 'Тестовото съобщение е в опашката';
+
+  @override
+  String get inboxChannelDeliveries => 'Доставки';
+
+  @override
+  String get inboxChannelDeliveriesSubtitle => 'Най-новите първо.';
+
+  @override
+  String get inboxChannelNoDeliveries => 'Още няма доставки.';
+
+  @override
+  String get inboxChannelGone => 'Този канал вече не съществува.';
+
+  @override
+  String get inboxChannelDangerZone => 'Опасна зона';
+
+  @override
+  String get inboxChannelDelete => 'Изтрий канала';
+
+  @override
+  String inboxChannelDeleteTitle(String name) {
+    return 'Да се изтрие ли $name?';
+  }
+
+  @override
+  String get inboxChannelDeleteBody =>
+      'Каналът и дневникът на доставките се премахват. Това не може да бъде отменено.';
+
+  @override
+  String inboxChannelDeleted(String name) {
+    return 'Изтрит е $name';
+  }
+
+  @override
+  String get inboxDeliveryDelivered => 'доставено';
+
+  @override
+  String get inboxDeliveryFailed => 'неуспешно';
+
+  @override
+  String get inboxDeliveryPending => 'чака';
+
+  @override
+  String get inboxDeliveryTest => 'Тестово съобщение';
+
+  @override
+  String get inboxDeliveryItem => 'Елемент от входящите';
+
+  @override
+  String inboxDeliveryAttempts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count опита',
+      one: '1 опит',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxDeliveryRedeliver => 'Изпрати пак';
+
+  @override
+  String get inboxDeliveryRequeued => 'Отново е в опашката';
+
+  @override
+  String get liveUpdated => 'Обновено';
+
+  @override
+  String get liveChangedElsewhere =>
+      'Това е променено другаде. Промените ви са запазени.';
+
+  @override
+  String liveChangedElsewhereBy(String handle) {
+    return '@$handle промени това. Промените ви са запазени.';
+  }
+
+  @override
+  String get liveKeepEditing => 'Продължи';
+
+  @override
+  String get liveReload => 'Презареди';
+
+  @override
+  String get notifSettingsTitle => 'Известия';
+
+  @override
+  String get notifSettingsSubtitle => 'На това устройство, видове и канали';
+
+  @override
+  String get notifDeviceTitle => 'На това устройство';
+
+  @override
+  String get notifDeviceSubtitle => 'За активната инстанция и организация.';
+
+  @override
+  String get notifDeviceInfo =>
+      'Показват се, докато приложението е отворено или скоро е било скрито. Затворено приложение не може да бъде известено: tix още няма услуга за push. Каналите по-долу доставят навсякъде.';
+
+  @override
+  String get notifEnabled => 'Известявай ме за нови елементи';
+
+  @override
+  String get notifEnabledHelp => 'Докоснете известие, за да отворите задачата.';
+
+  @override
+  String get notifBlocked => 'Известията за tix са блокирани.';
+
+  @override
+  String get notifBlockedHelp =>
+      'Разрешете известията за tix в системните настройки и включете отново.';
+
+  @override
+  String get notifNudge =>
+      'Получавайте известие, когато нещо ново пристигне във входящите.';
+
+  @override
+  String get notifTurnOn => 'Включи';
+
+  @override
+  String get notifNotNow => 'Не сега';
+
+  @override
+  String notifMore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Още $count елемента',
+      one: 'Още 1 елемент',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notifMoreBody => 'Отворете входящите, за да ги видите.';
 }

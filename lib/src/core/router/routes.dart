@@ -30,11 +30,18 @@ abstract final class Routes {
   /// Task templates.
   static const templates = '/templates';
 
-  /// The inbox, once it is routed.
-  static const inbox = '/inbox';
-
   /// The reader's open assigned work by deadline.
   static const myWork = '/mine';
+
+  /// The caller's inbox.
+  static const inbox = '/inbox';
+
+  /// Notifications on this device, inbox kinds and personal channels.
+  static const notificationSettings = '/settings/notifications';
+
+  /// The personal notification channel [id].
+  static String channel(String id) =>
+      '$notificationSettings/channels/${Uri.encodeComponent(id)}';
 
   /// Theme, language and instances.
   static const settings = '/settings';

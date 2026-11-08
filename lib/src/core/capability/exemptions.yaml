@@ -51,20 +51,6 @@ pending:
   # time, views, filters, inbox, search, stars, snooze, templates, bulk.
   wave1:
     - filter.show
-    - inbox.channel.add
-    - inbox.channel.deliveries
-    - inbox.channel.edit
-    - inbox.channel.list
-    - inbox.channel.redeliver
-    - inbox.channel.rm
-    - inbox.channel.test
-    - inbox.count
-    - inbox.list
-    - inbox.prefs
-    - inbox.prefs.set
-    - inbox.read
-    - inbox.read_all
-    - inbox.unread
     - task.lease
     - task.tags
     - task.transition

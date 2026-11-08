@@ -85,6 +85,19 @@ class SettingsScreen extends ConsumerWidget {
             ],
           ),
           TixSection(
+            title: l10n.notifSettingsTitle,
+            children: [
+              ListTile(
+                key: const Key('settings.notifications'),
+                leading: const Icon(Icons.notifications_outlined),
+                title: Text(l10n.notifSettingsTitle),
+                subtitle: Text(l10n.notifSettingsSubtitle),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.go(Routes.notificationSettings),
+              ),
+            ],
+          ),
+          TixSection(
             title: l10n.instancesTitle,
             trailing: TixButton.primary(
               key: const Key('settings.add'),

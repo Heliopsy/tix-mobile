@@ -3014,6 +3014,684 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not save: {reason}'**
   String templateGeneralError(String reason);
+
+  /// No description provided for @goInbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to inbox'**
+  String get goInbox;
+
+  /// No description provided for @inboxTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox'**
+  String get inboxTitle;
+
+  /// No description provided for @inboxAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get inboxAll;
+
+  /// No description provided for @inboxUnreadFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Unread'**
+  String get inboxUnreadFilter;
+
+  /// No description provided for @inboxShowUnread.
+  ///
+  /// In en, this message translates to:
+  /// **'Show unread only'**
+  String get inboxShowUnread;
+
+  /// No description provided for @inboxUnread.
+  ///
+  /// In en, this message translates to:
+  /// **'unread'**
+  String get inboxUnread;
+
+  /// No description provided for @inboxAllCaughtUp.
+  ///
+  /// In en, this message translates to:
+  /// **'All caught up'**
+  String get inboxAllCaughtUp;
+
+  /// No description provided for @inboxUnreadCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 unread} other{{count} unread}}'**
+  String inboxUnreadCount(int count);
+
+  /// No description provided for @inboxToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get inboxToday;
+
+  /// No description provided for @inboxYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get inboxYesterday;
+
+  /// No description provided for @inboxEarlier.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier'**
+  String get inboxEarlier;
+
+  /// No description provided for @inboxEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here yet.'**
+  String get inboxEmpty;
+
+  /// No description provided for @inboxEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'When somebody mentions you, assigns you a task or comments on one you follow, it shows up here.'**
+  String get inboxEmptyBody;
+
+  /// No description provided for @inboxEmptyUnread.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing unread.'**
+  String get inboxEmptyUnread;
+
+  /// No description provided for @inboxEmptyFiltered.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing of these kinds.'**
+  String get inboxEmptyFiltered;
+
+  /// No description provided for @inboxSomebody.
+  ///
+  /// In en, this message translates to:
+  /// **'Somebody'**
+  String get inboxSomebody;
+
+  /// No description provided for @inboxWhatMention.
+  ///
+  /// In en, this message translates to:
+  /// **'{who} mentioned you'**
+  String inboxWhatMention(String who);
+
+  /// No description provided for @inboxWhatAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'{who} assigned you'**
+  String inboxWhatAssigned(String who);
+
+  /// No description provided for @inboxWhatComment.
+  ///
+  /// In en, this message translates to:
+  /// **'{who} commented'**
+  String inboxWhatComment(String who);
+
+  /// No description provided for @inboxWhatStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'{who} moved it'**
+  String inboxWhatStatus(String who);
+
+  /// No description provided for @inboxWhatOther.
+  ///
+  /// In en, this message translates to:
+  /// **'{who} changed it'**
+  String inboxWhatOther(String who);
+
+  /// No description provided for @inboxMovedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'moved to'**
+  String get inboxMovedTo;
+
+  /// No description provided for @inboxTaskGone.
+  ///
+  /// In en, this message translates to:
+  /// **'A task that has been deleted'**
+  String get inboxTaskGone;
+
+  /// No description provided for @inboxNow.
+  ///
+  /// In en, this message translates to:
+  /// **'now'**
+  String get inboxNow;
+
+  /// No description provided for @inboxMinutesAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} min'**
+  String inboxMinutesAgo(int n);
+
+  /// No description provided for @inboxHoursAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} h'**
+  String inboxHoursAgo(int n);
+
+  /// No description provided for @inboxItemActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Actions'**
+  String get inboxItemActions;
+
+  /// No description provided for @inboxOpenTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Open task'**
+  String get inboxOpenTask;
+
+  /// No description provided for @inboxMarkRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark read'**
+  String get inboxMarkRead;
+
+  /// No description provided for @inboxMarkUnread.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark unread'**
+  String get inboxMarkUnread;
+
+  /// No description provided for @inboxMarkAllRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all read'**
+  String get inboxMarkAllRead;
+
+  /// No description provided for @inboxMarkedAll.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Marked 1 item read} other{Marked {count} items read}}'**
+  String inboxMarkedAll(int count);
+
+  /// No description provided for @inboxMuteKind.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop {kind} in the inbox'**
+  String inboxMuteKind(String kind);
+
+  /// No description provided for @inboxMuted.
+  ///
+  /// In en, this message translates to:
+  /// **'{kind} no longer reach your inbox'**
+  String inboxMuted(String kind);
+
+  /// No description provided for @inboxKindMention.
+  ///
+  /// In en, this message translates to:
+  /// **'Mentions'**
+  String get inboxKindMention;
+
+  /// No description provided for @inboxKindAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Assignments'**
+  String get inboxKindAssigned;
+
+  /// No description provided for @inboxKindComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Comments'**
+  String get inboxKindComment;
+
+  /// No description provided for @inboxKindStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status changes'**
+  String get inboxKindStatus;
+
+  /// No description provided for @inboxKindMentionHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Somebody writes @you in a comment or a description.'**
+  String get inboxKindMentionHelp;
+
+  /// No description provided for @inboxKindAssignedHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A task is assigned to you.'**
+  String get inboxKindAssignedHelp;
+
+  /// No description provided for @inboxKindCommentHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Somebody comments on a task you are assigned to or starred.'**
+  String get inboxKindCommentHelp;
+
+  /// No description provided for @inboxKindStatusHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A task assigned to you moves to another status.'**
+  String get inboxKindStatusHelp;
+
+  /// No description provided for @inboxKindsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox'**
+  String get inboxKindsTitle;
+
+  /// No description provided for @inboxKindsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What creates an item in your inbox, on every device.'**
+  String get inboxKindsSubtitle;
+
+  /// No description provided for @inboxKindsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Stored on the server, as under Settings, Inbox in the web app. Off, a kind creates no item; items already in your inbox stay. Your own changes never appear.'**
+  String get inboxKindsInfo;
+
+  /// No description provided for @inboxSummaryOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get inboxSummaryOverdue;
+
+  /// No description provided for @inboxSummaryDueToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Due today'**
+  String get inboxSummaryDueToday;
+
+  /// No description provided for @inboxSummaryOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get inboxSummaryOpen;
+
+  /// No description provided for @inboxSummaryDoneWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Done in 7 days'**
+  String get inboxSummaryDoneWeek;
+
+  /// No description provided for @inboxCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'{category, select, todo{To do} inProgress{In progress} blocked{Blocked} waiting{Waiting} other{Other}}'**
+  String inboxCategory(String category);
+
+  /// No description provided for @inboxChannelsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Channels'**
+  String get inboxChannelsTitle;
+
+  /// No description provided for @inboxChannelsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Deliver your inbox to Slack, Discord, ntfy or any URL.'**
+  String get inboxChannelsSubtitle;
+
+  /// No description provided for @inboxChannelsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'A channel is yours alone: it receives only your items, of the kinds it lists, and nothing of a kind you stopped above. The server posts each item as it is written.'**
+  String get inboxChannelsInfo;
+
+  /// No description provided for @inboxChannelsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No channels yet.'**
+  String get inboxChannelsEmpty;
+
+  /// No description provided for @inboxChannelAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add channel'**
+  String get inboxChannelAdd;
+
+  /// No description provided for @inboxChannelEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit channel'**
+  String get inboxChannelEdit;
+
+  /// No description provided for @inboxChannelSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get inboxChannelSave;
+
+  /// No description provided for @inboxChannelSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Channel saved'**
+  String get inboxChannelSaved;
+
+  /// No description provided for @inboxChannelAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Added {name}'**
+  String inboxChannelAdded(String name);
+
+  /// No description provided for @inboxChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get inboxChannelName;
+
+  /// No description provided for @inboxChannelNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'My Slack'**
+  String get inboxChannelNameHint;
+
+  /// No description provided for @inboxChannelUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get inboxChannelUrl;
+
+  /// No description provided for @inboxChannelUrlHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The webhook or topic URL. It must be https.'**
+  String get inboxChannelUrlHelp;
+
+  /// No description provided for @inboxChannelFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Format'**
+  String get inboxChannelFormat;
+
+  /// No description provided for @inboxChannelFormatGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed JSON'**
+  String get inboxChannelFormatGeneric;
+
+  /// No description provided for @inboxChannelKinds.
+  ///
+  /// In en, this message translates to:
+  /// **'Kinds'**
+  String get inboxChannelKinds;
+
+  /// No description provided for @inboxChannelAllKinds.
+  ///
+  /// In en, this message translates to:
+  /// **'Every kind'**
+  String get inboxChannelAllKinds;
+
+  /// No description provided for @inboxChannelOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get inboxChannelOff;
+
+  /// No description provided for @inboxChannelSecretTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Signing secret'**
+  String get inboxChannelSecretTitle;
+
+  /// No description provided for @inboxChannelSecretBody.
+  ///
+  /// In en, this message translates to:
+  /// **'tix signs every signed JSON message with this secret. Copy it now: it is not shown again.'**
+  String get inboxChannelSecretBody;
+
+  /// No description provided for @inboxChannelSecretCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get inboxChannelSecretCopy;
+
+  /// No description provided for @inboxChannelSecretDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get inboxChannelSecretDone;
+
+  /// No description provided for @inboxChannelAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'Channel'**
+  String get inboxChannelAbout;
+
+  /// No description provided for @inboxChannelActive.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get inboxChannelActive;
+
+  /// No description provided for @inboxChannelActiveHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Off, the channel receives nothing.'**
+  String get inboxChannelActiveHelp;
+
+  /// No description provided for @inboxChannelTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Send test'**
+  String get inboxChannelTest;
+
+  /// No description provided for @inboxChannelTestQueued.
+  ///
+  /// In en, this message translates to:
+  /// **'Test message queued'**
+  String get inboxChannelTestQueued;
+
+  /// No description provided for @inboxChannelDeliveries.
+  ///
+  /// In en, this message translates to:
+  /// **'Deliveries'**
+  String get inboxChannelDeliveries;
+
+  /// No description provided for @inboxChannelDeliveriesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest first.'**
+  String get inboxChannelDeliveriesSubtitle;
+
+  /// No description provided for @inboxChannelNoDeliveries.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing delivered yet.'**
+  String get inboxChannelNoDeliveries;
+
+  /// No description provided for @inboxChannelGone.
+  ///
+  /// In en, this message translates to:
+  /// **'This channel no longer exists.'**
+  String get inboxChannelGone;
+
+  /// No description provided for @inboxChannelDangerZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Danger zone'**
+  String get inboxChannelDangerZone;
+
+  /// No description provided for @inboxChannelDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete channel'**
+  String get inboxChannelDelete;
+
+  /// No description provided for @inboxChannelDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {name}?'**
+  String inboxChannelDeleteTitle(String name);
+
+  /// No description provided for @inboxChannelDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The channel and its delivery log are removed. This cannot be undone.'**
+  String get inboxChannelDeleteBody;
+
+  /// No description provided for @inboxChannelDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted {name}'**
+  String inboxChannelDeleted(String name);
+
+  /// No description provided for @inboxDeliveryDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'delivered'**
+  String get inboxDeliveryDelivered;
+
+  /// No description provided for @inboxDeliveryFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'failed'**
+  String get inboxDeliveryFailed;
+
+  /// No description provided for @inboxDeliveryPending.
+  ///
+  /// In en, this message translates to:
+  /// **'pending'**
+  String get inboxDeliveryPending;
+
+  /// No description provided for @inboxDeliveryTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Test message'**
+  String get inboxDeliveryTest;
+
+  /// No description provided for @inboxDeliveryItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox item'**
+  String get inboxDeliveryItem;
+
+  /// No description provided for @inboxDeliveryAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 attempt} other{{count} attempts}}'**
+  String inboxDeliveryAttempts(int count);
+
+  /// No description provided for @inboxDeliveryRedeliver.
+  ///
+  /// In en, this message translates to:
+  /// **'Redeliver'**
+  String get inboxDeliveryRedeliver;
+
+  /// No description provided for @inboxDeliveryRequeued.
+  ///
+  /// In en, this message translates to:
+  /// **'Queued again'**
+  String get inboxDeliveryRequeued;
+
+  /// No description provided for @liveUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get liveUpdated;
+
+  /// No description provided for @liveChangedElsewhere.
+  ///
+  /// In en, this message translates to:
+  /// **'This changed elsewhere. Your edits are kept.'**
+  String get liveChangedElsewhere;
+
+  /// No description provided for @liveChangedElsewhereBy.
+  ///
+  /// In en, this message translates to:
+  /// **'@{handle} changed this. Your edits are kept.'**
+  String liveChangedElsewhereBy(String handle);
+
+  /// No description provided for @liveKeepEditing.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep editing'**
+  String get liveKeepEditing;
+
+  /// No description provided for @liveReload.
+  ///
+  /// In en, this message translates to:
+  /// **'Reload'**
+  String get liveReload;
+
+  /// No description provided for @notifSettingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifSettingsTitle;
+
+  /// No description provided for @notifSettingsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'On this device, inbox kinds and channels'**
+  String get notifSettingsSubtitle;
+
+  /// No description provided for @notifDeviceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'On this device'**
+  String get notifDeviceTitle;
+
+  /// No description provided for @notifDeviceSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'For the active instance and tenant.'**
+  String get notifDeviceSubtitle;
+
+  /// No description provided for @notifDeviceInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Shown while the app is open or was put away a moment ago. A closed app cannot be told: tix has no push service yet. Channels below deliver everywhere.'**
+  String get notifDeviceInfo;
+
+  /// No description provided for @notifEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Notify me about new inbox items'**
+  String get notifEnabled;
+
+  /// No description provided for @notifEnabledHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a notification to open the task.'**
+  String get notifEnabledHelp;
+
+  /// No description provided for @notifBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are blocked for tix.'**
+  String get notifBlocked;
+
+  /// No description provided for @notifBlockedHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow notifications for tix in the system settings, then turn this on again.'**
+  String get notifBlockedHelp;
+
+  /// No description provided for @notifNudge.
+  ///
+  /// In en, this message translates to:
+  /// **'Get a notification when something new reaches your inbox.'**
+  String get notifNudge;
+
+  /// No description provided for @notifTurnOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on'**
+  String get notifTurnOn;
+
+  /// No description provided for @notifNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get notifNotNow;
+
+  /// No description provided for @notifMore.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 more inbox item} other{{count} more inbox items}}'**
+  String notifMore(int count);
+
+  /// No description provided for @notifMoreBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the inbox to see them.'**
+  String get notifMoreBody;
 }
 
 class _AppLocalizationsDelegate

@@ -109,4 +109,43 @@ const bindings = <String, Binding>{
   'filter.delete': Binding(feature: 'tasks', action: 'delete-filter', wave: 1),
   'filter.order': Binding(feature: 'tasks', action: 'order-filters', wave: 1),
   'stats.read': Binding(feature: 'projects', action: 'open-count', wave: 1),
+  // Inbox, notifications and the summary (wave 1, area C).
+  'inbox.list': Binding(feature: 'inbox', action: 'list', wave: 1),
+  'inbox.count': Binding(feature: 'inbox', action: 'badge', wave: 1),
+  'inbox.read': Binding(feature: 'inbox', action: 'mark-read', wave: 1),
+  'inbox.unread': Binding(feature: 'inbox', action: 'mark-unread', wave: 1),
+  'inbox.read_all': Binding(feature: 'inbox', action: 'mark-all-read', wave: 1),
+  'inbox.prefs': Binding(feature: 'inbox', action: 'kinds', wave: 1),
+  'inbox.prefs.set': Binding(feature: 'inbox', action: 'mute-kind', wave: 1),
+  'inbox.channel.list': Binding(feature: 'inbox', action: 'channels', wave: 1),
+  'inbox.channel.add': Binding(
+    feature: 'inbox',
+    action: 'add-channel',
+    wave: 1,
+  ),
+  'inbox.channel.edit': Binding(
+    feature: 'inbox',
+    action: 'edit-channel',
+    wave: 1,
+  ),
+  'inbox.channel.rm': Binding(
+    feature: 'inbox',
+    action: 'delete-channel',
+    wave: 1,
+  ),
+  'inbox.channel.test': Binding(
+    feature: 'inbox',
+    action: 'test-channel',
+    wave: 1,
+  ),
+  'inbox.channel.deliveries': Binding(
+    feature: 'inbox',
+    action: 'deliveries',
+    wave: 1,
+  ),
+  'inbox.channel.redeliver': Binding(
+    feature: 'inbox',
+    action: 'redeliver',
+    wave: 1,
+  ),
 };

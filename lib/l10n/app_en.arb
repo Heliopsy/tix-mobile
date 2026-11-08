@@ -1033,5 +1033,244 @@
         "type": "String"
       }
     }
-  }
+  },
+  "goInbox": "Go to inbox",
+  "inboxTitle": "Inbox",
+  "inboxAll": "All",
+  "inboxUnreadFilter": "Unread",
+  "inboxShowUnread": "Show unread only",
+  "inboxUnread": "unread",
+  "inboxAllCaughtUp": "All caught up",
+  "inboxUnreadCount": "{count, plural, =1{1 unread} other{{count} unread}}",
+  "@inboxUnreadCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inboxToday": "Today",
+  "inboxYesterday": "Yesterday",
+  "inboxEarlier": "Earlier",
+  "inboxEmpty": "Nothing here yet.",
+  "inboxEmptyBody": "When somebody mentions you, assigns you a task or comments on one you follow, it shows up here.",
+  "inboxEmptyUnread": "Nothing unread.",
+  "inboxEmptyFiltered": "Nothing of these kinds.",
+  "inboxSomebody": "Somebody",
+  "inboxWhatMention": "{who} mentioned you",
+  "@inboxWhatMention": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxWhatAssigned": "{who} assigned you",
+  "@inboxWhatAssigned": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxWhatComment": "{who} commented",
+  "@inboxWhatComment": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxWhatStatus": "{who} moved it",
+  "@inboxWhatStatus": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxWhatOther": "{who} changed it",
+  "@inboxWhatOther": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxMovedTo": "moved to",
+  "inboxTaskGone": "A task that has been deleted",
+  "inboxNow": "now",
+  "inboxMinutesAgo": "{n} min",
+  "@inboxMinutesAgo": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "inboxHoursAgo": "{n} h",
+  "@inboxHoursAgo": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "inboxItemActions": "Actions",
+  "inboxOpenTask": "Open task",
+  "inboxMarkRead": "Mark read",
+  "inboxMarkUnread": "Mark unread",
+  "inboxMarkAllRead": "Mark all read",
+  "inboxMarkedAll": "{count, plural, =1{Marked 1 item read} other{Marked {count} items read}}",
+  "@inboxMarkedAll": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inboxMuteKind": "Stop {kind} in the inbox",
+  "@inboxMuteKind": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxMuted": "{kind} no longer reach your inbox",
+  "@inboxMuted": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxKindMention": "Mentions",
+  "inboxKindAssigned": "Assignments",
+  "inboxKindComment": "Comments",
+  "inboxKindStatus": "Status changes",
+  "inboxKindMentionHelp": "Somebody writes @you in a comment or a description.",
+  "inboxKindAssignedHelp": "A task is assigned to you.",
+  "inboxKindCommentHelp": "Somebody comments on a task you are assigned to or starred.",
+  "inboxKindStatusHelp": "A task assigned to you moves to another status.",
+  "inboxKindsTitle": "Inbox",
+  "inboxKindsSubtitle": "What creates an item in your inbox, on every device.",
+  "inboxKindsInfo": "Stored on the server, as under Settings, Inbox in the web app. Off, a kind creates no item; items already in your inbox stay. Your own changes never appear.",
+  "inboxSummaryOverdue": "Overdue",
+  "inboxSummaryDueToday": "Due today",
+  "inboxSummaryOpen": "Open",
+  "inboxSummaryDoneWeek": "Done in 7 days",
+  "inboxCategory": "{category, select, todo{To do} inProgress{In progress} blocked{Blocked} waiting{Waiting} other{Other}}",
+  "@inboxCategory": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxChannelsTitle": "Channels",
+  "inboxChannelsSubtitle": "Deliver your inbox to Slack, Discord, ntfy or any URL.",
+  "inboxChannelsInfo": "A channel is yours alone: it receives only your items, of the kinds it lists, and nothing of a kind you stopped above. The server posts each item as it is written.",
+  "inboxChannelsEmpty": "No channels yet.",
+  "inboxChannelAdd": "Add channel",
+  "inboxChannelEdit": "Edit channel",
+  "inboxChannelSave": "Save",
+  "inboxChannelSaved": "Channel saved",
+  "inboxChannelAdded": "Added {name}",
+  "@inboxChannelAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxChannelName": "Name",
+  "inboxChannelNameHint": "My Slack",
+  "inboxChannelUrl": "Address",
+  "inboxChannelUrlHelp": "The webhook or topic URL. It must be https.",
+  "inboxChannelFormat": "Format",
+  "inboxChannelFormatGeneric": "Signed JSON",
+  "inboxChannelKinds": "Kinds",
+  "inboxChannelAllKinds": "Every kind",
+  "inboxChannelOff": "Off",
+  "inboxChannelSecretTitle": "Signing secret",
+  "inboxChannelSecretBody": "tix signs every signed JSON message with this secret. Copy it now: it is not shown again.",
+  "inboxChannelSecretCopy": "Copy",
+  "inboxChannelSecretDone": "Done",
+  "inboxChannelAbout": "Channel",
+  "inboxChannelActive": "On",
+  "inboxChannelActiveHelp": "Off, the channel receives nothing.",
+  "inboxChannelTest": "Send test",
+  "inboxChannelTestQueued": "Test message queued",
+  "inboxChannelDeliveries": "Deliveries",
+  "inboxChannelDeliveriesSubtitle": "Newest first.",
+  "inboxChannelNoDeliveries": "Nothing delivered yet.",
+  "inboxChannelGone": "This channel no longer exists.",
+  "inboxChannelDangerZone": "Danger zone",
+  "inboxChannelDelete": "Delete channel",
+  "inboxChannelDeleteTitle": "Delete {name}?",
+  "@inboxChannelDeleteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxChannelDeleteBody": "The channel and its delivery log are removed. This cannot be undone.",
+  "inboxChannelDeleted": "Deleted {name}",
+  "@inboxChannelDeleted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxDeliveryDelivered": "delivered",
+  "inboxDeliveryFailed": "failed",
+  "inboxDeliveryPending": "pending",
+  "inboxDeliveryTest": "Test message",
+  "inboxDeliveryItem": "Inbox item",
+  "inboxDeliveryAttempts": "{count, plural, =1{1 attempt} other{{count} attempts}}",
+  "@inboxDeliveryAttempts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inboxDeliveryRedeliver": "Redeliver",
+  "inboxDeliveryRequeued": "Queued again",
+  "liveUpdated": "Updated",
+  "liveChangedElsewhere": "This changed elsewhere. Your edits are kept.",
+  "liveChangedElsewhereBy": "@{handle} changed this. Your edits are kept.",
+  "@liveChangedElsewhereBy": {
+    "placeholders": {
+      "handle": {
+        "type": "String"
+      }
+    }
+  },
+  "liveKeepEditing": "Keep editing",
+  "liveReload": "Reload",
+  "notifSettingsTitle": "Notifications",
+  "notifSettingsSubtitle": "On this device, inbox kinds and channels",
+  "notifDeviceTitle": "On this device",
+  "notifDeviceSubtitle": "For the active instance and tenant.",
+  "notifDeviceInfo": "Shown while the app is open or was put away a moment ago. A closed app cannot be told: tix has no push service yet. Channels below deliver everywhere.",
+  "notifEnabled": "Notify me about new inbox items",
+  "notifEnabledHelp": "Tap a notification to open the task.",
+  "notifBlocked": "Notifications are blocked for tix.",
+  "notifBlockedHelp": "Allow notifications for tix in the system settings, then turn this on again.",
+  "notifNudge": "Get a notification when something new reaches your inbox.",
+  "notifTurnOn": "Turn on",
+  "notifNotNow": "Not now",
+  "notifMore": "{count, plural, =1{1 more inbox item} other{{count} more inbox items}}",
+  "@notifMore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notifMoreBody": "Open the inbox to see them."
 }

@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/markdown/checklist.dart';
+import 'package:tix_mobile/src/data/models/inbox.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 
 // Sample content in English only: the gallery is a debug tool for
@@ -654,6 +655,69 @@ openssl x509 -enddate -noout
         onToggle: (item, {required done}) =>
             setState(() => _body = setChecklistItem(_body, item, done: done)),
       ),
+    ],
+  );
+}
+
+/// Inbox items of every kind, read and unread, as the inbox draws them.
+final galleryInbox = [
+  InboxItem(
+    id: 'g1',
+    kind: InboxKind.mention,
+    actorHandle: 'raj',
+    taskRef: 'infra-11',
+    taskTitle: 'Shed load instead of falling over',
+    excerpt: '@ana can you take the second half of this?',
+    createdAt: galleryNow.subtract(const Duration(minutes: 12)),
+  ),
+  InboxItem(
+    id: 'g2',
+    kind: InboxKind.status,
+    actorHandle: 'lee',
+    taskRef: 'web-4',
+    taskTitle: 'Full text search across titles, bodies and comments',
+    fromStatus: 'todo',
+    toStatus: 'doing',
+    createdAt: galleryNow.subtract(const Duration(hours: 3)),
+    readAt: galleryNow,
+  ),
+  InboxItem(
+    id: 'g3',
+    kind: InboxKind.assigned,
+    actorHandle: 'kim',
+    taskRef: 'ops-2',
+    taskTitle: 'Move DNS to the new registrar',
+    createdAt: galleryNow.subtract(const Duration(days: 1)),
+  ),
+  InboxItem(
+    id: 'g4',
+    kind: InboxKind.comment,
+    taskRef: 'ops-9',
+    taskGone: true,
+    excerpt: 'Closing this, the vendor fixed it.',
+    createdAt: galleryNow.subtract(const Duration(days: 6)),
+    readAt: galleryNow,
+  ),
+];
+
+/// Inbox rows and the live-update marks.
+class GalleryInbox extends StatelessWidget {
+  /// Creates the samples.
+  const GalleryInbox({super.key});
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      for (final item in galleryInbox)
+        InboxRow(item: item, now: galleryNow, onTap: () {}, onMenu: () {}),
+      const SizedBox(height: TixSpace.s4),
+      const Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: UpdatedMark(visible: true),
+      ),
+      const SizedBox(height: TixSpace.s3),
+      ChangedElsewhereBanner(by: 'raj', onReload: () {}, onDismiss: () {}),
     ],
   );
 }

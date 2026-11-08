@@ -131,7 +131,7 @@ class _QuickActionsHostState extends ConsumerState<QuickActionsHost> {
       case AppShortcutTypes.quickAdd:
         ref.read(quickAddDraftsProvider.notifier).open();
       case AppShortcutTypes.inbox:
-        _goIfRouted(Routes.inbox);
+        _router?.go(Routes.inbox);
       case AppShortcutTypes.myWork:
         _goIfRouted(Routes.myWork);
     }
@@ -293,14 +293,13 @@ class _QuickActionsHostState extends ConsumerState<QuickActionsHost> {
           icon: Icons.bolt,
           run: () => _router?.go(Routes.templates),
         ),
-        if (_routes(Routes.inbox))
-          TixCommand(
-            id: 'go.inbox',
-            label: l10n.paletteGoInbox,
-            group: l10n.commandsNavigate,
-            icon: Icons.inbox_outlined,
-            run: () => _router?.go(Routes.inbox),
-          ),
+        TixCommand(
+          id: 'go.inbox',
+          label: l10n.paletteGoInbox,
+          group: l10n.commandsNavigate,
+          icon: Icons.inbox_outlined,
+          run: () => _router?.go(Routes.inbox),
+        ),
       ],
       sources: [_taskByRef, _recentTasks, _projects, _templates],
       child: widget.child,

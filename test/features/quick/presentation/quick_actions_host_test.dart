@@ -146,8 +146,9 @@ void main() {
     expect(tester.widget<TextField>(line()).controller!.text, 'From clipboard');
   });
 
-  testWidgets('launcher shortcuts open quick add, and go to projects while '
-      'the inbox is not routed', (tester) async {
+  testWidgets('launcher shortcuts open quick add and the inbox', (
+    tester,
+  ) async {
     await pump(tester, size: phone);
     expect(shortcuts.items.map((i) => i.type), [
       AppShortcutTypes.quickAdd,
@@ -161,7 +162,7 @@ void main() {
     await tester.pumpAndSettle();
     shortcuts.pick!(AppShortcutTypes.inbox);
     await tester.pumpAndSettle();
-    expect(find.text('route:/projects'), findsOneWidget);
+    expect(find.text('route:/inbox'), findsOneWidget);
   });
 
   testWidgets('the palette finds a project and a task by reference', (

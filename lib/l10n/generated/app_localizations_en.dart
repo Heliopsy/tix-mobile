@@ -1735,4 +1735,426 @@ class AppLocalizationsEn extends AppLocalizations {
   String templateGeneralError(String reason) {
     return 'Could not save: $reason';
   }
+
+  @override
+  String get goInbox => 'Go to inbox';
+
+  @override
+  String get inboxTitle => 'Inbox';
+
+  @override
+  String get inboxAll => 'All';
+
+  @override
+  String get inboxUnreadFilter => 'Unread';
+
+  @override
+  String get inboxShowUnread => 'Show unread only';
+
+  @override
+  String get inboxUnread => 'unread';
+
+  @override
+  String get inboxAllCaughtUp => 'All caught up';
+
+  @override
+  String inboxUnreadCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count unread',
+      one: '1 unread',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxToday => 'Today';
+
+  @override
+  String get inboxYesterday => 'Yesterday';
+
+  @override
+  String get inboxEarlier => 'Earlier';
+
+  @override
+  String get inboxEmpty => 'Nothing here yet.';
+
+  @override
+  String get inboxEmptyBody =>
+      'When somebody mentions you, assigns you a task or comments on one you follow, it shows up here.';
+
+  @override
+  String get inboxEmptyUnread => 'Nothing unread.';
+
+  @override
+  String get inboxEmptyFiltered => 'Nothing of these kinds.';
+
+  @override
+  String get inboxSomebody => 'Somebody';
+
+  @override
+  String inboxWhatMention(String who) {
+    return '$who mentioned you';
+  }
+
+  @override
+  String inboxWhatAssigned(String who) {
+    return '$who assigned you';
+  }
+
+  @override
+  String inboxWhatComment(String who) {
+    return '$who commented';
+  }
+
+  @override
+  String inboxWhatStatus(String who) {
+    return '$who moved it';
+  }
+
+  @override
+  String inboxWhatOther(String who) {
+    return '$who changed it';
+  }
+
+  @override
+  String get inboxMovedTo => 'moved to';
+
+  @override
+  String get inboxTaskGone => 'A task that has been deleted';
+
+  @override
+  String get inboxNow => 'now';
+
+  @override
+  String inboxMinutesAgo(int n) {
+    return '$n min';
+  }
+
+  @override
+  String inboxHoursAgo(int n) {
+    return '$n h';
+  }
+
+  @override
+  String get inboxItemActions => 'Actions';
+
+  @override
+  String get inboxOpenTask => 'Open task';
+
+  @override
+  String get inboxMarkRead => 'Mark read';
+
+  @override
+  String get inboxMarkUnread => 'Mark unread';
+
+  @override
+  String get inboxMarkAllRead => 'Mark all read';
+
+  @override
+  String inboxMarkedAll(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Marked $count items read',
+      one: 'Marked 1 item read',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inboxMuteKind(String kind) {
+    return 'Stop $kind in the inbox';
+  }
+
+  @override
+  String inboxMuted(String kind) {
+    return '$kind no longer reach your inbox';
+  }
+
+  @override
+  String get inboxKindMention => 'Mentions';
+
+  @override
+  String get inboxKindAssigned => 'Assignments';
+
+  @override
+  String get inboxKindComment => 'Comments';
+
+  @override
+  String get inboxKindStatus => 'Status changes';
+
+  @override
+  String get inboxKindMentionHelp =>
+      'Somebody writes @you in a comment or a description.';
+
+  @override
+  String get inboxKindAssignedHelp => 'A task is assigned to you.';
+
+  @override
+  String get inboxKindCommentHelp =>
+      'Somebody comments on a task you are assigned to or starred.';
+
+  @override
+  String get inboxKindStatusHelp =>
+      'A task assigned to you moves to another status.';
+
+  @override
+  String get inboxKindsTitle => 'Inbox';
+
+  @override
+  String get inboxKindsSubtitle =>
+      'What creates an item in your inbox, on every device.';
+
+  @override
+  String get inboxKindsInfo =>
+      'Stored on the server, as under Settings, Inbox in the web app. Off, a kind creates no item; items already in your inbox stay. Your own changes never appear.';
+
+  @override
+  String get inboxSummaryOverdue => 'Overdue';
+
+  @override
+  String get inboxSummaryDueToday => 'Due today';
+
+  @override
+  String get inboxSummaryOpen => 'Open';
+
+  @override
+  String get inboxSummaryDoneWeek => 'Done in 7 days';
+
+  @override
+  String inboxCategory(String category) {
+    String _temp0 = intl.Intl.selectLogic(category, {
+      'todo': 'To do',
+      'inProgress': 'In progress',
+      'blocked': 'Blocked',
+      'waiting': 'Waiting',
+      'other': 'Other',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxChannelsTitle => 'Channels';
+
+  @override
+  String get inboxChannelsSubtitle =>
+      'Deliver your inbox to Slack, Discord, ntfy or any URL.';
+
+  @override
+  String get inboxChannelsInfo =>
+      'A channel is yours alone: it receives only your items, of the kinds it lists, and nothing of a kind you stopped above. The server posts each item as it is written.';
+
+  @override
+  String get inboxChannelsEmpty => 'No channels yet.';
+
+  @override
+  String get inboxChannelAdd => 'Add channel';
+
+  @override
+  String get inboxChannelEdit => 'Edit channel';
+
+  @override
+  String get inboxChannelSave => 'Save';
+
+  @override
+  String get inboxChannelSaved => 'Channel saved';
+
+  @override
+  String inboxChannelAdded(String name) {
+    return 'Added $name';
+  }
+
+  @override
+  String get inboxChannelName => 'Name';
+
+  @override
+  String get inboxChannelNameHint => 'My Slack';
+
+  @override
+  String get inboxChannelUrl => 'Address';
+
+  @override
+  String get inboxChannelUrlHelp =>
+      'The webhook or topic URL. It must be https.';
+
+  @override
+  String get inboxChannelFormat => 'Format';
+
+  @override
+  String get inboxChannelFormatGeneric => 'Signed JSON';
+
+  @override
+  String get inboxChannelKinds => 'Kinds';
+
+  @override
+  String get inboxChannelAllKinds => 'Every kind';
+
+  @override
+  String get inboxChannelOff => 'Off';
+
+  @override
+  String get inboxChannelSecretTitle => 'Signing secret';
+
+  @override
+  String get inboxChannelSecretBody =>
+      'tix signs every signed JSON message with this secret. Copy it now: it is not shown again.';
+
+  @override
+  String get inboxChannelSecretCopy => 'Copy';
+
+  @override
+  String get inboxChannelSecretDone => 'Done';
+
+  @override
+  String get inboxChannelAbout => 'Channel';
+
+  @override
+  String get inboxChannelActive => 'On';
+
+  @override
+  String get inboxChannelActiveHelp => 'Off, the channel receives nothing.';
+
+  @override
+  String get inboxChannelTest => 'Send test';
+
+  @override
+  String get inboxChannelTestQueued => 'Test message queued';
+
+  @override
+  String get inboxChannelDeliveries => 'Deliveries';
+
+  @override
+  String get inboxChannelDeliveriesSubtitle => 'Newest first.';
+
+  @override
+  String get inboxChannelNoDeliveries => 'Nothing delivered yet.';
+
+  @override
+  String get inboxChannelGone => 'This channel no longer exists.';
+
+  @override
+  String get inboxChannelDangerZone => 'Danger zone';
+
+  @override
+  String get inboxChannelDelete => 'Delete channel';
+
+  @override
+  String inboxChannelDeleteTitle(String name) {
+    return 'Delete $name?';
+  }
+
+  @override
+  String get inboxChannelDeleteBody =>
+      'The channel and its delivery log are removed. This cannot be undone.';
+
+  @override
+  String inboxChannelDeleted(String name) {
+    return 'Deleted $name';
+  }
+
+  @override
+  String get inboxDeliveryDelivered => 'delivered';
+
+  @override
+  String get inboxDeliveryFailed => 'failed';
+
+  @override
+  String get inboxDeliveryPending => 'pending';
+
+  @override
+  String get inboxDeliveryTest => 'Test message';
+
+  @override
+  String get inboxDeliveryItem => 'Inbox item';
+
+  @override
+  String inboxDeliveryAttempts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count attempts',
+      one: '1 attempt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxDeliveryRedeliver => 'Redeliver';
+
+  @override
+  String get inboxDeliveryRequeued => 'Queued again';
+
+  @override
+  String get liveUpdated => 'Updated';
+
+  @override
+  String get liveChangedElsewhere =>
+      'This changed elsewhere. Your edits are kept.';
+
+  @override
+  String liveChangedElsewhereBy(String handle) {
+    return '@$handle changed this. Your edits are kept.';
+  }
+
+  @override
+  String get liveKeepEditing => 'Keep editing';
+
+  @override
+  String get liveReload => 'Reload';
+
+  @override
+  String get notifSettingsTitle => 'Notifications';
+
+  @override
+  String get notifSettingsSubtitle =>
+      'On this device, inbox kinds and channels';
+
+  @override
+  String get notifDeviceTitle => 'On this device';
+
+  @override
+  String get notifDeviceSubtitle => 'For the active instance and tenant.';
+
+  @override
+  String get notifDeviceInfo =>
+      'Shown while the app is open or was put away a moment ago. A closed app cannot be told: tix has no push service yet. Channels below deliver everywhere.';
+
+  @override
+  String get notifEnabled => 'Notify me about new inbox items';
+
+  @override
+  String get notifEnabledHelp => 'Tap a notification to open the task.';
+
+  @override
+  String get notifBlocked => 'Notifications are blocked for tix.';
+
+  @override
+  String get notifBlockedHelp =>
+      'Allow notifications for tix in the system settings, then turn this on again.';
+
+  @override
+  String get notifNudge =>
+      'Get a notification when something new reaches your inbox.';
+
+  @override
+  String get notifTurnOn => 'Turn on';
+
+  @override
+  String get notifNotNow => 'Not now';
+
+  @override
+  String notifMore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count more inbox items',
+      one: '1 more inbox item',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notifMoreBody => 'Open the inbox to see them.';
 }

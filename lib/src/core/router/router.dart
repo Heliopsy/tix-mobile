@@ -8,6 +8,10 @@ import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/features/connect/presentation/connect_screen.dart';
 import 'package:tix_mobile/src/features/gallery/presentation/gallery_screen.dart';
+import 'package:tix_mobile/src/features/inbox/presentation/channel_screen.dart';
+import 'package:tix_mobile/src/features/inbox/presentation/inbox_screen.dart';
+import 'package:tix_mobile/src/features/inbox/presentation/inbox_shell.dart';
+import 'package:tix_mobile/src/features/inbox/presentation/notification_settings_screen.dart';
 import 'package:tix_mobile/src/features/instances/presentation/instances_screen.dart';
 import 'package:tix_mobile/src/features/projects/presentation/projects_screen.dart';
 import 'package:tix_mobile/src/features/quick/presentation/quick_actions_host.dart';
@@ -76,9 +80,16 @@ GoRouter router(Ref ref) {
       if (Routes.galleryEnabled)
         GoRoute(path: Routes.gallery, builder: (_, _) => const GalleryScreen()),
       StatefulShellRoute.indexedStack(
-        builder: (_, _, shell) => QuickActionsHost(
-          child: TemplatesCommands(
-            child: SettingsCommands(child: HomeShell(shell: shell)),
+        builder: (_, _, shell) => InboxAlertsScope(
+          child: QuickActionsHost(
+            child: TemplatesCommands(
+              child: SettingsCommands(
+                child: HomeShell(
+                  shell: shell,
+                  inboxIcon: (icon) => InboxNavIcon(icon: icon),
+                ),
+              ),
+            ),
           ),
         ),
         branches: [
@@ -124,12 +135,32 @@ GoRouter router(Ref ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
+                path: Routes.inbox,
+                builder: (_, _) => const InboxScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
                 path: Routes.settings,
                 builder: (_, _) => const SettingsScreen(),
                 routes: [
                   GoRoute(
                     path: 'instances',
                     builder: (_, _) => const InstancesScreen(),
+                  ),
+                  GoRoute(
+                    path: 'notifications',
+                    builder: (_, _) => const NotificationSettingsScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'channels/:id',
+                        builder: (_, state) => ChannelScreen(
+                          channelId: state.pathParameters['id']!,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
