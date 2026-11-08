@@ -23,7 +23,7 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final themeMode = ref.watch(themeModeSettingProvider);
+    final theme = ref.watch(themeSettingProvider);
     final locale = ref.watch(localeSettingProvider);
     final session = ref.watch(sessionControllerProvider).value;
     final count = ref.watch(contextDirectoryProvider).groups.length;
@@ -41,45 +41,57 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               _Labelled(
                 label: l10n.themeLabel,
-                child: SegmentedButton<ThemeMode>(
+                child: TixChoices<ThemeChoice>(
                   key: const Key('settings.theme'),
-                  segments: [
-                    ButtonSegment(
-                      value: ThemeMode.system,
-                      label: Text(l10n.themeSystem),
-                      icon: const Icon(Icons.brightness_auto),
+                  choices: [
+                    TixChoice(
+                      ThemeChoice.system,
+                      l10n.themeSystem,
+                      icon: Icons.brightness_auto,
                     ),
-                    ButtonSegment(
-                      value: ThemeMode.light,
-                      label: Text(l10n.themeLight),
-                      icon: const Icon(Icons.light_mode),
+                    TixChoice(
+                      ThemeChoice.light,
+                      l10n.themeLight,
+                      icon: Icons.light_mode,
                     ),
-                    ButtonSegment(
-                      value: ThemeMode.dark,
-                      label: Text(l10n.themeDark),
-                      icon: const Icon(Icons.dark_mode),
+                    TixChoice(
+                      ThemeChoice.dark,
+                      l10n.themeDark,
+                      icon: Icons.dark_mode,
+                    ),
+                    TixChoice(
+                      ThemeChoice.oled,
+                      l10n.themeOled,
+                      icon: Icons.contrast,
                     ),
                   ],
-                  showSelectedIcon: false,
-                  selected: {themeMode},
-                  onSelectionChanged: (s) =>
-                      ref.read(themeModeSettingProvider.notifier).set(s.first),
+                  selected: theme,
+                  onSelected: (c) =>
+                      ref.read(themeSettingProvider.notifier).set(c),
                 ),
               ),
+              if (theme == ThemeChoice.system)
+                TixSwitchRow(
+                  key: const Key('settings.systemBlack'),
+                  title: l10n.themeSystemBlack,
+                  subtitle: l10n.themeSystemBlackHelp,
+                  value: ref.watch(systemBlackSettingProvider),
+                  onChanged: (on) =>
+                      ref.read(systemBlackSettingProvider.notifier).set(on: on),
+                ),
               _Labelled(
                 label: l10n.languageLabel,
-                child: SegmentedButton<String>(
+                child: TixChoices<String>(
                   key: const Key('settings.language'),
-                  segments: [
-                    ButtonSegment(value: '', label: Text(l10n.languageSystem)),
+                  choices: [
+                    TixChoice('', l10n.languageSystem),
                     for (final MapEntry(:key, :value) in languageNames.entries)
-                      ButtonSegment(value: key, label: Text(value)),
+                      TixChoice(key, value),
                   ],
-                  showSelectedIcon: false,
-                  selected: {locale?.languageCode ?? ''},
-                  onSelectionChanged: (s) => ref
+                  selected: locale?.languageCode ?? '',
+                  onSelected: (c) => ref
                       .read(localeSettingProvider.notifier)
-                      .set(s.first.isEmpty ? null : Locale(s.first)),
+                      .set(c.isEmpty ? null : Locale(c)),
                 ),
               ),
             ],
@@ -213,7 +225,7 @@ class _Labelled extends StatelessWidget {
           ),
         ),
         const SizedBox(height: TixSpace.s2),
-        SingleChildScrollView(scrollDirection: Axis.horizontal, child: child),
+        child,
       ],
     ),
   );

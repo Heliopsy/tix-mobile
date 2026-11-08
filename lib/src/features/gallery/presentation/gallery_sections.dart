@@ -444,6 +444,49 @@ class _GalleryFormsState extends State<GalleryForms> {
   );
 }
 
+/// Pick-one settings drawn as wrapping chips.
+class GalleryChoices extends StatefulWidget {
+  /// Creates the samples.
+  const GalleryChoices({super.key});
+
+  @override
+  State<GalleryChoices> createState() => _GalleryChoicesState();
+}
+
+class _GalleryChoicesState extends State<GalleryChoices> {
+  String _theme = 'oled';
+  String _language = 'de';
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      TixChoices<String>(
+        choices: const [
+          TixChoice('system', 'System', icon: Icons.brightness_auto),
+          TixChoice('light', 'Light', icon: Icons.light_mode),
+          TixChoice('dark', 'Dark', icon: Icons.dark_mode),
+          TixChoice('oled', 'OLED black', icon: Icons.contrast),
+        ],
+        selected: _theme,
+        onSelected: (v) => setState(() => _theme = v),
+      ),
+      const SizedBox(height: TixSpace.s3),
+      TixChoices<String>(
+        choices: const [
+          TixChoice('', 'System'),
+          TixChoice('en', 'English'),
+          TixChoice('bg', 'Български'),
+          TixChoice('fr', 'Français'),
+          TixChoice('de', 'Deutsch'),
+        ],
+        selected: _language,
+        onSelected: (v) => setState(() => _language = v),
+      ),
+    ],
+  );
+}
+
 /// Empty, error and loading states, and a settings section.
 class GalleryStates extends StatelessWidget {
   /// Creates the samples.

@@ -3692,6 +3692,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open the inbox to see them.'**
   String get notifMoreBody;
+
+  /// Theme choice: dark on a pure black page, for OLED screens.
+  ///
+  /// In en, this message translates to:
+  /// **'OLED black'**
+  String get themeOled;
+
+  /// Switch under the System theme: use the OLED black theme whenever the system is dark.
+  ///
+  /// In en, this message translates to:
+  /// **'Pure black when dark'**
+  String get themeSystemBlack;
+
+  /// No description provided for @themeSystemBlackHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Uses OLED black whenever the system is dark. Saves battery on OLED screens.'**
+  String get themeSystemBlackHelp;
 }
 
 class _AppLocalizationsDelegate

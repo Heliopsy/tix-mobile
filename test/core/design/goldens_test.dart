@@ -25,6 +25,7 @@ Future<void> pumpGolden(
   required Size size,
   required Brightness brightness,
   TixAccent accent = TixAccent.standard,
+  TixTokens? base,
 }) async {
   await setSize(tester, Size(size.width, 2600));
   await tester.pumpWidget(
@@ -32,7 +33,7 @@ Future<void> pumpGolden(
       overrides: fakeOverrides(FakeTix()),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: buildTixTheme(brightness, accent: accent),
+        theme: buildTixTheme(brightness, accent: accent, base: base),
         locale: const Locale('en'),
         localizationsDelegates: const [
           AppLocalizations.delegate,
@@ -53,6 +54,7 @@ Future<void> pumpGolden(
                   color: buildTixTheme(
                     brightness,
                     accent: accent,
+                    base: base,
                   ).scaffoldBackgroundColor,
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: TixSpace.s5),
@@ -97,6 +99,8 @@ void main() {
     ),
     'record': () => const GalleryBlock(title: 'Record', child: GalleryRecord()),
   };
+  Widget choices() =>
+      const GalleryBlock(title: 'Choices', child: GalleryChoices());
 
   for (final brightness in Brightness.values) {
     for (final MapEntry(key: width, value: size) in sizes.entries) {
@@ -130,4 +134,61 @@ void main() {
       );
     }, skip: !onLinux);
   }
+
+  for (final MapEntry(key: width, value: size) in sizes.entries) {
+    for (final MapEntry(key: name, value: build) in {
+      ...sections,
+      'choices': choices,
+    }.entries) {
+      testWidgets('$name, oled, $width', (tester) async {
+        await pumpGolden(
+          tester,
+          build(),
+          size: size,
+          brightness: Brightness.dark,
+          base: TixTokens.oled,
+        );
+        await expectLater(
+          find.byKey(const Key('golden')),
+          matchesGoldenFile('goldens/$name-oled-$width.png'),
+        );
+      }, skip: !onLinux);
+    }
+  }
+
+  for (final brightness in Brightness.values) {
+    testWidgets('choices, ${brightness.name}', (tester) async {
+      await pumpGolden(
+        tester,
+        choices(),
+        size: const Size(400, 0),
+        brightness: brightness,
+      );
+      await expectLater(
+        find.byKey(const Key('golden')),
+        matchesGoldenFile('goldens/choices-${brightness.name}-phone.png'),
+      );
+    }, skip: !onLinux);
+  }
+
+  testWidgets('a tenant accent, oled', (tester) async {
+    await pumpGolden(
+      tester,
+      const Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          GalleryBlock(title: 'Buttons', child: GalleryButtons()),
+          GalleryBlock(title: 'Tasks', child: GalleryTasks()),
+        ],
+      ),
+      size: const Size(400, 0),
+      brightness: Brightness.dark,
+      accent: TixAccent.resolve('ember'),
+      base: TixTokens.oled,
+    );
+    await expectLater(
+      find.byKey(const Key('golden')),
+      matchesGoldenFile('goldens/accent-ember-oled.png'),
+    );
+  }, skip: !onLinux);
 }

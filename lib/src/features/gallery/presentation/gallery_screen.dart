@@ -7,9 +7,9 @@ import 'package:tix_mobile/src/core/design/theme.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/features/gallery/presentation/gallery_sections.dart';
 
-/// Every component, in light or dark and any tenant accent: the reference
-/// for anyone building a screen. Only routed in debug and profile builds,
-/// or with `--dart-define=TIX_GALLERY=true`.
+/// Every component, in light, dark or OLED black and any tenant accent: the
+/// reference for anyone building a screen. Only routed in debug and profile
+/// builds, or with `--dart-define=TIX_GALLERY=true`.
 class GalleryScreen extends ConsumerStatefulWidget {
   /// Creates the gallery.
   const GalleryScreen({super.key});
@@ -19,7 +19,7 @@ class GalleryScreen extends ConsumerStatefulWidget {
 }
 
 class _GalleryScreenState extends ConsumerState<GalleryScreen> {
-  Brightness? _brightness;
+  TixTokens? _scheme;
   TixAccent _accent = TixAccent.standard;
 
   static final List<TixAccent> _accents = [
@@ -30,24 +30,32 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final brightness = _brightness ?? Theme.of(context).brightness;
+    final scheme =
+        _scheme ??
+        (context.tix.isBlack
+            ? TixTokens.oled
+            : TixTokens.of(Theme.of(context).brightness));
     final registry = ref.watch(commandRegistryProvider);
     return Theme(
-      data: buildTixTheme(brightness, accent: _accent),
+      data: buildTixTheme(scheme.brightness, accent: _accent, base: scheme),
       child: Builder(
         builder: (context) => TixPage(
           title: l10n.galleryTitle,
           actions: [
             TixIconButton(
               key: const Key('gallery.brightness'),
-              icon: brightness == Brightness.dark
+              icon: scheme.isBlack
                   ? Icons.light_mode
+                  : scheme.isDark
+                  ? Icons.contrast
                   : Icons.dark_mode,
               tooltip: l10n.themeLabel,
               onPressed: () => setState(
-                () => _brightness = brightness == Brightness.dark
-                    ? Brightness.light
-                    : Brightness.dark,
+                () => _scheme = scheme.isBlack
+                    ? TixTokens.light
+                    : scheme.isDark
+                    ? TixTokens.oled
+                    : TixTokens.dark,
               ),
             ),
             PopupMenuButton<TixAccent>(
@@ -88,6 +96,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
                 const GalleryBlock(title: 'Tasks', child: GalleryTasks()),
                 const GalleryBlock(title: 'Inbox', child: GalleryInbox()),
                 const GalleryBlock(title: 'Forms', child: GalleryForms()),
+                const GalleryBlock(title: 'Choices', child: GalleryChoices()),
                 const GalleryBlock(title: 'States', child: GalleryStates()),
                 const GalleryBlock(title: 'Record', child: GalleryRecord()),
                 GalleryBlock(

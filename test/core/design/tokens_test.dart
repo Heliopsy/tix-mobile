@@ -12,13 +12,14 @@ void main() {
     'light': TixTokens.light,
     'dark': TixTokens.dark,
     'dim': TixTokens.dim,
+    'oled': TixTokens.oled,
   };
 
   for (final MapEntry(key: name, value: t) in schemes.entries) {
     group('$name contrast', () {
       for (final (label, page) in [('page', t.bg), ('surface', t.surface)]) {
         test('text tokens clear 4.5:1 on the $label', () {
-          for (final c in [t.ink, t.muted, t.danger, t.ok]) {
+          for (final c in [t.ink, t.muted, t.danger, t.warn, t.ok, t.brand]) {
             expect(
               contrast(c, page),
               greaterThanOrEqualTo(4.5),
@@ -40,10 +41,11 @@ void main() {
   }
 
   for (final a in [...TixAccent.builtIn, TixAccent.resolve('#ffcc00')]) {
-    for (final b in Brightness.values) {
-      test('${a.name} ${b.name}: text on the accent and the accent on '
+    for (final MapEntry(key: name, value: scheme) in schemes.entries) {
+      if (scheme == TixTokens.dim) continue;
+      test('${a.name} $name: text on the accent and the accent on '
           'its tint read', () {
-        final t = TixTokens.of(b).withAccent(a);
+        final t = scheme.withAccent(a);
         expect(contrast(t.onAccent, t.accent), greaterThanOrEqualTo(4.5));
         expect(contrast(t.accent, t.accentSoft), greaterThanOrEqualTo(3));
         expect(contrast(t.accent, t.bg), greaterThanOrEqualTo(3));
@@ -62,6 +64,25 @@ void main() {
       expect(themed.priority(p), plain.priority(p));
     }
     expect(themed.projects, plain.projects);
+  });
+
+  test('OLED black is the dark scheme on a black page, status kept', () {
+    const t = TixTokens.oled;
+    expect(t.bg, const Color(0xFF000000));
+    expect(t.isBlack, isTrue);
+    expect(t.isDark, isTrue);
+    expect(TixTokens.dark.isBlack, isFalse);
+    expect(luminance(t.surface), lessThan(0.005));
+    expect(contrast(t.line, t.bg), greaterThan(contrast(t.surface, t.bg)));
+    final themed = t.withAccent(TixAccent.resolve('plum'));
+    expect(themed.bg, t.bg);
+    for (final c in StatusCategory.values) {
+      expect(themed.status(c), TixTokens.dark.status(c), reason: c.name);
+    }
+    expect(themed.projects, TixTokens.dark.projects);
+    final theme = buildTixTheme(Brightness.dark, base: t);
+    expect(theme.scaffoldBackgroundColor, const Color(0xFF000000));
+    expect(theme.colorScheme.surface, const Color(0xFF000000));
   });
 
   test('project colours resolve palette names and shade custom ones', () {

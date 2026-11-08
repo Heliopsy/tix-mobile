@@ -1272,5 +1272,14 @@
       }
     }
   },
-  "notifMoreBody": "Open the inbox to see them."
+  "notifMoreBody": "Open the inbox to see them.",
+  "themeOled": "OLED black",
+  "@themeOled": {
+    "description": "Theme choice: dark on a pure black page, for OLED screens."
+  },
+  "themeSystemBlack": "Pure black when dark",
+  "@themeSystemBlack": {
+    "description": "Switch under the System theme: use the OLED black theme whenever the system is dark."
+  },
+  "themeSystemBlackHelp": "Uses OLED black whenever the system is dark. Saves battery on OLED screens."
 }

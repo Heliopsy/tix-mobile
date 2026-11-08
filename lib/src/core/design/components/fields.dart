@@ -256,3 +256,75 @@ class TixSwitchRow extends StatelessWidget {
     onChanged: onChanged,
   );
 }
+
+/// One option of [TixChoices].
+@immutable
+class TixChoice<T> {
+  /// An option worth [value], shown as [label].
+  const TixChoice(this.value, this.label, {this.icon});
+
+  /// What picking it sets.
+  final T value;
+
+  /// What it says.
+  final String label;
+
+  /// An icon before the label.
+  final IconData? icon;
+}
+
+/// A pick-one setting: chips that wrap onto more lines when the labels are
+/// long or the text is large, so no option hides off screen.
+class TixChoices<T> extends StatelessWidget {
+  /// Chips for [choices], with [selected] marked.
+  const TixChoices({
+    required this.choices,
+    required this.selected,
+    required this.onSelected,
+    super.key,
+  });
+
+  /// The options, in order.
+  final List<TixChoice<T>> choices;
+
+  /// The option that is on.
+  final T selected;
+
+  /// Called with the option picked.
+  final ValueChanged<T> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tix;
+    return Wrap(
+      spacing: TixSpace.s2,
+      runSpacing: TixSpace.s1,
+      children: [
+        for (final c in choices)
+          Builder(
+            builder: (context) {
+              final on = c.value == selected;
+              return ChoiceChip(
+                key: ValueKey(c.value),
+                selected: on,
+                onSelected: (_) => onSelected(c.value),
+                avatar: c.icon == null
+                    ? null
+                    : Icon(c.icon, size: 16, color: on ? t.accent : t.muted),
+                label: Text(c.label),
+                labelStyle: TextStyle(
+                  fontSize: TixText.sm,
+                  fontWeight: on ? FontWeight.w600 : FontWeight.w500,
+                  color: on ? t.accent : t.ink,
+                ),
+                side: BorderSide(color: on ? t.accent : t.lineStrong),
+                backgroundColor: t.bg,
+                selectedColor: t.accentSoft,
+                materialTapTargetSize: MaterialTapTargetSize.padded,
+              );
+            },
+          ),
+      ],
+    );
+  }
+}

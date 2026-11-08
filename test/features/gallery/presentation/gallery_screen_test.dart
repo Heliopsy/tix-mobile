@@ -15,17 +15,21 @@ void main() {
   });
 
   for (final MapEntry(key: width, value: size) in widths.entries) {
-    testWidgets('$width: every block draws, in light and dark', (tester) async {
+    testWidgets('$width: every block draws, in light, dark and OLED black', (
+      tester,
+    ) async {
       await pumpComponent(tester, const GalleryScreen(), size: size);
       expect(find.text('Tokens'), findsOneWidget);
       expect(tester.takeException(), isNull);
-      final before = Theme.of(tester.element(find.text('Tokens'))).brightness;
-      await tester.tap(find.byKey(const Key('gallery.brightness')));
-      await tester.pump();
-      expect(
-        Theme.of(tester.element(find.text('Tokens'))).brightness,
-        isNot(before),
-      );
+      TixTokens tokens() =>
+          Theme.of(tester.element(find.text('Tokens'))).extension<TixTokens>()!;
+      expect(tokens().bg, TixTokens.light.bg);
+      for (final next in [TixTokens.dark, TixTokens.oled, TixTokens.light]) {
+        await tester.tap(find.byKey(const Key('gallery.brightness')));
+        await tester.pump();
+        expect(tokens().bg, next.bg);
+        expect(tester.takeException(), isNull);
+      }
     });
   }
 

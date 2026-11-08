@@ -2157,4 +2157,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notifMoreBody => 'Open the inbox to see them.';
+
+  @override
+  String get themeOled => 'OLED black';
+
+  @override
+  String get themeSystemBlack => 'Pure black when dark';
+
+  @override
+  String get themeSystemBlackHelp =>
+      'Uses OLED black whenever the system is dark. Saves battery on OLED screens.';
 }

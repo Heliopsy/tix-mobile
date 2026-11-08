@@ -47,13 +47,31 @@ void main() {
     await tester.tap(find.text('Dark'));
     await tester.tap(find.text('Български'));
     await tester.pumpAndSettle();
-    expect(c.read(themeModeSettingProvider), ThemeMode.dark);
+    expect(c.read(themeSettingProvider), ThemeChoice.dark);
     expect(c.read(localeSettingProvider), const Locale('bg'));
     expect(stores.settings.values['settings.theme'], 'dark');
     expect(stores.settings.values['settings.locale'], 'bg');
     await tester.tap(find.text('System').last);
     await tester.pumpAndSettle();
     expect(c.read(localeSettingProvider), isNull);
+  });
+
+  testWidgets('OLED black is a theme, and the system can go black', (
+    tester,
+  ) async {
+    final c = await pump(tester);
+    final toggle = find.byKey(const Key('settings.systemBlack'));
+    expect(toggle, findsOneWidget);
+    await tester.tap(toggle);
+    await tester.pumpAndSettle();
+    expect(c.read(systemBlackSettingProvider), isTrue);
+    expect(stores.settings.values['settings.systemBlack'], 'true');
+
+    await tester.tap(find.text('OLED black'));
+    await tester.pumpAndSettle();
+    expect(c.read(themeSettingProvider), ThemeChoice.oled);
+    expect(stores.settings.values['settings.theme'], 'oled');
+    expect(toggle, findsNothing);
   });
 
   testWidgets('instances shows the active context and opens the list', (

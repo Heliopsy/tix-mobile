@@ -598,5 +598,8 @@
   "notifTurnOn": "Включи",
   "notifNotNow": "Не сега",
   "notifMore": "{count, plural, =1{Още 1 елемент} other{Още {count} елемента}}",
-  "notifMoreBody": "Отворете входящите, за да ги видите."
+  "notifMoreBody": "Отворете входящите, за да ги видите.",
+  "themeOled": "OLED черна",
+  "themeSystemBlack": "Чисто черно при тъмна тема",
+  "themeSystemBlackHelp": "Използва OLED черна тема, когато системата е тъмна. Пести батерия на OLED екрани."
 }
