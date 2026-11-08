@@ -135,8 +135,10 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   role or token allows it.
 - **Export and import**: a project's tasks, or a filtered part of them, as CSV, JSON, NDJSON or Markdown with the
   columns you choose, a snapshot of the whole tenant, and importing a file of tasks after a dry run.
-- **Settings**: system, light, dark or OLED black theme, English, Bulgarian, French or German, and the saved
-  instances.
+- **Settings**, grouped by where each is kept and searchable: on this device the theme (system, light, dark or
+  OLED black), language, reduced motion, touch feedback, start screen and saved instances; with your account the
+  profile, security, your API tokens, the calendar feed, the date format and time zone every screen follows, inbox
+  kinds and channels, saved filters and the board arrangement; for administrators, the tenant's own settings.
 - **About**: the app, engine and server versions, links to the site, source, roadmap and changelog, and a bug
   report with the versions filled in.
 - **Administration**: tenant settings with a live theme preview, domains, the server's live connections, and for

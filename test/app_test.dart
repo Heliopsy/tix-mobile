@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/app.dart';
 import 'package:tix_mobile/src/core/config/config.dart';
+import 'package:tix_mobile/src/features/inbox/presentation/inbox_screen.dart';
+import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
 
 import 'helpers/app.dart';
@@ -109,7 +111,16 @@ void main() {
     await tester.tap(find.text('Български'));
     await tester.pumpAndSettle();
     expect(find.text('Настройки'), findsWidgets);
-    await tester.ensureVisible(find.byKey(const Key('settings.signOut')));
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('settings.signOut')),
+      300,
+      scrollable: find
+          .descendant(
+            of: find.byType(SettingsScreen),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('settings.signOut')));
     await tester.pumpAndSettle();
@@ -212,5 +223,29 @@ void main() {
     await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
     expect(find.textContaining('did not accept'), findsOneWidget);
     expect(find.byKey(const Key('error.signInAgain')), findsNothing);
+  });
+
+  testWidgets('dates follow the reader\'s server preference everywhere', (
+    tester,
+  ) async {
+    server
+      ..keepsTime = true
+      ..timeTenant['time_format'] = 'dotted'
+      ..timeUser['timezone'] = 'Europe/Sofia';
+    final stores = signedInStores();
+    await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
+    await tester.tap(find.text('Infrastructure'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Fix login'));
+    await tester.pumpAndSettle();
+    // Due 2026-11-20T00:00Z is 02:00 on the 20th in Sofia.
+    expect(find.text('Fri 20.11.2026'), findsOneWidget);
+  });
+
+  testWidgets('the app opens on the start screen chosen here', (tester) async {
+    final stores = signedInStores();
+    stores.settings.values['settings.start'] = 'inbox';
+    await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
+    expect(find.byType(InboxScreen), findsOneWidget);
   });
 }

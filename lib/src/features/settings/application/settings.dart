@@ -3,6 +3,8 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
+import 'package:tix_mobile/src/core/router/routes.dart';
+import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/data/repositories/settings_repository.dart';
 
@@ -107,5 +109,65 @@ class WidgetLockCountsSetting extends _$WidgetLockCountsSetting {
     state = on;
     await ref.read(settingsRepositoryProvider).setWidgetLockCounts(on: on);
     ref.read(widgetsStaleProvider.notifier).touch();
+  }
+}
+
+/// Whether touch feedback is on, on this device.
+@Riverpod(keepAlive: true)
+class HapticsSetting extends _$HapticsSetting {
+  @override
+  bool build() => ref.watch(settingsRepositoryProvider).haptics();
+
+  /// Turns touch feedback on or off and remembers it.
+  Future<void> set({required bool on}) async {
+    state = on;
+    await ref.read(settingsRepositoryProvider).setHaptics(on: on);
+  }
+}
+
+/// Whether the app keeps still whatever the platform asks, on this device.
+@Riverpod(keepAlive: true)
+class ReduceMotionSetting extends _$ReduceMotionSetting {
+  @override
+  bool build() => ref.watch(settingsRepositoryProvider).reduceMotion();
+
+  /// Turns reduced motion on or off and remembers it.
+  Future<void> set({required bool on}) async {
+    state = on;
+    await ref.read(settingsRepositoryProvider).setReduceMotion(on: on);
+  }
+}
+
+/// The screen the app opens on, on this device.
+@Riverpod(keepAlive: true)
+class StartScreenSetting extends _$StartScreenSetting {
+  @override
+  StartScreen build() =>
+      StartScreen.named(ref.watch(settingsRepositoryProvider).startScreen());
+
+  /// Opens on [screen] from the next start.
+  Future<void> set(StartScreen screen) async {
+    state = screen;
+    await ref
+        .read(settingsRepositoryProvider)
+        .setStartScreen(screen == StartScreen.projects ? null : screen.name);
+  }
+}
+
+/// The views whose arrangement the reader can reset from Settings: the
+/// board, lanes and My work, as tix names them.
+const arrangedViews = ['board', 'lanes', 'mine'];
+
+/// The reader's arrangements of the shared views, kept with their account.
+@riverpod
+class ArrangementSettings extends _$ArrangementSettings {
+  @override
+  void build() {}
+
+  /// Forgets every group the reader hid, starred, collapsed or moved in
+  /// [arrangedViews], on the server.
+  Future<void> reset() async {
+    final repo = ref.read(viewPrefsRepositoryProvider);
+    await Future.wait([for (final v in arrangedViews) repo.reset(v)]);
   }
 }

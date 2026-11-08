@@ -2,12 +2,12 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/admin.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/features/admin/application/global_admin.dart';
 import 'package:tix_mobile/src/features/admin/application/tenant_admin.dart';
@@ -76,7 +76,6 @@ class _Overview extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final locale = Localizations.localeOf(context).toLanguageTag();
     final created = tenant.createdAt;
     final totp = [
       if (tenant.requireTotpWeb) l10n.totpSurfaceWeb,
@@ -116,7 +115,7 @@ class _Overview extends ConsumerWidget {
             if (created != null)
               TixPropertyRow(
                 label: l10n.tenantCreatedAt,
-                child: Text(DateFormat.yMMMd(locale).format(created.toLocal())),
+                child: Text(context.times.style.date(created)),
               ),
           ],
         ),

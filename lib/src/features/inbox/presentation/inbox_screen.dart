@@ -12,6 +12,7 @@ import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/paging/paged.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/core/widgets/paged_list_view.dart';
 import 'package:tix_mobile/src/features/inbox/application/alerts.dart';
@@ -178,17 +179,16 @@ class _InboxList extends ConsumerWidget {
 
   List<_Entry> _group(
     AppLocalizations l10n,
+    TixTimeStyle style,
     List<InboxItem> items,
     DateTime now,
   ) {
-    final today = DateUtils.dateOnly(now.toLocal());
+    final today = style.day(now);
     final out = <_Entry>[];
     String? last;
     for (final item in items) {
       final at = item.createdAt;
-      final days = at == null
-          ? 2
-          : today.difference(DateUtils.dateOnly(at.toLocal())).inDays;
+      final days = at == null ? 2 : today.difference(style.day(at)).inDays;
       final label = days <= 0
           ? l10n.inboxToday
           : days == 1
@@ -213,7 +213,7 @@ class _InboxList extends ConsumerWidget {
         (_) => unawaited(notifier.fill(filter.keeps)),
       );
     }
-    final entries = _group(l10n, visible, now);
+    final entries = _group(l10n, context.times.style, visible, now);
     final header = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

@@ -4,20 +4,17 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/core/widgets/paged_list_view.dart';
 import 'package:tix_mobile/src/data/models/integrations.dart';
 import 'package:tix_mobile/src/features/audit/application/audit.dart';
 
-String _when(BuildContext context, DateTime at) =>
-    DateFormat.yMMMd(Localizations.localeOf(context).toLanguageTag())
-        .add_Hms()
-        .format(at.toLocal());
+String _when(BuildContext context, DateTime at) => context.times.stamp(at);
 
 /// The tenant's audit log: every change, newest first, narrowed by text,
 /// surface, channel, actor, action, token and time, with each entry's
@@ -268,9 +265,8 @@ class _AuditFilterFormState extends State<AuditFilterForm> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final locale = Localizations.localeOf(context).toLanguageTag();
     String day(DateTime? d) =>
-        d == null ? l10n.auditAnyTime : DateFormat.yMMMd(locale).format(d);
+        d == null ? l10n.auditAnyTime : context.times.style.calendar(d);
     const gap = SizedBox(height: TixSpace.s3);
     return TixSheetBody(
       title: l10n.auditFilters,

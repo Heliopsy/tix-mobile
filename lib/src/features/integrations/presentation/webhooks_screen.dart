@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/core/widgets/paged_list_view.dart';
 import 'package:tix_mobile/src/data/models/integrations.dart';
@@ -347,9 +347,7 @@ class DeliveryRow extends StatelessWidget {
     final l10n = context.l10n;
     final t = context.tix;
     final d = delivery;
-    final locale = Localizations.localeOf(context).toLanguageTag();
-    String when(DateTime at) =>
-        DateFormat.yMMMd(locale).add_Hm().format(at.toLocal());
+    String when(DateTime at) => context.times.stamp(at);
     final (label, tone) = switch (d.status) {
       DeliveryStatus.delivered => (l10n.webhookStatusDelivered, TixTone.ok),
       DeliveryStatus.failed => (l10n.webhookStatusFailed, TixTone.danger),

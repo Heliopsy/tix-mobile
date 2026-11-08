@@ -5752,6 +5752,356 @@ class AppLocalizationsBg extends AppLocalizations {
   String get auditAfter => 'След';
 
   @override
+  String get timeJustNow => 'току-що';
+
+  @override
+  String get timeInAMoment => 'след малко';
+
+  @override
+  String timeAgoMinutes(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'преди $n минути',
+      one: 'преди 1 минута',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoHours(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'преди $n часа',
+      one: 'преди 1 час',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoDays(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'преди $n дни',
+      one: 'преди 1 ден',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoMonths(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'преди $n месеца',
+      one: 'преди 1 месец',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoYears(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'преди $n години',
+      one: 'преди 1 година',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInMinutes(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'след $n минути',
+      one: 'след 1 минута',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInHours(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'след $n часа',
+      one: 'след 1 час',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInDays(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'след $n дни',
+      one: 'след 1 ден',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInMonths(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'след $n месеца',
+      one: 'след 1 месец',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInYears(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'след $n години',
+      one: 'след 1 година',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get timeFormatIso => 'ISO';
+
+  @override
+  String get timeFormatRfc3339 => 'RFC 3339';
+
+  @override
+  String get timeFormatShort => 'Кратък';
+
+  @override
+  String get timeFormatLong => 'Дълъг';
+
+  @override
+  String get timeFormatDotted => 'С точки';
+
+  @override
+  String get timeFormatDayfirst => 'Първо денят';
+
+  @override
+  String get timeFormatUs => 'САЩ';
+
+  @override
+  String get timeFormatRelative => 'Относителен';
+
+  @override
+  String get settingsSearchHint => 'Търсене в настройките';
+
+  @override
+  String settingsNoMatch(String query) {
+    return 'Няма настройка, отговаряща на „$query“';
+  }
+
+  @override
+  String get settingsNoMatchBody =>
+      'Опитайте с друга дума или изчистете търсенето.';
+
+  @override
+  String get settingsScopeDevice => 'На това устройство';
+
+  @override
+  String get settingsScopeAccount => 'Синхронизира се с профила ви';
+
+  @override
+  String get settingsScopeTenant => 'Целият наемател';
+
+  @override
+  String get settingsGroupDevice => 'Това устройство';
+
+  @override
+  String get settingsGroupDeviceHelp =>
+      'Пазят се само на това устройство. Другите ви устройства и уебът имат свои.';
+
+  @override
+  String settingsGroupAccount(String tenant) {
+    return 'Вашият профил в $tenant';
+  }
+
+  @override
+  String get settingsGroupAccountHelp =>
+      'Сървърът ги пази с профила ви, затова ви следват на всяко устройство, в уеба и в командния ред.';
+
+  @override
+  String get settingsGroupTenant => 'Този наемател';
+
+  @override
+  String settingsGroupTenantHelp(String tenant) {
+    return 'Настройки за всички в $tenant. Виждат ги само администратори.';
+  }
+
+  @override
+  String get settingsReduceMotion => 'Без анимации';
+
+  @override
+  String get settingsReduceMotionHelp =>
+      'Приложението остава неподвижно, дори когато системата позволява анимации.';
+
+  @override
+  String get settingsHaptics => 'Вибрация при докосване';
+
+  @override
+  String get settingsHapticsHelp =>
+      'Кратка вибрация при плъзгане, завършена задача и отказ.';
+
+  @override
+  String get settingsLanguageHelp =>
+      'tix не пази език в профила ви, затова всяко устройство и браузър избира свой.';
+
+  @override
+  String get settingsStartTitle => 'Начален екран';
+
+  @override
+  String get settingsStartHelp =>
+      'Къде се отваря приложението при стартиране или след вход.';
+
+  @override
+  String get settingsDeviceNotifTitle => 'Известия на това устройство';
+
+  @override
+  String get settingsDeviceNotifSubtitle =>
+      'Дали това устройство ви известява и за какво';
+
+  @override
+  String get settingsProfileTitle => 'Профил';
+
+  @override
+  String get settingsDatesTitle => 'Дати и часове';
+
+  @override
+  String get settingsDatesHelp =>
+      'Пазят се с профила ви, затова всяко устройство, браузър и терминал показва датите така. „Наследяване“ следва настройката на наемателя, а тя тази на сървъра.';
+
+  @override
+  String get settingsDateFormat => 'Формат на датата';
+
+  @override
+  String get settingsDateFormatHelp =>
+      'Как се изписва всеки момент в приложението. В уеба tix чете въведените дати по същия начин.';
+
+  @override
+  String get settingsTimeZone => 'Часова зона';
+
+  @override
+  String get settingsTimeZoneHelp =>
+      'Зоната, в която се показва всеки час в приложението и където свършва днешният ден за сроковете.';
+
+  @override
+  String get settingsInherit => 'Наследяване';
+
+  @override
+  String settingsInheritValue(String value) {
+    return 'Наследяване: $value';
+  }
+
+  @override
+  String settingsInUse(String value, String source) {
+    return 'В момента: $value, от $source';
+  }
+
+  @override
+  String get settingsSourceUser => 'вашия избор';
+
+  @override
+  String get settingsSourceTenant => 'настройката на наемателя';
+
+  @override
+  String get settingsSourceGlobal => 'настройката на сървъра';
+
+  @override
+  String get settingsDeviceFormat => 'формата на това устройство';
+
+  @override
+  String settingsDeviceZone(String zone) {
+    return 'зоната на това устройство ($zone)';
+  }
+
+  @override
+  String get settingsDatesNotPersonal =>
+      'Тези идентификационни данни не са на човек, затова ползват настройките на наемателя и не могат да имат свои.';
+
+  @override
+  String get settingsDatesUnavailable =>
+      'Този сървър не пази предпочитания за дати или още не е отговорил, затова датите следват устройството.';
+
+  @override
+  String get settingsDatesSaved => 'Запазено в профила ви';
+
+  @override
+  String get settingsZoneSearch => 'Търсене на часова зона';
+
+  @override
+  String get settingsZoneNone => 'Няма такава часова зона.';
+
+  @override
+  String get settingsInboxTitle => 'Входящи и канали';
+
+  @override
+  String get settingsInboxSubtitle =>
+      'Какво стига до входящите ви и личните ви канали';
+
+  @override
+  String get settingsFiltersTitle => 'Запазени филтри';
+
+  @override
+  String get settingsFiltersSubtitle =>
+      'Преименуване, споделяне или изтриване на филтрите ви';
+
+  @override
+  String get settingsArrangementTitle => 'Табло и ленти';
+
+  @override
+  String get settingsArrangementHelp =>
+      'Групите, които сте скрили, отбелязали, свили или преместили на таблото, в лентите и в „Моята работа“.';
+
+  @override
+  String get settingsArrangementReset => 'Нулиране';
+
+  @override
+  String get settingsArrangementResetTitle => 'Нулиране на таблото и лентите';
+
+  @override
+  String get settingsArrangementResetBody =>
+      'Всяка група на таблото, в лентите и в „Моята работа“ се връща там, където я поставя tix, на всяко устройство и в уеба. Това не може да се отмени.';
+
+  @override
+  String get settingsArrangementDone => 'Подредбата е нулирана';
+
+  @override
+  String settingsTenantManage(String tenant) {
+    return 'Управление на $tenant';
+  }
+
+  @override
+  String get settingsTenantManageSubtitle =>
+      'Проекти, работни потоци, полета, хора и настройките на наемателя';
+
+  @override
+  String paletteSettingsItem(String name) {
+    return 'Настройки: $name';
+  }
+
+  @override
+  String get savedFiltersEmpty => 'Няма запазени филтри';
+
+  @override
+  String get savedFiltersEmptyBody =>
+      'Запазете филтър от списъка със задачи и той ще се появи тук, на всяко устройство.';
+
+  @override
+  String get savedFilterSharedBadge => 'Споделен';
+
+  @override
+  String get savedFilterTheirs =>
+      'Споделен с вас; само собственикът и администраторите могат да го променят.';
+
+  @override
   String durationDays(int n) {
     return '$n д';
   }

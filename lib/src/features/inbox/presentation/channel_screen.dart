@@ -4,11 +4,11 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/core/widgets/paged_list_view.dart';
 import 'package:tix_mobile/src/features/inbox/application/channels.dart';
@@ -246,7 +246,7 @@ class _DeliveryRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final t = context.tix;
-    final locale = Localizations.localeOf(context).toLanguageTag();
+    final times = context.times;
     final at = delivery.createdAt;
     final (label, tone) = switch (delivery.status) {
       DeliveryStatus.delivered => (l10n.inboxDeliveryDelivered, TixTone.ok),
@@ -255,7 +255,7 @@ class _DeliveryRow extends ConsumerWidget {
       null => (l10n.inboxDeliveryPending, TixTone.neutral),
     };
     final detail = [
-      if (at != null) DateFormat.MMMd(locale).add_Hm().format(at.toLocal()),
+      if (at != null) times.shortStamp(at),
       l10n.inboxDeliveryAttempts(delivery.attempts),
       if (delivery.lastStatusCode > 0) 'HTTP ${delivery.lastStatusCode}',
     ].join(' · ');

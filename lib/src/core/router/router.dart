@@ -5,7 +5,9 @@ import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
+import 'package:tix_mobile/src/data/repositories/settings_repository.dart';
 import 'package:tix_mobile/src/features/about/presentation/about_screen.dart';
 import 'package:tix_mobile/src/features/account/presentation/account_screen.dart';
 import 'package:tix_mobile/src/features/account/presentation/calendar_screen.dart';
@@ -44,6 +46,7 @@ import 'package:tix_mobile/src/features/settings/presentation/settings_screen.da
 import 'package:tix_mobile/src/features/shell/presentation/home_shell.dart';
 import 'package:tix_mobile/src/features/shell/presentation/splash_screen.dart';
 import 'package:tix_mobile/src/features/status/presentation/status_screen.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/saved_filters_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_list_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_screen.dart';
@@ -60,7 +63,12 @@ export 'package:tix_mobile/src/core/router/routes.dart';
 part 'router.g.dart';
 
 /// Where [uri] should lead instead, given [session], or null to stay.
-String? redirectFor(AsyncValue<Session?> session, Uri uri) {
+/// Signing in, or starting signed in, lands on [home].
+String? redirectFor(
+  AsyncValue<Session?> session,
+  Uri uri, {
+  String home = Routes.projects,
+}) {
   final path = uri.path;
   if (path == Routes.gallery && Routes.galleryEnabled) return null;
   if (session.isLoading && !session.hasValue) {
@@ -71,7 +79,7 @@ String? redirectFor(AsyncValue<Session?> session, Uri uri) {
   }
   final adding = uri.queryParameters.keys.any(Routes.connectParams.contains);
   if (path == Routes.splash || (path == Routes.connect && !adding)) {
-    return Routes.projects;
+    return home;
   }
   return null;
 }
@@ -91,7 +99,13 @@ GoRouter router(Ref ref) {
   final router = GoRouter(
     initialLocation: Routes.splash,
     refreshListenable: session,
-    redirect: (_, state) => redirectFor(session.value, state.uri),
+    redirect: (_, state) => redirectFor(
+      session.value,
+      state.uri,
+      home: StartScreen.named(
+        SettingsRepository(ref.read(keyValueStoreProvider)).startScreen(),
+      ).route,
+    ),
     routes: [
       GoRoute(path: Routes.splash, builder: (_, _) => const SplashScreen()),
       GoRoute(
@@ -241,8 +255,15 @@ GoRouter router(Ref ref) {
             routes: [
               GoRoute(
                 path: Routes.settings,
-                builder: (_, _) => const SettingsScreen(),
+                builder: (_, state) {
+                  final q = state.uri.queryParameters['q'] ?? '';
+                  return SettingsScreen(key: ValueKey(q), initialQuery: q);
+                },
                 routes: [
+                  GoRoute(
+                    path: 'filters',
+                    builder: (_, _) => const SavedFiltersScreen(),
+                  ),
                   GoRoute(
                     path: 'instances',
                     builder: (_, _) => const InstancesScreen(),

@@ -122,6 +122,16 @@ const bindings = <String, Binding>{
   'inbox.read_all': Binding(feature: 'inbox', action: 'mark-all-read', wave: 1),
   'inbox.prefs': Binding(feature: 'inbox', action: 'kinds', wave: 1),
   'inbox.prefs.set': Binding(feature: 'inbox', action: 'mute-kind', wave: 1),
+  'time.settings': Binding(
+    feature: 'core/time',
+    action: 'date-settings',
+    wave: 1,
+  ),
+  'time.prefs.set': Binding(
+    feature: 'settings',
+    action: 'set-date-settings',
+    wave: 1,
+  ),
   'inbox.channel.list': Binding(feature: 'inbox', action: 'channels', wave: 1),
   'inbox.channel.add': Binding(
     feature: 'inbox',

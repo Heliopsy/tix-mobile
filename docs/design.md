@@ -290,6 +290,23 @@ A closed app hears nothing: there is no push service, and the app does not prete
 
 Until then, personal channels (ntfy in particular) are how a person is reached when the app is closed.
 
+## Dates and times
+
+Every date and time a screen shows goes through `context.times` (`core/time/times.dart`), never `DateFormat` on a
+raw `DateTime`. It writes in the reader's tix preference: the effective date format and time zone `GET /me/time`
+returns (the person's, else the tenant's, else the deployment's), with the device's locale formats and zone only
+where the server names none or cannot answer. `stamp` is an instant with its date and time, `shortStamp` one in a
+list, `style.date`, `style.dayMonth` and `style.clock` the parts, `style.calendar` a date field that is not an
+instant. Day boundaries (today, overdue, My work's buckets) count with `style.day`, and a picked wall clock becomes
+an instant with `style.fromWall`. Wire formats (`yyyy-MM-dd` for a date field) are not display and stay as they are.
+
+## Settings
+
+Settings is grouped by where a setting is kept: This device, Your account on the tenant, and This tenant
+(administrators). Each section carries its label ("On this device", "Synced to your account", "Whole tenant"). A
+setting is an entry in `settings_catalogue.dart` and a case in the screen's `_Entry`; search and the palette's
+"Settings: …" commands read the catalogue, so a new setting is found as soon as it is listed.
+
 ## UX rules
 
 tix's web rules, adapted for touch. They hold on every screen.

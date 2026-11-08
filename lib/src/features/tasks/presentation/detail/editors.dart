@@ -9,6 +9,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/features/tasks/application/task_detail.dart';
@@ -288,8 +289,10 @@ Future<Choice<DateTime?>?> pickDue(
   DateTime? current,
 }) async {
   final l10n = context.l10n;
-  final now = ref.read(clockProvider)().toLocal();
-  DateTime day(int offset) => DateTime(now.year, now.month, now.day + offset);
+  final style = context.times.style;
+  final now = style.pickable(ref.read(clockProvider)());
+  DateTime day(int offset) =>
+      style.fromWall(DateTime(now.year, now.month, now.day + offset));
   final choice = await showActionSheet<String>(
     context,
     title: l10n.taskDetailDueTitle,
@@ -342,18 +345,19 @@ Future<Choice<DateTime?>?> pickDue(
     case 'pick':
       final picked = await showDatePicker(
         context: context,
-        initialDate: current?.toLocal() ?? now,
+        initialDate: current == null ? now : style.pickable(current),
         firstDate: DateTime(now.year - 10),
         lastDate: DateTime(now.year + 10),
       );
-      return picked == null ? null : Choice(picked);
+      return picked == null ? null : Choice(style.fromWall(picked));
   }
   return null;
 }
 
 /// Asks for a date and a time of day, starting at [initial].
 Future<DateTime?> pickDateTime(BuildContext context, DateTime initial) async {
-  final local = initial.toLocal();
+  final style = context.times.style;
+  final local = style.pickable(initial);
   final date = await showDatePicker(
     context: context,
     initialDate: local,
@@ -366,7 +370,9 @@ Future<DateTime?> pickDateTime(BuildContext context, DateTime initial) async {
     initialTime: TimeOfDay.fromDateTime(local),
   );
   if (time == null) return null;
-  return DateTime(date.year, date.month, date.day, time.hour, time.minute);
+  return style.fromWall(
+    DateTime(date.year, date.month, date.day, time.hour, time.minute),
+  );
 }
 
 /// Asks where to move a task in [status] under [workflow], and for a
@@ -525,8 +531,8 @@ StatusCategory statusCategoryOf(WorkflowState? s, [String status = '']) {
 /// Asks until when to snooze, from the presets or a picked time.
 Future<DateTime?> pickSnooze(BuildContext context, DateTime now) async {
   final l10n = context.l10n;
-  final locale = Localizations.localeOf(context).toLanguageTag();
-  String when(DateTime t) => DateFormat.MMMEd(locale).add_Hm().format(t);
+  final times = context.times;
+  String when(DateTime t) => times.weekdayStamp(t, now: now);
   final choice = await showActionSheet<Object>(
     context,
     title: l10n.taskDetailSnoozeTitle,
@@ -540,7 +546,7 @@ Future<DateTime?> pickSnooze(BuildContext context, DateTime now) async {
                 SnoozePreset.laterToday => l10n.taskDetailSnoozeLater,
                 SnoozePreset.tomorrow => l10n.taskDetailSnoozeTomorrow,
                 SnoozePreset.nextWeek => l10n.taskDetailSnoozeNextWeek,
-              }} · ${when(p.from(now))}',
+              }} · ${when(p.from(now, style: times.style))}',
           icon: switch (p) {
             SnoozePreset.laterToday => Icons.schedule,
             SnoozePreset.tomorrow => Icons.wb_twilight,
@@ -556,8 +562,11 @@ Future<DateTime?> pickSnooze(BuildContext context, DateTime now) async {
     ],
   );
   if (!context.mounted || choice == null) return null;
-  if (choice is SnoozePreset) return choice.from(now);
-  return await pickDateTime(context, SnoozePreset.tomorrow.from(now));
+  if (choice is SnoozePreset) return choice.from(now, style: times.style);
+  return await pickDateTime(
+    context,
+    SnoozePreset.tomorrow.from(now, style: times.style),
+  );
 }
 
 /// Asks where to copy [task] and what travels with it.
@@ -888,18 +897,16 @@ Object? _jsonOrText(String text) {
 String fieldText(BuildContext context, FieldDef def, Object? value) {
   if (value == null) return '';
   final l10n = context.l10n;
-  final locale = Localizations.localeOf(context).toLanguageTag();
+  final times = context.times;
   switch (def.typeName) {
     case 'bool':
       return value == true ? l10n.taskDetailYes : l10n.taskDetailNo;
     case 'date':
       final d = DateTime.tryParse('$value');
-      return d == null ? '$value' : DateFormat.yMMMd(locale).format(d);
+      return d == null ? '$value' : times.style.calendar(d);
     case 'datetime':
       final d = DateTime.tryParse('$value');
-      return d == null
-          ? '$value'
-          : DateFormat.yMMMd(locale).add_Hm().format(d.toLocal());
+      return d == null ? '$value' : times.stamp(d);
     case 'json':
       return jsonEncode(value);
   }

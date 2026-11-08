@@ -12,6 +12,7 @@ import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/data/models/group_pref.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
@@ -397,7 +398,11 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
     AppLocalizations l10n,
   ) {
     if (_scope is MineScope) {
-      return ListGroups.deadline(ref.watch(clockProvider)(), l10n);
+      return ListGroups.deadline(
+        ref.watch(clockProvider)(),
+        l10n,
+        style: context.times.style,
+      );
     }
     if (taskContext == null || state.view != TaskView.list) {
       return ListGroups.none;

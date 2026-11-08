@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/components/pickers.dart'
     show projectIconGlyph;
 import 'package:tix_mobile/src/core/design/theme.dart';
 import 'package:tix_mobile/src/core/design/tokens.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 
 // Each kind of fact on a task row has its own shape, so colour alone never
 // tells them apart (250-row-markings): the status is the one filled pill, a
@@ -480,17 +480,14 @@ class DueMark extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.tix;
     final l10n = context.l10n;
-    final clock = (now ?? DateTime.now()).toLocal();
-    final local = due.toLocal();
-    final today = DateTime(clock.year, clock.month, clock.day);
-    final day = DateTime(local.year, local.month, local.day);
-    final days = day.difference(today).inDays;
-    final locale = Localizations.localeOf(context).toLanguageTag();
+    final style = context.times.style;
+    final today = style.day(now ?? DateTime.now());
+    final days = style.day(due).difference(today).inDays;
     final (text, colour, dot) = switch (days) {
       < 0 => (l10n.dueOverdue, t.danger, true),
       0 => (l10n.dueToday, t.warn, true),
-      < 7 => (l10n.dueOn(DateFormat.E(locale).format(local)), t.warn, true),
-      _ => (l10n.dueOn(DateFormat.MMMd(locale).format(local)), t.muted, false),
+      < 7 => (l10n.dueOn(style.weekday(due)), t.warn, true),
+      _ => (l10n.dueOn(style.dayMonth(due)), t.muted, false),
     };
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -532,15 +529,13 @@ class SnoozeMark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.tix;
-    final locale = Localizations.localeOf(context).toLanguageTag();
+    final style = context.times.style;
     return CustomPaint(
       painter: DashedBorder(colour: t.lineStrong, radius: TixRadius.pill),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
         child: Text(
-          context.l10n.snoozedUntil(
-            DateFormat.MMMd(locale).format(until.toLocal()),
-          ),
+          context.l10n.snoozedUntil(style.dayMonth(until)),
           style: TextStyle(
             fontSize: TixText.xs2,
             fontWeight: FontWeight.w600,

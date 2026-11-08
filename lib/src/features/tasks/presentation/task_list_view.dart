@@ -7,6 +7,7 @@ import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/paging/paged.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/paged_list_view.dart';
 import 'package:tix_mobile/src/data/models/group_pref.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
@@ -110,19 +111,22 @@ class ListGroups {
   );
 
   /// Groups by deadline, as My work does.
-  factory ListGroups.deadline(DateTime now, AppLocalizations l10n) =>
-      ListGroups._(
-        'mine',
-        [for (final b in DueBucket.values) b.name],
-        (t) => dueBucket(t.dueAt, now).name,
-        (g) => switch (DueBucket.values.byName(g)) {
-          DueBucket.overdue => l10n.myWorkOverdue,
-          DueBucket.today => l10n.myWorkToday,
-          DueBucket.week => l10n.myWorkWeek,
-          DueBucket.later => l10n.myWorkLater,
-          DueBucket.none => l10n.myWorkNoDate,
-        },
-      );
+  factory ListGroups.deadline(
+    DateTime now,
+    AppLocalizations l10n, {
+    TixTimeStyle style = TixTimeStyle.device,
+  }) => ListGroups._(
+    'mine',
+    [for (final b in DueBucket.values) b.name],
+    (t) => dueBucket(t.dueAt, now, style: style).name,
+    (g) => switch (DueBucket.values.byName(g)) {
+      DueBucket.overdue => l10n.myWorkOverdue,
+      DueBucket.today => l10n.myWorkToday,
+      DueBucket.week => l10n.myWorkWeek,
+      DueBucket.later => l10n.myWorkLater,
+      DueBucket.none => l10n.myWorkNoDate,
+    },
+  );
 
   /// The view the arrangement is kept under; empty for no headings.
   final String view;

@@ -85,13 +85,13 @@ void main() {
     c.read(routerProvider).go(Routes.settings);
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
-      find.byKey(const Key('settings.security')),
+      find.byKey(const Key('settings.security.open')),
       200,
       scrollable: find.byType(Scrollable).first,
     );
-    await tester.ensureVisible(find.byKey(const Key('settings.security')));
+    await tester.ensureVisible(find.byKey(const Key('settings.security.open')));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('settings.security')));
+    await tester.tap(find.byKey(const Key('settings.security.open')));
     await tester.pumpAndSettle();
     expect(find.byType(SecurityScreen), findsOneWidget);
   });

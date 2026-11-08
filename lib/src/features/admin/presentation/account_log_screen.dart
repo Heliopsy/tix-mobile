@@ -3,11 +3,11 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/session/admin.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/core/widgets/paged_list_view.dart';
 import 'package:tix_mobile/src/features/admin/application/global_admin.dart';
@@ -60,7 +60,6 @@ class AccountLogRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final t = context.tix;
-    final locale = Localizations.localeOf(context).toLanguageTag();
     final when = entry.occurredAt;
     final by = entry.byEmail.isEmpty
         ? l10n.adminAccountLogSystem
@@ -100,8 +99,7 @@ class AccountLogRow extends StatelessWidget {
             [
               l10n.adminAccountLogBy(by),
               if (entry.via.isNotEmpty) l10n.adminAccountLogVia(entry.via),
-              if (when != null)
-                DateFormat.yMMMd(locale).add_Hm().format(when.toLocal()),
+              if (when != null) context.times.stamp(when),
             ].join(' · '),
             style: Theme.of(context).textTheme.bodySmall,
           ),

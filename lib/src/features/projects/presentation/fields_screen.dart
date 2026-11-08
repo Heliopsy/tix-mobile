@@ -11,6 +11,7 @@ import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/access.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/data/models/project_admin.dart';
 import 'package:tix_mobile/src/features/projects/application/project_admin.dart';
@@ -633,18 +634,23 @@ class _FieldSheetState extends ConsumerState<_FieldSheet> {
   String _dateLabel(String value) {
     final parsed = DateTime.tryParse(value);
     if (parsed == null) return value;
-    final locale = Localizations.localeOf(context).toLanguageTag();
+    final times = context.times;
     return _type == FieldType.date
-        ? DateFormat.yMMMd(locale).format(parsed)
-        : DateFormat.yMMMd(locale).add_Hm().format(parsed.toLocal());
+        ? times.style.calendar(parsed)
+        : times.stamp(parsed);
   }
 
   Future<void> _pickDate() async {
     final current = DateTime.tryParse((_choice as String?) ?? '');
-    final now = DateTime.now();
+    final style = context.times.style;
+    final now = style.pickable(DateTime.now());
     final date = await showDatePicker(
       context: context,
-      initialDate: current?.toLocal() ?? now,
+      initialDate: current == null
+          ? now
+          : _type == FieldType.date
+          ? current
+          : style.pickable(current),
       firstDate: DateTime(1970),
       lastDate: DateTime(now.year + 50),
     );
@@ -655,15 +661,13 @@ class _FieldSheetState extends ConsumerState<_FieldSheet> {
     }
     final time = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.fromDateTime(current?.toLocal() ?? now),
+      initialTime: TimeOfDay.fromDateTime(
+        current == null ? now : style.pickable(current),
+      ),
     );
     if (time == null || !mounted) return;
-    final at = DateTime(
-      date.year,
-      date.month,
-      date.day,
-      time.hour,
-      time.minute,
+    final at = style.fromWall(
+      DateTime(date.year, date.month, date.day, time.hour, time.minute),
     );
     setState(() => _choice = at.toUtc().toIso8601String());
   }

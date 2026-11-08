@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/core/widgets/paged_list_view.dart';
 import 'package:tix_mobile/src/data/models/integrations.dart';
@@ -27,10 +27,7 @@ String credentialNames(SyncSource source) => [
     if (c.hint.isEmpty) c.name else '${c.name} …${c.hint}',
 ].join(', ');
 
-String _when(BuildContext context, DateTime at) =>
-    DateFormat.yMMMd(Localizations.localeOf(context).toLanguageTag())
-        .add_Hm()
-        .format(at.toLocal());
+String _when(BuildContext context, DateTime at) => context.times.stamp(at);
 
 /// The tenant's external sync sources and their run history: register,
 /// check, edit and remove sources, run one now or preview it.

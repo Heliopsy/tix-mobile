@@ -13,6 +13,7 @@ class SectionHeader extends StatelessWidget {
     this.subtitle,
     this.info,
     this.trailing,
+    this.badge,
     this.padding = const EdgeInsets.fromLTRB(
       TixSpace.s4,
       TixSpace.s5,
@@ -35,6 +36,10 @@ class SectionHeader extends StatelessWidget {
   final Widget? trailing;
 
   /// Space round it.
+  /// A mark under the title, such as where a group of settings is kept.
+  /// It wraps under the title rather than squeezing it.
+  final Widget? badge;
+
   final EdgeInsetsGeometry padding;
 
   @override
@@ -59,6 +64,10 @@ class SectionHeader extends StatelessWidget {
                     if (info != null) InfoTip(info!),
                   ],
                 ),
+                if (badge != null) ...[
+                  const SizedBox(height: TixSpace.headSub),
+                  badge!,
+                ],
                 if (subtitle != null) ...[
                   const SizedBox(height: TixSpace.headSub),
                   Text(subtitle!, style: theme.textTheme.bodySmall),
@@ -119,6 +128,7 @@ class TixSection extends StatelessWidget {
     this.subtitle,
     this.info,
     this.trailing,
+    this.badge,
     this.danger = false,
     super.key,
   });
@@ -136,6 +146,9 @@ class TixSection extends StatelessWidget {
   final Widget? trailing;
 
   /// The rows.
+  /// A mark under the title; see [SectionHeader.badge].
+  final Widget? badge;
+
   final List<Widget> children;
 
   /// Draws the group's border in the danger colour, for destructive
@@ -153,6 +166,7 @@ class TixSection extends StatelessWidget {
           subtitle: subtitle,
           info: info,
           trailing: trailing,
+          badge: badge,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: TixSpace.s4),

@@ -9799,6 +9799,474 @@ abstract class AppLocalizations {
   /// **'After'**
   String get auditAfter;
 
+  /// No description provided for @timeJustNow.
+  ///
+  /// In en, this message translates to:
+  /// **'just now'**
+  String get timeJustNow;
+
+  /// No description provided for @timeInAMoment.
+  ///
+  /// In en, this message translates to:
+  /// **'in a moment'**
+  String get timeInAMoment;
+
+  /// No description provided for @timeAgoMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 minute ago} other{{n} minutes ago}}'**
+  String timeAgoMinutes(int n);
+
+  /// No description provided for @timeAgoHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 hour ago} other{{n} hours ago}}'**
+  String timeAgoHours(int n);
+
+  /// No description provided for @timeAgoDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 day ago} other{{n} days ago}}'**
+  String timeAgoDays(int n);
+
+  /// No description provided for @timeAgoMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 month ago} other{{n} months ago}}'**
+  String timeAgoMonths(int n);
+
+  /// No description provided for @timeAgoYears.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 year ago} other{{n} years ago}}'**
+  String timeAgoYears(int n);
+
+  /// No description provided for @timeInMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{in 1 minute} other{in {n} minutes}}'**
+  String timeInMinutes(int n);
+
+  /// No description provided for @timeInHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{in 1 hour} other{in {n} hours}}'**
+  String timeInHours(int n);
+
+  /// No description provided for @timeInDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{in 1 day} other{in {n} days}}'**
+  String timeInDays(int n);
+
+  /// No description provided for @timeInMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{in 1 month} other{in {n} months}}'**
+  String timeInMonths(int n);
+
+  /// No description provided for @timeInYears.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{in 1 year} other{in {n} years}}'**
+  String timeInYears(int n);
+
+  /// No description provided for @timeFormatIso.
+  ///
+  /// In en, this message translates to:
+  /// **'ISO'**
+  String get timeFormatIso;
+
+  /// No description provided for @timeFormatRfc3339.
+  ///
+  /// In en, this message translates to:
+  /// **'RFC 3339'**
+  String get timeFormatRfc3339;
+
+  /// No description provided for @timeFormatShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Short'**
+  String get timeFormatShort;
+
+  /// No description provided for @timeFormatLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Long'**
+  String get timeFormatLong;
+
+  /// No description provided for @timeFormatDotted.
+  ///
+  /// In en, this message translates to:
+  /// **'Dotted'**
+  String get timeFormatDotted;
+
+  /// No description provided for @timeFormatDayfirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Day first'**
+  String get timeFormatDayfirst;
+
+  /// No description provided for @timeFormatUs.
+  ///
+  /// In en, this message translates to:
+  /// **'US'**
+  String get timeFormatUs;
+
+  /// No description provided for @timeFormatRelative.
+  ///
+  /// In en, this message translates to:
+  /// **'Relative'**
+  String get timeFormatRelative;
+
+  /// No description provided for @settingsSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search settings'**
+  String get settingsSearchHint;
+
+  /// No description provided for @settingsNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No setting matches “{query}”'**
+  String settingsNoMatch(String query);
+
+  /// No description provided for @settingsNoMatchBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Try another word, or clear the search.'**
+  String get settingsNoMatchBody;
+
+  /// No description provided for @settingsScopeDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'On this device'**
+  String get settingsScopeDevice;
+
+  /// No description provided for @settingsScopeAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Synced to your account'**
+  String get settingsScopeAccount;
+
+  /// No description provided for @settingsScopeTenant.
+  ///
+  /// In en, this message translates to:
+  /// **'Whole tenant'**
+  String get settingsScopeTenant;
+
+  /// No description provided for @settingsGroupDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'This device'**
+  String get settingsGroupDevice;
+
+  /// No description provided for @settingsGroupDeviceHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept on this device only. Your other devices and the web keep their own.'**
+  String get settingsGroupDeviceHelp;
+
+  /// No description provided for @settingsGroupAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account on {tenant}'**
+  String settingsGroupAccount(String tenant);
+
+  /// No description provided for @settingsGroupAccountHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept by the server with your account, so they follow you to every device, the web and the command line.'**
+  String get settingsGroupAccountHelp;
+
+  /// No description provided for @settingsGroupTenant.
+  ///
+  /// In en, this message translates to:
+  /// **'This tenant'**
+  String get settingsGroupTenant;
+
+  /// No description provided for @settingsGroupTenantHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings for everyone in {tenant}. Only administrators see these.'**
+  String settingsGroupTenantHelp(String tenant);
+
+  /// No description provided for @settingsReduceMotion.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce motion'**
+  String get settingsReduceMotion;
+
+  /// No description provided for @settingsReduceMotionHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Keeps the app still even when the system allows animation.'**
+  String get settingsReduceMotionHelp;
+
+  /// No description provided for @settingsHaptics.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch feedback'**
+  String get settingsHaptics;
+
+  /// No description provided for @settingsHapticsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A short buzz on swipes, completed tasks and refusals.'**
+  String get settingsHapticsHelp;
+
+  /// No description provided for @settingsLanguageHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'tix keeps no language with your account, so each device and browser picks its own.'**
+  String get settingsLanguageHelp;
+
+  /// No description provided for @settingsStartTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start screen'**
+  String get settingsStartTitle;
+
+  /// No description provided for @settingsStartHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Where the app opens when it starts or after you sign in.'**
+  String get settingsStartHelp;
+
+  /// No description provided for @settingsDeviceNotifTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications on this device'**
+  String get settingsDeviceNotifTitle;
+
+  /// No description provided for @settingsDeviceNotifSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Whether this device alerts you, and for which kinds'**
+  String get settingsDeviceNotifSubtitle;
+
+  /// No description provided for @settingsProfileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get settingsProfileTitle;
+
+  /// No description provided for @settingsDatesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dates and times'**
+  String get settingsDatesTitle;
+
+  /// No description provided for @settingsDatesHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept with your account, so every device, browser and terminal shows dates this way. Inherit follows your tenant’s default, which follows the server’s.'**
+  String get settingsDatesHelp;
+
+  /// No description provided for @settingsDateFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Date format'**
+  String get settingsDateFormat;
+
+  /// No description provided for @settingsDateFormatHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'How every timestamp in the app is written. tix reads dates you type the same way on the web.'**
+  String get settingsDateFormatHelp;
+
+  /// No description provided for @settingsTimeZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Time zone'**
+  String get settingsTimeZone;
+
+  /// No description provided for @settingsTimeZoneHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The zone every time in the app is shown in, and where today ends for due dates.'**
+  String get settingsTimeZoneHelp;
+
+  /// No description provided for @settingsInherit.
+  ///
+  /// In en, this message translates to:
+  /// **'Inherit'**
+  String get settingsInherit;
+
+  /// No description provided for @settingsInheritValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Inherit: {value}'**
+  String settingsInheritValue(String value);
+
+  /// No description provided for @settingsInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'In use: {value}, from {source}'**
+  String settingsInUse(String value, String source);
+
+  /// No description provided for @settingsSourceUser.
+  ///
+  /// In en, this message translates to:
+  /// **'your choice'**
+  String get settingsSourceUser;
+
+  /// No description provided for @settingsSourceTenant.
+  ///
+  /// In en, this message translates to:
+  /// **'the tenant default'**
+  String get settingsSourceTenant;
+
+  /// No description provided for @settingsSourceGlobal.
+  ///
+  /// In en, this message translates to:
+  /// **'the server default'**
+  String get settingsSourceGlobal;
+
+  /// No description provided for @settingsDeviceFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'this device’s format'**
+  String get settingsDeviceFormat;
+
+  /// No description provided for @settingsDeviceZone.
+  ///
+  /// In en, this message translates to:
+  /// **'this device’s zone ({zone})'**
+  String settingsDeviceZone(String zone);
+
+  /// No description provided for @settingsDatesNotPersonal.
+  ///
+  /// In en, this message translates to:
+  /// **'This credential is not a person, so it reads your tenant’s defaults and cannot keep its own.'**
+  String get settingsDatesNotPersonal;
+
+  /// No description provided for @settingsDatesUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This server keeps no date preferences, or has not answered yet, so dates follow this device.'**
+  String get settingsDatesUnavailable;
+
+  /// No description provided for @settingsDatesSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved with your account'**
+  String get settingsDatesSaved;
+
+  /// No description provided for @settingsZoneSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search time zones'**
+  String get settingsZoneSearch;
+
+  /// No description provided for @settingsZoneNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No time zone matches.'**
+  String get settingsZoneNone;
+
+  /// No description provided for @settingsInboxTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox and channels'**
+  String get settingsInboxTitle;
+
+  /// No description provided for @settingsInboxSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Which kinds reach your inbox, and your personal channels'**
+  String get settingsInboxSubtitle;
+
+  /// No description provided for @settingsFiltersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved filters'**
+  String get settingsFiltersTitle;
+
+  /// No description provided for @settingsFiltersSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename, share or delete the filters you keep'**
+  String get settingsFiltersSubtitle;
+
+  /// No description provided for @settingsArrangementTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Board and lanes'**
+  String get settingsArrangementTitle;
+
+  /// No description provided for @settingsArrangementHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The groups you hid, starred, collapsed or moved on the board, in lanes and on My work.'**
+  String get settingsArrangementHelp;
+
+  /// No description provided for @settingsArrangementReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get settingsArrangementReset;
+
+  /// No description provided for @settingsArrangementResetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset board and lanes'**
+  String get settingsArrangementResetTitle;
+
+  /// No description provided for @settingsArrangementResetBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Every group on the board, in lanes and on My work goes back where tix puts it, on every device and on the web. This cannot be undone.'**
+  String get settingsArrangementResetBody;
+
+  /// No description provided for @settingsArrangementDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrangement reset'**
+  String get settingsArrangementDone;
+
+  /// No description provided for @settingsTenantManage.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage {tenant}'**
+  String settingsTenantManage(String tenant);
+
+  /// No description provided for @settingsTenantManageSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Projects, workflows, fields, people and the tenant’s own settings'**
+  String get settingsTenantManageSubtitle;
+
+  /// No description provided for @paletteSettingsItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings: {name}'**
+  String paletteSettingsItem(String name);
+
+  /// No description provided for @savedFiltersEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved filters'**
+  String get savedFiltersEmpty;
+
+  /// No description provided for @savedFiltersEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Save a filter from the task list and it shows here, on every device.'**
+  String get savedFiltersEmptyBody;
+
+  /// No description provided for @savedFilterSharedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared'**
+  String get savedFilterSharedBadge;
+
+  /// No description provided for @savedFilterTheirs.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared with you; only its owner and administrators can change it.'**
+  String get savedFilterTheirs;
+
   /// No description provided for @durationDays.
   ///
   /// In en, this message translates to:

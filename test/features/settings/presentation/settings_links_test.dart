@@ -19,13 +19,13 @@ void main() {
     final rig = PeopleRig();
     await pump(tester, rig);
     for (final k in [
-      'settings.account',
-      'settings.calendar',
-      'settings.tokens',
+      'settings.profile.account',
+      'settings.calendar.open',
+      'settings.security.tokens',
     ]) {
       expect(find.byKey(Key(k)), findsOneWidget, reason: k);
     }
-    await tapIn(tester, find.byKey(const Key('settings.tokens')));
+    await tapIn(tester, find.byKey(const Key('settings.security.tokens')));
     expect(find.text('route:/settings/tokens'), findsOneWidget);
   });
 
@@ -33,8 +33,8 @@ void main() {
     final rig = PeopleRig();
     rig.people.me = {...rig.people.me, 'role': 'viewer'};
     await pump(tester, rig);
-    expect(find.byKey(const Key('settings.account')), findsOneWidget);
-    expect(find.byKey(const Key('settings.calendar')), findsOneWidget);
-    expect(find.byKey(const Key('settings.tokens')), findsNothing);
+    expect(find.byKey(const Key('settings.profile.account')), findsOneWidget);
+    expect(find.byKey(const Key('settings.calendar.open')), findsOneWidget);
+    expect(find.byKey(const Key('settings.security.tokens')), findsNothing);
   });
 }

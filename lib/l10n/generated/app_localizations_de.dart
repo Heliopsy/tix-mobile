@@ -5799,6 +5799,356 @@ class AppLocalizationsDe extends AppLocalizations {
   String get auditAfter => 'Nachher';
 
   @override
+  String get timeJustNow => 'gerade eben';
+
+  @override
+  String get timeInAMoment => 'gleich';
+
+  @override
+  String timeAgoMinutes(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'vor $n Minuten',
+      one: 'vor 1 Minute',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoHours(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'vor $n Stunden',
+      one: 'vor 1 Stunde',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoDays(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'vor $n Tagen',
+      one: 'vor 1 Tag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoMonths(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'vor $n Monaten',
+      one: 'vor 1 Monat',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoYears(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'vor $n Jahren',
+      one: 'vor 1 Jahr',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInMinutes(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'in $n Minuten',
+      one: 'in 1 Minute',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInHours(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'in $n Stunden',
+      one: 'in 1 Stunde',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInDays(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'in $n Tagen',
+      one: 'in 1 Tag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInMonths(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'in $n Monaten',
+      one: 'in 1 Monat',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInYears(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'in $n Jahren',
+      one: 'in 1 Jahr',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get timeFormatIso => 'ISO';
+
+  @override
+  String get timeFormatRfc3339 => 'RFC 3339';
+
+  @override
+  String get timeFormatShort => 'Kurz';
+
+  @override
+  String get timeFormatLong => 'Lang';
+
+  @override
+  String get timeFormatDotted => 'Mit Punkten';
+
+  @override
+  String get timeFormatDayfirst => 'Tag zuerst';
+
+  @override
+  String get timeFormatUs => 'USA';
+
+  @override
+  String get timeFormatRelative => 'Relativ';
+
+  @override
+  String get settingsSearchHint => 'Einstellungen durchsuchen';
+
+  @override
+  String settingsNoMatch(String query) {
+    return 'Keine Einstellung passt zu „$query“';
+  }
+
+  @override
+  String get settingsNoMatchBody =>
+      'Versuchen Sie ein anderes Wort oder leeren Sie die Suche.';
+
+  @override
+  String get settingsScopeDevice => 'Auf diesem Gerät';
+
+  @override
+  String get settingsScopeAccount => 'Mit Ihrem Konto synchronisiert';
+
+  @override
+  String get settingsScopeTenant => 'Ganzer Mandant';
+
+  @override
+  String get settingsGroupDevice => 'Dieses Gerät';
+
+  @override
+  String get settingsGroupDeviceHelp =>
+      'Nur auf diesem Gerät gespeichert. Ihre anderen Geräte und das Web haben eigene.';
+
+  @override
+  String settingsGroupAccount(String tenant) {
+    return 'Ihr Konto in $tenant';
+  }
+
+  @override
+  String get settingsGroupAccountHelp =>
+      'Vom Server mit Ihrem Konto gespeichert, sie folgen Ihnen also auf jedes Gerät, ins Web und in die Kommandozeile.';
+
+  @override
+  String get settingsGroupTenant => 'Dieser Mandant';
+
+  @override
+  String settingsGroupTenantHelp(String tenant) {
+    return 'Einstellungen für alle in $tenant. Nur Administratoren sehen sie.';
+  }
+
+  @override
+  String get settingsReduceMotion => 'Bewegung reduzieren';
+
+  @override
+  String get settingsReduceMotionHelp =>
+      'Die App bleibt ruhig, auch wenn das System Animationen erlaubt.';
+
+  @override
+  String get settingsHaptics => 'Haptisches Feedback';
+
+  @override
+  String get settingsHapticsHelp =>
+      'Ein kurzes Vibrieren bei Wischgesten, erledigten Aufgaben und Ablehnungen.';
+
+  @override
+  String get settingsLanguageHelp =>
+      'tix speichert keine Sprache mit Ihrem Konto, daher wählt jedes Gerät und jeder Browser seine eigene.';
+
+  @override
+  String get settingsStartTitle => 'Startbildschirm';
+
+  @override
+  String get settingsStartHelp =>
+      'Wo sich die App beim Start oder nach der Anmeldung öffnet.';
+
+  @override
+  String get settingsDeviceNotifTitle => 'Benachrichtigungen auf diesem Gerät';
+
+  @override
+  String get settingsDeviceNotifSubtitle =>
+      'Ob dieses Gerät Sie benachrichtigt und bei welchen Arten';
+
+  @override
+  String get settingsProfileTitle => 'Profil';
+
+  @override
+  String get settingsDatesTitle => 'Datum und Uhrzeit';
+
+  @override
+  String get settingsDatesHelp =>
+      'Mit Ihrem Konto gespeichert, sodass jedes Gerät, jeder Browser und jedes Terminal Daten so zeigt. „Erben“ folgt der Vorgabe des Mandanten, die der des Servers folgt.';
+
+  @override
+  String get settingsDateFormat => 'Datumsformat';
+
+  @override
+  String get settingsDateFormatHelp =>
+      'Wie jeder Zeitstempel in der App geschrieben wird. Im Web liest tix eingegebene Daten genauso.';
+
+  @override
+  String get settingsTimeZone => 'Zeitzone';
+
+  @override
+  String get settingsTimeZoneHelp =>
+      'Die Zone, in der jede Uhrzeit angezeigt wird und in der der Tag für Fälligkeiten endet.';
+
+  @override
+  String get settingsInherit => 'Erben';
+
+  @override
+  String settingsInheritValue(String value) {
+    return 'Erben: $value';
+  }
+
+  @override
+  String settingsInUse(String value, String source) {
+    return 'Aktiv: $value, aus $source';
+  }
+
+  @override
+  String get settingsSourceUser => 'Ihrer Wahl';
+
+  @override
+  String get settingsSourceTenant => 'der Mandantenvorgabe';
+
+  @override
+  String get settingsSourceGlobal => 'der Servervorgabe';
+
+  @override
+  String get settingsDeviceFormat => 'das Format dieses Geräts';
+
+  @override
+  String settingsDeviceZone(String zone) {
+    return 'die Zone dieses Geräts ($zone)';
+  }
+
+  @override
+  String get settingsDatesNotPersonal =>
+      'Diese Anmeldung gehört keiner Person, sie nutzt daher die Vorgaben des Mandanten und kann keine eigenen haben.';
+
+  @override
+  String get settingsDatesUnavailable =>
+      'Dieser Server speichert keine Datumseinstellungen oder hat noch nicht geantwortet, daher folgen Daten diesem Gerät.';
+
+  @override
+  String get settingsDatesSaved => 'Mit Ihrem Konto gespeichert';
+
+  @override
+  String get settingsZoneSearch => 'Zeitzonen durchsuchen';
+
+  @override
+  String get settingsZoneNone => 'Keine Zeitzone passt.';
+
+  @override
+  String get settingsInboxTitle => 'Posteingang und Kanäle';
+
+  @override
+  String get settingsInboxSubtitle =>
+      'Was in Ihrem Posteingang landet, und Ihre persönlichen Kanäle';
+
+  @override
+  String get settingsFiltersTitle => 'Gespeicherte Filter';
+
+  @override
+  String get settingsFiltersSubtitle =>
+      'Ihre Filter umbenennen, teilen oder löschen';
+
+  @override
+  String get settingsArrangementTitle => 'Board und Bahnen';
+
+  @override
+  String get settingsArrangementHelp =>
+      'Die Gruppen, die Sie auf dem Board, in Bahnen und in Meine Arbeit ausgeblendet, markiert, eingeklappt oder verschoben haben.';
+
+  @override
+  String get settingsArrangementReset => 'Zurücksetzen';
+
+  @override
+  String get settingsArrangementResetTitle => 'Board und Bahnen zurücksetzen';
+
+  @override
+  String get settingsArrangementResetBody =>
+      'Jede Gruppe auf dem Board, in Bahnen und in Meine Arbeit kehrt an ihren Standardplatz zurück, auf jedem Gerät und im Web. Das lässt sich nicht rückgängig machen.';
+
+  @override
+  String get settingsArrangementDone => 'Anordnung zurückgesetzt';
+
+  @override
+  String settingsTenantManage(String tenant) {
+    return '$tenant verwalten';
+  }
+
+  @override
+  String get settingsTenantManageSubtitle =>
+      'Projekte, Workflows, Felder, Personen und die Einstellungen des Mandanten';
+
+  @override
+  String paletteSettingsItem(String name) {
+    return 'Einstellungen: $name';
+  }
+
+  @override
+  String get savedFiltersEmpty => 'Keine gespeicherten Filter';
+
+  @override
+  String get savedFiltersEmptyBody =>
+      'Speichern Sie einen Filter in der Aufgabenliste, dann erscheint er hier, auf jedem Gerät.';
+
+  @override
+  String get savedFilterSharedBadge => 'Geteilt';
+
+  @override
+  String get savedFilterTheirs =>
+      'Mit Ihnen geteilt; nur der Eigentümer und Administratoren können ihn ändern.';
+
+  @override
   String durationDays(int n) {
     return '$n T.';
   }
