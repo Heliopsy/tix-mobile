@@ -87,6 +87,7 @@ void main() {
       ],
     ),
     'tasks': () => const GalleryBlock(title: 'Tasks', child: GalleryTasks()),
+    'inbox': () => const GalleryBlock(title: 'Inbox', child: GalleryInbox()),
     'forms': () => const Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

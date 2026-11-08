@@ -131,6 +131,35 @@ Map<String, Object?> workflowJson({
   },
 };
 
+Map<String, Object?> inboxJson(
+  String id, {
+  String kind = 'mention',
+  String ref = 'infra-1',
+  String title = 'Fix login',
+  String actor = 'raj',
+  String created = '2026-11-01T11:30:00Z',
+  String? read,
+  String excerpt = '',
+  String from = '',
+  String to = '',
+  bool gone = false,
+}) => {
+  'id': id,
+  'kind': kind,
+  'task_id': 'id-$ref',
+  'task_ref': ref,
+  'task_title': title,
+  'task_gone': gone,
+  'actor_id': 'a-$actor',
+  'actor_handle': actor,
+  'recipient_id': 'me',
+  'excerpt': excerpt,
+  'from_status': from,
+  'to_status': to,
+  'created_at': created,
+  'read_at': read,
+};
+
 /// A person who can sign in: their password and their tenants.
 class FakeAccount {
   FakeAccount({
@@ -251,6 +280,68 @@ class FakeTix {
   /// Rows per page, so tests can force pagination.
   int pageSize = 50;
 
+  /// The caller's inbox, newest first.
+  final inbox = <Map<String, Object?>>[
+    inboxJson('i1', excerpt: '@ana can you look at this?'),
+    inboxJson(
+      'i2',
+      kind: 'status',
+      ref: 'infra-2',
+      title: 'Rotate keys',
+      created: '2026-10-31T09:00:00Z',
+      from: 'todo',
+      to: 'doing',
+      read: '2026-10-31T10:00:00Z',
+    ),
+    inboxJson(
+      'i3',
+      kind: 'assigned',
+      ref: 'web-7',
+      title: 'Ship the banner',
+      actor: 'lee',
+      created: '2026-10-20T09:00:00Z',
+    ),
+  ];
+
+  /// The kinds the caller muted.
+  final inboxMuted = <String>[];
+
+  /// The caller's channels.
+  final channels = <Map<String, Object?>>[];
+
+  /// Deliveries per channel id, newest first.
+  final deliveries = <String, List<Map<String, Object?>>>{};
+
+  /// What `GET /stats` answers for the inbox summary, in place of the
+  /// counts worked out from [tasks]; null leaves those.
+  Map<String, Object?>? inboxStats;
+
+  /// What `GET /tasks?assignee=me` answers for the inbox summary; null
+  /// leaves the ordinary listing.
+  List<Map<String, Object?>>? dueTasks;
+
+  /// Sets [inboxStats] and [dueTasks] to a summary with one overdue task
+  /// and one due today.
+  void withSummary() {
+    inboxStats = {
+      'by_category': [
+        {'category': 'todo', 'count': 5},
+        {'category': 'in_progress', 'count': 2},
+        {'category': 'blocked', 'count': 1},
+        {'category': 'done', 'count': 9},
+      ],
+      'completed': 4,
+      'created': 6,
+    };
+    dueTasks = [
+      taskJson('infra-1', title: 'Fix login', due: '2026-10-30T00:00:00Z'),
+      taskJson('infra-5', title: 'Renew cert', due: '2026-11-01T18:00:00Z'),
+    ];
+  }
+
+  /// Answers to these paths with this, for one route's failure.
+  final failing = <String, FakeResponse>{};
+
   late final adapter = FakeAdapter(_handle);
 
   /// A factory override that sends every client to this server.
@@ -336,6 +427,10 @@ class FakeTix {
       return FakeResponse(401, envelope('unauthenticated', 'bad token'));
     }
     final q = o.uri.queryParameters;
+    final failure = failing[path];
+    if (failure != null) return failure;
+    final inboxAnswer = _inbox(o, path, q);
+    if (inboxAnswer != null) return inboxAnswer;
     final quick = await _quick(o, path);
     if (quick != null) return quick;
     switch ((o.method, path)) {
@@ -449,6 +544,129 @@ class FakeTix {
       }
     }
     return FakeResponse(404, envelope('not_found', path));
+  }
+
+  var _channelSeq = 0;
+
+  FakeResponse? _inbox(RequestOptions o, String path, Map<String, String> q) {
+    final segments = path.substring(1).split('/');
+    switch ((o.method, path)) {
+      case ('GET', '/api/v1/inbox'):
+        final rows = q['unread'] == 'true'
+            ? [
+                for (final i in inbox)
+                  if (i['read_at'] == null) i,
+              ]
+            : inbox;
+        return FakeResponse(200, _page(rows, q['cursor']));
+      case ('GET', '/api/v1/inbox/count'):
+        return FakeResponse(200, {
+          'unread': inbox.where((i) => i['read_at'] == null).length,
+        });
+      case ('POST', '/api/v1/inbox/read-all'):
+        var marked = 0;
+        for (final i in inbox) {
+          if (i['read_at'] == null) {
+            i['read_at'] = '2026-11-01T12:00:00Z';
+            marked++;
+          }
+        }
+        return FakeResponse(200, {'marked': marked});
+      case ('GET', '/api/v1/inbox/prefs'):
+        return FakeResponse(200, {'muted': inboxMuted});
+      case ('PUT', '/api/v1/inbox/prefs'):
+        final muted = ((o.data as Map)['muted'] as List).cast<String>();
+        inboxMuted
+          ..clear()
+          ..addAll(muted);
+        return FakeResponse(200, {'muted': inboxMuted});
+      case ('GET', '/api/v1/stats') when inboxStats != null:
+        return FakeResponse(200, inboxStats);
+      case ('GET', '/api/v1/tasks')
+          when q['assignee'] == 'me' && dueTasks != null:
+        return FakeResponse(200, {'items': dueTasks, 'next_cursor': ''});
+      case ('GET', '/api/v1/channels'):
+        return FakeResponse(200, {'items': channels, 'next_cursor': ''});
+      case ('POST', '/api/v1/channels'):
+        final body = o.data as Map<String, dynamic>;
+        if ((body['url'] as String? ?? '').startsWith('http:')) {
+          return const FakeResponse(400, {
+            'error': {
+              'code': 'invalid',
+              'message': 'url must be https',
+              'details': {'field': 'url'},
+            },
+          });
+        }
+        final channel = {
+          'id': 'ch${++_channelSeq}',
+          'name': body['name'],
+          'url': body['url'],
+          'format': body['format'] ?? 'generic',
+          'kinds':
+              body['kinds'] ?? ['mention', 'assigned', 'status', 'comment'],
+          'active': body['active'] ?? true,
+        };
+        channels.add(channel);
+        return FakeResponse(201, {...channel, 'secret': 'whsec_test'});
+    }
+    if (segments.length >= 4 &&
+        segments[2] == 'inbox' &&
+        segments.last == 'read') {
+      final item = inbox.where((i) => i['id'] == segments[3]).firstOrNull;
+      if (item == null) return FakeResponse(404, envelope('not_found', 'item'));
+      item['read_at'] = o.method == 'PUT' ? '2026-11-01T12:00:00Z' : null;
+      return FakeResponse(200, item);
+    }
+    if (segments.length >= 4 && segments[2] == 'channels') {
+      final channel = channels.where((c) => c['id'] == segments[3]).firstOrNull;
+      if (channel == null) {
+        return FakeResponse(404, envelope('not_found', 'channel'));
+      }
+      final id = channel['id']! as String;
+      if (segments.length == 4 && o.method == 'PATCH') {
+        final body = o.data as Map<String, dynamic>;
+        channel.addAll({
+          for (final e in body.entries)
+            if (e.value != null) e.key: e.value,
+        });
+        return FakeResponse(200, channel);
+      }
+      if (segments.length == 4 && o.method == 'DELETE') {
+        channels.remove(channel);
+        return const FakeResponse(204);
+      }
+      if (segments.length == 5 && segments[4] == 'test') {
+        final d = {
+          'id': 'd${DateTime.now().microsecondsSinceEpoch}',
+          'channel_id': id,
+          'item_id': '',
+          'status': 'delivered',
+          'attempts': 1,
+          'last_status_code': 200,
+          'created_at': '2026-11-01T12:00:00Z',
+        };
+        deliveries.putIfAbsent(id, () => []).insert(0, d);
+        return FakeResponse(200, d);
+      }
+      if (segments.length == 5 && segments[4] == 'deliveries') {
+        return FakeResponse(200, _page(deliveries[id] ?? [], q['cursor']));
+      }
+    }
+    if (segments.length == 5 &&
+        segments[2] == 'channel-deliveries' &&
+        segments[4] == 'redeliver') {
+      for (final list in deliveries.values) {
+        for (final d in list) {
+          if (d['id'] == segments[3]) {
+            d['status'] = 'pending';
+            return const FakeResponse(204);
+          }
+        }
+      }
+      return FakeResponse(404, envelope('not_found', 'delivery'));
+    }
+    return null;
   }
 
   final _tickets = <String, String>{};

@@ -30,12 +30,15 @@ val releaseStoreFile = signingValue("ANDROID_KEYSTORE_PATH", "storeFile")
 
 android {
     namespace = "red.tix.tix_mobile"
-    compileSdk = flutter.compileSdkVersion
+    // flutter_local_notifications 23 compiles against SDK 37.
+    compileSdk = maxOf(flutter.compileSdkVersion, 37)
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        // flutter_local_notifications uses java.time on every API level.
+        isCoreLibraryDesugaringEnabled = true
     }
 
     defaultConfig {
@@ -83,6 +86,12 @@ android {
                     logger.warn("tix-mobile: no release keystore configured, signing the release build with the debug key")
                     signingConfigs.getByName("debug")
                 }
+            // Gson, which flutter_local_notifications uses, needs its rules
+            // under R8.
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
 }
@@ -95,4 +104,8 @@ kotlin {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

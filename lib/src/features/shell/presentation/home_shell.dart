@@ -17,10 +17,16 @@ import 'package:tix_mobile/src/features/shell/presentation/context_switcher.dart
 /// bottom navigation bar on phones, atop a navigation rail on anything wider.
 class HomeShell extends StatelessWidget {
   /// Frames the branch navigators of [shell].
-  const HomeShell({required this.shell, super.key});
+  const HomeShell({required this.shell, this.inboxIcon, super.key});
 
   /// The shell route's navigation state.
   final StatefulNavigationShell shell;
+
+  /// Draws the Inbox destination's icon, such as with its unread badge.
+  final Widget Function(Widget icon)? inboxIcon;
+
+  static const _inbox = 3;
+  static const _settings = 4;
 
   void _select(int index) =>
       shell.goBranch(index, initialLocation: index == shell.currentIndex);
@@ -53,11 +59,18 @@ class HomeShell extends StatelessWidget {
             run: () => _select(2),
           ),
           TixCommand(
+            id: 'go.inbox',
+            label: l10n.goInbox,
+            group: l10n.commandsNavigate,
+            icon: Icons.inbox_outlined,
+            run: () => _select(_inbox),
+          ),
+          TixCommand(
             id: 'go.settings',
             label: l10n.goSettings,
             group: l10n.commandsNavigate,
             icon: Icons.settings_outlined,
-            run: () => _select(3),
+            run: () => _select(_settings),
           ),
           TixCommand(
             id: 'go.instances',
@@ -87,8 +100,15 @@ class HomeShell extends StatelessWidget {
       (Icons.folder_outlined, Icons.folder, l10n.projectsTitle),
       (Icons.checklist, Icons.checklist, l10n.tasksTitle),
       (Icons.person_outline, Icons.person, l10n.myWorkTitle),
+      (Icons.inbox_outlined, Icons.inbox, l10n.inboxTitle),
       (Icons.settings_outlined, Icons.settings, l10n.settingsTitle),
     ];
+    Widget icon(int i, IconData data) {
+      final drawn = Icon(data);
+      final decorate = inboxIcon;
+      return i == _inbox && decorate != null ? decorate(drawn) : drawn;
+    }
+
     if (width < compactMaxWidth) {
       return Scaffold(
         body: shell,
@@ -112,10 +132,11 @@ class HomeShell extends StatelessWidget {
               selectedIndex: shell.currentIndex,
               onDestinationSelected: _select,
               destinations: [
-                for (final (icon, selected, label) in destinations)
+                for (final (i, (outline, selected, label))
+                    in destinations.indexed)
                   NavigationDestination(
-                    icon: Icon(icon),
-                    selectedIcon: Icon(selected),
+                    icon: icon(i, outline),
+                    selectedIcon: icon(i, selected),
                     label: label,
                   ),
               ],
@@ -144,10 +165,11 @@ class HomeShell extends StatelessWidget {
               selectedIndex: shell.currentIndex,
               onDestinationSelected: _select,
               destinations: [
-                for (final (icon, selected, label) in destinations)
+                for (final (i, (outline, selected, label))
+                    in destinations.indexed)
                   NavigationRailDestination(
-                    icon: Icon(icon),
-                    selectedIcon: Icon(selected),
+                    icon: icon(i, outline),
+                    selectedIcon: icon(i, selected),
                     label: Text(label),
                   ),
               ],

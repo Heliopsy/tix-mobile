@@ -12,6 +12,7 @@ import 'package:tix_mobile/src/core/config/config.dart';
 import 'package:tix_mobile/src/core/design/theme.dart';
 import 'package:tix_mobile/src/core/events/events.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/notifications/local_notifier.dart';
 import 'package:tix_mobile/src/core/platform/files.dart';
 import 'package:tix_mobile/src/core/session/api.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
@@ -20,6 +21,7 @@ import 'package:tix_mobile/src/data/cache/cache_store.dart';
 import 'package:tix_mobile/src/data/local/local_engine.dart';
 
 import 'fake_events.dart';
+import 'fake_notes.dart';
 import 'fake_tix.dart';
 import 'stores.dart';
 
@@ -114,6 +116,7 @@ List<Override> fakeOverrides(
   bool local = false,
   CacheStore? cache,
   EventSocketConnector events = refusingEventSocket,
+  FakeNotes? notes,
 }) => [
   keyValueStoreProvider.overrideWithValue(settings ?? MemoryKeyValueStore()),
   secretStoreProvider.overrideWithValue(secrets ?? MemorySecretStore()),
@@ -125,6 +128,7 @@ List<Override> fakeOverrides(
   cacheStoreProvider.overrideWithValue(cache ?? MemoryCacheStore()),
   eventSocketConnectorProvider.overrideWithValue(events),
   appResumedProvider.overrideWithValue(const AsyncData(null)),
+  localNotesProvider.overrideWithValue(notes ?? FakeNotes()),
 ];
 
 /// The time every test runs at.
@@ -204,10 +208,18 @@ Future<ProviderContainer> pumpScreen(
     routes: [
       GoRoute(path: '/', builder: (_, _) => screen),
       GoRoute(path: '/connect', builder: stub),
+      GoRoute(path: '/inbox', builder: stub),
       GoRoute(
         path: '/settings',
         builder: stub,
-        routes: [GoRoute(path: 'instances', builder: stub)],
+        routes: [
+          GoRoute(path: 'instances', builder: stub),
+          GoRoute(
+            path: 'notifications',
+            builder: stub,
+            routes: [GoRoute(path: 'channels/:id', builder: stub)],
+          ),
+        ],
       ),
       GoRoute(
         path: '/projects',
