@@ -107,9 +107,21 @@ jobs:
         with:
           persist-credentials: false
       - uses: ./.github/actions/flutter
+      - id: libtix
+        uses: ./.github/actions/libtix
+        with:
+          target: test
 
+      # TIX_ENGINE_REQUIRED makes the engine's integration test fail rather
+      # than skip when the hook could not bundle libtix.
       - name: Test with coverage
+        env:
+          TIX_ENGINE_REQUIRED: "1"
         run: just cover
+
+      - name: Engine licence notices match tix.lock
+        if: success() || failure()
+        run: just engine-notices-check
 
       # Uploaded before the floor is applied, so a pull request that drops
       # below it still shows Codecov's view of where the lines went.
@@ -123,6 +135,13 @@ jobs:
 
       - name: Coverage floor
         run: just cover-floor
+
+      - name: Save the libtix cache
+        if: github.event_name == 'push' && steps.libtix.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
+        with:
+          path: ${{ steps.libtix.outputs.paths }}
+          key: ${{ steps.libtix.outputs.key }}
 
       - name: Upload the coverage report
         if: always()
@@ -154,28 +173,40 @@ jobs:
             os: ubuntu-24.04
             java: true
             recipe: build-apk
+            target: android
+            check: android
             artifact: build/app/outputs/flutter-apk/app-*-release.apk
           - name: Linux x64
             os: ubuntu-24.04
             linux: true
             recipe: build-linux
+            target: linux
+            check: bundle
             artifact: build/linux/x64/release/bundle/
           - name: Linux arm64
             os: ubuntu-24.04-arm
             linux: true
             recipe: build-linux
+            target: linux
+            check: bundle
             artifact: build/linux/arm64/release/bundle/
           - name: iOS
             os: macos-15
             recipe: build-ios
+            target: ios
+            check: bundle
             artifact: build/ios/iphoneos/Runner.app/
           - name: macOS
             os: macos-15
             recipe: build-macos
+            target: macos
+            check: bundle
             artifact: build/macos/Build/Products/Release/
           - name: Windows
             os: windows-2025
             recipe: build-windows
+            target: windows
+            check: bundle
             artifact: build/windows/x64/runner/Release/
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
@@ -184,6 +215,10 @@ jobs:
       - uses: ./.github/actions/flutter
         with:
           java: ${{ matrix.java && 'true' || 'false' }}
+      - id: libtix
+        uses: ./.github/actions/libtix
+        with:
+          target: ${{ matrix.target }}
 
       - name: Linux build dependencies
         if: matrix.linux
@@ -193,6 +228,33 @@ jobs:
         env:
           RECIPE: ${{ matrix.recipe }}
         run: just "$RECIPE"
+
+      # A build without Go succeeds without the engine, by design; a CI build
+      # never may.
+      - name: The build carries the engine
+        env:
+          CHECK: ${{ matrix.check }}
+          ARTIFACT: ${{ matrix.artifact }}
+        run: |
+          # The APK path is a glob, so it is left to the shell to expand.
+          # shellcheck disable=SC2086
+          just engine-check "$CHECK" $ARTIFACT
+
+      - name: Sizes
+        env:
+          ARTIFACT: ${{ matrix.artifact }}
+        run: |
+          # shellcheck disable=SC2086
+          du -sk $ARTIFACT | awk '{ printf "| %s | %.1f MB |\n", $2, $1 / 1024 }' > sizes.md
+          { echo "| Artifact | Size |"; echo "| --- | --- |"; cat sizes.md; } >> "$GITHUB_STEP_SUMMARY"
+          cat sizes.md
+
+      - name: Save the libtix cache
+        if: github.event_name == 'push' && steps.libtix.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
+        with:
+          path: ${{ steps.libtix.outputs.paths }}
+          key: ${{ steps.libtix.outputs.key }}
 
       - name: Upload the build
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2

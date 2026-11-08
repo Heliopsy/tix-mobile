@@ -101,6 +101,9 @@ jobs:
       - uses: ./.github/actions/flutter
         with:
           java: "true"
+      - uses: ./.github/actions/libtix
+        with:
+          target: android
 
       # Signed with the upload key when the four ANDROID_* secrets exist,
       # debug-signed otherwise (android/app/build.gradle.kts decides, and
@@ -126,6 +129,8 @@ jobs:
         run: |
           just build-apk
           just build-aab
+          just engine-check android build/app/outputs/flutter-apk/app-*-release.apk
+          just engine-check aab build/app/outputs/bundle/release/app-release.aab
 
       - name: Remove the keystore
         if: always()
@@ -168,8 +173,14 @@ jobs:
           ref: ${{ needs.prepare.outputs.tag }}
           persist-credentials: false
       - uses: ./.github/actions/flutter
+      - uses: ./.github/actions/libtix
+        with:
+          target: linux
       - run: just setup-linux
       - run: just build-linux
+      - env:
+          ARCH: ${{ matrix.arch }}
+        run: just engine-check bundle "build/linux/$ARCH/release/bundle"
       - env:
           ARCH: ${{ matrix.arch }}
         run: just package-linux "$ARCH"
@@ -196,10 +207,14 @@ jobs:
           ref: ${{ needs.prepare.outputs.tag }}
           persist-credentials: false
       - uses: ./.github/actions/flutter
+      - uses: ./.github/actions/libtix
+        with:
+          target: macos
       # Ad-hoc signed only. TODO: Developer ID signing and notarization
       # (`xcrun notarytool`) once there is an Apple Developer account, so
       # Gatekeeper opens the app without a right-click.
       - run: just build-macos
+      - run: just engine-check bundle build/macos/Build/Products/Release
       - run: just package-macos
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
         with:
@@ -224,7 +239,11 @@ jobs:
           ref: ${{ needs.prepare.outputs.tag }}
           persist-credentials: false
       - uses: ./.github/actions/flutter
+      - uses: ./.github/actions/libtix
+        with:
+          target: windows
       - run: just build-windows
+      - run: just engine-check bundle build/windows/x64/runner/Release
       - run: just package-windows
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
         with:
@@ -258,7 +277,11 @@ jobs:
           ref: ${{ needs.prepare.outputs.tag }}
           persist-credentials: false
       - uses: ./.github/actions/flutter
+      - uses: ./.github/actions/libtix
+        with:
+          target: ios
       - run: just build-ios
+      - run: just engine-check bundle build/ios/iphoneos/Runner.app
       - run: just package-ios
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
         with:
