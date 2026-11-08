@@ -30,6 +30,11 @@ merge commit's own subject, so the commits inside a `--no-ff` merge never reach 
 | macOS | `.zip` of the app | macOS |
 | Windows | `.zip` of the desktop bundle | Windows |
 
+Every artifact carries the embedded tix engine (libtix), built from the commit `tix.lock` pins. The release jobs
+install Go, build it through `hook/build.dart` and fail unless `just engine-check` finds it in each artifact; on
+Android that also checks it is stored uncompressed and 16 KB aligned, which Google Play requires. To ship a newer
+tix, change `tix.lock`, run `just engine-notices`, and commit both.
+
 Every release also carries `SHA256SUMS` over all of them, and each artifact has a GitHub build provenance
 attestation. Users verify with:
 
