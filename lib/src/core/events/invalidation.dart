@@ -59,6 +59,15 @@ abstract final class EventTopics {
 
   /// Webhook deliveries.
   static const webhooks = {'webhook.delivered'};
+
+  /// Users, memberships and invites.
+  static const people = {'user.*', 'member.*', 'user_invite.*'};
+
+  /// API tokens.
+  static const tokens = {'token.*'};
+
+  /// The caller's calendar feed.
+  static const calendar = {'calendar_feed.*'};
 }
 
 /// Refreshes the provider building with [ref] when an event matching one of

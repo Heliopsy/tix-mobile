@@ -3333,4 +3333,949 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Copié.';
+
+  @override
+  String get secretShare => 'Partager';
+
+  @override
+  String get secretDone => 'Je l’ai conservé';
+
+  @override
+  String get roleViewer => 'lecteur';
+
+  @override
+  String get roleMember => 'membre';
+
+  @override
+  String get roleAdmin => 'administrateur';
+
+  @override
+  String get roleViewerHelp => 'Lit les tâches, les projets et les workflows.';
+
+  @override
+  String get roleMemberHelp =>
+      'Crée, modifie, prend et déplace aussi des tâches, commente et exporte.';
+
+  @override
+  String get roleAdminHelp => 'Peut tout faire dans cet espace.';
+
+  @override
+  String get peopleTitle => 'Utilisateurs';
+
+  @override
+  String get peopleAdd => 'Ajouter un utilisateur';
+
+  @override
+  String peopleActive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count actifs',
+      one: '1 actif',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String peopleDisabledCount(int count) {
+    return '$count désactivés';
+  }
+
+  @override
+  String get peopleAddMember => 'Ajouter un membre';
+
+  @override
+  String get peopleAddMemberButton => 'Ajouter';
+
+  @override
+  String get peopleAddMemberHelp =>
+      'Donnez un rôle dans cet espace à un agent ou un compte existant.';
+
+  @override
+  String get peopleNoActors =>
+      'Tous les acteurs appartiennent déjà à cet espace.';
+
+  @override
+  String get peopleAgent => 'agent';
+
+  @override
+  String get peoplePerson => 'personne';
+
+  @override
+  String get peopleEmpty => 'Aucun utilisateur pour l’instant.';
+
+  @override
+  String get peopleYou => 'vous';
+
+  @override
+  String get peopleNoRole => 'sans rôle';
+
+  @override
+  String get peopleDisabled => 'désactivé';
+
+  @override
+  String get peopleInvites => 'Invitations en attente';
+
+  @override
+  String get peopleInvitesInfo =>
+      'Liens émis et pas encore utilisés. Réémettre arrête l’ancien lien et vous en donne un nouveau à envoyer ; révoquer l’arrête.';
+
+  @override
+  String get peopleInvited => 'invité';
+
+  @override
+  String peopleInvitedBy(String handle) {
+    return 'invité par $handle';
+  }
+
+  @override
+  String get peopleInviteExpired => 'expirée';
+
+  @override
+  String peopleInviteExpires(String day) {
+    return 'expire le $day';
+  }
+
+  @override
+  String get peopleReissue => 'Réémettre';
+
+  @override
+  String get peopleRevoke => 'Révoquer';
+
+  @override
+  String peopleRevokeInviteTitle(String email) {
+    return 'Révoquer l’invitation de $email ?';
+  }
+
+  @override
+  String get peopleRevokeInviteBody =>
+      'Le lien cesse de fonctionner immédiatement. Le compte reste, sans mot de passe, jusqu’à ce que vous le supprimiez ou l’invitiez à nouveau.';
+
+  @override
+  String peopleInviteRevoked(String email) {
+    return 'Invitation de $email révoquée';
+  }
+
+  @override
+  String get peopleSignInMode => 'Comment ils se connectent';
+
+  @override
+  String get peopleSignInModeInfo =>
+      'Un lien d’invitation permet à la personne de choisir son propre mot de passe. Il fonctionne une fois et expire ; tix n’envoie pas d’e-mail, c’est à vous de transmettre le lien.';
+
+  @override
+  String get peopleModeInvite => 'Lien d’invitation';
+
+  @override
+  String get peopleModePassword => 'Définir un mot de passe';
+
+  @override
+  String get peopleDisplayName => 'Nom affiché';
+
+  @override
+  String get peopleDisplayNameHelp => 'Vide, l’e-mail est affiché à la place.';
+
+  @override
+  String get peopleRole => 'Rôle';
+
+  @override
+  String get peopleLinkExpires => 'Le lien expire après';
+
+  @override
+  String peopleDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days jours',
+      one: '1 jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get peopleYear => '1 an';
+
+  @override
+  String get peopleInviteHelp =>
+      'Vous obtenez un lien à leur envoyer. Il fonctionne une fois et leur permet de choisir leur mot de passe.';
+
+  @override
+  String get peopleRequireChangeFirst =>
+      'Exiger un changement de mot de passe à la première connexion';
+
+  @override
+  String get peopleCreateInvite => 'Créer le lien d’invitation';
+
+  @override
+  String get peopleCreateUser => 'Créer l’utilisateur';
+
+  @override
+  String peopleCreated(String email) {
+    return '$email créé';
+  }
+
+  @override
+  String get peopleInviteLink => 'Lien d’invitation';
+
+  @override
+  String peopleSendLink(String email) {
+    return 'Envoyez ce lien à $email';
+  }
+
+  @override
+  String get peopleLinkOnce =>
+      'Il fonctionne une fois. tix n’envoie pas d’e-mail, et le lien ne sera plus affiché.';
+
+  @override
+  String peopleLinkOnceUntil(String day) {
+    return 'Il fonctionne une fois et expire le $day. tix n’envoie pas d’e-mail, et le lien ne sera plus affiché.';
+  }
+
+  @override
+  String get peopleRename => 'Changer le nom affiché';
+
+  @override
+  String get peopleNoName => 'Non défini';
+
+  @override
+  String get peopleChangeRole => 'Changer le rôle';
+
+  @override
+  String get peopleSignIn => 'Se connecte avec';
+
+  @override
+  String peopleSso(String provider) {
+    return 'Authentification unique ($provider)';
+  }
+
+  @override
+  String get peoplePasswordSignIn => 'Un mot de passe';
+
+  @override
+  String get peopleSecondFactor => 'Second facteur';
+
+  @override
+  String get peopleTotpOn => 'Configuré';
+
+  @override
+  String get peopleTotpOff => 'Aucun';
+
+  @override
+  String get peopleCreatedAt => 'Créé';
+
+  @override
+  String get peopleAccess => 'Accès';
+
+  @override
+  String get peopleDisabledSwitch => 'Désactivé';
+
+  @override
+  String get peopleDisabledHelp =>
+      'Un compte désactivé ne peut pas se connecter : ses sessions se terminent et ses jetons d’API sont révoqués immédiatement. Le réactiver ne rend pas les jetons.';
+
+  @override
+  String peopleDisabledToast(String name) {
+    return '$name désactivé';
+  }
+
+  @override
+  String peopleEnabledToast(String name) {
+    return '$name peut de nouveau se connecter';
+  }
+
+  @override
+  String get peopleRequireChange =>
+      'Demander un changement de mot de passe à la prochaine connexion';
+
+  @override
+  String get peopleRequireChangeHelp =>
+      'Leur prochaine connexion par mot de passe s’arrête sur une page qui en demande un nouveau. Les sessions ouvertes et les jetons d’API ne sont pas touchés.';
+
+  @override
+  String get peopleSaved => 'Enregistré';
+
+  @override
+  String get peopleSave => 'Enregistrer';
+
+  @override
+  String peopleRoleChanged(String name, String role) {
+    return '$name est maintenant $role';
+  }
+
+  @override
+  String get peopleDangerZone => 'Zone dangereuse';
+
+  @override
+  String get peopleRemoveMember => 'Retirer de cet espace';
+
+  @override
+  String get peopleRemoveMemberHelp =>
+      'Met fin à l’appartenance et garde le compte.';
+
+  @override
+  String get peopleRemoveMemberButton => 'Retirer';
+
+  @override
+  String peopleRemoveMemberTitle(String name) {
+    return 'Retirer $name de cet espace ?';
+  }
+
+  @override
+  String get peopleRemoveMemberBody =>
+      'Cette personne cesse d’agir ici immédiatement. Le compte reste et peut recevoir un rôle à nouveau.';
+
+  @override
+  String peopleMemberRemoved(String name) {
+    return '$name retiré de cet espace';
+  }
+
+  @override
+  String peopleDelete(String name) {
+    return 'Supprimer $name';
+  }
+
+  @override
+  String get peopleDeleteHelp =>
+      'La suppression retire le compte et son appartenance. La désactivation est en général ce que vous voulez, et elle est réversible.';
+
+  @override
+  String get peopleDeleteButton => 'Supprimer';
+
+  @override
+  String peopleDeleteTitle(String name) {
+    return 'Supprimer $name ?';
+  }
+
+  @override
+  String get peopleDeleteBody =>
+      'La suppression retire le compte et son appartenance. C’est irréversible.';
+
+  @override
+  String peopleDeleted(String name) {
+    return '$name supprimé';
+  }
+
+  @override
+  String get tokensTitle => 'Jetons d’API';
+
+  @override
+  String get tokensMine => 'Mes jetons d’API';
+
+  @override
+  String get tokensIssue => 'Émettre un jeton';
+
+  @override
+  String get tokensIssueButton => 'Émettre';
+
+  @override
+  String get tokensWholeTenant => 'Tous les jetons de cet espace';
+
+  @override
+  String get tokensOwn => 'Vos jetons';
+
+  @override
+  String get tokensWholeNote =>
+      'Vous avez tenant:admin, cette liste montre donc tous les jetons de l’espace et à qui ils appartiennent. Révoquer celui de quelqu’un d’autre est consigné comme tel.';
+
+  @override
+  String get tokensIntro =>
+      'Un jeton est l’identifiant qu’un script, la CLI ou un agent présente au lieu de se connecter. Il porte ses propres portées, et sa valeur n’est affichée qu’une fois, à l’émission.';
+
+  @override
+  String get tokensEmpty => 'Aucun jeton.';
+
+  @override
+  String get tokensActive => 'actif';
+
+  @override
+  String get tokensExpired => 'expiré';
+
+  @override
+  String get tokensRevoked => 'révoqué';
+
+  @override
+  String get tokensRevoke => 'Révoquer';
+
+  @override
+  String tokensOwner(String name) {
+    return 'Propriétaire : $name';
+  }
+
+  @override
+  String tokensOwnerYou(String name) {
+    return 'Propriétaire : $name (vous)';
+  }
+
+  @override
+  String tokensCreated(String day) {
+    return 'Créé le $day';
+  }
+
+  @override
+  String tokensExpires(String day) {
+    return 'Expire le $day';
+  }
+
+  @override
+  String get tokensNeverExpires => 'N’expire jamais';
+
+  @override
+  String get tokensNotUsed => 'Pas encore utilisé';
+
+  @override
+  String tokensLastUsed(String when) {
+    return 'Dernière utilisation $when';
+  }
+
+  @override
+  String tokensRevokeTitle(String name) {
+    return 'Révoquer $name ?';
+  }
+
+  @override
+  String get tokensRevokeBody =>
+      'Ce qui détient ce jeton cesse immédiatement de s’authentifier. C’est irréversible, et la valeur ne peut pas être récupérée.';
+
+  @override
+  String tokensRevokeOther(String name) {
+    return 'Ce jeton appartient à $name, pas à vous, et le journal indiquera que vous avez mis fin au jeton de quelqu’un d’autre.';
+  }
+
+  @override
+  String tokensRevokeNamed(String name) {
+    return 'Révoquer $name';
+  }
+
+  @override
+  String tokensRevokedToast(String name) {
+    return '$name révoqué';
+  }
+
+  @override
+  String get tokensName => 'Nom';
+
+  @override
+  String get tokensNameHelp =>
+      'Ce qui vous permettra de le choisir au moment de le révoquer, par exemple ci ou laptop. Deux jetons actifs ne peuvent pas porter le même nom.';
+
+  @override
+  String get tokensScopes => 'Portées';
+
+  @override
+  String get tokensNotHeld =>
+      'Vous n’avez pas cette portée, vous ne pouvez donc pas l’accorder.';
+
+  @override
+  String get tokensPresetAgent => 'Agent';
+
+  @override
+  String get tokensPresetAgentNote =>
+      'Lire, créer et modifier des tâches, les prendre, les déplacer et commenter.';
+
+  @override
+  String get tokensPresetRead => 'Lecture seule';
+
+  @override
+  String get tokensPresetReadNote =>
+      'Lire les tâches, les projets et les workflows, et suivre le flux d’événements.';
+
+  @override
+  String get tokensExpiry => 'Expire';
+
+  @override
+  String get tokensExpiryInfo =>
+      'Une expiration est le seul moyen de limiter les dégâts d’un jeton qui fuit sans que personne ne le remarque. Préférez la durée la plus courte qui suffit.';
+
+  @override
+  String get tokensNever => 'Jamais';
+
+  @override
+  String tokensIssuedTitle(String name) {
+    return 'Jeton $name émis';
+  }
+
+  @override
+  String get tokensValue => 'Copiez ce jeton maintenant';
+
+  @override
+  String get tokensValueWarning =>
+      'Gardez-le en lieu sûr. Il ne sera plus affiché, et rien ne pourra le montrer plus tard.';
+
+  @override
+  String get scopeAll =>
+      'Tout sauf l’administration globale et l’historique du compte. Uniquement pour un identifiant auquel vous faites confiance comme à vous-même.';
+
+  @override
+  String get scopeGroupTasks => 'Tâches';
+
+  @override
+  String get scopeGroupProjects => 'Projets';
+
+  @override
+  String get scopeGroupWorkflows => 'Workflows';
+
+  @override
+  String get scopeGroupComments => 'Commentaires et artefacts';
+
+  @override
+  String get scopeGroupEvents => 'Événements';
+
+  @override
+  String get scopeGroupAdmin => 'Administration';
+
+  @override
+  String get scopeGroupAccount => 'Votre compte';
+
+  @override
+  String get scopeTaskRead =>
+      'Lire les tâches, leurs commentaires et leur historique.';
+
+  @override
+  String get scopeTaskWrite => 'Créer et modifier des tâches.';
+
+  @override
+  String get scopeTaskTransition =>
+      'Faire passer une tâche d’un état à un autre.';
+
+  @override
+  String get scopeTaskClaim =>
+      'Prendre des tâches, renouveler et libérer le bail.';
+
+  @override
+  String get scopeTaskDelete =>
+      'Supprimer des tâches et les restaurer depuis la corbeille.';
+
+  @override
+  String get scopeTaskReclaim => 'Mettre fin au bail d’un autre exécutant.';
+
+  @override
+  String get scopeProjectRead => 'Lire les projets.';
+
+  @override
+  String get scopeProjectWrite => 'Créer et modifier des projets.';
+
+  @override
+  String get scopeWorkflowRead => 'Lire les workflows.';
+
+  @override
+  String get scopeWorkflowWrite => 'Créer et modifier des workflows.';
+
+  @override
+  String get scopeCommentWrite => 'Commenter les tâches.';
+
+  @override
+  String get scopeArtifactWrite => 'Joindre des artefacts aux tâches.';
+
+  @override
+  String get scopeEventSubscribe => 'Suivre le flux d’événements en direct.';
+
+  @override
+  String get scopeUserAdmin => 'Créer, modifier et supprimer des utilisateurs.';
+
+  @override
+  String get scopeTotpAdmin =>
+      'Effacer le second facteur d’une autre personne.';
+
+  @override
+  String get scopeTokenAdmin => 'Émettre et révoquer des jetons d’API.';
+
+  @override
+  String get scopeWebhookAdmin => 'Gérer les webhooks sortants.';
+
+  @override
+  String get scopeTenantAdmin => 'Gérer l’espace, ses membres et ses domaines.';
+
+  @override
+  String get scopeSyncAdmin =>
+      'Gérer et lancer des imports depuis d’autres outils de suivi.';
+
+  @override
+  String get scopeAuditRead => 'Lire le journal d’audit.';
+
+  @override
+  String get scopeExport =>
+      'Exporter des tâches et un instantané de tout l’espace.';
+
+  @override
+  String get scopeImport =>
+      'Importer des tâches et des instantanés dans l’espace.';
+
+  @override
+  String get scopeGlobalAdmin =>
+      'Administrer tous les espaces de ce serveur. Seul le jeton d’un administrateur global peut la porter.';
+
+  @override
+  String get scopeAccountRead =>
+      'Lire l’historique de votre propre compte, qui nomme chaque espace auquel vous appartenez. Seul un jeton pour votre propre compte peut la porter.';
+
+  @override
+  String get accountTitle => 'Votre compte';
+
+  @override
+  String get accountKind => 'Connecté en tant que';
+
+  @override
+  String get accountKindToken => 'Un jeton d’API';
+
+  @override
+  String get accountKindAgent => 'Un agent';
+
+  @override
+  String get accountKindPerson => 'Une personne';
+
+  @override
+  String get accountGlobalAdmin => 'administrateur global';
+
+  @override
+  String get accountGlobalAdminYes =>
+      'Administre tous les espaces de ce serveur';
+
+  @override
+  String get accountMemberships => 'Vos espaces';
+
+  @override
+  String get accountMembershipsHelp =>
+      'Chaque espace auquel ce compte appartient, avec son rôle.';
+
+  @override
+  String get accountCurrent => 'actuel';
+
+  @override
+  String get accountHistory => 'Historique du compte';
+
+  @override
+  String get accountHistoryHelp =>
+      'Chaque changement de votre mot de passe, second facteur et appartenances, dans chaque espace. Seuls vous et les administrateurs globaux pouvez le lire.';
+
+  @override
+  String get accountHistoryEmpty => 'Rien n’a encore changé.';
+
+  @override
+  String get accountHistoryNotReadable =>
+      'Ce jeton ne peut pas lire l’historique de votre compte : il faut la portée account:read, que seul un jeton émis pour votre propre compte porte.';
+
+  @override
+  String accountBy(String email) {
+    return 'par $email';
+  }
+
+  @override
+  String get accountBySystem => 'par le système';
+
+  @override
+  String get calendarTitle => 'Flux de calendrier';
+
+  @override
+  String get calendarLead => 'Vos échéances dans Google, Apple ou Outlook';
+
+  @override
+  String get calendarUnavailable => 'Rien à gérer ici';
+
+  @override
+  String get calendarUnavailableBody =>
+      'Un flux de calendrier lit les tâches en votre nom, et cet identifiant ne peut pas lire les tâches.';
+
+  @override
+  String get calendarCreate => 'Créer le flux';
+
+  @override
+  String get calendarNone => 'Aucun flux de calendrier';
+
+  @override
+  String get calendarNoneBody =>
+      'Une adresse privée à laquelle votre calendrier s’abonne, pour voir vos échéances à côté du reste de votre semaine.';
+
+  @override
+  String get calendarFeed => 'Adresse du flux';
+
+  @override
+  String get calendarFeedInfo =>
+      'Chaque tâche avec une échéance est un événement d’une journée qui renvoie ici. Quiconque détient l’adresse peut lire ce qu’elle liste : traitez-la comme un mot de passe. Seule une empreinte est conservée, elle ne peut donc pas être réaffichée.';
+
+  @override
+  String get calendarActive => 'Actif';
+
+  @override
+  String calendarCreatedOn(String day) {
+    return 'Créé le $day. L’adresse a été affichée une fois ; faites-la tourner pour en obtenir une nouvelle.';
+  }
+
+  @override
+  String get calendarShownOnce =>
+      'L’adresse a été affichée une fois ; faites-la tourner pour en obtenir une nouvelle.';
+
+  @override
+  String get calendarFilter => 'Filtre du flux';
+
+  @override
+  String get calendarFilterDefault =>
+      'Les tâches qui vous sont assignées et ne sont pas terminées';
+
+  @override
+  String get calendarFilterHint => 'project:infra tag:ops';
+
+  @override
+  String get calendarFilterHelp =>
+      'Le langage de filtre de la liste des tâches. Vide signifie les vôtres, non terminées. Seules les tâches avec une échéance sont listées.';
+
+  @override
+  String get calendarEditFilter => 'Changer le filtre';
+
+  @override
+  String get calendarSaveFilter => 'Enregistrer le filtre';
+
+  @override
+  String get calendarFilterSaved => 'Filtre du flux enregistré';
+
+  @override
+  String get calendarRotate => 'Faire tourner l’adresse';
+
+  @override
+  String get calendarRotateHelp =>
+      'Une nouvelle adresse avec le même filtre ; l’ancienne s’arrête immédiatement.';
+
+  @override
+  String get calendarRotateButton => 'Faire tourner';
+
+  @override
+  String get calendarRevoke => 'Révoquer le flux';
+
+  @override
+  String get calendarRevokeHelp =>
+      'L’adresse cesse de répondre. Les calendriers abonnés gardent ce qu’ils ont récupéré en dernier.';
+
+  @override
+  String get calendarRevokeButton => 'Révoquer';
+
+  @override
+  String get calendarRevokeTitle => 'Révoquer le flux de calendrier ?';
+
+  @override
+  String get calendarRevokeBody =>
+      'L’adresse s’arrête immédiatement. Supprimez aussi l’abonnement dans votre application de calendrier.';
+
+  @override
+  String get calendarRevoked => 'Flux de calendrier révoqué';
+
+  @override
+  String get calendarAddress => 'Abonnez-vous à cette adresse';
+
+  @override
+  String get calendarOnce =>
+      'Ajoutez-la dans votre application de calendrier. Elle ne sera plus affichée, copiez-la maintenant.';
+
+  @override
+  String get calendarRotatedOnce =>
+      'Cette adresse remplace l’ancienne, qui s’est arrêtée. Réabonnez-vous partout où l’ancienne était utilisée. Elle ne sera plus affichée.';
+
+  @override
+  String calendarLists(String filter) {
+    return 'Liste : $filter';
+  }
+
+  @override
+  String get calendarListsDefault =>
+      'Liste les tâches qui vous sont assignées et ne sont pas terminées.';
+
+  @override
+  String get calendarHowGoogle =>
+      'Google Agenda : Autres agendas, puis À partir de l’URL, et collez l’adresse.';
+
+  @override
+  String get calendarHowApple =>
+      'Calendrier d’Apple : Fichier, puis Nouvel abonnement à un calendrier, ou utilisez S’abonner sur cet appareil.';
+
+  @override
+  String get calendarHowOutlook =>
+      'Outlook : Ajouter un calendrier, puis S’abonner à partir du web, et collez l’adresse.';
+
+  @override
+  String get calendarSubscribeHere => 'S’abonner sur cet appareil';
+
+  @override
+  String get transferTitle => 'Export et import';
+
+  @override
+  String get transferNoProjects =>
+      'Créez un projet avant d’exporter ou d’importer des tâches.';
+
+  @override
+  String get transferExportTitle => 'Exporter des tâches';
+
+  @override
+  String get transferExportHelp =>
+      'Les tâches d’un projet, ou celles qu’un filtre retient, sous forme de fichier.';
+
+  @override
+  String get transferQuery => 'Filtre';
+
+  @override
+  String get transferQueryHelp =>
+      'Le langage de filtre de la liste des tâches. Vide exporte toutes les tâches.';
+
+  @override
+  String get transferFormat => 'Format';
+
+  @override
+  String get transferFormatCsv => 'CSV, pour les tableurs';
+
+  @override
+  String get transferFormatNdjson => 'NDJSON, une tâche par ligne';
+
+  @override
+  String get transferFormatMarkdown => 'Tableau Markdown';
+
+  @override
+  String get transferColumns => 'Colonnes';
+
+  @override
+  String get transferDates => 'Dates';
+
+  @override
+  String get transferDatesIso => 'Date et heure (ISO)';
+
+  @override
+  String get transferDatesDay => 'Jour seulement';
+
+  @override
+  String get transferDelimiter => 'Séparateur';
+
+  @override
+  String get transferDelimiterComma => 'Virgule';
+
+  @override
+  String get transferDelimiterSemicolon => 'Point-virgule';
+
+  @override
+  String get transferDelimiterTab => 'Tabulation';
+
+  @override
+  String get transferDelimiterBar => 'Barre verticale';
+
+  @override
+  String get transferFinished => 'Inclure les tâches terminées';
+
+  @override
+  String get transferSubtasks => 'Inclure les sous-tâches';
+
+  @override
+  String get transferTrashed => 'Inclure les tâches de la corbeille';
+
+  @override
+  String get transferExportButton => 'Exporter';
+
+  @override
+  String transferExported(String name) {
+    return '$name enregistré';
+  }
+
+  @override
+  String get transferSnapshotTitle => 'Instantané';
+
+  @override
+  String get transferSnapshotHelp =>
+      'Tout le contenu de cet espace dans un fichier NDJSON, que tix peut importer ailleurs.';
+
+  @override
+  String get transferSnapshotComments => 'Inclure les commentaires';
+
+  @override
+  String get transferSnapshotButton => 'Exporter l’instantané';
+
+  @override
+  String get transferImportTitle => 'Importer des tâches';
+
+  @override
+  String get transferImportHelp =>
+      'Un fichier de tâches CSV, JSON ou NDJSON, y compris ceux de Jira, GitHub, Trello et Linear. Vous voyez ce qui se passerait avant que rien ne change.';
+
+  @override
+  String get transferPick => 'Choisir un fichier';
+
+  @override
+  String transferDryRun(
+    int rows,
+    int created,
+    int updated,
+    int skipped,
+    int failed,
+  ) {
+    return '$rows lignes : $created à créer, $updated à mettre à jour, $skipped ignorées, $failed en échec.';
+  }
+
+  @override
+  String transferImportError(int line, String message) {
+    return 'Ligne $line : $message';
+  }
+
+  @override
+  String transferImportButton(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Importer $count tâches',
+      one: 'Importer 1 tâche',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String transferImported(int created, int updated) {
+    return 'Importé : $created créées, $updated mises à jour';
+  }
+
+  @override
+  String get columnRef => 'Référence';
+
+  @override
+  String get columnTitle => 'Titre';
+
+  @override
+  String get columnParent => 'Parent';
+
+  @override
+  String get columnDependsOn => 'Dépend de';
+
+  @override
+  String get columnRepeat => 'Répétition';
+
+  @override
+  String get columnCreated => 'Créée';
+
+  @override
+  String get columnUpdated => 'Modifiée';
+
+  @override
+  String get columnStarted => 'Commencée';
+
+  @override
+  String get columnCompleted => 'Terminée';
+
+  @override
+  String get columnDeleted => 'Supprimée';
+
+  @override
+  String get columnCreator => 'Créateur';
+
+  @override
+  String get columnProject => 'Projet';
+
+  @override
+  String get columnId => 'Identifiant';
+
+  @override
+  String get columnComments => 'Commentaires';
+
+  @override
+  String get columnHistory => 'Historique';
+
+  @override
+  String get settingsAccountHelp => 'Profil, espaces et historique';
+
+  @override
+  String get settingsCalendarHelp => 'Vos échéances dans votre calendrier';
+
+  @override
+  String get settingsTokensHelp =>
+      'Identifiants pour les scripts, la CLI et les agents';
 }

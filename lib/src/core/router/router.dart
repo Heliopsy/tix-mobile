@@ -7,6 +7,8 @@ import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/features/about/presentation/about_screen.dart';
+import 'package:tix_mobile/src/features/account/presentation/account_screen.dart';
+import 'package:tix_mobile/src/features/account/presentation/calendar_screen.dart';
 import 'package:tix_mobile/src/features/connect/presentation/connect_screen.dart';
 import 'package:tix_mobile/src/features/gallery/presentation/gallery_screen.dart';
 import 'package:tix_mobile/src/features/inbox/presentation/channel_screen.dart';
@@ -15,6 +17,8 @@ import 'package:tix_mobile/src/features/inbox/presentation/inbox_shell.dart';
 import 'package:tix_mobile/src/features/inbox/presentation/notification_settings_screen.dart';
 import 'package:tix_mobile/src/features/instances/presentation/instances_screen.dart';
 import 'package:tix_mobile/src/features/manage/presentation/manage_screen.dart';
+import 'package:tix_mobile/src/features/people/presentation/user_screen.dart';
+import 'package:tix_mobile/src/features/people/presentation/users_screen.dart';
 import 'package:tix_mobile/src/features/projects/presentation/fields_screen.dart';
 import 'package:tix_mobile/src/features/projects/presentation/project_settings_screen.dart';
 import 'package:tix_mobile/src/features/projects/presentation/projects_screen.dart';
@@ -27,6 +31,8 @@ import 'package:tix_mobile/src/features/tasks/presentation/task_list_screen.dart
 import 'package:tix_mobile/src/features/tasks/presentation/task_screen.dart';
 import 'package:tix_mobile/src/features/templates/presentation/templates_commands.dart';
 import 'package:tix_mobile/src/features/templates/presentation/templates_screen.dart';
+import 'package:tix_mobile/src/features/tokens/presentation/tokens_screen.dart';
+import 'package:tix_mobile/src/features/transfer/presentation/transfer_screen.dart';
 import 'package:tix_mobile/src/features/widgets/presentation/home_widgets_scope.dart';
 import 'package:tix_mobile/src/features/workflows/presentation/workflow_editor_screen.dart';
 import 'package:tix_mobile/src/features/workflows/presentation/workflows_screen.dart';
@@ -191,6 +197,7 @@ GoRouter router(Ref ref) {
                       ),
                     ],
                   ),
+                  ...manageRoutes,
                 ],
               ),
             ],
@@ -221,6 +228,7 @@ GoRouter router(Ref ref) {
                     path: 'about',
                     builder: (_, _) => const AboutScreen(),
                   ),
+                  ...accountRoutes,
                 ],
               ),
             ],
@@ -247,3 +255,35 @@ Page<void> _taskPage(BuildContext context, GoRouterState state) {
     child: TaskDetailScreen(taskRef: ref),
   );
 }
+
+/// The caller's own account, under Settings.
+final accountRoutes = [
+  GoRoute(path: 'account', builder: (_, _) => const AccountScreen()),
+  GoRoute(path: 'calendar', builder: (_, _) => const CalendarScreen()),
+  GoRoute(
+    path: 'tokens',
+    builder: (_, _) => const TokensScreen(personal: true),
+  ),
+];
+
+/// People, tokens and transfers of the tenant, under Manage.
+final manageRoutes = [
+  GoRoute(
+    path: 'users',
+    builder: (_, _) => const UsersScreen(),
+    routes: [
+      GoRoute(
+        path: ':id',
+        builder: (_, state) => UserScreen(userId: state.pathParameters['id']!),
+      ),
+    ],
+  ),
+  GoRoute(path: 'tokens', builder: (_, _) => const TokensScreen()),
+  GoRoute(
+    path: 'transfer',
+    builder: (_, state) => TransferScreen(
+      project: state.uri.queryParameters['project'] ?? '',
+      query: state.uri.queryParameters['q'] ?? '',
+    ),
+  ),
+];

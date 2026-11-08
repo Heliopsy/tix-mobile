@@ -5646,6 +5646,1584 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copied.'**
   String get copiedToClipboard;
+
+  /// No description provided for @secretShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get secretShare;
+
+  /// No description provided for @secretDone.
+  ///
+  /// In en, this message translates to:
+  /// **'I have kept it'**
+  String get secretDone;
+
+  /// No description provided for @roleViewer.
+  ///
+  /// In en, this message translates to:
+  /// **'viewer'**
+  String get roleViewer;
+
+  /// No description provided for @roleMember.
+  ///
+  /// In en, this message translates to:
+  /// **'member'**
+  String get roleMember;
+
+  /// No description provided for @roleAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'admin'**
+  String get roleAdmin;
+
+  /// No description provided for @roleViewerHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Reads tasks, projects and workflows.'**
+  String get roleViewerHelp;
+
+  /// No description provided for @roleMemberHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Also creates, edits, claims and moves tasks, comments and exports.'**
+  String get roleMemberHelp;
+
+  /// No description provided for @roleAdminHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'May do everything in this tenant.'**
+  String get roleAdminHelp;
+
+  /// No description provided for @peopleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Users'**
+  String get peopleTitle;
+
+  /// No description provided for @peopleAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add user'**
+  String get peopleAdd;
+
+  /// No description provided for @peopleActive.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 active} other{{count} active}}'**
+  String peopleActive(int count);
+
+  /// No description provided for @peopleDisabledCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} disabled'**
+  String peopleDisabledCount(int count);
+
+  /// No description provided for @peopleAddMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a member'**
+  String get peopleAddMember;
+
+  /// No description provided for @peopleAddMemberButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add member'**
+  String get peopleAddMemberButton;
+
+  /// No description provided for @peopleAddMemberHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Give an existing agent or account a role in this tenant.'**
+  String get peopleAddMemberHelp;
+
+  /// No description provided for @peopleNoActors.
+  ///
+  /// In en, this message translates to:
+  /// **'Every actor already belongs to this tenant.'**
+  String get peopleNoActors;
+
+  /// No description provided for @peopleAgent.
+  ///
+  /// In en, this message translates to:
+  /// **'agent'**
+  String get peopleAgent;
+
+  /// No description provided for @peoplePerson.
+  ///
+  /// In en, this message translates to:
+  /// **'person'**
+  String get peoplePerson;
+
+  /// No description provided for @peopleEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No users yet.'**
+  String get peopleEmpty;
+
+  /// No description provided for @peopleYou.
+  ///
+  /// In en, this message translates to:
+  /// **'you'**
+  String get peopleYou;
+
+  /// No description provided for @peopleNoRole.
+  ///
+  /// In en, this message translates to:
+  /// **'no role'**
+  String get peopleNoRole;
+
+  /// No description provided for @peopleDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'disabled'**
+  String get peopleDisabled;
+
+  /// No description provided for @peopleInvites.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending invites'**
+  String get peopleInvites;
+
+  /// No description provided for @peopleInvitesInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Links issued and not used yet. Re-issuing stops the old link and gives you a new one to send; revoking stops it.'**
+  String get peopleInvitesInfo;
+
+  /// No description provided for @peopleInvited.
+  ///
+  /// In en, this message translates to:
+  /// **'invited'**
+  String get peopleInvited;
+
+  /// No description provided for @peopleInvitedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'invited by {handle}'**
+  String peopleInvitedBy(String handle);
+
+  /// No description provided for @peopleInviteExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'expired'**
+  String get peopleInviteExpired;
+
+  /// No description provided for @peopleInviteExpires.
+  ///
+  /// In en, this message translates to:
+  /// **'expires {day}'**
+  String peopleInviteExpires(String day);
+
+  /// No description provided for @peopleReissue.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-issue'**
+  String get peopleReissue;
+
+  /// No description provided for @peopleRevoke.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke'**
+  String get peopleRevoke;
+
+  /// No description provided for @peopleRevokeInviteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke the invite for {email}?'**
+  String peopleRevokeInviteTitle(String email);
+
+  /// No description provided for @peopleRevokeInviteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The link stops working at once. The account stays, without a password, until you delete it or invite it again.'**
+  String get peopleRevokeInviteBody;
+
+  /// No description provided for @peopleInviteRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite for {email} revoked'**
+  String peopleInviteRevoked(String email);
+
+  /// No description provided for @peopleSignInMode.
+  ///
+  /// In en, this message translates to:
+  /// **'How they sign in'**
+  String get peopleSignInMode;
+
+  /// No description provided for @peopleSignInModeInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'An invite link lets the person choose their own password. It works once and expires; tix sends no email, so you pass the link on yourself.'**
+  String get peopleSignInModeInfo;
+
+  /// No description provided for @peopleModeInvite.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite link'**
+  String get peopleModeInvite;
+
+  /// No description provided for @peopleModePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a password'**
+  String get peopleModePassword;
+
+  /// No description provided for @peopleDisplayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Display name'**
+  String get peopleDisplayName;
+
+  /// No description provided for @peopleDisplayNameHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty shows the email instead.'**
+  String get peopleDisplayNameHelp;
+
+  /// No description provided for @peopleRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get peopleRole;
+
+  /// No description provided for @peopleLinkExpires.
+  ///
+  /// In en, this message translates to:
+  /// **'Link expires after'**
+  String get peopleLinkExpires;
+
+  /// No description provided for @peopleDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day} other{{days} days}}'**
+  String peopleDays(int days);
+
+  /// No description provided for @peopleYear.
+  ///
+  /// In en, this message translates to:
+  /// **'1 year'**
+  String get peopleYear;
+
+  /// No description provided for @peopleInviteHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'You get a link to send them. It works once, and they choose their own password with it.'**
+  String get peopleInviteHelp;
+
+  /// No description provided for @peopleRequireChangeFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Require a password change at first sign-in'**
+  String get peopleRequireChangeFirst;
+
+  /// No description provided for @peopleCreateInvite.
+  ///
+  /// In en, this message translates to:
+  /// **'Create invite link'**
+  String get peopleCreateInvite;
+
+  /// No description provided for @peopleCreateUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Create user'**
+  String get peopleCreateUser;
+
+  /// No description provided for @peopleCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Created {email}'**
+  String peopleCreated(String email);
+
+  /// No description provided for @peopleInviteLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite link'**
+  String get peopleInviteLink;
+
+  /// No description provided for @peopleSendLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Send this link to {email}'**
+  String peopleSendLink(String email);
+
+  /// No description provided for @peopleLinkOnce.
+  ///
+  /// In en, this message translates to:
+  /// **'It works once. tix does not send email, and the link is not shown again.'**
+  String get peopleLinkOnce;
+
+  /// No description provided for @peopleLinkOnceUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'It works once and expires on {day}. tix does not send email, and the link is not shown again.'**
+  String peopleLinkOnceUntil(String day);
+
+  /// No description provided for @peopleRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Change display name'**
+  String get peopleRename;
+
+  /// No description provided for @peopleNoName.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get peopleNoName;
+
+  /// No description provided for @peopleChangeRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Change role'**
+  String get peopleChangeRole;
+
+  /// No description provided for @peopleSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Signs in with'**
+  String get peopleSignIn;
+
+  /// No description provided for @peopleSso.
+  ///
+  /// In en, this message translates to:
+  /// **'Single sign-on ({provider})'**
+  String peopleSso(String provider);
+
+  /// No description provided for @peoplePasswordSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'A password'**
+  String get peoplePasswordSignIn;
+
+  /// No description provided for @peopleSecondFactor.
+  ///
+  /// In en, this message translates to:
+  /// **'Second factor'**
+  String get peopleSecondFactor;
+
+  /// No description provided for @peopleTotpOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Enrolled'**
+  String get peopleTotpOn;
+
+  /// No description provided for @peopleTotpOff.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get peopleTotpOff;
+
+  /// No description provided for @peopleCreatedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get peopleCreatedAt;
+
+  /// No description provided for @peopleAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Access'**
+  String get peopleAccess;
+
+  /// No description provided for @peopleDisabledSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get peopleDisabledSwitch;
+
+  /// No description provided for @peopleDisabledHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A disabled account cannot sign in: its sessions end and its API tokens are revoked at once. Turning it back on does not bring the tokens back.'**
+  String get peopleDisabledHelp;
+
+  /// No description provided for @peopleDisabledToast.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} disabled'**
+  String peopleDisabledToast(String name);
+
+  /// No description provided for @peopleEnabledToast.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} can sign in again'**
+  String peopleEnabledToast(String name);
+
+  /// No description provided for @peopleRequireChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask to change the password at next sign-in'**
+  String get peopleRequireChange;
+
+  /// No description provided for @peopleRequireChangeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Their next sign-in with a password stops at a page asking for a new one. Open sessions and API tokens are not affected.'**
+  String get peopleRequireChangeHelp;
+
+  /// No description provided for @peopleSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get peopleSaved;
+
+  /// No description provided for @peopleSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get peopleSave;
+
+  /// No description provided for @peopleRoleChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is now {role}'**
+  String peopleRoleChanged(String name, String role);
+
+  /// No description provided for @peopleDangerZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Danger zone'**
+  String get peopleDangerZone;
+
+  /// No description provided for @peopleRemoveMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from this tenant'**
+  String get peopleRemoveMember;
+
+  /// No description provided for @peopleRemoveMemberHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends the membership and keeps the account.'**
+  String get peopleRemoveMemberHelp;
+
+  /// No description provided for @peopleRemoveMemberButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get peopleRemoveMemberButton;
+
+  /// No description provided for @peopleRemoveMemberTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name} from this tenant?'**
+  String peopleRemoveMemberTitle(String name);
+
+  /// No description provided for @peopleRemoveMemberBody.
+  ///
+  /// In en, this message translates to:
+  /// **'They stop acting here at once. The account stays and can be given a role again.'**
+  String get peopleRemoveMemberBody;
+
+  /// No description provided for @peopleMemberRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} removed from this tenant'**
+  String peopleMemberRemoved(String name);
+
+  /// No description provided for @peopleDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {name}'**
+  String peopleDelete(String name);
+
+  /// No description provided for @peopleDeleteHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting removes the account and its membership. Disabling is usually what you want, and can be undone.'**
+  String get peopleDeleteHelp;
+
+  /// No description provided for @peopleDeleteButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get peopleDeleteButton;
+
+  /// No description provided for @peopleDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {name}?'**
+  String peopleDeleteTitle(String name);
+
+  /// No description provided for @peopleDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting removes the account and its membership. It cannot be undone.'**
+  String get peopleDeleteBody;
+
+  /// No description provided for @peopleDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} deleted'**
+  String peopleDeleted(String name);
+
+  /// No description provided for @tokensTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'API tokens'**
+  String get tokensTitle;
+
+  /// No description provided for @tokensMine.
+  ///
+  /// In en, this message translates to:
+  /// **'My API tokens'**
+  String get tokensMine;
+
+  /// No description provided for @tokensIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Issue a token'**
+  String get tokensIssue;
+
+  /// No description provided for @tokensIssueButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Issue token'**
+  String get tokensIssueButton;
+
+  /// No description provided for @tokensWholeTenant.
+  ///
+  /// In en, this message translates to:
+  /// **'Every token of this tenant'**
+  String get tokensWholeTenant;
+
+  /// No description provided for @tokensOwn.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tokens'**
+  String get tokensOwn;
+
+  /// No description provided for @tokensWholeNote.
+  ///
+  /// In en, this message translates to:
+  /// **'You hold tenant:admin, so this lists every token of the tenant and whose it is. Revoking somebody else\'s is recorded as such.'**
+  String get tokensWholeNote;
+
+  /// No description provided for @tokensIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'A token is the credential a script, the CLI or an agent presents instead of signing in. It carries its own scopes, and its value is shown once, when it is issued.'**
+  String get tokensIntro;
+
+  /// No description provided for @tokensEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No tokens.'**
+  String get tokensEmpty;
+
+  /// No description provided for @tokensActive.
+  ///
+  /// In en, this message translates to:
+  /// **'active'**
+  String get tokensActive;
+
+  /// No description provided for @tokensExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'expired'**
+  String get tokensExpired;
+
+  /// No description provided for @tokensRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'revoked'**
+  String get tokensRevoked;
+
+  /// No description provided for @tokensRevoke.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke'**
+  String get tokensRevoke;
+
+  /// No description provided for @tokensOwner.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner: {name}'**
+  String tokensOwner(String name);
+
+  /// No description provided for @tokensOwnerYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner: {name} (you)'**
+  String tokensOwnerYou(String name);
+
+  /// No description provided for @tokensCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Created {day}'**
+  String tokensCreated(String day);
+
+  /// No description provided for @tokensExpires.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires {day}'**
+  String tokensExpires(String day);
+
+  /// No description provided for @tokensNeverExpires.
+  ///
+  /// In en, this message translates to:
+  /// **'Never expires'**
+  String get tokensNeverExpires;
+
+  /// No description provided for @tokensNotUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Not used yet'**
+  String get tokensNotUsed;
+
+  /// No description provided for @tokensLastUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Last used {when}'**
+  String tokensLastUsed(String when);
+
+  /// No description provided for @tokensRevokeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke {name}?'**
+  String tokensRevokeTitle(String name);
+
+  /// No description provided for @tokensRevokeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Whatever holds this token stops authenticating at once. It cannot be undone, and the value cannot be recovered.'**
+  String get tokensRevokeBody;
+
+  /// No description provided for @tokensRevokeOther.
+  ///
+  /// In en, this message translates to:
+  /// **'This token is {name}\'s, not yours, and the trail will record that you ended somebody else\'s.'**
+  String tokensRevokeOther(String name);
+
+  /// No description provided for @tokensRevokeNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke {name}'**
+  String tokensRevokeNamed(String name);
+
+  /// No description provided for @tokensRevokedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} revoked'**
+  String tokensRevokedToast(String name);
+
+  /// No description provided for @tokensName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get tokensName;
+
+  /// No description provided for @tokensNameHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'What you will choose by when you revoke it, such as ci or laptop. No two live tokens share a name.'**
+  String get tokensNameHelp;
+
+  /// No description provided for @tokensScopes.
+  ///
+  /// In en, this message translates to:
+  /// **'Scopes'**
+  String get tokensScopes;
+
+  /// No description provided for @tokensNotHeld.
+  ///
+  /// In en, this message translates to:
+  /// **'You do not hold this scope, so you cannot grant it.'**
+  String get tokensNotHeld;
+
+  /// No description provided for @tokensPresetAgent.
+  ///
+  /// In en, this message translates to:
+  /// **'Agent'**
+  String get tokensPresetAgent;
+
+  /// No description provided for @tokensPresetAgentNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Read, create and edit tasks, claim them, move them and comment.'**
+  String get tokensPresetAgentNote;
+
+  /// No description provided for @tokensPresetRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read only'**
+  String get tokensPresetRead;
+
+  /// No description provided for @tokensPresetReadNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Read tasks, projects and workflows, and follow the event stream.'**
+  String get tokensPresetReadNote;
+
+  /// No description provided for @tokensExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires'**
+  String get tokensExpiry;
+
+  /// No description provided for @tokensExpiryInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'An expiry is the one control that limits the damage of a token that leaks without anybody noticing. Prefer the shortest window the work fits in.'**
+  String get tokensExpiryInfo;
+
+  /// No description provided for @tokensNever.
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get tokensNever;
+
+  /// No description provided for @tokensIssuedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Token {name} issued'**
+  String tokensIssuedTitle(String name);
+
+  /// No description provided for @tokensValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy this token now'**
+  String get tokensValue;
+
+  /// No description provided for @tokensValueWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it somewhere safe. It is not shown again, and nothing can show it later.'**
+  String get tokensValueWarning;
+
+  /// No description provided for @scopeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything but global admin and account history. Only for a credential you trust like yourself.'**
+  String get scopeAll;
+
+  /// No description provided for @scopeGroupTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks'**
+  String get scopeGroupTasks;
+
+  /// No description provided for @scopeGroupProjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Projects'**
+  String get scopeGroupProjects;
+
+  /// No description provided for @scopeGroupWorkflows.
+  ///
+  /// In en, this message translates to:
+  /// **'Workflows'**
+  String get scopeGroupWorkflows;
+
+  /// No description provided for @scopeGroupComments.
+  ///
+  /// In en, this message translates to:
+  /// **'Comments and artifacts'**
+  String get scopeGroupComments;
+
+  /// No description provided for @scopeGroupEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Events'**
+  String get scopeGroupEvents;
+
+  /// No description provided for @scopeGroupAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Administration'**
+  String get scopeGroupAdmin;
+
+  /// No description provided for @scopeGroupAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account'**
+  String get scopeGroupAccount;
+
+  /// No description provided for @scopeTaskRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read tasks, their comments and history.'**
+  String get scopeTaskRead;
+
+  /// No description provided for @scopeTaskWrite.
+  ///
+  /// In en, this message translates to:
+  /// **'Create and edit tasks.'**
+  String get scopeTaskWrite;
+
+  /// No description provided for @scopeTaskTransition.
+  ///
+  /// In en, this message translates to:
+  /// **'Move a task from one state to another.'**
+  String get scopeTaskTransition;
+
+  /// No description provided for @scopeTaskClaim.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim tasks, renew the lease and release it.'**
+  String get scopeTaskClaim;
+
+  /// No description provided for @scopeTaskDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete tasks and restore them from the trash.'**
+  String get scopeTaskDelete;
+
+  /// No description provided for @scopeTaskReclaim.
+  ///
+  /// In en, this message translates to:
+  /// **'End a lease another worker holds.'**
+  String get scopeTaskReclaim;
+
+  /// No description provided for @scopeProjectRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read projects.'**
+  String get scopeProjectRead;
+
+  /// No description provided for @scopeProjectWrite.
+  ///
+  /// In en, this message translates to:
+  /// **'Create and change projects.'**
+  String get scopeProjectWrite;
+
+  /// No description provided for @scopeWorkflowRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read workflows.'**
+  String get scopeWorkflowRead;
+
+  /// No description provided for @scopeWorkflowWrite.
+  ///
+  /// In en, this message translates to:
+  /// **'Create and change workflows.'**
+  String get scopeWorkflowWrite;
+
+  /// No description provided for @scopeCommentWrite.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment on tasks.'**
+  String get scopeCommentWrite;
+
+  /// No description provided for @scopeArtifactWrite.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach artifacts to tasks.'**
+  String get scopeArtifactWrite;
+
+  /// No description provided for @scopeEventSubscribe.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow the live event stream.'**
+  String get scopeEventSubscribe;
+
+  /// No description provided for @scopeUserAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Create, change and remove users.'**
+  String get scopeUserAdmin;
+
+  /// No description provided for @scopeTotpAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear another person\'s second factor.'**
+  String get scopeTotpAdmin;
+
+  /// No description provided for @scopeTokenAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Issue and revoke API tokens.'**
+  String get scopeTokenAdmin;
+
+  /// No description provided for @scopeWebhookAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage outgoing webhooks.'**
+  String get scopeWebhookAdmin;
+
+  /// No description provided for @scopeTenantAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage the tenant, its members and domains.'**
+  String get scopeTenantAdmin;
+
+  /// No description provided for @scopeSyncAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage and run imports from other trackers.'**
+  String get scopeSyncAdmin;
+
+  /// No description provided for @scopeAuditRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read the audit log.'**
+  String get scopeAuditRead;
+
+  /// No description provided for @scopeExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export tasks and a snapshot of the whole tenant.'**
+  String get scopeExport;
+
+  /// No description provided for @scopeImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Import tasks and snapshots into the tenant.'**
+  String get scopeImport;
+
+  /// No description provided for @scopeGlobalAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Administer every tenant on this server. Only a global admin\'s token can carry it.'**
+  String get scopeGlobalAdmin;
+
+  /// No description provided for @scopeAccountRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read your own account\'s history, which names every tenant you belong to. Only a token for your own account can carry it.'**
+  String get scopeAccountRead;
+
+  /// No description provided for @accountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account'**
+  String get accountTitle;
+
+  /// No description provided for @accountKind.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as'**
+  String get accountKind;
+
+  /// No description provided for @accountKindToken.
+  ///
+  /// In en, this message translates to:
+  /// **'An API token'**
+  String get accountKindToken;
+
+  /// No description provided for @accountKindAgent.
+  ///
+  /// In en, this message translates to:
+  /// **'An agent'**
+  String get accountKindAgent;
+
+  /// No description provided for @accountKindPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'A person'**
+  String get accountKindPerson;
+
+  /// No description provided for @accountGlobalAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'global admin'**
+  String get accountGlobalAdmin;
+
+  /// No description provided for @accountGlobalAdminYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Administers every tenant of this server'**
+  String get accountGlobalAdminYes;
+
+  /// No description provided for @accountMemberships.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tenants'**
+  String get accountMemberships;
+
+  /// No description provided for @accountMembershipsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Every tenant this account belongs to, with its role there.'**
+  String get accountMembershipsHelp;
+
+  /// No description provided for @accountCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'current'**
+  String get accountCurrent;
+
+  /// No description provided for @accountHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Account history'**
+  String get accountHistory;
+
+  /// No description provided for @accountHistoryHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Every change to your password, second factor and memberships, in every tenant. Only you and global admins can read this.'**
+  String get accountHistoryHelp;
+
+  /// No description provided for @accountHistoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing has changed yet.'**
+  String get accountHistoryEmpty;
+
+  /// No description provided for @accountHistoryNotReadable.
+  ///
+  /// In en, this message translates to:
+  /// **'This token cannot read your account\'s history: it needs the account:read scope, which only a token minted for your own account carries.'**
+  String get accountHistoryNotReadable;
+
+  /// No description provided for @accountBy.
+  ///
+  /// In en, this message translates to:
+  /// **'by {email}'**
+  String accountBy(String email);
+
+  /// No description provided for @accountBySystem.
+  ///
+  /// In en, this message translates to:
+  /// **'by the system'**
+  String get accountBySystem;
+
+  /// No description provided for @calendarTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar feed'**
+  String get calendarTitle;
+
+  /// No description provided for @calendarLead.
+  ///
+  /// In en, this message translates to:
+  /// **'Your due dates in Google, Apple or Outlook calendar'**
+  String get calendarLead;
+
+  /// No description provided for @calendarUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to manage here'**
+  String get calendarUnavailable;
+
+  /// No description provided for @calendarUnavailableBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A calendar feed reads tasks as you, and this credential cannot read tasks.'**
+  String get calendarUnavailableBody;
+
+  /// No description provided for @calendarCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create feed'**
+  String get calendarCreate;
+
+  /// No description provided for @calendarNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No calendar feed'**
+  String get calendarNone;
+
+  /// No description provided for @calendarNoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A private address your calendar subscribes to, so your due dates appear beside the rest of your week.'**
+  String get calendarNoneBody;
+
+  /// No description provided for @calendarFeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Feed address'**
+  String get calendarFeed;
+
+  /// No description provided for @calendarFeedInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Each task with a due date is an all-day event that links back here. Anybody holding the address can read what it lists, so treat it like a password. Only a hash of it is kept, so it cannot be shown again.'**
+  String get calendarFeedInfo;
+
+  /// No description provided for @calendarActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get calendarActive;
+
+  /// No description provided for @calendarCreatedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Created {day}. The address was shown once; rotate to get a new one.'**
+  String calendarCreatedOn(String day);
+
+  /// No description provided for @calendarShownOnce.
+  ///
+  /// In en, this message translates to:
+  /// **'The address was shown once; rotate to get a new one.'**
+  String get calendarShownOnce;
+
+  /// No description provided for @calendarFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Feed filter'**
+  String get calendarFilter;
+
+  /// No description provided for @calendarFilterDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'The tasks assigned to you that are not finished'**
+  String get calendarFilterDefault;
+
+  /// No description provided for @calendarFilterHint.
+  ///
+  /// In en, this message translates to:
+  /// **'project:infra tag:ops'**
+  String get calendarFilterHint;
+
+  /// No description provided for @calendarFilterHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The task list\'s filter language. Empty means yours, not finished. Only tasks with a due date are listed.'**
+  String get calendarFilterHelp;
+
+  /// No description provided for @calendarEditFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Change filter'**
+  String get calendarEditFilter;
+
+  /// No description provided for @calendarSaveFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Save filter'**
+  String get calendarSaveFilter;
+
+  /// No description provided for @calendarFilterSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Feed filter saved'**
+  String get calendarFilterSaved;
+
+  /// No description provided for @calendarRotate.
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate the address'**
+  String get calendarRotate;
+
+  /// No description provided for @calendarRotateHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A new address with the same filter; the old one stops at once.'**
+  String get calendarRotateHelp;
+
+  /// No description provided for @calendarRotateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate'**
+  String get calendarRotateButton;
+
+  /// No description provided for @calendarRevoke.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke the feed'**
+  String get calendarRevoke;
+
+  /// No description provided for @calendarRevokeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The address stops answering. Subscribed calendars keep what they last fetched.'**
+  String get calendarRevokeHelp;
+
+  /// No description provided for @calendarRevokeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke'**
+  String get calendarRevokeButton;
+
+  /// No description provided for @calendarRevokeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke the calendar feed?'**
+  String get calendarRevokeTitle;
+
+  /// No description provided for @calendarRevokeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The address stops at once. Remove the subscription from your calendar app too.'**
+  String get calendarRevokeBody;
+
+  /// No description provided for @calendarRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar feed revoked'**
+  String get calendarRevoked;
+
+  /// No description provided for @calendarAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe to this address'**
+  String get calendarAddress;
+
+  /// No description provided for @calendarOnce.
+  ///
+  /// In en, this message translates to:
+  /// **'Add it in your calendar app. It is not shown again, so copy it now.'**
+  String get calendarOnce;
+
+  /// No description provided for @calendarRotatedOnce.
+  ///
+  /// In en, this message translates to:
+  /// **'This address replaces the old one, which has stopped. Subscribe to it again wherever the old one was used. It is not shown again.'**
+  String get calendarRotatedOnce;
+
+  /// No description provided for @calendarLists.
+  ///
+  /// In en, this message translates to:
+  /// **'Lists: {filter}'**
+  String calendarLists(String filter);
+
+  /// No description provided for @calendarListsDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Lists the tasks assigned to you that are not finished.'**
+  String get calendarListsDefault;
+
+  /// No description provided for @calendarHowGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Calendar: Other calendars, then From URL, and paste the address.'**
+  String get calendarHowGoogle;
+
+  /// No description provided for @calendarHowApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Calendar: File, then New Calendar Subscription, or use Subscribe on this device.'**
+  String get calendarHowApple;
+
+  /// No description provided for @calendarHowOutlook.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlook: Add calendar, then Subscribe from web, and paste the address.'**
+  String get calendarHowOutlook;
+
+  /// No description provided for @calendarSubscribeHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe on this device'**
+  String get calendarSubscribeHere;
+
+  /// No description provided for @transferTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Export and import'**
+  String get transferTitle;
+
+  /// No description provided for @transferNoProjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a project before exporting or importing tasks.'**
+  String get transferNoProjects;
+
+  /// No description provided for @transferExportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Export tasks'**
+  String get transferExportTitle;
+
+  /// No description provided for @transferExportHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'One project\'s tasks, or the ones a filter picks, as a file.'**
+  String get transferExportHelp;
+
+  /// No description provided for @transferQuery.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get transferQuery;
+
+  /// No description provided for @transferQueryHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The task list\'s filter language. Empty exports every task.'**
+  String get transferQueryHelp;
+
+  /// No description provided for @transferFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Format'**
+  String get transferFormat;
+
+  /// No description provided for @transferFormatCsv.
+  ///
+  /// In en, this message translates to:
+  /// **'CSV, for spreadsheets'**
+  String get transferFormatCsv;
+
+  /// No description provided for @transferFormatNdjson.
+  ///
+  /// In en, this message translates to:
+  /// **'NDJSON, one task per line'**
+  String get transferFormatNdjson;
+
+  /// No description provided for @transferFormatMarkdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Markdown table'**
+  String get transferFormatMarkdown;
+
+  /// No description provided for @transferColumns.
+  ///
+  /// In en, this message translates to:
+  /// **'Columns'**
+  String get transferColumns;
+
+  /// No description provided for @transferDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Dates'**
+  String get transferDates;
+
+  /// No description provided for @transferDatesIso.
+  ///
+  /// In en, this message translates to:
+  /// **'Date and time (ISO)'**
+  String get transferDatesIso;
+
+  /// No description provided for @transferDatesDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Day only'**
+  String get transferDatesDay;
+
+  /// No description provided for @transferDelimiter.
+  ///
+  /// In en, this message translates to:
+  /// **'Delimiter'**
+  String get transferDelimiter;
+
+  /// No description provided for @transferDelimiterComma.
+  ///
+  /// In en, this message translates to:
+  /// **'Comma'**
+  String get transferDelimiterComma;
+
+  /// No description provided for @transferDelimiterSemicolon.
+  ///
+  /// In en, this message translates to:
+  /// **'Semicolon'**
+  String get transferDelimiterSemicolon;
+
+  /// No description provided for @transferDelimiterTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Tab'**
+  String get transferDelimiterTab;
+
+  /// No description provided for @transferDelimiterBar.
+  ///
+  /// In en, this message translates to:
+  /// **'Vertical bar'**
+  String get transferDelimiterBar;
+
+  /// No description provided for @transferFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'Include finished tasks'**
+  String get transferFinished;
+
+  /// No description provided for @transferSubtasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Include subtasks'**
+  String get transferSubtasks;
+
+  /// No description provided for @transferTrashed.
+  ///
+  /// In en, this message translates to:
+  /// **'Include tasks in the trash'**
+  String get transferTrashed;
+
+  /// No description provided for @transferExportButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get transferExportButton;
+
+  /// No description provided for @transferExported.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved {name}'**
+  String transferExported(String name);
+
+  /// No description provided for @transferSnapshotTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Snapshot'**
+  String get transferSnapshotTitle;
+
+  /// No description provided for @transferSnapshotHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything in this tenant as one NDJSON file, which tix can import elsewhere.'**
+  String get transferSnapshotHelp;
+
+  /// No description provided for @transferSnapshotComments.
+  ///
+  /// In en, this message translates to:
+  /// **'Include comments'**
+  String get transferSnapshotComments;
+
+  /// No description provided for @transferSnapshotButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Export snapshot'**
+  String get transferSnapshotButton;
+
+  /// No description provided for @transferImportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import tasks'**
+  String get transferImportTitle;
+
+  /// No description provided for @transferImportHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A CSV, JSON or NDJSON file of tasks, including files Jira, GitHub, Trello and Linear write. You see what would happen before anything changes.'**
+  String get transferImportHelp;
+
+  /// No description provided for @transferPick.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a file'**
+  String get transferPick;
+
+  /// No description provided for @transferDryRun.
+  ///
+  /// In en, this message translates to:
+  /// **'{rows} rows: {created} to create, {updated} to update, {skipped} skipped, {failed} failed.'**
+  String transferDryRun(
+    int rows,
+    int created,
+    int updated,
+    int skipped,
+    int failed,
+  );
+
+  /// No description provided for @transferImportError.
+  ///
+  /// In en, this message translates to:
+  /// **'Line {line}: {message}'**
+  String transferImportError(int line, String message);
+
+  /// No description provided for @transferImportButton.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Import 1 task} other{Import {count} tasks}}'**
+  String transferImportButton(int count);
+
+  /// No description provided for @transferImported.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported: {created} created, {updated} updated'**
+  String transferImported(int created, int updated);
+
+  /// No description provided for @columnRef.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference'**
+  String get columnRef;
+
+  /// No description provided for @columnTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get columnTitle;
+
+  /// No description provided for @columnParent.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent'**
+  String get columnParent;
+
+  /// No description provided for @columnDependsOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Depends on'**
+  String get columnDependsOn;
+
+  /// No description provided for @columnRepeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat'**
+  String get columnRepeat;
+
+  /// No description provided for @columnCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get columnCreated;
+
+  /// No description provided for @columnUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get columnUpdated;
+
+  /// No description provided for @columnStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Started'**
+  String get columnStarted;
+
+  /// No description provided for @columnCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get columnCompleted;
+
+  /// No description provided for @columnDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted'**
+  String get columnDeleted;
+
+  /// No description provided for @columnCreator.
+  ///
+  /// In en, this message translates to:
+  /// **'Creator'**
+  String get columnCreator;
+
+  /// No description provided for @columnProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Project'**
+  String get columnProject;
+
+  /// No description provided for @columnId.
+  ///
+  /// In en, this message translates to:
+  /// **'Identifier'**
+  String get columnId;
+
+  /// No description provided for @columnComments.
+  ///
+  /// In en, this message translates to:
+  /// **'Comments'**
+  String get columnComments;
+
+  /// No description provided for @columnHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get columnHistory;
+
+  /// No description provided for @settingsAccountHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile, tenants and history'**
+  String get settingsAccountHelp;
+
+  /// No description provided for @settingsCalendarHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Your due dates in your calendar app'**
+  String get settingsCalendarHelp;
+
+  /// No description provided for @settingsTokensHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Credentials for scripts, the CLI and agents'**
+  String get settingsTokensHelp;
 }
 
 class _AppLocalizationsDelegate

@@ -67,7 +67,8 @@ CI) fails while the copy differs; `just openapi-sync` refreshes it.
 - `client.gen.dart`: `TixClient`, one group per area and one method per operation, named from the operationId:
   `task.list` is `api.task.list(...)`, `inbox.channel.add` is `api.inbox.channelAdd(...)`. Path parameters are
   positional, the body follows, query parameters are named. A listing returns `Page<T>`; a GET listing also has an
-  NDJSON twin (`listStream`) that streams items.
+  NDJSON twin (`listStream`) that streams items. An operation that answers JSON or a document format its request
+  picks, such as `task.export` (CSV, Markdown), also has a `…File` twin returning the bytes as the server wrote them.
 
 Why a generator of our own rather than a package is in the `api-foundation` design
 (`openspec/changes/archive/*-api-foundation/design.md`). `data/models/*.dart` re-export the generated classes the
@@ -177,7 +178,9 @@ The steps for a screen that performs an operation, say `task.star`:
 2. **Repository.** Add a method to the repository for the area (or a new one in `data/repositories/`, built in
    `core/session/session.dart` from `sessionApiProvider` and `responseCacheProvider`). Reads that open a screen use
    `_cache.remember(key, fresh, encode)` and get a `cached…` twin; first pages only, never a page after a cursor.
-   Never cache anything carrying a secret (tokens, sessions, recovery codes, invite links).
+   Never cache anything carrying a secret (tokens, sessions, recovery codes, invite links). A value tix shows once (a token, an invite
+   link, a calendar address) goes from the notifier method straight back to the widget that shows it in a
+   `OneTimeSecret`; `test/core/session/secrets_test.dart` checks none reaches the cache, the log or provider state.
 3. **Provider.** In `features/<feature>/application/`, an `AsyncNotifier`:
    - load with `cachedFirst(ref: ref, cached: repo.cachedX(), fresh: repo.x, onFresh: (v) => state = AsyncData(v))`;
    - declare live updates with `refreshOn(ref, EventTopics.<topic>, where: ...)`;
