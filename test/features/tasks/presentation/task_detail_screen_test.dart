@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
 
 import '../../../helpers/app.dart';
@@ -41,7 +42,8 @@ void main() {
     testWidgets('$width: loading, then the task', (tester) async {
       server.gate = Completer<void>();
       await pump(tester, 'infra-1', size: size, settle: false);
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.byType(SkeletonBox), findsWidgets);
+      expect(find.text('Fix login'), findsNothing);
       server.gate!.complete();
       await tester.pumpAndSettle();
       expect(find.text('Fix login'), findsOneWidget);
@@ -64,7 +66,7 @@ void main() {
     expect(find.text('infra-1'), findsOneWidget);
     expect(find.text('Fix login'), findsOneWidget);
     expect(find.text('todo'), findsOneWidget);
-    expect(find.text('Highest'), findsOneWidget);
+    expect(find.text('highest'), findsOneWidget);
     expect(find.text('Raj'), findsOneWidget);
     expect(find.textContaining('Nov 20, 2026'), findsOneWidget);
     expect(find.text('#auth'), findsOneWidget);

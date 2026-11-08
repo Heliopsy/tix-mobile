@@ -3,8 +3,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
+import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/core/widgets/paged_list_view.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
@@ -18,14 +20,25 @@ class ProjectsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.projectsTitle)),
+    final session = ref.watch(sessionControllerProvider).value;
+    final tenant = session == null
+        ? ''
+        : session.connection.tenantLabel.isNotEmpty
+        ? session.connection.tenantLabel
+        : session.instance.name;
+    return TixPage(
+      title: l10n.projectsTitle,
+      subtitle: tenant.isEmpty ? null : l10n.projectsSubtitle(tenant),
       body: AsyncBody(
         value: ref.watch(projectsProvider),
         onRetry: () => ref.invalidate(projectsProvider),
         data: (paged) => PagedListView(
           paged: paged,
-          empty: l10n.projectsEmpty,
+          empty: EmptyState(
+            icon: Icons.folder_outlined,
+            title: l10n.projectsEmpty,
+            body: l10n.projectsEmptyBody,
+          ),
           onRefresh: () => ref.refresh(projectsProvider.future),
           onLoadMore: () => ref.read(projectsProvider.notifier).loadMore(),
           itemBuilder: (context, project) => ProjectTile(project: project),
@@ -35,7 +48,8 @@ class ProjectsScreen extends ConsumerWidget {
   }
 }
 
-/// One project in the list.
+/// One project in the list: its mark in its colour, its name and key, and
+/// its description.
 class ProjectTile extends StatelessWidget {
   /// Draws [project].
   const ProjectTile({required this.project, super.key});
@@ -45,19 +59,61 @@ class ProjectTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final monogram = project.icon.isNotEmpty
-        ? project.icon
-        : project.key.characters.take(2).toString().toUpperCase();
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: scheme.primaryContainer,
-        foregroundColor: scheme.onPrimaryContainer,
-        child: Text(monogram),
-      ),
-      title: Text(project.name.isEmpty ? project.key : project.name),
-      subtitle: Text(project.key),
+    final t = context.tix;
+    final name = project.name.isEmpty ? project.key : project.name;
+    final stripe = t.projectColour(project.color);
+    return InkWell(
       onTap: () => context.go(Routes.project(project.key)),
+      child: Container(
+        constraints: const BoxConstraints(minHeight: 64),
+        padding: const EdgeInsets.symmetric(
+          horizontal: TixSpace.s4,
+          vertical: TixSpace.s3,
+        ),
+        decoration: BoxDecoration(
+          border: Border(
+            left: BorderSide(color: stripe ?? Colors.transparent, width: 3),
+            bottom: BorderSide(color: t.line),
+          ),
+        ),
+        child: Row(
+          children: [
+            ProjectMark(name: name, colour: project.color, icon: project.icon),
+            const SizedBox(width: TixSpace.s3),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Wrap(
+                    spacing: TixSpace.s2,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Text(
+                        name,
+                        style: const TextStyle(
+                          fontSize: TixText.md,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(project.key, style: tixMono(context)),
+                    ],
+                  ),
+                  if (project.description.isNotEmpty) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      project.description,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right, color: t.lineStrong),
+          ],
+        ),
+      ),
     );
   }
 }

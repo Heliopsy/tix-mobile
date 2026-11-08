@@ -105,7 +105,15 @@ void main() {
   testWidgets('about shows the tix mark beside the app name', (tester) async {
     await pump(tester);
     final about = find.byKey(const Key('settings.about'));
-    await tester.scrollUntilVisible(about, 100);
+    await tester.scrollUntilVisible(
+      about,
+      100,
+      scrollable: find
+          .byWidgetPredicate(
+            (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+          )
+          .first,
+    );
     await tester.tap(about);
     await tester.pumpAndSettle();
     final dialog = find.byType(AboutDialog);

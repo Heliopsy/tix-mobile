@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_list_screen.dart';
 
@@ -45,7 +46,7 @@ void main() {
           size: size,
           settle: false,
         );
-        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        expect(find.byType(SkeletonList), findsOneWidget);
         server.gate!.complete();
         await tester.pumpAndSettle();
         expect(find.text('Fix login'), findsOneWidget);
@@ -80,7 +81,16 @@ void main() {
   ) async {
     await pump(tester, const TaskListScreen(projectKey: 'infra'));
     expect(find.text('Fix login'), findsOneWidget);
-    expect(find.textContaining('infra-1 · todo · Nov 20'), findsOneWidget);
+    final row = find.ancestor(
+      of: find.text('Fix login'),
+      matching: find.byType(TaskRow),
+    );
+    for (final text in ['infra-1', 'todo', 'due Nov 20']) {
+      expect(
+        find.descendant(of: row, matching: find.text(text)),
+        findsOneWidget,
+      );
+    }
     expect(find.byType(TaskDetailView), findsNothing);
     await tester.tap(find.text('Rotate keys'));
     await tester.pumpAndSettle();
@@ -95,17 +105,17 @@ void main() {
       const TaskListScreen(projectKey: 'infra', selectedRef: 'infra-1'),
       size: desktop,
     );
-    final tile = tester.widget<ListTile>(
+    final tile = tester.widget<TaskRow>(
       find.ancestor(
         of: find.text('Rotate keys'),
-        matching: find.byType(ListTile),
+        matching: find.byType(TaskRow),
       ),
     );
     expect(tile.selected, isFalse);
-    final selected = tester.widget<ListTile>(
+    final selected = tester.widget<TaskRow>(
       find.ancestor(
         of: find.text('Fix login').first,
-        matching: find.byType(ListTile),
+        matching: find.byType(TaskRow),
       ),
     );
     expect(selected.selected, isTrue);
@@ -137,15 +147,17 @@ void main() {
 
   testWidgets('priorities read as words to a screen reader', (tester) async {
     await pump(tester, const TaskListScreen(projectKey: 'infra'));
-    final labels = tester
-        .widgetList<Icon>(
-          find.descendant(
-            of: find.byType(PriorityIcon),
-            matching: find.byType(Icon),
-          ),
-        )
-        .map((i) => i.semanticLabel);
-    expect(labels, ['Highest', 'Normal']);
+    final semantics = tester.ensureSemantics();
+    for (final label in ['Highest', 'Normal']) {
+      expect(
+        find.descendant(
+          of: find.byType(PriorityMark),
+          matching: find.bySemanticsLabel(label),
+        ),
+        findsOneWidget,
+      );
+    }
+    semantics.dispose();
   });
 
   testWidgets('quick add creates the task and confirms it', (tester) async {

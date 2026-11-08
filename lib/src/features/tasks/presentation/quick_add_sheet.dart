@@ -2,22 +2,21 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/features/tasks/application/tasks.dart';
 
-/// Opens the quick-add sheet for [projectKey] and confirms what it created.
+/// Opens quick add for [projectKey], a sheet on a phone and a dialog on
+/// anything wider, and confirms what it created.
 Future<void> showQuickAdd(BuildContext context, String projectKey) async {
-  final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
-  final task = await showModalBottomSheet<Task>(
-    context: context,
-    isScrollControlled: true,
-    showDragHandle: true,
+  final task = await showTixSheet<Task>(
+    context,
     builder: (_) => QuickAddSheet(projectKey: projectKey),
   );
-  if (task != null) {
-    messenger.showSnackBar(SnackBar(content: Text(l10n.taskCreated(task.ref))));
+  if (task != null && context.mounted) {
+    showTixToast(context, l10n.taskCreated(task.ref));
   }
 }
 
@@ -71,54 +70,26 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final error = _error;
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-        16,
-        0,
-        16,
-        16 + MediaQuery.viewInsetsOf(context).bottom,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            l10n.quickAddTitle,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            key: const Key('quickAdd.line'),
-            controller: _line,
-            autofocus: true,
-            enabled: !_busy,
-            textInputAction: TextInputAction.done,
-            onSubmitted: (_) => _submit(),
-            decoration: InputDecoration(
-              hintText: l10n.quickAddHint,
-              helperText: l10n.quickAddHelp,
-              errorText: error == null ? null : errorMessage(l10n, error),
-              errorMaxLines: 3,
-              border: const OutlineInputBorder(),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: _busy ? null : () => Navigator.of(context).pop(),
-                child: Text(l10n.cancel),
-              ),
-              const SizedBox(width: 8),
-              FilledButton(
-                key: const Key('quickAdd.submit'),
-                onPressed: _busy ? null : _submit,
-                child: Text(l10n.quickAddButton),
-              ),
-            ],
-          ),
-        ],
+    return TixSheetBody(
+      title: l10n.quickAddTitle,
+      actions: [
+        TixButton.quiet(
+          label: l10n.cancel,
+          onPressed: _busy ? null : () => Navigator.of(context).pop(),
+        ),
+      ],
+      child: Padding(
+        padding: const EdgeInsets.only(top: TixSpace.s1),
+        child: QuickAddField(
+          controller: _line,
+          autofocus: true,
+          busy: _busy,
+          help: l10n.quickAddHelp,
+          error: error == null ? null : errorMessage(l10n, error),
+          fieldKey: const Key('quickAdd.line'),
+          submitKey: const Key('quickAdd.submit'),
+          onSubmit: _submit,
+        ),
       ),
     );
   }

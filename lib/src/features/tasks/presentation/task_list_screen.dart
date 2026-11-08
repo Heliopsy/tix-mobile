@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/clock/clock.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
@@ -26,18 +28,36 @@ class TaskListScreen extends ConsumerWidget {
   final String? selectedRef;
 
   /// The width of the list pane in the two-pane layout.
-  static const listPaneWidth = 380.0;
+  static const listPaneWidth = 420.0;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final provider = projectTasksProvider(projectKey);
+    void add() => showQuickAdd(context, projectKey);
+    final addAction = TixAction(
+      key: const Key('tasks.quickAdd'),
+      label: l10n.newTask,
+      icon: Icons.add,
+      onPressed: add,
+    );
     final list = AsyncBody(
       value: ref.watch(provider),
       onRetry: () => ref.invalidate(provider),
       data: (paged) => PagedListView(
         paged: paged,
-        empty: l10n.tasksEmpty,
+        padding: EdgeInsets.only(bottom: context.isCompact ? 96 : 0),
+        empty: EmptyState(
+          icon: Icons.task_alt,
+          title: l10n.tasksEmpty,
+          body: l10n.tasksEmptyBody,
+          action: TixAction(
+            key: const Key('tasks.empty.add'),
+            label: l10n.newTask,
+            icon: Icons.add,
+            onPressed: add,
+          ),
+        ),
         onRefresh: () => ref.refresh(provider.future),
         onLoadMore: () => ref.read(provider.notifier).loadMore(),
         itemBuilder: (context, task) => TaskTile(
@@ -48,36 +68,55 @@ class TaskListScreen extends ConsumerWidget {
       ),
     );
     final selected = selectedRef;
-    return Scaffold(
-      appBar: AppBar(title: Text(projectKey)),
-      floatingActionButton: FloatingActionButton(
-        key: const Key('tasks.quickAdd'),
-        tooltip: l10n.quickAddTitle,
-        onPressed: () => showQuickAdd(context, projectKey),
-        child: const Icon(Icons.add),
+    return CommandScope(
+      commands: [
+        TixCommand(
+          id: 'tasks.new',
+          label: l10n.newTask,
+          group: l10n.commandsTasks,
+          icon: Icons.add,
+          shortcut: const SingleActivator(LogicalKeyboardKey.keyN),
+          run: add,
+        ),
+        TixCommand(
+          id: 'tasks.refresh',
+          label: l10n.refresh,
+          group: l10n.commandsTasks,
+          icon: Icons.refresh,
+          shortcut: const SingleActivator(LogicalKeyboardKey.keyR),
+          run: () => ref.invalidate(provider),
+        ),
+      ],
+      child: TixPage(
+        title: projectKey,
+        titleWidget: Text(projectKey),
+        primaryAction: addAction,
+        body: context.isTwoPane
+            ? Row(
+                children: [
+                  SizedBox(width: listPaneWidth, child: list),
+                  const VerticalDivider(width: 1),
+                  Expanded(
+                    child: selected == null
+                        ? EmptyState(
+                            icon: Icons.touch_app_outlined,
+                            title: l10n.noTaskSelected,
+                          )
+                        : TaskDetailView(
+                            key: ValueKey(selected),
+                            taskRef: selected,
+                          ),
+                  ),
+                ],
+              )
+            : list,
       ),
-      body: context.isTwoPane
-          ? Row(
-              children: [
-                SizedBox(width: listPaneWidth, child: list),
-                const VerticalDivider(width: 1),
-                Expanded(
-                  child: selected == null
-                      ? Center(child: Text(l10n.noTaskSelected))
-                      : TaskDetailView(
-                          key: ValueKey(selected),
-                          taskRef: selected,
-                        ),
-                ),
-              ],
-            )
-          : list,
     );
   }
 }
 
-/// One task in a list.
-class TaskTile extends StatelessWidget {
+/// One task in a list: a [TaskRow] with its assignee's handle looked up.
+class TaskTile extends ConsumerWidget {
   /// Draws [task].
   const TaskTile({
     required this.task,
@@ -96,63 +135,16 @@ class TaskTile extends StatelessWidget {
   final bool selected;
 
   @override
-  Widget build(BuildContext context) {
-    final locale = Localizations.localeOf(context).toLanguageTag();
-    final due = task.dueAt;
-    return ListTile(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final handle = task.assigneeActorId.isEmpty
+        ? ''
+        : ref.watch(actorProvider(task.assigneeActorId)).value?.handle ?? '';
+    return TaskRow(
+      task: task,
       selected: selected,
-      leading: PriorityIcon(priority: task.priority),
-      title: Text(task.title, maxLines: 2, overflow: TextOverflow.ellipsis),
-      subtitle: Text(
-        [
-          task.ref,
-          task.status,
-          if (due != null) DateFormat.MMMd(locale).format(due.toLocal()),
-        ].join(' · '),
-      ),
       onTap: onTap,
+      now: ref.watch(clockProvider)(),
+      facts: TaskFacts(assigneeHandle: handle),
     );
-  }
-}
-
-/// A task's priority as an icon: arrows for high and low, nothing for normal.
-class PriorityIcon extends StatelessWidget {
-  /// Draws [priority], 1 the highest and 5 the lowest.
-  const PriorityIcon({required this.priority, super.key});
-
-  /// The priority.
-  final int priority;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final label = context.l10n.priorityLabel('$priority');
-    return switch (priority) {
-      1 => Icon(
-        Icons.keyboard_double_arrow_up,
-        color: scheme.error,
-        semanticLabel: label,
-      ),
-      2 => Icon(
-        Icons.keyboard_arrow_up,
-        color: scheme.error,
-        semanticLabel: label,
-      ),
-      4 => Icon(
-        Icons.keyboard_arrow_down,
-        color: scheme.outline,
-        semanticLabel: label,
-      ),
-      5 => Icon(
-        Icons.keyboard_double_arrow_down,
-        color: scheme.outline,
-        semanticLabel: label,
-      ),
-      _ => Icon(
-        Icons.remove,
-        color: scheme.outlineVariant,
-        semanticLabel: label,
-      ),
-    };
   }
 }

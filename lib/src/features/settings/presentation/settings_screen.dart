@@ -3,10 +3,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
-import 'package:tix_mobile/src/core/widgets/confirm.dart';
 import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
 
@@ -21,97 +21,140 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
     final themeMode = ref.watch(themeModeSettingProvider);
     final locale = ref.watch(localeSettingProvider);
     final session = ref.watch(sessionControllerProvider).value;
     final count = ref.watch(contextDirectoryProvider).groups.length;
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.settingsTitle)),
+    Widget padded(Widget child) => Padding(
+      padding: const EdgeInsets.all(TixSpace.s3),
+      child: Align(alignment: AlignmentDirectional.centerStart, child: child),
+    );
+    return TixPage(
+      title: l10n.settingsTitle,
       body: ListView(
+        padding: const EdgeInsets.only(bottom: TixSpace.s6),
         children: [
-          _SectionHeading(l10n.themeLabel),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: SegmentedButton<ThemeMode>(
-              key: const Key('settings.theme'),
-              segments: [
-                ButtonSegment(
-                  value: ThemeMode.system,
-                  label: Text(l10n.themeSystem),
-                  icon: const Icon(Icons.brightness_auto),
+          TixSection(
+            title: l10n.appearanceLabel,
+            children: [
+              _Labelled(
+                label: l10n.themeLabel,
+                child: SegmentedButton<ThemeMode>(
+                  key: const Key('settings.theme'),
+                  segments: [
+                    ButtonSegment(
+                      value: ThemeMode.system,
+                      label: Text(l10n.themeSystem),
+                      icon: const Icon(Icons.brightness_auto),
+                    ),
+                    ButtonSegment(
+                      value: ThemeMode.light,
+                      label: Text(l10n.themeLight),
+                      icon: const Icon(Icons.light_mode),
+                    ),
+                    ButtonSegment(
+                      value: ThemeMode.dark,
+                      label: Text(l10n.themeDark),
+                      icon: const Icon(Icons.dark_mode),
+                    ),
+                  ],
+                  showSelectedIcon: false,
+                  selected: {themeMode},
+                  onSelectionChanged: (s) =>
+                      ref.read(themeModeSettingProvider.notifier).set(s.first),
                 ),
-                ButtonSegment(
-                  value: ThemeMode.light,
-                  label: Text(l10n.themeLight),
-                  icon: const Icon(Icons.light_mode),
+              ),
+              _Labelled(
+                label: l10n.languageLabel,
+                child: SegmentedButton<String>(
+                  key: const Key('settings.language'),
+                  segments: [
+                    ButtonSegment(value: '', label: Text(l10n.languageSystem)),
+                    for (final MapEntry(:key, :value) in languageNames.entries)
+                      ButtonSegment(value: key, label: Text(value)),
+                  ],
+                  showSelectedIcon: false,
+                  selected: {locale?.languageCode ?? ''},
+                  onSelectionChanged: (s) => ref
+                      .read(localeSettingProvider.notifier)
+                      .set(s.first.isEmpty ? null : Locale(s.first)),
                 ),
-                ButtonSegment(
-                  value: ThemeMode.dark,
-                  label: Text(l10n.themeDark),
-                  icon: const Icon(Icons.dark_mode),
+              ),
+            ],
+          ),
+          TixSection(
+            title: l10n.instancesTitle,
+            trailing: TixButton.primary(
+              key: const Key('settings.add'),
+              label: l10n.addInstance,
+              icon: Icons.add,
+              size: TixButtonSize.small,
+              onPressed: () => context.go(Routes.addServer),
+            ),
+            children: [
+              ListTile(
+                key: const Key('settings.instances'),
+                leading: const Icon(Icons.dns_outlined),
+                title: Text(l10n.manageInstances),
+                subtitle: Text(
+                  [
+                    l10n.instanceCount(count),
+                    if (session != null) session.instance.name,
+                    if (session != null &&
+                        session.connection.tenantKey.isNotEmpty)
+                      session.connection.tenantLabel,
+                  ].join(' · '),
                 ),
-              ],
-              selected: {themeMode},
-              onSelectionChanged: (s) =>
-                  ref.read(themeModeSettingProvider.notifier).set(s.first),
-            ),
-          ),
-          _SectionHeading(l10n.languageLabel),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: SegmentedButton<String>(
-              key: const Key('settings.language'),
-              segments: [
-                ButtonSegment(value: '', label: Text(l10n.languageSystem)),
-                for (final MapEntry(:key, :value) in languageNames.entries)
-                  ButtonSegment(value: key, label: Text(value)),
-              ],
-              selected: {locale?.languageCode ?? ''},
-              onSelectionChanged: (s) => ref
-                  .read(localeSettingProvider.notifier)
-                  .set(s.first.isEmpty ? null : Locale(s.first)),
-            ),
-          ),
-          _SectionHeading(l10n.instancesTitle),
-          ListTile(
-            key: const Key('settings.instances'),
-            leading: const Icon(Icons.dns_outlined),
-            title: Text(l10n.manageInstances),
-            subtitle: Text(
-              [
-                l10n.instanceCount(count),
-                if (session != null) session.instance.name,
-                if (session != null && session.connection.tenantKey.isNotEmpty)
-                  session.connection.tenantLabel,
-              ].join(' · '),
-            ),
-            onTap: () => context.go(Routes.instances),
-          ),
-          ListTile(
-            key: const Key('settings.add'),
-            leading: const Icon(Icons.add),
-            title: Text(l10n.addInstance),
-            onTap: () => context.go(Routes.addServer),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.go(Routes.instances),
+              ),
+            ],
           ),
           if (session != null)
-            ListTile(
-              key: const Key('settings.signOut'),
-              leading: Icon(Icons.logout, color: theme.colorScheme.error),
-              title: Text(
-                l10n.signOut,
-                style: TextStyle(color: theme.colorScheme.error),
-              ),
-              subtitle: session.connection.handle.isEmpty
-                  ? null
-                  : Text(l10n.signedInAs('@${session.connection.handle}')),
-              onTap: () => _confirmSignOut(context, ref, session.instance.name),
+            TixSection(
+              title: l10n.accountLabel,
+              children: [
+                padded(
+                  Wrap(
+                    spacing: TixSpace.s3,
+                    runSpacing: TixSpace.s2,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      if (session.connection.handle.isNotEmpty)
+                        Text(l10n.signedInAs('@${session.connection.handle}')),
+                      TixButton.danger(
+                        key: const Key('settings.signOut'),
+                        label: l10n.signOut,
+                        icon: Icons.logout,
+                        onPressed: () => _confirmSignOut(
+                          context,
+                          ref,
+                          session.instance.name,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          AboutListTile(
-            key: const Key('settings.about'),
-            icon: const TixMark(size: 24),
-            applicationName: l10n.appTitle,
-            applicationIcon: const TixMark(size: 48),
+          TixSection(
+            title: l10n.aboutTitle,
+            children: [
+              AboutListTile(
+                key: const Key('settings.about'),
+                icon: const TixMark(size: 24),
+                applicationName: l10n.appTitle,
+                applicationIcon: const TixMark(size: 48),
+              ),
+              if (Routes.galleryEnabled)
+                ListTile(
+                  key: const Key('settings.gallery'),
+                  leading: const Icon(Icons.widgets_outlined),
+                  title: Text(l10n.galleryTitle),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.push(Routes.gallery),
+                ),
+            ],
           ),
         ],
       ),
@@ -134,22 +177,29 @@ class SettingsScreen extends ConsumerWidget {
   }
 }
 
-class _SectionHeading extends StatelessWidget {
-  const _SectionHeading(this.text);
+class _Labelled extends StatelessWidget {
+  const _Labelled({required this.label, required this.child});
 
-  final String text;
+  final String label;
+  final Widget child;
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
-      child: Text(
-        text,
-        style: theme.textTheme.titleSmall?.copyWith(
-          color: theme.colorScheme.primary,
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.all(TixSpace.s3),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: TixText.xs,
+            fontWeight: FontWeight.w500,
+            color: context.tix.muted,
+          ),
         ),
-      ),
-    );
-  }
+        const SizedBox(height: TixSpace.s2),
+        SingleChildScrollView(scrollDirection: Axis.horizontal, child: child),
+      ],
+    ),
+  );
 }

@@ -3,11 +3,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/files.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
-import 'package:tix_mobile/src/core/widgets/confirm.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
 
@@ -21,21 +21,39 @@ class InstancesScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final directory = ref.watch(contextDirectoryProvider);
     final active = ref.watch(sessionControllerProvider).value?.connection.id;
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.instancesTitle)),
-      floatingActionButton: FloatingActionButton.extended(
+    void add() => context.go(Routes.addServer);
+    return TixPage(
+      title: l10n.instancesTitle,
+      primaryAction: TixAction(
         key: const Key('instances.add'),
-        onPressed: () => context.go(Routes.addServer),
-        icon: const Icon(Icons.add),
-        label: Text(l10n.addInstance),
+        label: l10n.addInstance,
+        icon: Icons.add,
+        onPressed: add,
       ),
       body: directory.groups.isEmpty
-          ? Center(child: Text(l10n.instancesEmpty))
+          ? EmptyState(
+              icon: Icons.dns_outlined,
+              title: l10n.instancesEmpty,
+              body: l10n.instancesEmptyBody,
+            )
           : ListView(
-              padding: const EdgeInsets.fromLTRB(8, 8, 8, 96),
+              padding: const EdgeInsets.fromLTRB(
+                TixSpace.s4,
+                TixSpace.s2,
+                TixSpace.s4,
+                96,
+              ),
               children: [
                 for (final g in directory.groups)
-                  InstanceCard(group: g, activeConnectionId: active),
+                  Align(
+                    alignment: AlignmentDirectional.topStart,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxWidth: TixMeasure.form,
+                      ),
+                      child: InstanceCard(group: g, activeConnectionId: active),
+                    ),
+                  ),
               ],
             ),
     );
@@ -136,12 +154,18 @@ class InstanceCard extends ConsumerWidget {
     final copy = local && !ref.watch(filePickingProvider).opensInPlace;
     return Card(
       key: Key('instances.instance.${instance.id}'),
-      margin: const EdgeInsets.symmetric(vertical: 4),
+      margin: const EdgeInsets.only(bottom: TixSpace.s3),
       child: Column(
         children: [
           ListTile(
-            leading: Icon(local ? Icons.storage : Icons.cloud_outlined),
-            title: Text(instance.name),
+            leading: TixAvatar(
+              label: instance.name,
+              icon: local ? Icons.storage : Icons.cloud_outlined,
+            ),
+            title: Text(
+              instance.name,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
             subtitle: Text(
               copy
                   ? '${l10n.localCopyNote} · ${instance.location}'
@@ -162,7 +186,10 @@ class InstanceCard extends ConsumerWidget {
                   ),
                 PopupMenuItem(
                   value: _InstanceAction.remove,
-                  child: Text(l10n.removeInstance),
+                  child: Text(
+                    l10n.removeInstance,
+                    style: TextStyle(color: context.tix.danger),
+                  ),
                 ),
               ],
             ),
@@ -207,7 +234,10 @@ class InstanceCard extends ConsumerWidget {
                   ],
                   PopupMenuItem(
                     value: _ConnectionAction.remove,
-                    child: Text(l10n.removeConnection),
+                    child: Text(
+                      l10n.removeConnection,
+                      style: TextStyle(color: context.tix.danger),
+                    ),
                   ),
                 ],
               ),
