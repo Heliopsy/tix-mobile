@@ -79,4 +79,18 @@ void main() {
     expect(bg.projectsTitle, 'Проекти');
     expect(bg.priorityLabel('1'), 'Най-висок');
   });
+
+  test('French and German load, and anything else falls back to English', () {
+    const supported = AppLocalizations.supportedLocales;
+    expect(
+      resolveLocale(const [Locale('de', 'AT')], supported),
+      const Locale('de'),
+    );
+    expect(
+      resolveLocale(const [Locale('ja'), Locale('fr', 'CA')], supported),
+      const Locale('fr'),
+    );
+    expect(resolveLocale(const [Locale('ja')], supported), const Locale('en'));
+    expect(resolveLocale(null, supported), const Locale('en'));
+  });
 }

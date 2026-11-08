@@ -12,6 +12,17 @@ extension L10nContext on BuildContext {
   AppLocalizations get l10n => AppLocalizations.of(this);
 }
 
+/// The first of [preferred] the app speaks, by language, or English when it
+/// speaks none of them.
+Locale resolveLocale(List<Locale>? preferred, Iterable<Locale> supported) {
+  for (final p in preferred ?? const <Locale>[]) {
+    for (final s in supported) {
+      if (s.languageCode == p.languageCode) return s;
+    }
+  }
+  return const Locale('en');
+}
+
 /// What to tell a person about [error].
 String errorMessage(AppLocalizations l10n, Object error) {
   if (error is! TixException) return l10n.errorUnknown;

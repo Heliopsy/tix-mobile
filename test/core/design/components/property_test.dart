@@ -68,15 +68,22 @@ void main() {
     expect((value.dy - label.dy).abs(), lessThan(12));
   });
 
-  for (final MapEntry(key: width, value: size) in widths.entries) {
-    testWidgets('$width: at twice the text size the value moves under it', (
-      tester,
-    ) async {
-      await pumpComponent(tester, list(() {}), size: size, textScale: 2);
-      expect(tester.takeException(), isNull);
-      final label = tester.getTopLeft(find.text('Priority'));
-      final value = tester.getTopLeft(find.text('high'));
-      expect(value.dy, greaterThan(label.dy));
-    });
+  for (final locale in textLocales) {
+    for (final MapEntry(key: width, value: size) in widths.entries) {
+      testWidgets('$width, $locale: at twice the text size the value moves '
+          'under it', (tester) async {
+        await pumpComponent(
+          tester,
+          list(() {}),
+          size: size,
+          textScale: 2,
+          locale: locale,
+        );
+        expect(tester.takeException(), isNull);
+        final label = tester.getTopLeft(find.text('Priority'));
+        final value = tester.getTopLeft(find.text('high'));
+        expect(value.dy, greaterThan(label.dy));
+      });
+    }
   }
 }

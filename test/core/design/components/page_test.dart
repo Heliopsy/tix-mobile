@@ -48,12 +48,20 @@ void main() {
     expect(added, 1);
   });
 
-  for (final MapEntry(key: width, value: size) in widths.entries) {
-    testWidgets('$width: the header survives twice the text size', (
-      tester,
-    ) async {
-      await pumpComponent(tester, page(() {}), size: size, textScale: 2);
-      expect(tester.takeException(), isNull);
-    });
+  for (final locale in textLocales) {
+    for (final MapEntry(key: width, value: size) in widths.entries) {
+      testWidgets('$width, $locale: the header survives twice the text size', (
+        tester,
+      ) async {
+        await pumpComponent(
+          tester,
+          page(() {}),
+          size: size,
+          textScale: 2,
+          locale: locale,
+        );
+        expect(tester.takeException(), isNull);
+      });
+    }
   }
 }

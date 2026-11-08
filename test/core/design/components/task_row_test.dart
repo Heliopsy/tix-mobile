@@ -93,20 +93,25 @@ void main() {
     expect(opened, 1);
   });
 
-  for (final MapEntry(key: width, value: size) in widths.entries) {
-    testWidgets('$width: twice the text size still fits', (tester) async {
-      await pumpComponent(
+  for (final locale in textLocales) {
+    for (final MapEntry(key: width, value: size) in widths.entries) {
+      testWidgets('$width, $locale: twice the text size still fits', (
         tester,
-        ListView(
-          children: [
-            TaskRow(task: task, facts: facts, onTap: () {}),
-            TaskCard(task: task, facts: facts, onTap: () {}),
-          ],
-        ),
-        size: size,
-        textScale: 2,
-      );
-      expect(tester.takeException(), isNull);
-    });
+      ) async {
+        await pumpComponent(
+          tester,
+          ListView(
+            children: [
+              TaskRow(task: task, facts: facts, onTap: () {}),
+              TaskCard(task: task, facts: facts, onTap: () {}),
+            ],
+          ),
+          size: size,
+          textScale: 2,
+          locale: locale,
+        );
+        expect(tester.takeException(), isNull);
+      });
+    }
   }
 }

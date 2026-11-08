@@ -11,6 +11,10 @@ import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'app.dart';
 import 'fake_tix.dart';
 
+/// The languages the 200% text tests run in: English, and the two that
+/// run longest.
+const textLocales = [Locale('en'), Locale('de'), Locale('fr')];
+
 /// Pumps [child] in a scaffold under the tix theme at [size], with
 /// [textScale] applied, and returns its container.
 Future<ProviderContainer> pumpComponent(
@@ -20,6 +24,7 @@ Future<ProviderContainer> pumpComponent(
   Brightness brightness = Brightness.light,
   TixAccent accent = TixAccent.standard,
   double textScale = 1,
+  Locale locale = const Locale('en'),
   List<Override> overrides = const [],
 }) async {
   await setSize(tester, size);
@@ -27,7 +32,7 @@ Future<ProviderContainer> pumpComponent(
     overrides: [...fakeOverrides(FakeTix()), ...overrides],
     child: MaterialApp(
       theme: buildTixTheme(brightness, accent: accent),
-      locale: const Locale('en'),
+      locale: locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         ...GlobalMaterialLocalizations.delegates,

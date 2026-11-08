@@ -85,17 +85,22 @@ Intro with [a link](https://example.com) and [a script](javascript:alert(1)).
     ]);
   });
 
-  for (final MapEntry(key: width, value: size) in widths.entries) {
-    testWidgets('$width: survives twice the text size', (tester) async {
-      await pumpComponent(
+  for (final locale in textLocales) {
+    for (final MapEntry(key: width, value: size) in widths.entries) {
+      testWidgets('$width, $locale: survives twice the text size', (
         tester,
-        SingleChildScrollView(
-          child: TixMarkdown(data: body, onToggle: (_, {required done}) {}),
-        ),
-        size: size,
-        textScale: 2,
-      );
-      expect(tester.takeException(), isNull);
-    });
+      ) async {
+        await pumpComponent(
+          tester,
+          SingleChildScrollView(
+            child: TixMarkdown(data: body, onToggle: (_, {required done}) {}),
+          ),
+          size: size,
+          textScale: 2,
+          locale: locale,
+        );
+        expect(tester.takeException(), isNull);
+      });
+    }
   }
 }
