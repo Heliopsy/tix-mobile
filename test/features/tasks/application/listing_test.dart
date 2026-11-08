@@ -2,6 +2,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/cache/cache_store.dart';
 import 'package:tix_mobile/src/data/models/bulk.dart';
@@ -181,6 +182,60 @@ void main() {
     });
     await c.read(taskListingProvider(q).future);
     expect(refs(c, q), contains('infra-1'));
+  });
+
+  group('an Undo the server refuses', () {
+    Task row(ProviderContainer c, TaskQuery q, String ref) => c
+        .read(taskListingProvider(q))
+        .value!
+        .items
+        .firstWhere((t) => t.ref == ref);
+
+    test('stops and shows what the server holds', () async {
+      final (c, q) = await listing(const TaskQuery());
+      final n = c.read(taskListingProvider(q).notifier);
+      final run = await n.bulk(
+        const BulkTaskInput(
+          action: BulkAction.move,
+          refs: ['infra-1', 'infra-2'],
+          to: 'done',
+        ),
+      );
+      server.refuse['infra-2'] = ('precondition_failed', 'no way back');
+      await expectLater(n.undo(run), throwsA(isA<TixException>()));
+      await c.read(taskListingProvider(q).future);
+      expect(row(c, q, 'infra-1').status, 'todo');
+      expect(row(c, q, 'infra-2').status, 'done');
+    });
+
+    test('a failed request reloads the rows', () async {
+      final (c, q) = await listing(const TaskQuery());
+      final n = c.read(taskListingProvider(q).notifier);
+      final run = await n.bulk(
+        const BulkTaskInput(action: BulkAction.star, refs: ['infra-1']),
+      );
+      server.override = FakeResponse(500, envelope('internal', 'down'));
+      await expectLater(n.undo(run), throwsA(isA<TixException>()));
+      server.override = null;
+      await c.read(taskListingProvider(q).future);
+      expect(row(c, q, 'infra-1').starred, isTrue);
+    });
+
+    test('a refused restore reloads what did come back', () async {
+      final (c, q) = await listing(const TaskQuery());
+      final n = c.read(taskListingProvider(q).notifier);
+      final run = await n.bulk(
+        const BulkTaskInput(
+          action: BulkAction.delete,
+          refs: ['infra-1', 'web-1'],
+        ),
+      );
+      server.refuse['web-1'] = ('forbidden', 'not yours');
+      await expectLater(n.undo(run), throwsA(isA<TixException>()));
+      await c.read(taskListingProvider(q).future);
+      expect(refs(c, q), contains('infra-1'));
+      expect(refs(c, q), isNot(contains('web-1')));
+    });
   });
 
   group('undo requests', () {

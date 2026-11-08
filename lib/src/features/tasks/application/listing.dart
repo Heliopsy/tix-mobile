@@ -306,28 +306,36 @@ class TaskListing extends _$TaskListing {
     return BulkRun(request: request, before: before, result: result);
   }
 
-  /// Reverses [run]: the rows go back at once, then the server is asked.
+  /// Reverses [run]: the rows go back at once, then the server is asked,
+  /// one request per previous value. The first failure or refusal stops
+  /// the rest and reloads the listing, so the rows show what the server
+  /// holds rather than an Undo that half happened; the error is rethrown
+  /// for the caller to say why.
   Future<void> undo(BulkRun run) async {
     final requests = undoRequests(run.request, run.before, run.result);
-    if (run.request.action == BulkAction.delete ||
-        run.request.action == BulkAction.copy) {
+    final reload =
+        run.request.action == BulkAction.delete ||
+        run.request.action == BulkAction.copy;
+    if (!reload) {
+      final applied = {
+        for (final o in run.result.outcomes)
+          if (o.applied) o.ref,
+      };
+      apply([
+        for (final e in run.before.entries)
+          if (applied.contains(e.key)) e.value,
+      ]);
+    }
+    try {
       for (final r in requests) {
-        await _repo.bulk(r);
+        final refused = (await _repo.bulk(r)).refusals;
+        if (refused.isNotEmpty) throw refusalError(refused.first);
       }
+    } on Object {
       ref.invalidateSelf();
-      return;
+      rethrow;
     }
-    final applied = {
-      for (final o in run.result.outcomes)
-        if (o.applied) o.ref,
-    };
-    apply([
-      for (final e in run.before.entries)
-        if (applied.contains(e.key)) e.value,
-    ]);
-    for (final r in requests) {
-      await _repo.bulk(r);
-    }
+    if (reload) ref.invalidateSelf();
   }
 
   void _applyLocal(BulkTaskInput request, Map<String, Task> before) {
