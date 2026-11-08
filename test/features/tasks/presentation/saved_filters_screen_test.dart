@@ -6,7 +6,6 @@ import 'package:tix_mobile/src/features/tasks/presentation/saved_filters_screen.
 
 import '../../../helpers/app.dart';
 import '../../../helpers/fake_tix.dart';
-import '../../../helpers/stores.dart';
 
 void main() {
   late FakeTix server;

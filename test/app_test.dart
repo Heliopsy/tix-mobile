@@ -225,7 +225,7 @@ void main() {
     expect(find.byKey(const Key('error.signInAgain')), findsNothing);
   });
 
-  testWidgets('dates follow the reader\'s server preference everywhere', (
+  testWidgets("dates follow the reader's server preference everywhere", (
     tester,
   ) async {
     server
