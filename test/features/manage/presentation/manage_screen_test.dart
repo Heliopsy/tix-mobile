@@ -45,7 +45,8 @@ void main() {
         expect(find.byKey(const Key('manage.group.projects')), findsOneWidget);
         expect(find.byKey(const Key('manage.group.workflows')), findsOneWidget);
         expect(find.byKey(const Key('manage.group.fields')), findsOneWidget);
-        expect(find.byKey(const Key('manage.group.people')), findsNothing);
+        expect(find.byKey(const Key('manage.group.people')), findsOneWidget);
+        expect(find.byKey(const Key('manage.group.server')), findsNothing);
       });
 
       testWidgets('a credential that manages nothing says so', (tester) async {
@@ -108,7 +109,7 @@ void main() {
       entries: [
         ...manageSections,
         ManageEntry(
-          id: 'people.users',
+          id: 'people.custom',
           group: ManageGroup.people,
           icon: Icons.group_outlined,
           title: (_) => 'Users',
@@ -127,7 +128,7 @@ void main() {
         ),
       ],
     );
-    expect(find.byKey(const Key('manage.people.users')), findsOneWidget);
+    expect(find.byKey(const Key('manage.people.custom')), findsOneWidget);
     expect(find.byKey(const Key('manage.server.global')), findsNothing);
     final people = tester.getTopLeft(
       find.byKey(const Key('manage.group.people')),
