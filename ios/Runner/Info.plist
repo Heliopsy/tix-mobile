@@ -73,6 +73,29 @@
 		</array>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleURLName</key>
+				<string>red.tix.tixMobile.widgets</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>tixwidget</string>
+				</array>
+			</dict>
+		</array>
+		<key>FlutterDeepLinkingEnabled</key>
+		<false/>
+		<key>BGTaskSchedulerPermittedIdentifiers</key>
+		<array>
+			<string>red.tix.tixMobile.widgets.refresh</string>
+		</array>
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>fetch</string>
+		</array>
+		<key>TixAppGroup</key>
+		<string>$(TIX_APP_GROUP)</string>
 		<key>NSCameraUsageDescription</key>
 		<string>Take a photo to attach to a task.</string>
 		<key>NSPhotoLibraryUsageDescription</key>

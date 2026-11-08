@@ -3,6 +3,11 @@ import FlutterMacOS
 
 @main
 class AppDelegate: FlutterAppDelegate {
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    addApplicationLifecycleDelegate(WidgetChannel.shared)
+  }
+
   override func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
     return true
   }

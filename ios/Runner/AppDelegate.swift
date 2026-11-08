@@ -14,6 +14,12 @@ import UserNotifications
     // Lets flutter_local_notifications show inbox notifications while the
     // app is in the foreground and hear taps on them.
     UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+    WidgetRefresh.register()
+    NotificationCenter.default.addObserver(
+      forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main
+    ) { _ in
+      WidgetRefresh.schedule()
+    }
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 

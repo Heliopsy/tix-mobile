@@ -12,6 +12,7 @@ class MainFlutterWindow: NSWindow {
 
     RegisterGeneratedPlugins(registry: flutterViewController)
     localAccess = LocalAccess(messenger: flutterViewController.engine.binaryMessenger)
+    WidgetChannel.shared.attach(to: flutterViewController.engine.binaryMessenger)
 
     super.awakeFromNib()
   }
