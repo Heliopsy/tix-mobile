@@ -74,6 +74,17 @@ class ContextSwitcherButton extends ConsumerWidget {
     final title = contextTitle(session);
     final handle = session.connection.handle;
     final avatar = _ContextAvatar(session.instance);
+    final badged = Stack(
+      clipBehavior: Clip.none,
+      children: [
+        avatar,
+        const Positioned(
+          right: -2,
+          bottom: -2,
+          child: LiveStatusIndicator(compact: true),
+        ),
+      ],
+    );
     if (rail && !extended) {
       return Tooltip(
         message: title,
@@ -87,17 +98,7 @@ class ContextSwitcherButton extends ConsumerWidget {
               width: 64,
               child: Column(
                 children: [
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      avatar,
-                      const Positioned(
-                        right: -2,
-                        bottom: -2,
-                        child: LiveStatusIndicator(compact: true),
-                      ),
-                    ],
-                  ),
+                  badged,
                   const SizedBox(height: 4),
                   Text(
                     session.connection.tenantLabel.isEmpty
@@ -132,7 +133,7 @@ class ContextSwitcherButton extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 children: [
-                  avatar,
+                  if (rail) badged else avatar,
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -156,7 +157,7 @@ class ContextSwitcherButton extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  const LiveStatusIndicator(),
+                  if (!rail) const Flexible(child: LiveStatusIndicator()),
                   const Icon(Icons.unfold_more),
                 ],
               ),
