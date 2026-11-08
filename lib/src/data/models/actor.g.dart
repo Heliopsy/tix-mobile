@@ -17,6 +17,12 @@ _Actor _$ActorFromJson(Map<String, dynamic> json) => _Actor(
   tenantId: json['tenant_id'] as String? ?? '',
   tenantKey: json['tenant_key'] as String? ?? '',
   tenantName: json['tenant_name'] as String? ?? '',
+  accountId: json['account_id'] as String? ?? '',
+  memberships:
+      (json['memberships'] as List<dynamic>?)
+          ?.map((e) => Membership.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const <Membership>[],
 );
 
 Map<String, dynamic> _$ActorToJson(_Actor instance) => <String, dynamic>{
@@ -28,4 +34,6 @@ Map<String, dynamic> _$ActorToJson(_Actor instance) => <String, dynamic>{
   'tenant_id': instance.tenantId,
   'tenant_key': instance.tenantKey,
   'tenant_name': instance.tenantName,
+  'account_id': instance.accountId,
+  'memberships': instance.memberships.map((e) => e.toJson()).toList(),
 };

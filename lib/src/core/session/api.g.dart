@@ -54,4 +54,4 @@ final class TixApiFactoryProvider
   }
 }
 
-String _$tixApiFactoryHash() => r'616888be52415edcf6ebcd26edc909a5e68e5e4b';
+String _$tixApiFactoryHash() => r'2839c381f60cd9a75ca07fe4ab4ea9be00ee096c';

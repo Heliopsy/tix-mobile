@@ -1,8 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/router/routes.dart';
+import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/data/models/connection.dart';
 
 /// Draws [value]: a spinner while it first loads, an [ErrorView] with a retry
 /// button when it fails, and [data] otherwise.
@@ -33,7 +38,7 @@ class AsyncBody<T> extends StatelessWidget {
 }
 
 /// A failure, explained, with a way to try again.
-class ErrorView extends StatelessWidget {
+class ErrorView extends ConsumerWidget {
   /// Explains [error], retrying with [onRetry].
   const ErrorView({required this.error, required this.onRetry, super.key});
 
@@ -44,8 +49,13 @@ class ErrorView extends StatelessWidget {
   final VoidCallback onRetry;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final connection = ref.watch(sessionControllerProvider).value?.connection;
+    final reconnect =
+        error is TixException &&
+        (error as TixException).kind == TixErrorKind.unauthenticated &&
+        connection?.kind == ConnectionKind.signIn;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -61,6 +71,14 @@ class ErrorView extends StatelessWidget {
             Text(errorMessage(l10n, error), textAlign: TextAlign.center),
             const SizedBox(height: 16),
             FilledButton.tonal(onPressed: onRetry, child: Text(l10n.retry)),
+            if (reconnect) ...[
+              const SizedBox(height: 8),
+              TextButton(
+                key: const Key('error.signInAgain'),
+                onPressed: () => context.go(Routes.reconnect(connection!.id)),
+                child: Text(l10n.signInAgain),
+              ),
+            ],
           ],
         ),
       ),

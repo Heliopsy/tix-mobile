@@ -18,10 +18,11 @@ class AppLocalizationsBg extends AppLocalizations {
   String get connectTitle => 'Свързване с tix';
 
   @override
-  String get connectAddTitle => 'Добавяне на сървър';
+  String get connectAddTitle => 'Добавяне на инстанция';
 
   @override
-  String get connectIntro => 'Влезте с адреса на вашия tix сървър и API токен.';
+  String get connectIntro =>
+      'Свържете се с tix сървър чрез API токен или с вход, или отворете tix база данни на това устройство.';
 
   @override
   String get serverUrlLabel => 'Адрес на сървъра';
@@ -40,8 +41,7 @@ class AppLocalizationsBg extends AppLocalizations {
   String get contextNameLabel => 'Име (по избор)';
 
   @override
-  String get contextNameHelp =>
-      'Показва се, когато превключвате между сървъри.';
+  String get contextNameHelp => 'Показва се в превключвателя.';
 
   @override
   String get connectButton => 'Свързване';
@@ -144,17 +144,11 @@ class AppLocalizationsBg extends AppLocalizations {
   String get languageSystem => 'Система';
 
   @override
-  String get serversLabel => 'Сървъри';
-
-  @override
-  String get addServer => 'Добавяне на сървър';
-
-  @override
   String get signOut => 'Изход';
 
   @override
   String signOutBody(String server) {
-    return 'Токенът за $server ще бъде забравен на това устройство.';
+    return 'Тази връзка към $server ще бъде забравена на това устройство.';
   }
 
   @override
@@ -175,7 +169,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get errorUnauthenticated =>
-      'Токенът не беше приет. Проверете го или създайте нов.';
+      'Сървърът не прие тази връзка. Проверете токена или влезте отново.';
 
   @override
   String get errorForbidden => 'Този токен няма право на това.';
@@ -219,4 +213,211 @@ class AppLocalizationsBg extends AppLocalizations {
   String errorRequestId(String id) {
     return 'Заявка $id.';
   }
+
+  @override
+  String get instanceRemote => 'Сървър';
+
+  @override
+  String get instanceLocal => 'Това устройство';
+
+  @override
+  String get localUnavailableNote =>
+      'Базите данни на това устройство изискват вграден в приложението tix, който още не е в тази версия.';
+
+  @override
+  String get methodToken => 'Токен';
+
+  @override
+  String get methodSignIn => 'Вход';
+
+  @override
+  String get emailLabel => 'Имейл';
+
+  @override
+  String get passwordLabel => 'Парола';
+
+  @override
+  String get signInHelp =>
+      'Сесиите траят около 12 часа. Използвайте токен за устройство, което трябва да остане свързано.';
+
+  @override
+  String get signInButton => 'Вход';
+
+  @override
+  String get localIntro =>
+      'Създайте нова tix база данни или отворете вече съществуваща.';
+
+  @override
+  String get dbNameLabel => 'Име на базата данни';
+
+  @override
+  String get dbNameHelp => 'Създава се в папката с документи на приложението.';
+
+  @override
+  String get localNewFile => 'Нова база данни…';
+
+  @override
+  String get localCreate => 'Създаване на база данни';
+
+  @override
+  String get localOpenFile => 'Отваряне на файл с база данни…';
+
+  @override
+  String get localListTenants => 'Показване на тенантите';
+
+  @override
+  String get codeIntro =>
+      'Този акаунт има втори фактор. Въведете кода от приложението за удостоверяване.';
+
+  @override
+  String get codeLabel => 'Код';
+
+  @override
+  String get codeHelp =>
+      'Шест цифри или един от кодовете ви за възстановяване.';
+
+  @override
+  String get verifyButton => 'Потвърждаване';
+
+  @override
+  String get chooseTenantIntro =>
+      'Тук членувате в повече от един тенант. Кой да отваря тази връзка?';
+
+  @override
+  String get pinLabel => 'Закачане за този тенант';
+
+  @override
+  String get pinOnHelp =>
+      'Връзката остава в този тенант. Добавете друга връзка за друг тенант.';
+
+  @override
+  String get pinOffHelp =>
+      'Превключвайте между тенантите си от превключвателя.';
+
+  @override
+  String get openButton => 'Отваряне';
+
+  @override
+  String get localTenantsIntro => 'Отворете тенант от тази база данни.';
+
+  @override
+  String get newTenantTitle => 'Нов тенант';
+
+  @override
+  String get tenantKeyLabel => 'Ключ';
+
+  @override
+  String get tenantNameLabel => 'Име';
+
+  @override
+  String get createTenantButton => 'Създаване и отваряне';
+
+  @override
+  String servedAt(String host) {
+    return 'Обслужва се на $host';
+  }
+
+  @override
+  String get addAsInstance => 'Добавяне';
+
+  @override
+  String get instancesTitle => 'Инстанции';
+
+  @override
+  String get addInstance => 'Добавяне на инстанция';
+
+  @override
+  String get instancesEmpty => 'Още няма инстанции.';
+
+  @override
+  String get removeInstance => 'Премахване на инстанцията';
+
+  @override
+  String removeInstanceBody(String name) {
+    return '$name и всички връзки към нея ще бъдат забравени на това устройство. На сървъра нищо не се променя.';
+  }
+
+  @override
+  String get remove => 'Премахване';
+
+  @override
+  String get removeConnection => 'Премахване на връзката';
+
+  @override
+  String removeConnectionBody(String name) {
+    return '$name ще бъде забравена на това устройство.';
+  }
+
+  @override
+  String get openTenant => 'Отваряне на тенант';
+
+  @override
+  String get addConnection => 'Добавяне на връзка';
+
+  @override
+  String get useConnection => 'Използване';
+
+  @override
+  String get makeSwitchable => 'Позволяване на превключване';
+
+  @override
+  String get pin => 'Закачане за текущия тенант';
+
+  @override
+  String get signInAgain => 'Нов вход';
+
+  @override
+  String get switchable => 'С превключване';
+
+  @override
+  String get pinned => 'Закачена';
+
+  @override
+  String get switchContext => 'Смяна на инстанция или тенант';
+
+  @override
+  String get recentContexts => 'Скорошни';
+
+  @override
+  String get manageInstances => 'Управление на инстанциите';
+
+  @override
+  String instanceCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count инстанции',
+      one: '1 инстанция',
+      zero: 'Няма инстанции',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get errorBadCredentials => 'Този имейл и парола не бяха приети.';
+
+  @override
+  String get errorEmailRequired => 'Въведете имейла си.';
+
+  @override
+  String get errorPasswordRequired => 'Въведете паролата си.';
+
+  @override
+  String get errorCodeRequired =>
+      'Въведете кода от приложението за удостоверяване.';
+
+  @override
+  String get errorSecondFactorSetup =>
+      'Този акаунт трябва първо да настрои втори фактор. Влезте веднъж през браузъра, за да го направите.';
+
+  @override
+  String get errorPasswordChange =>
+      'Този акаунт трябва първо да избере нова парола. Влезте веднъж през браузъра, за да го направите.';
+
+  @override
+  String get errorTenantRequired => 'Въведете ключ за тенанта.';
+
+  @override
+  String get errorEngineUnavailable =>
+      'Базите данни на това устройство още не са налични в тази версия.';
 }

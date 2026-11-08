@@ -6,13 +6,14 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/widgets/confirm.dart';
 import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
 
 /// Language names as their own readers write them, as tix's web app does.
 const languageNames = {'en': 'English', 'bg': 'Български'};
 
-/// Theme, language and the saved servers.
+/// Theme, language and the saved instances.
 class SettingsScreen extends ConsumerWidget {
   /// Creates the screen.
   const SettingsScreen({super.key});
@@ -24,7 +25,7 @@ class SettingsScreen extends ConsumerWidget {
     final themeMode = ref.watch(themeModeSettingProvider);
     final locale = ref.watch(localeSettingProvider);
     final session = ref.watch(sessionControllerProvider).value;
-    final contexts = ref.watch(savedContextsProvider);
+    final count = ref.watch(contextDirectoryProvider).groups.length;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: ListView(
@@ -72,29 +73,25 @@ class SettingsScreen extends ConsumerWidget {
                   .set(s.first.isEmpty ? null : Locale(s.first)),
             ),
           ),
-          _SectionHeading(l10n.serversLabel),
-          for (final c in contexts)
-            ListTile(
-              key: Key('settings.server.${c.id}'),
-              leading: Icon(
-                c.id == session?.context.id
-                    ? Icons.check_circle
-                    : Icons.dns_outlined,
-              ),
-              title: Text(c.name),
-              subtitle: Text(
-                c.handle.isEmpty ? c.baseUrl : '@${c.handle} · ${c.baseUrl}',
-              ),
-              selected: c.id == session?.context.id,
-              onTap: c.id == session?.context.id
-                  ? null
-                  : () => ref
-                        .read(sessionControllerProvider.notifier)
-                        .switchTo(c.id),
-            ),
+          _SectionHeading(l10n.instancesTitle),
           ListTile(
+            key: const Key('settings.instances'),
+            leading: const Icon(Icons.dns_outlined),
+            title: Text(l10n.manageInstances),
+            subtitle: Text(
+              [
+                l10n.instanceCount(count),
+                if (session != null) session.instance.name,
+                if (session != null && session.connection.tenantKey.isNotEmpty)
+                  session.connection.tenantLabel,
+              ].join(' · '),
+            ),
+            onTap: () => context.go(Routes.instances),
+          ),
+          ListTile(
+            key: const Key('settings.add'),
             leading: const Icon(Icons.add),
-            title: Text(l10n.addServer),
+            title: Text(l10n.addInstance),
             onTap: () => context.go(Routes.addServer),
           ),
           if (session != null)
@@ -105,10 +102,10 @@ class SettingsScreen extends ConsumerWidget {
                 l10n.signOut,
                 style: TextStyle(color: theme.colorScheme.error),
               ),
-              subtitle: session.context.handle.isEmpty
+              subtitle: session.connection.handle.isEmpty
                   ? null
-                  : Text(l10n.signedInAs('@${session.context.handle}')),
-              onTap: () => _confirmSignOut(context, ref, session.context.name),
+                  : Text(l10n.signedInAs('@${session.connection.handle}')),
+              onTap: () => _confirmSignOut(context, ref, session.instance.name),
             ),
           AboutListTile(
             key: const Key('settings.about'),
@@ -127,31 +124,13 @@ class SettingsScreen extends ConsumerWidget {
     String server,
   ) async {
     final l10n = context.l10n;
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.signOut),
-        content: Text(l10n.signOutBody(server)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(l10n.cancel),
-          ),
-          FilledButton(
-            key: const Key('settings.signOut.confirm'),
-            style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
-              foregroundColor: Theme.of(context).colorScheme.onError,
-            ),
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(l10n.signOut),
-          ),
-        ],
-      ),
+    final ok = await confirmDestructive(
+      context,
+      title: l10n.signOut,
+      body: l10n.signOutBody(server),
+      action: l10n.signOut,
     );
-    if (ok ?? false) {
-      await ref.read(sessionControllerProvider.notifier).signOut();
-    }
+    if (ok) await ref.read(sessionControllerProvider.notifier).signOut();
   }
 }
 

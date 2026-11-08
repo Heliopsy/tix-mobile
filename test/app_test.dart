@@ -41,6 +41,8 @@ void main() {
     expect(find.byType(NavigationBar), findsNothing);
     await tester.enterText(find.byKey(const Key('connect.url')), 'tix.example');
     await tester.enterText(find.byKey(const Key('connect.token')), 'tok');
+    await tester.ensureVisible(find.byKey(const Key('connect.submit')));
+    await tester.pump();
     await tester.tap(find.byKey(const Key('connect.submit')));
     await tester.pumpAndSettle();
     expect(find.text('Infrastructure'), findsOneWidget);
@@ -109,7 +111,7 @@ void main() {
     expect(find.text('Настройки'), findsWidgets);
     await tester.tap(find.byKey(const Key('settings.signOut')));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('settings.signOut.confirm')));
+    await tester.tap(find.byKey(const Key('confirm.ok')));
     await tester.pumpAndSettle();
     expect(find.text('Свързване с tix'), findsOneWidget);
     expect(stores.secrets.values, isEmpty);
@@ -138,5 +140,73 @@ void main() {
     await tester.tap(find.text('Projects').last);
     await tester.pumpAndSettle();
     expect(find.text('Infrastructure'), findsOneWidget);
+  });
+
+  testWidgets('the switcher sits above the bar and atop the rail', (
+    tester,
+  ) async {
+    final stores = signedInStores();
+    await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
+    final open = find.byKey(const Key('switcher.open'));
+    expect(open, findsOneWidget);
+    expect(
+      tester.getBottomLeft(open).dy,
+      lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
+    );
+    expect(find.text('Work › Default'), findsOneWidget);
+  });
+
+  testWidgets('switching tenant from the switcher reloads the projects', (
+    tester,
+  ) async {
+    server
+      ..tenants['acme'] = (name: 'Acme', host: '')
+      ..tenantProjects['acme'] = [
+        {'id': 'p9', 'key': 'ops', 'name': 'Operations'},
+      ];
+    final stores = signInStores(server, tenants: ['default', 'acme']);
+    await pumpApp(
+      tester,
+      size: desktop,
+      settings: stores.settings,
+      secrets: stores.secrets,
+    );
+    expect(
+      find.descendant(
+        of: find.byType(NavigationRail),
+        matching: find.byKey(const Key('switcher.open')),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Infrastructure'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('switcher.open')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('switcher.entry.s1.acme')));
+    await tester.pumpAndSettle();
+    expect(find.text('Operations'), findsOneWidget);
+    expect(find.text('Infrastructure'), findsNothing);
+  });
+
+  testWidgets('an expired session offers to sign in again', (tester) async {
+    final stores = signInStores(server);
+    server.sessions.clear();
+    await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
+    await tester.tap(find.byKey(const Key('error.signInAgain')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('connect.password')), findsOneWidget);
+    await tester.enterText(find.byKey(const Key('connect.password')), 'pw');
+    await tester.ensureVisible(find.byKey(const Key('connect.submit')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('connect.submit')));
+    await tester.pumpAndSettle();
+    expect(find.text('Infrastructure'), findsOneWidget);
+    expect(stores.secrets.values.keys, ['session.s1']);
+  });
+
+  testWidgets('a token refused offers no sign-in', (tester) async {
+    final stores = signedInStores(token: 'revoked');
+    await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
+    expect(find.textContaining('did not accept'), findsOneWidget);
+    expect(find.byKey(const Key('error.signInAgain')), findsNothing);
   });
 }

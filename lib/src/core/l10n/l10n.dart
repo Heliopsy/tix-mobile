@@ -35,6 +35,14 @@ String errorMessage(AppLocalizations l10n, Object error) {
     TixErrorKind.notTix => l10n.errorNotTix,
     TixErrorKind.badUrl => l10n.errorBadUrl,
     TixErrorKind.tokenRequired => l10n.errorTokenRequired,
+    TixErrorKind.badCredentials => l10n.errorBadCredentials,
+    TixErrorKind.emailRequired => l10n.errorEmailRequired,
+    TixErrorKind.passwordRequired => l10n.errorPasswordRequired,
+    TixErrorKind.codeRequired => l10n.errorCodeRequired,
+    TixErrorKind.secondFactorSetup => l10n.errorSecondFactorSetup,
+    TixErrorKind.passwordChange => l10n.errorPasswordChange,
+    TixErrorKind.tenantRequired => l10n.errorTenantRequired,
+    TixErrorKind.engineUnavailable => l10n.errorEngineUnavailable,
     TixErrorKind.unknown =>
       message.isEmpty ? l10n.errorUnknown : '${l10n.errorUnknown} $message',
   };

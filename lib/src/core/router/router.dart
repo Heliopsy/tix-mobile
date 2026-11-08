@@ -3,9 +3,11 @@
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/features/connect/presentation/connect_screen.dart';
+import 'package:tix_mobile/src/features/instances/presentation/instances_screen.dart';
 import 'package:tix_mobile/src/features/projects/presentation/projects_screen.dart';
 import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';
 import 'package:tix_mobile/src/features/shell/presentation/home_shell.dart';
@@ -13,32 +15,9 @@ import 'package:tix_mobile/src/features/shell/presentation/splash_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_list_screen.dart';
 
+export 'package:tix_mobile/src/core/router/routes.dart';
+
 part 'router.g.dart';
-
-/// App locations.
-abstract final class Routes {
-  /// Shown while the saved session loads.
-  static const splash = '/';
-
-  /// Sign in to a server.
-  static const connect = '/connect';
-
-  /// Sign in to one more server while signed in to another.
-  static const addServer = '/connect?add=1';
-
-  /// Every project.
-  static const projects = '/projects';
-
-  /// Theme, language and servers.
-  static const settings = '/settings';
-
-  /// The tasks of the project [key].
-  static String project(String key) => '/projects/${Uri.encodeComponent(key)}';
-
-  /// The task [ref] in the project [key].
-  static String task(String key, String ref) =>
-      '${project(key)}/tasks/${Uri.encodeComponent(ref)}';
-}
 
 /// Where [uri] should lead instead, given [session], or null to stay.
 String? redirectFor(AsyncValue<Session?> session, Uri uri) {
@@ -49,7 +28,7 @@ String? redirectFor(AsyncValue<Session?> session, Uri uri) {
   if (session.value == null) {
     return path == Routes.connect ? null : Routes.connect;
   }
-  final adding = uri.queryParameters.containsKey('add');
+  final adding = uri.queryParameters.keys.any(Routes.connectParams.contains);
   if (path == Routes.splash || (path == Routes.connect && !adding)) {
     return Routes.projects;
   }
@@ -76,8 +55,17 @@ GoRouter router(Ref ref) {
       GoRoute(path: Routes.splash, builder: (_, _) => const SplashScreen()),
       GoRoute(
         path: Routes.connect,
-        builder: (_, state) =>
-            ConnectScreen(adding: state.uri.queryParameters.containsKey('add')),
+        builder: (_, state) {
+          final q = state.uri.queryParameters;
+          return ConnectScreen(
+            key: ValueKey(state.uri.toString()),
+            adding: q.keys.any(Routes.connectParams.contains),
+            instanceId: q['instance'],
+            connectionId: q['connection'],
+            url: q['url'] ?? '',
+            email: q['email'] ?? '',
+          );
+        },
       ),
       StatefulShellRoute.indexedStack(
         builder: (_, _, shell) => HomeShell(shell: shell),
@@ -106,6 +94,12 @@ GoRouter router(Ref ref) {
               GoRoute(
                 path: Routes.settings,
                 builder: (_, _) => const SettingsScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'instances',
+                    builder: (_, _) => const InstancesScreen(),
+                  ),
+                ],
               ),
             ],
           ),
