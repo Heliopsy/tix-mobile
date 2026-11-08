@@ -526,6 +526,16 @@ class GalleryStates extends StatelessWidget {
           180,
         ),
         framed(const SkeletonList(rows: 3), 190),
+        const Padding(
+          padding: EdgeInsets.only(bottom: TixSpace.s3),
+          child: OneTimeSecret(
+            heading: 'Copy this signing secret now',
+            note:
+                'It is shown once and cannot be retrieved again. If you '
+                'lose it, save the endpoint again with a new secret.',
+            values: ['whsec_3f9c0a7d1b2e4f6a8c0d2e4f6a8b0c1d'],
+          ),
+        ),
         TixSection(
           title: 'Danger zone',
           subtitle: 'Settings are always drawn, never folded away.',

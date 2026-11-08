@@ -3327,4 +3327,10 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get liveStatusUnavailableInfo =>
       'Cette connexion ne peut pas suivre les mises à jour en direct (il lui faut la portée event:subscribe). Tirez vers le bas pour actualiser.';
+
+  @override
+  String get copyToClipboard => 'Copier';
+
+  @override
+  String get copiedToClipboard => 'Copié.';
 }

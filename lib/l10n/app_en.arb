@@ -1937,5 +1937,7 @@
   "liveStatusOffline": "Offline",
   "liveStatusOfflineInfo": "The server cannot be reached. The app keeps trying and catches up when it is back.",
   "liveStatusUnavailable": "Not available",
-  "liveStatusUnavailableInfo": "This connection may not follow live updates (it needs the event:subscribe scope). Pull down to refresh instead."
+  "liveStatusUnavailableInfo": "This connection may not follow live updates (it needs the event:subscribe scope). Pull down to refresh instead.",
+  "copyToClipboard": "Copy",
+  "copiedToClipboard": "Copied."
 }

@@ -21,6 +21,7 @@ export 'components/notice.dart';
 export 'components/page.dart';
 export 'components/pickers.dart';
 export 'components/property.dart';
+export 'components/secret.dart';
 export 'components/section.dart';
 export 'components/states.dart';
 export 'components/swipe.dart';

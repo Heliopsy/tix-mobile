@@ -921,5 +921,7 @@
   "liveStatusOffline": "Offline",
   "liveStatusOfflineInfo": "Der Server ist nicht erreichbar. Die App versucht es weiter und holt auf, sobald er wieder da ist.",
   "liveStatusUnavailable": "Nicht verfügbar",
-  "liveStatusUnavailableInfo": "Diese Verbindung darf keine Live-Aktualisierungen verfolgen (sie braucht den Scope event:subscribe). Zum Aktualisieren nach unten ziehen."
+  "liveStatusUnavailableInfo": "Diese Verbindung darf keine Live-Aktualisierungen verfolgen (sie braucht den Scope event:subscribe). Zum Aktualisieren nach unten ziehen.",
+  "copyToClipboard": "Kopieren",
+  "copiedToClipboard": "Kopiert."
 }

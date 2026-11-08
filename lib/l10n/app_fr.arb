@@ -921,5 +921,7 @@
   "liveStatusOffline": "Hors ligne",
   "liveStatusOfflineInfo": "Le serveur est injoignable. L’application réessaie et rattrapera son retard dès son retour.",
   "liveStatusUnavailable": "Indisponible",
-  "liveStatusUnavailableInfo": "Cette connexion ne peut pas suivre les mises à jour en direct (il lui faut la portée event:subscribe). Tirez vers le bas pour actualiser."
+  "liveStatusUnavailableInfo": "Cette connexion ne peut pas suivre les mises à jour en direct (il lui faut la portée event:subscribe). Tirez vers le bas pour actualiser.",
+  "copyToClipboard": "Copier",
+  "copiedToClipboard": "Copié."
 }

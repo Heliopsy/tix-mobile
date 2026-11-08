@@ -3331,4 +3331,10 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get liveStatusUnavailableInfo =>
       'Diese Verbindung darf keine Live-Aktualisierungen verfolgen (sie braucht den Scope event:subscribe). Zum Aktualisieren nach unten ziehen.';
+
+  @override
+  String get copyToClipboard => 'Kopieren';
+
+  @override
+  String get copiedToClipboard => 'Kopiert.';
 }
