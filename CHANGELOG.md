@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.0](https://github.com/Heliopsy/tix-mobile/compare/v0.1.0...v0.2.0) (2026-11-08)
+
+
+### Features
+
+* several instances, sign-in and switching between tenants ([b1725e1](https://github.com/Heliopsy/tix-mobile/commit/b1725e11dd1bb5f984c997f51d8fcff46ed29f51))
+* show the tix mark on the connect screen and in About ([d0e712d](https://github.com/Heliopsy/tix-mobile/commit/d0e712d70c9adf3376ab1e37ed019dfa6e11d34b))
+* tix icons, launch screens and name on every platform ([5ae9aeb](https://github.com/Heliopsy/tix-mobile/commit/5ae9aebfa140ac0d34394bcfd834f33659879b89))
+
+
+### Dependencies
+
+* **android:** ship one APK per ABI instead of a universal APK ([3a47f36](https://github.com/Heliopsy/tix-mobile/commit/3a47f36f8366565da3190a0b9252774bf70dbb9d))
+
 ## 0.1.0 (2026-11-08)
 
 
