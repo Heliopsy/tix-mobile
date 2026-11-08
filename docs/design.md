@@ -161,6 +161,50 @@ The commands appear in the palette and, when they have a key, in the `?` help, f
 mounted. Keys pressed while a text field has focus stay in the field. Ids are `<feature>.<verb>`; a later scope
 with the same id wins.
 
+**Searches.** Things too many to register one by one (projects, recent tasks, a task by reference) come from
+sources: a function from what the person typed to commands, read from data already loaded and never awaited.
+
+```dart
+CommandScope(
+  commands: const [],
+  sources: [
+    (query) => [
+      for (final p in projects)
+        TixCommand(id: 'project.${p.key}', label: p.name, keywords: p.key, run: () => open(p)),
+    ],
+  ],
+  child: ...,
+)
+```
+
+The palette ranks commands and source results together by letters in order (`fuzzyScore`): consecutive letters,
+word starts and prefixes first. `keywords` are matched as well as the label.
+
+**Global commands.** A command that should exist on every screen is registered by a widget the router mounts around
+the signed-in shell, not by a screen: `QuickActionsHost` (quick add, the clipboard, templates, inbox and my work once
+routed, projects, recent tasks, task by reference, using a template), `TemplatesCommands` (new template, from the
+open task), `SettingsCommands` (theme) and `ContextCommands` in the shell (switch context). A feature adds its own
+the same way: a small widget wrapping `child` in a `CommandScope`, composed in `core/router/router.dart`.
+
+**Keys.** Use `primaryKey(LogicalKeyboardKey.keyN)` for Ctrl on Linux and Windows and Cmd on Apple platforms. Taken:
+`?`, Ctrl/Cmd K (palette), Ctrl/Cmd N (quick add), Ctrl/Cmd Shift V (quick add from the clipboard), and on the task
+list `N` and `R`.
+
+### Share intake and launcher shortcuts
+
+Android: `MainActivity` takes `ACTION_SEND` with `text/plain`, holds the latest share, and Dart takes it over the
+`tix/share` channel (`ShareIntake` in `core/platform`), on a cold start and when the activity says `shared`. Subject
+and text become one line, and quick add opens holding it; nothing is added until the person presses Add.
+
+iOS needs a share extension: a separate target that cannot run Flutter, so it would write the text to an App Group
+container and open the app with a `tix://share` URL that `ShareIntake` reads. That brings a target, an App Group
+entitlement and provisioning changes, and lands in its own change. Desktop drag and drop waits on `desktop_drop` 0.9,
+whose `cross_file` 0.4 conflicts with `share_plus` 13; until then Ctrl+Shift+V or Cmd+Shift+V opens quick add with
+the clipboard.
+
+Launcher shortcuts (Android) and home-screen quick actions (iOS) come from `quick_actions`: Quick add, Inbox and My
+work. A shortcut whose screen is not routed yet goes to Projects.
+
 ### Optimistic updates
 
 Quick actions change the screen before the server answers. The notifier owns the state; the widget calls:
