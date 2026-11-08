@@ -65,11 +65,14 @@ abstract final class Routes {
   /// The projects whose custom fields can be managed.
   static const fieldProjects = '/manage/fields';
 
-  /// Theme, language and instances.
+  /// Everything a person can set, on this device and on the server.
   static const settings = '/settings';
 
   /// The saved instances and their connections.
   static const instances = '/settings/instances';
+
+  /// The reader's saved filters, kept with their account.
+  static const savedFilters = '/settings/filters';
 
   /// What the app is, its versions, links and the bug report.
   static const about = '/settings/about';
@@ -198,4 +201,28 @@ abstract final class Routes {
   /// The log of the account [email].
   static String accountLog(String email) =>
       '/manage/accounts/${Uri.encodeComponent(email)}/log';
+}
+
+/// The screens the app can open on.
+enum StartScreen {
+  /// Every project, the default.
+  projects(Routes.projects),
+
+  /// Every task.
+  tasks(Routes.tasks),
+
+  /// The reader's assigned work.
+  myWork(Routes.myWork),
+
+  /// The inbox.
+  inbox(Routes.inbox);
+
+  StartScreen(this.route);
+
+  /// Where it is.
+  final String route;
+
+  /// The screen named [name], or [projects] for none or an unknown name.
+  static StartScreen named(String? name) =>
+      values.firstWhere((s) => s.name == name, orElse: () => projects);
 }

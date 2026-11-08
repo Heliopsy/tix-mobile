@@ -366,6 +366,37 @@ class FakeTix {
     ];
   }
 
+  /// Whether `/me/time` exists; an older server answers 404.
+  bool keepsTime = false;
+
+  /// The date preferences at each level, as `/me/time` reports them.
+  final timeGlobal = <String, String>{'time_format': '', 'timezone': ''};
+  final timeTenant = <String, String>{'time_format': '', 'timezone': ''};
+  final timeUser = <String, String>{'time_format': '', 'timezone': ''};
+
+  /// Whether the caller may hold a date preference of their own.
+  bool timePersonal = true;
+
+  Map<String, Object?> _timeSettings() {
+    (String, String) pick(String field) {
+      if (timeUser[field]!.isNotEmpty) return (timeUser[field]!, 'user');
+      if (timeTenant[field]!.isNotEmpty) return (timeTenant[field]!, 'tenant');
+      return (timeGlobal[field]!, 'global');
+    }
+
+    final (format, formatSource) = pick('time_format');
+    final (zone, zoneSource) = pick('timezone');
+    return {
+      'global': {...timeGlobal},
+      'tenant': {...timeTenant},
+      'user': {...timeUser},
+      'effective': {'time_format': format, 'timezone': zone},
+      'format_source': formatSource,
+      'timezone_source': zoneSource,
+      'personal': timePersonal,
+    };
+  }
+
   /// Answers to these paths with this, for one route's failure.
   final failing = <String, FakeResponse>{};
 
@@ -565,6 +596,17 @@ class FakeTix {
     switch ((o.method, path)) {
       case ('GET', '/api/v1/events/poll'):
         return await _poll(q);
+      case ('GET', '/api/v1/me/time') when keepsTime:
+        return FakeResponse(200, _timeSettings());
+      case ('PATCH', '/api/v1/me/time') when keepsTime:
+        if (!timePersonal) {
+          return FakeResponse(403, envelope('forbidden', 'not a person'));
+        }
+        final body = o.data as Map<String, dynamic>;
+        for (final f in ['time_format', 'timezone']) {
+          if (body[f] case final String v) timeUser[f] = v;
+        }
+        return FakeResponse(200, _timeSettings());
       case ('GET', '/api/v1/whoami'):
         final account = accounts[caller.email];
         if (account == null) {

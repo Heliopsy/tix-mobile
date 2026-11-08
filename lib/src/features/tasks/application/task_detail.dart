@@ -8,6 +8,7 @@ import 'package:tix_mobile/src/core/events/invalidation.dart';
 import 'package:tix_mobile/src/core/markdown/checklist.dart';
 import 'package:tix_mobile/src/core/paging/paged.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/time/time_style.dart';
 import 'package:tix_mobile/src/data/events/tix_event.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
@@ -449,10 +450,12 @@ enum SnoozePreset {
   /// Nine on the coming Monday.
   nextWeek;
 
-  /// The moment this preset names, seen from [now] in local time, as tix's
-  /// own presets count it.
-  DateTime from(DateTime now) {
-    final local = now.toLocal();
+  /// The moment this preset names, seen from [now] on the wall clock of
+  /// [style]'s zone, as tix's own presets count it.
+  DateTime from(DateTime now, {TixTimeStyle style = TixTimeStyle.device}) =>
+      style.fromWall(_wall(style.pickable(now)));
+
+  DateTime _wall(DateTime local) {
     DateTime morning(int days) =>
         DateTime(local.year, local.month, local.day + days, 9);
     switch (this) {

@@ -341,3 +341,238 @@ abstract class _$WidgetLockCountsSetting extends $Notifier<bool> {
     return element.handleCreate(ref, build);
   }
 }
+
+/// Whether touch feedback is on, on this device.
+
+@ProviderFor(HapticsSetting)
+final hapticsSettingProvider = HapticsSettingProvider._();
+
+/// Whether touch feedback is on, on this device.
+final class HapticsSettingProvider
+    extends $NotifierProvider<HapticsSetting, bool> {
+  /// Whether touch feedback is on, on this device.
+  HapticsSettingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'hapticsSettingProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$hapticsSettingHash();
+
+  @$internal
+  @override
+  HapticsSetting create() => HapticsSetting();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$hapticsSettingHash() => r'8e1ddedad1bc9df8e746e37ad8bf02e3d5aa8d9b';
+
+/// Whether touch feedback is on, on this device.
+
+abstract class _$HapticsSetting extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
+/// Whether the app keeps still whatever the platform asks, on this device.
+
+@ProviderFor(ReduceMotionSetting)
+final reduceMotionSettingProvider = ReduceMotionSettingProvider._();
+
+/// Whether the app keeps still whatever the platform asks, on this device.
+final class ReduceMotionSettingProvider
+    extends $NotifierProvider<ReduceMotionSetting, bool> {
+  /// Whether the app keeps still whatever the platform asks, on this device.
+  ReduceMotionSettingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'reduceMotionSettingProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$reduceMotionSettingHash();
+
+  @$internal
+  @override
+  ReduceMotionSetting create() => ReduceMotionSetting();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$reduceMotionSettingHash() =>
+    r'b59103a54bcb712085620f98584c26754ea0be49';
+
+/// Whether the app keeps still whatever the platform asks, on this device.
+
+abstract class _$ReduceMotionSetting extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
+/// The screen the app opens on, on this device.
+
+@ProviderFor(StartScreenSetting)
+final startScreenSettingProvider = StartScreenSettingProvider._();
+
+/// The screen the app opens on, on this device.
+final class StartScreenSettingProvider
+    extends $NotifierProvider<StartScreenSetting, StartScreen> {
+  /// The screen the app opens on, on this device.
+  StartScreenSettingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'startScreenSettingProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$startScreenSettingHash();
+
+  @$internal
+  @override
+  StartScreenSetting create() => StartScreenSetting();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(StartScreen value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<StartScreen>(value),
+    );
+  }
+}
+
+String _$startScreenSettingHash() =>
+    r'de1e00df883ba637dd36e59f4abd75ca1f3aafc1';
+
+/// The screen the app opens on, on this device.
+
+abstract class _$StartScreenSetting extends $Notifier<StartScreen> {
+  StartScreen build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<StartScreen, StartScreen>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<StartScreen, StartScreen>,
+              StartScreen,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
+/// The reader's arrangements of the shared views, kept with their account.
+
+@ProviderFor(ArrangementSettings)
+final arrangementSettingsProvider = ArrangementSettingsProvider._();
+
+/// The reader's arrangements of the shared views, kept with their account.
+final class ArrangementSettingsProvider
+    extends $NotifierProvider<ArrangementSettings, void> {
+  /// The reader's arrangements of the shared views, kept with their account.
+  ArrangementSettingsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'arrangementSettingsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$arrangementSettingsHash();
+
+  @$internal
+  @override
+  ArrangementSettings create() => ArrangementSettings();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
+
+String _$arrangementSettingsHash() =>
+    r'66f6f33a623ef8cf2b2ad3ba4d2bc32348a0ec96';
+
+/// The reader's arrangements of the shared views, kept with their account.
+
+abstract class _$ArrangementSettings extends $Notifier<void> {
+  void build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<void, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<void, void>,
+              void,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}

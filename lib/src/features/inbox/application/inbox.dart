@@ -10,6 +10,7 @@ import 'package:tix_mobile/src/core/events/invalidation.dart';
 import 'package:tix_mobile/src/core/notifications/local_notifier.dart';
 import 'package:tix_mobile/src/core/paging/paged.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/time/reader_time.dart';
 import 'package:tix_mobile/src/data/models/inbox.dart';
 import 'package:tix_mobile/src/data/models/page.dart';
 
@@ -366,8 +367,9 @@ class InboxSummary {
 Future<InboxSummary> inboxSummary(Ref ref) async {
   final repo = ref.watch(inboxRepositoryProvider);
   final now = ref.watch(clockProvider)();
-  final local = now.toLocal();
-  final endOfDay = DateTime(local.year, local.month, local.day + 1);
+  final style = ref.watch(readerTimeStyleProvider);
+  final day = style.day(now);
+  final endOfDay = style.fromWall(DateTime(day.year, day.month, day.day + 1));
   final (stats, due) = await (
     repo.stats(),
     repo.openTasksDueBefore(endOfDay),

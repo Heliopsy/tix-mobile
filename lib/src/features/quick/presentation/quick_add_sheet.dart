@@ -2,12 +2,12 @@
 
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/quick/quick_add.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/quick_preview.dart';
@@ -479,7 +479,7 @@ List<QuickChip> previewChips(
     if (due != null)
       QuickChip(
         kind: l10n.quickAddChipDue,
-        value: DateFormat.MMMEd(l10n.localeName).format(due.toUtc()),
+        value: context.times.style.plain.weekdayDate(due),
       ),
     if (status != null) QuickChip(kind: l10n.quickAddChipStatus, value: status),
     if (row.parent.isNotEmpty)

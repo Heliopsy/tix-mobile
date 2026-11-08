@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/session/admin.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/features/admin/application/tenant_admin.dart';
 
@@ -144,7 +144,6 @@ class _ConnectionRow extends ConsumerWidget {
     final l10n = context.l10n;
     final since = connection.since;
     final ssh = connection.surface == ConnectionSurface.ssh;
-    final locale = Localizations.localeOf(context).toLanguageTag();
     return ListTile(
       key: Key('connection.${connection.id}'),
       leading: Icon(ssh ? Icons.terminal : Icons.sensors),
@@ -157,10 +156,7 @@ class _ConnectionRow extends ConsumerWidget {
       subtitle: Text(
         [
           if (connection.remote.isNotEmpty) connection.remote,
-          if (since != null)
-            l10n.connectionSince(
-              DateFormat.yMMMd(locale).add_Hm().format(since.toLocal()),
-            ),
+          if (since != null) l10n.connectionSince(context.times.stamp(since)),
           if (connection.fingerprint.isNotEmpty) connection.fingerprint,
         ].join(' · '),
       ),

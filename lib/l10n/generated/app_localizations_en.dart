@@ -5745,6 +5745,355 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auditAfter => 'After';
 
   @override
+  String get timeJustNow => 'just now';
+
+  @override
+  String get timeInAMoment => 'in a moment';
+
+  @override
+  String timeAgoMinutes(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n minutes ago',
+      one: '1 minute ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoHours(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n hours ago',
+      one: '1 hour ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoDays(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n days ago',
+      one: '1 day ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoMonths(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n months ago',
+      one: '1 month ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoYears(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n years ago',
+      one: '1 year ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInMinutes(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'in $n minutes',
+      one: 'in 1 minute',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInHours(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'in $n hours',
+      one: 'in 1 hour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInDays(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'in $n days',
+      one: 'in 1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInMonths(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'in $n months',
+      one: 'in 1 month',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInYears(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'in $n years',
+      one: 'in 1 year',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get timeFormatIso => 'ISO';
+
+  @override
+  String get timeFormatRfc3339 => 'RFC 3339';
+
+  @override
+  String get timeFormatShort => 'Short';
+
+  @override
+  String get timeFormatLong => 'Long';
+
+  @override
+  String get timeFormatDotted => 'Dotted';
+
+  @override
+  String get timeFormatDayfirst => 'Day first';
+
+  @override
+  String get timeFormatUs => 'US';
+
+  @override
+  String get timeFormatRelative => 'Relative';
+
+  @override
+  String get settingsSearchHint => 'Search settings';
+
+  @override
+  String settingsNoMatch(String query) {
+    return 'No setting matches “$query”';
+  }
+
+  @override
+  String get settingsNoMatchBody => 'Try another word, or clear the search.';
+
+  @override
+  String get settingsScopeDevice => 'On this device';
+
+  @override
+  String get settingsScopeAccount => 'Synced to your account';
+
+  @override
+  String get settingsScopeTenant => 'Whole tenant';
+
+  @override
+  String get settingsGroupDevice => 'This device';
+
+  @override
+  String get settingsGroupDeviceHelp =>
+      'Kept on this device only. Your other devices and the web keep their own.';
+
+  @override
+  String settingsGroupAccount(String tenant) {
+    return 'Your account on $tenant';
+  }
+
+  @override
+  String get settingsGroupAccountHelp =>
+      'Kept by the server with your account, so they follow you to every device, the web and the command line.';
+
+  @override
+  String get settingsGroupTenant => 'This tenant';
+
+  @override
+  String settingsGroupTenantHelp(String tenant) {
+    return 'Settings for everyone in $tenant. Only administrators see these.';
+  }
+
+  @override
+  String get settingsReduceMotion => 'Reduce motion';
+
+  @override
+  String get settingsReduceMotionHelp =>
+      'Keeps the app still even when the system allows animation.';
+
+  @override
+  String get settingsHaptics => 'Touch feedback';
+
+  @override
+  String get settingsHapticsHelp =>
+      'A short buzz on swipes, completed tasks and refusals.';
+
+  @override
+  String get settingsLanguageHelp =>
+      'tix keeps no language with your account, so each device and browser picks its own.';
+
+  @override
+  String get settingsStartTitle => 'Start screen';
+
+  @override
+  String get settingsStartHelp =>
+      'Where the app opens when it starts or after you sign in.';
+
+  @override
+  String get settingsDeviceNotifTitle => 'Notifications on this device';
+
+  @override
+  String get settingsDeviceNotifSubtitle =>
+      'Whether this device alerts you, and for which kinds';
+
+  @override
+  String get settingsProfileTitle => 'Profile';
+
+  @override
+  String get settingsDatesTitle => 'Dates and times';
+
+  @override
+  String get settingsDatesHelp =>
+      'Kept with your account, so every device, browser and terminal shows dates this way. Inherit follows your tenant’s default, which follows the server’s.';
+
+  @override
+  String get settingsDateFormat => 'Date format';
+
+  @override
+  String get settingsDateFormatHelp =>
+      'How every timestamp in the app is written. tix reads dates you type the same way on the web.';
+
+  @override
+  String get settingsTimeZone => 'Time zone';
+
+  @override
+  String get settingsTimeZoneHelp =>
+      'The zone every time in the app is shown in, and where today ends for due dates.';
+
+  @override
+  String get settingsInherit => 'Inherit';
+
+  @override
+  String settingsInheritValue(String value) {
+    return 'Inherit: $value';
+  }
+
+  @override
+  String settingsInUse(String value, String source) {
+    return 'In use: $value, from $source';
+  }
+
+  @override
+  String get settingsSourceUser => 'your choice';
+
+  @override
+  String get settingsSourceTenant => 'the tenant default';
+
+  @override
+  String get settingsSourceGlobal => 'the server default';
+
+  @override
+  String get settingsDeviceFormat => 'this device’s format';
+
+  @override
+  String settingsDeviceZone(String zone) {
+    return 'this device’s zone ($zone)';
+  }
+
+  @override
+  String get settingsDatesNotPersonal =>
+      'This credential is not a person, so it reads your tenant’s defaults and cannot keep its own.';
+
+  @override
+  String get settingsDatesUnavailable =>
+      'This server keeps no date preferences, or has not answered yet, so dates follow this device.';
+
+  @override
+  String get settingsDatesSaved => 'Saved with your account';
+
+  @override
+  String get settingsZoneSearch => 'Search time zones';
+
+  @override
+  String get settingsZoneNone => 'No time zone matches.';
+
+  @override
+  String get settingsInboxTitle => 'Inbox and channels';
+
+  @override
+  String get settingsInboxSubtitle =>
+      'Which kinds reach your inbox, and your personal channels';
+
+  @override
+  String get settingsFiltersTitle => 'Saved filters';
+
+  @override
+  String get settingsFiltersSubtitle =>
+      'Rename, share or delete the filters you keep';
+
+  @override
+  String get settingsArrangementTitle => 'Board and lanes';
+
+  @override
+  String get settingsArrangementHelp =>
+      'The groups you hid, starred, collapsed or moved on the board, in lanes and on My work.';
+
+  @override
+  String get settingsArrangementReset => 'Reset';
+
+  @override
+  String get settingsArrangementResetTitle => 'Reset board and lanes';
+
+  @override
+  String get settingsArrangementResetBody =>
+      'Every group on the board, in lanes and on My work goes back where tix puts it, on every device and on the web. This cannot be undone.';
+
+  @override
+  String get settingsArrangementDone => 'Arrangement reset';
+
+  @override
+  String settingsTenantManage(String tenant) {
+    return 'Manage $tenant';
+  }
+
+  @override
+  String get settingsTenantManageSubtitle =>
+      'Projects, workflows, fields, people and the tenant’s own settings';
+
+  @override
+  String paletteSettingsItem(String name) {
+    return 'Settings: $name';
+  }
+
+  @override
+  String get savedFiltersEmpty => 'No saved filters';
+
+  @override
+  String get savedFiltersEmptyBody =>
+      'Save a filter from the task list and it shows here, on every device.';
+
+  @override
+  String get savedFilterSharedBadge => 'Shared';
+
+  @override
+  String get savedFilterTheirs =>
+      'Shared with you; only its owner and administrators can change it.';
+
+  @override
   String durationDays(int n) {
     return '$n d';
   }

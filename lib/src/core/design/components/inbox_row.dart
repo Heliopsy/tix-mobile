@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/components/avatar.dart';
 import 'package:tix_mobile/src/core/design/components/buttons.dart';
@@ -8,6 +7,7 @@ import 'package:tix_mobile/src/core/design/components/live.dart';
 import 'package:tix_mobile/src/core/design/components/marks.dart';
 import 'package:tix_mobile/src/core/design/tokens.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/data/models/inbox.dart';
 
 /// The icon for an inbox [kind].
@@ -38,10 +38,9 @@ String inboxWhat(AppLocalizations l10n, InboxItem item) {
 String inboxWhen(BuildContext context, DateTime? at, DateTime now) {
   if (at == null) return '';
   final l10n = context.l10n;
-  final locale = Localizations.localeOf(context).toLanguageTag();
-  final local = at.toLocal();
-  final today = DateUtils.dateOnly(now.toLocal());
-  final day = DateUtils.dateOnly(local);
+  final style = context.times.style;
+  final today = style.day(now);
+  final day = style.day(at);
   if (day == today) {
     final ago = now.difference(at);
     if (ago.inMinutes < 1) return l10n.inboxNow;
@@ -49,9 +48,9 @@ String inboxWhen(BuildContext context, DateTime? at, DateTime now) {
     return l10n.inboxHoursAgo(ago.inHours);
   }
   if (today.difference(day).inDays == 1) {
-    return DateFormat.Hm(locale).format(local);
+    return style.clock(at);
   }
-  return DateFormat.MMMd(locale).format(local);
+  return style.dayMonth(at);
 }
 
 /// One inbox item, as tix's inbox draws it: who did what, the task, the

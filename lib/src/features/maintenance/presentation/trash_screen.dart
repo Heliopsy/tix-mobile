@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/core/widgets/paged_list_view.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
@@ -34,7 +34,6 @@ class TrashScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final locale = Localizations.localeOf(context).toLanguageTag();
     final theme = Theme.of(context);
     return TixPage(
       title: l10n.trashTitle,
@@ -64,9 +63,7 @@ class TrashScreen extends ConsumerWidget {
                 [
                   task.ref,
                   if (deleted != null)
-                    l10n.trashDeletedAt(
-                      DateFormat.yMMMd(locale).format(deleted.toLocal()),
-                    ),
+                    l10n.trashDeletedAt(context.times.style.date(deleted)),
                 ].join(' · '),
               ),
               trailing: TixButton(

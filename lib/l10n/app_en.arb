@@ -3314,6 +3314,213 @@
   "auditUserAgent": "User agent",
   "auditBefore": "Before",
   "auditAfter": "After",
+  "timeJustNow": "just now",
+  "timeInAMoment": "in a moment",
+  "timeAgoMinutes": "{n, plural, =1{1 minute ago} other{{n} minutes ago}}",
+  "@timeAgoMinutes": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timeAgoHours": "{n, plural, =1{1 hour ago} other{{n} hours ago}}",
+  "@timeAgoHours": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timeAgoDays": "{n, plural, =1{1 day ago} other{{n} days ago}}",
+  "@timeAgoDays": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timeAgoMonths": "{n, plural, =1{1 month ago} other{{n} months ago}}",
+  "@timeAgoMonths": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timeAgoYears": "{n, plural, =1{1 year ago} other{{n} years ago}}",
+  "@timeAgoYears": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timeInMinutes": "{n, plural, =1{in 1 minute} other{in {n} minutes}}",
+  "@timeInMinutes": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timeInHours": "{n, plural, =1{in 1 hour} other{in {n} hours}}",
+  "@timeInHours": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timeInDays": "{n, plural, =1{in 1 day} other{in {n} days}}",
+  "@timeInDays": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timeInMonths": "{n, plural, =1{in 1 month} other{in {n} months}}",
+  "@timeInMonths": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timeInYears": "{n, plural, =1{in 1 year} other{in {n} years}}",
+  "@timeInYears": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timeFormatIso": "ISO",
+  "timeFormatRfc3339": "RFC 3339",
+  "timeFormatShort": "Short",
+  "timeFormatLong": "Long",
+  "timeFormatDotted": "Dotted",
+  "timeFormatDayfirst": "Day first",
+  "timeFormatUs": "US",
+  "timeFormatRelative": "Relative",
+  "settingsSearchHint": "Search settings",
+  "settingsNoMatch": "No setting matches “{query}”",
+  "@settingsNoMatch": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsNoMatchBody": "Try another word, or clear the search.",
+  "settingsScopeDevice": "On this device",
+  "settingsScopeAccount": "Synced to your account",
+  "settingsScopeTenant": "Whole tenant",
+  "settingsGroupDevice": "This device",
+  "settingsGroupDeviceHelp": "Kept on this device only. Your other devices and the web keep their own.",
+  "settingsGroupAccount": "Your account on {tenant}",
+  "@settingsGroupAccount": {
+    "placeholders": {
+      "tenant": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGroupAccountHelp": "Kept by the server with your account, so they follow you to every device, the web and the command line.",
+  "settingsGroupTenant": "This tenant",
+  "settingsGroupTenantHelp": "Settings for everyone in {tenant}. Only administrators see these.",
+  "@settingsGroupTenantHelp": {
+    "placeholders": {
+      "tenant": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsReduceMotion": "Reduce motion",
+  "settingsReduceMotionHelp": "Keeps the app still even when the system allows animation.",
+  "settingsHaptics": "Touch feedback",
+  "settingsHapticsHelp": "A short buzz on swipes, completed tasks and refusals.",
+  "settingsLanguageHelp": "tix keeps no language with your account, so each device and browser picks its own.",
+  "settingsStartTitle": "Start screen",
+  "settingsStartHelp": "Where the app opens when it starts or after you sign in.",
+  "settingsDeviceNotifTitle": "Notifications on this device",
+  "settingsDeviceNotifSubtitle": "Whether this device alerts you, and for which kinds",
+  "settingsProfileTitle": "Profile",
+  "settingsDatesTitle": "Dates and times",
+  "settingsDatesHelp": "Kept with your account, so every device, browser and terminal shows dates this way. Inherit follows your tenant’s default, which follows the server’s.",
+  "settingsDateFormat": "Date format",
+  "settingsDateFormatHelp": "How every timestamp in the app is written. tix reads dates you type the same way on the web.",
+  "settingsTimeZone": "Time zone",
+  "settingsTimeZoneHelp": "The zone every time in the app is shown in, and where today ends for due dates.",
+  "settingsInherit": "Inherit",
+  "settingsInheritValue": "Inherit: {value}",
+  "@settingsInheritValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsInUse": "In use: {value}, from {source}",
+  "@settingsInUse": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSourceUser": "your choice",
+  "settingsSourceTenant": "the tenant default",
+  "settingsSourceGlobal": "the server default",
+  "settingsDeviceFormat": "this device’s format",
+  "settingsDeviceZone": "this device’s zone ({zone})",
+  "@settingsDeviceZone": {
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsDatesNotPersonal": "This credential is not a person, so it reads your tenant’s defaults and cannot keep its own.",
+  "settingsDatesUnavailable": "This server keeps no date preferences, or has not answered yet, so dates follow this device.",
+  "settingsDatesSaved": "Saved with your account",
+  "settingsZoneSearch": "Search time zones",
+  "settingsZoneNone": "No time zone matches.",
+  "settingsInboxTitle": "Inbox and channels",
+  "settingsInboxSubtitle": "Which kinds reach your inbox, and your personal channels",
+  "settingsFiltersTitle": "Saved filters",
+  "settingsFiltersSubtitle": "Rename, share or delete the filters you keep",
+  "settingsArrangementTitle": "Board and lanes",
+  "settingsArrangementHelp": "The groups you hid, starred, collapsed or moved on the board, in lanes and on My work.",
+  "settingsArrangementReset": "Reset",
+  "settingsArrangementResetTitle": "Reset board and lanes",
+  "settingsArrangementResetBody": "Every group on the board, in lanes and on My work goes back where tix puts it, on every device and on the web. This cannot be undone.",
+  "settingsArrangementDone": "Arrangement reset",
+  "settingsTenantManage": "Manage {tenant}",
+  "@settingsTenantManage": {
+    "placeholders": {
+      "tenant": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTenantManageSubtitle": "Projects, workflows, fields, people and the tenant’s own settings",
+  "paletteSettingsItem": "Settings: {name}",
+  "@paletteSettingsItem": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "savedFiltersEmpty": "No saved filters",
+  "savedFiltersEmptyBody": "Save a filter from the task list and it shows here, on every device.",
+  "savedFilterSharedBadge": "Shared",
+  "savedFilterTheirs": "Shared with you; only its owner and administrators can change it.",
   "durationDays": "{n} d",
   "@durationDays": {
     "placeholders": {

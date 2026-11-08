@@ -4,11 +4,11 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/attachments.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/features/tasks/application/task_detail.dart';
@@ -226,7 +226,7 @@ class _CommentTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final t = context.tix;
-    final locale = Localizations.localeOf(context).toLanguageTag();
+    final times = context.times;
     final author = ref.watch(actorProvider(comment.authorActorId)).value;
     final name = author?.label ?? comment.authorActorId;
     final provider = taskCommentsProvider(task.ref);
@@ -316,9 +316,7 @@ class _CommentTile extends ConsumerWidget {
                     if (created != null) ...[
                       const SizedBox(width: TixSpace.s2),
                       Text(
-                        DateFormat.MMMd(locale)
-                            .add_Hm()
-                            .format(created.toLocal()),
+                        times.shortStamp(created),
                         style: TextStyle(fontSize: TixText.xs, color: t.muted),
                       ),
                     ],
@@ -409,7 +407,7 @@ class _HistoryTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final t = context.tix;
-    final locale = Localizations.localeOf(context).toLanguageTag();
+    final times = context.times;
     final actor = entry.actorId.isEmpty
         ? null
         : ref.watch(actorProvider(entry.actorId)).value;
@@ -461,8 +459,7 @@ class _HistoryTile extends ConsumerWidget {
                 ),
                 Text(
                   [
-                    if (when != null)
-                      DateFormat.yMMMd(locale).add_Hm().format(when.toLocal()),
+                    if (when != null) times.stamp(when),
                     if (channel.isNotEmpty) channel,
                   ].join(' · '),
                   style: TextStyle(fontSize: TixText.xs, color: t.muted),
@@ -629,7 +626,7 @@ class _ArtifactTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final t = context.tix;
-    final locale = Localizations.localeOf(context).toLanguageTag();
+    final times = context.times;
     final a = artifact;
     final size = a.blob.isEmpty ? null : (a.blob.length * 3) ~/ 4;
     final created = a.createdAt;
@@ -661,10 +658,7 @@ class _ArtifactTile extends ConsumerWidget {
                       [
                         _kind(l10n, a.kindName),
                         if (size != null) _bytes(size),
-                        if (created != null)
-                          DateFormat.MMMd(locale)
-                              .add_Hm()
-                              .format(created.toLocal()),
+                        if (created != null) times.shortStamp(created),
                       ].join(' · '),
                       style: TextStyle(fontSize: TixText.xs, color: t.muted),
                     ),

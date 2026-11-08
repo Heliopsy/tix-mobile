@@ -4,13 +4,13 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/durations.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/features/tasks/application/task_detail.dart';
@@ -166,16 +166,14 @@ extension TaskEdits on WidgetRef {
     }
     final picked = await pickSnooze(context, now);
     if (picked == null || !context.mounted) return;
-    final locale = Localizations.localeOf(context).toLanguageTag();
+    final times = context.times;
     await changeTask(
       context,
       this,
       task,
       TaskChange.snooze(picked),
       undo: TaskChange.snooze(null),
-      success: l10n.taskDetailSnoozed(
-        DateFormat.MMMEd(locale).add_Hm().format(picked),
-      ),
+      success: l10n.taskDetailSnoozed(times.weekdayStamp(picked, now: now)),
     );
   }
 
@@ -228,7 +226,7 @@ class TaskProperties extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final t = context.tix;
-    final locale = Localizations.localeOf(context).toLanguageTag();
+    final times = context.times;
     final workflow = ref.watch(projectWorkflowProvider(task.projectId)).value;
     final fields =
         ref.watch(projectFieldsProvider(task.projectId)).value ?? const [];
@@ -282,7 +280,7 @@ class TaskProperties extends ConsumerWidget {
           child: due == null
               ? Text(l10n.noDueDate, style: muted)
               : Text(
-                  DateFormat.yMMMEd(locale).format(due.toLocal()),
+                  times.style.longDate(due),
                   style: due.isBefore(ref.watch(clockProvider)())
                       ? TextStyle(color: t.danger, fontWeight: FontWeight.w500)
                       : null,
@@ -361,18 +359,14 @@ class TaskProperties extends ConsumerWidget {
           TixPropertyRow(
             label: l10n.taskDetailCreated,
             child: Text(
-              DateFormat.yMMMd(locale)
-                  .add_Hm()
-                  .format(task.createdAt!.toLocal()),
+              times.stamp(task.createdAt!, now: ref.watch(clockProvider)()),
             ),
           ),
         if (task.updatedAt != null)
           TixPropertyRow(
             label: l10n.taskDetailUpdated,
             child: Text(
-              DateFormat.yMMMd(locale)
-                  .add_Hm()
-                  .format(task.updatedAt!.toLocal()),
+              times.stamp(task.updatedAt!, now: ref.watch(clockProvider)()),
             ),
           ),
       ],

@@ -5790,6 +5790,357 @@ class AppLocalizationsFr extends AppLocalizations {
   String get auditAfter => 'Après';
 
   @override
+  String get timeJustNow => 'à l’instant';
+
+  @override
+  String get timeInAMoment => 'dans un instant';
+
+  @override
+  String timeAgoMinutes(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'il y a $n minutes',
+      one: 'il y a 1 minute',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoHours(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'il y a $n heures',
+      one: 'il y a 1 heure',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoDays(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'il y a $n jours',
+      one: 'il y a 1 jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoMonths(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'il y a $n mois',
+      one: 'il y a 1 mois',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoYears(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'il y a $n ans',
+      one: 'il y a 1 an',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInMinutes(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'dans $n minutes',
+      one: 'dans 1 minute',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInHours(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'dans $n heures',
+      one: 'dans 1 heure',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInDays(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'dans $n jours',
+      one: 'dans 1 jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInMonths(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'dans $n mois',
+      one: 'dans 1 mois',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeInYears(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'dans $n ans',
+      one: 'dans 1 an',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get timeFormatIso => 'ISO';
+
+  @override
+  String get timeFormatRfc3339 => 'RFC 3339';
+
+  @override
+  String get timeFormatShort => 'Court';
+
+  @override
+  String get timeFormatLong => 'Long';
+
+  @override
+  String get timeFormatDotted => 'Avec points';
+
+  @override
+  String get timeFormatDayfirst => 'Jour en premier';
+
+  @override
+  String get timeFormatUs => 'États-Unis';
+
+  @override
+  String get timeFormatRelative => 'Relatif';
+
+  @override
+  String get settingsSearchHint => 'Rechercher dans les paramètres';
+
+  @override
+  String settingsNoMatch(String query) {
+    return 'Aucun paramètre ne correspond à « $query »';
+  }
+
+  @override
+  String get settingsNoMatchBody =>
+      'Essayez un autre mot ou effacez la recherche.';
+
+  @override
+  String get settingsScopeDevice => 'Sur cet appareil';
+
+  @override
+  String get settingsScopeAccount => 'Synchronisé avec votre compte';
+
+  @override
+  String get settingsScopeTenant => 'Tout l’espace';
+
+  @override
+  String get settingsGroupDevice => 'Cet appareil';
+
+  @override
+  String get settingsGroupDeviceHelp =>
+      'Conservés sur cet appareil seulement. Vos autres appareils et le web ont les leurs.';
+
+  @override
+  String settingsGroupAccount(String tenant) {
+    return 'Votre compte sur $tenant';
+  }
+
+  @override
+  String get settingsGroupAccountHelp =>
+      'Conservés par le serveur avec votre compte : ils vous suivent sur chaque appareil, sur le web et en ligne de commande.';
+
+  @override
+  String get settingsGroupTenant => 'Cet espace';
+
+  @override
+  String settingsGroupTenantHelp(String tenant) {
+    return 'Paramètres pour tout le monde dans $tenant. Seuls les administrateurs les voient.';
+  }
+
+  @override
+  String get settingsReduceMotion => 'Réduire les animations';
+
+  @override
+  String get settingsReduceMotionHelp =>
+      'L’application reste immobile même si le système autorise les animations.';
+
+  @override
+  String get settingsHaptics => 'Retour haptique';
+
+  @override
+  String get settingsHapticsHelp =>
+      'Une courte vibration lors des balayages, des tâches terminées et des refus.';
+
+  @override
+  String get settingsLanguageHelp =>
+      'tix ne garde aucune langue avec votre compte : chaque appareil et navigateur choisit la sienne.';
+
+  @override
+  String get settingsStartTitle => 'Écran de démarrage';
+
+  @override
+  String get settingsStartHelp =>
+      'L’endroit où l’application s’ouvre au démarrage ou après la connexion.';
+
+  @override
+  String get settingsDeviceNotifTitle => 'Notifications sur cet appareil';
+
+  @override
+  String get settingsDeviceNotifSubtitle =>
+      'Si cet appareil vous alerte, et pour quels types';
+
+  @override
+  String get settingsProfileTitle => 'Profil';
+
+  @override
+  String get settingsDatesTitle => 'Dates et heures';
+
+  @override
+  String get settingsDatesHelp =>
+      'Conservés avec votre compte : chaque appareil, navigateur et terminal affiche les dates ainsi. « Hériter » suit la valeur par défaut de l’espace, qui suit celle du serveur.';
+
+  @override
+  String get settingsDateFormat => 'Format de date';
+
+  @override
+  String get settingsDateFormatHelp =>
+      'La façon dont chaque horodatage est écrit dans l’application. Sur le web, tix lit les dates saisies de la même façon.';
+
+  @override
+  String get settingsTimeZone => 'Fuseau horaire';
+
+  @override
+  String get settingsTimeZoneHelp =>
+      'Le fuseau dans lequel chaque heure est affichée et où se termine la journée pour les échéances.';
+
+  @override
+  String get settingsInherit => 'Hériter';
+
+  @override
+  String settingsInheritValue(String value) {
+    return 'Hériter : $value';
+  }
+
+  @override
+  String settingsInUse(String value, String source) {
+    return 'Utilisé : $value, venant de $source';
+  }
+
+  @override
+  String get settingsSourceUser => 'votre choix';
+
+  @override
+  String get settingsSourceTenant => 'la valeur de l’espace';
+
+  @override
+  String get settingsSourceGlobal => 'la valeur du serveur';
+
+  @override
+  String get settingsDeviceFormat => 'le format de cet appareil';
+
+  @override
+  String settingsDeviceZone(String zone) {
+    return 'le fuseau de cet appareil ($zone)';
+  }
+
+  @override
+  String get settingsDatesNotPersonal =>
+      'Cet identifiant n’est pas une personne : il lit les valeurs de l’espace et ne peut pas avoir les siennes.';
+
+  @override
+  String get settingsDatesUnavailable =>
+      'Ce serveur ne garde pas de préférences de date, ou n’a pas encore répondu : les dates suivent cet appareil.';
+
+  @override
+  String get settingsDatesSaved => 'Enregistré avec votre compte';
+
+  @override
+  String get settingsZoneSearch => 'Rechercher un fuseau';
+
+  @override
+  String get settingsZoneNone => 'Aucun fuseau ne correspond.';
+
+  @override
+  String get settingsInboxTitle => 'Boîte de réception et canaux';
+
+  @override
+  String get settingsInboxSubtitle =>
+      'Ce qui arrive dans votre boîte, et vos canaux personnels';
+
+  @override
+  String get settingsFiltersTitle => 'Filtres enregistrés';
+
+  @override
+  String get settingsFiltersSubtitle =>
+      'Renommer, partager ou supprimer vos filtres';
+
+  @override
+  String get settingsArrangementTitle => 'Tableau et couloirs';
+
+  @override
+  String get settingsArrangementHelp =>
+      'Les groupes que vous avez masqués, suivis, réduits ou déplacés sur le tableau, dans les couloirs et dans Mon travail.';
+
+  @override
+  String get settingsArrangementReset => 'Réinitialiser';
+
+  @override
+  String get settingsArrangementResetTitle =>
+      'Réinitialiser le tableau et les couloirs';
+
+  @override
+  String get settingsArrangementResetBody =>
+      'Chaque groupe du tableau, des couloirs et de Mon travail revient à la place choisie par tix, sur chaque appareil et sur le web. Impossible d’annuler.';
+
+  @override
+  String get settingsArrangementDone => 'Agencement réinitialisé';
+
+  @override
+  String settingsTenantManage(String tenant) {
+    return 'Gérer $tenant';
+  }
+
+  @override
+  String get settingsTenantManageSubtitle =>
+      'Projets, workflows, champs, personnes et réglages de l’espace';
+
+  @override
+  String paletteSettingsItem(String name) {
+    return 'Paramètres : $name';
+  }
+
+  @override
+  String get savedFiltersEmpty => 'Aucun filtre enregistré';
+
+  @override
+  String get savedFiltersEmptyBody =>
+      'Enregistrez un filtre depuis la liste des tâches pour le retrouver ici, sur chaque appareil.';
+
+  @override
+  String get savedFilterSharedBadge => 'Partagé';
+
+  @override
+  String get savedFilterTheirs =>
+      'Partagé avec vous ; seuls son propriétaire et les administrateurs peuvent le modifier.';
+
+  @override
   String durationDays(int n) {
     return '$n j';
   }

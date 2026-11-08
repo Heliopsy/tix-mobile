@@ -228,11 +228,13 @@ Future<ProviderContainer> pumpScreen(
       GoRoute(path: '/', builder: (_, _) => screen),
       GoRoute(path: '/connect', builder: stub),
       GoRoute(path: '/inbox', builder: stub),
+      GoRoute(path: '/tasks', builder: stub),
       GoRoute(
         path: '/settings',
         builder: stub,
         routes: [
           GoRoute(path: 'instances', builder: stub),
+          GoRoute(path: 'filters', builder: stub),
           GoRoute(
             path: 'notifications',
             builder: stub,

@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/time/time_style.dart';
 import 'package:tix_mobile/src/data/models/group_pref.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/saved_filter.dart';
@@ -377,18 +378,20 @@ enum DueBucket {
   none,
 }
 
-/// The heading [due] falls under at [now], in [now]'s time zone.
-DueBucket dueBucket(DateTime? due, DateTime now) {
+/// The heading [due] falls under at [now], counting days in [style]'s
+/// zone.
+DueBucket dueBucket(
+  DateTime? due,
+  DateTime now, {
+  TixTimeStyle style = TixTimeStyle.device,
+}) {
   if (due == null) return DueBucket.none;
-  final local = due.toLocal();
-  final today = DateTime(now.year, now.month, now.day);
-  if (local.isBefore(now)) return DueBucket.overdue;
-  if (local.isBefore(today.add(const Duration(days: 1)))) {
-    return DueBucket.today;
-  }
-  if (local.isBefore(today.add(const Duration(days: 7)))) {
-    return DueBucket.week;
-  }
+  if (due.isBefore(now)) return DueBucket.overdue;
+  final today = style.day(now);
+  DateTime midnight(int days) =>
+      style.fromWall(DateTime(today.year, today.month, today.day + days));
+  if (due.isBefore(midnight(1))) return DueBucket.today;
+  if (due.isBefore(midnight(7))) return DueBucket.week;
   return DueBucket.later;
 }
 

@@ -3,13 +3,13 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/attachments.dart';
 import 'package:tix_mobile/src/core/session/admin.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/form_sheet.dart';
 import 'package:tix_mobile/src/features/security/application/security.dart';
 
@@ -58,10 +58,7 @@ Future<void> addSshKey(BuildContext context) async {
   }
 }
 
-String _when(BuildContext context, DateTime t) =>
-    DateFormat.yMMMd(Localizations.localeOf(context).toLanguageTag())
-        .add_Hm()
-        .format(t.toLocal());
+String _when(BuildContext context, DateTime t) => context.times.stamp(t);
 
 class _SecondFactorSection extends ConsumerWidget {
   const _SecondFactorSection();

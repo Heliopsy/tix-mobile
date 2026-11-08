@@ -2,7 +2,9 @@
 
 import 'package:tix_mobile/src/core/storage/stores.dart';
 
-/// Theme, language and local engine choices, stored by name.
+/// The choices kept on this device: theme, language, motion, haptics, the
+/// screen the app opens on and the local engine's idle timeout, stored by
+/// name.
 class SettingsRepository {
   /// Keeps the choices in [_store].
   SettingsRepository(this._store);
@@ -12,6 +14,9 @@ class SettingsRepository {
   static const _systemBlackKey = 'settings.systemBlack';
   static const _idleKey = 'settings.local_idle_minutes';
   static const _widgetLockCountsKey = 'settings.widgetLockCounts';
+  static const _hapticsKey = 'settings.haptics';
+  static const _reduceMotionKey = 'settings.reduceMotion';
+  static const _startKey = 'settings.start';
 
   final KeyValueStore _store;
 
@@ -52,4 +57,26 @@ class SettingsRepository {
   Future<void> setWidgetLockCounts({required bool on}) => on
       ? _store.delete(_widgetLockCountsKey)
       : _store.write(_widgetLockCountsKey, 'false');
+
+  /// Whether touch feedback is on; on until turned off.
+  bool haptics() => _store.read(_hapticsKey) != 'off';
+
+  /// Saves whether touch feedback is on.
+  Future<void> setHaptics({required bool on}) =>
+      on ? _store.delete(_hapticsKey) : _store.write(_hapticsKey, 'off');
+
+  /// Whether the app keeps still whatever the platform asks.
+  bool reduceMotion() => _store.read(_reduceMotionKey) == 'true';
+
+  /// Saves whether the app keeps still.
+  Future<void> setReduceMotion({required bool on}) => on
+      ? _store.write(_reduceMotionKey, 'true')
+      : _store.delete(_reduceMotionKey);
+
+  /// The name of the screen the app opens on, null for the default.
+  String? startScreen() => _store.read(_startKey);
+
+  /// Saves the screen named [name] to open on, or the default with null.
+  Future<void> setStartScreen(String? name) =>
+      name == null ? _store.delete(_startKey) : _store.write(_startKey, name);
 }
