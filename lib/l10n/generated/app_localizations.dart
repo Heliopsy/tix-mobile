@@ -5418,6 +5418,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A write-ahead log was already beside this file. Another program may have it open, or a sync client copied one from another device.'**
   String get localInstanceWalLeftOver;
+
+  /// Widget title: the reader's open assigned tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'My work'**
+  String get widgetMyWork;
+
+  /// Widget title: the inbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox'**
+  String get widgetInbox;
+
+  /// Widget title: one button that opens quick add.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick add'**
+  String get widgetQuickAdd;
+
+  /// The Quick add widget's button.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a task'**
+  String get widgetAddTask;
+
+  /// My work widget with no open tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing assigned to you'**
+  String get widgetNothingDue;
+
+  /// Inbox widget with nothing unread.
+  ///
+  /// In en, this message translates to:
+  /// **'All caught up'**
+  String get widgetAllRead;
+
+  /// Project widget whose project has no open tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'No open tasks'**
+  String get widgetNoOpenTasks;
+
+  /// Widget footer before how long ago the data was read, as in 'Updated 5 min ago'.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get widgetUpdated;
+
+  /// A widget with no data yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Open tix to load this widget'**
+  String get widgetOpenApp;
+
+  /// Footer of a widget showing a local database, which never refreshes in the background.
+  ///
+  /// In en, this message translates to:
+  /// **'Refreshes when tix is open'**
+  String get widgetLocalStale;
+
+  /// A task's due date has passed.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get widgetOverdue;
+
+  /// A task is due today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get widgetToday;
+
+  /// Accessibility label of the tick on a widget row.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get widgetComplete;
+
+  /// Project widget whose project is not in the context it follows.
+  ///
+  /// In en, this message translates to:
+  /// **'Not in this context'**
+  String get widgetProjectMissing;
+
+  /// A widget while no context is active.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to tix'**
+  String get widgetSignedOut;
+
+  /// My work widget: how many tasks did not fit.
+  ///
+  /// In en, this message translates to:
+  /// **'+{count} more'**
+  String widgetMore(int count);
+
+  /// Inbox widget: the unread count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nothing unread} =1{1 unread} other{{count} unread}}'**
+  String widgetUnread(int count);
+
+  /// Settings section about the home screen widgets.
+  ///
+  /// In en, this message translates to:
+  /// **'Home screen widgets'**
+  String get settingsWidgets;
+
+  /// Settings switch: widgets on the lock screen show counts and no titles.
+  ///
+  /// In en, this message translates to:
+  /// **'Counts only on the lock screen'**
+  String get settingsWidgetLockCounts;
+
+  /// Help under the lock screen counts switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Widgets on the lock screen say how many, not what.'**
+  String get settingsWidgetLockCountsHelp;
+
+  /// Explanation at the top of the widgets settings section.
+  ///
+  /// In en, this message translates to:
+  /// **'Add tix widgets from your home screen. They show what the app last read, and a tick waits for the app if it cannot reach the server.'**
+  String get settingsWidgetsHelp;
+
+  /// A widget whose data is newer than it can read.
+  ///
+  /// In en, this message translates to:
+  /// **'Open tix to update'**
+  String get widgetOpenUpdate;
+
+  /// Project widget with no project chosen yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a project'**
+  String get widgetPickProject;
 }
 
 class _AppLocalizationsDelegate

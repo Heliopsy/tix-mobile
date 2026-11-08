@@ -50,6 +50,7 @@ const runtimePackages = <String>{
   'flutter_web_plugins',
   'freezed_annotation',
   'go_router',
+  'home_widget',
   'hooks',
   'http',
   'http_parser',

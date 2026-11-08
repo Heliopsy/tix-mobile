@@ -16,7 +16,12 @@ class TenantRepository {
   static String _key(String context) => 'accent.$context';
 
   /// The theme last seen for [context], empty when none was.
-  String rememberedTheme(String context) => _store.read(_key(context)) ?? '';
+  String rememberedTheme(String context) => rememberedIn(_store, context);
+
+  /// The theme last seen for [context] in [store], for readers without a
+  /// connection.
+  static String rememberedIn(KeyValueStore store, String context) =>
+      store.read(_key(context)) ?? '';
 
   /// The theme tenant [tenant] names, empty when it names none, or null
   /// when this credential may not read the tenant (it needs

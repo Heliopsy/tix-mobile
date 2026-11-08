@@ -11,6 +11,7 @@ class SettingsRepository {
   static const _localeKey = 'settings.locale';
   static const _systemBlackKey = 'settings.systemBlack';
   static const _idleKey = 'settings.local_idle_minutes';
+  static const _widgetLockCountsKey = 'settings.widgetLockCounts';
 
   final KeyValueStore _store;
 
@@ -42,4 +43,13 @@ class SettingsRepository {
   /// Saves [minutes] as the local engine idle timeout, 0 for never.
   Future<void> setLocalIdleMinutes(int minutes) =>
       _store.write(_idleKey, '$minutes');
+
+  /// Whether widgets on the lock screen show counts only; on until turned
+  /// off.
+  bool widgetLockCounts() => _store.read(_widgetLockCountsKey) != 'false';
+
+  /// Saves whether widgets on the lock screen show counts only.
+  Future<void> setWidgetLockCounts({required bool on}) => on
+      ? _store.delete(_widgetLockCountsKey)
+      : _store.write(_widgetLockCountsKey, 'false');
 }

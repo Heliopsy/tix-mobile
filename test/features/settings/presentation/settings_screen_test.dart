@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
@@ -14,6 +15,7 @@ import 'package:tix_mobile/src/features/settings/presentation/settings_screen.da
 import '../../../helpers/app.dart';
 import '../../../helpers/design.dart';
 import '../../../helpers/fake_tix.dart';
+import '../../../helpers/fake_widgets.dart';
 import '../../../helpers/stores.dart';
 
 void main() {
@@ -24,6 +26,7 @@ void main() {
     Size size = const Size(500, 1000),
     Locale locale = const Locale('en'),
     bool local = false,
+    FakeWidgetBridge? widgets,
   }) {
     final s = signedInStores();
     s.settings.values['contexts'] = jsonEncode([
@@ -47,6 +50,7 @@ void main() {
         settings: s.settings,
         secrets: s.secrets,
         local: local,
+        widgets: widgets,
       ),
     );
   }
@@ -103,6 +107,25 @@ void main() {
     expect(c.read(themeSettingProvider), ThemeChoice.oled);
     expect(stores.settings.values['settings.theme'], 'oled');
     expect(toggle, findsNothing);
+  });
+
+  testWidgets('widgets keep the lock screen to counts until turned off', (
+    tester,
+  ) async {
+    final c = await pump(tester, widgets: FakeWidgetBridge());
+    final toggle = find.byKey(const Key('settings.widgetLockCounts'));
+    await tester.scrollUntilVisible(toggle, 200);
+    expect(c.read(widgetLockCountsSettingProvider), isTrue);
+    await tester.tap(toggle);
+    await tester.pumpAndSettle();
+    expect(c.read(widgetLockCountsSettingProvider), isFalse);
+    expect(stores.settings.values['settings.widgetLockCounts'], 'false');
+    expect(c.read(widgetsStaleProvider), 1);
+  });
+
+  testWidgets('no widgets section where the platform has none', (tester) async {
+    await pump(tester);
+    expect(find.byKey(const Key('settings.widgets')), findsNothing);
   });
 
   testWidgets('instances shows the active context and opens the list', (

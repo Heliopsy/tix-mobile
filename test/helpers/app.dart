@@ -15,6 +15,7 @@ import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/notifications/local_notifier.dart';
 import 'package:tix_mobile/src/core/platform/files.dart';
 import 'package:tix_mobile/src/core/platform/local_access.dart';
+import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/session/api.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
@@ -25,6 +26,7 @@ import 'fake_events.dart';
 import 'fake_local_access.dart';
 import 'fake_notes.dart';
 import 'fake_tix.dart';
+import 'fake_widgets.dart';
 import 'stores.dart';
 
 const phone = Size(400, 800);
@@ -120,6 +122,7 @@ List<Override> fakeOverrides(
   CacheStore? cache,
   EventSocketConnector events = refusingEventSocket,
   FakeNotes? notes,
+  FakeWidgetBridge? widgets,
 }) => [
   keyValueStoreProvider.overrideWithValue(settings ?? MemoryKeyValueStore()),
   secretStoreProvider.overrideWithValue(secrets ?? MemorySecretStore()),
@@ -139,7 +142,11 @@ List<Override> fakeOverrides(
   cacheStoreProvider.overrideWithValue(cache ?? MemoryCacheStore()),
   eventSocketConnectorProvider.overrideWithValue(events),
   appResumedProvider.overrideWithValue(const AsyncData(null)),
+  appHiddenProvider.overrideWithValue(const AsyncData(null)),
   localNotesProvider.overrideWithValue(notes ?? FakeNotes()),
+  widgetBridgeProvider.overrideWithValue(
+    widgets ?? FakeWidgetBridge(supported: false),
+  ),
 ];
 
 /// The time every test runs at.

@@ -1808,5 +1808,107 @@
   "localInstancePermissionRefused": "All files access was not granted, so tix cannot open files in place. You can import a copy instead.",
   "localInstancePermissionTitle": "Allow access to your files",
   "localInstanceSyncWarning": "A synced database must be open on one device at a time. Close tix on your other devices and let the sync finish first. tix stops the database whenever it goes to the background, so the sync client always finds a whole file.",
-  "localInstanceWalLeftOver": "A write-ahead log was already beside this file. Another program may have it open, or a sync client copied one from another device."
+  "localInstanceWalLeftOver": "A write-ahead log was already beside this file. Another program may have it open, or a sync client copied one from another device.",
+  "widgetMyWork": "My work",
+  "@widgetMyWork": {
+    "description": "Widget title: the reader's open assigned tasks."
+  },
+  "widgetInbox": "Inbox",
+  "@widgetInbox": {
+    "description": "Widget title: the inbox."
+  },
+  "widgetQuickAdd": "Quick add",
+  "@widgetQuickAdd": {
+    "description": "Widget title: one button that opens quick add."
+  },
+  "widgetAddTask": "Add a task",
+  "@widgetAddTask": {
+    "description": "The Quick add widget's button."
+  },
+  "widgetNothingDue": "Nothing assigned to you",
+  "@widgetNothingDue": {
+    "description": "My work widget with no open tasks."
+  },
+  "widgetAllRead": "All caught up",
+  "@widgetAllRead": {
+    "description": "Inbox widget with nothing unread."
+  },
+  "widgetNoOpenTasks": "No open tasks",
+  "@widgetNoOpenTasks": {
+    "description": "Project widget whose project has no open tasks."
+  },
+  "widgetUpdated": "Updated",
+  "@widgetUpdated": {
+    "description": "Widget footer before how long ago the data was read, as in 'Updated 5 min ago'."
+  },
+  "widgetOpenApp": "Open tix to load this widget",
+  "@widgetOpenApp": {
+    "description": "A widget with no data yet."
+  },
+  "widgetLocalStale": "Refreshes when tix is open",
+  "@widgetLocalStale": {
+    "description": "Footer of a widget showing a local database, which never refreshes in the background."
+  },
+  "widgetOverdue": "Overdue",
+  "@widgetOverdue": {
+    "description": "A task's due date has passed."
+  },
+  "widgetToday": "Today",
+  "@widgetToday": {
+    "description": "A task is due today."
+  },
+  "widgetComplete": "Complete",
+  "@widgetComplete": {
+    "description": "Accessibility label of the tick on a widget row."
+  },
+  "widgetProjectMissing": "Not in this context",
+  "@widgetProjectMissing": {
+    "description": "Project widget whose project is not in the context it follows."
+  },
+  "widgetSignedOut": "Sign in to tix",
+  "@widgetSignedOut": {
+    "description": "A widget while no context is active."
+  },
+  "widgetMore": "+{count} more",
+  "@widgetMore": {
+    "description": "My work widget: how many tasks did not fit.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "widgetUnread": "{count, plural, =0{Nothing unread} =1{1 unread} other{{count} unread}}",
+  "@widgetUnread": {
+    "description": "Inbox widget: the unread count.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsWidgets": "Home screen widgets",
+  "@settingsWidgets": {
+    "description": "Settings section about the home screen widgets."
+  },
+  "settingsWidgetLockCounts": "Counts only on the lock screen",
+  "@settingsWidgetLockCounts": {
+    "description": "Settings switch: widgets on the lock screen show counts and no titles."
+  },
+  "settingsWidgetLockCountsHelp": "Widgets on the lock screen say how many, not what.",
+  "@settingsWidgetLockCountsHelp": {
+    "description": "Help under the lock screen counts switch."
+  },
+  "settingsWidgetsHelp": "Add tix widgets from your home screen. They show what the app last read, and a tick waits for the app if it cannot reach the server.",
+  "@settingsWidgetsHelp": {
+    "description": "Explanation at the top of the widgets settings section."
+  },
+  "widgetOpenUpdate": "Open tix to update",
+  "@widgetOpenUpdate": {
+    "description": "A widget whose data is newer than it can read."
+  },
+  "widgetPickProject": "Pick a project",
+  "@widgetPickProject": {
+    "description": "Project widget with no project chosen yet."
+  }
 }

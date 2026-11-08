@@ -3178,4 +3178,86 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String get localInstanceWalLeftOver =>
       'До този файл вече имаше журнал за запис (write-ahead log). Друга програма може да го държи отворен или синхронизиращ клиент да е копирал такъв от друго устройство.';
+
+  @override
+  String get widgetMyWork => 'Моята работа';
+
+  @override
+  String get widgetInbox => 'Входящи';
+
+  @override
+  String get widgetQuickAdd => 'Бързо добавяне';
+
+  @override
+  String get widgetAddTask => 'Добави задача';
+
+  @override
+  String get widgetNothingDue => 'Нищо не е възложено на вас';
+
+  @override
+  String get widgetAllRead => 'Всичко е прочетено';
+
+  @override
+  String get widgetNoOpenTasks => 'Няма отворени задачи';
+
+  @override
+  String get widgetUpdated => 'Обновено';
+
+  @override
+  String get widgetOpenApp => 'Отворете tix, за да заредите тази джаджа';
+
+  @override
+  String get widgetLocalStale => 'Обновява се, когато tix е отворено';
+
+  @override
+  String get widgetOverdue => 'Просрочено';
+
+  @override
+  String get widgetToday => 'Днес';
+
+  @override
+  String get widgetComplete => 'Завърши';
+
+  @override
+  String get widgetProjectMissing => 'Няма го в този контекст';
+
+  @override
+  String get widgetSignedOut => 'Влезте в tix';
+
+  @override
+  String widgetMore(int count) {
+    return '+$count още';
+  }
+
+  @override
+  String widgetUnread(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count непрочетени',
+      one: '1 непрочетено',
+      zero: 'Нищо непрочетено',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsWidgets => 'Джаджи на началния екран';
+
+  @override
+  String get settingsWidgetLockCounts => 'Само бройки на заключения екран';
+
+  @override
+  String get settingsWidgetLockCountsHelp =>
+      'Джаджите на заключения екран показват колко, а не какво.';
+
+  @override
+  String get settingsWidgetsHelp =>
+      'Добавете джаджи на tix от началния екран. Те показват последно прочетеното от приложението, а отметка изчаква приложението, ако сървърът е недостъпен.';
+
+  @override
+  String get widgetOpenUpdate => 'Отворете tix, за да обновите';
+
+  @override
+  String get widgetPickProject => 'Изберете проект';
 }

@@ -29,6 +29,19 @@ Stream<void> appResumed(Ref ref) {
   return resumed.stream;
 }
 
+/// Fires each time the app goes out of sight, the moment a home screen and
+/// its widgets come back into view.
+@Riverpod(keepAlive: true)
+Stream<void> appHidden(Ref ref) {
+  final hidden = StreamController<void>.broadcast();
+  final listener = AppLifecycleListener(onHide: () => hidden.add(null));
+  ref.onDispose(() {
+    listener.dispose();
+    unawaited(hidden.close());
+  });
+  return hidden.stream;
+}
+
 /// The event stream of the active context, null while there is none or it
 /// cannot be reached. Rebuilt, with a fresh cursor, when the context
 /// changes.

@@ -2,6 +2,7 @@
 
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/data/repositories/settings_repository.dart';
 
@@ -50,6 +51,7 @@ class ThemeSetting extends _$ThemeSetting {
   Future<void> set(ThemeChoice choice) async {
     state = choice;
     await ref.read(settingsRepositoryProvider).setThemeMode(choice.name);
+    ref.read(widgetsStaleProvider.notifier).touch();
   }
 }
 
@@ -63,6 +65,7 @@ class SystemBlackSetting extends _$SystemBlackSetting {
   Future<void> set({required bool on}) async {
     state = on;
     await ref.read(settingsRepositoryProvider).setSystemBlack(on: on);
+    ref.read(widgetsStaleProvider.notifier).touch();
   }
 }
 
@@ -89,5 +92,20 @@ class LocaleSetting extends _$LocaleSetting {
     await ref
         .read(settingsRepositoryProvider)
         .setLanguageCode(locale?.languageCode);
+    ref.read(widgetsStaleProvider.notifier).touch();
+  }
+}
+
+/// Whether widgets on the lock screen show counts only.
+@Riverpod(keepAlive: true)
+class WidgetLockCountsSetting extends _$WidgetLockCountsSetting {
+  @override
+  bool build() => ref.watch(settingsRepositoryProvider).widgetLockCounts();
+
+  /// Turns counts only on or off, remembers it and rewrites the widgets.
+  Future<void> set({required bool on}) async {
+    state = on;
+    await ref.read(settingsRepositoryProvider).setWidgetLockCounts(on: on);
+    ref.read(widgetsStaleProvider.notifier).touch();
   }
 }
