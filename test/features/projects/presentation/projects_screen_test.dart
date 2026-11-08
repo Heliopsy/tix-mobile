@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/features/projects/presentation/projects_screen.dart';
@@ -8,17 +10,55 @@ import '../../../helpers/app.dart';
 import '../../../helpers/fake_tix.dart';
 
 void main() {
-  Future<void> pump(WidgetTester tester, FakeTix server) {
+  Future<void> pump(
+    WidgetTester tester,
+    FakeTix server, {
+    Size size = phone,
+    bool settle = true,
+  }) {
     final stores = signedInStores();
     return pumpScreen(
       tester,
       const ProjectsScreen(),
+      size: size,
+      settle: settle,
       overrides: fakeOverrides(
         server,
         settings: stores.settings,
         secrets: stores.secrets,
       ),
     );
+  }
+
+  for (final MapEntry(key: width, value: size) in widths.entries) {
+    group(width, () {
+      testWidgets('loading, then data', (tester) async {
+        final server = FakeTix()..gate = Completer<void>();
+        await pump(tester, server, size: size, settle: false);
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        expect(find.text('Infrastructure'), findsNothing);
+        server.gate!.complete();
+        await tester.pumpAndSettle();
+        expect(find.byType(CircularProgressIndicator), findsNothing);
+        expect(find.text('Infrastructure'), findsOneWidget);
+      });
+
+      testWidgets('empty', (tester) async {
+        await pump(tester, FakeTix(projects: []), size: size);
+        expect(find.text('No projects yet.'), findsOneWidget);
+      });
+
+      testWidgets('error', (tester) async {
+        final server = FakeTix()
+          ..override = FakeResponse(500, envelope('internal', 'x'));
+        await pump(tester, server, size: size);
+        expect(
+          find.textContaining('The server had a problem.'),
+          findsOneWidget,
+        );
+        expect(find.textContaining('Request req-1.'), findsOneWidget);
+      });
+    });
   }
 
   testWidgets('lists projects and opens one', (tester) async {
@@ -90,7 +130,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text("Couldn't load more."), findsOneWidget);
     server.override = null;
-    await tester.tap(find.widgetWithText(TextButton, 'Retry'));
+    final retry = find.widgetWithText(TextButton, 'Retry');
+    await tester.ensureVisible(retry);
+    await tester.pumpAndSettle();
+    await tester.tap(retry);
     await tester.pumpAndSettle();
     await tester.drag(find.byType(ListView), const Offset(0, -3000));
     await tester.pumpAndSettle();

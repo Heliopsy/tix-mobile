@@ -27,7 +27,11 @@
   "noTaskSelected": "Pick a task to see it here.",
   "priorityLabel": "{priority, select, 1{Highest} 2{High} 3{Normal} 4{Low} 5{Lowest} other{None}}",
   "@priorityLabel": {
-    "placeholders": {"priority": {"type": "String"}}
+    "placeholders": {
+      "priority": {
+        "type": "String"
+      }
+    }
   },
   "quickAddTitle": "Quick add",
   "quickAddHint": "Fix login !high #auth @raj due:fri",
@@ -36,7 +40,11 @@
   "cancel": "Cancel",
   "taskCreated": "Created {ref}",
   "@taskCreated": {
-    "placeholders": {"ref": {"type": "String"}}
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
   },
   "settingsTitle": "Settings",
   "themeLabel": "Theme",
@@ -50,17 +58,29 @@
   "signOut": "Sign out",
   "signOutBody": "This forgets the token for {server} on this device.",
   "@signOutBody": {
-    "placeholders": {"server": {"type": "String"}}
+    "placeholders": {
+      "server": {
+        "type": "String"
+      }
+    }
   },
   "signedInAs": "Signed in as {handle}",
   "@signedInAs": {
-    "placeholders": {"handle": {"type": "String"}}
+    "placeholders": {
+      "handle": {
+        "type": "String"
+      }
+    }
   },
   "retry": "Retry",
   "loadMoreFailed": "Couldn't load more.",
   "errorInvalid": "The server refused that: {message}",
   "@errorInvalid": {
-    "placeholders": {"message": {"type": "String"}}
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
   },
   "errorUnauthenticated": "The token was not accepted. Check it, or create a new one.",
   "errorForbidden": "This token is not allowed to do that.",
@@ -68,7 +88,11 @@
   "errorConflict": "Someone changed this at the same time. Reload and try again.",
   "errorPrecondition": "That can't be done right now: {message}",
   "@errorPrecondition": {
-    "placeholders": {"message": {"type": "String"}}
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
   },
   "errorServer": "The server had a problem. Try again later.",
   "errorNetwork": "Couldn't reach the server. Check the address and your connection.",
@@ -76,5 +100,13 @@
   "errorNotTix": "That address doesn't answer like a tix server.",
   "errorBadUrl": "Enter a server address, such as https://tix.example.com.",
   "errorTokenRequired": "Enter an API token.",
-  "errorUnknown": "Something went wrong."
+  "errorUnknown": "Something went wrong.",
+  "errorRequestId": "Request {id}.",
+  "@errorRequestId": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  }
 }

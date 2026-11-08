@@ -25,7 +25,8 @@
 - [x] 3.5 Quick add with server-side parsing
 - [x] 3.6 Settings: theme, language, servers, sign out
 - [x] 3.7 Router with session redirects; adaptive shell and two-pane task view
-- [x] 3.8 English and Bulgarian strings, errors mapped to messages
+- [x] 3.8 English and Bulgarian strings, errors mapped to messages, server failures naming their request id
+- [x] 3.9 Shared session state in `core/session/`; `data/` free of Flutter widgets and Riverpod
 
 ## 4. Tests
 

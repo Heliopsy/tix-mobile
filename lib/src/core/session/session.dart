@@ -4,13 +4,21 @@ import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
-import 'package:tix_mobile/src/data/api/providers.dart';
+import 'package:tix_mobile/src/core/session/api.dart';
+import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/models/server_context.dart';
 import 'package:tix_mobile/src/data/repositories/contexts_repository.dart';
 import 'package:tix_mobile/src/data/repositories/tasks_repository.dart';
 
 part 'session.g.dart';
+
+/// The saved servers.
+@Riverpod(keepAlive: true)
+ContextsRepository contextsRepository(Ref ref) => ContextsRepository(
+  ref.watch(keyValueStoreProvider),
+  ref.watch(secretStoreProvider),
+);
 
 /// The active server and its token.
 @immutable

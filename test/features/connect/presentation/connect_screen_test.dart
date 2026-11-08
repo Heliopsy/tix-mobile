@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:tix_mobile/src/features/connect/application/session.dart';
+import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/features/connect/presentation/connect_screen.dart';
 
 import '../../../helpers/app.dart';
@@ -67,6 +69,39 @@ void main() {
     expect(find.textContaining('Въведете адрес на сървър'), findsOneWidget);
     expect(server.requests, isEmpty);
   });
+
+  for (final MapEntry(key: width, value: size) in widths.entries) {
+    testWidgets('$width: busy while checking, fields locked', (tester) async {
+      server.gate = Completer<void>();
+      await pumpScreen(
+        tester,
+        const ConnectScreen(),
+        size: size,
+        overrides: fakeOverrides(server),
+      );
+      await tester.enterText(find.byKey(const Key('connect.url')), 'x.example');
+      await tester.enterText(find.byKey(const Key('connect.token')), 'tok');
+      await tester.tap(find.byKey(const Key('connect.submit')));
+      await tester.pump();
+      final button = tester.widget<FilledButton>(
+        find.byKey(const Key('connect.submit')),
+      );
+      expect(button.onPressed, isNull);
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('connect.submit')),
+          matching: find.byType(CircularProgressIndicator),
+        ),
+        findsOneWidget,
+      );
+      final url = tester.widget<TextField>(
+        find.byKey(const Key('connect.url')),
+      );
+      expect(url.enabled, isFalse);
+      server.gate!.complete();
+      await tester.pumpAndSettle();
+    });
+  }
 
   testWidgets('the token is hidden until asked for', (tester) async {
     await pumpScreen(

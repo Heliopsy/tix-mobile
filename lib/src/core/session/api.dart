@@ -3,7 +3,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 
-part 'providers.g.dart';
+part 'api.g.dart';
 
 /// Builds a [TixApi] for a server root and an optional token.
 typedef TixApiFactory = TixApi Function(String baseUrl, String? token);

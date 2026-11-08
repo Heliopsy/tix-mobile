@@ -452,6 +452,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong.'**
   String get errorUnknown;
+
+  /// No description provided for @errorRequestId.
+  ///
+  /// In en, this message translates to:
+  /// **'Request {id}.'**
+  String errorRequestId(String id);
 }
 
 class _AppLocalizationsDelegate

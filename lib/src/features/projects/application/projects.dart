@@ -2,8 +2,8 @@
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/paging/paged.dart';
+import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
-import 'package:tix_mobile/src/features/connect/application/session.dart';
 
 part 'projects.g.dart';
 
@@ -22,5 +22,6 @@ class Projects extends _$Projects {
     fetch: (cursor) =>
         ref.read(tasksRepositoryProvider).projects(cursor: cursor),
     emit: (next) => state = AsyncData(next),
+    idOf: (project) => project.id,
   );
 }

@@ -25,6 +25,13 @@ riverpod_lint 3 is an `analysis_server_plugin`, configured under `plugins:` in `
 custom_lint is no longer needed. The plugin runs under `dart analyze`, not `flutter analyze`, so CI should
 run `dart analyze`.
 
+### Layers
+
+`data/` holds the API client, models and repositories, and imports neither Flutter widgets nor Riverpod.
+State that several features read (the saved servers, the active session, the API client built for it and
+the repository over it) lives in `core/session/`, so no feature imports another. `core/router/` is the one
+place in `core/` that names feature screens, because it is where the routes are declared.
+
 ### HTTP: Dio over package:http
 
 - An `HttpClientAdapter` is the seam for tests: `test/helpers/fake_tix.dart` is an in-memory tix behind
@@ -71,7 +78,8 @@ address as the same handle replaces the saved context rather than adding a secon
 
 Every tix list is keyset paginated: `limit`, `cursor`, `next_cursor`. `Paged<T>` holds the rows so far and
 the next cursor; `loadNextPage` appends a page and keeps a failure on the state, beside the rows already
-shown, so the footer can offer a retry. `PagedListView` asks for the next page five rows before the end.
+shown, so the footer can offer a retry. A row whose id is already loaded is dropped, since a keyset page can repeat a
+row that moved while someone scrolled. `PagedListView` asks for the next page five rows before the end.
 
 ### Quick add
 

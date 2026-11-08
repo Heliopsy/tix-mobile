@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
+
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -13,11 +15,19 @@ void main() {
 
   setUp(() => server = FakeTix());
 
-  Future<void> pump(WidgetTester tester, String ref, {Locale? locale}) {
+  Future<void> pump(
+    WidgetTester tester,
+    String ref, {
+    Locale? locale,
+    Size size = phone,
+    bool settle = true,
+  }) {
     final stores = signedInStores();
     return pumpScreen(
       tester,
       TaskDetailScreen(taskRef: ref),
+      size: size,
+      settle: settle,
       locale: locale ?? const Locale('en'),
       overrides: fakeOverrides(
         server,
@@ -25,6 +35,26 @@ void main() {
         secrets: stores.secrets,
       ),
     );
+  }
+
+  for (final MapEntry(key: width, value: size) in widths.entries) {
+    testWidgets('$width: loading, then the task', (tester) async {
+      server.gate = Completer<void>();
+      await pump(tester, 'infra-1', size: size, settle: false);
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      server.gate!.complete();
+      await tester.pumpAndSettle();
+      expect(find.text('Fix login'), findsOneWidget);
+    });
+
+    testWidgets('$width: a missing task can be retried', (tester) async {
+      await pump(tester, 'infra-99', size: size);
+      expect(find.textContaining('Not found.'), findsOneWidget);
+      server.tasks['infra']!.add(taskJson('infra-99', title: 'Late'));
+      await tester.tap(find.text('Retry'));
+      await tester.pumpAndSettle();
+      expect(find.text('Late'), findsOneWidget);
+    });
   }
 
   testWidgets('shows the fields, the assignee by name and the Markdown body', (

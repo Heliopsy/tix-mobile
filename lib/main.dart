@@ -19,7 +19,7 @@ Future<void> main() async {
       overrides: [
         keyValueStoreProvider.overrideWithValue(PrefsKeyValueStore(prefs)),
       ],
-      child: const TixApp(),
+      child: const App(),
     ),
   );
 }

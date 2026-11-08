@@ -2,9 +2,9 @@
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/paging/paged.dart';
+import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
-import 'package:tix_mobile/src/features/connect/application/session.dart';
 
 part 'tasks.g.dart';
 
@@ -23,6 +23,7 @@ class ProjectTasks extends _$ProjectTasks {
     fetch: (cursor) =>
         ref.read(tasksRepositoryProvider).tasks(projectKey, cursor: cursor),
     emit: (next) => state = AsyncData(next),
+    idOf: (task) => task.id,
   );
 
   /// Creates a task in this project from a quick-add [line] and reloads the

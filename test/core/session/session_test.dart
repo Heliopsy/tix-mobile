@@ -3,12 +3,12 @@
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
-import 'package:tix_mobile/src/features/connect/application/session.dart';
+import 'package:tix_mobile/src/core/session/session.dart';
 
-import '../../../helpers/app.dart';
-import '../../../helpers/container.dart';
-import '../../../helpers/fake_tix.dart';
-import '../../../helpers/stores.dart';
+import '../../helpers/app.dart';
+import '../../helpers/container.dart';
+import '../../helpers/fake_tix.dart';
+import '../../helpers/stores.dart';
 
 void main() {
   late FakeTix server;

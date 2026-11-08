@@ -213,4 +213,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorUnknown => 'Something went wrong.';
+
+  @override
+  String errorRequestId(String id) {
+    return 'Request $id.';
+  }
 }

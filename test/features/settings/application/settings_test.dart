@@ -27,6 +27,9 @@ void main() {
     final again = makeContainer(fakeOverrides(FakeTix(), settings: settings));
     expect(again.read(themeModeSettingProvider), ThemeMode.dark);
     expect(again.read(localeSettingProvider), const Locale('bg'));
+    settings.values['settings.theme'] = 'neon';
+    again.invalidate(settingsRepositoryProvider);
+    expect(again.read(themeModeSettingProvider), ThemeMode.system);
     await again.read(localeSettingProvider.notifier).set(null);
     expect(settings.values.containsKey('settings.locale'), isFalse);
   });

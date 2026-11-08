@@ -26,12 +26,16 @@ String errorMessage(AppLocalizations l10n, Object error) {
     TixErrorKind.conflict || TixErrorKind.leaseExpired => l10n.errorConflict,
     TixErrorKind.preconditionFailed =>
       message.isEmpty ? l10n.errorUnknown : l10n.errorPrecondition(message),
-    TixErrorKind.upstream || TixErrorKind.internal => l10n.errorServer,
+    TixErrorKind.upstream || TixErrorKind.internal =>
+      error.requestId == null
+          ? l10n.errorServer
+          : '${l10n.errorServer} ${l10n.errorRequestId(error.requestId!)}',
     TixErrorKind.network => l10n.errorNetwork,
     TixErrorKind.timeout => l10n.errorTimeout,
     TixErrorKind.notTix => l10n.errorNotTix,
     TixErrorKind.badUrl => l10n.errorBadUrl,
     TixErrorKind.tokenRequired => l10n.errorTokenRequired,
-    TixErrorKind.unknown => l10n.errorUnknown,
+    TixErrorKind.unknown =>
+      message.isEmpty ? l10n.errorUnknown : '${l10n.errorUnknown} $message',
   };
 }
