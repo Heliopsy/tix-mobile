@@ -143,6 +143,7 @@ All in `lib/src/core/design/components/`. Each has a doc comment saying when to 
 | `AssigneeRef`, `TixAvatar` | `@handle` on a row; initials in a circle (accent, or `hued` from the handle) |
 | `RefText`, `DueMark`, `SnoozeMark` | The reference in mono; due dates; snoozes |
 | `TixBadge`, `TixCounter`, `Kbd` | A non-task state or role; a count; a key |
+| `LiveIndicator` | Whether live updates arrive: a dot alone when live, a dot and a word in any other state, explained on hover or long press. `compact` is the dot alone, for a corner badge |
 | `EmptyState` | Any list or screen with nothing in it. Carries the screen's create action |
 | `ErrorState` | A failure: the message, Retry, Sign in again when the session ended, and Back |
 | `SkeletonList`, `SkeletonBox` | Loading. Never a spinner for a list's first page |

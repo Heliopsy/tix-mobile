@@ -3283,4 +3283,52 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get widgetPickProject => 'Projekt wählen';
+
+  @override
+  String liveStatusLabel(String state) {
+    return 'Live-Aktualisierungen: $state';
+  }
+
+  @override
+  String get liveStatusLive => 'Live';
+
+  @override
+  String get liveStatusLiveInfo =>
+      'Änderungen von anderswo erscheinen hier, sobald sie passieren.';
+
+  @override
+  String get liveStatusConnecting => 'Verbinden';
+
+  @override
+  String get liveStatusConnectingInfo =>
+      'Verbindung zu Live-Aktualisierungen wird aufgebaut. Änderungen erscheinen, sobald sie steht.';
+
+  @override
+  String get liveStatusPolling => 'Abfrage';
+
+  @override
+  String get liveStatusPollingInfo =>
+      'Die Live-Verbindung bricht in diesem Netz immer wieder ab, daher kommen Aktualisierungen über einfaches HTTP. Sie können einige Sekunden später eintreffen.';
+
+  @override
+  String get liveStatusRefreshing => 'Aktualisierung';
+
+  @override
+  String liveStatusRefreshingInfo(int seconds) {
+    return 'Live-Aktualisierungen kommen nicht durch und dieser Server ist zu alt für Abfragen, daher lädt der Bildschirm alle $seconds Sekunden neu.';
+  }
+
+  @override
+  String get liveStatusOffline => 'Offline';
+
+  @override
+  String get liveStatusOfflineInfo =>
+      'Der Server ist nicht erreichbar. Die App versucht es weiter und holt auf, sobald er wieder da ist.';
+
+  @override
+  String get liveStatusUnavailable => 'Nicht verfügbar';
+
+  @override
+  String get liveStatusUnavailableInfo =>
+      'Diese Verbindung darf keine Live-Aktualisierungen verfolgen (sie braucht den Scope event:subscribe). Zum Aktualisieren nach unten ziehen.';
 }

@@ -99,6 +99,7 @@ void main() {
     ),
     'record': () => const GalleryBlock(title: 'Record', child: GalleryRecord()),
     'manage': () => const GalleryBlock(title: 'Manage', child: GalleryManage()),
+    'live': () => const GalleryBlock(title: 'Live', child: GalleryLive()),
   };
   Widget choices() =>
       const GalleryBlock(title: 'Choices', child: GalleryChoices());

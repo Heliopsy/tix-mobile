@@ -1910,5 +1910,32 @@
   "widgetPickProject": "Pick a project",
   "@widgetPickProject": {
     "description": "Project widget with no project chosen yet."
-  }
+  },
+  "liveStatusLabel": "Live updates: {state}",
+  "@liveStatusLabel": {
+    "placeholders": {
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "liveStatusLive": "Live",
+  "liveStatusLiveInfo": "Changes made elsewhere show up here as they happen.",
+  "liveStatusConnecting": "Connecting",
+  "liveStatusConnectingInfo": "Connecting to live updates. Changes show up once it is through.",
+  "liveStatusPolling": "Polling",
+  "liveStatusPollingInfo": "The live connection keeps failing on this network, so updates come over plain HTTP instead. They can take a few seconds longer.",
+  "liveStatusRefreshing": "Refreshing",
+  "liveStatusRefreshingInfo": "Live updates do not get through and this server is too old to poll, so the screen reloads every {seconds} seconds.",
+  "@liveStatusRefreshingInfo": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "liveStatusOffline": "Offline",
+  "liveStatusOfflineInfo": "The server cannot be reached. The app keeps trying and catches up when it is back.",
+  "liveStatusUnavailable": "Not available",
+  "liveStatusUnavailableInfo": "This connection may not follow live updates (it needs the event:subscribe scope). Pull down to refresh instead."
 }

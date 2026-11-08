@@ -842,3 +842,19 @@ class _GalleryManageState extends State<GalleryManage> {
     ],
   );
 }
+
+/// The live indicator in every state, then as a corner badge.
+class GalleryLive extends StatelessWidget {
+  /// Creates the indicators.
+  const GalleryLive({super.key});
+
+  @override
+  Widget build(BuildContext context) => Wrap(
+    spacing: TixSpace.s3,
+    crossAxisAlignment: WrapCrossAlignment.center,
+    children: [
+      for (final s in LiveState.values) LiveIndicator(state: s),
+      for (final s in LiveState.values) LiveIndicator(state: s, compact: true),
+    ],
+  );
+}
