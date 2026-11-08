@@ -2060,6 +2060,18 @@ class TaskOps {
     );
   }
 
+  /// ExportTasks writes one project's tasks as CSV, JSON, NDJSON or a Markdown
+  /// table, as it walks them.
+  ///
+  /// `POST /api/v1/projects/{ref}/tasks/export` (`task.export`) as the bytes of the format the request asks for, scope `export`.
+  Future<Uint8List> exportFile(String ref, {TaskExportInput? body}) async {
+    return _t.bytes(
+      'POST',
+      '/api/v1/projects/${_t.segment(ref)}/tasks/export',
+      body: body?.toJson(),
+    );
+  }
+
   /// ImportTasks reads a file of tasks into one project: CSV, JSON or NDJSON,
   /// including files Jira, GitHub, Trello and Linear write, or a list of
   /// quick-add lines.
@@ -2259,6 +2271,93 @@ class TaskOps {
         },
       )
       .map((e) => Task.fromJson(e! as Map<String, dynamic>));
+
+  /// ListTasks lists tasks matching the filter, one keyset-paginated page at a
+  /// time, with the cursor for the next page.
+  ///
+  /// `GET /api/v1/tasks` (`task.list`) as the bytes of the format the request asks for, scope `task:read`.
+  Future<Uint8List> listFile({
+    int? limit,
+    String? cursor,
+    String? sort,
+    String? direction,
+    List<String>? project,
+    List<String>? projectId,
+    List<String>? status,
+    List<String>? tag,
+    List<String>? assignee,
+    List<String>? creator,
+    List<String>? claimedBy,
+    String? parentId,
+    String? q,
+    bool? rootOnly,
+    bool? includeDeleted,
+    String? claimed,
+    String? starred,
+    String? blocked,
+    String? recurring,
+    String? checklist,
+    String? checklistOpen,
+    String? trashed,
+    String? snoozed,
+    List<int>? priority,
+    List<String>? notProject,
+    List<String>? notStatus,
+    List<String>? notTag,
+    List<String>? notAssignee,
+    List<String>? notCreator,
+    List<String>? notClaimedBy,
+    List<int>? notPriority,
+    List<String>? text,
+    DateTime? dueBefore,
+    DateTime? dueAfter,
+    String? customFields,
+    Map<String, String>? fieldFilters,
+  }) async {
+    return _t.bytes(
+      'GET',
+      '/api/v1/tasks',
+      query: {
+        'limit': limit,
+        'cursor': cursor,
+        'sort': sort,
+        'direction': direction,
+        'project': project,
+        'project_id': projectId,
+        'status': status,
+        'tag': tag,
+        'assignee': assignee,
+        'creator': creator,
+        'claimed_by': claimedBy,
+        'parent_id': parentId,
+        'q': q,
+        'root_only': rootOnly,
+        'include_deleted': includeDeleted,
+        'claimed': claimed,
+        'starred': starred,
+        'blocked': blocked,
+        'recurring': recurring,
+        'checklist': checklist,
+        'checklist_open': checklistOpen,
+        'trashed': trashed,
+        'snoozed': snoozed,
+        'priority': priority,
+        'not_project': notProject,
+        'not_status': notStatus,
+        'not_tag': notTag,
+        'not_assignee': notAssignee,
+        'not_creator': notCreator,
+        'not_claimed_by': notClaimedBy,
+        'not_priority': notPriority,
+        'text': text,
+        'due_before': dueBefore,
+        'due_after': dueAfter,
+        'custom_fields': customFields,
+        if (fieldFilters != null)
+          for (final e in fieldFilters.entries) 'field.${e.key}': e.value,
+      },
+    );
+  }
 
   /// RestoreTask brings a task back out of the trash and returns it.
   ///
