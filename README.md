@@ -141,13 +141,64 @@ and [the app section of tix's docs](https://tix.red/en/docs/#app) covers tokens,
 
 ### From a release
 
-Download the file for your platform from the [latest release](https://github.com/heliopsy/tix-mobile/releases/latest).
 Every release attaches Android APKs (one per ABI: take `arm64-v8a` for any phone from the last several years)
 and an AAB, Linux `.tar.gz` files for x64 and arm64, a macOS `.zip`, a Windows `.zip`, and a `SHA256SUMS` file.
-Each file carries GitHub build provenance, and the checksums file a cosign signature, so you can check where a
-download came from:
+[tix.red/en/apps](https://tix.red/en/apps/) has a one-paste install for Windows and macOS too.
+
+On Linux, this downloads the latest release for your CPU, checks it against `SHA256SUMS`, installs or upgrades it
+in `~/.local/opt/tix-mobile` with a launcher entry and `~/.local/bin/tix-mobile`, and starts it. Paste it from any
+directory; a failed step stops it without touching what is installed. It needs curl, GTK 3 and a Secret Service
+keyring (GNOME Keyring or KWallet).
 
 ```sh
+(
+set -eu
+v="$(curl -fsSLI -o /dev/null -w '%{url_effective}' https://github.com/Heliopsy/tix-mobile/releases/latest)"
+v="${v##*/v}"
+case "$(uname -m)" in
+  x86_64|amd64) f="tix-mobile-$v-linux-x64.tar.gz" ;;
+  aarch64|arm64) f="tix-mobile-$v-linux-arm64.tar.gz" ;;
+  *) echo "tix mobile has no Linux build for $(uname -m)" >&2; exit 1 ;;
+esac
+url="https://github.com/Heliopsy/tix-mobile/releases/download/v$v"
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+cd "$tmp"
+for a in "$f" SHA256SUMS; do curl -fL -sS -o "$a" "$url/$a"; done
+sha256sum --check --ignore-missing --quiet SHA256SUMS
+dest="$HOME/.local/opt/tix-mobile"
+mkdir -p "$HOME/.local/opt" "$HOME/.local/bin" "$HOME/.local/share/applications" "$HOME/.local/share/icons"
+rm -rf "$dest.new" "$dest.old"
+mkdir "$dest.new"
+tar -xzf "$f" -C "$dest.new"
+if [ -e "$dest" ]; then mv "$dest" "$dest.old"; fi
+mv "$dest.new" "$dest" || { mv "$dest.old" "$dest"; exit 1; }
+rm -rf "$dest.old"
+cp -R "$dest/share/icons/." "$HOME/.local/share/icons/"
+sed -e '/^#/d' -e "s|^Exec=.*|Exec=\"$dest/tix_mobile\"|" \
+  "$dest/share/applications/red.tix.tix_mobile.desktop" \
+  > "$HOME/.local/share/applications/red.tix.tix_mobile.desktop"
+if command -v update-desktop-database >/dev/null 2>&1; then update-desktop-database -q "$HOME/.local/share/applications" || true; fi
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then gtk-update-icon-cache -q -t "$HOME/.local/share/icons/hicolor" || true; fi
+ln -sfn "$dest/tix_mobile" "$HOME/.local/bin/tix-mobile"
+cd "$HOME"
+nohup "$dest/tix_mobile" >/dev/null 2>&1 &
+echo "tix mobile $f installed in $dest"
+)
+```
+
+To uninstall:
+
+```sh
+rm -rf ~/.local/opt/tix-mobile ~/.local/bin/tix-mobile ~/.local/share/applications/red.tix.tix_mobile.desktop
+find ~/.local/share/icons/hicolor -name 'red.tix.tix_mobile.*' -delete
+```
+
+Each file also carries GitHub build provenance, and the checksums file a cosign signature. To check a download by
+hand, fetch it next to `SHA256SUMS` and verify both:
+
+```sh
+gh release download --repo heliopsy/tix-mobile --pattern '*-linux-x64.tar.gz' --pattern SHA256SUMS
 sha256sum --check --ignore-missing SHA256SUMS
 gh attestation verify tix-mobile-*-linux-x64.tar.gz --repo heliopsy/tix-mobile
 ```
