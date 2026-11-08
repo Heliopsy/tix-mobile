@@ -66,7 +66,7 @@ final class TaskScreenProvider
   }
 }
 
-String _$taskScreenHash() => r'a507c068762fa52f154740eb74f703083ad8a37d';
+String _$taskScreenHash() => r'7a6bc009117590779c342d56274a223cab41307a';
 
 /// The filter, drawing and options of the task screen over one scope, kept
 /// while the app runs so going back finds them as they were.
@@ -363,7 +363,7 @@ final class SavedFiltersProvider
   SavedFilters create() => SavedFilters();
 }
 
-String _$savedFiltersHash() => r'ca1911b84a3e853f9656cbb05e43d1f913e16967';
+String _$savedFiltersHash() => r'3125b7269010c965ff696d9f0faacc59b6e4b093';
 
 /// The reader's saved filters, then the ones shared with them.
 

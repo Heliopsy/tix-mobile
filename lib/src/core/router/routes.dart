@@ -27,6 +27,10 @@ abstract final class Routes {
   /// Every task, as a list, a board or lanes.
   static const tasks = '/tasks';
 
+  /// The task screen opened on the saved filter [nameOrId].
+  static String tasksFiltered(String nameOrId) =>
+      Uri(path: tasks, queryParameters: {'filter': nameOrId}).toString();
+
   /// Task templates.
   static const templates = '/templates';
 
@@ -55,6 +59,9 @@ abstract final class Routes {
   /// Theme, language and instances.
   static const settings = '/settings';
 
+  /// The caller's date format and timezone.
+  static const timeSettings = '/settings/time';
+
   /// The saved instances and their connections.
   static const instances = '/settings/instances';
 
@@ -80,7 +87,13 @@ abstract final class Routes {
   static const audit = '/manage/audit';
 
   /// The query parameters that open the connect screen beside a session.
-  static const connectParams = {'add', 'instance', 'connection', 'url'};
+  static const connectParams = {
+    'add',
+    'instance',
+    'connection',
+    'url',
+    'invite',
+  };
 
   /// Add a connection to the saved instance [id].
   static String addConnection(String id) =>
@@ -122,6 +135,10 @@ abstract final class Routes {
     path: transfer,
     queryParameters: {'project': project, if (query.isNotEmpty) 'q': query},
   ).toString();
+
+  /// Accept the invite [link], adding its server when it is new.
+  static String acceptInvite(String link) =>
+      Uri(path: connect, queryParameters: {'invite': link}).toString();
 
   /// The tasks of the project [key].
   static String project(String key) => '/projects/${Uri.encodeComponent(key)}';

@@ -131,22 +131,34 @@ void main() {
       expect(inRow('prop.status', find.text('done')), findsOneWidget);
     });
 
+    testWidgets('a move one transition away is a transition', (tester) async {
+      await pumpTask(tester, server);
+      await press(tester, find.byKey(const Key('prop.status')));
+      await press(tester, find.byKey(const Key('move.doing')));
+      expect(bodies(server, 'POST', '/tasks/infra-1/transition'), [
+        {'to': 'doing'},
+      ]);
+      expect(count(server, 'POST', '/tasks/infra-1/route'), 0);
+      expect(toast('Moved infra-1 to doing.'), findsOneWidget);
+    });
+
     testWidgets('a move that needs a comment asks for one', (tester) async {
       server.tasks['infra']![0]['status'] = 'doing';
       await pumpTask(tester, server);
       await press(tester, find.byKey(const Key('prop.status')));
       await press(tester, find.byKey(const Key('move.blocked')));
-      expect(count(server, 'POST', '/tasks/infra-1/route'), 0);
+      expect(count(server, 'POST', '/tasks/infra-1/transition'), 0);
       await press(tester, find.byKey(const Key('move.confirm')));
-      expect(count(server, 'POST', '/tasks/infra-1/route'), 0);
+      expect(count(server, 'POST', '/tasks/infra-1/transition'), 0);
       await tester.enterText(
         find.byKey(const Key('move.comment')),
         'Waiting on DNS',
       );
       await press(tester, find.byKey(const Key('move.confirm')));
-      expect(bodies(server, 'POST', '/tasks/infra-1/route'), [
+      expect(bodies(server, 'POST', '/tasks/infra-1/transition'), [
         {'to': 'blocked', 'comment': 'Waiting on DNS'},
       ]);
+      expect(count(server, 'POST', '/tasks/infra-1/route'), 0);
     });
 
     testWidgets('a route that stops partway says where and why', (

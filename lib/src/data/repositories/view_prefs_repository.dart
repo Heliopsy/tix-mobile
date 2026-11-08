@@ -75,6 +75,10 @@ class ViewPrefsRepository {
     ),
   ))?.items;
 
+  /// The filter [nameOrId] the reader can see, their own winning over a
+  /// shared one of the same name (`filter.show`).
+  Future<SavedFilter> filter(String nameOrId) => _api.filter.show(nameOrId);
+
   /// Saves a new filter.
   Future<SavedFilter> saveFilter({
     required String name,

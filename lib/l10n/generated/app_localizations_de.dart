@@ -5797,4 +5797,476 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get auditAfter => 'Nachher';
+
+  @override
+  String durationDays(int n) {
+    return '$n T.';
+  }
+
+  @override
+  String durationHours(int n) {
+    return '$n Std.';
+  }
+
+  @override
+  String durationMinutes(int n) {
+    return '$n Min.';
+  }
+
+  @override
+  String durationSeconds(int n) {
+    return '$n Sek.';
+  }
+
+  @override
+  String get errorBadInviteLink =>
+      'Das ist kein Einladungslink. Er sieht so aus: https://ihr-server/invite/tix_inv_…';
+
+  @override
+  String get methodInvite => 'Einladung';
+
+  @override
+  String get inviteLinkLabel => 'Einladungslink';
+
+  @override
+  String get inviteLinkHint => 'https://tix.example.com/invite/tix_inv_…';
+
+  @override
+  String get inviteLinkHelp =>
+      'Fügen Sie den Link aus Ihrer Einladungs-E-Mail ein oder teilen Sie ihn aus einer anderen App mit tix. Der Server wird für Sie hinzugefügt.';
+
+  @override
+  String get invitePaste => 'Einladungslink einfügen';
+
+  @override
+  String get inviteCheck => 'Einladung prüfen';
+
+  @override
+  String inviteJoin(String tenant) {
+    return '$tenant beitreten';
+  }
+
+  @override
+  String inviteAs(String email) {
+    return 'als $email';
+  }
+
+  @override
+  String inviteExpires(String when) {
+    return 'Der Link gilt bis $when.';
+  }
+
+  @override
+  String get inviteExistingAccount =>
+      'Diese Adresse hat bereits ein tix-Konto. Geben Sie dessen Passwort ein, um anzunehmen; am Konto ändert sich nichts.';
+
+  @override
+  String get inviteDisplayName => 'Ihr Name';
+
+  @override
+  String get inviteNewPassword => 'Neues Passwort';
+
+  @override
+  String get inviteNewPasswordHelp =>
+      'Mindestens 12 Zeichen. Damit melden Sie sich überall an, nicht nur hier.';
+
+  @override
+  String get inviteExistingPasswordHelp =>
+      'Das Passwort, mit dem Sie sich bereits bei tix anmelden.';
+
+  @override
+  String get inviteCodeHelp =>
+      'Ein Code aus Ihrer Authenticator-App, die dieses Konto bereits nutzt.';
+
+  @override
+  String get inviteAccept => 'Einladung annehmen';
+
+  @override
+  String get notifHideContent =>
+      'Aufgabeninhalte in Benachrichtigungen ausblenden';
+
+  @override
+  String get notifHideContentHelp =>
+      'Benachrichtigungen zeigen nur „Neu in Ihrem Posteingang“, für diesen Kontext.';
+
+  @override
+  String get notifPrivateTitle => 'Neu in Ihrem Posteingang';
+
+  @override
+  String get notifPrivateBody => 'Öffnen Sie tix, um es zu lesen.';
+
+  @override
+  String get taskDetailLease => 'Reservierungsdauer';
+
+  @override
+  String get taskDetailLeaseInfo =>
+      'Wie lange die Reservierung eines Agenten für diese Aufgabe gilt, wenn er keine Dauer angibt, und wie lange eine Reservierung höchstens gelten darf. Aufgabe, Projekt, Workflow und Mandant können sie festlegen; die nächste Ebene gewinnt.';
+
+  @override
+  String taskDetailLeaseValue(String length, String source) {
+    return '$length (Quelle: $source)';
+  }
+
+  @override
+  String taskDetailLeaseMax(String length, String source) {
+    return 'Höchstens $length (Quelle: $source)';
+  }
+
+  @override
+  String get taskDetailLeaseClamped => 'Auf die Obergrenze gekürzt.';
+
+  @override
+  String get leaseSourceClaim => 'Reservierung';
+
+  @override
+  String get leaseSourceTask => 'Aufgabe';
+
+  @override
+  String get leaseSourceProject => 'Projekt';
+
+  @override
+  String get leaseSourceWorkflow => 'Workflow';
+
+  @override
+  String get leaseSourceTenant => 'Mandant';
+
+  @override
+  String get leaseSourceDeployment => 'Server';
+
+  @override
+  String get leaseSourceBuiltin => 'tix-Standard';
+
+  @override
+  String get statusTitle => 'Serverstatus';
+
+  @override
+  String get statusInstallation => 'Installation';
+
+  @override
+  String get statusVersion => 'Version';
+
+  @override
+  String get statusSchema => 'Schema';
+
+  @override
+  String get statusEngine => 'Datenbank';
+
+  @override
+  String get statusAnswering => 'Beantwortet von';
+
+  @override
+  String get statusObserved => 'Geprüft';
+
+  @override
+  String get statusServers => 'Serverprozesse';
+
+  @override
+  String get statusServersInfo =>
+      'Jeder bei dieser Datenbank registrierte tix-Prozess. Wer drei Lebenszeichen verpasst, wird als verstummt angezeigt.';
+
+  @override
+  String get statusNoServers =>
+      'Kein Prozess registriert. Der antwortende läuft womöglich ohne Registry.';
+
+  @override
+  String get statusAttached => 'Sendet Lebenszeichen';
+
+  @override
+  String statusDetached(String when) {
+    return 'Still seit $when';
+  }
+
+  @override
+  String statusUptime(String length) {
+    return 'läuft seit $length';
+  }
+
+  @override
+  String statusConnections(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Verbindungen',
+      one: '1 Verbindung',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statusWork => 'Dieser Mandant';
+
+  @override
+  String get statusProjects => 'Projekte';
+
+  @override
+  String get statusTasks => 'Aufgaben';
+
+  @override
+  String get statusClaimed => 'Reserviert';
+
+  @override
+  String get statusUnswept => 'Abgelaufene, nicht bereinigte Reservierungen';
+
+  @override
+  String get statusWebhooksPending => 'Wartende Webhook-Zustellungen';
+
+  @override
+  String get statusWebhooksFailed => 'Fehlgeschlagene Webhook-Zustellungen';
+
+  @override
+  String get statusSecondFactor => 'Zweiter Faktor';
+
+  @override
+  String get statusKey => 'Versiegelungsschlüssel gesetzt';
+
+  @override
+  String get statusRequireWeb => 'Im Browser erforderlich';
+
+  @override
+  String get statusRequireCli =>
+      'In der Kommandozeile und in Apps erforderlich';
+
+  @override
+  String get statusRequireSsh => 'Über SSH erforderlich';
+
+  @override
+  String get statusAdmins => 'Admins mit zweitem Faktor';
+
+  @override
+  String statusAdminsEnrolled(int enrolled, int total) {
+    return '$enrolled von $total';
+  }
+
+  @override
+  String get statusUnrecoverable =>
+      'Einige zweite Faktoren sind unlesbar: Der Versiegelungsschlüssel fehlt. Diese Personen müssen ihren löschen lassen und sich neu registrieren.';
+
+  @override
+  String get statusYes => 'Ja';
+
+  @override
+  String get statusNo => 'Nein';
+
+  @override
+  String get bundlesTitle => 'Pakete';
+
+  @override
+  String get bundleExportTitle => 'Paket exportieren';
+
+  @override
+  String get bundleExportSubtitle =>
+      'Wiederverwendbare Einrichtung als eine Datei, für einen anderen Mandanten oder Server';
+
+  @override
+  String get bundleExportInfo =>
+      'Ein Paket enthält Workflows, Felddefinitionen, Tags, Projekte als Vorlagen und Webhook-Endpunkte, nie deren Aufgaben. Webhook-Geheimnisse sind nie enthalten.';
+
+  @override
+  String get bundleKindWorkflow => 'Workflows';
+
+  @override
+  String get bundleKindField => 'Eigene Felder';
+
+  @override
+  String get bundleKindTag => 'Tags';
+
+  @override
+  String get bundleKindProject => 'Projektvorlagen';
+
+  @override
+  String get bundleKindWebhook => 'Webhooks';
+
+  @override
+  String get bundleKindsAll =>
+      'Nichts ausgewählt: Das Paket enthält alle Arten.';
+
+  @override
+  String get bundleKindsSome => 'Nur die ausgewählten Arten kommen hinein.';
+
+  @override
+  String get bundleName => 'Name';
+
+  @override
+  String get bundleNameHelp =>
+      'Beschriftet das Paket für die Empfänger. Optional.';
+
+  @override
+  String get bundleExport => 'Paket exportieren';
+
+  @override
+  String bundleExported(String name) {
+    return '$name exportiert';
+  }
+
+  @override
+  String get bundleImportTitle => 'Paket importieren';
+
+  @override
+  String get bundleImportSubtitle =>
+      'Erst Vorschau, dann auf einmal angewendet';
+
+  @override
+  String get bundleImportInfo =>
+      'Ein Paket wird atomar angewendet: Alles kommt an oder nichts. Die Vorschau schreibt nichts.';
+
+  @override
+  String get bundlePick => 'Paketdatei wählen';
+
+  @override
+  String get bundleCollision => 'Wenn ein Schlüssel schon vergeben ist';
+
+  @override
+  String get bundleCollisionAsk => 'Anhalten und melden';
+
+  @override
+  String get bundleCollisionSkip => 'Meinen behalten';
+
+  @override
+  String get bundleCollisionRename => 'Unter neuem Schlüssel importieren';
+
+  @override
+  String get bundleCollisionReplace => 'Meinen ersetzen';
+
+  @override
+  String get bundleProject => 'Projekt für eigene Felder';
+
+  @override
+  String get bundleProjectHelp =>
+      'Der Projektschlüssel, in dem Felddefinitionen landen. Nur nötig, wenn das Paket welche enthält.';
+
+  @override
+  String get bundlePreview => 'Vorschau';
+
+  @override
+  String get bundleImport => 'Paket importieren';
+
+  @override
+  String get bundleReplaceBody =>
+      'Komponenten mit demselben Schlüssel werden mit denen des Pakets überschrieben. Das lässt sich nicht rückgängig machen.';
+
+  @override
+  String get bundleImported => 'Paket importiert.';
+
+  @override
+  String get bundlePlan => 'Was der Import tun würde';
+
+  @override
+  String get bundleDone => 'Was der Import getan hat';
+
+  @override
+  String get bundleEmpty => 'Das Paket enthält nichts.';
+
+  @override
+  String get bundleActionCreate => 'Neu';
+
+  @override
+  String get bundleActionReplace => 'Ersetzt';
+
+  @override
+  String get bundleActionRename => 'Umbenannt';
+
+  @override
+  String get bundleActionSkip => 'Übersprungen';
+
+  @override
+  String get snapshotTitle => 'Snapshot importieren';
+
+  @override
+  String get snapshotFileTitle => 'Snapshot-Datei';
+
+  @override
+  String get snapshotFileSubtitle =>
+      'Eine Datei aus dem Export eines ganzen Mandanten';
+
+  @override
+  String get snapshotInfo =>
+      'Ein Snapshot enthält Projekte, Workflows, Felder, Aufgaben und Kommentare. Prüfen Sie mit einem Probelauf, was er ändern würde, bevor Sie importieren.';
+
+  @override
+  String get snapshotPick => 'Snapshot-Datei wählen';
+
+  @override
+  String get snapshotMerge => 'Zusammenführen';
+
+  @override
+  String get snapshotReplace => 'Ersetzen';
+
+  @override
+  String get snapshotMergeHelp =>
+      'Fügt Neues hinzu und aktualisiert Geändertes. Nichts wird entfernt.';
+
+  @override
+  String get snapshotReplaceHelp =>
+      'Entfernt außerdem Aufgaben und Felder jedes importierten Projekts, die der Snapshot nicht enthält.';
+
+  @override
+  String get snapshotDryRun => 'Probelauf';
+
+  @override
+  String get snapshotImport => 'Snapshot importieren';
+
+  @override
+  String get snapshotMergeBody =>
+      'Die Datensätze des Snapshots werden diesem Mandanten hinzugefügt und aktualisieren vorhandene.';
+
+  @override
+  String get snapshotReplaceBody =>
+      'Aufgaben und Felder der importierten Projekte, die der Snapshot nicht enthält, werden gelöscht. Das lässt sich nicht rückgängig machen.';
+
+  @override
+  String get snapshotImported => 'Snapshot importiert.';
+
+  @override
+  String get snapshotPlan => 'Was der Import tun würde';
+
+  @override
+  String get snapshotDone => 'Was der Import getan hat';
+
+  @override
+  String get snapshotCreated => 'Erstellt';
+
+  @override
+  String get snapshotUpdated => 'Aktualisiert';
+
+  @override
+  String get snapshotDeleted => 'Gelöscht';
+
+  @override
+  String get snapshotSkipped => 'Unverändert';
+
+  @override
+  String manageInheritedValue(String value) {
+    return 'Geerbt: $value';
+  }
+
+  @override
+  String manageDurationSaved(String value) {
+    return 'Gespeichert als $value. Leer erbt.';
+  }
+
+  @override
+  String get projectsShowArchived => 'Archivierte anzeigen';
+
+  @override
+  String get manageBundlesSubtitle =>
+      'Workflows, Felder, Tags und Webhooks als eine Datei';
+
+  @override
+  String get manageSnapshotSubtitle =>
+      'Den Export eines ganzen Mandanten einspielen';
+
+  @override
+  String get manageStatusSubtitle =>
+      'Version, Serverprozesse und Arbeit des Mandanten';
+
+  @override
+  String get rotateToken => 'Token erneuern';
+
+  @override
+  String rotateTokenBody(String name) {
+    return '$name erhält ein neues Token mit demselben Namen, denselben Berechtigungen und derselben Laufzeit, und die App behält nur das neue. Alles andere, das das alte Token nutzt, funktioniert in einer Minute nicht mehr.';
+  }
+
+  @override
+  String get tokenRotated => 'Token erneuert. Das alte endet in einer Minute.';
 }

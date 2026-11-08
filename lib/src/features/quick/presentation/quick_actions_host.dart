@@ -13,6 +13,7 @@ import 'package:tix_mobile/src/core/platform/app_shortcuts.dart';
 import 'package:tix_mobile/src/core/platform/share_intake.dart';
 import 'package:tix_mobile/src/core/quick/quick_add.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
+import 'package:tix_mobile/src/data/models/invite_link.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/models/template.dart';
@@ -69,11 +70,14 @@ class _QuickActionsHostState extends ConsumerState<QuickActionsHost> {
   void initState() {
     super.initState();
     final intake = ref.read(shareIntakeProvider);
-    _shares = intake.shares.listen(
-      (share) => ref
-          .read(quickAddDraftsProvider.notifier)
-          .open(text: sharedLine(share)),
-    );
+    _shares = intake.shares.listen((share) {
+      final line = sharedLine(share);
+      if (InviteLink.parse(line) != null) {
+        _router?.go(Routes.acceptInvite(line));
+        return;
+      }
+      ref.read(quickAddDraftsProvider.notifier).open(text: line);
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       setState(() => _router = GoRouter.maybeOf(context));

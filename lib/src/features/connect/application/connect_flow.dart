@@ -13,6 +13,7 @@ import 'package:tix_mobile/src/data/local/local_engine.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/auth.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
+import 'package:tix_mobile/src/data/models/invite_link.dart';
 import 'package:tix_mobile/src/data/models/membership.dart';
 
 part 'connect_flow.g.dart';
@@ -212,6 +213,41 @@ class ConnectFlow extends _$ConnectFlow {
         replacing: old?.id,
         pinned: old?.pinned,
       ),
+      result,
+    );
+  }
+
+  /// Reads the invite link in [text] and what it admits to.
+  Future<({InviteLink link, InvitePreview preview})> previewInvite(
+    String text,
+  ) async {
+    final link = InviteLink.parse(text);
+    if (link == null) throw const TixException(TixErrorKind.badInviteLink);
+    final auth = ref.read(authRepositoryProvider);
+    await auth.checkServer(link.baseUrl);
+    return (link: link, preview: await auth.previewInvite(link));
+  }
+
+  /// Accepts the invite [link] for [email] and saves the sign-in it
+  /// starts, adding the server as an instance when it is new.
+  Future<void> acceptInvite(
+    InviteLink link, {
+    required String email,
+    required String password,
+    String displayName = '',
+    String code = '',
+    String name = '',
+  }) async {
+    final result = await ref
+        .read(authRepositoryProvider)
+        .acceptInvite(
+          link,
+          password: password,
+          displayName: displayName,
+          code: code,
+        );
+    await _signedIn(
+      SignInDraft(baseUrl: link.baseUrl, email: email, name: name),
       result,
     );
   }

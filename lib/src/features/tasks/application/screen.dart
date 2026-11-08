@@ -93,6 +93,22 @@ class TaskScreen extends _$TaskScreen {
     );
   }
 
+  /// Takes [fresh], the server's copy of [drawn], when [drawn] is still the
+  /// filter applied and its query, sort or view changed.
+  void refreshSaved(SavedFilter drawn, SavedFilter fresh) {
+    if (state.savedFilterId != drawn.id) return;
+    if (fresh.query != drawn.query ||
+        fresh.sort != drawn.sort ||
+        fresh.view != drawn.view) {
+      applySaved(fresh);
+    }
+  }
+
+  /// Clears the filter when the saved filter [id] is the one applied.
+  void dropSaved(String id) {
+    if (state.savedFilterId == id) clear();
+  }
+
   /// Clears the filter, keeping the sort and the drawing.
   void clear() => state = state.copyWith(
     expression: '',
@@ -269,6 +285,18 @@ class SavedFilters extends _$SavedFilters {
   @override
   Future<List<SavedFilter>> build() =>
       ref.watch(viewPrefsRepositoryProvider).filters();
+
+  /// The filter [nameOrId] as the server has it now (`filter.show`); the
+  /// reader's own wins over a shared one of the same name. One gone from the
+  /// server drops out of the list and the error is thrown.
+  Future<SavedFilter> fetch(String nameOrId) async {
+    try {
+      return await ref.read(viewPrefsRepositoryProvider).filter(nameOrId);
+    } on TixException catch (e) {
+      if (e.kind == TixErrorKind.notFound && ref.mounted) ref.invalidateSelf();
+      rethrow;
+    }
+  }
 
   /// Saves [query] with its [sort] and [view] as [name].
   Future<SavedFilter> save({

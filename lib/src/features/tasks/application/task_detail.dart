@@ -145,9 +145,10 @@ class TaskDetailController extends _$TaskDetailController {
     return commit(change);
   }
 
-  /// Moves the task to [to] by the workflow's route, drawing the new status
-  /// at once; the answer says where it stopped if it did not arrive.
-  Future<RouteResult> move(String to, {String? comment}) {
+  /// Moves the task to [to], drawing the new status at once: by one
+  /// transition when [direct], else by the workflow's route, whose answer
+  /// says where it stopped if it did not arrive.
+  Future<RouteResult> move(String to, {String? comment, bool direct = false}) {
     final local = TaskChange(
       apply: (t) => t.copyWith(status: to),
       send: (_, _) async => null,
@@ -155,7 +156,15 @@ class TaskDetailController extends _$TaskDetailController {
     begin(local);
     return _serial(() async {
       try {
-        final result = await _repo.move(taskRef, to, comment: comment);
+        final from = _server?.status ?? '';
+        final result = direct
+            ? RouteResult(
+                from: from,
+                route: [to],
+                applied: [to],
+                task: await _repo.transition(taskRef, to, comment: comment),
+              )
+            : await _repo.move(taskRef, to, comment: comment);
         _server = result.task ?? _server;
         return result;
       } finally {
@@ -392,6 +401,18 @@ Future<Workflow> projectWorkflow(Ref ref, String project) async {
 @riverpod
 Future<List<Actor>> actorDirectory(Ref ref) =>
     ref.watch(taskDetailRepositoryProvider).actors();
+
+/// The lease a claim on [taskRef] that names no length would get now, and
+/// the levels that decide it.
+@riverpod
+Future<LeaseGrant> taskLease(Ref ref, String taskRef) =>
+    ref.watch(taskDetailRepositoryProvider).lease(taskRef);
+
+/// The tags on [taskRef] as the server has them now, so a picker never
+/// offers one somebody else has just added.
+@riverpod
+Future<List<String>> taskTags(Ref ref, String taskRef) =>
+    ref.watch(taskDetailRepositoryProvider).taskTags(taskRef);
 
 /// Every tag in the tenant.
 @riverpod

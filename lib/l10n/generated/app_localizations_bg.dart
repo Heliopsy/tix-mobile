@@ -5750,4 +5750,470 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get auditAfter => 'След';
+
+  @override
+  String durationDays(int n) {
+    return '$n д';
+  }
+
+  @override
+  String durationHours(int n) {
+    return '$n ч';
+  }
+
+  @override
+  String durationMinutes(int n) {
+    return '$n мин';
+  }
+
+  @override
+  String durationSeconds(int n) {
+    return '$n с';
+  }
+
+  @override
+  String get errorBadInviteLink =>
+      'Това не е линк за покана. Изглежда така: https://вашият-сървър/invite/tix_inv_…';
+
+  @override
+  String get methodInvite => 'Покана';
+
+  @override
+  String get inviteLinkLabel => 'Линк за покана';
+
+  @override
+  String get inviteLinkHint => 'https://tix.example.com/invite/tix_inv_…';
+
+  @override
+  String get inviteLinkHelp =>
+      'Поставете линка от имейла с поканата или го споделете към tix от друго приложение. Сървърът се добавя автоматично.';
+
+  @override
+  String get invitePaste => 'Поставяне на линка за покана';
+
+  @override
+  String get inviteCheck => 'Провери поканата';
+
+  @override
+  String inviteJoin(String tenant) {
+    return 'Присъединяване към $tenant';
+  }
+
+  @override
+  String inviteAs(String email) {
+    return 'като $email';
+  }
+
+  @override
+  String inviteExpires(String when) {
+    return 'Линкът важи до $when.';
+  }
+
+  @override
+  String get inviteExistingAccount =>
+      'Този адрес вече има профил в tix. Въведете паролата му, за да приемете; профилът не се променя.';
+
+  @override
+  String get inviteDisplayName => 'Вашето име';
+
+  @override
+  String get inviteNewPassword => 'Нова парола';
+
+  @override
+  String get inviteNewPasswordHelp =>
+      'Поне 12 знака. С нея влизате навсякъде, не само тук.';
+
+  @override
+  String get inviteExistingPasswordHelp =>
+      'Паролата, с която вече влизате в tix.';
+
+  @override
+  String get inviteCodeHelp =>
+      'Код от приложението за удостоверяване, което профилът вече използва.';
+
+  @override
+  String get inviteAccept => 'Приемане на поканата';
+
+  @override
+  String get notifHideContent => 'Скриване на съдържанието в известията';
+
+  @override
+  String get notifHideContentHelp =>
+      'Известията казват само „Ново във входящите“, за този контекст.';
+
+  @override
+  String get notifPrivateTitle => 'Ново във входящите';
+
+  @override
+  String get notifPrivateBody => 'Отворете tix, за да го прочетете.';
+
+  @override
+  String get taskDetailLease => 'Срок на заявка';
+
+  @override
+  String get taskDetailLeaseInfo =>
+      'Колко трае заявката на агент за тази задача, когато не поиска срок, и най-дългото, което може да трае. Задачата, проектът, работният процес и тенантът могат да го зададат; най-близкият печели.';
+
+  @override
+  String taskDetailLeaseValue(String length, String source) {
+    return '$length, от $source';
+  }
+
+  @override
+  String taskDetailLeaseMax(String length, String source) {
+    return 'Най-много $length, от $source';
+  }
+
+  @override
+  String get taskDetailLeaseClamped => 'Съкратен до тавана.';
+
+  @override
+  String get leaseSourceClaim => 'заявката';
+
+  @override
+  String get leaseSourceTask => 'задачата';
+
+  @override
+  String get leaseSourceProject => 'проекта';
+
+  @override
+  String get leaseSourceWorkflow => 'работния процес';
+
+  @override
+  String get leaseSourceTenant => 'тенанта';
+
+  @override
+  String get leaseSourceDeployment => 'сървъра';
+
+  @override
+  String get leaseSourceBuiltin => 'стандарта на tix';
+
+  @override
+  String get statusTitle => 'Състояние на сървъра';
+
+  @override
+  String get statusInstallation => 'Инсталация';
+
+  @override
+  String get statusVersion => 'Версия';
+
+  @override
+  String get statusSchema => 'Схема';
+
+  @override
+  String get statusEngine => 'База данни';
+
+  @override
+  String get statusAnswering => 'Отговорил';
+
+  @override
+  String get statusObserved => 'Проверено';
+
+  @override
+  String get statusServers => 'Сървърни процеси';
+
+  @override
+  String get statusServersInfo =>
+      'Всеки процес на tix, регистриран към тази база данни. Пропуснал три сигнала се показва като замлъкнал.';
+
+  @override
+  String get statusNoServers =>
+      'Няма регистриран процес. Отговарящият може да работи без регистъра.';
+
+  @override
+  String get statusAttached => 'Изпраща сигнали';
+
+  @override
+  String statusDetached(String when) {
+    return 'Замлъкнал от $when';
+  }
+
+  @override
+  String statusUptime(String length) {
+    return 'работи от $length';
+  }
+
+  @override
+  String statusConnections(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count връзки',
+      one: '1 връзка',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statusWork => 'Този тенант';
+
+  @override
+  String get statusProjects => 'Проекти';
+
+  @override
+  String get statusTasks => 'Задачи';
+
+  @override
+  String get statusClaimed => 'Заети сега';
+
+  @override
+  String get statusUnswept => 'Изтекли заявки, още неизчистени';
+
+  @override
+  String get statusWebhooksPending => 'Чакащи доставки на webhook';
+
+  @override
+  String get statusWebhooksFailed => 'Неуспешни доставки на webhook';
+
+  @override
+  String get statusSecondFactor => 'Втори фактор';
+
+  @override
+  String get statusKey => 'Зададен ключ за запечатване';
+
+  @override
+  String get statusRequireWeb => 'Задължителен в браузъра';
+
+  @override
+  String get statusRequireCli => 'Задължителен в командния ред и приложенията';
+
+  @override
+  String get statusRequireSsh => 'Задължителен през SSH';
+
+  @override
+  String get statusAdmins => 'Администратори с такъв';
+
+  @override
+  String statusAdminsEnrolled(int enrolled, int total) {
+    return '$enrolled от $total';
+  }
+
+  @override
+  String get statusUnrecoverable =>
+      'Някои втори фактори не могат да се прочетат: липсва ключът за запечатване. На тези хора трябва да се изчистят и да се регистрират отново.';
+
+  @override
+  String get statusYes => 'Да';
+
+  @override
+  String get statusNo => 'Не';
+
+  @override
+  String get bundlesTitle => 'Пакети';
+
+  @override
+  String get bundleExportTitle => 'Експорт на пакет';
+
+  @override
+  String get bundleExportSubtitle =>
+      'Настройки за многократна употреба в един файл, за друг тенант или сървър';
+
+  @override
+  String get bundleExportInfo =>
+      'Пакетът съдържа работни процеси, дефиниции на полета, етикети, проекти като шаблони и webhook адреси, но не и задачите им. Тайните на webhook никога не се включват.';
+
+  @override
+  String get bundleKindWorkflow => 'Работни процеси';
+
+  @override
+  String get bundleKindField => 'Полета';
+
+  @override
+  String get bundleKindTag => 'Етикети';
+
+  @override
+  String get bundleKindProject => 'Шаблони на проекти';
+
+  @override
+  String get bundleKindWebhook => 'Webhooks';
+
+  @override
+  String get bundleKindsAll =>
+      'Нищо не е избрано: пакетът съдържа всички видове.';
+
+  @override
+  String get bundleKindsSome => 'Влизат само избраните видове.';
+
+  @override
+  String get bundleName => 'Име';
+
+  @override
+  String get bundleNameHelp => 'Етикет на пакета за получателя. По избор.';
+
+  @override
+  String get bundleExport => 'Експорт на пакета';
+
+  @override
+  String bundleExported(String name) {
+    return 'Експортиран $name';
+  }
+
+  @override
+  String get bundleImportTitle => 'Импорт на пакет';
+
+  @override
+  String get bundleImportSubtitle => 'Първо преглед, после се прилага наведнъж';
+
+  @override
+  String get bundleImportInfo =>
+      'Пакетът се прилага изцяло: или влиза всичко, или нищо. Прегледът не записва нищо.';
+
+  @override
+  String get bundlePick => 'Изберете файл с пакет';
+
+  @override
+  String get bundleCollision => 'Когато ключът е зает';
+
+  @override
+  String get bundleCollisionAsk => 'Спиране и съобщение';
+
+  @override
+  String get bundleCollisionSkip => 'Запазване на моя';
+
+  @override
+  String get bundleCollisionRename => 'Импорт с нов ключ';
+
+  @override
+  String get bundleCollisionReplace => 'Замяна на моя';
+
+  @override
+  String get bundleProject => 'Проект за полетата';
+
+  @override
+  String get bundleProjectHelp =>
+      'Ключът на проекта, в който влизат дефинициите на полета. Нужен е само ако пакетът ги съдържа.';
+
+  @override
+  String get bundlePreview => 'Преглед';
+
+  @override
+  String get bundleImport => 'Импорт на пакета';
+
+  @override
+  String get bundleReplaceBody =>
+      'Компонентите със същия ключ се презаписват с тези от пакета. Това не може да се отмени.';
+
+  @override
+  String get bundleImported => 'Пакетът е импортиран.';
+
+  @override
+  String get bundlePlan => 'Какво би направил импортът';
+
+  @override
+  String get bundleDone => 'Какво направи импортът';
+
+  @override
+  String get bundleEmpty => 'Пакетът не съдържа нищо.';
+
+  @override
+  String get bundleActionCreate => 'Нов';
+
+  @override
+  String get bundleActionReplace => 'Заменен';
+
+  @override
+  String get bundleActionRename => 'Преименуван';
+
+  @override
+  String get bundleActionSkip => 'Пропуснат';
+
+  @override
+  String get snapshotTitle => 'Импорт на снимка';
+
+  @override
+  String get snapshotFileTitle => 'Файл със снимка';
+
+  @override
+  String get snapshotFileSubtitle => 'Файл от експорт на цял тенант';
+
+  @override
+  String get snapshotInfo =>
+      'Снимката съдържа проекти, работни процеси, полета, задачи и коментари. Проверете какво ще промени с пробно изпълнение преди импорта.';
+
+  @override
+  String get snapshotPick => 'Изберете файл със снимка';
+
+  @override
+  String get snapshotMerge => 'Сливане';
+
+  @override
+  String get snapshotReplace => 'Замяна';
+
+  @override
+  String get snapshotMergeHelp =>
+      'Добавя новото и обновява промененото. Нищо не се премахва.';
+
+  @override
+  String get snapshotReplaceHelp =>
+      'Премахва и задачите и полетата на всеки импортиран проект, които снимката не съдържа.';
+
+  @override
+  String get snapshotDryRun => 'Пробно изпълнение';
+
+  @override
+  String get snapshotImport => 'Импорт на снимката';
+
+  @override
+  String get snapshotMergeBody =>
+      'Записите от снимката се добавят към този тенант и обновяват съществуващите.';
+
+  @override
+  String get snapshotReplaceBody =>
+      'Задачите и полетата на импортираните проекти, които снимката не съдържа, се изтриват. Това не може да се отмени.';
+
+  @override
+  String get snapshotImported => 'Снимката е импортирана.';
+
+  @override
+  String get snapshotPlan => 'Какво би направил импортът';
+
+  @override
+  String get snapshotDone => 'Какво направи импортът';
+
+  @override
+  String get snapshotCreated => 'Създадени';
+
+  @override
+  String get snapshotUpdated => 'Обновени';
+
+  @override
+  String get snapshotDeleted => 'Изтрити';
+
+  @override
+  String get snapshotSkipped => 'Непроменени';
+
+  @override
+  String manageInheritedValue(String value) {
+    return 'Наследено: $value';
+  }
+
+  @override
+  String manageDurationSaved(String value) {
+    return 'Записано като $value. Празно наследява.';
+  }
+
+  @override
+  String get projectsShowArchived => 'Показване на архивираните';
+
+  @override
+  String get manageBundlesSubtitle =>
+      'Работни процеси, полета, етикети и webhooks в един файл';
+
+  @override
+  String get manageSnapshotSubtitle => 'Внасяне на експорт на цял тенант';
+
+  @override
+  String get manageStatusSubtitle =>
+      'Версия, сървърни процеси и работата на тенанта';
+
+  @override
+  String get rotateToken => 'Смяна на токена';
+
+  @override
+  String rotateTokenBody(String name) {
+    return '$name получава нов токен със същото име, обхват и срок, а приложението пази само новия. Всичко друго, което ползва стария токен, спира да работи след минута.';
+  }
+
+  @override
+  String get tokenRotated => 'Токенът е сменен. Старият спира след минута.';
 }

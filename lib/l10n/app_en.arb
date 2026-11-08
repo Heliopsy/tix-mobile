@@ -3313,5 +3313,267 @@
   "auditJob": "Job",
   "auditUserAgent": "User agent",
   "auditBefore": "Before",
-  "auditAfter": "After"
+  "auditAfter": "After",
+  "durationDays": "{n} d",
+  "@durationDays": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "durationHours": "{n} h",
+  "@durationHours": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "durationMinutes": "{n} min",
+  "@durationMinutes": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "durationSeconds": "{n} s",
+  "@durationSeconds": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "errorBadInviteLink": "That is not an invite link. It looks like https://your-server/invite/tix_inv_…",
+  "methodInvite": "Invite",
+  "inviteLinkLabel": "Invite link",
+  "inviteLinkHint": "https://tix.example.com/invite/tix_inv_…",
+  "inviteLinkHelp": "Paste the link from your invite email, or share it to tix from another app. The server is added for you.",
+  "invitePaste": "Paste the invite link",
+  "inviteCheck": "Check invite",
+  "inviteJoin": "Join {tenant}",
+  "@inviteJoin": {
+    "placeholders": {
+      "tenant": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteAs": "as {email}",
+  "@inviteAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteExpires": "The link works until {when}.",
+  "@inviteExpires": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteExistingAccount": "This address already has a tix account. Enter its password to accept; nothing about the account changes.",
+  "inviteDisplayName": "Your name",
+  "inviteNewPassword": "New password",
+  "inviteNewPasswordHelp": "At least 12 characters. It signs you in everywhere, not only here.",
+  "inviteExistingPasswordHelp": "The password you already sign in to tix with.",
+  "inviteCodeHelp": "A code from your authenticator app, which this account already uses.",
+  "inviteAccept": "Accept invite",
+  "notifHideContent": "Hide task content in notifications",
+  "notifHideContentHelp": "Notifications only say “New in your inbox”, for this context.",
+  "notifPrivateTitle": "New in your inbox",
+  "notifPrivateBody": "Open tix to read it.",
+  "taskDetailLease": "Claim length",
+  "taskDetailLeaseInfo": "How long an agent's claim on this task lasts when it asks for no length, and the most any claim may last. The task, project, workflow and tenant can each set it; the nearest one wins.",
+  "taskDetailLeaseValue": "{length}, from {source}",
+  "@taskDetailLeaseValue": {
+    "placeholders": {
+      "length": {
+        "type": "String"
+      },
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailLeaseMax": "At most {length}, from {source}",
+  "@taskDetailLeaseMax": {
+    "placeholders": {
+      "length": {
+        "type": "String"
+      },
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailLeaseClamped": "Cut down to the ceiling.",
+  "leaseSourceClaim": "the claim",
+  "leaseSourceTask": "the task",
+  "leaseSourceProject": "the project",
+  "leaseSourceWorkflow": "the workflow",
+  "leaseSourceTenant": "the tenant",
+  "leaseSourceDeployment": "the server",
+  "leaseSourceBuiltin": "tix's default",
+  "statusTitle": "Server status",
+  "statusInstallation": "Installation",
+  "statusVersion": "Version",
+  "statusSchema": "Schema",
+  "statusEngine": "Database",
+  "statusAnswering": "Answered by",
+  "statusObserved": "Checked",
+  "statusServers": "Server processes",
+  "statusServersInfo": "Every tix process registered against this database. One that misses three heartbeats is shown as gone quiet.",
+  "statusNoServers": "No process has registered. The one answering may run without the registry.",
+  "statusAttached": "Heartbeating",
+  "statusDetached": "Quiet since {when}",
+  "@statusDetached": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "statusUptime": "up {length}",
+  "@statusUptime": {
+    "placeholders": {
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "statusConnections": "{count, plural, =1{1 connection} other{{count} connections}}",
+  "@statusConnections": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statusWork": "This tenant",
+  "statusProjects": "Projects",
+  "statusTasks": "Tasks",
+  "statusClaimed": "Claimed now",
+  "statusUnswept": "Expired claims not yet swept",
+  "statusWebhooksPending": "Webhook deliveries waiting",
+  "statusWebhooksFailed": "Webhook deliveries failed",
+  "statusSecondFactor": "Second factor",
+  "statusKey": "Sealing key set",
+  "statusRequireWeb": "Required in the browser",
+  "statusRequireCli": "Required on the command line and in apps",
+  "statusRequireSsh": "Required over SSH",
+  "statusAdmins": "Admins with one",
+  "statusAdminsEnrolled": "{enrolled} of {total}",
+  "@statusAdminsEnrolled": {
+    "placeholders": {
+      "enrolled": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "statusUnrecoverable": "Some second factors cannot be read: the sealing key is missing. Those people must have theirs cleared and enrol again.",
+  "statusYes": "Yes",
+  "statusNo": "No",
+  "bundlesTitle": "Bundles",
+  "bundleExportTitle": "Export a bundle",
+  "bundleExportSubtitle": "Reusable setup as one file, for another tenant or server",
+  "bundleExportInfo": "A bundle carries workflows, custom field definitions, tags, projects as templates and webhook endpoints, never their tasks. Webhook secrets never travel in one.",
+  "bundleKindWorkflow": "Workflows",
+  "bundleKindField": "Custom fields",
+  "bundleKindTag": "Tags",
+  "bundleKindProject": "Project templates",
+  "bundleKindWebhook": "Webhooks",
+  "bundleKindsAll": "Nothing picked: the bundle carries every kind.",
+  "bundleKindsSome": "Only the kinds picked go in.",
+  "bundleName": "Name",
+  "bundleNameHelp": "Labels the bundle for whoever receives it. Optional.",
+  "bundleExport": "Export bundle",
+  "bundleExported": "Exported {name}",
+  "@bundleExported": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "bundleImportTitle": "Import a bundle",
+  "bundleImportSubtitle": "Previewed first, then applied all at once",
+  "bundleImportInfo": "A bundle applies atomically: everything in it lands, or nothing does. The preview writes nothing.",
+  "bundlePick": "Choose a bundle file",
+  "bundleCollision": "When a key is already taken",
+  "bundleCollisionAsk": "Stop and say",
+  "bundleCollisionSkip": "Keep mine",
+  "bundleCollisionRename": "Import under a new key",
+  "bundleCollisionReplace": "Replace mine",
+  "bundleProject": "Project for custom fields",
+  "bundleProjectHelp": "The project key that field definitions land in. Needed only when the bundle carries them.",
+  "bundlePreview": "Preview",
+  "bundleImport": "Import bundle",
+  "bundleReplaceBody": "Components with the same key are overwritten with the bundle's. This cannot be undone.",
+  "bundleImported": "Bundle imported.",
+  "bundlePlan": "What the import would do",
+  "bundleDone": "What the import did",
+  "bundleEmpty": "The bundle carries nothing.",
+  "bundleActionCreate": "New",
+  "bundleActionReplace": "Replaced",
+  "bundleActionRename": "Renamed",
+  "bundleActionSkip": "Skipped",
+  "snapshotTitle": "Import a snapshot",
+  "snapshotFileTitle": "Snapshot file",
+  "snapshotFileSubtitle": "A file written by an export of a whole tenant",
+  "snapshotInfo": "A snapshot carries projects, workflows, fields, tasks and comments. Check what it would change with a dry run before importing.",
+  "snapshotPick": "Choose a snapshot file",
+  "snapshotMerge": "Merge",
+  "snapshotReplace": "Replace",
+  "snapshotMergeHelp": "Adds what is new and updates what changed. Nothing is removed.",
+  "snapshotReplaceHelp": "Also removes the tasks and fields of each imported project that the snapshot does not carry.",
+  "snapshotDryRun": "Dry run",
+  "snapshotImport": "Import snapshot",
+  "snapshotMergeBody": "The snapshot's records are added to this tenant and update the ones it already has.",
+  "snapshotReplaceBody": "Tasks and fields of the imported projects that the snapshot does not carry are deleted. This cannot be undone.",
+  "snapshotImported": "Snapshot imported.",
+  "snapshotPlan": "What the import would do",
+  "snapshotDone": "What the import did",
+  "snapshotCreated": "Created",
+  "snapshotUpdated": "Updated",
+  "snapshotDeleted": "Deleted",
+  "snapshotSkipped": "Left alone",
+  "manageInheritedValue": "Inherited: {value}",
+  "@manageInheritedValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "manageDurationSaved": "Saved as {value}. Empty inherits.",
+  "@manageDurationSaved": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "projectsShowArchived": "Show archived",
+  "manageBundlesSubtitle": "Workflows, fields, tags and webhooks as one file",
+  "manageSnapshotSubtitle": "Bring a whole tenant's export in",
+  "manageStatusSubtitle": "Version, server processes and the tenant's work",
+  "rotateToken": "Rotate token",
+  "rotateTokenBody": "{name} gets a new token with the same name, scopes and lifetime, and the app keeps only the new one. Anything else using the old token stops working in a minute.",
+  "@rotateTokenBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tokenRotated": "Token rotated. The old one stops in a minute."
 }

@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/logging/log.dart';
@@ -20,6 +21,8 @@ class LocalNote {
     required this.body,
     required this.payload,
     this.badge,
+    this.publicTitle,
+    this.publicBody,
   });
 
   /// Stable per item, so showing it again replaces it.
@@ -36,6 +39,13 @@ class LocalNote {
 
   /// The app icon's badge, where the platform draws one from a notification.
   final int? badge;
+
+  /// What a locked screen shows in place of [title], where the platform
+  /// takes a public version (Android).
+  final String? publicTitle;
+
+  /// What a locked screen shows in place of [body].
+  final String? publicBody;
 }
 
 /// The platform's local notifications, behind an interface tests fake.
@@ -69,6 +79,10 @@ class PluginLocalNotifier implements LocalNotifier {
     : _plugin = plugin ?? FlutterLocalNotificationsPlugin();
 
   final FlutterLocalNotificationsPlugin _plugin;
+
+  // flutter_local_notifications cannot set a public version, so
+  // MainActivity adds one to the posted notification.
+  static const _public = MethodChannel('tix/notes');
   final _taps = StreamController<String>.broadcast();
   Future<void>? _ready;
 
@@ -186,6 +200,7 @@ class PluginLocalNotifier implements LocalNotifier {
             channelDescription: _channel.description,
             category: AndroidNotificationCategory.social,
             number: note.badge,
+            visibility: NotificationVisibility.private,
           ),
           iOS: DarwinNotificationDetails(badgeNumber: note.badge),
           macOS: DarwinNotificationDetails(badgeNumber: note.badge),
@@ -196,6 +211,18 @@ class PluginLocalNotifier implements LocalNotifier {
       );
     } on Object catch (e) {
       log('notifications: show failed: ${e.runtimeType}');
+      return;
+    }
+    final title = note.publicTitle;
+    if (title == null || !Platform.isAndroid) return;
+    try {
+      await _public.invokeMethod<bool>('publicVersion', {
+        'id': note.id,
+        'title': title,
+        'body': note.publicBody ?? '',
+      });
+    } on Object catch (e) {
+      log('notifications: public version failed: ${e.runtimeType}');
     }
   }
 

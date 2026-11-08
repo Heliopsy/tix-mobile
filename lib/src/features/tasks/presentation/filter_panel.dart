@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
+import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/data/models/saved_filter.dart';
@@ -286,8 +287,9 @@ class _SavedFilterRow extends ConsumerWidget {
                       ? Icons.group_outlined
                       : Icons.bookmark_outline,
                   selected: state.savedFilterId == f.id,
-                  onSelected: (on) =>
-                      on ? screen.applySaved(f) : screen.clear(),
+                  onSelected: (on) => on
+                      ? unawaited(_openSaved(context, ref, scope, f))
+                      : screen.clear(),
                 ),
               ),
               const SizedBox(width: TixSpace.s2),
@@ -315,6 +317,55 @@ class _SavedFilterRow extends ConsumerWidget {
 }
 
 /// Asks for a name and whether to share, then saves the screen's filter.
+Future<void> _openSaved(
+  BuildContext context,
+  WidgetRef ref,
+  TaskScope scope,
+  SavedFilter filter,
+) async {
+  final screen = ref.read(taskScreenProvider(scope).notifier)
+    ..applySaved(filter);
+  try {
+    final fresh = await ref
+        .read(savedFiltersProvider.notifier)
+        .fetch(filter.id);
+    screen.refreshSaved(filter, fresh);
+  } on TixException catch (e) {
+    if (e.kind == TixErrorKind.notFound) screen.dropSaved(filter.id);
+    if (context.mounted) {
+      showTixToast(
+        context,
+        errorMessage(context.l10n, e),
+        tone: TixTone.danger,
+      );
+    }
+  }
+}
+
+/// Opens the saved filter [nameOrId] on the task screen over [scope], as a
+/// link names it, and says so when it cannot.
+Future<void> openSavedFilterNamed(
+  BuildContext context,
+  WidgetRef ref,
+  TaskScope scope,
+  String nameOrId,
+) async {
+  try {
+    final filter = await ref
+        .read(savedFiltersProvider.notifier)
+        .fetch(nameOrId);
+    ref.read(taskScreenProvider(scope).notifier).applySaved(filter);
+  } on TixException catch (e) {
+    if (context.mounted) {
+      showTixToast(
+        context,
+        errorMessage(context.l10n, e),
+        tone: TixTone.danger,
+      );
+    }
+  }
+}
+
 Future<void> saveCurrentFilter(
   BuildContext context,
   WidgetRef ref,

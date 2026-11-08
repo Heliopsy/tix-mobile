@@ -1,11 +1,17 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
+
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/files.dart';
 import 'package:tix_mobile/src/core/platform/local_access.dart';
+import 'package:tix_mobile/src/core/platform/share_intake.dart';
+import 'package:tix_mobile/src/core/quick/quick_add.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
@@ -13,6 +19,7 @@ import 'package:tix_mobile/src/core/widgets/sync_findings_note.dart';
 import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
 import 'package:tix_mobile/src/data/local/local_engine.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
+import 'package:tix_mobile/src/data/models/invite_link.dart';
 import 'package:tix_mobile/src/data/models/membership.dart';
 import 'package:tix_mobile/src/features/connect/application/connect_flow.dart';
 import 'package:tix_mobile/src/features/connect/presentation/in_place_browser.dart';
@@ -24,6 +31,9 @@ enum ConnectMethod {
 
   /// Email and password.
   signIn,
+
+  /// An invite link, accepted here.
+  invite,
 }
 
 /// Add an instance, or a connection to one: a server address or a database
@@ -36,6 +46,7 @@ class ConnectScreen extends ConsumerStatefulWidget {
     this.connectionId,
     this.url = '',
     this.email = '',
+    this.invite = '',
     super.key,
   });
 
@@ -55,6 +66,9 @@ class ConnectScreen extends ConsumerStatefulWidget {
   /// An email to sign in with.
   final String email;
 
+  /// An invite link to accept.
+  final String invite;
+
   @override
   ConsumerState<ConnectScreen> createState() => _ConnectScreenState();
 }
@@ -69,8 +83,14 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
   final _dbName = TextEditingController();
   final _tenantKey = TextEditingController();
   final _tenantName = TextEditingController();
+  late final _inviteLink = TextEditingController(text: widget.invite);
+  final _displayName = TextEditingController();
+  ({InviteLink link, InvitePreview preview})? _invite;
+  StreamSubscription<SharedText>? _shares;
   InstanceKind _kind = InstanceKind.remote;
-  late ConnectMethod _method = widget.email.isNotEmpty || _replacing != null
+  late ConnectMethod _method = widget.invite.isNotEmpty
+      ? ConnectMethod.invite
+      : widget.email.isNotEmpty || _replacing != null
       ? ConnectMethod.signIn
       : ConnectMethod.token;
   bool _busy = false;
@@ -89,6 +109,7 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
       widget.connectionId,
       widget.url,
       widget.email,
+      widget.invite,
     ].join('|'),
   );
 
@@ -100,10 +121,43 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
     if (old != null) _email.text = old.email;
     final saved = repo.instance(widget.instanceId ?? '');
     if (saved != null) _kind = saved.kind;
+    _inviteLink.addListener(_inviteEdited);
+    if (widget.invite.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _previewInvite().ignore();
+      });
+    }
+    if (!widget.adding) _takeShares();
+  }
+
+  void _takeShares() {
+    final intake = ref.read(shareIntakeProvider);
+    _shares = intake.shares.listen((share) {
+      final line = sharedLine(share);
+      if (InviteLink.parse(line) == null) {
+        ref.read(quickAddDraftsProvider.notifier).open(text: line);
+        return;
+      }
+      setState(() {
+        _kind = InstanceKind.remote;
+        _method = ConnectMethod.invite;
+      });
+      _inviteLink.text = line;
+      _previewInvite().ignore();
+    });
+    unawaited(intake.start());
+  }
+
+  void _inviteEdited() {
+    final link = _invite?.link;
+    if (link != null && InviteLink.parse(_inviteLink.text) != link) {
+      setState(() => _invite = null);
+    }
   }
 
   @override
   void dispose() {
+    unawaited(_shares?.cancel());
     for (final c in [
       _url,
       _token,
@@ -114,6 +168,8 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
       _dbName,
       _tenantKey,
       _tenantName,
+      _inviteLink,
+      _displayName,
     ]) {
       c.dispose();
     }
@@ -157,6 +213,39 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
             replacing: _replacing,
           ),
   );
+
+  Future<void> _previewInvite() => _run(() async {
+    final found = await _flow.previewInvite(_inviteLink.text);
+    if (!mounted) return;
+    setState(() {
+      _invite = found;
+      _displayName.text = found.preview.displayName;
+      _password.clear();
+    });
+  });
+
+  Future<void> _acceptInvite() {
+    final invite = _invite;
+    if (invite == null) return _previewInvite();
+    return _run(
+      () => _flow.acceptInvite(
+        invite.link,
+        email: invite.preview.email,
+        password: _password.text,
+        displayName: invite.preview.existingAccount ? '' : _displayName.text,
+        code: _code.text,
+        name: _name.text,
+      ),
+    );
+  }
+
+  Future<void> _pasteInvite() async {
+    final data = await Clipboard.getData(Clipboard.kTextPlain);
+    final text = data?.text ?? '';
+    if (text.isEmpty || !mounted) return;
+    _inviteLink.text = text.trim();
+    await _previewInvite();
+  }
 
   Future<void> _openFile() async {
     final files = ref.read(filePickingProvider);
@@ -389,7 +478,7 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
     final l10n = context.l10n;
     final reauth = _replacing != null;
     return [
-      if (saved == null)
+      if (saved == null && _method != ConnectMethod.invite)
         TextField(
           key: const Key('connect.url'),
           controller: _url,
@@ -404,9 +493,10 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
             border: const OutlineInputBorder(),
           ),
         )
-      else
+      else if (saved != null)
         Text(saved.baseUrl, key: const Key('connect.instanceUrl')),
-      const SizedBox(height: 16),
+      if (saved != null || _method != ConnectMethod.invite)
+        const SizedBox(height: 16),
       if (!reauth) ...[
         SegmentedButton<ConnectMethod>(
           key: const Key('connect.method'),
@@ -421,6 +511,12 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
               label: Text(l10n.methodSignIn),
               icon: const Icon(Icons.person_outline),
             ),
+            if (saved == null)
+              ButtonSegment(
+                value: ConnectMethod.invite,
+                label: Text(l10n.methodInvite),
+                icon: const Icon(Icons.mail_outline),
+              ),
           ],
           selected: {_method},
           onSelectionChanged: _busy
@@ -432,7 +528,9 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
         ),
         const SizedBox(height: 16),
       ],
-      if (_method == ConnectMethod.token)
+      if (_method == ConnectMethod.invite)
+        ..._inviteForm(context)
+      else if (_method == ConnectMethod.token)
         _SecretField(
           fieldKey: const Key('connect.token'),
           controller: _token,
@@ -467,7 +565,7 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
           onToggle: () => setState(() => _showSecret = !_showSecret),
         ),
       ],
-      if (saved == null) ...[
+      if (saved == null && _method != ConnectMethod.invite) ...[
         const SizedBox(height: 16),
         _NameField(
           controller: _name,
@@ -475,16 +573,159 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
           onSubmitted: _busy ? null : _submitRemote,
         ),
       ],
-      const SizedBox(height: 24),
-      FilledButton(
-        key: const Key('connect.submit'),
-        onPressed: _busy ? null : _submitRemote,
-        child: _spinnerOr(
-          _method == ConnectMethod.token
-              ? l10n.connectButton
-              : l10n.signInButton,
+      if (_method != ConnectMethod.invite) ...[
+        const SizedBox(height: 24),
+        FilledButton(
+          key: const Key('connect.submit'),
+          onPressed: _busy ? null : _submitRemote,
+          child: _spinnerOr(
+            _method == ConnectMethod.token
+                ? l10n.connectButton
+                : l10n.signInButton,
+          ),
+        ),
+      ],
+    ];
+  }
+
+  List<Widget> _inviteForm(BuildContext context) {
+    final l10n = context.l10n;
+    final invite = _invite;
+    final preview = invite?.preview;
+    final expires = preview?.expiresAt;
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    return [
+      TextField(
+        key: const Key('connect.inviteLink'),
+        controller: _inviteLink,
+        enabled: !_busy,
+        keyboardType: TextInputType.url,
+        autocorrect: false,
+        enableSuggestions: false,
+        textInputAction: TextInputAction.go,
+        onSubmitted: (_) => _busy ? null : _previewInvite(),
+        decoration: InputDecoration(
+          labelText: l10n.inviteLinkLabel,
+          hintText: l10n.inviteLinkHint,
+          helperText: l10n.inviteLinkHelp,
+          helperMaxLines: 3,
+          border: const OutlineInputBorder(),
+          suffixIcon: IconButton(
+            key: const Key('connect.invitePaste'),
+            tooltip: l10n.invitePaste,
+            icon: const Icon(Icons.content_paste),
+            onPressed: _busy ? null : _pasteInvite,
+          ),
         ),
       ),
+      const SizedBox(height: 16),
+      if (invite == null || preview == null)
+        FilledButton(
+          key: const Key('connect.invitePreview'),
+          onPressed: _busy ? null : _previewInvite,
+          child: _spinnerOr(l10n.inviteCheck),
+        )
+      else ...[
+        Card(
+          key: const Key('connect.inviteSummary'),
+          margin: EdgeInsets.zero,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.inviteJoin(
+                    preview.tenantName.isEmpty
+                        ? invite.link.baseUrl
+                        : preview.tenantName,
+                  ),
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 4),
+                Text(l10n.inviteAs(preview.email)),
+                Text(
+                  invite.link.baseUrl,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                if (expires != null)
+                  Text(
+                    l10n.inviteExpires(
+                      DateFormat.yMMMd(locale)
+                          .add_Hm()
+                          .format(expires.toLocal()),
+                    ),
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                if (preview.existingAccount) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    l10n.inviteExistingAccount,
+                    key: const Key('connect.inviteExisting'),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        if (!preview.existingAccount) ...[
+          TextField(
+            key: const Key('connect.inviteDisplayName'),
+            controller: _displayName,
+            enabled: !_busy,
+            autofillHints: const [AutofillHints.name],
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              labelText: l10n.inviteDisplayName,
+              border: const OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+        _SecretField(
+          fieldKey: const Key('connect.invitePassword'),
+          controller: _password,
+          enabled: !_busy,
+          label: preview.existingAccount
+              ? l10n.passwordLabel
+              : l10n.inviteNewPassword,
+          helper: preview.existingAccount
+              ? l10n.inviteExistingPasswordHelp
+              : l10n.inviteNewPasswordHelp,
+          visible: _showSecret,
+          onToggle: () => setState(() => _showSecret = !_showSecret),
+        ),
+        if (preview.codeRequired) ...[
+          const SizedBox(height: 16),
+          TextField(
+            key: const Key('connect.inviteCode'),
+            controller: _code,
+            enabled: !_busy,
+            keyboardType: TextInputType.number,
+            autofillHints: const [AutofillHints.oneTimeCode],
+            autocorrect: false,
+            decoration: InputDecoration(
+              labelText: l10n.codeLabel,
+              helperText: l10n.inviteCodeHelp,
+              helperMaxLines: 3,
+              border: const OutlineInputBorder(),
+            ),
+          ),
+        ],
+        const SizedBox(height: 16),
+        _NameField(
+          controller: _name,
+          enabled: !_busy,
+          onSubmitted: _busy ? null : _acceptInvite,
+        ),
+        const SizedBox(height: 24),
+        FilledButton(
+          key: const Key('connect.inviteAccept'),
+          onPressed: _busy ? null : _acceptInvite,
+          child: _spinnerOr(l10n.inviteAccept),
+        ),
+      ],
     ];
   }
 
