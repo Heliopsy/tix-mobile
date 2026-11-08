@@ -49,8 +49,10 @@ A feature does not import another feature. Anything two features need moves to `
 
 ### API client
 
-One client per saved server, holding its base URL and reading its token from secure storage. It sends
-`Authorization: Bearer <token>` and JSON, decodes JSON, and maps failures to typed errors. It performs no
+One client per active context, holding its base URL and a `Credential` read from secure storage. An API token
+goes out as `Authorization: Bearer <token>`. A sign-in session goes out as the `tix_session` cookie and nothing
+else: tix's bearer authenticator accepts API tokens only and refuses the request when a session token arrives
+there. The client sends and decodes JSON and maps failures to typed errors. It performs no
 validation and applies no rules: whatever the server decides is the answer. This mirrors tix's own
 `internal/client`, which marshals and nothing else.
 
@@ -67,6 +69,31 @@ against a newer server.
 A repository is the only thing a provider talks to. It turns DTOs into the models the UI uses, hides which endpoint
 serves what, and is the seam a later offline cache slots into without the providers noticing.
 
+## Instances, connections and the active context
+
+- An **instance** is a tix server: `remote` (an address) or `local` (a `.db` file served by tix embedded in the
+  app over loopback HTTP).
+- A **connection** is one identity on an instance: an API token, pinned by tix to the tenant it was minted in, or
+  a sign-in holding a session. A sign-in is pinned to one tenant or switchable between the person's memberships;
+  switching calls `POST /api/v1/auth/switch`, which mints a session in the target and ends the old one.
+- The **active context** is a connection and the tenant it targets. `SessionController` in `core/session` builds
+  it, and everything that talks to the server watches it, so switching rebuilds the client and every list.
+
+| Where | Key | Holds |
+| --- | --- | --- |
+| Preferences | `instances`, `connections` | The saved instances and connections, no secrets |
+| Preferences | `context.active`, `context.recent` | The active context and the recent ones |
+| Secure storage | `token.<connection>` | An API token (the 0.1 key, so upgrading moves nothing) |
+| Secure storage | `session.<connection>` | A sign-in's session token |
+
+The 0.1 list of servers is migrated once, on first start: each becomes a token connection with the same id on a
+remote instance per address. `whoami` names the tenant only for a person's session; for a token the app reads
+`GET /api/v1/tenants/{id}`, which needs `tenant:admin`, and leaves a narrower token's tenant unnamed.
+
+A local instance's engine sits behind `LocalTixEngine` in `data/local`. It starts when a local context becomes
+active and stops when another instance becomes active or the app exits. Until the FFI engine ships, the app uses
+`UnavailableLocalTixEngine`, and tests use `InMemoryLocalTixEngine`.
+
 ## Errors
 
 tix answers every failure with one envelope:
@@ -80,7 +107,7 @@ The API client reads `code` into a closed set of error kinds and keeps `message`
 | `code` | HTTP status | What the app does |
 | --- | --- | --- |
 | `invalid` | 400 | Shows the server's message next to the input that caused it |
-| `unauthenticated` | 401 | The token is wrong, expired or revoked: show the error and send the user back to the connect screen to fix that server (in-place token replacement is planned) |
+| `unauthenticated` | 401 | The token or session is wrong, expired or revoked: show the error; for a sign-in, offer to sign in again, keeping the connection |
 | `forbidden` | 403 | The token lacks a scope: say which action was refused, do not retry |
 | `not_found` | 404 | The item is gone or not visible to this token |
 | `conflict`, `lease_expired` | 409 | Someone changed it first: reload and show the current state |
@@ -131,8 +158,8 @@ tix's API documents.
   exposes `AsyncValue`. Widgets switch on it for loading, data and error.
 - Widgets `ref.watch` in `build` and `ref.read` in callbacks. `ref.listen` is for side effects such as snack bars
   and navigation, never for building UI.
-- The active server is a provider. Everything that talks to the API depends on it, so switching servers rebuilds
-  the client and invalidates every cached list without explicit bookkeeping.
+- The active context is a provider. Everything that talks to the API depends on it, so switching instance or
+  tenant rebuilds the client and invalidates every cached list without explicit bookkeeping.
 - Mutations go through notifier methods that call the repository, then update or invalidate the affected state.
   A widget never calls a repository directly.
 
@@ -152,13 +179,15 @@ The shell adapts to the window width, using Material 3's window size classes:
 The layout reacts to the width, not to the platform, so a narrow desktop window behaves like a phone and a wide
 tablet like a desktop.
 
-When no server is saved, the router redirects to the connect screen.
+When no context is active, the router redirects to the connect screen. The context switcher sits above the
+bottom navigation bar on phones and at the top of the navigation rail elsewhere.
 
 ## Secrets and preferences
 
-- API tokens live only in platform secure storage: Keychain on iOS and macOS, Android Keystore, libsecret on Linux,
-  DPAPI on Windows.
-- The saved servers' names and URLs, the theme and the language are ordinary preferences.
+- API tokens and session tokens live only in platform secure storage: Keychain on iOS and macOS, Android Keystore,
+  libsecret on Linux, DPAPI on Windows. Passwords are never stored.
+- The saved instances and connections (names, addresses, handles, tenants), the theme and the language are
+  ordinary preferences.
 - Nothing the app stores is a copy of server data. The future offline cache will change that, and will be specified
   in `openspec/` before it is built.
 
