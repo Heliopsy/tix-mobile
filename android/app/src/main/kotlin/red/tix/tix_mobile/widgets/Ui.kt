@@ -3,6 +3,7 @@
 package red.tix.tix_mobile.widgets
 
 import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetProviderInfo
 import android.content.Context
 import android.text.format.DateUtils
 import androidx.compose.runtime.Composable
@@ -67,7 +68,7 @@ class Look(val context: Context, val index: Index?) {
 @Composable
 fun onKeyguard(): Boolean =
     LocalAppWidgetOptions.current.getInt(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY, -1) ==
-        AppWidgetManager.WIDGET_CATEGORY_KEYGUARD
+        AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD
 
 @Composable
 fun isCompact(): Boolean = LocalSize.current.height < CompactHeight
