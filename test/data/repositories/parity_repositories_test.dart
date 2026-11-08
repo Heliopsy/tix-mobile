@@ -109,13 +109,26 @@ void main() {
         'kinds': ['workflow', 'field_def'],
         'name': 'Team setup',
       });
-      // tix answers application/vnd.tix.bundle+json, which Dio decodes
-      // unasked; the file still has to come out as the JSON it was.
-      expect(jsonDecode(utf8.decode(bytes)), {
-        'bundle_version': 1,
-        'name': 'Team setup',
-        'kinds': 2,
-      });
+      // tix serves NDJSON as application/vnd.tix.bundle+json, which Dio
+      // would try to decode as one JSON value; the file comes out as written.
+      expect(
+        utf8.decode(bytes),
+        '{"record":"header","header":{"name":"Team setup"}}\n'
+        '{"record":"component","kinds":2}\n',
+      );
+      server.failures['POST /api/v1/bundles/export'] = FakeResponse(
+        403,
+        envelope('forbidden', 'needs workflow:read'),
+      );
+      await expectLater(
+        repo.export(),
+        throwsA(
+          isA<TixException>()
+              .having((e) => e.kind, 'kind', TixErrorKind.forbidden)
+              .having((e) => e.message, 'message', 'needs workflow:read'),
+        ),
+      );
+      server.failures.clear();
       await repo.export();
       expect(last().body, {'kinds': <String>[]});
     });

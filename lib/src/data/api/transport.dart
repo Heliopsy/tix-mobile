@@ -112,13 +112,12 @@ class TixTransport {
       body: body,
       contentType: contentType,
       accept: accept,
-      type: ResponseType.plain,
+      // Bytes, not plain: Dio decodes any +json body even when asked for
+      // text, and a bundle is NDJSON served as application/vnd.tix.bundle+json.
+      type: ResponseType.bytes,
     );
     final data = response.data;
-    if (data is String) return data;
-    // Dio decodes a +json body even when asked for text (a bundle is
-    // application/vnd.tix.bundle+json), so it is written back as JSON.
-    return data == null ? '' : jsonEncode(data);
+    return data is List<int> ? utf8.decode(data, allowMalformed: true) : '';
   }
 
   /// A request answered with a file.
@@ -196,8 +195,28 @@ class TixTransport {
     } on DioException catch (e) {
       final data = e.response?.data;
       if (data is ResponseBody) throw await _fromStream(e, data);
+      if (data is List<int>) throw _fromBytes(e, data);
       throw TixException.fromDio(e);
     }
+  }
+
+  /// A failed request read as bytes carries its envelope undecoded.
+  static TixException _fromBytes(DioException e, List<int> bytes) {
+    final text = utf8.decode(bytes, allowMalformed: true);
+    Object? decoded;
+    try {
+      decoded = jsonDecode(text);
+    } on FormatException {
+      decoded = text;
+    }
+    return TixException.fromResponse(
+      Response<Object?>(
+        requestOptions: e.requestOptions,
+        statusCode: e.response?.statusCode,
+        headers: e.response?.headers,
+        data: decoded,
+      ),
+    );
   }
 
   /// A failed streamed request carries its envelope unread.

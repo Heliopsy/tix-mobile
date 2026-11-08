@@ -69,9 +69,9 @@ void main() {
           'name': 'Ops',
         });
         final saved = files.saved.single;
-        expect(saved.name, 'tix-bundle-ops.json');
+        expect(saved.name, 'tix-bundle-ops.ndjson');
         expect(saved.mimeType, 'application/vnd.tix.bundle+json');
-        expect(find.text('Exported tix-bundle-ops.json'), findsOneWidget);
+        expect(find.text('Exported tix-bundle-ops.ndjson'), findsOneWidget);
       });
     }
 

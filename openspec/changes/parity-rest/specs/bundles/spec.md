@@ -10,7 +10,7 @@ only after a preview. An import that replaces colliding components SHALL ask fir
 #### Scenario: Export
 
 - **WHEN** a person picks workflows and exports
-- **THEN** the app hands out the bundle tix wrote as a `.json` file
+- **THEN** the app hands out the bundle tix wrote byte for byte as an `.ndjson` file
 
 #### Scenario: Import
 
