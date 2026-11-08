@@ -248,6 +248,12 @@ release-files-check HEAD_REF="":
     set -euo pipefail
     case "{{HEAD_REF}}" in release-please--*) echo "release-please branch, skipped"; exit 0;; esac
     got=$(sed -nE 's/.*"\.": *"([^"]+)".*/\1/p' .release-please-manifest.json)
+    # CI on the release commit starts before release-please tags it, so the
+    # commit that bumps the manifest is checked against its own subject.
+    if [ "$(git log -1 --format=%s)" = "chore(main): release $got" ]; then
+      echo "release commit for $got, tagged by release-please after this run starts"
+      exit 0
+    fi
     tag=$(git tag --list 'v[0-9]*' --sort=-v:refname | head -1)
     if [ -z "$tag" ]; then
       [ "$got" = "0.0.0" ] || { echo "no release tag exists, so the manifest must say 0.0.0, not $got" >&2; exit 1; }
