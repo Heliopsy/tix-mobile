@@ -621,8 +621,8 @@ TixApi sessionApi(Ref ref) {
     api.transport.dio.interceptors.insert(
       0,
       LocalWakeInterceptor(
-        wake: () async => (await engines.ensure(instance)).baseUrl,
-        touch: () => engines.touch(instance.id),
+        wake: () async => (await engines.wake(instance)).baseUrl,
+        done: () => engines.done(instance.id),
       ),
     );
   }

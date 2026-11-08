@@ -23,13 +23,14 @@ void main() {
           wakes++;
           return 'http://127.0.0.1:4242';
         },
-        touch: () => touches++,
+        done: () => touches++,
       ),
     );
     await api.identity.whoami();
     expect(wakes, 1);
     expect(touches, 1);
     expect(server.requests.single.uri.authority, '127.0.0.1:4242');
+    expect(server.requests.single.persistentConnection, isFalse);
     server.tokens.clear();
     await expectLater(api.identity.whoami(), throwsA(isA<TixException>()));
     expect(touches, 2);
@@ -44,7 +45,7 @@ void main() {
             LocalWakeInterceptor(
               wake: () async =>
                   throw const TixException(TixErrorKind.engineUnavailable),
-              touch: () {},
+              done: () {},
             ),
           );
     await expectLater(

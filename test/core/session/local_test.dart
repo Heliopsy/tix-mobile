@@ -226,6 +226,27 @@ void main() {
       engines.dispose();
     });
 
+    testWidgets('a request in flight holds the engine awake', (tester) async {
+      final engine = InMemoryLocalTixEngine(existing: ['/a.db']);
+      final engines = LocalEngines(
+        engine,
+        idleAfter: const Duration(minutes: 1),
+      );
+      final a = local('a', '/a.db');
+      await engines.wake(a);
+      await engines.wake(a);
+      await tester.pump(const Duration(minutes: 5));
+      expect(engine.running, hasLength(1));
+      engines.done('a');
+      await tester.pump(const Duration(minutes: 5));
+      expect(engine.running, hasLength(1));
+      engines.done('a');
+      await tester.pump(const Duration(minutes: 1));
+      await tester.pump();
+      expect(engine.running, isEmpty);
+      engines.dispose();
+    });
+
     testWidgets('never keeps the engine running', (tester) async {
       final engine = InMemoryLocalTixEngine(existing: ['/a.db']);
       final engines = LocalEngines(
