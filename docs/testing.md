@@ -51,7 +51,11 @@ Goldens live under `test/**/goldens/` next to the test that owns them.
 
 - Golden images depend on the platform's font rendering. They are generated and compared on Linux, the platform CI
   runs on, and a golden test skips elsewhere. Do not commit goldens generated on macOS or Windows.
-- Update them with `flutter test --update-goldens <path>` and look at every changed image before committing it.
+- The design system's goldens live in `test/core/design/goldens/` and are tagged `golden`. `just goldens`
+  regenerates them; `test/core/design/flutter_test_config.dart` loads Roboto and the Material icons from the pinned
+  Flutter SDK's cache so they show real text rather than the test font's boxes.
+- Update them with `just goldens` (or `flutter test --update-goldens <path>`) and look at every changed image before
+  committing it.
   A golden updated without being looked at proves nothing.
 - Keep goldens few and small. A golden that changes with every unrelated tweak gets updated blindly and stops being
   a test.

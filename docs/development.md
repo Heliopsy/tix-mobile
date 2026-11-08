@@ -91,6 +91,7 @@ session. Without one there is nowhere safe to keep the token, and the app does n
 | `just cover` | Tests with a coverage report |
 | `just cover-check` | Fail when coverage drops under the floor in [testing.md](testing.md#coverage) |
 | `just cover-floor` | Apply the floor to the `coverage/lcov.info` already on disk |
+| `just goldens` | Regenerate the component goldens on Linux; look at every changed image before committing |
 
 ### Builds
 
