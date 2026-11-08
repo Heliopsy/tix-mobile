@@ -2,7 +2,7 @@
   {"name": "Android", "os": "ubuntu-24.04", "java": true, "recipe": "build-apk", "target": "android", "check": "android", "artifact": "build/app/outputs/flutter-apk/app-*-release.apk"},
   {"name": "Linux x64", "os": "ubuntu-24.04", "linux": true, "recipe": "build-linux", "target": "linux", "check": "bundle", "artifact": "build/linux/x64/release/bundle/"},
   {"name": "Linux arm64", "os": "ubuntu-24.04-arm", "linux": true, "recipe": "build-linux", "target": "linux", "check": "bundle", "artifact": "build/linux/arm64/release/bundle/"},
-  {"name": "iOS", "os": "macos-15", "main_only": true, "recipe": "build-ios", "target": "ios", "check": "bundle", "artifact": "build/ios/iphoneos/Runner.app/"},
-  {"name": "macOS", "os": "macos-15", "main_only": true, "recipe": "build-macos", "target": "macos", "check": "bundle", "artifact": "build/macos/Build/Products/Release/"},
-  {"name": "Windows", "os": "windows-2025", "main_only": true, "recipe": "build-windows", "target": "windows", "check": "bundle", "artifact": "build/windows/x64/runner/Release/"}
+  {"name": "iOS", "os": "macos-15", "main_only": true, "recipe": "build-ios", "target": "ios", "check": "bundle", "artifact": "build/ios/iphoneos/Runner.app/", "paths": "^(ios|macos)/|^(pubspec\\.lock|tix\\.lock)$|^hook/"},
+  {"name": "macOS", "os": "macos-15", "main_only": true, "recipe": "build-macos", "target": "macos", "check": "bundle", "artifact": "build/macos/Build/Products/Release/", "paths": "^(ios|macos)/|^(pubspec\\.lock|tix\\.lock)$|^hook/"},
+  {"name": "Windows", "os": "windows-2025", "main_only": true, "recipe": "build-windows", "target": "windows", "check": "bundle", "artifact": "build/windows/x64/runner/Release/", "paths": "^windows/|^(pubspec\\.lock|tix\\.lock)$|^hook/"}
 ]

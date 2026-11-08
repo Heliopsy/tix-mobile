@@ -182,9 +182,30 @@ jobs:
       - id: pick
         env:
           EVENT: ${{ github.event_name }}
+          REPO: ${{ github.repository }}
+          BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+          HEAD: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
+          GH_TOKEN: ${{ github.token }}
+        # main_only entries build on every push to main. A pull request or
+        # merge group gets one too when it touches the paths that entry names,
+        # so native code (Swift, the Windows runner, plugins via pubspec.lock,
+        # the engine hook) is compiled before it can break main.
         run: |
           set -euo pipefail
-          matrix=$(jq -c --arg ev "$EVENT" 'map(select($ev == "push" or (.main_only | not)) | del(.main_only))' .github/build-matrix.json)
+          changed='[]'
+          if [ "$EVENT" != push ] && [ -n "$BASE" ] && [ -n "$HEAD" ]; then
+            if ! changed=$(gh api "repos/$REPO/compare/$BASE...$HEAD" --jq '[.files[].filename]'); then
+              echo "could not list changed files; building every platform"
+              EVENT=push
+            elif [ "$(jq length <<<"$changed")" -ge 300 ]; then
+              echo "300 or more changed files; building every platform"
+              EVENT=push
+            fi
+          fi
+          matrix=$(jq -c --arg ev "$EVENT" --argjson changed "$changed" '
+            map(select($ev == "push" or (.main_only | not)
+                       or (.paths != null and (.paths as $p | any($changed[]; test($p))))))
+            | map(del(.main_only, .paths))' .github/build-matrix.json)
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
           echo "$matrix" | jq -r '.[].name'
 
