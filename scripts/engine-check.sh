@@ -46,10 +46,15 @@ load_aligned() { # SO NAME
 
 check_apk() {
   local apk=$1 tmp
-  mapfile -t libs < <(unzip -Z1 "$apk" | grep -E '^lib/[^/]+/libtix\.so$' || true)
+  # Listings are captured before matching: under pipefail, grep -q exiting at
+  # the first match kills unzip with SIGPIPE and fails the whole pipeline.
+  local listing info
+  listing=$(unzip -Z1 "$apk")
+  mapfile -t libs < <(grep -E '^lib/[^/]+/libtix\.so$' <<<"$listing" || true)
   [ "${#libs[@]}" -gt 0 ] || die "$apk: no lib/*/libtix.so"
   for lib in "${libs[@]}"; do
-    unzip -Z -v "$apk" "$lib" | grep -q 'compression method:.*none (stored)' \
+    info=$(unzip -Z -v "$apk" "$lib")
+    grep -q 'compression method:.*none (stored)' <<<"$info" \
       || die "$apk: $lib is compressed; native libraries must be stored"
     tmp=$(mktemp)
     unzip -p "$apk" "$lib" > "$tmp"
@@ -69,14 +74,23 @@ case "${1:-}" in
     ;;
   aab)
     [ -f "${2:-}" ] || die "aab needs an .aab file"
+    listing=$(unzip -Z1 "$2")
     for abi in arm64-v8a armeabi-v7a x86_64; do
-      unzip -Z1 "$2" | grep -qx "base/lib/$abi/libtix.so" || die "$2: no base/lib/$abi/libtix.so"
+      grep -qx "base/lib/$abi/libtix.so" <<<"$listing" || die "$2: no base/lib/$abi/libtix.so"
     done
     echo "$2: libtix.so for arm64-v8a, armeabi-v7a, x86_64"
     ;;
   bundle)
     [ -d "${2:-}" ] || die "bundle needs a directory"
-    found=$(find "$2" \( -name 'libtix.so' -o -name 'libtix.dll' -o -path '*libtix.framework/libtix' \) -print -quit)
+    found=$(find "$2" \( -name 'libtix.so' -o -name 'libtix.dll' \) -print -quit)
+    if [ -z "$found" ]; then
+      # Apple bundles: Flutter repackages code assets as frameworks under its
+      # own naming, so look for the binary that exports the engine instead.
+      while IFS= read -r f; do
+        syms=$(nm -gU "$f" 2>/dev/null || true)
+        if grep -q '_TixStart$' <<<"$syms"; then found=$f; break; fi
+      done < <(find "$2" -path '*.framework/*' -type f ! -name '*.plist' ! -path '*/_CodeSignature/*' ! -path '*/Resources/*')
+    fi
     [ -n "$found" ] || die "$2: no libtix in the bundle"
     echo "$2: $found"
     ;;
