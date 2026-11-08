@@ -1,0 +1,7 @@
+# SPDX-FileCopyrightText: tix-mobile contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# The tix engine's source, for fdroiddata's srclibs/ directory. The app's
+# recipe pins it to the commit tix.lock names (`tix@<commit>`).
+RepoType: git
+Repo: https://github.com/heliopsy/tix.git

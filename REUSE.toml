@@ -98,3 +98,16 @@ SPDX-License-Identifier = "AGPL-3.0-or-later"
 path = ["lib/**/*.yaml"]
 SPDX-FileCopyrightText = "tix-mobile contributors"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+# Store listing text and images, which F-Droid and Google Play read as plain
+# files and which cannot hold a header.
+[[annotations]]
+path = ["fastlane/metadata/**"]
+SPDX-FileCopyrightText = "tix-mobile contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+# Bundler's lockfile for fastlane, generated.
+[[annotations]]
+path = ["Gemfile.lock"]
+SPDX-FileCopyrightText = "tix-mobile contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"

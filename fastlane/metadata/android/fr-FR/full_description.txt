@@ -1,0 +1,31 @@
+tix est un gestionnaire de tâches pensé pour les humains comme pour les agents IA : un serveur auto-hébergé avec une CLI, un tableau dans le terminal, une API HTTP et une interface web. Cette application en est le client natif. Elle utilise la même API que la CLI : une tâche prise en charge par un agent depuis un terminal apparaît sur votre téléphone une seconde plus tard.
+
+Deux façons de l'utiliser :
+- Vous connecter à votre propre serveur tix (https://github.com/heliopsy/tix) avec un jeton d'API, ou avec votre e-mail et votre mot de passe (double authentification comprise). Vous pouvez ajouter plusieurs serveurs et passer de l'un à l'autre, et d'un tenant à l'autre, depuis n'importe quel écran.
+- Ouvrir une base de données tix locale sur l'appareil. Le moteur tix est intégré à l'application et sert un fichier .db sans aucun serveur. Vous en importez une copie dans l'application et la réexportez via le menu de partage.
+
+Ce qu'elle fait :
+- Projets avec leur couleur et leur nombre de tâches ouvertes
+- Listes de tâches avec actualisation par glissement, tri, regroupement par statut ou par projet, balayage pour terminer ou reporter une tâche, et modifications groupées annulables en une fois
+- Fiche de tâche modifiable sur place : titre, description en Markdown avec cases à cocher, étape du workflow, priorité, responsable, échéance, étiquettes, champs personnalisés et règle de répétition, ainsi que sous-tâches, dépendances, commentaires avec mentions @, historique et pièces jointes
+- Tableau avec glisser-déposer entre les colonnes du workflow, ou une ligne par projet
+- Filtres et recherche dans le langage de filtres de tix, filtres rapides en un geste et filtres enregistrés
+- Mon travail : vos tâches ouvertes classées en En retard, Aujourd'hui, Cette semaine, Plus tard et Sans date
+- Ajout rapide dans la syntaxe sur une ligne de tix, par exemple « Fix login !high #auth @raj due:fri », avec un aperçu en direct de ce que le serveur en comprend. C'est le serveur qui analyse la ligne, donc l'application comprend exactement ce que comprennent la CLI et le navigateur.
+- Modèles de tâches
+- Partager vers tix : un texte ou un lien partagé ouvre l'ajout rapide en brouillon. Raccourcis du lanceur pour Ajout rapide, Boîte de réception et Mon travail.
+- Boîte de réception pour les mentions, attributions, commentaires et changements de statut, avec un badge de non-lus
+- Notifications des nouveaux éléments de la boîte de réception tant que l'application tourne
+- Thème système, clair, sombre ou noir OLED
+- Anglais, bulgare, français et allemand
+- Mise en page pour téléphone et tablette, avec liste et détail côte à côte sur grand écran
+
+Confidentialité :
+Le serveur reste la référence. L'application ne garde aucune donnée propre en dehors des serveurs ajoutés et de quelques préférences. Les jetons d'API et les sessions sont conservés dans le Android Keystore et ne sont jamais écrits dans les journaux ni dans les préférences. Les mots de passe ne sont pas enregistrés du tout. L'application ne contient aucune bibliothèque d'analyse, de publicité ou de rapport de plantage.
+
+Pour commencer :
+Sur la machine qui fait tourner tix, créez un jeton avec « tix token create phone --scope task:read --scope task:write --scope project:read », puis saisissez l'adresse du serveur et le jeton dans l'application. Un téléphone ne peut pas joindre un serveur qui n'écoute que sur localhost sur une autre machine : servez tix en HTTPS, directement ou derrière un proxy inverse.
+
+L'application en est à ses débuts, avant toute version stable. Elle couvre une partie de l'API tix, et il faut s'attendre à des imperfections et à des changements avant la 1.0.
+
+tix-mobile est un logiciel libre sous licence AGPL-3.0-or-later. Code source, suivi des problèmes et feuille de route : https://github.com/heliopsy/tix-mobile

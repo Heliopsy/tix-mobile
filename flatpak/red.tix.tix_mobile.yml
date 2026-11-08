@@ -1,0 +1,87 @@
+# SPDX-FileCopyrightText: tix-mobile contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Flatpak manifest for Flathub, building tix-mobile and its embedded tix engine
+# from source. The app id is the one linux/CMakeLists.txt already gives the
+# GTK application, so the desktop entry, icons and window all match.
+#
+# This is the input manifest. Flathub builds offline, so before a submission
+# (or a version bump in the flathub/red.tix.tix_mobile repository) two lists of
+# sources are generated next to it, as docs/releasing.md#flathub describes:
+#
+#   generated/flutter-sdk.json, generated/pubspec-sources.json
+#       flatpak-flutter: the Flutter SDK's engine artifacts and every package
+#       pubspec.lock pins, so `flutter pub get --offline` works
+#   generated/tix-go-modules.json
+#       the Go modules of tix at the tix.lock commit, unpacked as tix-src/vendor
+#
+# The tag, the tix commit (tix.lock) and the Flutter tag (.tool-versions) move
+# together on every release.
+
+id: red.tix.tix_mobile
+runtime: org.gnome.Platform
+runtime-version: '51'
+sdk: org.gnome.Sdk
+command: tix_mobile
+
+finish-args:
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  # A client for tix servers, local or remote.
+  - --share=network
+  # API tokens live in the desktop's secret service (libsecret), never in files.
+  - --talk-name=org.freedesktop.secrets
+  # flutter_local_notifications talks to the notification service directly.
+  - --talk-name=org.freedesktop.Notifications
+  # Opening and saving files and links goes through the portals, so no
+  # filesystem access is requested.
+
+modules:
+  # Go only for the build: the hook compiles libtix with it, then it is
+  # removed from the app. Downloaded rather than taken from the golang SDK
+  # extension, because tix's go.mod asks for a newer Go than the extension
+  # ships for most of a runtime's life.
+  - name: go
+    buildsystem: simple
+    cleanup: ['*']
+    build-commands:
+      - install -d /app/lib/go
+      - cp -a . /app/lib/go/
+    sources:
+      - type: archive
+        only-arches: [x86_64]
+        url: https://go.dev/dl/go1.27.3.linux-amd64.tar.gz
+        sha256: 65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40
+      - type: archive
+        only-arches: [aarch64]
+        url: https://go.dev/dl/go1.27.3.linux-arm64.tar.gz
+        sha256: a06e99309dbcbdca1a8ccd2282c3ee146e55930886e26b4f1193269587165f49
+
+  - name: tix-mobile
+    buildsystem: simple
+    build-commands:
+      - flatpak/build.sh
+    sources:
+      # Placeholder: v0.4.0 predates flatpak/build.sh and the metainfo, so the
+      # first release that carries them is the first one Flathub can build.
+      # Set tag and commit to it when submitting.
+      - type: git
+        url: https://github.com/heliopsy/tix-mobile.git
+        tag: v0.4.0
+        commit: 7ecadd9cfaacb8a59e24e3d97807041a50ca46b3
+      # The tix commit tix.lock pins, which the build places where
+      # hook/build.dart looks for it.
+      - type: git
+        url: https://github.com/heliopsy/tix.git
+        commit: b66e8b4456251a2086d50e07514f30b724d51d72
+        dest: tix-src
+      - type: git
+        url: https://github.com/flutter/flutter.git
+        tag: 3.47.9
+        commit: c197ca5199e9ee5661e865596c9c07294dfab51c
+        dest: flutter
+      - generated/flutter-sdk.json
+      - generated/pubspec-sources.json
+      - generated/tix-go-modules.json

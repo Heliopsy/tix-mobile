@@ -1,0 +1,94 @@
+# SPDX-FileCopyrightText: tix-mobile contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# The F-Droid recipe, to be submitted to fdroiddata as
+# metadata/red.tix.tix_mobile.yml together with srclibs/tix.yml. Store text,
+# icon and changelogs come from fastlane/metadata/android in this repository,
+# which F-Droid reads at the built tag.
+#
+# Three builds per release, one per ABI. Flutter's --split-per-abi adds
+# 1000 x the ABI number to the version code, which here is the "+N" that
+# release-please increments in pubspec.yaml on every release, so the codes
+# never collide: 1000+N (armeabi-v7a), 2000+N (arm64-v8a), 4000+N (x86_64).
+# They differ from the GitHub release APKs' codes on purpose: F-Droid signs
+# with its own key, so the two never update each other anyway.
+#
+# Placeholder version: v0.4.0 predates the APK changes F-Droid needs (no
+# dependency metadata blob), so set the three entries to the first release
+# that carries this file before submitting. docs/releasing.md#f-droid.
+
+Categories:
+  - Productivity
+License: AGPL-3.0-or-later
+AuthorName: tix-mobile contributors
+WebSite: https://github.com/heliopsy/tix-mobile
+SourceCode: https://github.com/heliopsy/tix-mobile
+IssueTracker: https://github.com/heliopsy/tix-mobile/issues
+Changelog: https://github.com/heliopsy/tix-mobile/blob/HEAD/CHANGELOG.md
+
+AutoName: tix
+
+RepoType: git
+Repo: https://github.com/heliopsy/tix-mobile.git
+
+Builds:
+  - versionName: 0.4.0
+    versionCode: 1005
+    commit: v0.4.0
+    output: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+    srclibs:
+      - flutter@3.47.9
+      - tix@b66e8b4456251a2086d50e07514f30b724d51d72
+    prebuild: &prebuild
+      # Go at the version .tool-versions pins, checked against go.dev's sum.
+      - curl -fsSLo $HOME/go.tgz https://go.dev/dl/go1.27.3.linux-amd64.tar.gz
+      - echo "65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40  $HOME/go.tgz"
+        | sha256sum -c -
+      - tar -C $HOME -xzf $HOME/go.tgz
+      # hook/build.dart builds libtix from a tix checkout in its cache when
+      # one is there, so the srclib is put where it looks instead of fetched.
+      - mkdir -p $HOME/.cache/tix-mobile/libtix/src
+      - cp -a $$tix$$ $HOME/.cache/tix-mobile/libtix/src/b66e8b4456251a2086d50e07514f30b724d51d72
+      - $HOME/go/bin/go env -w GOTOOLCHAIN=local GOFLAGS=-trimpath
+      - $$flutter$$/bin/flutter config --no-analytics
+      - $$flutter$$/bin/flutter pub get
+    build:
+      - export PATH=$HOME/go/bin:$PATH
+      - $$flutter$$/bin/flutter build apk --release --split-per-abi --target-platform=android-arm
+    ndk: r28c
+
+  - versionName: 0.4.0
+    versionCode: 2005
+    commit: v0.4.0
+    output: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+    srclibs:
+      - flutter@3.47.9
+      - tix@b66e8b4456251a2086d50e07514f30b724d51d72
+    prebuild: *prebuild
+    build:
+      - export PATH=$HOME/go/bin:$PATH
+      - $$flutter$$/bin/flutter build apk --release --split-per-abi --target-platform=android-arm64
+    ndk: r28c
+
+  - versionName: 0.4.0
+    versionCode: 4005
+    commit: v0.4.0
+    output: build/app/outputs/flutter-apk/app-x86_64-release.apk
+    srclibs:
+      - flutter@3.47.9
+      - tix@b66e8b4456251a2086d50e07514f30b724d51d72
+    prebuild: *prebuild
+    build:
+      - export PATH=$HOME/go/bin:$PATH
+      - $$flutter$$/bin/flutter build apk --release --split-per-abi --target-platform=android-x64
+    ndk: r28c
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags ^v\d+\.\d+\.\d+$
+VercodeOperation:
+  - 1000 + %c
+  - 2000 + %c
+  - 4000 + %c
+UpdateCheckData: pubspec.yaml|version:\s.+\+(\d+)|.|version:\s(.+)\+
+CurrentVersion: 0.4.0
+CurrentVersionCode: 4005
