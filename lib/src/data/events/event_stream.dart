@@ -155,15 +155,18 @@ final class EventStreamStatus extends EventStreamUpdate {
 /// [close]. The cursor lives as long as this object: a fresh one starts
 /// live-only, since whatever reads the events loads current data anyway.
 class TixEventStream {
-  /// Streams events from the server at [baseUrl], presenting the given headers.
+  /// Streams events from the server at [baseUrl], presenting the given
+  /// headers, resuming after [since] when it is above 0.
   TixEventStream({
     required String baseUrl,
     required this._headers,
     this._connector = ioEventSocket,
     this._backoff = const Backoff(),
     this._types = const [],
+    int since = 0,
     Random? random,
   }) : url = eventsUrl(baseUrl),
+       _cursor = since,
        _random = random ?? Random() {
     _updates = StreamController<EventStreamUpdate>.broadcast(
       onListen: () {
@@ -202,8 +205,9 @@ class TixEventStream {
   StreamSubscription<Object?>? _listening;
   Timer? _retry;
   int _attempt = 0;
-  int _cursor = 0;
+  int _cursor;
   bool _wasLive = false;
+  bool _expired = false;
   EventStreamState _state = EventStreamState.connecting;
 
   /// Every update: events, gaps and state changes.
@@ -299,7 +303,10 @@ class TixEventStream {
     switch (msg['type']) {
       case 'subscribed':
         final resumed = msg['since_seq'] != null || _cursor > 0;
-        if (_wasLive && !resumed) _updates.add(const EventsMissed());
+        if ((_wasLive && !resumed) || _expired) {
+          _updates.add(const EventsMissed());
+        }
+        _expired = false;
         _wasLive = true;
         _attempt = 0;
         _set(EventStreamState.live);
@@ -322,6 +329,7 @@ class TixEventStream {
     if (code == 'invalid' && message.contains('no longer available')) {
       // The acknowledgement of this live-only subscription reports the gap.
       _cursor = 0;
+      _expired = true;
       _subscribe(resume: false);
       return;
     }

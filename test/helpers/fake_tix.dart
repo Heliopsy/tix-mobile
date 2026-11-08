@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show SocketException;
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
@@ -344,6 +345,85 @@ class FakeTix {
 
   late final adapter = FakeAdapter(_handle);
 
+  /// The event log `GET /api/v1/events/poll` reads, oldest first.
+  final eventLog = <Map<String, Object?>>[];
+
+  /// Whether the poll endpoint exists; false answers 404 as a tix older
+  /// than it does.
+  bool pollSupported = true;
+
+  /// Answers every poll with this when set, for refusals.
+  FakeResponse? pollAnswer;
+
+  /// Fails every poll as an unreachable server would.
+  bool pollOffline = false;
+
+  /// The oldest event the log still keeps; a poll from before it is
+  /// refused as tix refuses an expired cursor.
+  int oldestRetained = 0;
+
+  Completer<void> _logged = Completer<void>();
+
+  /// Commits an event with [seq] and [type], waking polls waiting for one.
+  void addEvent(int seq, String type, {String subjectId = 'id-infra-1'}) {
+    eventLog.add({
+      'seq': seq,
+      'type': type,
+      'subject_type': type.split('.').first,
+      'subject_id': subjectId,
+      'project_id': 'p1',
+      'occurred_at': '2026-11-08T10:00:00Z',
+    });
+    final woke = _logged;
+    _logged = Completer<void>();
+    woke.complete();
+  }
+
+  /// Requests to the poll endpoint, in order.
+  List<RequestOptions> get polls => requestsTo('/api/v1/events/poll');
+
+  Future<FakeResponse> _poll(Map<String, String> q) async {
+    if (pollOffline) {
+      throw const SocketException('network is unreachable');
+    }
+    final answer = pollAnswer;
+    if (answer != null) return answer;
+    if (!pollSupported) {
+      return FakeResponse(404, envelope('not_found', 'no such route'));
+    }
+    final head = eventLog.isEmpty ? 0 : eventLog.last['seq']! as int;
+    final requested = int.tryParse(q['since_seq'] ?? '') ?? 0;
+    if (requested > 0 && requested < oldestRetained - 1) {
+      return FakeResponse(
+        400,
+        envelope(
+          'invalid',
+          'cursor $requested is no longer available; '
+              'the oldest retained event is $oldestRetained',
+        ),
+      );
+    }
+    final since = requested == 0 ? head : requested;
+    final limit = int.tryParse(q['limit'] ?? '') ?? 200;
+    final wait = int.tryParse((q['wait'] ?? '0s').replaceAll('s', '')) ?? 0;
+    List<Map<String, Object?>> after() => [
+      for (final e in eventLog)
+        if ((e['seq']! as int) > since) e,
+    ].take(limit).toList();
+    var events = after();
+    if (events.isEmpty && wait > 0) {
+      await Future.any([
+        _logged.future,
+        Future<void>.delayed(Duration(seconds: wait)),
+      ]);
+      events = after();
+    }
+    return FakeResponse(200, {
+      'events': events,
+      'next_seq': events.isEmpty ? since : events.last['seq'],
+    });
+  }
+
   /// A factory override that sends every client to this server.
   TixApiFactory get factory =>
       (baseUrl, credential, {tenant}) => TixApi(
@@ -434,6 +514,8 @@ class FakeTix {
     final quick = await _quick(o, path);
     if (quick != null) return quick;
     switch ((o.method, path)) {
+      case ('GET', '/api/v1/events/poll'):
+        return await _poll(q);
       case ('GET', '/api/v1/whoami'):
         final account = accounts[caller.email];
         if (account == null) {
