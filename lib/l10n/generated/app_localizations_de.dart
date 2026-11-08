@@ -1062,6 +1062,426 @@ class AppLocalizationsDe extends AppLocalizations {
   String get taskDetailYes => 'Ja';
 
   @override
+  String get boardAllEmpty => 'Noch keine Aufgaben.';
+
+  @override
+  String get boardAllEmptyBody =>
+      'Hier erscheinen Aufgaben aus allen Projekten.';
+
+  @override
+  String get boardArrangement => 'Anordnung';
+
+  @override
+  String get boardAssignMe => 'Mir zuweisen';
+
+  @override
+  String boardAssignedToMe(String ref) {
+    return '$ref Ihnen zugewiesen';
+  }
+
+  @override
+  String get boardCollapse => 'Einklappen';
+
+  @override
+  String get boardColumnEmpty => 'Hier ist nichts';
+
+  @override
+  String boardCompleted(String ref) {
+    return '$ref erledigt';
+  }
+
+  @override
+  String boardCount(int count, String more) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count$more Aufgaben',
+      one: '1$more Aufgabe',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get boardExpand => 'Ausklappen';
+
+  @override
+  String boardGroupMenu(String group) {
+    return '$group anordnen';
+  }
+
+  @override
+  String boardHiddenCount(int count) {
+    return 'Ausgeblendet: $count';
+  }
+
+  @override
+  String get boardHide => 'Ausblenden';
+
+  @override
+  String get boardLoadMore => 'Mehr laden';
+
+  @override
+  String get boardMoveDown => 'Nach unten';
+
+  @override
+  String get boardMoveLeft => 'Nach links';
+
+  @override
+  String get boardMoveRight => 'Nach rechts';
+
+  @override
+  String boardMoveTitle(String ref) {
+    return '$ref verschieben nach';
+  }
+
+  @override
+  String get boardMoveTo => 'Verschieben nach…';
+
+  @override
+  String get boardMoveUp => 'Nach oben';
+
+  @override
+  String boardMoved(String ref, String status) {
+    return '$ref nach $status verschoben';
+  }
+
+  @override
+  String get boardNext => 'Nächste Aufgabe';
+
+  @override
+  String boardNoRoute(String ref) {
+    return 'Für $ref gibt es in ihrem Workflow keinen Weg dorthin';
+  }
+
+  @override
+  String get boardOpen => 'Öffnen';
+
+  @override
+  String get boardPrevious => 'Vorherige Aufgabe';
+
+  @override
+  String get boardRefused =>
+      'Diese Projekte nutzen unterschiedliche Workflows und können daher kein gemeinsames Board haben. Grenzen Sie den Filter auf Projekte eines Workflows ein, um ein Board zu sehen.';
+
+  @override
+  String boardRefusedGroup(String workflow, String projects) {
+    return '$workflow: $projects';
+  }
+
+  @override
+  String boardReopened(String ref) {
+    return '$ref wieder geöffnet';
+  }
+
+  @override
+  String get boardResetArrangement => 'Anordnung zurücksetzen';
+
+  @override
+  String boardShowGroup(String group) {
+    return '$group anzeigen';
+  }
+
+  @override
+  String get boardSnoozeLater => 'Später heute';
+
+  @override
+  String boardSnoozeTitle(String ref) {
+    return '$ref zurückstellen bis';
+  }
+
+  @override
+  String get boardSnoozeTomorrow => 'Morgen früh';
+
+  @override
+  String get boardSnoozeWeek => 'Nächste Woche';
+
+  @override
+  String boardSnoozed(String ref) {
+    return '$ref zurückgestellt';
+  }
+
+  @override
+  String boardStarred(String ref) {
+    return '$ref als Favorit markiert';
+  }
+
+  @override
+  String boardStrays(String refs) {
+    return 'Nicht in den Spalten dieses Boards: $refs';
+  }
+
+  @override
+  String get boardSwitchProject => 'Projekt wechseln';
+
+  @override
+  String boardUnstarred(String ref) {
+    return '$ref aus Favoriten entfernt';
+  }
+
+  @override
+  String get boardWake => 'Jetzt aufwecken';
+
+  @override
+  String boardWoken(String ref) {
+    return '$ref ist wieder aktiv';
+  }
+
+  @override
+  String get bulkClear => 'Auswahl aufheben';
+
+  @override
+  String get bulkCopy => 'Kopieren nach…';
+
+  @override
+  String bulkCopyTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Aufgaben kopieren nach',
+      one: '1 Aufgabe kopieren nach',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bulkDelete => 'Löschen';
+
+  @override
+  String get bulkDeleteBody =>
+      'Sie kommen in den Papierkorb, mit „Rückgängig“ holen Sie sie zurück.';
+
+  @override
+  String bulkDeleteTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Aufgaben löschen?',
+      one: '1 Aufgabe löschen?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bulkDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Aufgaben geändert',
+      one: '1 Aufgabe geändert',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bulkMove => 'Verschieben';
+
+  @override
+  String bulkMoveTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Aufgaben verschieben nach',
+      one: '1 Aufgabe verschieben nach',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bulkPartly(int count, String refused) {
+    return '$count geändert. Abgelehnt: $refused';
+  }
+
+  @override
+  String get bulkSelect => 'Auswählen';
+
+  @override
+  String get bulkSelectAll => 'Alle auswählen';
+
+  @override
+  String bulkSelected(int count) {
+    return '$count ausgewählt';
+  }
+
+  @override
+  String get bulkTagAdd => 'Tag hinzufügen';
+
+  @override
+  String get bulkTagRemove => 'Tag entfernen';
+
+  @override
+  String get filterBlocked => 'Blockiert';
+
+  @override
+  String get filterClear => 'Leeren';
+
+  @override
+  String get filterDelete => 'Filter löschen';
+
+  @override
+  String get filterDeleteBody =>
+      'Alle, mit denen er geteilt wurde, verlieren ihn ebenfalls.';
+
+  @override
+  String filterDeleteTitle(String name) {
+    return '$name löschen?';
+  }
+
+  @override
+  String get filterDueToday => 'Heute fällig';
+
+  @override
+  String get filterDueWeek => 'Diese Woche fällig';
+
+  @override
+  String get filterFinished => 'Abgeschlossen';
+
+  @override
+  String get filterFocus => 'Aufgaben filtern';
+
+  @override
+  String get filterMine => 'Meine';
+
+  @override
+  String get filterName => 'Name';
+
+  @override
+  String get filterNoMatch => 'Nichts passt zu diesem Filter.';
+
+  @override
+  String get filterNoMatchBody => 'Ändern oder leeren Sie den Filter.';
+
+  @override
+  String get filterOverdue => 'Überfällig';
+
+  @override
+  String get filterRename => 'Umbenennen';
+
+  @override
+  String get filterSave => 'Filter speichern';
+
+  @override
+  String get filterSaveTitle => 'Diesen Filter speichern';
+
+  @override
+  String filterSaved(String name) {
+    return '$name gespeichert';
+  }
+
+  @override
+  String get filterShare => 'Mit allen teilen';
+
+  @override
+  String get filterShared => 'Mit allen im Mandanten teilen';
+
+  @override
+  String get filterSharedHelp =>
+      'Andere sehen ihn unter ihren gespeicherten Filtern; nur Sie und Administratoren können ihn ändern.';
+
+  @override
+  String get filterSnoozed => 'Zurückgestellt';
+
+  @override
+  String get filterUnshare => 'Nicht mehr teilen';
+
+  @override
+  String get goMyWork => 'Zu „Meine Arbeit“';
+
+  @override
+  String get goTasks => 'Zu „Aufgaben“';
+
+  @override
+  String get groupNone => 'Keine Gruppierung';
+
+  @override
+  String get groupProject => 'Nach Projekt gruppieren';
+
+  @override
+  String get groupStatus => 'Nach Status gruppieren';
+
+  @override
+  String get lanesEmpty => 'Keine Aufgaben';
+
+  @override
+  String get myWorkEmpty => 'Ihnen ist nichts zugewiesen.';
+
+  @override
+  String get myWorkEmptyBody =>
+      'Offene Aufgaben, die Ihnen zugewiesen sind, erscheinen hier nach Frist sortiert.';
+
+  @override
+  String get myWorkLater => 'Später';
+
+  @override
+  String get myWorkNoDate => 'Kein Datum';
+
+  @override
+  String get myWorkOverdue => 'Überfällig';
+
+  @override
+  String get myWorkTitle => 'Meine Arbeit';
+
+  @override
+  String get myWorkToday => 'Heute';
+
+  @override
+  String get myWorkWeek => 'Diese Woche';
+
+  @override
+  String projectOpenCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count offene Aufgaben',
+      one: '1 offene Aufgabe',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sortCreated => 'Erstellt';
+
+  @override
+  String get sortDescending => 'Absteigend';
+
+  @override
+  String get sortMenu => 'Sortieren und gruppieren';
+
+  @override
+  String get sortNumber => 'Nummer';
+
+  @override
+  String get sortTitle => 'Titel';
+
+  @override
+  String get sortUpdated => 'Aktualisiert';
+
+  @override
+  String get sortUrgency => 'Dringlichkeit';
+
+  @override
+  String get tasksTitle => 'Aufgaben';
+
+  @override
+  String get viewBoard => 'Board';
+
+  @override
+  String get viewLanes => 'Bahnen';
+
+  @override
+  String get viewList => 'Liste';
+
+  @override
+  String get viewSwitch => 'Ansicht wechseln';
+
+  @override
+  String boardAssigned(String ref) {
+    return '$ref zugewiesen';
+  }
+
+  @override
+  String get boardAssignTo => 'Zuweisen an…';
+
+  @override
   String get themeOled => 'OLED-Schwarz';
 
   @override
