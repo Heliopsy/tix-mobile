@@ -43,6 +43,15 @@ abstract final class Routes {
   static String channel(String id) =>
       '$notificationSettings/channels/${Uri.encodeComponent(id)}';
 
+  /// Every management area the credential can use.
+  static const manage = '/manage';
+
+  /// The tenant's workflows.
+  static const workflows = '/manage/workflows';
+
+  /// The projects whose custom fields can be managed.
+  static const fieldProjects = '/manage/fields';
+
   /// Theme, language and instances.
   static const settings = '/settings';
 
@@ -71,6 +80,16 @@ abstract final class Routes {
 
   /// The tasks of the project [key].
   static String project(String key) => '/projects/${Uri.encodeComponent(key)}';
+
+  /// The settings of the project [key].
+  static String projectSettings(String key) => '${project(key)}/settings';
+
+  /// The custom fields of the project [key].
+  static String projectFields(String key) => '${project(key)}/fields';
+
+  /// The workflow [key], in its editor.
+  static String workflow(String key) =>
+      '$workflows/${Uri.encodeComponent(key)}';
 
   /// The task [ref] in the project [key].
   static String task(String key, String ref) =>

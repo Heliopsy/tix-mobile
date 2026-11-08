@@ -1,0 +1,86 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/router/routes.dart';
+import 'package:tix_mobile/src/data/models/access.dart';
+
+/// The groups the Manage screen lists, in order.
+enum ManageGroup { projects, workflows, fields, people, access, tenant, server }
+
+/// One management area on the Manage screen.
+@immutable
+class ManageEntry {
+  /// An entry in [group] opening [route], shown when the credential holds
+  /// [scope] (and passes [when], if given).
+  const ManageEntry({
+    required this.id,
+    required this.group,
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.route,
+    this.scope,
+    this.when,
+  });
+
+  /// A stable id, `<area>.<screen>`, for keys and tests.
+  final String id;
+
+  /// Where it is listed.
+  final ManageGroup group;
+
+  /// Its icon.
+  final IconData icon;
+
+  /// Its name.
+  final String Function(AppLocalizations l10n) title;
+
+  /// One line on what it manages.
+  final String Function(AppLocalizations l10n) subtitle;
+
+  /// The location it opens.
+  final String route;
+
+  /// The scope that shows it; null shows it to everyone [when] lets in.
+  final Scope? scope;
+
+  /// A further test, for entries a scope alone does not decide.
+  final bool Function(Access access)? when;
+
+  /// Whether [access] may use it.
+  bool visibleTo(Access access) =>
+      (scope == null || access.has(scope!)) && (when?.call(access) ?? true);
+}
+
+/// Every management area. Add an entry here for a new area; the Manage
+/// screen groups and filters them, so nothing else needs to change.
+final manageSections = <ManageEntry>[
+  ManageEntry(
+    id: 'projects.list',
+    group: ManageGroup.projects,
+    icon: Icons.folder_outlined,
+    title: (l) => l.projectsTitle,
+    subtitle: (l) => l.manageProjectsSubtitle,
+    route: Routes.projects,
+    scope: Scope.projectRead,
+  ),
+  ManageEntry(
+    id: 'workflows.list',
+    group: ManageGroup.workflows,
+    icon: Icons.account_tree_outlined,
+    title: (l) => l.workflowsTitle,
+    subtitle: (l) => l.manageWorkflowsSubtitle,
+    route: Routes.workflows,
+    scope: Scope.workflowRead,
+  ),
+  ManageEntry(
+    id: 'fields.projects',
+    group: ManageGroup.fields,
+    icon: Icons.tune,
+    title: (l) => l.fieldsTitle,
+    subtitle: (l) => l.manageFieldsSubtitle,
+    route: Routes.fieldProjects,
+    scope: Scope.projectRead,
+  ),
+];

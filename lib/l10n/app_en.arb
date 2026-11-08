@@ -245,7 +245,7 @@
   "commandsTasks": "Tasks",
   "newTask": "New task",
   "refresh": "Refresh",
-  "projectsEmptyBody": "Projects are created on the server, in the browser or with tix project add.",
+  "projectsEmptyBody": "Create one with New project, in the browser or with tix project add.",
   "tasksEmptyBody": "Add a task with one line: a title, then !high, #tag, @handle or due:fri.",
   "instancesEmptyBody": "Add the tix server you work on, or a database on this device.",
   "projectsSubtitle": "Every project in {tenant}",
@@ -1330,5 +1330,429 @@
   "paletteThemeOled": "OLED black theme",
   "@paletteThemeOled": {
     "description": "Command palette entry that switches to the OLED black theme."
-  }
+  },
+  "manageTitle": "Manage",
+  "manageSubtitle": "What you can manage in {tenant}",
+  "@manageSubtitle": {
+    "placeholders": {
+      "tenant": {
+        "type": "String"
+      }
+    }
+  },
+  "goManage": "Go to Manage",
+  "navMore": "More",
+  "manageEmpty": "Nothing to manage with this credential.",
+  "manageEmptyBody": "Projects, workflows, people and the tenant need scopes this token or role does not hold. Ask an admin for a wider one.",
+  "manageGroupProjects": "Projects",
+  "manageGroupWorkflows": "Workflows",
+  "manageGroupFields": "Fields",
+  "manageGroupPeople": "People",
+  "manageGroupAccess": "Access",
+  "manageGroupTenant": "Tenant",
+  "manageGroupServer": "Server",
+  "manageProjectsSubtitle": "Create, rename, recolour, archive and delete projects",
+  "manageWorkflowsSubtitle": "States, the moves between them and who may make them",
+  "manageFieldsSubtitle": "The custom fields each project's tasks carry",
+  "manageSave": "Save",
+  "manageSaveChanges": "Save changes",
+  "manageDelete": "Delete",
+  "manageClear": "Clear",
+  "manageYes": "Yes",
+  "manageNo": "No",
+  "manageDangerZone": "Danger zone",
+  "manageInherited": "Inherited",
+  "manageDurationHelp": "A duration such as 30m or 4h. Empty inherits.",
+  "manageChanged": "changed",
+  "manageTaskCount": "{count, plural, =1{1 task} other{{count} tasks}}",
+  "@manageTaskCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "manageDragToReorder": "Drag to reorder",
+  "colourNone": "No colour",
+  "colourSlate": "Slate",
+  "colourRed": "Red",
+  "colourAmber": "Amber",
+  "colourGreen": "Green",
+  "colourTeal": "Teal",
+  "colourBlue": "Blue",
+  "colourViolet": "Violet",
+  "colourPink": "Pink",
+  "colourCustom": "Custom colour",
+  "iconNone": "None",
+  "iconText": "Emoji",
+  "iconBuiltin": "Icon",
+  "iconImage": "Image",
+  "iconNoneHelp": "The first letters of the name stand in.",
+  "iconTextLabel": "Emoji or letters",
+  "iconTextHelp": "One emoji, or one or two letters.",
+  "iconImageHelp": "PNG, JPEG, WebP or SVG, at most 64 KB.",
+  "iconUpload": "Choose image",
+  "projectNew": "New project",
+  "projectCreate": "Create project",
+  "projectCreated": "Created {name}.",
+  "@projectCreated": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "projectName": "Name",
+  "projectKey": "Key",
+  "projectKeyHelp": "Starts every task reference, such as infra-1. Letters, digits, - and _.",
+  "projectKeyChangeHelp": "Changing it renames every task reference; the old key keeps working.",
+  "projectDescription": "Description",
+  "projectWorkflow": "Workflow",
+  "projectWorkflowInfo": "The states this project's tasks move through. tix refuses a switch while a task sits in a state the new workflow lacks.",
+  "projectColour": "Colour",
+  "projectIcon": "Icon",
+  "projectSettingsTitle": "Project settings",
+  "projectSectionProject": "Project",
+  "projectSectionAppearance": "Appearance",
+  "projectSectionClaims": "Claims",
+  "projectClaimsInfo": "How long a claim on this project's tasks holds. The project's value outranks the workflow's and the tenant's; the longest lease can only be lower than the tenant's.",
+  "projectLeaseDefault": "Lease length",
+  "projectLeaseMax": "Longest lease",
+  "projectLeaseMaxHelp": "A duration such as 24h, below the tenant's ceiling. Empty inherits.",
+  "projectManageFields": "Custom fields",
+  "projectManageFieldsHelp": "Define the fields this project's tasks carry.",
+  "projectReadOnly": "You can see these settings but not change them: that needs project:write.",
+  "projectSaved": "Project saved.",
+  "projectRekeyTitle": "Change the project key?",
+  "projectRekeyBody": "Every task reference changes with the key:",
+  "projectRekeyAlias": "Links, references and filters that use {old} keep working: the old key stays as an alias, and no other project can take it.",
+  "@projectRekeyAlias": {
+    "placeholders": {
+      "old": {
+        "type": "String"
+      }
+    }
+  },
+  "projectRekeyConfirm": "Change key",
+  "projectArchive": "Archive project",
+  "projectArchiveHelp": "Hides it from lists and keeps its tasks and history. tix has no way to unarchive.",
+  "projectArchiveTitle": "Archive {name}?",
+  "@projectArchiveTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "projectArchiveBody": "The project leaves the default lists. Its tasks and history stay. tix cannot unarchive a project.",
+  "projectArchived": "Archived {name}.",
+  "@projectArchived": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "projectArchivedBadge": "archived",
+  "projectIsArchived": "This project is archived.",
+  "projectDelete": "Delete project",
+  "projectDeleteHelp": "Removes it permanently. Its tasks move to another project or go with it.",
+  "projectDeleteTitle": "Delete {key}?",
+  "@projectDeleteTitle": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "projectDeleteEmpty": "The project holds no tasks. Deleting it cannot be undone.",
+  "projectDeleteHolds": "It holds {live, plural, =1{1 task} other{{live} tasks}} and {trashed, plural, =1{1 in the trash} other{{trashed} in the trash}}. What happens to them?",
+  "@projectDeleteHolds": {
+    "placeholders": {
+      "live": {
+        "type": "int"
+      },
+      "trashed": {
+        "type": "int"
+      }
+    }
+  },
+  "projectDeleteMove": "Move them to another project",
+  "projectDeleteNoTarget": "There is no other active project to move them to.",
+  "projectDeleteTarget": "Move to",
+  "projectDeleteMapping": "Status after the move",
+  "projectDeleteTasks": "Delete them permanently",
+  "projectDeleteType": "Type {key} to confirm",
+  "@projectDeleteType": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "projectDeleteConfirm": "The project and its tasks are deleted permanently.",
+  "projectDeleteMoveConfirm": "The tasks move to {target}, then the project is deleted permanently.",
+  "@projectDeleteMoveConfirm": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "projectDeleted": "Deleted {key}.",
+  "@projectDeleted": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "fieldsTitle": "Custom fields",
+  "fieldProjectsSubtitle": "tix defines fields per project. Pick one.",
+  "fieldsEmpty": "No custom fields yet.",
+  "fieldsEmptyBody": "A field adds a value of your choosing to every task in the project, such as an environment or a customer.",
+  "fieldsReadOnly": "You can see these fields but not change them: that needs project:write.",
+  "fieldNew": "New field",
+  "fieldEdit": "Edit {key}",
+  "@fieldEdit": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "fieldKey": "Key",
+  "fieldKeyHelp": "How tasks and filters name the field, such as env.",
+  "fieldKeyFixed": "The key names the field; define a new field to change it.",
+  "fieldLabel": "Label",
+  "fieldLabelHelp": "What people see. Empty shows the key.",
+  "fieldType": "Type",
+  "fieldOptions": "Options",
+  "fieldOptionsHelp": "The allowed values, separated by commas.",
+  "fieldDefault": "Default",
+  "fieldNoDefault": "No default",
+  "fieldPickDefault": "Pick a default",
+  "fieldActorHint": "A handle, such as raj",
+  "fieldDefaultIs": "default {value}",
+  "@fieldDefaultIs": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "fieldDefaultUnreadable": "This default cannot be read as the field's type.",
+  "fieldRequired": "Required",
+  "fieldRequiredHelp": "A new task without a value is refused, unless there is a default.",
+  "fieldSaved": "Saved {key}.",
+  "@fieldSaved": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "fieldDeleteTitle": "Delete the field {key}?",
+  "@fieldDeleteTitle": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "fieldDeleteBody": "Tasks stop showing this field.",
+  "fieldDeleted": "Deleted {key}.",
+  "@fieldDeleted": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "fieldTypeString": "Text, one line",
+  "fieldTypeText": "Text, several lines",
+  "fieldTypeInt": "Whole number",
+  "fieldTypeFloat": "Number",
+  "fieldTypeBool": "Yes or no",
+  "fieldTypeDate": "Date",
+  "fieldTypeDatetime": "Date and time",
+  "fieldTypeEnum": "Choice",
+  "fieldTypeActor": "Person or agent",
+  "fieldTypeJson": "JSON",
+  "fieldTypeUnknown": "Unknown",
+  "categoryTodo": "To do",
+  "categoryInProgress": "In progress",
+  "categoryBlocked": "Blocked",
+  "categoryWaiting": "Waiting",
+  "categoryDone": "Done",
+  "categoryCancelled": "Cancelled",
+  "categoryDerived": "From the state (tix decides)",
+  "workflowsTitle": "Workflows",
+  "workflowsSubtitle": "The states tasks move through, and how",
+  "workflowsEmpty": "No workflows.",
+  "workflowTitle": "Workflow",
+  "workflowSubtitle": "Key {key}",
+  "@workflowSubtitle": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "workflowBuiltin": "builtin",
+  "workflowStateCount": "{count, plural, =1{1 state} other{{count} states}}",
+  "@workflowStateCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "workflowNew": "New workflow",
+  "workflowCreate": "Create workflow",
+  "workflowCreated": "Created {name}.",
+  "@workflowCreated": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "workflowKey": "Key",
+  "workflowKeyHelp": "Letters, digits, - and _, starting with a letter.",
+  "workflowKeyTaken": "A workflow with this key exists; saving would replace it.",
+  "workflowName": "Name",
+  "workflowStartFrom": "Start from",
+  "workflowMinimal": "Open and done",
+  "workflowCopyOf": "A copy of {name}",
+  "@workflowCopyOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "workflowReadOnly": "You can see this workflow but not change it: that needs workflow:write.",
+  "workflowRefused": "tix refused the change",
+  "workflowSaved": "Workflow saved.",
+  "workflowSectionGeneral": "Workflow",
+  "workflowInitial": "Initial state",
+  "workflowInitialHelp": "Where a new task starts.",
+  "workflowDefaultLease": "Lease length",
+  "workflowSectionStates": "States",
+  "workflowStatesHelp": "Drag the handle to reorder. Tap a state to edit it.",
+  "workflowAddState": "Add state",
+  "workflowEditState": "Edit {name}",
+  "@workflowEditState": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "workflowStateKey": "Key",
+  "workflowStateKeyHelp": "What a task's status holds, such as review.",
+  "workflowStateKeyRename": "Renaming moves this state's tasks to the new key when you save.",
+  "workflowStateKeyTaken": "Another state has this key.",
+  "workflowStateLabel": "Label",
+  "workflowStateCategory": "Category",
+  "workflowStateCategoryInfo": "Groups the state for colours, boards and reports. Left to tix: done when terminal, to do for the initial state, in progress otherwise.",
+  "workflowStateInitial": "Initial state",
+  "workflowTerminal": "Terminal",
+  "workflowTerminalHelp": "Reaching it completes the task and satisfies what depends on it.",
+  "workflowRevert": "Revert when a claim runs out",
+  "workflowRevertHelp": "A claimed task here goes back when its lease expires.",
+  "workflowRevertTo": "Go back to",
+  "workflowRevertsTo": "reverts to {state}",
+  "@workflowRevertsTo": {
+    "placeholders": {
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "workflowInitialBadge": "initial",
+  "workflowSectionTransitions": "Transitions",
+  "workflowTransitionsHelp": "Tap a state to allow the move. The rules button on a chosen move asks for a comment or a scope.",
+  "workflowCanMoveTo": "From {name}, a task can move to",
+  "@workflowCanMoveTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "workflowNoMoves": "No move leaves this state.",
+  "workflowMoveRules": "Rules for this move",
+  "workflowRulesTitle": "{from} to {to}",
+  "@workflowRulesTitle": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "workflowNeedsComment": "Needs a comment",
+  "workflowNeedsCommentHelp": "The move is refused unless it carries a comment.",
+  "workflowNeedsScope": "Needs {scope}",
+  "@workflowNeedsScope": {
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "workflowRequiredScope": "Required scope",
+  "workflowRequiredScopeHelp": "Only someone holding it may make this move.",
+  "workflowNoScope": "None",
+  "workflowSectionRoutes": "Routes",
+  "workflowRoutesInfo": "How many moves each state is from the initial one. A move to a state further away passes through the states between, one transition at a time.",
+  "workflowSteps": "{count, plural, =1{1 step} other{{count} steps}}",
+  "@workflowSteps": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "workflowUnreachable": "No route reaches it",
+  "workflowSectionRemoved": "Removed states",
+  "workflowRemovedHelp": "Tasks still in a removed state need somewhere to go, or tix refuses the save.",
+  "workflowMigrate": "Move tasks in {state} to",
+  "@workflowMigrate": {
+    "placeholders": {
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "workflowMigrateNone": "Nowhere (refused if it holds tasks)",
+  "workflowDelete": "Delete workflow",
+  "workflowDeleteHelp": "Only a workflow no project uses can be deleted.",
+  "workflowDeleteTitle": "Delete {key}?",
+  "@workflowDeleteTitle": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "workflowDeleteBody": "The workflow is deleted permanently.",
+  "workflowDeleted": "Deleted {key}.",
+  "@workflowDeleted": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "manageUsersTitle": "Users",
+  "manageUsersSubtitle": "People in the tenant, their roles and invites",
+  "manageTokensTitle": "API tokens",
+  "manageTokensSubtitle": "Tokens for agents and scripts, and what each may do",
+  "manageTransferTitle": "Import and export",
+  "manageTransferSubtitle": "Move tasks and whole tenants in and out"
 }

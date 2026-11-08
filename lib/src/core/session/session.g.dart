@@ -572,3 +572,162 @@ final class InboxRepositoryProvider
 }
 
 String _$inboxRepositoryHash() => r'6fd361e8fb5c9f4b72a4fec2c66a8ec3a5ffef3d';
+
+/// Who the active credential is, for the active session.
+
+@ProviderFor(identityRepository)
+final identityRepositoryProvider = IdentityRepositoryProvider._();
+
+/// Who the active credential is, for the active session.
+
+final class IdentityRepositoryProvider
+    extends
+        $FunctionalProvider<
+          IdentityRepository,
+          IdentityRepository,
+          IdentityRepository
+        >
+    with $Provider<IdentityRepository> {
+  /// Who the active credential is, for the active session.
+  IdentityRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'identityRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$identityRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<IdentityRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  IdentityRepository create(Ref ref) {
+    return identityRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IdentityRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IdentityRepository>(value),
+    );
+  }
+}
+
+String _$identityRepositoryHash() =>
+    r'cb010e13c4ce381b2ac97c3cf10b7cbb5522efdf';
+
+/// Project administration and custom fields, for the active session.
+
+@ProviderFor(projectsRepository)
+final projectsRepositoryProvider = ProjectsRepositoryProvider._();
+
+/// Project administration and custom fields, for the active session.
+
+final class ProjectsRepositoryProvider
+    extends
+        $FunctionalProvider<
+          ProjectsRepository,
+          ProjectsRepository,
+          ProjectsRepository
+        >
+    with $Provider<ProjectsRepository> {
+  /// Project administration and custom fields, for the active session.
+  ProjectsRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'projectsRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$projectsRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<ProjectsRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  ProjectsRepository create(Ref ref) {
+    return projectsRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ProjectsRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ProjectsRepository>(value),
+    );
+  }
+}
+
+String _$projectsRepositoryHash() =>
+    r'78b1b709fcdeadec70d323419b3d0403b91b6bdb';
+
+/// The tenant's workflows, for the active session.
+
+@ProviderFor(workflowsRepository)
+final workflowsRepositoryProvider = WorkflowsRepositoryProvider._();
+
+/// The tenant's workflows, for the active session.
+
+final class WorkflowsRepositoryProvider
+    extends
+        $FunctionalProvider<
+          WorkflowsRepository,
+          WorkflowsRepository,
+          WorkflowsRepository
+        >
+    with $Provider<WorkflowsRepository> {
+  /// The tenant's workflows, for the active session.
+  WorkflowsRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'workflowsRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$workflowsRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<WorkflowsRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  WorkflowsRepository create(Ref ref) {
+    return workflowsRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(WorkflowsRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<WorkflowsRepository>(value),
+    );
+  }
+}
+
+String _$workflowsRepositoryHash() =>
+    r'9df84a2a32c991ad01e6c3d998f22b9f2ed15b3e';

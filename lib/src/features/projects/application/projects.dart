@@ -6,7 +6,7 @@ import 'package:tix_mobile/src/core/events/invalidation.dart';
 import 'package:tix_mobile/src/core/paging/paged.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/models/page.dart';
-import 'package:tix_mobile/src/data/models/project.dart';
+import 'package:tix_mobile/src/data/models/project_admin.dart';
 
 part 'projects.g.dart';
 
@@ -29,6 +29,14 @@ class Projects extends _$Projects {
 
   static Paged<Project> _paged(Page<Project> p) =>
       Paged(items: p.items, cursor: p.nextCursor);
+
+  /// Creates a project from [input] and reads the list again. A refusal
+  /// is thrown to the form.
+  Future<Project> create(CreateProjectInput input) async {
+    final created = await ref.read(projectsRepositoryProvider).create(input);
+    if (ref.mounted) ref.invalidateSelf();
+    return created;
+  }
 
   /// Fetches the next page, if there is one and none is in flight.
   Future<void> loadMore() => loadNextPage(

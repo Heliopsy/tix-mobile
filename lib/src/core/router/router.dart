@@ -14,6 +14,9 @@ import 'package:tix_mobile/src/features/inbox/presentation/inbox_screen.dart';
 import 'package:tix_mobile/src/features/inbox/presentation/inbox_shell.dart';
 import 'package:tix_mobile/src/features/inbox/presentation/notification_settings_screen.dart';
 import 'package:tix_mobile/src/features/instances/presentation/instances_screen.dart';
+import 'package:tix_mobile/src/features/manage/presentation/manage_screen.dart';
+import 'package:tix_mobile/src/features/projects/presentation/fields_screen.dart';
+import 'package:tix_mobile/src/features/projects/presentation/project_settings_screen.dart';
 import 'package:tix_mobile/src/features/projects/presentation/projects_screen.dart';
 import 'package:tix_mobile/src/features/quick/presentation/quick_actions_host.dart';
 import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';
@@ -24,6 +27,8 @@ import 'package:tix_mobile/src/features/tasks/presentation/task_list_screen.dart
 import 'package:tix_mobile/src/features/tasks/presentation/task_screen.dart';
 import 'package:tix_mobile/src/features/templates/presentation/templates_commands.dart';
 import 'package:tix_mobile/src/features/templates/presentation/templates_screen.dart';
+import 'package:tix_mobile/src/features/workflows/presentation/workflow_editor_screen.dart';
+import 'package:tix_mobile/src/features/workflows/presentation/workflows_screen.dart';
 
 export 'package:tix_mobile/src/core/router/routes.dart';
 
@@ -107,6 +112,18 @@ GoRouter router(Ref ref) {
                     ),
                     routes: [
                       GoRoute(path: 'tasks/:ref', pageBuilder: _taskPage),
+                      GoRoute(
+                        path: 'settings',
+                        builder: (_, state) => ProjectSettingsScreen(
+                          projectKey: state.pathParameters['key']!,
+                        ),
+                      ),
+                      GoRoute(
+                        path: 'fields',
+                        builder: (_, state) => ProjectFieldsScreen(
+                          projectKey: state.pathParameters['key']!,
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -138,6 +155,40 @@ GoRouter router(Ref ref) {
               GoRoute(
                 path: Routes.inbox,
                 builder: (_, _) => const InboxScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.manage,
+                builder: (_, _) => const ManageScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'workflows',
+                    builder: (_, _) => const WorkflowsScreen(),
+                    routes: [
+                      GoRoute(
+                        path: ':key',
+                        builder: (_, state) => WorkflowEditorScreen(
+                          workflowKey: state.pathParameters['key']!,
+                        ),
+                      ),
+                    ],
+                  ),
+                  GoRoute(
+                    path: 'fields',
+                    builder: (_, _) => const FieldProjectsScreen(),
+                    routes: [
+                      GoRoute(
+                        path: ':key',
+                        builder: (_, state) => ProjectFieldsScreen(
+                          projectKey: state.pathParameters['key']!,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),

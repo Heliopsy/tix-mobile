@@ -86,7 +86,12 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   the app and export it back through the share sheet or a save dialog. The engine costs about 32 MB per Android
   ABI and 34 MB on desktop.
 - **Projects** visible to the active connection, each in its colour with its open task count, and a switcher in
-  the project's title.
+  the project's title. Create one, change its name, key, description, colour, icon, workflow and lease bounds,
+  archive it, or delete it with its tasks moved or deleted.
+- **Manage**: every management area the credential can use, grouped, nothing offered that the server would refuse.
+- **Workflows**: states reordered by drag, categories, terminal and revert rules, "can move to" chips with comment
+  and scope rules, the route from the initial state to each state, migrations for removed states.
+- **Custom fields** per project, every type, with a default entered as its type.
 - **Task detail** where every attribute the web edits is edited in place: title, Markdown description with a
   checklist you tick, workflow moves, priority, assignee, due date, tags, custom fields and the repeat rule;
   subtasks, dependencies, comments with `@` mentions, history and attached files; star, snooze, copy and delete

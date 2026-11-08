@@ -41,7 +41,7 @@ final class ProjectsProvider
   Projects create() => Projects();
 }
 
-String _$projectsHash() => r'636b32dedf6e75e784cb00c245db251901bd422e';
+String _$projectsHash() => r'92908c3c25d567a89f77c0121c40326d9132af8a';
 
 /// The projects on the active server, a page at a time: the cached first
 /// page at once, then the server's, and again whenever a project changes.

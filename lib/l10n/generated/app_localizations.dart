@@ -1030,7 +1030,7 @@ abstract class AppLocalizations {
   /// No description provided for @projectsEmptyBody.
   ///
   /// In en, this message translates to:
-  /// **'Projects are created on the server, in the browser or with tix project add.'**
+  /// **'Create one with New project, in the browser or with tix project add.'**
   String get projectsEmptyBody;
 
   /// No description provided for @tasksEmptyBody.
@@ -3930,6 +3930,1296 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OLED black theme'**
   String get paletteThemeOled;
+
+  /// No description provided for @manageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage'**
+  String get manageTitle;
+
+  /// No description provided for @manageSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What you can manage in {tenant}'**
+  String manageSubtitle(String tenant);
+
+  /// No description provided for @goManage.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Manage'**
+  String get goManage;
+
+  /// No description provided for @navMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get navMore;
+
+  /// No description provided for @manageEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to manage with this credential.'**
+  String get manageEmpty;
+
+  /// No description provided for @manageEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Projects, workflows, people and the tenant need scopes this token or role does not hold. Ask an admin for a wider one.'**
+  String get manageEmptyBody;
+
+  /// No description provided for @manageGroupProjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Projects'**
+  String get manageGroupProjects;
+
+  /// No description provided for @manageGroupWorkflows.
+  ///
+  /// In en, this message translates to:
+  /// **'Workflows'**
+  String get manageGroupWorkflows;
+
+  /// No description provided for @manageGroupFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Fields'**
+  String get manageGroupFields;
+
+  /// No description provided for @manageGroupPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'People'**
+  String get manageGroupPeople;
+
+  /// No description provided for @manageGroupAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Access'**
+  String get manageGroupAccess;
+
+  /// No description provided for @manageGroupTenant.
+  ///
+  /// In en, this message translates to:
+  /// **'Tenant'**
+  String get manageGroupTenant;
+
+  /// No description provided for @manageGroupServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Server'**
+  String get manageGroupServer;
+
+  /// No description provided for @manageProjectsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create, rename, recolour, archive and delete projects'**
+  String get manageProjectsSubtitle;
+
+  /// No description provided for @manageWorkflowsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'States, the moves between them and who may make them'**
+  String get manageWorkflowsSubtitle;
+
+  /// No description provided for @manageFieldsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The custom fields each project\'s tasks carry'**
+  String get manageFieldsSubtitle;
+
+  /// No description provided for @manageSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get manageSave;
+
+  /// No description provided for @manageSaveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get manageSaveChanges;
+
+  /// No description provided for @manageDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get manageDelete;
+
+  /// No description provided for @manageClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get manageClear;
+
+  /// No description provided for @manageYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get manageYes;
+
+  /// No description provided for @manageNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get manageNo;
+
+  /// No description provided for @manageDangerZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Danger zone'**
+  String get manageDangerZone;
+
+  /// No description provided for @manageInherited.
+  ///
+  /// In en, this message translates to:
+  /// **'Inherited'**
+  String get manageInherited;
+
+  /// No description provided for @manageDurationHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A duration such as 30m or 4h. Empty inherits.'**
+  String get manageDurationHelp;
+
+  /// No description provided for @manageChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'changed'**
+  String get manageChanged;
+
+  /// No description provided for @manageTaskCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task} other{{count} tasks}}'**
+  String manageTaskCount(int count);
+
+  /// No description provided for @manageDragToReorder.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to reorder'**
+  String get manageDragToReorder;
+
+  /// No description provided for @colourNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No colour'**
+  String get colourNone;
+
+  /// No description provided for @colourSlate.
+  ///
+  /// In en, this message translates to:
+  /// **'Slate'**
+  String get colourSlate;
+
+  /// No description provided for @colourRed.
+  ///
+  /// In en, this message translates to:
+  /// **'Red'**
+  String get colourRed;
+
+  /// No description provided for @colourAmber.
+  ///
+  /// In en, this message translates to:
+  /// **'Amber'**
+  String get colourAmber;
+
+  /// No description provided for @colourGreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Green'**
+  String get colourGreen;
+
+  /// No description provided for @colourTeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Teal'**
+  String get colourTeal;
+
+  /// No description provided for @colourBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue'**
+  String get colourBlue;
+
+  /// No description provided for @colourViolet.
+  ///
+  /// In en, this message translates to:
+  /// **'Violet'**
+  String get colourViolet;
+
+  /// No description provided for @colourPink.
+  ///
+  /// In en, this message translates to:
+  /// **'Pink'**
+  String get colourPink;
+
+  /// No description provided for @colourCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom colour'**
+  String get colourCustom;
+
+  /// No description provided for @iconNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get iconNone;
+
+  /// No description provided for @iconText.
+  ///
+  /// In en, this message translates to:
+  /// **'Emoji'**
+  String get iconText;
+
+  /// No description provided for @iconBuiltin.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get iconBuiltin;
+
+  /// No description provided for @iconImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Image'**
+  String get iconImage;
+
+  /// No description provided for @iconNoneHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The first letters of the name stand in.'**
+  String get iconNoneHelp;
+
+  /// No description provided for @iconTextLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Emoji or letters'**
+  String get iconTextLabel;
+
+  /// No description provided for @iconTextHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'One emoji, or one or two letters.'**
+  String get iconTextHelp;
+
+  /// No description provided for @iconImageHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'PNG, JPEG, WebP or SVG, at most 64 KB.'**
+  String get iconImageHelp;
+
+  /// No description provided for @iconUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose image'**
+  String get iconUpload;
+
+  /// No description provided for @projectNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New project'**
+  String get projectNew;
+
+  /// No description provided for @projectCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create project'**
+  String get projectCreate;
+
+  /// No description provided for @projectCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Created {name}.'**
+  String projectCreated(String name);
+
+  /// No description provided for @projectName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get projectName;
+
+  /// No description provided for @projectKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Key'**
+  String get projectKey;
+
+  /// No description provided for @projectKeyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts every task reference, such as infra-1. Letters, digits, - and _.'**
+  String get projectKeyHelp;
+
+  /// No description provided for @projectKeyChangeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Changing it renames every task reference; the old key keeps working.'**
+  String get projectKeyChangeHelp;
+
+  /// No description provided for @projectDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get projectDescription;
+
+  /// No description provided for @projectWorkflow.
+  ///
+  /// In en, this message translates to:
+  /// **'Workflow'**
+  String get projectWorkflow;
+
+  /// No description provided for @projectWorkflowInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The states this project\'s tasks move through. tix refuses a switch while a task sits in a state the new workflow lacks.'**
+  String get projectWorkflowInfo;
+
+  /// No description provided for @projectColour.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour'**
+  String get projectColour;
+
+  /// No description provided for @projectIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get projectIcon;
+
+  /// No description provided for @projectSettingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Project settings'**
+  String get projectSettingsTitle;
+
+  /// No description provided for @projectSectionProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Project'**
+  String get projectSectionProject;
+
+  /// No description provided for @projectSectionAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get projectSectionAppearance;
+
+  /// No description provided for @projectSectionClaims.
+  ///
+  /// In en, this message translates to:
+  /// **'Claims'**
+  String get projectSectionClaims;
+
+  /// No description provided for @projectClaimsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'How long a claim on this project\'s tasks holds. The project\'s value outranks the workflow\'s and the tenant\'s; the longest lease can only be lower than the tenant\'s.'**
+  String get projectClaimsInfo;
+
+  /// No description provided for @projectLeaseDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Lease length'**
+  String get projectLeaseDefault;
+
+  /// No description provided for @projectLeaseMax.
+  ///
+  /// In en, this message translates to:
+  /// **'Longest lease'**
+  String get projectLeaseMax;
+
+  /// No description provided for @projectLeaseMaxHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A duration such as 24h, below the tenant\'s ceiling. Empty inherits.'**
+  String get projectLeaseMaxHelp;
+
+  /// No description provided for @projectManageFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom fields'**
+  String get projectManageFields;
+
+  /// No description provided for @projectManageFieldsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Define the fields this project\'s tasks carry.'**
+  String get projectManageFieldsHelp;
+
+  /// No description provided for @projectReadOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'You can see these settings but not change them: that needs project:write.'**
+  String get projectReadOnly;
+
+  /// No description provided for @projectSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Project saved.'**
+  String get projectSaved;
+
+  /// No description provided for @projectRekeyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change the project key?'**
+  String get projectRekeyTitle;
+
+  /// No description provided for @projectRekeyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Every task reference changes with the key:'**
+  String get projectRekeyBody;
+
+  /// No description provided for @projectRekeyAlias.
+  ///
+  /// In en, this message translates to:
+  /// **'Links, references and filters that use {old} keep working: the old key stays as an alias, and no other project can take it.'**
+  String projectRekeyAlias(String old);
+
+  /// No description provided for @projectRekeyConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Change key'**
+  String get projectRekeyConfirm;
+
+  /// No description provided for @projectArchive.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive project'**
+  String get projectArchive;
+
+  /// No description provided for @projectArchiveHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Hides it from lists and keeps its tasks and history. tix has no way to unarchive.'**
+  String get projectArchiveHelp;
+
+  /// No description provided for @projectArchiveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive {name}?'**
+  String projectArchiveTitle(String name);
+
+  /// No description provided for @projectArchiveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The project leaves the default lists. Its tasks and history stay. tix cannot unarchive a project.'**
+  String get projectArchiveBody;
+
+  /// No description provided for @projectArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived {name}.'**
+  String projectArchived(String name);
+
+  /// No description provided for @projectArchivedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'archived'**
+  String get projectArchivedBadge;
+
+  /// No description provided for @projectIsArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'This project is archived.'**
+  String get projectIsArchived;
+
+  /// No description provided for @projectDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete project'**
+  String get projectDelete;
+
+  /// No description provided for @projectDeleteHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Removes it permanently. Its tasks move to another project or go with it.'**
+  String get projectDeleteHelp;
+
+  /// No description provided for @projectDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {key}?'**
+  String projectDeleteTitle(String key);
+
+  /// No description provided for @projectDeleteEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'The project holds no tasks. Deleting it cannot be undone.'**
+  String get projectDeleteEmpty;
+
+  /// No description provided for @projectDeleteHolds.
+  ///
+  /// In en, this message translates to:
+  /// **'It holds {live, plural, =1{1 task} other{{live} tasks}} and {trashed, plural, =1{1 in the trash} other{{trashed} in the trash}}. What happens to them?'**
+  String projectDeleteHolds(int live, int trashed);
+
+  /// No description provided for @projectDeleteMove.
+  ///
+  /// In en, this message translates to:
+  /// **'Move them to another project'**
+  String get projectDeleteMove;
+
+  /// No description provided for @projectDeleteNoTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no other active project to move them to.'**
+  String get projectDeleteNoTarget;
+
+  /// No description provided for @projectDeleteTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to'**
+  String get projectDeleteTarget;
+
+  /// No description provided for @projectDeleteMapping.
+  ///
+  /// In en, this message translates to:
+  /// **'Status after the move'**
+  String get projectDeleteMapping;
+
+  /// No description provided for @projectDeleteTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete them permanently'**
+  String get projectDeleteTasks;
+
+  /// No description provided for @projectDeleteType.
+  ///
+  /// In en, this message translates to:
+  /// **'Type {key} to confirm'**
+  String projectDeleteType(String key);
+
+  /// No description provided for @projectDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'The project and its tasks are deleted permanently.'**
+  String get projectDeleteConfirm;
+
+  /// No description provided for @projectDeleteMoveConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'The tasks move to {target}, then the project is deleted permanently.'**
+  String projectDeleteMoveConfirm(String target);
+
+  /// No description provided for @projectDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted {key}.'**
+  String projectDeleted(String key);
+
+  /// No description provided for @fieldsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom fields'**
+  String get fieldsTitle;
+
+  /// No description provided for @fieldProjectsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'tix defines fields per project. Pick one.'**
+  String get fieldProjectsSubtitle;
+
+  /// No description provided for @fieldsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No custom fields yet.'**
+  String get fieldsEmpty;
+
+  /// No description provided for @fieldsEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A field adds a value of your choosing to every task in the project, such as an environment or a customer.'**
+  String get fieldsEmptyBody;
+
+  /// No description provided for @fieldsReadOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'You can see these fields but not change them: that needs project:write.'**
+  String get fieldsReadOnly;
+
+  /// No description provided for @fieldNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New field'**
+  String get fieldNew;
+
+  /// No description provided for @fieldEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit {key}'**
+  String fieldEdit(String key);
+
+  /// No description provided for @fieldKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Key'**
+  String get fieldKey;
+
+  /// No description provided for @fieldKeyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'How tasks and filters name the field, such as env.'**
+  String get fieldKeyHelp;
+
+  /// No description provided for @fieldKeyFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'The key names the field; define a new field to change it.'**
+  String get fieldKeyFixed;
+
+  /// No description provided for @fieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Label'**
+  String get fieldLabel;
+
+  /// No description provided for @fieldLabelHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'What people see. Empty shows the key.'**
+  String get fieldLabelHelp;
+
+  /// No description provided for @fieldType.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get fieldType;
+
+  /// No description provided for @fieldOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Options'**
+  String get fieldOptions;
+
+  /// No description provided for @fieldOptionsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The allowed values, separated by commas.'**
+  String get fieldOptionsHelp;
+
+  /// No description provided for @fieldDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get fieldDefault;
+
+  /// No description provided for @fieldNoDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'No default'**
+  String get fieldNoDefault;
+
+  /// No description provided for @fieldPickDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a default'**
+  String get fieldPickDefault;
+
+  /// No description provided for @fieldActorHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A handle, such as raj'**
+  String get fieldActorHint;
+
+  /// No description provided for @fieldDefaultIs.
+  ///
+  /// In en, this message translates to:
+  /// **'default {value}'**
+  String fieldDefaultIs(String value);
+
+  /// No description provided for @fieldDefaultUnreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'This default cannot be read as the field\'s type.'**
+  String get fieldDefaultUnreadable;
+
+  /// No description provided for @fieldRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get fieldRequired;
+
+  /// No description provided for @fieldRequiredHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A new task without a value is refused, unless there is a default.'**
+  String get fieldRequiredHelp;
+
+  /// No description provided for @fieldSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved {key}.'**
+  String fieldSaved(String key);
+
+  /// No description provided for @fieldDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the field {key}?'**
+  String fieldDeleteTitle(String key);
+
+  /// No description provided for @fieldDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks stop showing this field.'**
+  String get fieldDeleteBody;
+
+  /// No description provided for @fieldDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted {key}.'**
+  String fieldDeleted(String key);
+
+  /// No description provided for @fieldTypeString.
+  ///
+  /// In en, this message translates to:
+  /// **'Text, one line'**
+  String get fieldTypeString;
+
+  /// No description provided for @fieldTypeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Text, several lines'**
+  String get fieldTypeText;
+
+  /// No description provided for @fieldTypeInt.
+  ///
+  /// In en, this message translates to:
+  /// **'Whole number'**
+  String get fieldTypeInt;
+
+  /// No description provided for @fieldTypeFloat.
+  ///
+  /// In en, this message translates to:
+  /// **'Number'**
+  String get fieldTypeFloat;
+
+  /// No description provided for @fieldTypeBool.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes or no'**
+  String get fieldTypeBool;
+
+  /// No description provided for @fieldTypeDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get fieldTypeDate;
+
+  /// No description provided for @fieldTypeDatetime.
+  ///
+  /// In en, this message translates to:
+  /// **'Date and time'**
+  String get fieldTypeDatetime;
+
+  /// No description provided for @fieldTypeEnum.
+  ///
+  /// In en, this message translates to:
+  /// **'Choice'**
+  String get fieldTypeEnum;
+
+  /// No description provided for @fieldTypeActor.
+  ///
+  /// In en, this message translates to:
+  /// **'Person or agent'**
+  String get fieldTypeActor;
+
+  /// No description provided for @fieldTypeJson.
+  ///
+  /// In en, this message translates to:
+  /// **'JSON'**
+  String get fieldTypeJson;
+
+  /// No description provided for @fieldTypeUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get fieldTypeUnknown;
+
+  /// No description provided for @categoryTodo.
+  ///
+  /// In en, this message translates to:
+  /// **'To do'**
+  String get categoryTodo;
+
+  /// No description provided for @categoryInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get categoryInProgress;
+
+  /// No description provided for @categoryBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked'**
+  String get categoryBlocked;
+
+  /// No description provided for @categoryWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting'**
+  String get categoryWaiting;
+
+  /// No description provided for @categoryDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get categoryDone;
+
+  /// No description provided for @categoryCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get categoryCancelled;
+
+  /// No description provided for @categoryDerived.
+  ///
+  /// In en, this message translates to:
+  /// **'From the state (tix decides)'**
+  String get categoryDerived;
+
+  /// No description provided for @workflowsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Workflows'**
+  String get workflowsTitle;
+
+  /// No description provided for @workflowsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The states tasks move through, and how'**
+  String get workflowsSubtitle;
+
+  /// No description provided for @workflowsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No workflows.'**
+  String get workflowsEmpty;
+
+  /// No description provided for @workflowTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Workflow'**
+  String get workflowTitle;
+
+  /// No description provided for @workflowSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Key {key}'**
+  String workflowSubtitle(String key);
+
+  /// No description provided for @workflowBuiltin.
+  ///
+  /// In en, this message translates to:
+  /// **'builtin'**
+  String get workflowBuiltin;
+
+  /// No description provided for @workflowStateCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 state} other{{count} states}}'**
+  String workflowStateCount(int count);
+
+  /// No description provided for @workflowNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New workflow'**
+  String get workflowNew;
+
+  /// No description provided for @workflowCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create workflow'**
+  String get workflowCreate;
+
+  /// No description provided for @workflowCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Created {name}.'**
+  String workflowCreated(String name);
+
+  /// No description provided for @workflowKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Key'**
+  String get workflowKey;
+
+  /// No description provided for @workflowKeyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Letters, digits, - and _, starting with a letter.'**
+  String get workflowKeyHelp;
+
+  /// No description provided for @workflowKeyTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'A workflow with this key exists; saving would replace it.'**
+  String get workflowKeyTaken;
+
+  /// No description provided for @workflowName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get workflowName;
+
+  /// No description provided for @workflowStartFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Start from'**
+  String get workflowStartFrom;
+
+  /// No description provided for @workflowMinimal.
+  ///
+  /// In en, this message translates to:
+  /// **'Open and done'**
+  String get workflowMinimal;
+
+  /// No description provided for @workflowCopyOf.
+  ///
+  /// In en, this message translates to:
+  /// **'A copy of {name}'**
+  String workflowCopyOf(String name);
+
+  /// No description provided for @workflowReadOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'You can see this workflow but not change it: that needs workflow:write.'**
+  String get workflowReadOnly;
+
+  /// No description provided for @workflowRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'tix refused the change'**
+  String get workflowRefused;
+
+  /// No description provided for @workflowSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Workflow saved.'**
+  String get workflowSaved;
+
+  /// No description provided for @workflowSectionGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'Workflow'**
+  String get workflowSectionGeneral;
+
+  /// No description provided for @workflowInitial.
+  ///
+  /// In en, this message translates to:
+  /// **'Initial state'**
+  String get workflowInitial;
+
+  /// No description provided for @workflowInitialHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Where a new task starts.'**
+  String get workflowInitialHelp;
+
+  /// No description provided for @workflowDefaultLease.
+  ///
+  /// In en, this message translates to:
+  /// **'Lease length'**
+  String get workflowDefaultLease;
+
+  /// No description provided for @workflowSectionStates.
+  ///
+  /// In en, this message translates to:
+  /// **'States'**
+  String get workflowSectionStates;
+
+  /// No description provided for @workflowStatesHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag the handle to reorder. Tap a state to edit it.'**
+  String get workflowStatesHelp;
+
+  /// No description provided for @workflowAddState.
+  ///
+  /// In en, this message translates to:
+  /// **'Add state'**
+  String get workflowAddState;
+
+  /// No description provided for @workflowEditState.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit {name}'**
+  String workflowEditState(String name);
+
+  /// No description provided for @workflowStateKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Key'**
+  String get workflowStateKey;
+
+  /// No description provided for @workflowStateKeyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'What a task\'s status holds, such as review.'**
+  String get workflowStateKeyHelp;
+
+  /// No description provided for @workflowStateKeyRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Renaming moves this state\'s tasks to the new key when you save.'**
+  String get workflowStateKeyRename;
+
+  /// No description provided for @workflowStateKeyTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Another state has this key.'**
+  String get workflowStateKeyTaken;
+
+  /// No description provided for @workflowStateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Label'**
+  String get workflowStateLabel;
+
+  /// No description provided for @workflowStateCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get workflowStateCategory;
+
+  /// No description provided for @workflowStateCategoryInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Groups the state for colours, boards and reports. Left to tix: done when terminal, to do for the initial state, in progress otherwise.'**
+  String get workflowStateCategoryInfo;
+
+  /// No description provided for @workflowStateInitial.
+  ///
+  /// In en, this message translates to:
+  /// **'Initial state'**
+  String get workflowStateInitial;
+
+  /// No description provided for @workflowTerminal.
+  ///
+  /// In en, this message translates to:
+  /// **'Terminal'**
+  String get workflowTerminal;
+
+  /// No description provided for @workflowTerminalHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Reaching it completes the task and satisfies what depends on it.'**
+  String get workflowTerminalHelp;
+
+  /// No description provided for @workflowRevert.
+  ///
+  /// In en, this message translates to:
+  /// **'Revert when a claim runs out'**
+  String get workflowRevert;
+
+  /// No description provided for @workflowRevertHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A claimed task here goes back when its lease expires.'**
+  String get workflowRevertHelp;
+
+  /// No description provided for @workflowRevertTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back to'**
+  String get workflowRevertTo;
+
+  /// No description provided for @workflowRevertsTo.
+  ///
+  /// In en, this message translates to:
+  /// **'reverts to {state}'**
+  String workflowRevertsTo(String state);
+
+  /// No description provided for @workflowInitialBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'initial'**
+  String get workflowInitialBadge;
+
+  /// No description provided for @workflowSectionTransitions.
+  ///
+  /// In en, this message translates to:
+  /// **'Transitions'**
+  String get workflowSectionTransitions;
+
+  /// No description provided for @workflowTransitionsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a state to allow the move. The rules button on a chosen move asks for a comment or a scope.'**
+  String get workflowTransitionsHelp;
+
+  /// No description provided for @workflowCanMoveTo.
+  ///
+  /// In en, this message translates to:
+  /// **'From {name}, a task can move to'**
+  String workflowCanMoveTo(String name);
+
+  /// No description provided for @workflowNoMoves.
+  ///
+  /// In en, this message translates to:
+  /// **'No move leaves this state.'**
+  String get workflowNoMoves;
+
+  /// No description provided for @workflowMoveRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Rules for this move'**
+  String get workflowMoveRules;
+
+  /// No description provided for @workflowRulesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{from} to {to}'**
+  String workflowRulesTitle(String from, String to);
+
+  /// No description provided for @workflowNeedsComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs a comment'**
+  String get workflowNeedsComment;
+
+  /// No description provided for @workflowNeedsCommentHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The move is refused unless it carries a comment.'**
+  String get workflowNeedsCommentHelp;
+
+  /// No description provided for @workflowNeedsScope.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs {scope}'**
+  String workflowNeedsScope(String scope);
+
+  /// No description provided for @workflowRequiredScope.
+  ///
+  /// In en, this message translates to:
+  /// **'Required scope'**
+  String get workflowRequiredScope;
+
+  /// No description provided for @workflowRequiredScopeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Only someone holding it may make this move.'**
+  String get workflowRequiredScopeHelp;
+
+  /// No description provided for @workflowNoScope.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get workflowNoScope;
+
+  /// No description provided for @workflowSectionRoutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Routes'**
+  String get workflowSectionRoutes;
+
+  /// No description provided for @workflowRoutesInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'How many moves each state is from the initial one. A move to a state further away passes through the states between, one transition at a time.'**
+  String get workflowRoutesInfo;
+
+  /// No description provided for @workflowSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 step} other{{count} steps}}'**
+  String workflowSteps(int count);
+
+  /// No description provided for @workflowUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'No route reaches it'**
+  String get workflowUnreachable;
+
+  /// No description provided for @workflowSectionRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed states'**
+  String get workflowSectionRemoved;
+
+  /// No description provided for @workflowRemovedHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks still in a removed state need somewhere to go, or tix refuses the save.'**
+  String get workflowRemovedHelp;
+
+  /// No description provided for @workflowMigrate.
+  ///
+  /// In en, this message translates to:
+  /// **'Move tasks in {state} to'**
+  String workflowMigrate(String state);
+
+  /// No description provided for @workflowMigrateNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Nowhere (refused if it holds tasks)'**
+  String get workflowMigrateNone;
+
+  /// No description provided for @workflowDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete workflow'**
+  String get workflowDelete;
+
+  /// No description provided for @workflowDeleteHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Only a workflow no project uses can be deleted.'**
+  String get workflowDeleteHelp;
+
+  /// No description provided for @workflowDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {key}?'**
+  String workflowDeleteTitle(String key);
+
+  /// No description provided for @workflowDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The workflow is deleted permanently.'**
+  String get workflowDeleteBody;
+
+  /// No description provided for @workflowDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted {key}.'**
+  String workflowDeleted(String key);
+
+  /// No description provided for @manageUsersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Users'**
+  String get manageUsersTitle;
+
+  /// No description provided for @manageUsersSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'People in the tenant, their roles and invites'**
+  String get manageUsersSubtitle;
+
+  /// No description provided for @manageTokensTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'API tokens'**
+  String get manageTokensTitle;
+
+  /// No description provided for @manageTokensSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tokens for agents and scripts, and what each may do'**
+  String get manageTokensSubtitle;
+
+  /// No description provided for @manageTransferTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import and export'**
+  String get manageTransferTitle;
+
+  /// No description provided for @manageTransferSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Move tasks and whole tenants in and out'**
+  String get manageTransferSubtitle;
 }
 
 class _AppLocalizationsDelegate

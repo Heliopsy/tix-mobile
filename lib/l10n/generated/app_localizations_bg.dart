@@ -537,7 +537,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get projectsEmptyBody =>
-      'Проектите се създават на сървъра, в браузъра или с tix project add.';
+      'Създайте проект с „Нов проект“, в браузъра или с tix project add.';
 
   @override
   String get tasksEmptyBody =>
@@ -2286,4 +2286,779 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get paletteThemeOled => 'OLED черна тема';
+
+  @override
+  String get manageTitle => 'Управление';
+
+  @override
+  String manageSubtitle(String tenant) {
+    return 'Какво можете да управлявате в $tenant';
+  }
+
+  @override
+  String get goManage => 'Към Управление';
+
+  @override
+  String get navMore => 'Още';
+
+  @override
+  String get manageEmpty => 'С тези данни за достъп няма какво да управлявате.';
+
+  @override
+  String get manageEmptyBody =>
+      'Проектите, работните потоци, хората и наемателят изискват права, които този токен или роля нямат. Поискайте по-широки от администратор.';
+
+  @override
+  String get manageGroupProjects => 'Проекти';
+
+  @override
+  String get manageGroupWorkflows => 'Работни потоци';
+
+  @override
+  String get manageGroupFields => 'Полета';
+
+  @override
+  String get manageGroupPeople => 'Хора';
+
+  @override
+  String get manageGroupAccess => 'Достъп';
+
+  @override
+  String get manageGroupTenant => 'Наемател';
+
+  @override
+  String get manageGroupServer => 'Сървър';
+
+  @override
+  String get manageProjectsSubtitle =>
+      'Създаване, преименуване, оцветяване, архивиране и изтриване на проекти';
+
+  @override
+  String get manageWorkflowsSubtitle =>
+      'Състояния, преходите между тях и кой може да ги прави';
+
+  @override
+  String get manageFieldsSubtitle =>
+      'Потребителските полета на задачите във всеки проект';
+
+  @override
+  String get manageSave => 'Запази';
+
+  @override
+  String get manageSaveChanges => 'Запази промените';
+
+  @override
+  String get manageDelete => 'Изтрий';
+
+  @override
+  String get manageClear => 'Изчисти';
+
+  @override
+  String get manageYes => 'Да';
+
+  @override
+  String get manageNo => 'Не';
+
+  @override
+  String get manageDangerZone => 'Опасна зона';
+
+  @override
+  String get manageInherited => 'Наследено';
+
+  @override
+  String get manageDurationHelp =>
+      'Продължителност като 30m или 4h. Празно наследява.';
+
+  @override
+  String get manageChanged => 'променено';
+
+  @override
+  String manageTaskCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count задачи',
+      one: '1 задача',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get manageDragToReorder => 'Плъзнете за пренареждане';
+
+  @override
+  String get colourNone => 'Без цвят';
+
+  @override
+  String get colourSlate => 'Графит';
+
+  @override
+  String get colourRed => 'Червено';
+
+  @override
+  String get colourAmber => 'Кехлибар';
+
+  @override
+  String get colourGreen => 'Зелено';
+
+  @override
+  String get colourTeal => 'Синьозелено';
+
+  @override
+  String get colourBlue => 'Синьо';
+
+  @override
+  String get colourViolet => 'Виолетово';
+
+  @override
+  String get colourPink => 'Розово';
+
+  @override
+  String get colourCustom => 'Собствен цвят';
+
+  @override
+  String get iconNone => 'Без';
+
+  @override
+  String get iconText => 'Емоджи';
+
+  @override
+  String get iconBuiltin => 'Икона';
+
+  @override
+  String get iconImage => 'Изображение';
+
+  @override
+  String get iconNoneHelp => 'Вместо икона се показват първите букви от името.';
+
+  @override
+  String get iconTextLabel => 'Емоджи или букви';
+
+  @override
+  String get iconTextHelp => 'Едно емоджи или една-две букви.';
+
+  @override
+  String get iconImageHelp => 'PNG, JPEG, WebP или SVG, до 64 KB.';
+
+  @override
+  String get iconUpload => 'Избери изображение';
+
+  @override
+  String get projectNew => 'Нов проект';
+
+  @override
+  String get projectCreate => 'Създай проект';
+
+  @override
+  String projectCreated(String name) {
+    return 'Създаден е $name.';
+  }
+
+  @override
+  String get projectName => 'Име';
+
+  @override
+  String get projectKey => 'Ключ';
+
+  @override
+  String get projectKeyHelp =>
+      'Започва всяка препратка към задача, например infra-1. Букви, цифри, - и _.';
+
+  @override
+  String get projectKeyChangeHelp =>
+      'Промяната преименува всички препратки към задачи; старият ключ продължава да работи.';
+
+  @override
+  String get projectDescription => 'Описание';
+
+  @override
+  String get projectWorkflow => 'Работен поток';
+
+  @override
+  String get projectWorkflowInfo =>
+      'Състоянията, през които минават задачите на проекта. tix отказва смяна, докато задача е в състояние, което новият поток няма.';
+
+  @override
+  String get projectColour => 'Цвят';
+
+  @override
+  String get projectIcon => 'Икона';
+
+  @override
+  String get projectSettingsTitle => 'Настройки на проекта';
+
+  @override
+  String get projectSectionProject => 'Проект';
+
+  @override
+  String get projectSectionAppearance => 'Външен вид';
+
+  @override
+  String get projectSectionClaims => 'Заявки';
+
+  @override
+  String get projectClaimsInfo =>
+      'Колко дълго важи заявка за задачите на проекта. Стойността на проекта има предимство пред тази на потока и наемателя; най-дългата заявка може само да е по-кратка от тази на наемателя.';
+
+  @override
+  String get projectLeaseDefault => 'Продължителност на заявка';
+
+  @override
+  String get projectLeaseMax => 'Най-дълга заявка';
+
+  @override
+  String get projectLeaseMaxHelp =>
+      'Продължителност като 24h, под тавана на наемателя. Празно наследява.';
+
+  @override
+  String get projectManageFields => 'Потребителски полета';
+
+  @override
+  String get projectManageFieldsHelp =>
+      'Определете полетата на задачите в проекта.';
+
+  @override
+  String get projectReadOnly =>
+      'Можете да виждате тези настройки, но не и да ги променяте: нужно е project:write.';
+
+  @override
+  String get projectSaved => 'Проектът е запазен.';
+
+  @override
+  String get projectRekeyTitle => 'Да се смени ли ключът на проекта?';
+
+  @override
+  String get projectRekeyBody =>
+      'Всички препратки към задачи се сменят с ключа:';
+
+  @override
+  String projectRekeyAlias(String old) {
+    return 'Връзките, препратките и филтрите с $old продължават да работят: старият ключ остава като псевдоним и друг проект не може да го вземе.';
+  }
+
+  @override
+  String get projectRekeyConfirm => 'Смени ключа';
+
+  @override
+  String get projectArchive => 'Архивирай проекта';
+
+  @override
+  String get projectArchiveHelp =>
+      'Скрива го от списъците и запазва задачите и историята му. В tix няма разархивиране.';
+
+  @override
+  String projectArchiveTitle(String name) {
+    return 'Да се архивира ли $name?';
+  }
+
+  @override
+  String get projectArchiveBody =>
+      'Проектът изчезва от списъците по подразбиране. Задачите и историята му остават. tix не може да разархивира проект.';
+
+  @override
+  String projectArchived(String name) {
+    return '$name е архивиран.';
+  }
+
+  @override
+  String get projectArchivedBadge => 'архивиран';
+
+  @override
+  String get projectIsArchived => 'Този проект е архивиран.';
+
+  @override
+  String get projectDelete => 'Изтрий проекта';
+
+  @override
+  String get projectDeleteHelp =>
+      'Премахва го завинаги. Задачите му се преместват в друг проект или се изтриват с него.';
+
+  @override
+  String projectDeleteTitle(String key) {
+    return 'Да се изтрие ли $key?';
+  }
+
+  @override
+  String get projectDeleteEmpty =>
+      'Проектът няма задачи. Изтриването не може да се отмени.';
+
+  @override
+  String projectDeleteHolds(int live, int trashed) {
+    String _temp0 = intl.Intl.pluralLogic(
+      live,
+      locale: localeName,
+      other: '$live задачи',
+      one: '1 задача',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      trashed,
+      locale: localeName,
+      other: '$trashed в кошчето',
+      one: '1 в кошчето',
+    );
+    return 'Има $_temp0 и $_temp1. Какво да стане с тях?';
+  }
+
+  @override
+  String get projectDeleteMove => 'Премести ги в друг проект';
+
+  @override
+  String get projectDeleteNoTarget =>
+      'Няма друг активен проект, в който да се преместят.';
+
+  @override
+  String get projectDeleteTarget => 'Премести в';
+
+  @override
+  String get projectDeleteMapping => 'Състояние след преместването';
+
+  @override
+  String get projectDeleteTasks => 'Изтрий ги завинаги';
+
+  @override
+  String projectDeleteType(String key) {
+    return 'Въведете $key за потвърждение';
+  }
+
+  @override
+  String get projectDeleteConfirm =>
+      'Проектът и задачите му се изтриват завинаги.';
+
+  @override
+  String projectDeleteMoveConfirm(String target) {
+    return 'Задачите се преместват в $target, след което проектът се изтрива завинаги.';
+  }
+
+  @override
+  String projectDeleted(String key) {
+    return '$key е изтрит.';
+  }
+
+  @override
+  String get fieldsTitle => 'Потребителски полета';
+
+  @override
+  String get fieldProjectsSubtitle =>
+      'tix определя полетата за всеки проект. Изберете проект.';
+
+  @override
+  String get fieldsEmpty => 'Още няма потребителски полета.';
+
+  @override
+  String get fieldsEmptyBody =>
+      'Полето добавя избрана от вас стойност към всяка задача в проекта, например среда или клиент.';
+
+  @override
+  String get fieldsReadOnly =>
+      'Можете да виждате тези полета, но не и да ги променяте: нужно е project:write.';
+
+  @override
+  String get fieldNew => 'Ново поле';
+
+  @override
+  String fieldEdit(String key) {
+    return 'Редакция на $key';
+  }
+
+  @override
+  String get fieldKey => 'Ключ';
+
+  @override
+  String get fieldKeyHelp =>
+      'Как задачите и филтрите наричат полето, например env.';
+
+  @override
+  String get fieldKeyFixed =>
+      'Ключът именува полето; за да го смените, създайте ново поле.';
+
+  @override
+  String get fieldLabel => 'Етикет';
+
+  @override
+  String get fieldLabelHelp => 'Какво виждат хората. Празно показва ключа.';
+
+  @override
+  String get fieldType => 'Тип';
+
+  @override
+  String get fieldOptions => 'Възможности';
+
+  @override
+  String get fieldOptionsHelp =>
+      'Позволените стойности, разделени със запетаи.';
+
+  @override
+  String get fieldDefault => 'По подразбиране';
+
+  @override
+  String get fieldNoDefault => 'Без стойност по подразбиране';
+
+  @override
+  String get fieldPickDefault => 'Изберете стойност';
+
+  @override
+  String get fieldActorHint => 'Потребителско име, например raj';
+
+  @override
+  String fieldDefaultIs(String value) {
+    return 'по подразбиране $value';
+  }
+
+  @override
+  String get fieldDefaultUnreadable =>
+      'Тази стойност не може да се прочете като типа на полето.';
+
+  @override
+  String get fieldRequired => 'Задължително';
+
+  @override
+  String get fieldRequiredHelp =>
+      'Нова задача без стойност се отказва, освен ако има стойност по подразбиране.';
+
+  @override
+  String fieldSaved(String key) {
+    return '$key е запазено.';
+  }
+
+  @override
+  String fieldDeleteTitle(String key) {
+    return 'Да се изтрие ли полето $key?';
+  }
+
+  @override
+  String get fieldDeleteBody => 'Задачите спират да показват това поле.';
+
+  @override
+  String fieldDeleted(String key) {
+    return '$key е изтрито.';
+  }
+
+  @override
+  String get fieldTypeString => 'Текст, един ред';
+
+  @override
+  String get fieldTypeText => 'Текст, няколко реда';
+
+  @override
+  String get fieldTypeInt => 'Цяло число';
+
+  @override
+  String get fieldTypeFloat => 'Число';
+
+  @override
+  String get fieldTypeBool => 'Да или не';
+
+  @override
+  String get fieldTypeDate => 'Дата';
+
+  @override
+  String get fieldTypeDatetime => 'Дата и час';
+
+  @override
+  String get fieldTypeEnum => 'Избор';
+
+  @override
+  String get fieldTypeActor => 'Човек или агент';
+
+  @override
+  String get fieldTypeJson => 'JSON';
+
+  @override
+  String get fieldTypeUnknown => 'Непознат';
+
+  @override
+  String get categoryTodo => 'За работа';
+
+  @override
+  String get categoryInProgress => 'В процес';
+
+  @override
+  String get categoryBlocked => 'Блокирано';
+
+  @override
+  String get categoryWaiting => 'Изчакване';
+
+  @override
+  String get categoryDone => 'Готово';
+
+  @override
+  String get categoryCancelled => 'Отменено';
+
+  @override
+  String get categoryDerived => 'От състоянието (решава tix)';
+
+  @override
+  String get workflowsTitle => 'Работни потоци';
+
+  @override
+  String get workflowsSubtitle =>
+      'Състоянията, през които минават задачите, и как';
+
+  @override
+  String get workflowsEmpty => 'Няма работни потоци.';
+
+  @override
+  String get workflowTitle => 'Работен поток';
+
+  @override
+  String workflowSubtitle(String key) {
+    return 'Ключ $key';
+  }
+
+  @override
+  String get workflowBuiltin => 'вграден';
+
+  @override
+  String workflowStateCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count състояния',
+      one: '1 състояние',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get workflowNew => 'Нов работен поток';
+
+  @override
+  String get workflowCreate => 'Създай поток';
+
+  @override
+  String workflowCreated(String name) {
+    return 'Създаден е $name.';
+  }
+
+  @override
+  String get workflowKey => 'Ключ';
+
+  @override
+  String get workflowKeyHelp => 'Букви, цифри, - и _, започва с буква.';
+
+  @override
+  String get workflowKeyTaken =>
+      'Вече има поток с този ключ; запазването би го заменило.';
+
+  @override
+  String get workflowName => 'Име';
+
+  @override
+  String get workflowStartFrom => 'Започни от';
+
+  @override
+  String get workflowMinimal => 'Отворено и готово';
+
+  @override
+  String workflowCopyOf(String name) {
+    return 'Копие на $name';
+  }
+
+  @override
+  String get workflowReadOnly =>
+      'Можете да виждате този поток, но не и да го променяте: нужно е workflow:write.';
+
+  @override
+  String get workflowRefused => 'tix отказа промяната';
+
+  @override
+  String get workflowSaved => 'Потокът е запазен.';
+
+  @override
+  String get workflowSectionGeneral => 'Поток';
+
+  @override
+  String get workflowInitial => 'Начално състояние';
+
+  @override
+  String get workflowInitialHelp => 'Откъдето започва нова задача.';
+
+  @override
+  String get workflowDefaultLease => 'Продължителност на заявка';
+
+  @override
+  String get workflowSectionStates => 'Състояния';
+
+  @override
+  String get workflowStatesHelp =>
+      'Плъзнете дръжката за пренареждане. Докоснете състояние, за да го редактирате.';
+
+  @override
+  String get workflowAddState => 'Добави състояние';
+
+  @override
+  String workflowEditState(String name) {
+    return 'Редакция на $name';
+  }
+
+  @override
+  String get workflowStateKey => 'Ключ';
+
+  @override
+  String get workflowStateKeyHelp =>
+      'Какво съдържа състоянието на задача, например review.';
+
+  @override
+  String get workflowStateKeyRename =>
+      'Преименуването премества задачите на това състояние към новия ключ при запазване.';
+
+  @override
+  String get workflowStateKeyTaken => 'Друго състояние има този ключ.';
+
+  @override
+  String get workflowStateLabel => 'Етикет';
+
+  @override
+  String get workflowStateCategory => 'Категория';
+
+  @override
+  String get workflowStateCategoryInfo =>
+      'Групира състоянието за цветове, табла и отчети. Ако го оставите на tix: готово при крайно, за работа при начално, в процес иначе.';
+
+  @override
+  String get workflowStateInitial => 'Начално състояние';
+
+  @override
+  String get workflowTerminal => 'Крайно';
+
+  @override
+  String get workflowTerminalHelp =>
+      'Достигането му завършва задачата и удовлетворява зависимите от нея.';
+
+  @override
+  String get workflowRevert => 'Връщане при изтичане на заявка';
+
+  @override
+  String get workflowRevertHelp =>
+      'Заявена задача тук се връща, когато заявката изтече.';
+
+  @override
+  String get workflowRevertTo => 'Връщане към';
+
+  @override
+  String workflowRevertsTo(String state) {
+    return 'връща към $state';
+  }
+
+  @override
+  String get workflowInitialBadge => 'начално';
+
+  @override
+  String get workflowSectionTransitions => 'Преходи';
+
+  @override
+  String get workflowTransitionsHelp =>
+      'Докоснете състояние, за да позволите прехода. Бутонът за правила на избран преход изисква коментар или право.';
+
+  @override
+  String workflowCanMoveTo(String name) {
+    return 'От $name задача може да отиде в';
+  }
+
+  @override
+  String get workflowNoMoves => 'Няма преход от това състояние.';
+
+  @override
+  String get workflowMoveRules => 'Правила за прехода';
+
+  @override
+  String workflowRulesTitle(String from, String to) {
+    return '$from към $to';
+  }
+
+  @override
+  String get workflowNeedsComment => 'Изисква коментар';
+
+  @override
+  String get workflowNeedsCommentHelp => 'Преходът се отказва без коментар.';
+
+  @override
+  String workflowNeedsScope(String scope) {
+    return 'Изисква $scope';
+  }
+
+  @override
+  String get workflowRequiredScope => 'Нужно право';
+
+  @override
+  String get workflowRequiredScopeHelp =>
+      'Само притежател на това право може да направи прехода.';
+
+  @override
+  String get workflowNoScope => 'Без';
+
+  @override
+  String get workflowSectionRoutes => 'Маршрути';
+
+  @override
+  String get workflowRoutesInfo =>
+      'Колко прехода дели всяко състояние от началното. Преход към по-далечно състояние минава през междинните, един по един.';
+
+  @override
+  String workflowSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count стъпки',
+      one: '1 стъпка',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get workflowUnreachable => 'Няма маршрут дотук';
+
+  @override
+  String get workflowSectionRemoved => 'Премахнати състояния';
+
+  @override
+  String get workflowRemovedHelp =>
+      'Задачите в премахнато състояние трябва да отидат някъде, иначе tix отказва запазването.';
+
+  @override
+  String workflowMigrate(String state) {
+    return 'Премести задачите от $state в';
+  }
+
+  @override
+  String get workflowMigrateNone => 'Никъде (отказ, ако има задачи)';
+
+  @override
+  String get workflowDelete => 'Изтрий потока';
+
+  @override
+  String get workflowDeleteHelp =>
+      'Може да се изтрие само поток, който никой проект не ползва.';
+
+  @override
+  String workflowDeleteTitle(String key) {
+    return 'Да се изтрие ли $key?';
+  }
+
+  @override
+  String get workflowDeleteBody => 'Потокът се изтрива завинаги.';
+
+  @override
+  String workflowDeleted(String key) {
+    return '$key е изтрит.';
+  }
+
+  @override
+  String get manageUsersTitle => 'Потребители';
+
+  @override
+  String get manageUsersSubtitle => 'Хората в наемателя, ролите им и поканите';
+
+  @override
+  String get manageTokensTitle => 'API токени';
+
+  @override
+  String get manageTokensSubtitle =>
+      'Токени за агенти и скриптове и какво може всеки';
+
+  @override
+  String get manageTransferTitle => 'Внос и износ';
+
+  @override
+  String get manageTransferSubtitle => 'Пренасяне на задачи и цели наематели';
 }

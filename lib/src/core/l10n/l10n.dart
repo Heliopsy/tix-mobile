@@ -23,6 +23,14 @@ Locale resolveLocale(List<Locale>? preferred, Iterable<Locale> supported) {
   return const Locale('en');
 }
 
+/// [errorMessage], with the server's own words added where the kind's
+/// text leaves them out: what a form shows above itself after a refusal.
+String errorDetail(AppLocalizations l10n, Object error) {
+  final text = errorMessage(l10n, error);
+  if (error is! TixException || error.message.isEmpty) return text;
+  return text.contains(error.message) ? text : '$text ${error.message}';
+}
+
 /// What to tell a person about [error].
 String errorMessage(AppLocalizations l10n, Object error) {
   if (error is! TixException) return l10n.errorUnknown;

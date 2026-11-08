@@ -539,7 +539,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get projectsEmptyBody =>
-      'Projekte werden auf dem Server angelegt, im Browser oder mit tix project add.';
+      'Legen Sie eines mit „Neues Projekt“ an, im Browser oder mit tix project add.';
 
   @override
   String get tasksEmptyBody =>
@@ -2300,4 +2300,786 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get paletteThemeOled => 'Design OLED-Schwarz';
+
+  @override
+  String get manageTitle => 'Verwaltung';
+
+  @override
+  String manageSubtitle(String tenant) {
+    return 'Was Sie in $tenant verwalten können';
+  }
+
+  @override
+  String get goManage => 'Zur Verwaltung';
+
+  @override
+  String get navMore => 'Mehr';
+
+  @override
+  String get manageEmpty =>
+      'Mit diesen Zugangsdaten gibt es nichts zu verwalten.';
+
+  @override
+  String get manageEmptyBody =>
+      'Projekte, Workflows, Personen und der Mandant brauchen Berechtigungen, die dieser Token oder diese Rolle nicht hat. Bitten Sie einen Admin um weitere.';
+
+  @override
+  String get manageGroupProjects => 'Projekte';
+
+  @override
+  String get manageGroupWorkflows => 'Workflows';
+
+  @override
+  String get manageGroupFields => 'Felder';
+
+  @override
+  String get manageGroupPeople => 'Personen';
+
+  @override
+  String get manageGroupAccess => 'Zugriff';
+
+  @override
+  String get manageGroupTenant => 'Mandant';
+
+  @override
+  String get manageGroupServer => 'Server';
+
+  @override
+  String get manageProjectsSubtitle =>
+      'Projekte anlegen, umbenennen, umfärben, archivieren und löschen';
+
+  @override
+  String get manageWorkflowsSubtitle =>
+      'Zustände, die Übergänge dazwischen und wer sie ausführen darf';
+
+  @override
+  String get manageFieldsSubtitle =>
+      'Die benutzerdefinierten Felder der Aufgaben jedes Projekts';
+
+  @override
+  String get manageSave => 'Speichern';
+
+  @override
+  String get manageSaveChanges => 'Änderungen speichern';
+
+  @override
+  String get manageDelete => 'Löschen';
+
+  @override
+  String get manageClear => 'Leeren';
+
+  @override
+  String get manageYes => 'Ja';
+
+  @override
+  String get manageNo => 'Nein';
+
+  @override
+  String get manageDangerZone => 'Gefahrenzone';
+
+  @override
+  String get manageInherited => 'Geerbt';
+
+  @override
+  String get manageDurationHelp =>
+      'Eine Dauer wie 30m oder 4h. Leer erbt den Wert.';
+
+  @override
+  String get manageChanged => 'geändert';
+
+  @override
+  String manageTaskCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Aufgaben',
+      one: '1 Aufgabe',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get manageDragToReorder => 'Zum Umsortieren ziehen';
+
+  @override
+  String get colourNone => 'Keine Farbe';
+
+  @override
+  String get colourSlate => 'Schiefer';
+
+  @override
+  String get colourRed => 'Rot';
+
+  @override
+  String get colourAmber => 'Bernstein';
+
+  @override
+  String get colourGreen => 'Grün';
+
+  @override
+  String get colourTeal => 'Petrol';
+
+  @override
+  String get colourBlue => 'Blau';
+
+  @override
+  String get colourViolet => 'Violett';
+
+  @override
+  String get colourPink => 'Rosa';
+
+  @override
+  String get colourCustom => 'Eigene Farbe';
+
+  @override
+  String get iconNone => 'Keins';
+
+  @override
+  String get iconText => 'Emoji';
+
+  @override
+  String get iconBuiltin => 'Symbol';
+
+  @override
+  String get iconImage => 'Bild';
+
+  @override
+  String get iconNoneHelp =>
+      'Stattdessen erscheinen die ersten Buchstaben des Namens.';
+
+  @override
+  String get iconTextLabel => 'Emoji oder Buchstaben';
+
+  @override
+  String get iconTextHelp => 'Ein Emoji oder ein bis zwei Buchstaben.';
+
+  @override
+  String get iconImageHelp => 'PNG, JPEG, WebP oder SVG, höchstens 64 KB.';
+
+  @override
+  String get iconUpload => 'Bild auswählen';
+
+  @override
+  String get projectNew => 'Neues Projekt';
+
+  @override
+  String get projectCreate => 'Projekt anlegen';
+
+  @override
+  String projectCreated(String name) {
+    return '$name wurde angelegt.';
+  }
+
+  @override
+  String get projectName => 'Name';
+
+  @override
+  String get projectKey => 'Schlüssel';
+
+  @override
+  String get projectKeyHelp =>
+      'Beginnt jede Aufgabenreferenz, etwa infra-1. Buchstaben, Ziffern, - und _.';
+
+  @override
+  String get projectKeyChangeHelp =>
+      'Eine Änderung benennt alle Aufgabenreferenzen um; der alte Schlüssel funktioniert weiter.';
+
+  @override
+  String get projectDescription => 'Beschreibung';
+
+  @override
+  String get projectWorkflow => 'Workflow';
+
+  @override
+  String get projectWorkflowInfo =>
+      'Die Zustände, die die Aufgaben dieses Projekts durchlaufen. tix lehnt einen Wechsel ab, solange eine Aufgabe in einem Zustand steht, den der neue Workflow nicht hat.';
+
+  @override
+  String get projectColour => 'Farbe';
+
+  @override
+  String get projectIcon => 'Symbol';
+
+  @override
+  String get projectSettingsTitle => 'Projekteinstellungen';
+
+  @override
+  String get projectSectionProject => 'Projekt';
+
+  @override
+  String get projectSectionAppearance => 'Darstellung';
+
+  @override
+  String get projectSectionClaims => 'Übernahmen';
+
+  @override
+  String get projectClaimsInfo =>
+      'Wie lange eine Übernahme der Aufgaben dieses Projekts gilt. Der Wert des Projekts hat Vorrang vor dem des Workflows und des Mandanten; die längste Dauer kann nur kürzer sein als die des Mandanten.';
+
+  @override
+  String get projectLeaseDefault => 'Übernahmedauer';
+
+  @override
+  String get projectLeaseMax => 'Längste Dauer';
+
+  @override
+  String get projectLeaseMaxHelp =>
+      'Eine Dauer wie 24h, unter der Obergrenze des Mandanten. Leer erbt den Wert.';
+
+  @override
+  String get projectManageFields => 'Benutzerdefinierte Felder';
+
+  @override
+  String get projectManageFieldsHelp =>
+      'Legen Sie die Felder der Aufgaben dieses Projekts fest.';
+
+  @override
+  String get projectReadOnly =>
+      'Sie können diese Einstellungen sehen, aber nicht ändern: Dafür ist project:write nötig.';
+
+  @override
+  String get projectSaved => 'Projekt gespeichert.';
+
+  @override
+  String get projectRekeyTitle => 'Projektschlüssel ändern?';
+
+  @override
+  String get projectRekeyBody =>
+      'Jede Aufgabenreferenz ändert sich mit dem Schlüssel:';
+
+  @override
+  String projectRekeyAlias(String old) {
+    return 'Links, Referenzen und Filter mit $old funktionieren weiter: Der alte Schlüssel bleibt als Alias, und kein anderes Projekt kann ihn übernehmen.';
+  }
+
+  @override
+  String get projectRekeyConfirm => 'Schlüssel ändern';
+
+  @override
+  String get projectArchive => 'Projekt archivieren';
+
+  @override
+  String get projectArchiveHelp =>
+      'Blendet es in Listen aus und behält Aufgaben und Verlauf. tix kann nicht wieder dearchivieren.';
+
+  @override
+  String projectArchiveTitle(String name) {
+    return '$name archivieren?';
+  }
+
+  @override
+  String get projectArchiveBody =>
+      'Das Projekt verschwindet aus den Standardlisten. Aufgaben und Verlauf bleiben. tix kann ein Projekt nicht dearchivieren.';
+
+  @override
+  String projectArchived(String name) {
+    return '$name wurde archiviert.';
+  }
+
+  @override
+  String get projectArchivedBadge => 'archiviert';
+
+  @override
+  String get projectIsArchived => 'Dieses Projekt ist archiviert.';
+
+  @override
+  String get projectDelete => 'Projekt löschen';
+
+  @override
+  String get projectDeleteHelp =>
+      'Entfernt es endgültig. Seine Aufgaben wandern in ein anderes Projekt oder werden mitgelöscht.';
+
+  @override
+  String projectDeleteTitle(String key) {
+    return '$key löschen?';
+  }
+
+  @override
+  String get projectDeleteEmpty =>
+      'Das Projekt enthält keine Aufgaben. Das Löschen lässt sich nicht rückgängig machen.';
+
+  @override
+  String projectDeleteHolds(int live, int trashed) {
+    String _temp0 = intl.Intl.pluralLogic(
+      live,
+      locale: localeName,
+      other: '$live Aufgaben',
+      one: '1 Aufgabe',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      trashed,
+      locale: localeName,
+      other: '$trashed im Papierkorb',
+      one: '1 im Papierkorb',
+    );
+    return 'Es enthält $_temp0 und $_temp1. Was soll damit geschehen?';
+  }
+
+  @override
+  String get projectDeleteMove => 'In ein anderes Projekt verschieben';
+
+  @override
+  String get projectDeleteNoTarget =>
+      'Es gibt kein anderes aktives Projekt als Ziel.';
+
+  @override
+  String get projectDeleteTarget => 'Verschieben nach';
+
+  @override
+  String get projectDeleteMapping => 'Status nach dem Verschieben';
+
+  @override
+  String get projectDeleteTasks => 'Endgültig löschen';
+
+  @override
+  String projectDeleteType(String key) {
+    return 'Zur Bestätigung $key eingeben';
+  }
+
+  @override
+  String get projectDeleteConfirm =>
+      'Das Projekt und seine Aufgaben werden endgültig gelöscht.';
+
+  @override
+  String projectDeleteMoveConfirm(String target) {
+    return 'Die Aufgaben wandern nach $target, dann wird das Projekt endgültig gelöscht.';
+  }
+
+  @override
+  String projectDeleted(String key) {
+    return '$key wurde gelöscht.';
+  }
+
+  @override
+  String get fieldsTitle => 'Benutzerdefinierte Felder';
+
+  @override
+  String get fieldProjectsSubtitle =>
+      'tix legt Felder pro Projekt fest. Wählen Sie eines.';
+
+  @override
+  String get fieldsEmpty => 'Noch keine benutzerdefinierten Felder.';
+
+  @override
+  String get fieldsEmptyBody =>
+      'Ein Feld fügt jeder Aufgabe im Projekt einen Wert Ihrer Wahl hinzu, etwa eine Umgebung oder einen Kunden.';
+
+  @override
+  String get fieldsReadOnly =>
+      'Sie können diese Felder sehen, aber nicht ändern: Dafür ist project:write nötig.';
+
+  @override
+  String get fieldNew => 'Neues Feld';
+
+  @override
+  String fieldEdit(String key) {
+    return '$key bearbeiten';
+  }
+
+  @override
+  String get fieldKey => 'Schlüssel';
+
+  @override
+  String get fieldKeyHelp =>
+      'So nennen Aufgaben und Filter das Feld, etwa env.';
+
+  @override
+  String get fieldKeyFixed =>
+      'Der Schlüssel benennt das Feld; für einen anderen legen Sie ein neues Feld an.';
+
+  @override
+  String get fieldLabel => 'Bezeichnung';
+
+  @override
+  String get fieldLabelHelp => 'Was Menschen sehen. Leer zeigt den Schlüssel.';
+
+  @override
+  String get fieldType => 'Typ';
+
+  @override
+  String get fieldOptions => 'Optionen';
+
+  @override
+  String get fieldOptionsHelp => 'Die erlaubten Werte, durch Kommas getrennt.';
+
+  @override
+  String get fieldDefault => 'Standardwert';
+
+  @override
+  String get fieldNoDefault => 'Kein Standardwert';
+
+  @override
+  String get fieldPickDefault => 'Wert wählen';
+
+  @override
+  String get fieldActorHint => 'Ein Handle, etwa raj';
+
+  @override
+  String fieldDefaultIs(String value) {
+    return 'Standard $value';
+  }
+
+  @override
+  String get fieldDefaultUnreadable =>
+      'Dieser Wert passt nicht zum Typ des Felds.';
+
+  @override
+  String get fieldRequired => 'Pflichtfeld';
+
+  @override
+  String get fieldRequiredHelp =>
+      'Eine neue Aufgabe ohne Wert wird abgelehnt, außer es gibt einen Standardwert.';
+
+  @override
+  String fieldSaved(String key) {
+    return '$key wurde gespeichert.';
+  }
+
+  @override
+  String fieldDeleteTitle(String key) {
+    return 'Feld $key löschen?';
+  }
+
+  @override
+  String get fieldDeleteBody => 'Aufgaben zeigen dieses Feld nicht mehr.';
+
+  @override
+  String fieldDeleted(String key) {
+    return '$key wurde gelöscht.';
+  }
+
+  @override
+  String get fieldTypeString => 'Text, einzeilig';
+
+  @override
+  String get fieldTypeText => 'Text, mehrzeilig';
+
+  @override
+  String get fieldTypeInt => 'Ganzzahl';
+
+  @override
+  String get fieldTypeFloat => 'Zahl';
+
+  @override
+  String get fieldTypeBool => 'Ja oder nein';
+
+  @override
+  String get fieldTypeDate => 'Datum';
+
+  @override
+  String get fieldTypeDatetime => 'Datum und Uhrzeit';
+
+  @override
+  String get fieldTypeEnum => 'Auswahl';
+
+  @override
+  String get fieldTypeActor => 'Person oder Agent';
+
+  @override
+  String get fieldTypeJson => 'JSON';
+
+  @override
+  String get fieldTypeUnknown => 'Unbekannt';
+
+  @override
+  String get categoryTodo => 'Zu erledigen';
+
+  @override
+  String get categoryInProgress => 'In Arbeit';
+
+  @override
+  String get categoryBlocked => 'Blockiert';
+
+  @override
+  String get categoryWaiting => 'Wartend';
+
+  @override
+  String get categoryDone => 'Erledigt';
+
+  @override
+  String get categoryCancelled => 'Abgebrochen';
+
+  @override
+  String get categoryDerived => 'Aus dem Zustand (tix entscheidet)';
+
+  @override
+  String get workflowsTitle => 'Workflows';
+
+  @override
+  String get workflowsSubtitle =>
+      'Die Zustände, die Aufgaben durchlaufen, und wie';
+
+  @override
+  String get workflowsEmpty => 'Keine Workflows.';
+
+  @override
+  String get workflowTitle => 'Workflow';
+
+  @override
+  String workflowSubtitle(String key) {
+    return 'Schlüssel $key';
+  }
+
+  @override
+  String get workflowBuiltin => 'eingebaut';
+
+  @override
+  String workflowStateCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Zustände',
+      one: '1 Zustand',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get workflowNew => 'Neuer Workflow';
+
+  @override
+  String get workflowCreate => 'Workflow anlegen';
+
+  @override
+  String workflowCreated(String name) {
+    return '$name wurde angelegt.';
+  }
+
+  @override
+  String get workflowKey => 'Schlüssel';
+
+  @override
+  String get workflowKeyHelp =>
+      'Buchstaben, Ziffern, - und _, beginnend mit einem Buchstaben.';
+
+  @override
+  String get workflowKeyTaken =>
+      'Ein Workflow mit diesem Schlüssel existiert; Speichern würde ihn ersetzen.';
+
+  @override
+  String get workflowName => 'Name';
+
+  @override
+  String get workflowStartFrom => 'Ausgehend von';
+
+  @override
+  String get workflowMinimal => 'Offen und erledigt';
+
+  @override
+  String workflowCopyOf(String name) {
+    return 'Eine Kopie von $name';
+  }
+
+  @override
+  String get workflowReadOnly =>
+      'Sie können diesen Workflow sehen, aber nicht ändern: Dafür ist workflow:write nötig.';
+
+  @override
+  String get workflowRefused => 'tix hat die Änderung abgelehnt';
+
+  @override
+  String get workflowSaved => 'Workflow gespeichert.';
+
+  @override
+  String get workflowSectionGeneral => 'Workflow';
+
+  @override
+  String get workflowInitial => 'Anfangszustand';
+
+  @override
+  String get workflowInitialHelp => 'Hier beginnt eine neue Aufgabe.';
+
+  @override
+  String get workflowDefaultLease => 'Übernahmedauer';
+
+  @override
+  String get workflowSectionStates => 'Zustände';
+
+  @override
+  String get workflowStatesHelp =>
+      'Zum Umsortieren am Griff ziehen. Einen Zustand antippen, um ihn zu bearbeiten.';
+
+  @override
+  String get workflowAddState => 'Zustand hinzufügen';
+
+  @override
+  String workflowEditState(String name) {
+    return '$name bearbeiten';
+  }
+
+  @override
+  String get workflowStateKey => 'Schlüssel';
+
+  @override
+  String get workflowStateKeyHelp =>
+      'Was der Status einer Aufgabe enthält, etwa review.';
+
+  @override
+  String get workflowStateKeyRename =>
+      'Beim Speichern wandern die Aufgaben dieses Zustands zum neuen Schlüssel.';
+
+  @override
+  String get workflowStateKeyTaken =>
+      'Ein anderer Zustand hat diesen Schlüssel.';
+
+  @override
+  String get workflowStateLabel => 'Bezeichnung';
+
+  @override
+  String get workflowStateCategory => 'Kategorie';
+
+  @override
+  String get workflowStateCategoryInfo =>
+      'Gruppiert den Zustand für Farben, Boards und Berichte. Wenn tix entscheidet: erledigt bei Endzuständen, zu erledigen beim Anfangszustand, sonst in Arbeit.';
+
+  @override
+  String get workflowStateInitial => 'Anfangszustand';
+
+  @override
+  String get workflowTerminal => 'Endzustand';
+
+  @override
+  String get workflowTerminalHelp =>
+      'Erreicht eine Aufgabe ihn, ist sie erledigt und erfüllt, was von ihr abhängt.';
+
+  @override
+  String get workflowRevert => 'Zurück, wenn die Übernahme abläuft';
+
+  @override
+  String get workflowRevertHelp =>
+      'Eine hier übernommene Aufgabe geht zurück, wenn die Übernahme abläuft.';
+
+  @override
+  String get workflowRevertTo => 'Zurück zu';
+
+  @override
+  String workflowRevertsTo(String state) {
+    return 'zurück zu $state';
+  }
+
+  @override
+  String get workflowInitialBadge => 'Anfang';
+
+  @override
+  String get workflowSectionTransitions => 'Übergänge';
+
+  @override
+  String get workflowTransitionsHelp =>
+      'Einen Zustand antippen, um den Übergang zu erlauben. Die Regel-Schaltfläche eines gewählten Übergangs verlangt einen Kommentar oder eine Berechtigung.';
+
+  @override
+  String workflowCanMoveTo(String name) {
+    return 'Von $name kann eine Aufgabe wechseln zu';
+  }
+
+  @override
+  String get workflowNoMoves => 'Kein Übergang verlässt diesen Zustand.';
+
+  @override
+  String get workflowMoveRules => 'Regeln für diesen Übergang';
+
+  @override
+  String workflowRulesTitle(String from, String to) {
+    return '$from zu $to';
+  }
+
+  @override
+  String get workflowNeedsComment => 'Kommentar erforderlich';
+
+  @override
+  String get workflowNeedsCommentHelp =>
+      'Der Übergang wird ohne Kommentar abgelehnt.';
+
+  @override
+  String workflowNeedsScope(String scope) {
+    return 'Erfordert $scope';
+  }
+
+  @override
+  String get workflowRequiredScope => 'Erforderliche Berechtigung';
+
+  @override
+  String get workflowRequiredScopeHelp =>
+      'Nur wer sie hat, darf diesen Übergang ausführen.';
+
+  @override
+  String get workflowNoScope => 'Keine';
+
+  @override
+  String get workflowSectionRoutes => 'Wege';
+
+  @override
+  String get workflowRoutesInfo =>
+      'Wie viele Übergänge jeden Zustand vom Anfangszustand trennen. Ein Wechsel zu einem entfernteren Zustand durchläuft die Zustände dazwischen, einen Übergang nach dem anderen.';
+
+  @override
+  String workflowSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Schritte',
+      one: '1 Schritt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get workflowUnreachable => 'Kein Weg führt hierher';
+
+  @override
+  String get workflowSectionRemoved => 'Entfernte Zustände';
+
+  @override
+  String get workflowRemovedHelp =>
+      'Aufgaben in einem entfernten Zustand brauchen ein Ziel, sonst lehnt tix das Speichern ab.';
+
+  @override
+  String workflowMigrate(String state) {
+    return 'Aufgaben aus $state verschieben nach';
+  }
+
+  @override
+  String get workflowMigrateNone =>
+      'Nirgendwohin (abgelehnt, wenn Aufgaben darin sind)';
+
+  @override
+  String get workflowDelete => 'Workflow löschen';
+
+  @override
+  String get workflowDeleteHelp =>
+      'Nur ein Workflow, den kein Projekt nutzt, lässt sich löschen.';
+
+  @override
+  String workflowDeleteTitle(String key) {
+    return '$key löschen?';
+  }
+
+  @override
+  String get workflowDeleteBody => 'Der Workflow wird endgültig gelöscht.';
+
+  @override
+  String workflowDeleted(String key) {
+    return '$key wurde gelöscht.';
+  }
+
+  @override
+  String get manageUsersTitle => 'Benutzer';
+
+  @override
+  String get manageUsersSubtitle =>
+      'Personen im Mandanten, ihre Rollen und Einladungen';
+
+  @override
+  String get manageTokensTitle => 'API-Tokens';
+
+  @override
+  String get manageTokensSubtitle =>
+      'Tokens für Agenten und Skripte und was jeder darf';
+
+  @override
+  String get manageTransferTitle => 'Import und Export';
+
+  @override
+  String get manageTransferSubtitle =>
+      'Aufgaben und ganze Mandanten hinein- und herausbringen';
 }
