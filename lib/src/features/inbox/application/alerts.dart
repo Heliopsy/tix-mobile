@@ -53,7 +53,11 @@ class NotificationPrefs {
     required this.kinds,
     this.blocked = false,
     this.nudge = false,
+    this.hideContent = false,
   });
+
+  /// Notifications say only that something arrived, never what.
+  final bool hideContent;
 
   /// Whether the inbox should offer to turn notifications on.
   final bool nudge;
@@ -80,6 +84,8 @@ class NotificationPrefsState extends _$NotificationPrefsState {
     return NotificationPrefs(
       enabled: context != null && repo.enabled(notificationContextKey(context)),
       kinds: repo.kinds(),
+      hideContent:
+          context != null && repo.hideContent(notificationContextKey(context)),
       nudge:
           context != null &&
           !repo.enabled(notificationContextKey(context)) &&
@@ -93,6 +99,7 @@ class NotificationPrefsState extends _$NotificationPrefsState {
       enabled: state.enabled,
       kinds: state.kinds,
       blocked: state.blocked,
+      hideContent: state.hideContent,
     );
     await ref.read(notificationSettingsRepositoryProvider).dismissNudge();
   }
@@ -109,12 +116,17 @@ class NotificationPrefsState extends _$NotificationPrefsState {
         kinds: state.kinds,
         blocked: true,
         nudge: state.nudge,
+        hideContent: state.hideContent,
       );
       return;
     }
     await repo.setEnabled(notificationContextKey(context), on: on);
     if (!ref.mounted) return;
-    state = NotificationPrefs(enabled: on, kinds: state.kinds);
+    state = NotificationPrefs(
+      enabled: on,
+      kinds: state.kinds,
+      hideContent: state.hideContent,
+    );
   }
 
   /// Turns notifications for [kind] on or off.
@@ -126,8 +138,26 @@ class NotificationPrefsState extends _$NotificationPrefsState {
       enabled: state.enabled,
       kinds: kinds,
       blocked: state.blocked,
+      hideContent: state.hideContent,
     );
     await ref.read(notificationSettingsRepositoryProvider).setKinds(kinds);
+  }
+
+  /// Leaves task content out of the active context's notifications, or
+  /// puts it back.
+  Future<void> setHideContent({required bool on}) async {
+    final context = ref.read(sessionControllerProvider).value?.ref;
+    if (context == null) return;
+    state = NotificationPrefs(
+      enabled: state.enabled,
+      kinds: state.kinds,
+      blocked: state.blocked,
+      nudge: state.nudge,
+      hideContent: on,
+    );
+    await ref
+        .read(notificationSettingsRepositoryProvider)
+        .setHideContent(notificationContextKey(context), on: on);
   }
 }
 
@@ -229,7 +259,12 @@ class InboxAlerts extends _$InboxAlerts {
               kinds.contains(i.kind))
             i,
       ]..sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
-      await _show(key, fresh, badge: more ? null : items.length);
+      await _show(
+        key,
+        fresh,
+        badge: more ? null : items.length,
+        hide: settings.hideContent(key),
+      );
     }
     final mark = newest ?? (seen == null ? ref.read(clockProvider)() : null);
     if (mark != null && (seen == null || mark.isAfter(seen))) {
@@ -237,7 +272,12 @@ class InboxAlerts extends _$InboxAlerts {
     }
   }
 
-  Future<void> _show(String key, List<InboxItem> fresh, {int? badge}) async {
+  Future<void> _show(
+    String key,
+    List<InboxItem> fresh, {
+    required bool hide,
+    int? badge,
+  }) async {
     if (fresh.isEmpty) return;
     final notifier = ref.read(localNotesProvider);
     final l10n = _l10n();
@@ -251,12 +291,17 @@ class InboxAlerts extends _$InboxAlerts {
       await notifier.show(
         LocalNote(
           id: stableNoteId(item.id),
-          title: inboxWhat(l10n, item),
-          body: [
-            if (item.opensTask) '${item.taskRef}  ${item.taskTitle}',
-            if (item.excerpt.isNotEmpty && item.kind != InboxKind.assigned)
-              item.excerpt,
-          ].join('\n'),
+          title: hide ? l10n.notifPrivateTitle : inboxWhat(l10n, item),
+          body: hide
+              ? l10n.notifPrivateBody
+              : [
+                  if (item.opensTask) '${item.taskRef}  ${item.taskTitle}',
+                  if (item.excerpt.isNotEmpty &&
+                      item.kind != InboxKind.assigned)
+                    item.excerpt,
+                ].join('\n'),
+          publicTitle: l10n.notifPrivateTitle,
+          publicBody: l10n.notifPrivateBody,
           payload: NoteTarget(
             route: route,
             item: item.id,
@@ -273,6 +318,8 @@ class InboxAlerts extends _$InboxAlerts {
           id: stableNoteId('more.$key'),
           title: l10n.notifMore(rest),
           body: l10n.notifMoreBody,
+          publicTitle: l10n.notifPrivateTitle,
+          publicBody: l10n.notifPrivateBody,
           payload: NoteTarget(
             route: Routes.inbox,
             item: '',

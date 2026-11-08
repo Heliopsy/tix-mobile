@@ -29,6 +29,7 @@ enum TixErrorKind {
   engineUnavailable,
   localNotUsable,
   localAccessDenied,
+  badInviteLink,
   unknown,
 }
 

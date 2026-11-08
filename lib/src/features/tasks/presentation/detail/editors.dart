@@ -733,7 +733,10 @@ class _TagSheetState extends ConsumerState<_TagSheet> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final q = _controller.text.trim().toLowerCase().replaceFirst('#', '');
-    final have = widget.task.tags.map((t) => t.toLowerCase()).toSet();
+    final fresh = ref.watch(taskTagsProvider(widget.task.ref)).value;
+    final have = {
+      for (final t in [...widget.task.tags, ...?fresh]) t.toLowerCase(),
+    };
     final known = ref.watch(tagDirectoryProvider).value ?? const [];
     final offered = [
       for (final t in known)

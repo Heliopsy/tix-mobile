@@ -5743,4 +5743,472 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get auditAfter => 'After';
+
+  @override
+  String durationDays(int n) {
+    return '$n d';
+  }
+
+  @override
+  String durationHours(int n) {
+    return '$n h';
+  }
+
+  @override
+  String durationMinutes(int n) {
+    return '$n min';
+  }
+
+  @override
+  String durationSeconds(int n) {
+    return '$n s';
+  }
+
+  @override
+  String get errorBadInviteLink =>
+      'That is not an invite link. It looks like https://your-server/invite/tix_inv_…';
+
+  @override
+  String get methodInvite => 'Invite';
+
+  @override
+  String get inviteLinkLabel => 'Invite link';
+
+  @override
+  String get inviteLinkHint => 'https://tix.example.com/invite/tix_inv_…';
+
+  @override
+  String get inviteLinkHelp =>
+      'Paste the link from your invite email, or share it to tix from another app. The server is added for you.';
+
+  @override
+  String get invitePaste => 'Paste the invite link';
+
+  @override
+  String get inviteCheck => 'Check invite';
+
+  @override
+  String inviteJoin(String tenant) {
+    return 'Join $tenant';
+  }
+
+  @override
+  String inviteAs(String email) {
+    return 'as $email';
+  }
+
+  @override
+  String inviteExpires(String when) {
+    return 'The link works until $when.';
+  }
+
+  @override
+  String get inviteExistingAccount =>
+      'This address already has a tix account. Enter its password to accept; nothing about the account changes.';
+
+  @override
+  String get inviteDisplayName => 'Your name';
+
+  @override
+  String get inviteNewPassword => 'New password';
+
+  @override
+  String get inviteNewPasswordHelp =>
+      'At least 12 characters. It signs you in everywhere, not only here.';
+
+  @override
+  String get inviteExistingPasswordHelp =>
+      'The password you already sign in to tix with.';
+
+  @override
+  String get inviteCodeHelp =>
+      'A code from your authenticator app, which this account already uses.';
+
+  @override
+  String get inviteAccept => 'Accept invite';
+
+  @override
+  String get notifHideContent => 'Hide task content in notifications';
+
+  @override
+  String get notifHideContentHelp =>
+      'Notifications only say “New in your inbox”, for this context.';
+
+  @override
+  String get notifPrivateTitle => 'New in your inbox';
+
+  @override
+  String get notifPrivateBody => 'Open tix to read it.';
+
+  @override
+  String get taskDetailLease => 'Claim length';
+
+  @override
+  String get taskDetailLeaseInfo =>
+      'How long an agent\'s claim on this task lasts when it asks for no length, and the most any claim may last. The task, project, workflow and tenant can each set it; the nearest one wins.';
+
+  @override
+  String taskDetailLeaseValue(String length, String source) {
+    return '$length, from $source';
+  }
+
+  @override
+  String taskDetailLeaseMax(String length, String source) {
+    return 'At most $length, from $source';
+  }
+
+  @override
+  String get taskDetailLeaseClamped => 'Cut down to the ceiling.';
+
+  @override
+  String get leaseSourceClaim => 'the claim';
+
+  @override
+  String get leaseSourceTask => 'the task';
+
+  @override
+  String get leaseSourceProject => 'the project';
+
+  @override
+  String get leaseSourceWorkflow => 'the workflow';
+
+  @override
+  String get leaseSourceTenant => 'the tenant';
+
+  @override
+  String get leaseSourceDeployment => 'the server';
+
+  @override
+  String get leaseSourceBuiltin => 'tix\'s default';
+
+  @override
+  String get statusTitle => 'Server status';
+
+  @override
+  String get statusInstallation => 'Installation';
+
+  @override
+  String get statusVersion => 'Version';
+
+  @override
+  String get statusSchema => 'Schema';
+
+  @override
+  String get statusEngine => 'Database';
+
+  @override
+  String get statusAnswering => 'Answered by';
+
+  @override
+  String get statusObserved => 'Checked';
+
+  @override
+  String get statusServers => 'Server processes';
+
+  @override
+  String get statusServersInfo =>
+      'Every tix process registered against this database. One that misses three heartbeats is shown as gone quiet.';
+
+  @override
+  String get statusNoServers =>
+      'No process has registered. The one answering may run without the registry.';
+
+  @override
+  String get statusAttached => 'Heartbeating';
+
+  @override
+  String statusDetached(String when) {
+    return 'Quiet since $when';
+  }
+
+  @override
+  String statusUptime(String length) {
+    return 'up $length';
+  }
+
+  @override
+  String statusConnections(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count connections',
+      one: '1 connection',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statusWork => 'This tenant';
+
+  @override
+  String get statusProjects => 'Projects';
+
+  @override
+  String get statusTasks => 'Tasks';
+
+  @override
+  String get statusClaimed => 'Claimed now';
+
+  @override
+  String get statusUnswept => 'Expired claims not yet swept';
+
+  @override
+  String get statusWebhooksPending => 'Webhook deliveries waiting';
+
+  @override
+  String get statusWebhooksFailed => 'Webhook deliveries failed';
+
+  @override
+  String get statusSecondFactor => 'Second factor';
+
+  @override
+  String get statusKey => 'Sealing key set';
+
+  @override
+  String get statusRequireWeb => 'Required in the browser';
+
+  @override
+  String get statusRequireCli => 'Required on the command line and in apps';
+
+  @override
+  String get statusRequireSsh => 'Required over SSH';
+
+  @override
+  String get statusAdmins => 'Admins with one';
+
+  @override
+  String statusAdminsEnrolled(int enrolled, int total) {
+    return '$enrolled of $total';
+  }
+
+  @override
+  String get statusUnrecoverable =>
+      'Some second factors cannot be read: the sealing key is missing. Those people must have theirs cleared and enrol again.';
+
+  @override
+  String get statusYes => 'Yes';
+
+  @override
+  String get statusNo => 'No';
+
+  @override
+  String get bundlesTitle => 'Bundles';
+
+  @override
+  String get bundleExportTitle => 'Export a bundle';
+
+  @override
+  String get bundleExportSubtitle =>
+      'Reusable setup as one file, for another tenant or server';
+
+  @override
+  String get bundleExportInfo =>
+      'A bundle carries workflows, custom field definitions, tags, projects as templates and webhook endpoints, never their tasks. Webhook secrets never travel in one.';
+
+  @override
+  String get bundleKindWorkflow => 'Workflows';
+
+  @override
+  String get bundleKindField => 'Custom fields';
+
+  @override
+  String get bundleKindTag => 'Tags';
+
+  @override
+  String get bundleKindProject => 'Project templates';
+
+  @override
+  String get bundleKindWebhook => 'Webhooks';
+
+  @override
+  String get bundleKindsAll => 'Nothing picked: the bundle carries every kind.';
+
+  @override
+  String get bundleKindsSome => 'Only the kinds picked go in.';
+
+  @override
+  String get bundleName => 'Name';
+
+  @override
+  String get bundleNameHelp =>
+      'Labels the bundle for whoever receives it. Optional.';
+
+  @override
+  String get bundleExport => 'Export bundle';
+
+  @override
+  String bundleExported(String name) {
+    return 'Exported $name';
+  }
+
+  @override
+  String get bundleImportTitle => 'Import a bundle';
+
+  @override
+  String get bundleImportSubtitle =>
+      'Previewed first, then applied all at once';
+
+  @override
+  String get bundleImportInfo =>
+      'A bundle applies atomically: everything in it lands, or nothing does. The preview writes nothing.';
+
+  @override
+  String get bundlePick => 'Choose a bundle file';
+
+  @override
+  String get bundleCollision => 'When a key is already taken';
+
+  @override
+  String get bundleCollisionAsk => 'Stop and say';
+
+  @override
+  String get bundleCollisionSkip => 'Keep mine';
+
+  @override
+  String get bundleCollisionRename => 'Import under a new key';
+
+  @override
+  String get bundleCollisionReplace => 'Replace mine';
+
+  @override
+  String get bundleProject => 'Project for custom fields';
+
+  @override
+  String get bundleProjectHelp =>
+      'The project key that field definitions land in. Needed only when the bundle carries them.';
+
+  @override
+  String get bundlePreview => 'Preview';
+
+  @override
+  String get bundleImport => 'Import bundle';
+
+  @override
+  String get bundleReplaceBody =>
+      'Components with the same key are overwritten with the bundle\'s. This cannot be undone.';
+
+  @override
+  String get bundleImported => 'Bundle imported.';
+
+  @override
+  String get bundlePlan => 'What the import would do';
+
+  @override
+  String get bundleDone => 'What the import did';
+
+  @override
+  String get bundleEmpty => 'The bundle carries nothing.';
+
+  @override
+  String get bundleActionCreate => 'New';
+
+  @override
+  String get bundleActionReplace => 'Replaced';
+
+  @override
+  String get bundleActionRename => 'Renamed';
+
+  @override
+  String get bundleActionSkip => 'Skipped';
+
+  @override
+  String get snapshotTitle => 'Import a snapshot';
+
+  @override
+  String get snapshotFileTitle => 'Snapshot file';
+
+  @override
+  String get snapshotFileSubtitle =>
+      'A file written by an export of a whole tenant';
+
+  @override
+  String get snapshotInfo =>
+      'A snapshot carries projects, workflows, fields, tasks and comments. Check what it would change with a dry run before importing.';
+
+  @override
+  String get snapshotPick => 'Choose a snapshot file';
+
+  @override
+  String get snapshotMerge => 'Merge';
+
+  @override
+  String get snapshotReplace => 'Replace';
+
+  @override
+  String get snapshotMergeHelp =>
+      'Adds what is new and updates what changed. Nothing is removed.';
+
+  @override
+  String get snapshotReplaceHelp =>
+      'Also removes the tasks and fields of each imported project that the snapshot does not carry.';
+
+  @override
+  String get snapshotDryRun => 'Dry run';
+
+  @override
+  String get snapshotImport => 'Import snapshot';
+
+  @override
+  String get snapshotMergeBody =>
+      'The snapshot\'s records are added to this tenant and update the ones it already has.';
+
+  @override
+  String get snapshotReplaceBody =>
+      'Tasks and fields of the imported projects that the snapshot does not carry are deleted. This cannot be undone.';
+
+  @override
+  String get snapshotImported => 'Snapshot imported.';
+
+  @override
+  String get snapshotPlan => 'What the import would do';
+
+  @override
+  String get snapshotDone => 'What the import did';
+
+  @override
+  String get snapshotCreated => 'Created';
+
+  @override
+  String get snapshotUpdated => 'Updated';
+
+  @override
+  String get snapshotDeleted => 'Deleted';
+
+  @override
+  String get snapshotSkipped => 'Left alone';
+
+  @override
+  String manageInheritedValue(String value) {
+    return 'Inherited: $value';
+  }
+
+  @override
+  String manageDurationSaved(String value) {
+    return 'Saved as $value. Empty inherits.';
+  }
+
+  @override
+  String get projectsShowArchived => 'Show archived';
+
+  @override
+  String get manageBundlesSubtitle =>
+      'Workflows, fields, tags and webhooks as one file';
+
+  @override
+  String get manageSnapshotSubtitle => 'Bring a whole tenant\'s export in';
+
+  @override
+  String get manageStatusSubtitle =>
+      'Version, server processes and the tenant\'s work';
+
+  @override
+  String get rotateToken => 'Rotate token';
+
+  @override
+  String rotateTokenBody(String name) {
+    return '$name gets a new token with the same name, scopes and lifetime, and the app keeps only the new one. Anything else using the old token stops working in a minute.';
+  }
+
+  @override
+  String get tokenRotated => 'Token rotated. The old one stops in a minute.';
 }

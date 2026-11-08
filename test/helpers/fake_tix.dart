@@ -173,6 +173,13 @@ typedef FakeRoute = FutureOr<FakeResponse?> Function(
   FakeCaller caller,
 );
 
+/// One extra route answered without a credential, before the caller is
+/// known.
+typedef FakePublicRoute = FutureOr<FakeResponse?> Function(
+  RequestOptions o,
+  String path,
+);
+
 /// A person who can sign in: their password and their tenants.
 class FakeAccount {
   FakeAccount({
@@ -293,6 +300,9 @@ class FakeTix {
   /// Extra routes, asked in order before the built-in ones once the caller
   /// is known. Each answers what it serves and returns null for the rest.
   final routes = <FakeRoute>[];
+
+  /// Extra routes asked before any credential is checked.
+  final publicRoutes = <FakePublicRoute>[];
 
   /// Rows per page, so tests can force pagination.
   int pageSize = 50;
@@ -530,6 +540,10 @@ class FakeTix {
     }
     if (o.method == 'POST' && path == '/api/v1/auth/login') {
       return _login(o.data as Map<String, dynamic>);
+    }
+    for (final route in publicRoutes) {
+      final answer = await route(o, path);
+      if (answer != null) return answer;
     }
     final caller = _caller(o);
     if (caller == null) {
@@ -1115,6 +1129,10 @@ class FakeTix {
           'applied': [to],
           'task': t,
         });
+      case ('POST', ['transition']):
+        t['status'] = body['to'];
+        bump();
+        return FakeResponse(200, t);
       case ('PUT', ['star']):
         t['starred'] = true;
         return const FakeResponse(204);

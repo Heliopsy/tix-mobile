@@ -22,6 +22,16 @@ class NotificationSettingsRepository {
       ? _store.write('notif.on.$context', 'true')
       : _store.delete('notif.on.$context');
 
+  /// Whether notifications for [context] leave the task out and say only
+  /// that something arrived; off until turned on.
+  bool hideContent(String context) =>
+      _store.read('notif.private.$context') == 'true';
+
+  /// Hides task content in [context]'s notifications, or shows it again.
+  Future<void> setHideContent(String context, {required bool on}) => on
+      ? _store.write('notif.private.$context', 'true')
+      : _store.delete('notif.private.$context');
+
   /// The kinds that notify; every kind until some is turned off.
   Set<InboxKind> kinds() {
     final raw = _store.read(_kindsKey);

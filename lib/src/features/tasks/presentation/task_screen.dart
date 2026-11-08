@@ -10,6 +10,7 @@ import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
+import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/data/models/group_pref.dart';
@@ -28,9 +29,40 @@ import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.da
 import 'package:tix_mobile/src/features/tasks/presentation/task_list_view.dart';
 
 /// Every task on the server, as a list, a board or lanes.
-class TasksScreen extends StatelessWidget {
-  /// Creates the screen.
-  const TasksScreen({super.key});
+class TasksScreen extends ConsumerStatefulWidget {
+  /// Creates the screen, opening the saved filter [filter] when given.
+  const TasksScreen({this.filter = '', super.key});
+
+  /// A saved filter's name or id, from the address.
+  final String filter;
+
+  @override
+  ConsumerState<TasksScreen> createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends ConsumerState<TasksScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _open();
+  }
+
+  @override
+  void didUpdateWidget(TasksScreen old) {
+    super.didUpdateWidget(old);
+    if (old.filter != widget.filter) _open();
+  }
+
+  void _open() {
+    final name = widget.filter.trim();
+    if (name.isEmpty) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      await ref.read(sessionControllerProvider.future);
+      if (!mounted) return;
+      await openSavedFilterNamed(context, ref, const AllScope(), name);
+    });
+  }
 
   @override
   Widget build(BuildContext context) => const TaskScreenView(scope: AllScope());

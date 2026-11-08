@@ -5788,4 +5788,476 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get auditAfter => 'Après';
+
+  @override
+  String durationDays(int n) {
+    return '$n j';
+  }
+
+  @override
+  String durationHours(int n) {
+    return '$n h';
+  }
+
+  @override
+  String durationMinutes(int n) {
+    return '$n min';
+  }
+
+  @override
+  String durationSeconds(int n) {
+    return '$n s';
+  }
+
+  @override
+  String get errorBadInviteLink =>
+      'Ce n’est pas un lien d’invitation. Il ressemble à https://votre-serveur/invite/tix_inv_…';
+
+  @override
+  String get methodInvite => 'Invitation';
+
+  @override
+  String get inviteLinkLabel => 'Lien d’invitation';
+
+  @override
+  String get inviteLinkHint => 'https://tix.example.com/invite/tix_inv_…';
+
+  @override
+  String get inviteLinkHelp =>
+      'Collez le lien de votre e-mail d’invitation, ou partagez-le vers tix depuis une autre application. Le serveur est ajouté pour vous.';
+
+  @override
+  String get invitePaste => 'Coller le lien d’invitation';
+
+  @override
+  String get inviteCheck => 'Vérifier l’invitation';
+
+  @override
+  String inviteJoin(String tenant) {
+    return 'Rejoindre $tenant';
+  }
+
+  @override
+  String inviteAs(String email) {
+    return 'en tant que $email';
+  }
+
+  @override
+  String inviteExpires(String when) {
+    return 'Le lien fonctionne jusqu’au $when.';
+  }
+
+  @override
+  String get inviteExistingAccount =>
+      'Cette adresse a déjà un compte tix. Saisissez son mot de passe pour accepter ; le compte n’est pas modifié.';
+
+  @override
+  String get inviteDisplayName => 'Votre nom';
+
+  @override
+  String get inviteNewPassword => 'Nouveau mot de passe';
+
+  @override
+  String get inviteNewPasswordHelp =>
+      'Au moins 12 caractères. Il vous identifie partout, pas seulement ici.';
+
+  @override
+  String get inviteExistingPasswordHelp =>
+      'Le mot de passe avec lequel vous vous identifiez déjà sur tix.';
+
+  @override
+  String get inviteCodeHelp =>
+      'Un code de votre application d’authentification, que ce compte utilise déjà.';
+
+  @override
+  String get inviteAccept => 'Accepter l’invitation';
+
+  @override
+  String get notifHideContent =>
+      'Masquer le contenu des tâches dans les notifications';
+
+  @override
+  String get notifHideContentHelp =>
+      'Les notifications indiquent seulement « Nouveau dans votre boîte de réception », pour ce contexte.';
+
+  @override
+  String get notifPrivateTitle => 'Nouveau dans votre boîte de réception';
+
+  @override
+  String get notifPrivateBody => 'Ouvrez tix pour le lire.';
+
+  @override
+  String get taskDetailLease => 'Durée de réservation';
+
+  @override
+  String get taskDetailLeaseInfo =>
+      'Durée d’une réservation de cette tâche par un agent qui ne précise aucune durée, et la durée maximale de toute réservation. La tâche, le projet, le workflow et l’espace peuvent la fixer ; le plus proche l’emporte.';
+
+  @override
+  String taskDetailLeaseValue(String length, String source) {
+    return '$length, défini par $source';
+  }
+
+  @override
+  String taskDetailLeaseMax(String length, String source) {
+    return 'Au plus $length, défini par $source';
+  }
+
+  @override
+  String get taskDetailLeaseClamped => 'Ramenée au plafond.';
+
+  @override
+  String get leaseSourceClaim => 'la réservation';
+
+  @override
+  String get leaseSourceTask => 'la tâche';
+
+  @override
+  String get leaseSourceProject => 'le projet';
+
+  @override
+  String get leaseSourceWorkflow => 'le workflow';
+
+  @override
+  String get leaseSourceTenant => 'l’espace';
+
+  @override
+  String get leaseSourceDeployment => 'le serveur';
+
+  @override
+  String get leaseSourceBuiltin => 'la valeur par défaut de tix';
+
+  @override
+  String get statusTitle => 'État du serveur';
+
+  @override
+  String get statusInstallation => 'Installation';
+
+  @override
+  String get statusVersion => 'Version';
+
+  @override
+  String get statusSchema => 'Schéma';
+
+  @override
+  String get statusEngine => 'Base de données';
+
+  @override
+  String get statusAnswering => 'Répondu par';
+
+  @override
+  String get statusObserved => 'Vérifié';
+
+  @override
+  String get statusServers => 'Processus serveur';
+
+  @override
+  String get statusServersInfo =>
+      'Chaque processus tix inscrit sur cette base de données. Celui qui manque trois signaux de vie est indiqué comme silencieux.';
+
+  @override
+  String get statusNoServers =>
+      'Aucun processus inscrit. Celui qui répond fonctionne peut-être sans le registre.';
+
+  @override
+  String get statusAttached => 'Signal de vie';
+
+  @override
+  String statusDetached(String when) {
+    return 'Silencieux depuis le $when';
+  }
+
+  @override
+  String statusUptime(String length) {
+    return 'actif depuis $length';
+  }
+
+  @override
+  String statusConnections(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count connexions',
+      one: '1 connexion',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statusWork => 'Cet espace';
+
+  @override
+  String get statusProjects => 'Projets';
+
+  @override
+  String get statusTasks => 'Tâches';
+
+  @override
+  String get statusClaimed => 'Réservées';
+
+  @override
+  String get statusUnswept => 'Réservations expirées non nettoyées';
+
+  @override
+  String get statusWebhooksPending => 'Livraisons de webhook en attente';
+
+  @override
+  String get statusWebhooksFailed => 'Livraisons de webhook échouées';
+
+  @override
+  String get statusSecondFactor => 'Second facteur';
+
+  @override
+  String get statusKey => 'Clé de scellement définie';
+
+  @override
+  String get statusRequireWeb => 'Requis dans le navigateur';
+
+  @override
+  String get statusRequireCli =>
+      'Requis en ligne de commande et dans les applications';
+
+  @override
+  String get statusRequireSsh => 'Requis via SSH';
+
+  @override
+  String get statusAdmins => 'Administrateurs équipés';
+
+  @override
+  String statusAdminsEnrolled(int enrolled, int total) {
+    return '$enrolled sur $total';
+  }
+
+  @override
+  String get statusUnrecoverable =>
+      'Certains seconds facteurs sont illisibles : la clé de scellement manque. Ces personnes doivent les faire effacer puis s’inscrire à nouveau.';
+
+  @override
+  String get statusYes => 'Oui';
+
+  @override
+  String get statusNo => 'Non';
+
+  @override
+  String get bundlesTitle => 'Lots';
+
+  @override
+  String get bundleExportTitle => 'Exporter un lot';
+
+  @override
+  String get bundleExportSubtitle =>
+      'Une configuration réutilisable en un seul fichier, pour un autre espace ou serveur';
+
+  @override
+  String get bundleExportInfo =>
+      'Un lot contient des workflows, des définitions de champs, des étiquettes, des projets comme modèles et des webhooks, jamais leurs tâches. Les secrets de webhook n’y figurent jamais.';
+
+  @override
+  String get bundleKindWorkflow => 'Workflows';
+
+  @override
+  String get bundleKindField => 'Champs personnalisés';
+
+  @override
+  String get bundleKindTag => 'Étiquettes';
+
+  @override
+  String get bundleKindProject => 'Modèles de projet';
+
+  @override
+  String get bundleKindWebhook => 'Webhooks';
+
+  @override
+  String get bundleKindsAll =>
+      'Rien de sélectionné : le lot contient tous les types.';
+
+  @override
+  String get bundleKindsSome => 'Seuls les types sélectionnés sont inclus.';
+
+  @override
+  String get bundleName => 'Nom';
+
+  @override
+  String get bundleNameHelp =>
+      'Identifie le lot pour qui le reçoit. Facultatif.';
+
+  @override
+  String get bundleExport => 'Exporter le lot';
+
+  @override
+  String bundleExported(String name) {
+    return '$name exporté';
+  }
+
+  @override
+  String get bundleImportTitle => 'Importer un lot';
+
+  @override
+  String get bundleImportSubtitle =>
+      'Aperçu d’abord, puis appliqué en une fois';
+
+  @override
+  String get bundleImportInfo =>
+      'Un lot s’applique de façon atomique : tout est importé, ou rien. L’aperçu n’écrit rien.';
+
+  @override
+  String get bundlePick => 'Choisir un fichier de lot';
+
+  @override
+  String get bundleCollision => 'Quand une clé est déjà prise';
+
+  @override
+  String get bundleCollisionAsk => 'Arrêter et signaler';
+
+  @override
+  String get bundleCollisionSkip => 'Garder le mien';
+
+  @override
+  String get bundleCollisionRename => 'Importer sous une nouvelle clé';
+
+  @override
+  String get bundleCollisionReplace => 'Remplacer le mien';
+
+  @override
+  String get bundleProject => 'Projet des champs personnalisés';
+
+  @override
+  String get bundleProjectHelp =>
+      'La clé du projet qui reçoit les définitions de champs. Nécessaire seulement si le lot en contient.';
+
+  @override
+  String get bundlePreview => 'Aperçu';
+
+  @override
+  String get bundleImport => 'Importer le lot';
+
+  @override
+  String get bundleReplaceBody =>
+      'Les composants ayant la même clé sont écrasés par ceux du lot. Cette action est irréversible.';
+
+  @override
+  String get bundleImported => 'Lot importé.';
+
+  @override
+  String get bundlePlan => 'Ce que ferait l’import';
+
+  @override
+  String get bundleDone => 'Ce qu’a fait l’import';
+
+  @override
+  String get bundleEmpty => 'Le lot ne contient rien.';
+
+  @override
+  String get bundleActionCreate => 'Nouveau';
+
+  @override
+  String get bundleActionReplace => 'Remplacé';
+
+  @override
+  String get bundleActionRename => 'Renommé';
+
+  @override
+  String get bundleActionSkip => 'Ignoré';
+
+  @override
+  String get snapshotTitle => 'Importer un instantané';
+
+  @override
+  String get snapshotFileTitle => 'Fichier d’instantané';
+
+  @override
+  String get snapshotFileSubtitle =>
+      'Un fichier issu de l’export d’un espace entier';
+
+  @override
+  String get snapshotInfo =>
+      'Un instantané contient projets, workflows, champs, tâches et commentaires. Vérifiez ce qu’il changerait par un essai à blanc avant d’importer.';
+
+  @override
+  String get snapshotPick => 'Choisir un fichier d’instantané';
+
+  @override
+  String get snapshotMerge => 'Fusionner';
+
+  @override
+  String get snapshotReplace => 'Remplacer';
+
+  @override
+  String get snapshotMergeHelp =>
+      'Ajoute ce qui est nouveau et met à jour ce qui a changé. Rien n’est supprimé.';
+
+  @override
+  String get snapshotReplaceHelp =>
+      'Supprime aussi les tâches et champs de chaque projet importé absents de l’instantané.';
+
+  @override
+  String get snapshotDryRun => 'Essai à blanc';
+
+  @override
+  String get snapshotImport => 'Importer l’instantané';
+
+  @override
+  String get snapshotMergeBody =>
+      'Les enregistrements de l’instantané sont ajoutés à cet espace et mettent à jour ceux qu’il contient déjà.';
+
+  @override
+  String get snapshotReplaceBody =>
+      'Les tâches et champs des projets importés absents de l’instantané sont supprimés. Cette action est irréversible.';
+
+  @override
+  String get snapshotImported => 'Instantané importé.';
+
+  @override
+  String get snapshotPlan => 'Ce que ferait l’import';
+
+  @override
+  String get snapshotDone => 'Ce qu’a fait l’import';
+
+  @override
+  String get snapshotCreated => 'Créés';
+
+  @override
+  String get snapshotUpdated => 'Mis à jour';
+
+  @override
+  String get snapshotDeleted => 'Supprimés';
+
+  @override
+  String get snapshotSkipped => 'Inchangés';
+
+  @override
+  String manageInheritedValue(String value) {
+    return 'Hérité : $value';
+  }
+
+  @override
+  String manageDurationSaved(String value) {
+    return 'Enregistré : $value. Vide hérite.';
+  }
+
+  @override
+  String get projectsShowArchived => 'Afficher les archivés';
+
+  @override
+  String get manageBundlesSubtitle =>
+      'Workflows, champs, étiquettes et webhooks en un fichier';
+
+  @override
+  String get manageSnapshotSubtitle => 'Importer l’export d’un espace entier';
+
+  @override
+  String get manageStatusSubtitle =>
+      'Version, processus serveur et travail de l’espace';
+
+  @override
+  String get rotateToken => 'Renouveler le jeton';
+
+  @override
+  String rotateTokenBody(String name) {
+    return '$name reçoit un nouveau jeton avec le même nom, les mêmes portées et la même durée, et l’application ne garde que le nouveau. Tout ce qui utilise l’ancien jeton cesse de fonctionner dans une minute.';
+  }
+
+  @override
+  String get tokenRotated =>
+      'Jeton renouvelé. L’ancien s’arrête dans une minute.';
 }

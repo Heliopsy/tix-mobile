@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
+import 'package:tix_mobile/src/core/l10n/durations.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
@@ -40,8 +41,15 @@ extension TaskEdits on WidgetRef {
     if (picked == null || !context.mounted) return;
     final controller = read(taskDetailControllerProvider(task.ref).notifier);
     final from = task.status;
+    final direct = workflow
+        .routesFrom(task.status)
+        .any((r) => r.to.id == picked.to && r.via.isEmpty);
     try {
-      final result = await controller.move(picked.to, comment: picked.comment);
+      final result = await controller.move(
+        picked.to,
+        comment: picked.comment,
+        direct: direct,
+      );
       final status = result.task?.status ?? picked.to;
       final category = statusCategoryOf(workflow.state(status));
       unawaited(
@@ -225,6 +233,7 @@ class TaskProperties extends ConsumerWidget {
     final fields =
         ref.watch(projectFieldsProvider(task.projectId)).value ?? const [];
     final project = ref.watch(projectByIdProvider(task.projectId)).value;
+    final lease = ref.watch(taskLeaseProvider(task.ref)).value;
     final due = task.dueAt;
     final muted = TextStyle(color: t.muted);
     return TixPropertyList(
@@ -329,6 +338,13 @@ class TaskProperties extends ConsumerWidget {
                 : project.name,
           ),
         ),
+        if (lease != null && lease.ttl.isNotEmpty)
+          TixPropertyRow(
+            key: const Key('prop.lease'),
+            label: l10n.taskDetailLease,
+            info: l10n.taskDetailLeaseInfo,
+            child: _LeaseText(lease: lease),
+          ),
         if (task.parentId.isNotEmpty)
           TixPropertyRow(
             key: const Key('prop.parent'),
@@ -358,6 +374,57 @@ class TaskProperties extends ConsumerWidget {
                   .add_Hm()
                   .format(task.updatedAt!.toLocal()),
             ),
+          ),
+      ],
+    );
+  }
+}
+
+/// Who set a lease length, as the task screen names it.
+String leaseSourceLabel(AppLocalizations l10n, LeaseSource? source) =>
+    switch (source) {
+      LeaseSource.claim => l10n.leaseSourceClaim,
+      LeaseSource.task => l10n.leaseSourceTask,
+      LeaseSource.project => l10n.leaseSourceProject,
+      LeaseSource.workflow => l10n.leaseSourceWorkflow,
+      LeaseSource.tenant => l10n.leaseSourceTenant,
+      LeaseSource.deployment => l10n.leaseSourceDeployment,
+      LeaseSource.builtin || null => l10n.leaseSourceBuiltin,
+    };
+
+class _LeaseText extends StatelessWidget {
+  const _LeaseText({required this.lease});
+
+  final LeaseGrant lease;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final small = Theme.of(context).textTheme.bodySmall;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.taskDetailLeaseValue(
+            humanDuration(l10n, lease.ttl),
+            leaseSourceLabel(l10n, lease.source),
+          ),
+          key: const Key('lease.ttl'),
+        ),
+        if (lease.max.isNotEmpty)
+          Text(
+            l10n.taskDetailLeaseMax(
+              humanDuration(l10n, lease.max),
+              leaseSourceLabel(l10n, lease.maxSource),
+            ),
+            key: const Key('lease.max'),
+            style: small,
+          ),
+        if (lease.clamped)
+          Text(
+            l10n.taskDetailLeaseClamped,
+            key: const Key('lease.clamped'),
+            style: small,
           ),
       ],
     );

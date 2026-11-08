@@ -28,6 +28,16 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         val messenger = flutterEngine.dartExecutor.binaryMessenger
+        MethodChannel(messenger, "tix/notes").setMethodCallHandler { call, result ->
+            if (call.method == "publicVersion") {
+                val id = call.argument<Int>("id")
+                val title = call.argument<String>("title").orEmpty()
+                val body = call.argument<String>("body").orEmpty()
+                result.success(id != null && PublicNotes.attach(this, id, title, body))
+            } else {
+                result.notImplemented()
+            }
+        }
         channel = MethodChannel(messenger, "tix/share").apply {
             setMethodCallHandler { call, result ->
                 if (call.method == "take") {

@@ -60,6 +60,30 @@ class TaskDetailRepository {
   Future<RouteResult> move(String ref, String to, {String? comment}) =>
       _api.task.route(ref, RouteInput(to: to, comment: comment));
 
+  /// Moves [ref] one transition to [to] (`task.transition`). With
+  /// [version], a task changed since that version is refused as a conflict.
+  Future<Task> transition(
+    String ref,
+    String to, {
+    String? comment,
+    int? version,
+  }) => _api.task.transition(
+    ref,
+    TransitionInput(
+      to: to,
+      comment: (comment ?? '').isEmpty ? null : comment,
+      version: version,
+    ),
+  );
+
+  /// The lease a claim on [ref] would get now, and the levels that decide
+  /// it (`task.lease`).
+  Future<LeaseGrant> lease(String ref) => _api.task.lease(ref);
+
+  /// The tags on [ref] as the server has them now (`task.tags`).
+  Future<List<String>> taskTags(String ref) async =>
+      (await _api.task.tags(ref)).items;
+
   /// Stars or unstars [ref] for the reader (`task.star`, `task.unstar`).
   Future<void> setStar(String ref, {required bool starred}) =>
       starred ? _api.task.star(ref) : _api.task.unstar(ref);

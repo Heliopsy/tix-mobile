@@ -5,6 +5,7 @@ import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/auth.dart';
+import 'package:tix_mobile/src/data/models/invite_link.dart';
 
 /// Checking servers, signing in and switching tenant.
 class AuthRepository {
@@ -103,6 +104,35 @@ class AuthRepository {
     ),
     signingIn: false,
   );
+
+  /// What the invite [link] admits to, read without a credential
+  /// (`invite.preview`). Never cached: the link is a secret.
+  Future<InvitePreview> previewInvite(InviteLink link) =>
+      _build(link.baseUrl, null).invite.preview(link.token);
+
+  /// Accepts the invite [link] with [password], the new one or an existing
+  /// account's own, and signs in as a sign-in does (`invite.accept`).
+  Future<LoginResult> acceptInvite(
+    InviteLink link, {
+    required String password,
+    String displayName = '',
+    String code = '',
+  }) async {
+    if (password.isEmpty) {
+      throw const TixException(TixErrorKind.passwordRequired);
+    }
+    return await _complete(
+      _build(link.baseUrl, null).invite.accept(
+        link.token,
+        AcceptInviteInput(
+          password: password,
+          displayName: displayName.trim().isEmpty ? null : displayName.trim(),
+          code: code.trim().isEmpty ? null : code.trim(),
+          surface: _surface,
+        ),
+      ),
+    );
+  }
 
   /// Ends [session] on the server.
   Future<void> logout(String baseUrl, String session) =>

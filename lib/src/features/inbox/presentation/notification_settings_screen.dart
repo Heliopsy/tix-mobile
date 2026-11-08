@@ -93,6 +93,15 @@ class _DeviceSection extends ConsumerWidget {
               ],
             ),
           ),
+        TixSwitchRow(
+          key: const Key('notif.hideContent'),
+          title: l10n.notifHideContent,
+          subtitle: l10n.notifHideContentHelp,
+          value: prefs.hideContent,
+          onChanged: prefs.enabled
+              ? (on) => unawaited(notifier.setHideContent(on: on))
+              : null,
+        ),
         for (final kind in inboxKinds)
           TixSwitchRow(
             key: Key('notif.kind.${kind.value}'),

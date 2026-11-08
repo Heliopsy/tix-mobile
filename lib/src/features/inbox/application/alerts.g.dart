@@ -103,7 +103,7 @@ final class NotificationPrefsStateProvider
 }
 
 String _$notificationPrefsStateHash() =>
-    r'174f28bc5cdcd4e2188006ece25327f612982b20';
+    r'0dd4c52b2fc0b2f69f6e441afa8aea664c636bbd';
 
 /// The active context's notification choices.
 
@@ -156,7 +156,7 @@ final class InboxAlertsProvider
   InboxAlerts create() => InboxAlerts();
 }
 
-String _$inboxAlertsHash() => r'b002c2967d022daa701378c08b1bd48f2b45cff7';
+String _$inboxAlertsHash() => r'952f033c760fbba638da35cbef26e41ccd7e153c';
 
 /// Notifies new inbox items of the active context while the app runs:
 /// each item once, none that was there when the app started.

@@ -9798,6 +9798,810 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'After'**
   String get auditAfter;
+
+  /// No description provided for @durationDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} d'**
+  String durationDays(int n);
+
+  /// No description provided for @durationHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} h'**
+  String durationHours(int n);
+
+  /// No description provided for @durationMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} min'**
+  String durationMinutes(int n);
+
+  /// No description provided for @durationSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} s'**
+  String durationSeconds(int n);
+
+  /// No description provided for @errorBadInviteLink.
+  ///
+  /// In en, this message translates to:
+  /// **'That is not an invite link. It looks like https://your-server/invite/tix_inv_…'**
+  String get errorBadInviteLink;
+
+  /// No description provided for @methodInvite.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite'**
+  String get methodInvite;
+
+  /// No description provided for @inviteLinkLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite link'**
+  String get inviteLinkLabel;
+
+  /// No description provided for @inviteLinkHint.
+  ///
+  /// In en, this message translates to:
+  /// **'https://tix.example.com/invite/tix_inv_…'**
+  String get inviteLinkHint;
+
+  /// No description provided for @inviteLinkHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste the link from your invite email, or share it to tix from another app. The server is added for you.'**
+  String get inviteLinkHelp;
+
+  /// No description provided for @invitePaste.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste the invite link'**
+  String get invitePaste;
+
+  /// No description provided for @inviteCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Check invite'**
+  String get inviteCheck;
+
+  /// No description provided for @inviteJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Join {tenant}'**
+  String inviteJoin(String tenant);
+
+  /// No description provided for @inviteAs.
+  ///
+  /// In en, this message translates to:
+  /// **'as {email}'**
+  String inviteAs(String email);
+
+  /// No description provided for @inviteExpires.
+  ///
+  /// In en, this message translates to:
+  /// **'The link works until {when}.'**
+  String inviteExpires(String when);
+
+  /// No description provided for @inviteExistingAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'This address already has a tix account. Enter its password to accept; nothing about the account changes.'**
+  String get inviteExistingAccount;
+
+  /// No description provided for @inviteDisplayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get inviteDisplayName;
+
+  /// No description provided for @inviteNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get inviteNewPassword;
+
+  /// No description provided for @inviteNewPasswordHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 12 characters. It signs you in everywhere, not only here.'**
+  String get inviteNewPasswordHelp;
+
+  /// No description provided for @inviteExistingPasswordHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The password you already sign in to tix with.'**
+  String get inviteExistingPasswordHelp;
+
+  /// No description provided for @inviteCodeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A code from your authenticator app, which this account already uses.'**
+  String get inviteCodeHelp;
+
+  /// No description provided for @inviteAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept invite'**
+  String get inviteAccept;
+
+  /// No description provided for @notifHideContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide task content in notifications'**
+  String get notifHideContent;
+
+  /// No description provided for @notifHideContentHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications only say “New in your inbox”, for this context.'**
+  String get notifHideContentHelp;
+
+  /// No description provided for @notifPrivateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New in your inbox'**
+  String get notifPrivateTitle;
+
+  /// No description provided for @notifPrivateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Open tix to read it.'**
+  String get notifPrivateBody;
+
+  /// No description provided for @taskDetailLease.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim length'**
+  String get taskDetailLease;
+
+  /// No description provided for @taskDetailLeaseInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'How long an agent\'s claim on this task lasts when it asks for no length, and the most any claim may last. The task, project, workflow and tenant can each set it; the nearest one wins.'**
+  String get taskDetailLeaseInfo;
+
+  /// No description provided for @taskDetailLeaseValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{length}, from {source}'**
+  String taskDetailLeaseValue(String length, String source);
+
+  /// No description provided for @taskDetailLeaseMax.
+  ///
+  /// In en, this message translates to:
+  /// **'At most {length}, from {source}'**
+  String taskDetailLeaseMax(String length, String source);
+
+  /// No description provided for @taskDetailLeaseClamped.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut down to the ceiling.'**
+  String get taskDetailLeaseClamped;
+
+  /// No description provided for @leaseSourceClaim.
+  ///
+  /// In en, this message translates to:
+  /// **'the claim'**
+  String get leaseSourceClaim;
+
+  /// No description provided for @leaseSourceTask.
+  ///
+  /// In en, this message translates to:
+  /// **'the task'**
+  String get leaseSourceTask;
+
+  /// No description provided for @leaseSourceProject.
+  ///
+  /// In en, this message translates to:
+  /// **'the project'**
+  String get leaseSourceProject;
+
+  /// No description provided for @leaseSourceWorkflow.
+  ///
+  /// In en, this message translates to:
+  /// **'the workflow'**
+  String get leaseSourceWorkflow;
+
+  /// No description provided for @leaseSourceTenant.
+  ///
+  /// In en, this message translates to:
+  /// **'the tenant'**
+  String get leaseSourceTenant;
+
+  /// No description provided for @leaseSourceDeployment.
+  ///
+  /// In en, this message translates to:
+  /// **'the server'**
+  String get leaseSourceDeployment;
+
+  /// No description provided for @leaseSourceBuiltin.
+  ///
+  /// In en, this message translates to:
+  /// **'tix\'s default'**
+  String get leaseSourceBuiltin;
+
+  /// No description provided for @statusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Server status'**
+  String get statusTitle;
+
+  /// No description provided for @statusInstallation.
+  ///
+  /// In en, this message translates to:
+  /// **'Installation'**
+  String get statusInstallation;
+
+  /// No description provided for @statusVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get statusVersion;
+
+  /// No description provided for @statusSchema.
+  ///
+  /// In en, this message translates to:
+  /// **'Schema'**
+  String get statusSchema;
+
+  /// No description provided for @statusEngine.
+  ///
+  /// In en, this message translates to:
+  /// **'Database'**
+  String get statusEngine;
+
+  /// No description provided for @statusAnswering.
+  ///
+  /// In en, this message translates to:
+  /// **'Answered by'**
+  String get statusAnswering;
+
+  /// No description provided for @statusObserved.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked'**
+  String get statusObserved;
+
+  /// No description provided for @statusServers.
+  ///
+  /// In en, this message translates to:
+  /// **'Server processes'**
+  String get statusServers;
+
+  /// No description provided for @statusServersInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Every tix process registered against this database. One that misses three heartbeats is shown as gone quiet.'**
+  String get statusServersInfo;
+
+  /// No description provided for @statusNoServers.
+  ///
+  /// In en, this message translates to:
+  /// **'No process has registered. The one answering may run without the registry.'**
+  String get statusNoServers;
+
+  /// No description provided for @statusAttached.
+  ///
+  /// In en, this message translates to:
+  /// **'Heartbeating'**
+  String get statusAttached;
+
+  /// No description provided for @statusDetached.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet since {when}'**
+  String statusDetached(String when);
+
+  /// No description provided for @statusUptime.
+  ///
+  /// In en, this message translates to:
+  /// **'up {length}'**
+  String statusUptime(String length);
+
+  /// No description provided for @statusConnections.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 connection} other{{count} connections}}'**
+  String statusConnections(int count);
+
+  /// No description provided for @statusWork.
+  ///
+  /// In en, this message translates to:
+  /// **'This tenant'**
+  String get statusWork;
+
+  /// No description provided for @statusProjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Projects'**
+  String get statusProjects;
+
+  /// No description provided for @statusTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks'**
+  String get statusTasks;
+
+  /// No description provided for @statusClaimed.
+  ///
+  /// In en, this message translates to:
+  /// **'Claimed now'**
+  String get statusClaimed;
+
+  /// No description provided for @statusUnswept.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired claims not yet swept'**
+  String get statusUnswept;
+
+  /// No description provided for @statusWebhooksPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Webhook deliveries waiting'**
+  String get statusWebhooksPending;
+
+  /// No description provided for @statusWebhooksFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Webhook deliveries failed'**
+  String get statusWebhooksFailed;
+
+  /// No description provided for @statusSecondFactor.
+  ///
+  /// In en, this message translates to:
+  /// **'Second factor'**
+  String get statusSecondFactor;
+
+  /// No description provided for @statusKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Sealing key set'**
+  String get statusKey;
+
+  /// No description provided for @statusRequireWeb.
+  ///
+  /// In en, this message translates to:
+  /// **'Required in the browser'**
+  String get statusRequireWeb;
+
+  /// No description provided for @statusRequireCli.
+  ///
+  /// In en, this message translates to:
+  /// **'Required on the command line and in apps'**
+  String get statusRequireCli;
+
+  /// No description provided for @statusRequireSsh.
+  ///
+  /// In en, this message translates to:
+  /// **'Required over SSH'**
+  String get statusRequireSsh;
+
+  /// No description provided for @statusAdmins.
+  ///
+  /// In en, this message translates to:
+  /// **'Admins with one'**
+  String get statusAdmins;
+
+  /// No description provided for @statusAdminsEnrolled.
+  ///
+  /// In en, this message translates to:
+  /// **'{enrolled} of {total}'**
+  String statusAdminsEnrolled(int enrolled, int total);
+
+  /// No description provided for @statusUnrecoverable.
+  ///
+  /// In en, this message translates to:
+  /// **'Some second factors cannot be read: the sealing key is missing. Those people must have theirs cleared and enrol again.'**
+  String get statusUnrecoverable;
+
+  /// No description provided for @statusYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get statusYes;
+
+  /// No description provided for @statusNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get statusNo;
+
+  /// No description provided for @bundlesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bundles'**
+  String get bundlesTitle;
+
+  /// No description provided for @bundleExportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Export a bundle'**
+  String get bundleExportTitle;
+
+  /// No description provided for @bundleExportSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reusable setup as one file, for another tenant or server'**
+  String get bundleExportSubtitle;
+
+  /// No description provided for @bundleExportInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'A bundle carries workflows, custom field definitions, tags, projects as templates and webhook endpoints, never their tasks. Webhook secrets never travel in one.'**
+  String get bundleExportInfo;
+
+  /// No description provided for @bundleKindWorkflow.
+  ///
+  /// In en, this message translates to:
+  /// **'Workflows'**
+  String get bundleKindWorkflow;
+
+  /// No description provided for @bundleKindField.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom fields'**
+  String get bundleKindField;
+
+  /// No description provided for @bundleKindTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get bundleKindTag;
+
+  /// No description provided for @bundleKindProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Project templates'**
+  String get bundleKindProject;
+
+  /// No description provided for @bundleKindWebhook.
+  ///
+  /// In en, this message translates to:
+  /// **'Webhooks'**
+  String get bundleKindWebhook;
+
+  /// No description provided for @bundleKindsAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing picked: the bundle carries every kind.'**
+  String get bundleKindsAll;
+
+  /// No description provided for @bundleKindsSome.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the kinds picked go in.'**
+  String get bundleKindsSome;
+
+  /// No description provided for @bundleName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get bundleName;
+
+  /// No description provided for @bundleNameHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Labels the bundle for whoever receives it. Optional.'**
+  String get bundleNameHelp;
+
+  /// No description provided for @bundleExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export bundle'**
+  String get bundleExport;
+
+  /// No description provided for @bundleExported.
+  ///
+  /// In en, this message translates to:
+  /// **'Exported {name}'**
+  String bundleExported(String name);
+
+  /// No description provided for @bundleImportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import a bundle'**
+  String get bundleImportTitle;
+
+  /// No description provided for @bundleImportSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Previewed first, then applied all at once'**
+  String get bundleImportSubtitle;
+
+  /// No description provided for @bundleImportInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'A bundle applies atomically: everything in it lands, or nothing does. The preview writes nothing.'**
+  String get bundleImportInfo;
+
+  /// No description provided for @bundlePick.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a bundle file'**
+  String get bundlePick;
+
+  /// No description provided for @bundleCollision.
+  ///
+  /// In en, this message translates to:
+  /// **'When a key is already taken'**
+  String get bundleCollision;
+
+  /// No description provided for @bundleCollisionAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop and say'**
+  String get bundleCollisionAsk;
+
+  /// No description provided for @bundleCollisionSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep mine'**
+  String get bundleCollisionSkip;
+
+  /// No description provided for @bundleCollisionRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Import under a new key'**
+  String get bundleCollisionRename;
+
+  /// No description provided for @bundleCollisionReplace.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace mine'**
+  String get bundleCollisionReplace;
+
+  /// No description provided for @bundleProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Project for custom fields'**
+  String get bundleProject;
+
+  /// No description provided for @bundleProjectHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The project key that field definitions land in. Needed only when the bundle carries them.'**
+  String get bundleProjectHelp;
+
+  /// No description provided for @bundlePreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get bundlePreview;
+
+  /// No description provided for @bundleImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Import bundle'**
+  String get bundleImport;
+
+  /// No description provided for @bundleReplaceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Components with the same key are overwritten with the bundle\'s. This cannot be undone.'**
+  String get bundleReplaceBody;
+
+  /// No description provided for @bundleImported.
+  ///
+  /// In en, this message translates to:
+  /// **'Bundle imported.'**
+  String get bundleImported;
+
+  /// No description provided for @bundlePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'What the import would do'**
+  String get bundlePlan;
+
+  /// No description provided for @bundleDone.
+  ///
+  /// In en, this message translates to:
+  /// **'What the import did'**
+  String get bundleDone;
+
+  /// No description provided for @bundleEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'The bundle carries nothing.'**
+  String get bundleEmpty;
+
+  /// No description provided for @bundleActionCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get bundleActionCreate;
+
+  /// No description provided for @bundleActionReplace.
+  ///
+  /// In en, this message translates to:
+  /// **'Replaced'**
+  String get bundleActionReplace;
+
+  /// No description provided for @bundleActionRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Renamed'**
+  String get bundleActionRename;
+
+  /// No description provided for @bundleActionSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get bundleActionSkip;
+
+  /// No description provided for @snapshotTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import a snapshot'**
+  String get snapshotTitle;
+
+  /// No description provided for @snapshotFileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Snapshot file'**
+  String get snapshotFileTitle;
+
+  /// No description provided for @snapshotFileSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A file written by an export of a whole tenant'**
+  String get snapshotFileSubtitle;
+
+  /// No description provided for @snapshotInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'A snapshot carries projects, workflows, fields, tasks and comments. Check what it would change with a dry run before importing.'**
+  String get snapshotInfo;
+
+  /// No description provided for @snapshotPick.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a snapshot file'**
+  String get snapshotPick;
+
+  /// No description provided for @snapshotMerge.
+  ///
+  /// In en, this message translates to:
+  /// **'Merge'**
+  String get snapshotMerge;
+
+  /// No description provided for @snapshotReplace.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get snapshotReplace;
+
+  /// No description provided for @snapshotMergeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Adds what is new and updates what changed. Nothing is removed.'**
+  String get snapshotMergeHelp;
+
+  /// No description provided for @snapshotReplaceHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Also removes the tasks and fields of each imported project that the snapshot does not carry.'**
+  String get snapshotReplaceHelp;
+
+  /// No description provided for @snapshotDryRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Dry run'**
+  String get snapshotDryRun;
+
+  /// No description provided for @snapshotImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Import snapshot'**
+  String get snapshotImport;
+
+  /// No description provided for @snapshotMergeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The snapshot\'s records are added to this tenant and update the ones it already has.'**
+  String get snapshotMergeBody;
+
+  /// No description provided for @snapshotReplaceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks and fields of the imported projects that the snapshot does not carry are deleted. This cannot be undone.'**
+  String get snapshotReplaceBody;
+
+  /// No description provided for @snapshotImported.
+  ///
+  /// In en, this message translates to:
+  /// **'Snapshot imported.'**
+  String get snapshotImported;
+
+  /// No description provided for @snapshotPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'What the import would do'**
+  String get snapshotPlan;
+
+  /// No description provided for @snapshotDone.
+  ///
+  /// In en, this message translates to:
+  /// **'What the import did'**
+  String get snapshotDone;
+
+  /// No description provided for @snapshotCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get snapshotCreated;
+
+  /// No description provided for @snapshotUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get snapshotUpdated;
+
+  /// No description provided for @snapshotDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted'**
+  String get snapshotDeleted;
+
+  /// No description provided for @snapshotSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Left alone'**
+  String get snapshotSkipped;
+
+  /// No description provided for @manageInheritedValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Inherited: {value}'**
+  String manageInheritedValue(String value);
+
+  /// No description provided for @manageDurationSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved as {value}. Empty inherits.'**
+  String manageDurationSaved(String value);
+
+  /// No description provided for @projectsShowArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Show archived'**
+  String get projectsShowArchived;
+
+  /// No description provided for @manageBundlesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Workflows, fields, tags and webhooks as one file'**
+  String get manageBundlesSubtitle;
+
+  /// No description provided for @manageSnapshotSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring a whole tenant\'s export in'**
+  String get manageSnapshotSubtitle;
+
+  /// No description provided for @manageStatusSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Version, server processes and the tenant\'s work'**
+  String get manageStatusSubtitle;
+
+  /// No description provided for @rotateToken.
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate token'**
+  String get rotateToken;
+
+  /// No description provided for @rotateTokenBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} gets a new token with the same name, scopes and lifetime, and the app keeps only the new one. Anything else using the old token stops working in a minute.'**
+  String rotateTokenBody(String name);
+
+  /// No description provided for @tokenRotated.
+  ///
+  /// In en, this message translates to:
+  /// **'Token rotated. The old one stops in a minute.'**
+  String get tokenRotated;
 }
 
 class _AppLocalizationsDelegate

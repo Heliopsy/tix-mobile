@@ -115,7 +115,10 @@ class TixTransport {
       type: ResponseType.plain,
     );
     final data = response.data;
-    return data is String ? data : '';
+    if (data is String) return data;
+    // Dio decodes a +json body even when asked for text (a bundle is
+    // application/vnd.tix.bundle+json), so it is written back as JSON.
+    return data == null ? '' : jsonEncode(data);
   }
 
   /// A request answered with a file.
