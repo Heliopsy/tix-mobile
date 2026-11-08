@@ -10,4 +10,5 @@ part 'api.g.dart';
 /// How API clients are built; tests swap in one with a fake adapter.
 @Riverpod(keepAlive: true)
 TixApiFactory tixApiFactory(Ref ref) =>
-    (baseUrl, credential) => TixApi(baseUrl: baseUrl, credential: credential);
+    (baseUrl, credential, {tenant}) =>
+        TixApi(baseUrl: baseUrl, credential: credential, tenant: tenant);

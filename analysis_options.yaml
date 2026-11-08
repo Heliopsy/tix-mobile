@@ -9,6 +9,7 @@ analyzer:
     - build/**
     - lib/**/*.g.dart
     - lib/**/*.freezed.dart
+    - lib/**/*.gen.dart
     - lib/l10n/generated/**
     - android/**
     - ios/**

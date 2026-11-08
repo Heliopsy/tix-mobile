@@ -13,12 +13,16 @@ class AuthRepository {
 
   final TixApiFactory _build;
 
+  /// The surface sessions are minted for: tix's session policy and the
+  /// tenant's second factor rule for the command line fit an app best.
+  static const Surface _surface = Surface.cli;
+
   /// The server root for [input], once `GET /healthz` answers like tix.
   Future<String> checkServer(String input) async {
     final baseUrl = normalizeServerUrl(input);
     if (baseUrl == null) throw const TixException(TixErrorKind.badUrl);
     try {
-      await _build(baseUrl, null).health();
+      await _build(baseUrl, null).server.health();
     } on TixException catch (e) {
       if (e.kind == TixErrorKind.notFound) {
         throw TixException(TixErrorKind.notTix, status: e.status);
@@ -36,10 +40,10 @@ class AuthRepository {
   /// `tenant:admin` (or `*`) may read; any other token stays unnamed.
   Future<Actor> whoami(String baseUrl, Credential credential) async {
     final api = _build(baseUrl, credential);
-    final me = await api.whoami();
+    final me = await api.identity.whoami();
     if (me.tenantKey.isNotEmpty || me.tenantId.isEmpty) return me;
     try {
-      final t = await api.tenant(me.tenantId);
+      final t = await api.tenant.show(me.tenantId);
       return me.copyWith(tenantKey: t.key, tenantName: t.name);
     } on TixException catch (e) {
       if (e.kind != TixErrorKind.forbidden && e.kind != TixErrorKind.notFound) {
@@ -54,6 +58,7 @@ class AuthRepository {
     String baseUrl, {
     required String email,
     required String password,
+    String? tenant,
   }) async {
     final address = email.trim();
     if (address.isEmpty) throw const TixException(TixErrorKind.emailRequired);
@@ -61,10 +66,9 @@ class AuthRepository {
       throw const TixException(TixErrorKind.passwordRequired);
     }
     return await _complete(
-      _build(
-        baseUrl,
-        null,
-      ).login(LoginRequest(email: address, password: password)),
+      _build(baseUrl, null, tenant: tenant).session.login(
+        LoginRequest(email: address, password: password, surface: _surface),
+      ),
     );
   }
 
@@ -77,7 +81,9 @@ class AuthRepository {
     final value = code.trim();
     if (value.isEmpty) throw const TixException(TixErrorKind.codeRequired);
     return await _complete(
-      _build(baseUrl, null).login(LoginRequest(ticket: ticket, code: value)),
+      _build(baseUrl, null).session.login(
+        LoginRequest(ticket: ticket, code: value, surface: _surface),
+      ),
     );
   }
 
@@ -88,16 +94,15 @@ class AuthRepository {
     required String tenant,
     String? code,
   }) => _complete(
-    _build(
-      baseUrl,
-      SessionCredential(session),
-    ).switchTenant(tenant, code: code?.trim()),
+    _build(baseUrl, SessionCredential(session)).session.switchTenant(
+      SwitchTenantInput(tenant: tenant, code: code?.trim(), surface: _surface),
+    ),
     signingIn: false,
   );
 
   /// Ends [session] on the server.
   Future<void> logout(String baseUrl, String session) =>
-      _build(baseUrl, SessionCredential(session)).logout();
+      _build(baseUrl, SessionCredential(session)).session.logout();
 
   Future<LoginResult> _complete(
     Future<LoginResult> call, {
@@ -120,9 +125,11 @@ class AuthRepository {
       }
       rethrow;
     }
-    return switch (result.challenge?.kind) {
-      null || 'code' => result,
-      'password_change' => throw const TixException(
+    final challenge = result.challenge;
+    if (challenge == null) return result;
+    return switch (challenge.kind) {
+      TOTPChallengeKind.code => result,
+      TOTPChallengeKind.passwordChange => throw const TixException(
         TixErrorKind.passwordChange,
       ),
       _ => throw const TixException(TixErrorKind.secondFactorSetup),

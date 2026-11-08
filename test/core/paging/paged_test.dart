@@ -9,7 +9,7 @@ void main() {
     final last = Page.fromJson({
       'items': [1, 2].map((i) => {'n': i}).toList(),
       'next_cursor': '',
-    }, (j) => j['n']! as int);
+    }, (j) => (j! as Map)['n']! as int);
     expect(last.items, [1, 2]);
     expect(last.hasMore, isFalse);
     expect(Page.fromJson(const {'items': null}, (j) => j).items, isEmpty);

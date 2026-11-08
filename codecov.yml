@@ -17,6 +17,7 @@ coverage:
 ignore:
   - "**/*.g.dart"
   - "**/*.freezed.dart"
+  - "**/*.gen.dart"
   - "**/*.gr.dart"
   - "**/*.mocks.dart"
   - "**/*.config.dart"

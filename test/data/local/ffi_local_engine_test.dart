@@ -55,16 +55,16 @@ void main() {
         baseUrl: h.baseUrl,
         credential: BearerCredential(token),
       );
-      final me = await api.whoami();
+      final me = await api.identity.whoami();
       expect(me.tenantKey, 'home');
-      final projects = await api.projects();
+      final projects = await api.project.list();
       expect(projects.items, isA<List<Object?>>());
 
       final starter = await e.token(h, tenant: 'default', name: 'starter');
       final defaults = await TixApi(
         baseUrl: h.baseUrl,
         credential: BearerCredential(starter),
-      ).projects();
+      ).project.list();
       expect(defaults.items, isNotEmpty);
     } finally {
       await e.stop(h);

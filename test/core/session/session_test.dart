@@ -13,7 +13,6 @@ import 'package:tix_mobile/src/data/local/local_engine.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
-import 'package:tix_mobile/src/data/models/membership.dart';
 
 import '../../helpers/app.dart';
 import '../../helpers/container.dart';
@@ -245,7 +244,7 @@ void main() {
       handle: 'ana',
       tenantKey: tenant,
       tenantName: tenant,
-      memberships: [for (final t in tenants) Membership(tenantKey: t)],
+      memberships: [for (final t in tenants) AccountMembership(tenantKey: t)],
     );
 
     test('saveSignIn keeps the session in secure storage only', () async {

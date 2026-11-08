@@ -101,3 +101,52 @@ final class SecretStoreProvider
 }
 
 String _$secretStoreHash() => r'27bd0832caf2fb0780f2a77d20ec76a650137fba';
+
+/// Where the last good responses are kept: the app's support directory,
+/// which the platform does not back up as user documents.
+
+@ProviderFor(cacheStore)
+final cacheStoreProvider = CacheStoreProvider._();
+
+/// Where the last good responses are kept: the app's support directory,
+/// which the platform does not back up as user documents.
+
+final class CacheStoreProvider
+    extends $FunctionalProvider<CacheStore, CacheStore, CacheStore>
+    with $Provider<CacheStore> {
+  /// Where the last good responses are kept: the app's support directory,
+  /// which the platform does not back up as user documents.
+  CacheStoreProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'cacheStoreProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$cacheStoreHash();
+
+  @$internal
+  @override
+  $ProviderElement<CacheStore> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  CacheStore create(Ref ref) {
+    return cacheStore(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(CacheStore value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<CacheStore>(value),
+    );
+  }
+}
+
+String _$cacheStoreHash() => r'c22a0b39b3e9372aa8686fb21d731b4cbed5caa1';

@@ -95,6 +95,11 @@ final class ConnectTenants extends ConnectStep {
 
   /// Who signed in, with their memberships.
   final Actor me;
+
+  /// The tenants [me] belongs to.
+  List<Membership> get memberships => [
+    for (final m in me.memberships) Membership.fromAccount(m),
+  ];
 }
 
 /// A local database is open; the person picks or creates a tenant.

@@ -17,7 +17,7 @@ set -euo pipefail
 
 # Kept in step with codecov.yml's ignore list, so Codecov and the local floor
 # agree about what counts.
-generated='(\.g\.dart|\.freezed\.dart|\.gr\.dart|\.mocks\.dart|\.config\.dart)$|^lib/l10n/.*\.dart$|^lib/generated/'
+generated='(\.g\.dart|\.gen\.dart|\.freezed\.dart|\.gr\.dart|\.mocks\.dart|\.config\.dart)$|^lib/l10n/.*\.dart$|^lib/generated/'
 
 filter() {
   local in=$1 out=$2

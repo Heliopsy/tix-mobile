@@ -9,6 +9,8 @@ ignore: |
   **/node_modules/
   # Written by pub, never by hand.
   pubspec.lock
+  # tix's generated OpenAPI document, vendored byte for byte.
+  api/tix-openapi.yaml
 rules:
   line-length:
     max: 120

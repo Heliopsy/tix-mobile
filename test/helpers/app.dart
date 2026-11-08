@@ -10,13 +10,16 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/config/config.dart';
 import 'package:tix_mobile/src/core/design/theme.dart';
+import 'package:tix_mobile/src/core/events/events.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/files.dart';
 import 'package:tix_mobile/src/core/session/api.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
+import 'package:tix_mobile/src/data/cache/cache_store.dart';
 import 'package:tix_mobile/src/data/local/local_engine.dart';
 
+import 'fake_events.dart';
 import 'fake_tix.dart';
 import 'stores.dart';
 
@@ -109,6 +112,8 @@ List<Override> fakeOverrides(
   LocalTixEngine? engine,
   FilePicking? files,
   bool local = false,
+  CacheStore? cache,
+  EventSocketConnector events = refusingEventSocket,
 }) => [
   keyValueStoreProvider.overrideWithValue(settings ?? MemoryKeyValueStore()),
   secretStoreProvider.overrideWithValue(secrets ?? MemorySecretStore()),
@@ -117,6 +122,9 @@ List<Override> fakeOverrides(
   localInstancesEnabledProvider.overrideWithValue(local),
   filePickingProvider.overrideWithValue(files ?? FakeFilePicking()),
   clockProvider.overrideWithValue(() => fixedNow),
+  cacheStoreProvider.overrideWithValue(cache ?? MemoryCacheStore()),
+  eventSocketConnectorProvider.overrideWithValue(events),
+  appResumedProvider.overrideWithValue(const AsyncData(null)),
 ];
 
 /// The time every test runs at.

@@ -141,7 +141,7 @@ void main() {
 
   test('a failing tenant lookup is not hidden', () async {
     final failing = AuthRepository(
-      (b, c) => TixApi(
+      (b, c, {tenant}) => TixApi(
         baseUrl: b,
         credential: c,
         adapter: FakeAdapter(

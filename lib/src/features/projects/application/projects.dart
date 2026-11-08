@@ -1,20 +1,34 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tix_mobile/src/core/cache/cached.dart';
+import 'package:tix_mobile/src/core/events/invalidation.dart';
 import 'package:tix_mobile/src/core/paging/paged.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/data/models/page.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
 
 part 'projects.g.dart';
 
-/// The projects on the active server, a page at a time.
+/// The projects on the active server, a page at a time: the cached first
+/// page at once, then the server's, and again whenever a project changes.
 @riverpod
 class Projects extends _$Projects {
   @override
   Future<Paged<Project>> build() async {
-    final page = await ref.watch(tasksRepositoryProvider).projects();
-    return Paged(items: page.items, cursor: page.nextCursor);
+    final repo = ref.watch(tasksRepositoryProvider);
+    refreshOn(ref, EventTopics.projects);
+    final page = await cachedFirst(
+      ref: ref,
+      cached: repo.cachedProjects(),
+      fresh: repo.projects,
+      onFresh: (p) => state = AsyncData(_paged(p)),
+    );
+    return _paged(page);
   }
+
+  static Paged<Project> _paged(Page<Project> p) =>
+      Paged(items: p.items, cursor: p.nextCursor);
 
   /// Fetches the next page, if there is one and none is in flight.
   Future<void> loadMore() => loadNextPage(

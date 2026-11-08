@@ -9,11 +9,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
+import 'package:tix_mobile/src/core/logging/log.dart';
 import 'package:tix_mobile/src/core/platform/files.dart';
 import 'package:tix_mobile/src/core/session/api.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
+import 'package:tix_mobile/src/data/cache/response_cache.dart';
 import 'package:tix_mobile/src/data/local/local_engine.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
@@ -184,7 +186,9 @@ class SessionController extends _$SessionController {
     handle: me.handle.isEmpty ? c.handle : me.handle,
     tenantKey: me.tenantKey.isEmpty ? c.tenantKey : me.tenantKey,
     tenantName: me.tenantName.isEmpty ? c.tenantName : me.tenantName,
-    memberships: me.memberships.isEmpty ? c.memberships : me.memberships,
+    memberships: me.memberships.isEmpty
+        ? c.memberships
+        : [for (final m in me.memberships) Membership.fromAccount(m)],
   );
 
   /// Checks that [url] is a tix server that accepts [token], then saves a
@@ -354,6 +358,7 @@ class SessionController extends _$SessionController {
     final connection = repo.connection(id);
     if (connection == null) return;
     await _endSession(connection);
+    await _forgetCache(id);
     final instanceId = connection.instanceId;
     await repo.removeConnection(id);
     if (repo.instance(instanceId) == null) {
@@ -368,6 +373,7 @@ class SessionController extends _$SessionController {
     final repo = ref.read(instancesRepositoryProvider);
     for (final c in repo.connectionsOf(id)) {
       await _endSession(c);
+      await _forgetCache(c.id);
     }
     await ref.read(localEnginesProvider).stop(id);
     await repo.removeInstance(id);
@@ -407,6 +413,20 @@ class SessionController extends _$SessionController {
     } on TixException {
       // Forgetting must not depend on the server: an expired session or an
       // unreachable host still lets the person remove the connection.
+    }
+  }
+
+  /// Drops what was cached for [connectionId]: a forgotten connection
+  /// leaves no copy of its server's data behind.
+  Future<void> _forgetCache(String connectionId) async {
+    try {
+      await ref.read(cacheStoreProvider).clearConnection(connectionId);
+    } on Exception catch (e, s) {
+      log(
+        'could not clear the cache of $connectionId',
+        error: e,
+        stackTrace: s,
+      );
     }
   }
 
@@ -569,7 +589,29 @@ TixApi sessionApi(Ref ref) {
   return ref.watch(tixApiFactoryProvider)(baseUrl, credential);
 }
 
+/// The response cache of the active context. Reads are best effort, so a
+/// cache that cannot be opened behaves as an empty one.
+///
+/// A connection reaches one tenant unless it is a switchable sign-in, so
+/// only that kind names its tenant in the scope. The rest leave it empty,
+/// which keeps the scope stable while a background `whoami` fills in the
+/// tenant's key.
+@riverpod
+ResponseCache responseCache(Ref ref) {
+  final scope = ref.watch(
+    sessionControllerProvider.select((s) {
+      final c = s.value?.connection;
+      if (c == null) return null;
+      return CacheScope(c.id, c.switchable ? c.tenantKey : '');
+    }),
+  );
+  if (scope == null) throw StateError('no active session');
+  return ResponseCache(ref.watch(cacheStoreProvider), scope);
+}
+
 /// Projects and tasks for the active session.
 @riverpod
-TasksRepository tasksRepository(Ref ref) =>
-    TasksRepository(ref.watch(sessionApiProvider));
+TasksRepository tasksRepository(Ref ref) => TasksRepository(
+  ref.watch(sessionApiProvider),
+  ref.watch(responseCacheProvider),
+);

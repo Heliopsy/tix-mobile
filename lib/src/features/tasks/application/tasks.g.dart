@@ -10,15 +10,21 @@ part of 'tasks.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The tasks of one project, most urgent first, a page at a time.
+/// The tasks of one project, most urgent first, a page at a time: the
+/// cached first page at once, then the server's, and again whenever a task
+/// changes.
 
 @ProviderFor(ProjectTasks)
 final projectTasksProvider = ProjectTasksFamily._();
 
-/// The tasks of one project, most urgent first, a page at a time.
+/// The tasks of one project, most urgent first, a page at a time: the
+/// cached first page at once, then the server's, and again whenever a task
+/// changes.
 final class ProjectTasksProvider
     extends $AsyncNotifierProvider<ProjectTasks, Paged<Task>> {
-  /// The tasks of one project, most urgent first, a page at a time.
+  /// The tasks of one project, most urgent first, a page at a time: the
+  /// cached first page at once, then the server's, and again whenever a task
+  /// changes.
   ProjectTasksProvider._({
     required ProjectTasksFamily super.from,
     required String super.argument,
@@ -55,9 +61,11 @@ final class ProjectTasksProvider
   }
 }
 
-String _$projectTasksHash() => r'd7d7d846f14868dcb9d2d76e9e235e41d558a52c';
+String _$projectTasksHash() => r'fd2b2d8abd8fc2c293aed56cd0e11efb87346824';
 
-/// The tasks of one project, most urgent first, a page at a time.
+/// The tasks of one project, most urgent first, a page at a time: the
+/// cached first page at once, then the server's, and again whenever a task
+/// changes.
 
 final class ProjectTasksFamily extends $Family
     with
@@ -77,7 +85,9 @@ final class ProjectTasksFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// The tasks of one project, most urgent first, a page at a time.
+  /// The tasks of one project, most urgent first, a page at a time: the
+  /// cached first page at once, then the server's, and again whenever a task
+  /// changes.
 
   ProjectTasksProvider call(String projectKey) =>
       ProjectTasksProvider._(argument: projectKey, from: this);
@@ -86,7 +96,9 @@ final class ProjectTasksFamily extends $Family
   String toString() => r'projectTasksProvider';
 }
 
-/// The tasks of one project, most urgent first, a page at a time.
+/// The tasks of one project, most urgent first, a page at a time: the
+/// cached first page at once, then the server's, and again whenever a task
+/// changes.
 
 abstract class _$ProjectTasks extends $AsyncNotifier<Paged<Task>> {
   late final _$args = ref.$arg as String;
@@ -109,17 +121,18 @@ abstract class _$ProjectTasks extends $AsyncNotifier<Paged<Task>> {
   }
 }
 
-/// One task, by reference.
+/// One task, by reference: the cached copy at once, then the server's, and
+/// again whenever it or anything on it changes.
 
-@ProviderFor(taskDetail)
+@ProviderFor(TaskDetail)
 final taskDetailProvider = TaskDetailFamily._();
 
-/// One task, by reference.
-
+/// One task, by reference: the cached copy at once, then the server's, and
+/// again whenever it or anything on it changes.
 final class TaskDetailProvider
-    extends $FunctionalProvider<AsyncValue<Task>, Task, FutureOr<Task>>
-    with $FutureModifier<Task>, $FutureProvider<Task> {
-  /// One task, by reference.
+    extends $AsyncNotifierProvider<TaskDetail, Task> {
+  /// One task, by reference: the cached copy at once, then the server's, and
+  /// again whenever it or anything on it changes.
   TaskDetailProvider._({
     required TaskDetailFamily super.from,
     required String super.argument,
@@ -143,14 +156,7 @@ final class TaskDetailProvider
 
   @$internal
   @override
-  $FutureProviderElement<Task> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<Task> create(Ref ref) {
-    final argument = this.argument as String;
-    return taskDetail(ref, argument);
-  }
+  TaskDetail create() => TaskDetail();
 
   @override
   bool operator ==(Object other) {
@@ -163,12 +169,20 @@ final class TaskDetailProvider
   }
 }
 
-String _$taskDetailHash() => r'0dcc9cf686e1fd54e02d495c239b0842cd4aa1ee';
+String _$taskDetailHash() => r'b6612dadac58a1ebe08443208dfc9edaf9d6a363';
 
-/// One task, by reference.
+/// One task, by reference: the cached copy at once, then the server's, and
+/// again whenever it or anything on it changes.
 
 final class TaskDetailFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<Task>, String> {
+    with
+        $ClassFamilyOverride<
+          TaskDetail,
+          AsyncValue<Task>,
+          Task,
+          FutureOr<Task>,
+          String
+        > {
   TaskDetailFamily._()
     : super(
         retry: null,
@@ -178,13 +192,38 @@ final class TaskDetailFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// One task, by reference.
+  /// One task, by reference: the cached copy at once, then the server's, and
+  /// again whenever it or anything on it changes.
 
   TaskDetailProvider call(String taskRef) =>
       TaskDetailProvider._(argument: taskRef, from: this);
 
   @override
   String toString() => r'taskDetailProvider';
+}
+
+/// One task, by reference: the cached copy at once, then the server's, and
+/// again whenever it or anything on it changes.
+
+abstract class _$TaskDetail extends $AsyncNotifier<Task> {
+  late final _$args = ref.$arg as String;
+  String get taskRef => _$args;
+
+  FutureOr<Task> build(String taskRef);
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<Task>, Task>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<Task>, Task>,
+              AsyncValue<Task>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, () => build(_$args));
+  }
 }
 
 /// One actor, by id.

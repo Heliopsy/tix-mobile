@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:tix_mobile/src/data/api/gen/models.gen.dart'
+    show AccountMembership;
 
 part 'membership.freezed.dart';
 part 'membership.g.dart';
@@ -19,6 +21,17 @@ abstract class Membership with _$Membership {
   }) = _Membership;
 
   const Membership._();
+
+  /// The membership `whoami` reported as [m].
+  factory Membership.fromAccount(AccountMembership m) => Membership(
+    tenantKey: m.tenantKey,
+    tenantName: m.tenantName,
+    tenantId: m.tenantId,
+    actorId: m.actorId,
+    handle: m.handle,
+    role: m.role?.value ?? '',
+    host: m.host,
+  );
 
   factory Membership.fromJson(Map<String, dynamic> json) =>
       _$MembershipFromJson(json);

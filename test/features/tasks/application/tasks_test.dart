@@ -3,6 +3,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
+import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/features/tasks/application/tasks.dart';
 
 import '../../../helpers/container.dart';

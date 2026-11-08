@@ -9,14 +9,11 @@ class Page<T> {
   const Page({required this.items, this.nextCursor});
 
   /// Reads `{"items": [...], "next_cursor": "..."}` with [item] per element.
-  factory Page.fromJson(
-    Map<String, dynamic> json,
-    T Function(Map<String, dynamic>) item,
-  ) {
+  factory Page.fromJson(Map<String, dynamic> json, T Function(Object?) item) {
     final raw = json['items'] as List<dynamic>? ?? const <dynamic>[];
     final cursor = json['next_cursor'] as String?;
     return Page(
-      items: [for (final e in raw) item(e as Map<String, dynamic>)],
+      items: [for (final e in raw) item(e)],
       nextCursor: cursor == null || cursor.isEmpty ? null : cursor,
     );
   }
@@ -29,4 +26,10 @@ class Page<T> {
 
   /// Whether another page follows.
   bool get hasMore => nextCursor != null;
+
+  /// The page as tix writes it, with [item] encoding each row.
+  Map<String, Object?> toJson(Object? Function(T) item) => {
+    'items': [for (final e in items) item(e)],
+    'next_cursor': nextCursor ?? '',
+  };
 }

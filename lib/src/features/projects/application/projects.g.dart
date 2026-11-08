@@ -10,15 +10,18 @@ part of 'projects.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The projects on the active server, a page at a time.
+/// The projects on the active server, a page at a time: the cached first
+/// page at once, then the server's, and again whenever a project changes.
 
 @ProviderFor(Projects)
 final projectsProvider = ProjectsProvider._();
 
-/// The projects on the active server, a page at a time.
+/// The projects on the active server, a page at a time: the cached first
+/// page at once, then the server's, and again whenever a project changes.
 final class ProjectsProvider
     extends $AsyncNotifierProvider<Projects, Paged<Project>> {
-  /// The projects on the active server, a page at a time.
+  /// The projects on the active server, a page at a time: the cached first
+  /// page at once, then the server's, and again whenever a project changes.
   ProjectsProvider._()
     : super(
         from: null,
@@ -38,9 +41,10 @@ final class ProjectsProvider
   Projects create() => Projects();
 }
 
-String _$projectsHash() => r'ba817380e723d4d2afcd1fecf7ed34612791deeb';
+String _$projectsHash() => r'636b32dedf6e75e784cb00c245db251901bd422e';
 
-/// The projects on the active server, a page at a time.
+/// The projects on the active server, a page at a time: the cached first
+/// page at once, then the server's, and again whenever a project changes.
 
 abstract class _$Projects extends $AsyncNotifier<Paged<Project>> {
   FutureOr<Paged<Project>> build();
