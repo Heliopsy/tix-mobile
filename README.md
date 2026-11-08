@@ -108,6 +108,10 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   Inbox and My work on Android and iOS.
 - **Command palette** (Ctrl+K or Cmd+K): every command, projects, recent tasks and any task by reference; `?` lists
   the shortcuts.
+- **Inbox**: mentions, assignments, comments and status changes, grouped by day, with filters per kind, swipe to
+  mark read, mark all read, an unread badge, a summary of what is overdue and due today, and live updates.
+- **Notifications** for new inbox items while the app runs, per context and per kind, on every platform; the
+  kinds the server sends you and your own Slack, Discord, ntfy or signed JSON channels, with their delivery log.
 - **Settings**: light, dark or system theme, English or Bulgarian, and the saved instances.
 - **Adaptive layout**: a bottom navigation bar on phones, a navigation rail and a two-pane list and detail on tablets
   and desktops.
