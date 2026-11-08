@@ -266,6 +266,11 @@ app runs or was put away a moment ago, on Android, iOS, macOS, Linux and Windows
 turns them on, per context; the platform's permission is asked at that moment and never at start. Each item
 notifies once; items already there when the app starts never do. A tap opens the task and marks the item read.
 
+Every notification carries a public version that names no task ("New in your inbox"). Android posts it as
+private with that public version: `flutter_local_notifications` cannot set one, so `PublicNotes` in `MainActivity`
+reposts the notification with it, silently. "Hide task content" (per context, off by default) puts the same generic
+text in the notification itself; the tap still opens the item.
+
 ### What real push would need
 
 A closed app hears nothing: there is no push service, and the app does not pretend otherwise. Push through FCM

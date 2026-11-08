@@ -80,6 +80,8 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 
 - **Several tix servers**, each with one or more connections: an API token, or a sign-in with email and password
   (second factor included). A sign-in can follow you between your tenants on that server or stay pinned to one.
+- **Invite links**: paste one, or share it to tix, see what it admits you to, accept it, and the server and the
+  sign-in are added for you.
 - **A switcher on every screen** showing Instance › Tenant, recent ones first.
 - **Local databases** on every platform: tix itself is built into the app and serves a `.db` file on this device,
   with no server anywhere. Android, iOS and macOS import a copy into the app and export it back through the share
@@ -89,22 +91,25 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   (a setting) and starts again on the next one. It costs about 32 MB per Android ABI and 34 MB on desktop.
 - **Projects** visible to the active connection, each in its colour with its open task count, and a switcher in
   the project's title. Create one, change its name, key, description, colour, icon, workflow and lease bounds,
-  archive it, or delete it with its tasks moved or deleted.
+  archive it, or delete it with its tasks moved or deleted. Archived projects show behind a filter, badged.
 - **Manage**: every management area the credential can use, grouped, nothing offered that the server would refuse.
+  Server status, bundles of workflows, fields, tags and webhooks out and in after a preview, and snapshot imports
+  after a dry run.
 - **Workflows**: states reordered by drag, categories, terminal and revert rules, "can move to" chips with comment
   and scope rules, the route from the initial state to each state, migrations for removed states.
 - **Custom fields** per project, every type, with a default entered as its type.
 - **Task detail** where every attribute the web edits is edited in place: title, Markdown description with a
   checklist you tick, workflow moves, priority, assignee, due date, tags, custom fields and the repeat rule;
   subtasks, dependencies, comments with `@` mentions, history and attached files; star, snooze, copy and delete
-  with Undo. Keys on a keyboard, haptics on a phone, the properties beside the description on a wide screen.
+  with Undo. How long a claim on the task lasts, and which level decides it. Keys on a keyboard, haptics on a
+  phone, the properties beside the description on a wide screen.
 - **Task lists** with pull to refresh and keyset pagination, so a long list loads a page at a time and stays stable
   while tasks are being added. Sort, group by status or project, swipe to complete or snooze, star in place, and
   pick many tasks for one bulk move, priority, tag, assignee, star, copy or delete with a single Undo.
 - **Board and lanes**: a workflow's columns with drag and drop, or one lane per project, each column and lane
   starred, collapsed, moved or hidden the way tix keeps it for your account.
 - **Filters and search** in tix's filter language, one-tap chips (mine, starred, snoozed, blocked, due windows,
-  finished), and saved filters, your own and shared ones.
+  finished), and saved filters, your own and shared ones, also opened by name from `/tasks?filter=<name>`.
 - **My work**: your open tasks under Overdue, Today, This week, Later and No date.
 - **Keyboard**: `j` and `k` to move, Enter to open, `x` to pick, `/` to filter, `v` to switch the view.
 - **Quick add** in tix's one-line syntax: `Fix login !high #auth @raj due:fri`, from any screen (Ctrl+N or Cmd+N),
@@ -119,6 +124,7 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   mark read, mark all read, an unread badge, a summary of what is overdue and due today, and live updates.
 - **Notifications** for new inbox items while the app runs, per context and per kind, on every platform; the
   kinds the server sends you and your own Slack, Discord, ntfy or signed JSON channels, with their delivery log.
+  Task content can be hidden per context, and an Android lock screen only ever shows "New in your inbox".
 - **Home screen widgets**: My work (tick to complete), Inbox, Quick add and Project, natively on Android (Glance),
   iOS and macOS (WidgetKit), following the active context or pinned to one, with the inbox count on the iPhone lock
   screen. See [docs/widgets.md](docs/widgets.md).
@@ -128,8 +134,8 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   role or token allows it.
 - **Export and import**: a project's tasks, or a filtered part of them, as CSV, JSON, NDJSON or Markdown with the
   columns you choose, a snapshot of the whole tenant, and importing a file of tasks after a dry run.
-- **Settings**: system, light, dark or OLED black theme, English, Bulgarian, French or German, and the saved
-  instances.
+- **Settings**: system, light, dark or OLED black theme, English, Bulgarian, French or German, your date format
+  and timezone (kept with your account), and the saved instances.
 - **About**: the app, engine and server versions, links to the site, source, roadmap and changelog, and a bug
   report with the versions filled in.
 - **Administration**: tenant settings with a live theme preview, domains, the server's live connections, and for
