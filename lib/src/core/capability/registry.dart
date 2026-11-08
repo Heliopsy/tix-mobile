@@ -42,6 +42,14 @@ const bindings = <String, Binding>{
   'task.show': Binding(feature: 'tasks', action: 'detail', wave: 0),
   'task.create': Binding(feature: 'tasks', action: 'quick-add', wave: 0),
   'actor.show': Binding(feature: 'tasks', action: 'assignee', wave: 0),
+  // Wave 1: quick add, templates and the palette.
+  'task.import': Binding(feature: 'quick', action: 'preview-line', wave: 1),
+  'template.list': Binding(feature: 'templates', action: 'list', wave: 1),
+  'template.show': Binding(feature: 'templates', action: 'show', wave: 1),
+  'template.save': Binding(feature: 'templates', action: 'save', wave: 1),
+  'template.update': Binding(feature: 'templates', action: 'edit', wave: 1),
+  'template.delete': Binding(feature: 'templates', action: 'delete', wave: 1),
+  'template.use': Binding(feature: 'templates', action: 'use', wave: 1),
   'event.subscribe': Binding(
     feature: 'core/events',
     action: 'live-updates',

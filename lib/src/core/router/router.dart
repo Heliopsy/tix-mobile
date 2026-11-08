@@ -10,12 +10,15 @@ import 'package:tix_mobile/src/features/connect/presentation/connect_screen.dart
 import 'package:tix_mobile/src/features/gallery/presentation/gallery_screen.dart';
 import 'package:tix_mobile/src/features/instances/presentation/instances_screen.dart';
 import 'package:tix_mobile/src/features/projects/presentation/projects_screen.dart';
+import 'package:tix_mobile/src/features/quick/presentation/quick_actions_host.dart';
 import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';
 import 'package:tix_mobile/src/features/shell/presentation/home_shell.dart';
 import 'package:tix_mobile/src/features/shell/presentation/splash_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_list_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_screen.dart';
+import 'package:tix_mobile/src/features/templates/presentation/templates_commands.dart';
+import 'package:tix_mobile/src/features/templates/presentation/templates_screen.dart';
 
 export 'package:tix_mobile/src/core/router/routes.dart';
 
@@ -73,7 +76,11 @@ GoRouter router(Ref ref) {
       if (Routes.galleryEnabled)
         GoRoute(path: Routes.gallery, builder: (_, _) => const GalleryScreen()),
       StatefulShellRoute.indexedStack(
-        builder: (_, _, shell) => HomeShell(shell: shell),
+        builder: (_, _, shell) => QuickActionsHost(
+          child: TemplatesCommands(
+            child: SettingsCommands(child: HomeShell(shell: shell)),
+          ),
+        ),
         branches: [
           StatefulShellBranch(
             routes: [
@@ -91,6 +98,10 @@ GoRouter router(Ref ref) {
                     ],
                   ),
                 ],
+              ),
+              GoRoute(
+                path: Routes.templates,
+                builder: (_, _) => const TemplatesScreen(),
               ),
             ],
           ),

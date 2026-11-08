@@ -314,6 +314,9 @@ class FakeTix {
       (o.headers['Authorization'] as String?)?.replaceFirst('Bearer ', '');
 
   Future<FakeResponse> _handle(RequestOptions o) async {
+    if (offline) {
+      throw DioException.connectionError(requestOptions: o, reason: 'offline');
+    }
     final held = gate;
     if (held != null) await held.future;
     final forced = override;
@@ -333,6 +336,8 @@ class FakeTix {
       return FakeResponse(401, envelope('unauthenticated', 'bad token'));
     }
     final q = o.uri.queryParameters;
+    final quick = await _quick(o, path);
+    if (quick != null) return quick;
     switch ((o.method, path)) {
       case ('GET', '/api/v1/whoami'):
         final account = accounts[caller.email];
@@ -1091,5 +1096,197 @@ class FakeTix {
       'items': rows.sublist(start, end),
       'next_cursor': end < rows.length ? '$end' : '',
     };
+  }
+
+  /// Templates by id, in the shape tix answers with.
+  final templates = <String, Map<String, Object?>>{};
+
+  /// Tag names.
+  List<String> tagNames = ['auth', 'release', 'ui'];
+
+  /// Dry-run rows by line, recorded from a real tix; a line not listed
+  /// becomes a plain row titled as typed.
+  final previews = <String, Map<String, Object?>>{
+    'x': {'action': 'create', 'title': 'x', 'status': 'todo', 'priority': 3},
+  };
+
+  /// Whether every request fails as if there were no network.
+  bool offline = false;
+
+  /// Dry runs of these lines wait until the completer completes.
+  final previewHolds = <String, Completer<void>>{};
+
+  /// Whether dry runs are refused, as for a credential without `import`.
+  bool importForbidden = false;
+
+  /// Every quick-add line the dry run was asked about, the plain one left
+  /// out.
+  List<String> get previewedLines => [
+    for (final r in requests)
+      if (r.uri.path.endsWith('/tasks/import'))
+        ((r.data as Map<String, dynamic>)['content'] as String)
+            .split('\n')
+            .last,
+  ];
+
+  int _templateIds = 0;
+
+  /// Adds a template [name] in [project] (empty for every project) shaped
+  /// on [title].
+  Map<String, Object?> addTemplate(
+    String name, {
+    String project = '',
+    String title = 'A task',
+    int uses = 0,
+    List<Map<String, Object?>> subtasks = const [],
+    String? dueIn,
+  }) {
+    final id = 'tpl-${++_templateIds}';
+    return templates[id] = {
+      'id': id,
+      'name': name,
+      'project_id': project.isEmpty ? '' : 'id-$project',
+      'project_key': project,
+      'task': {
+        'title': title,
+        'priority': 3,
+        'tags': <String>[],
+        'subtasks': subtasks,
+      },
+      'due_in': ?dueIn,
+      'uses': uses,
+    };
+  }
+
+  Map<String, Object?>? _template(String ref) {
+    for (final t in templates.values) {
+      if (t['id'] == ref ||
+          (t['name']! as String).toLowerCase() == ref.toLowerCase()) {
+        return t;
+      }
+    }
+    return null;
+  }
+
+  Future<FakeResponse?> _quick(RequestOptions o, String path) async {
+    final segments = path.substring(1).split('/');
+    final body = o.data is Map<String, dynamic>
+        ? o.data as Map<String, dynamic>
+        : const <String, dynamic>{};
+    switch ((o.method, path)) {
+      case ('GET', '/api/v1/tags'):
+        return FakeResponse(200, {
+          'items': [
+            for (final t in tagNames) {'id': 'tag-$t', 'name': t},
+          ],
+        });
+      case ('GET', '/api/v1/actors'):
+        return FakeResponse(200, {'items': actors.values.toList()});
+      case ('GET', '/api/v1/templates'):
+        final rows = templates.values.toList()
+          ..sort(
+            (a, b) => (a['name']! as String).compareTo(b['name']! as String),
+          );
+        return FakeResponse(200, _page(rows, o.uri.queryParameters['cursor']));
+      case ('POST', '/api/v1/templates'):
+        final name = body['name'] as String? ?? '';
+        if (_template(name) != null) {
+          return FakeResponse(
+            409,
+            envelope('conflict', 'template "$name" already exists'),
+          );
+        }
+        final ref = body['task_ref'] as String? ?? '';
+        Map<String, Object?>? task;
+        var project = '';
+        for (final e in tasks.entries) {
+          for (final t in e.value) {
+            if (t['ref'] == ref) {
+              task = t;
+              project = e.key;
+            }
+          }
+        }
+        if (task == null) {
+          return FakeResponse(404, envelope('not_found', 'task "$ref"'));
+        }
+        return FakeResponse(
+          201,
+          addTemplate(
+            name,
+            project: body['tenant_wide'] == true ? '' : project,
+            title: task['title']! as String,
+            dueIn: body['due_in'] as String?,
+          ),
+        );
+    }
+    if (segments.length == 6 &&
+        segments[2] == 'projects' &&
+        segments[4] == 'tasks' &&
+        segments[5] == 'import' &&
+        o.method == 'POST') {
+      if (importForbidden) {
+        return FakeResponse(403, envelope('forbidden', 'needs scope import'));
+      }
+      final lines = (body['content'] as String).split('\n');
+      await previewHolds[lines.last]?.future;
+      return FakeResponse(200, {
+        'dry_run': true,
+        'preview': [
+          for (final (i, l) in lines.indexed)
+            {
+              'line': i + 1,
+              ...previews[l] ??
+                  {
+                    'action': 'create',
+                    'title': l,
+                    'status': 'todo',
+                    'priority': 3,
+                  },
+            },
+        ],
+      });
+    }
+    if (segments.length >= 4 && segments[2] == 'templates') {
+      final template = _template(segments[3]);
+      if (template == null) {
+        return FakeResponse(404, envelope('not_found', 'template'));
+      }
+      if (segments.length == 5 && segments[4] == 'use' && o.method == 'POST') {
+        final project =
+            body['project_ref'] as String? ??
+            ((template['project_key']! as String).isEmpty
+                ? 'infra'
+                : template['project_key']! as String);
+        final list = tasks.putIfAbsent(project, () => []);
+        final created = taskJson(
+          '$project-${list.length + 1}',
+          title: (template['task']! as Map)['title'] as String,
+        );
+        list.insert(0, created);
+        template['uses'] = (template['uses']! as int) + 1;
+        return FakeResponse(201, created);
+      }
+      switch (o.method) {
+        case 'GET':
+          return FakeResponse(200, template);
+        case 'DELETE':
+          templates.remove(template['id']);
+          return const FakeResponse(204);
+        case 'PATCH':
+          final task = Map<String, Object?>.from(template['task']! as Map);
+          for (final k in ['title', 'body', 'priority', 'tags', 'recurrence']) {
+            if (body.containsKey(k)) task[k] = body[k];
+          }
+          template['task'] = task;
+          if (body['name'] != null) template['name'] = body['name'];
+          if (body['due_in'] != null) template['due_in'] = body['due_in'];
+          if (body['project_ref'] != null) {
+            template['project_key'] = body['project_ref'];
+          }
+          return FakeResponse(200, template);
+      }
+    }
+    return null;
   }
 }

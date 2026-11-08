@@ -22,6 +22,7 @@ class TixCommand {
     this.group = '',
     this.icon,
     this.shortcut,
+    this.keywords = '',
   });
 
   /// Unique among the registered commands; a later registration with the
@@ -39,6 +40,9 @@ class TixCommand {
 
   /// The key that runs it, or null for palette only.
   final ShortcutActivator? shortcut;
+
+  /// More words the palette matches it by, such as a project's key.
+  final String keywords;
 
   /// Does it.
   final VoidCallback run;
@@ -66,9 +70,38 @@ String shortcutLabel(ShortcutActivator a) {
   return '';
 }
 
-/// Every command mounted screens have registered, newest last.
+/// Commands for what the person typed into the palette: projects, tasks,
+/// anything too many to register one by one. Called on every keystroke, so
+/// it reads what is already loaded and never waits.
+typedef CommandSource = List<TixCommand> Function(String query);
+
+final _wordChar = RegExp('[a-z0-9]');
+
+/// How well [query] matches [text]: null when its letters do not all appear
+/// in order, higher for consecutive letters and letters that start a word.
+int? fuzzyScore(String query, String text) {
+  final q = query.toLowerCase().replaceAll(RegExp(r'\s+'), '');
+  if (q.isEmpty) return 0;
+  final t = text.toLowerCase();
+  var score = 0;
+  var at = 0;
+  var run = 0;
+  for (final ch in q.split('')) {
+    final found = t.indexOf(ch, at);
+    if (found < 0) return null;
+    final wordStart = found == 0 || !_wordChar.hasMatch(t[found - 1]);
+    run = found == at && at > 0 ? run + 1 : 0;
+    score += 1 + run * 3 + (wordStart ? 4 : 0) - (found - at).clamp(0, 3);
+    at = found + 1;
+  }
+  if (t.startsWith(q)) score += 8;
+  return score;
+}
+
+/// Every command and source mounted widgets have registered, newest last.
 class CommandRegistry {
   final _scopes = <Object, List<TixCommand>>{};
+  final _sources = <Object, List<CommandSource>>{};
   final _changes = ValueNotifier<int>(0);
   bool _disposed = false;
 
@@ -95,18 +128,56 @@ class CommandRegistry {
     return byId.values.toList();
   }
 
-  /// Registers [commands] under [owner], replacing what it had.
-  void register(Object owner, List<TixCommand> commands) {
+  /// Registers [commands] and [sources] under [owner], replacing what it had.
+  void register(
+    Object owner,
+    List<TixCommand> commands, {
+    List<CommandSource> sources = const [],
+  }) {
     if (_disposed) return;
     _scopes
       ..remove(owner)
       ..[owner] = commands;
+    _sources
+      ..remove(owner)
+      ..[owner] = sources;
     _notify();
   }
 
   /// Removes what [owner] registered.
   void unregister(Object owner) {
-    if (!_disposed && _scopes.remove(owner) != null) _notify();
+    if (_disposed) return;
+    final had = _scopes.remove(owner) != null;
+    if (_sources.remove(owner) != null || had) _notify();
+  }
+
+  /// The commands and source results for [query], best match first, at most
+  /// [limit]. An empty query keeps the registered order, commands first.
+  List<TixCommand> search(String query, {int limit = 50}) {
+    final seen = <String>{};
+    final all = [
+      for (final c in commands)
+        if (seen.add(c.id)) c,
+      for (final list in _sources.values)
+        for (final source in list)
+          for (final c in source(query))
+            if (seen.add(c.id)) c,
+    ];
+    if (query.trim().isEmpty) return all.take(limit).toList();
+    final scored = <(int, int, TixCommand)>[];
+    for (final (i, c) in all.indexed) {
+      final score = [
+        fuzzyScore(query, c.label),
+        fuzzyScore(query, c.keywords),
+        if (c.group.isNotEmpty) fuzzyScore(query, '${c.group} ${c.label}'),
+      ].whereType<int>().fold<int?>(null, (a, b) => a == null || b > a ? b : a);
+      if (score != null) scored.add((score, i, c));
+    }
+    scored.sort((a, b) {
+      final by = b.$1.compareTo(a.$1);
+      return by != 0 ? by : a.$2.compareTo(b.$2);
+    });
+    return [for (final s in scored.take(limit)) s.$3];
   }
 }
 
@@ -118,15 +189,24 @@ CommandRegistry commandRegistry(Ref ref) {
   return registry;
 }
 
-/// Registers [commands] while this widget is mounted: a screen's own
-/// actions join the palette and the shortcuts when the screen shows and
-/// leave when it goes.
+/// Registers [commands] and [sources] while this widget is mounted: a
+/// screen's own actions join the palette and the shortcuts when the screen
+/// shows and leave when it goes. Mounted around the signed-in shell, they
+/// are global.
 class CommandScope extends ConsumerStatefulWidget {
-  /// Registers [commands] around [child].
-  const CommandScope({required this.commands, required this.child, super.key});
+  /// Registers [commands] and [sources] around [child].
+  const CommandScope({
+    required this.commands,
+    required this.child,
+    this.sources = const [],
+    super.key,
+  });
 
   /// The commands.
   final List<TixCommand> commands;
+
+  /// Searches the palette asks as the person types.
+  final List<CommandSource> sources;
 
   /// The screen.
   final Widget child;
@@ -142,16 +222,20 @@ class _CommandScopeState extends ConsumerState<CommandScope> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _registry.register(this, widget.commands);
+      if (mounted) _register();
     });
   }
+
+  void _register() =>
+      _registry.register(this, widget.commands, sources: widget.sources);
 
   @override
   void didUpdateWidget(CommandScope old) {
     super.didUpdateWidget(old);
-    if (!listEquals(old.commands, widget.commands)) {
+    if (!listEquals(old.commands, widget.commands) ||
+        !listEquals(old.sources, widget.sources)) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _registry.register(this, widget.commands);
+        if (mounted) _register();
       });
     }
   }
@@ -287,15 +371,15 @@ Future<void> showCommandPalette(
 ) async {
   final picked = await showDialog<TixCommand>(
     context: context,
-    builder: (context) => _Palette(commands: registry.commands),
+    builder: (context) => _Palette(registry: registry),
   );
   picked?.run();
 }
 
 class _Palette extends StatefulWidget {
-  const _Palette({required this.commands});
+  const _Palette({required this.registry});
 
-  final List<TixCommand> commands;
+  final CommandRegistry registry;
 
   @override
   State<_Palette> createState() => _PaletteState();
@@ -305,14 +389,7 @@ class _PaletteState extends State<_Palette> {
   String _query = '';
   int _index = 0;
 
-  List<TixCommand> get _matches {
-    final q = _query.trim().toLowerCase();
-    if (q.isEmpty) return widget.commands;
-    return [
-      for (final c in widget.commands)
-        if ('${c.group} ${c.label}'.toLowerCase().contains(q)) c,
-    ];
-  }
+  List<TixCommand> get _matches => widget.registry.search(_query);
 
   void _move(int by) {
     final n = _matches.length;

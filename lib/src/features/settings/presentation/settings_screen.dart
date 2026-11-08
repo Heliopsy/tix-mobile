@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -202,4 +204,41 @@ class _Labelled extends StatelessWidget {
       ],
     ),
   );
+}
+
+/// The settings anyone may want from the keyboard wherever they are: the
+/// theme. Mounted around the signed-in screens by the router.
+class SettingsCommands extends ConsumerWidget {
+  /// Registers the commands around [child].
+  const SettingsCommands({required this.child, super.key});
+
+  /// The signed-in screens.
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final theme = ref.read(themeModeSettingProvider.notifier);
+    return CommandScope(
+      commands: [
+        for (final (mode, label, icon) in [
+          (ThemeMode.light, l10n.paletteThemeLight, Icons.light_mode_outlined),
+          (ThemeMode.dark, l10n.paletteThemeDark, Icons.dark_mode_outlined),
+          (
+            ThemeMode.system,
+            l10n.paletteThemeSystem,
+            Icons.brightness_auto_outlined,
+          ),
+        ])
+          TixCommand(
+            id: 'theme.${mode.name}',
+            label: label,
+            group: l10n.paletteGroupTheme,
+            icon: icon,
+            run: () => unawaited(theme.set(mode)),
+          ),
+      ],
+      child: child,
+    );
+  }
 }

@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/cache/cached.dart';
 import 'package:tix_mobile/src/core/events/invalidation.dart';
 import 'package:tix_mobile/src/core/paging/paged.dart';
+import 'package:tix_mobile/src/core/quick/quick_add.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/page.dart';
@@ -20,6 +21,7 @@ class ProjectTasks extends _$ProjectTasks {
   @override
   Future<Paged<Task>> build(String projectKey) async {
     final repo = ref.watch(tasksRepositoryProvider);
+    ref.watch(tasksChangedProvider);
     refreshOn(ref, EventTopics.tasks);
     final page = await cachedFirst(
       ref: ref,

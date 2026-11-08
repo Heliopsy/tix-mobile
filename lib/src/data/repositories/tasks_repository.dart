@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:tix_mobile/src/core/config/config.dart';
+import 'package:tix_mobile/src/data/api/gen/models.gen.dart'
+    show TaskImportInput;
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/cache/response_cache.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/bulk.dart';
 import 'package:tix_mobile/src/data/models/page.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
+import 'package:tix_mobile/src/data/models/quick_preview.dart';
+import 'package:tix_mobile/src/data/models/tag.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 
 /// Projects, tasks and the actors they name, for the active server.
@@ -96,4 +100,39 @@ class TasksRepository {
   Future<Task> quickAdd(String project, String line) => _api.task.create(
     CreateTaskRequest(title: line, projectRef: project, parse: true),
   );
+
+  /// Every tag in the tenant.
+  Future<List<Tag>> tags() async => (await _api.tag.list()).items;
+
+  /// The tenant's actors, at most [max] of them.
+  Future<List<Actor>> actors({int max = 2000}) async {
+    final all = <Actor>[];
+    String? cursor;
+    do {
+      final page = await _api.actor.list(cursor: cursor, limit: 500);
+      all.addAll(page.items);
+      cursor = page.nextCursor;
+    } while (cursor != null && all.length < max);
+    return all;
+  }
+
+  /// What the server would make of the quick-add [line] in [project], from
+  /// a dry run of tix's import of a bare title and the line, which writes
+  /// nothing.
+  Future<QuickPreview> preview(String project, String line) async {
+    final result = await _api.task.import(
+      project,
+      TaskImportInput(
+        content: '$_plainTitle\n$line',
+        format: 'lines',
+        dryRun: true,
+        preview: 2,
+      ),
+    );
+    final rows = result.preview;
+    if (rows.length < 2) throw StateError('dry run returned ${rows.length}');
+    return QuickPreview(line: rows[1], plain: rows[0]);
+  }
+
+  static const _plainTitle = 'x';
 }
