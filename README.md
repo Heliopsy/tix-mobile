@@ -82,9 +82,11 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   (second factor included). A sign-in can follow you between your tenants on that server or stay pinned to one.
 - **A switcher on every screen** showing Instance › Tenant, recent ones first.
 - **Local databases** on every platform: tix itself is built into the app and serves a `.db` file on this device,
-  with no server anywhere. Linux and Windows open the file where it is; Android, iOS and macOS import a copy into
-  the app and export it back through the share sheet or a save dialog. The engine costs about 32 MB per Android
-  ABI and 34 MB on desktop.
+  with no server anywhere. Android, iOS and macOS import a copy into the app and export it back through the share
+  sheet or a save dialog. An advanced choice opens a database in place on every platform, for example in a folder
+  Nextcloud, Syncthing or iCloud Drive syncs (Android needs "All files access" for it, and a Google Play build can
+  leave that out). The engine runs only for the active local instance, stops after 10 minutes without a request
+  (a setting) and starts again on the next one. It costs about 32 MB per Android ABI and 34 MB on desktop.
 - **Projects** visible to the active connection, each in its colour with its open task count, and a switcher in
   the project's title. Create one, change its name, key, description, colour, icon, workflow and lease bounds,
   archive it, or delete it with its tasks moved or deleted.
