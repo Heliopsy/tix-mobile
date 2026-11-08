@@ -35,8 +35,9 @@ sections, cached for a quick first draw. Bundles export the picked kinds through
 and import after a preview, asking first when collisions replace. A snapshot import always dry-runs first and
 confirms; replace is the danger button. All three are Manage entries.
 
-Dio decodes a `+json` body even when asked for text, so `TixTransport.text` writes such a body back as JSON rather
-than returning nothing.
+A bundle is NDJSON served as `application/vnd.tix.bundle+json`, and Dio decodes any `+json` body even when asked
+for text, which fails on NDJSON. `TixTransport.text` therefore reads bytes and decodes UTF-8 itself; a refusal read as
+bytes still yields the server's error envelope.
 
 ## Notifications
 

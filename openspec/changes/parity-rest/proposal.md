@@ -31,5 +31,5 @@ Notifications also show task titles on a locked screen, and lease lengths read a
 - `just parity` reports no pending operation.
 - Android: `MainActivity` adds a `tix/notes` channel that gives a posted notification its public version, because
   `flutter_local_notifications` cannot.
-- The transport's text reads keep a `+json` body as text (a bundle is `application/vnd.tix.bundle+json`).
+- The transport's text reads take bytes, so an NDJSON bundle served as `application/vnd.tix.bundle+json` arrives intact.
 - No new dependencies.

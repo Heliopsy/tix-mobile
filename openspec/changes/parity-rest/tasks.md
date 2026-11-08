@@ -4,7 +4,7 @@
 
 - [x] 1.1 Repositories for the lease, task tags, transitions, a saved filter by name, time settings, status, bundles, snapshot imports and invites
 - [x] 1.2 `InviteLink` parsing and Go duration formatting
-- [x] 1.3 Text reads keep a `+json` body
+- [x] 1.3 Text reads take bytes, so an NDJSON bundle survives its `+json` type
 - [ ] 1.4 `project.list` with `include_archived`, `token.rotate`
 
 ## 2. Application

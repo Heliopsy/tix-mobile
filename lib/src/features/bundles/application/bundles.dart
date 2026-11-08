@@ -50,7 +50,7 @@ class BundleTransfer extends _$BundleTransfer {
         .replaceAll(RegExp('[^a-z0-9]+'), '-')
         .replaceAll(RegExp(r'^-|-$'), '');
     return (
-      name: slug.isEmpty ? 'tix-bundle.json' : 'tix-bundle-$slug.json',
+      name: slug.isEmpty ? 'tix-bundle.ndjson' : 'tix-bundle-$slug.ndjson',
       bytes: bytes,
     );
   }

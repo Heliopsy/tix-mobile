@@ -224,10 +224,11 @@ class FakeParity {
         return FakeResponse(200, status);
       case ('POST', ['bundles', 'export']):
         final body = o.data as Map<String, dynamic>? ?? const {};
+        final kinds = (body['kinds'] as List?)?.length ?? 0;
         return FakeResponse(
           200,
-          '{"bundle_version":1,"name":"${body['name'] ?? ''}",'
-              '"kinds":${(body['kinds'] as List?)?.length ?? 0}}',
+          '{"record":"header","header":{"name":"${body['name'] ?? ''}"}}\n'
+              '{"record":"component","kinds":$kinds}\n',
           'application/vnd.tix.bundle+json',
         );
       case ('POST', ['bundles', 'import']):

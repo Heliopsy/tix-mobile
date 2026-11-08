@@ -26,11 +26,11 @@ void main() {
           kinds: {ComponentKind.webhook, ComponentKind.workflow},
           name: 'Team Setup!',
         );
-    expect(file.name, 'tix-bundle-team-setup.json');
+    expect(file.name, 'tix-bundle-team-setup.ndjson');
     expect(server.requests.last.body['kinds'], ['workflow', 'webhook']);
-    expect(jsonDecode(utf8.decode(file.bytes)), containsPair('kinds', 2));
+    expect(utf8.decode(file.bytes), contains('"kinds":2'));
     final plain = await c.read(bundleTransferProvider.notifier).export();
-    expect(plain.name, 'tix-bundle.json');
+    expect(plain.name, 'tix-bundle.ndjson');
   });
 
   test('imports pass the rule and the project through', () async {
