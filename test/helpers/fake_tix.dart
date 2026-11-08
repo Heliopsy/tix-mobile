@@ -72,6 +72,9 @@ Map<String, Object?> taskJson(
   String parentId = '',
   String recurrence = '',
   Map<String, Object?> fields = const {},
+  bool starred = false,
+  String? snoozed,
+  String? completed,
 }) => {
   'id': 'id-$ref',
   'ref': ref,
@@ -87,6 +90,45 @@ Map<String, Object?> taskJson(
   'assignee_actor_id': assignee,
   'due_at': due,
   'tags': tags,
+  if (starred) 'starred': true,
+  'snoozed_until': ?snoozed,
+  'completed_at': ?completed,
+};
+
+/// tix's built-in workflow, as `GET /workflows` reports it.
+Map<String, Object?> workflowJson({
+  String id = 'wf1',
+  String key = 'default',
+  String name = 'Default',
+  List<String> states = const ['todo', 'doing', 'blocked', 'done', 'cancelled'],
+}) => {
+  'id': id,
+  'key': key,
+  'name': name,
+  'definition': {
+    'initial': states.first,
+    'states': [
+      for (final s in states)
+        {
+          'key': s,
+          'label': s[0].toUpperCase() + s.substring(1),
+          'category': switch (s) {
+            'todo' => 'todo',
+            'doing' => 'in_progress',
+            'blocked' => 'blocked',
+            'done' => 'done',
+            'cancelled' => 'cancelled',
+            _ => 'in_progress',
+          },
+          'terminal': s == 'done' || s == 'cancelled',
+        },
+    ],
+    'transitions': [
+      for (final a in states)
+        for (final b in states)
+          if (a != b) {'from': a, 'to': b},
+    ],
+  },
 };
 
 /// A person who can sign in: their password and their tenants.
@@ -118,9 +160,16 @@ class FakeTix {
                'id': 'p1',
                'key': 'infra',
                'name': 'Infrastructure',
+               'color': 'blue',
                'workflow_id': 'wf1',
              },
-             {'id': 'p2', 'key': 'web', 'name': 'Web', 'workflow_id': 'wf1'},
+             {
+               'id': 'p2',
+               'key': 'web',
+               'name': 'Web',
+               'color': 'violet',
+               'workflow_id': 'wf1',
+             },
            ],
        tasks =
            tasks ??
@@ -319,7 +368,37 @@ class FakeTix {
           _page(tenantProjects[caller.tenant] ?? projects, q['cursor']),
         );
       case ('GET', '/api/v1/tasks'):
-        return FakeResponse(200, _page(tasks[q['project']] ?? [], q['cursor']));
+        return FakeResponse(200, _page(_list(o.uri), q['cursor']));
+      case ('POST', '/api/v1/tasks/bulk'):
+        return FakeResponse(200, _bulk(o.data as Map<String, dynamic>));
+      case ('GET', '/api/v1/workflows'):
+        return FakeResponse(200, {'items': workflows, 'next_cursor': ''});
+      case ('GET', '/api/v1/stats'):
+        return _stats(q['project']);
+      case ('GET', '/api/v1/filters'):
+        return FakeResponse(200, {'items': filters, 'next_cursor': ''});
+      case ('POST', '/api/v1/filters'):
+        final body = o.data as Map<String, dynamic>;
+        if (filters.any((f) => f['name'] == body['name'])) {
+          return FakeResponse(409, envelope('conflict', 'name in use'));
+        }
+        final f = <String, Object?>{
+          'id': 'f${++_filterIds}',
+          ...body,
+          'mine': true,
+          'editable': true,
+          'position': filters.length + 1,
+        };
+        filters.add(f);
+        return FakeResponse(201, f);
+      case ('PUT', '/api/v1/filters/order'):
+        final ids = ((o.data as Map)['filters'] as List).cast<String>();
+        filters.sort(
+          (a, b) => ids
+              .indexOf(a['id']! as String)
+              .compareTo(ids.indexOf(b['id']! as String)),
+        );
+        return FakeResponse(200, {'items': filters, 'next_cursor': ''});
       case ('POST', '/api/v1/tasks'):
         final body = o.data as Map<String, dynamic>;
         final project = body['project_ref'] as String;
@@ -334,6 +413,8 @@ class FakeTix {
     final detail = _detail(o, path);
     if (detail != null) return detail;
     final segments = path.substring(1).split('/');
+    final more = _more(o, segments);
+    if (more != null) return more;
     if (o.method == 'GET' && segments.length == 4) {
       final id = segments[3];
       if (segments[2] == 'tenants') {
@@ -513,6 +594,20 @@ class FakeTix {
   final failures = <String, FakeResponse>{};
 
   var _ids = 0;
+
+  /// The tenant's workflows, [workflow] first, as `GET /workflows` lists them.
+  late final workflows = <Map<String, Object?>>[workflow];
+
+  /// The reader's view arrangements, by view then group.
+  final views = <String, Map<String, Map<String, Object?>>>{};
+
+  /// The reader's saved filters and those shared with them, in order.
+  final filters = <Map<String, Object?>>[];
+
+  /// Bulk refusals by reference: the error code and message.
+  final refuse = <String, (String, String)>{};
+
+  var _filterIds = 0;
 
   /// The task [ref], by reference or id.
   Map<String, Object?>? task(String ref) {
@@ -775,6 +870,216 @@ class FakeTix {
         };
         artifacts.putIfAbsent(tref, () => []).add(a);
         return FakeResponse(200, a);
+    }
+    return null;
+  }
+
+  String _projectKeyOf(Map<String, Object?> task) {
+    for (final e in tasks.entries) {
+      if (e.value.contains(task)) return e.key;
+    }
+    return '';
+  }
+
+  Map<String, Object?> _withProject(Map<String, Object?> t) {
+    final key = _projectKeyOf(t);
+    final p = projects.where((p) => p['key'] == key).firstOrNull;
+    return {...t, 'project_id': p?['id'] ?? ''};
+  }
+
+  List<Map<String, Object?>> _list(Uri uri) {
+    final q = uri.queryParametersAll;
+    final keys = q['project'];
+    var rows = [
+      for (final e in tasks.entries)
+        if (keys == null || keys.contains(e.key)) ...e.value,
+    ];
+    bool has(String k, Object? v) => q[k]?.contains('$v') ?? false;
+    if (q['status'] case final List<String> s) {
+      rows = [
+        for (final t in rows)
+          if (s.contains(t['status'])) t,
+      ];
+    }
+    if (q['not_status'] case final List<String> s) {
+      rows = [
+        for (final t in rows)
+          if (!s.contains(t['status'])) t,
+      ];
+    }
+    for (final tag in q['tag'] ?? const <String>[]) {
+      rows = [
+        for (final t in rows)
+          if ((t['tags']! as List).contains(tag)) t,
+      ];
+    }
+    if (q['assignee'] case final List<String> a) {
+      rows = [
+        for (final t in rows)
+          if (a.contains(t['assignee_actor_id']) ||
+              (a.contains('me') && t['assignee_actor_id'] == 'me'))
+            t,
+      ];
+    }
+    if (q.containsKey('starred')) {
+      rows = [
+        for (final t in rows)
+          if ((t['starred'] == true) == has('starred', true)) t,
+      ];
+    }
+    final snoozed = q['snoozed']?.first;
+    if (snoozed != 'any') {
+      rows = [
+        for (final t in rows)
+          if ((t['snoozed_until'] != null) == (snoozed == 'true')) t,
+      ];
+    }
+    if (q['q']?.first case final String text) {
+      rows = [
+        for (final t in rows)
+          if ((t['title']! as String).toLowerCase().contains(
+            text.toLowerCase(),
+          ))
+            t,
+      ];
+    }
+    final sort = q['sort']?.first;
+    if (sort == 'title' || sort == 'due_at') {
+      rows.sort((a, b) => '${a[sort] ?? '~'}'.compareTo('${b[sort] ?? '~'}'));
+    }
+    if (q['direction']?.first == 'desc') rows = rows.reversed.toList();
+    return [for (final t in rows) _withProject(t)];
+  }
+
+  Map<String, Object?> _bulk(Map<String, dynamic> body) {
+    final action = body['action'] as String;
+    final outcomes = <Map<String, Object?>>[];
+    for (final ref in (body['refs'] as List).cast<String>()) {
+      final refusal = refuse[ref];
+      final task = this.task(ref);
+      if (refusal != null || (task == null && action != 'restore')) {
+        outcomes.add({
+          'ref': ref,
+          'applied': false,
+          'code': refusal?.$1 ?? 'not_found',
+          'error': refusal?.$2 ?? 'task "$ref"',
+        });
+        continue;
+      }
+      var copy = '';
+      switch (action) {
+        case 'move':
+          task!['status'] = body['to'];
+        case 'priority':
+          task!['priority'] = body['priority'];
+        case 'tag_add':
+          final tags = (task!['tags']! as List).cast<String>();
+          if (!tags.contains(body['tag'])) {
+            task['tags'] = [...tags, body['tag'] as String];
+          }
+        case 'tag_remove':
+          task!['tags'] = [
+            for (final t in task['tags']! as List)
+              if (t != body['tag']) t,
+          ];
+        case 'assign':
+          task!['assignee_actor_id'] = body['assignee_actor_id'] ?? '';
+        case 'star':
+          task!['starred'] = true;
+        case 'unstar':
+          task!['starred'] = false;
+        case 'copy':
+          final to = body['project_ref'] as String;
+          final list = tasks.putIfAbsent(to, () => []);
+          copy = '$to-${list.length + 100}';
+          list.add({...task!, 'id': 'id-$copy', 'ref': copy});
+        case 'delete':
+          tasks[_projectKeyOf(task!)]!.remove(task);
+          trash[ref] = task;
+        case 'restore':
+          final gone = trash.remove(ref);
+          if (gone == null) {
+            outcomes.add({'ref': ref, 'applied': false, 'code': 'not_found'});
+            continue;
+          }
+          tasks[gone['project_id']]!.add(gone);
+      }
+      outcomes.add({
+        'ref': ref,
+        'applied': true,
+        'copy_ref': ?(copy.isEmpty ? null : copy),
+      });
+    }
+    final applied = outcomes.where((o) => o['applied'] == true).length;
+    return {
+      'action': action,
+      'applied': applied,
+      'refused': outcomes.length - applied,
+      'outcomes': outcomes,
+    };
+  }
+
+  FakeResponse _stats(String? project) {
+    final rows = project == null
+        ? [for (final l in tasks.values) ...l]
+        : tasks[project] ?? const [];
+    final counts = <String, int>{};
+    for (final t in rows) {
+      final status = t['status']! as String;
+      final c = switch (status) {
+        'doing' => 'in_progress',
+        'done' || 'cancelled' || 'blocked' || 'todo' => status,
+        _ => 'todo',
+      };
+      counts[c] = (counts[c] ?? 0) + 1;
+    }
+    return FakeResponse(200, {
+      'project_key': ?project,
+      'by_category': [
+        for (final e in counts.entries) {'category': e.key, 'count': e.value},
+      ],
+    });
+  }
+
+  FakeResponse? _more(RequestOptions o, List<String> segments) {
+    final method = o.method;
+    if (segments.length >= 5 && segments[2] == 'views') {
+      final view = Uri.decodeComponent(segments[3]);
+      final groups = views.putIfAbsent(view, () => {});
+      List<Map<String, Object?>> items() => [
+        for (final e in groups.entries)
+          {'group': e.key, 'view': view, ...e.value},
+      ];
+      switch ((method, segments.length, segments[4])) {
+        case ('GET', 5, 'groups'):
+          return FakeResponse(200, {'items': items(), 'next_cursor': ''});
+        case ('DELETE', 5, 'groups'):
+          views.remove(view);
+          return const FakeResponse(204);
+        case ('PATCH', 6, 'groups'):
+          final group = Uri.decodeComponent(segments[5]);
+          final g = groups.putIfAbsent(group, () => {})
+            ..addAll((o.data as Map).cast<String, Object?>());
+          return FakeResponse(200, {'group': group, 'view': view, ...g});
+        case ('PUT', 5, 'order'):
+          final order = ((o.data as Map)['groups'] as List).cast<String>();
+          for (var i = 0; i < order.length; i++) {
+            groups.putIfAbsent(order[i], () => {})['position'] = i + 1;
+          }
+          return FakeResponse(200, {'items': items(), 'next_cursor': ''});
+      }
+    }
+    if (segments.length == 4 && segments[2] == 'filters') {
+      final f = filters.where((f) => f['id'] == segments[3]).firstOrNull;
+      if (f == null) return FakeResponse(404, envelope('not_found', 'filter'));
+      switch (method) {
+        case 'PATCH':
+          f.addAll((o.data as Map).cast<String, Object?>());
+          return FakeResponse(200, f);
+        case 'DELETE':
+          filters.remove(f);
+          return const FakeResponse(204);
+      }
     }
     return null;
   }

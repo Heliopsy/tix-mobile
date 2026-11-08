@@ -164,6 +164,18 @@ The steps for a screen that performs an operation, say `task.star`:
    `ProviderContainer`, and the screen at both widths. For live updates, pass a `FakeEventSockets` connector to
    `fakeOverrides(events: ...)` and push events.
 
+## The filter expression
+
+`GET /api/v1/tasks` takes parameters, not tix's filter expression. tix's own CLI parses the expression on the
+client and sends parameters, and the app does the same: `data/query/filter_expression.dart` ports `internal/query`
+term for term (keys, `-` negation, the `~` operator, quotes, `due:` windows against the clock, priority names) and
+leaves every value for the server to judge. A key the language does not have is refused under the field with
+tix's own wording, before anything is sent. A saved filter's expression is checked by the server when saved.
+
+The task screen's list, board and lanes draw one query, as the web does. The list narrows to the unfinished
+states of the tenant's workflows when the expression names no status; the board and the lanes do not. A board
+needs one workflow, so projects whose workflows differ in states or transitions get the list and a notice.
+
 ## Instances, connections and the active context
 
 - An **instance** is a tix server: `remote` (an address) or `local` (a `.db` file served by tix embedded in the

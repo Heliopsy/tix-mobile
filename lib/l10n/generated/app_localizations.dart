@@ -1916,6 +1916,654 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Yes'**
   String get taskDetailYes;
+
+  /// No description provided for @boardAllEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No tasks yet.'**
+  String get boardAllEmpty;
+
+  /// No description provided for @boardAllEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks from every project show here.'**
+  String get boardAllEmptyBody;
+
+  /// No description provided for @boardArrangement.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrangement'**
+  String get boardArrangement;
+
+  /// No description provided for @boardAssignMe.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign to me'**
+  String get boardAssignMe;
+
+  /// No description provided for @boardAssignedToMe.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref} assigned to you'**
+  String boardAssignedToMe(String ref);
+
+  /// No description provided for @boardCollapse.
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse'**
+  String get boardCollapse;
+
+  /// No description provided for @boardColumnEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here'**
+  String get boardColumnEmpty;
+
+  /// No description provided for @boardCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref} completed'**
+  String boardCompleted(String ref);
+
+  /// No description provided for @boardCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1{more} task} other{{count}{more} tasks}}'**
+  String boardCount(int count, String more);
+
+  /// No description provided for @boardExpand.
+  ///
+  /// In en, this message translates to:
+  /// **'Expand'**
+  String get boardExpand;
+
+  /// No description provided for @boardGroupMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrange {group}'**
+  String boardGroupMenu(String group);
+
+  /// No description provided for @boardHiddenCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden: {count}'**
+  String boardHiddenCount(int count);
+
+  /// No description provided for @boardHide.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get boardHide;
+
+  /// No description provided for @boardLoadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load more'**
+  String get boardLoadMore;
+
+  /// No description provided for @boardMoveDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Move down'**
+  String get boardMoveDown;
+
+  /// No description provided for @boardMoveLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Move left'**
+  String get boardMoveLeft;
+
+  /// No description provided for @boardMoveRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Move right'**
+  String get boardMoveRight;
+
+  /// No description provided for @boardMoveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Move {ref} to'**
+  String boardMoveTitle(String ref);
+
+  /// No description provided for @boardMoveTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to…'**
+  String get boardMoveTo;
+
+  /// No description provided for @boardMoveUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Move up'**
+  String get boardMoveUp;
+
+  /// No description provided for @boardMoved.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref} moved to {status}'**
+  String boardMoved(String ref, String status);
+
+  /// No description provided for @boardNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next task'**
+  String get boardNext;
+
+  /// No description provided for @boardNoRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref} has no way there in its workflow'**
+  String boardNoRoute(String ref);
+
+  /// No description provided for @boardOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get boardOpen;
+
+  /// No description provided for @boardPrevious.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous task'**
+  String get boardPrevious;
+
+  /// No description provided for @boardRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'These projects run different workflows, so they cannot share one board. Narrow the filter to one workflow\'s projects to see a board.'**
+  String get boardRefused;
+
+  /// No description provided for @boardRefusedGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'{workflow}: {projects}'**
+  String boardRefusedGroup(String workflow, String projects);
+
+  /// No description provided for @boardReopened.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref} reopened'**
+  String boardReopened(String ref);
+
+  /// No description provided for @boardResetArrangement.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset arrangement'**
+  String get boardResetArrangement;
+
+  /// No description provided for @boardShowGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Show {group}'**
+  String boardShowGroup(String group);
+
+  /// No description provided for @boardSnoozeLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later today'**
+  String get boardSnoozeLater;
+
+  /// No description provided for @boardSnoozeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze {ref} until'**
+  String boardSnoozeTitle(String ref);
+
+  /// No description provided for @boardSnoozeTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow morning'**
+  String get boardSnoozeTomorrow;
+
+  /// No description provided for @boardSnoozeWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Next week'**
+  String get boardSnoozeWeek;
+
+  /// No description provided for @boardSnoozed.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref} snoozed'**
+  String boardSnoozed(String ref);
+
+  /// No description provided for @boardStarred.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref} starred'**
+  String boardStarred(String ref);
+
+  /// No description provided for @boardStrays.
+  ///
+  /// In en, this message translates to:
+  /// **'Not on this board\'s columns: {refs}'**
+  String boardStrays(String refs);
+
+  /// No description provided for @boardSwitchProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch project'**
+  String get boardSwitchProject;
+
+  /// No description provided for @boardUnstarred.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref} unstarred'**
+  String boardUnstarred(String ref);
+
+  /// No description provided for @boardWake.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake now'**
+  String get boardWake;
+
+  /// No description provided for @boardWoken.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref} is awake'**
+  String boardWoken(String ref);
+
+  /// No description provided for @bulkClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear selection'**
+  String get bulkClear;
+
+  /// No description provided for @bulkCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy to…'**
+  String get bulkCopy;
+
+  /// No description provided for @bulkCopyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Copy 1 task to} other{Copy {count} tasks to}}'**
+  String bulkCopyTitle(int count);
+
+  /// No description provided for @bulkDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get bulkDelete;
+
+  /// No description provided for @bulkDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'They go to the trash, and Undo brings them back.'**
+  String get bulkDeleteBody;
+
+  /// No description provided for @bulkDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Delete 1 task?} other{Delete {count} tasks?}}'**
+  String bulkDeleteTitle(int count);
+
+  /// No description provided for @bulkDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task changed} other{{count} tasks changed}}'**
+  String bulkDone(int count);
+
+  /// No description provided for @bulkMove.
+  ///
+  /// In en, this message translates to:
+  /// **'Move'**
+  String get bulkMove;
+
+  /// No description provided for @bulkMoveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Move 1 task to} other{Move {count} tasks to}}'**
+  String bulkMoveTitle(int count);
+
+  /// No description provided for @bulkPartly.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} changed. Refused: {refused}'**
+  String bulkPartly(int count, String refused);
+
+  /// No description provided for @bulkSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get bulkSelect;
+
+  /// No description provided for @bulkSelectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all'**
+  String get bulkSelectAll;
+
+  /// No description provided for @bulkSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected'**
+  String bulkSelected(int count);
+
+  /// No description provided for @bulkTagAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add tag'**
+  String get bulkTagAdd;
+
+  /// No description provided for @bulkTagRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove tag'**
+  String get bulkTagRemove;
+
+  /// No description provided for @filterBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked'**
+  String get filterBlocked;
+
+  /// No description provided for @filterClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get filterClear;
+
+  /// No description provided for @filterDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete filter'**
+  String get filterDelete;
+
+  /// No description provided for @filterDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Anyone it was shared with loses it too.'**
+  String get filterDeleteBody;
+
+  /// No description provided for @filterDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {name}?'**
+  String filterDeleteTitle(String name);
+
+  /// No description provided for @filterDueToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Due today'**
+  String get filterDueToday;
+
+  /// No description provided for @filterDueWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Due this week'**
+  String get filterDueWeek;
+
+  /// No description provided for @filterFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'Finished'**
+  String get filterFinished;
+
+  /// No description provided for @filterFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter tasks'**
+  String get filterFocus;
+
+  /// No description provided for @filterMine.
+  ///
+  /// In en, this message translates to:
+  /// **'Mine'**
+  String get filterMine;
+
+  /// No description provided for @filterName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get filterName;
+
+  /// No description provided for @filterNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing matches this filter.'**
+  String get filterNoMatch;
+
+  /// No description provided for @filterNoMatchBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Change the filter or clear it.'**
+  String get filterNoMatchBody;
+
+  /// No description provided for @filterOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get filterOverdue;
+
+  /// No description provided for @filterRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get filterRename;
+
+  /// No description provided for @filterSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save filter'**
+  String get filterSave;
+
+  /// No description provided for @filterSaveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Save this filter'**
+  String get filterSaveTitle;
+
+  /// No description provided for @filterSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved {name}'**
+  String filterSaved(String name);
+
+  /// No description provided for @filterShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share with everyone'**
+  String get filterShare;
+
+  /// No description provided for @filterShared.
+  ///
+  /// In en, this message translates to:
+  /// **'Share with everyone in the tenant'**
+  String get filterShared;
+
+  /// No description provided for @filterSharedHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Others see it under their saved filters; only you and administrators can change it.'**
+  String get filterSharedHelp;
+
+  /// No description provided for @filterSnoozed.
+  ///
+  /// In en, this message translates to:
+  /// **'Snoozed'**
+  String get filterSnoozed;
+
+  /// No description provided for @filterUnshare.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop sharing'**
+  String get filterUnshare;
+
+  /// No description provided for @goMyWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to My work'**
+  String get goMyWork;
+
+  /// No description provided for @goTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Tasks'**
+  String get goTasks;
+
+  /// No description provided for @groupNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No grouping'**
+  String get groupNone;
+
+  /// No description provided for @groupProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Group by project'**
+  String get groupProject;
+
+  /// No description provided for @groupStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Group by status'**
+  String get groupStatus;
+
+  /// No description provided for @lanesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No tasks'**
+  String get lanesEmpty;
+
+  /// No description provided for @myWorkEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing assigned to you.'**
+  String get myWorkEmpty;
+
+  /// No description provided for @myWorkEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Open tasks assigned to you show here by deadline.'**
+  String get myWorkEmptyBody;
+
+  /// No description provided for @myWorkLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get myWorkLater;
+
+  /// No description provided for @myWorkNoDate.
+  ///
+  /// In en, this message translates to:
+  /// **'No date'**
+  String get myWorkNoDate;
+
+  /// No description provided for @myWorkOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get myWorkOverdue;
+
+  /// No description provided for @myWorkTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My work'**
+  String get myWorkTitle;
+
+  /// No description provided for @myWorkToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get myWorkToday;
+
+  /// No description provided for @myWorkWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get myWorkWeek;
+
+  /// No description provided for @projectOpenCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 open task} other{{count} open tasks}}'**
+  String projectOpenCount(int count);
+
+  /// No description provided for @sortCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get sortCreated;
+
+  /// No description provided for @sortDescending.
+  ///
+  /// In en, this message translates to:
+  /// **'Descending'**
+  String get sortDescending;
+
+  /// No description provided for @sortMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort and group'**
+  String get sortMenu;
+
+  /// No description provided for @sortNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Number'**
+  String get sortNumber;
+
+  /// No description provided for @sortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get sortTitle;
+
+  /// No description provided for @sortUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get sortUpdated;
+
+  /// No description provided for @sortUrgency.
+  ///
+  /// In en, this message translates to:
+  /// **'Urgency'**
+  String get sortUrgency;
+
+  /// No description provided for @tasksTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks'**
+  String get tasksTitle;
+
+  /// No description provided for @viewBoard.
+  ///
+  /// In en, this message translates to:
+  /// **'Board'**
+  String get viewBoard;
+
+  /// No description provided for @viewLanes.
+  ///
+  /// In en, this message translates to:
+  /// **'Lanes'**
+  String get viewLanes;
+
+  /// No description provided for @viewList.
+  ///
+  /// In en, this message translates to:
+  /// **'List'**
+  String get viewList;
+
+  /// No description provided for @viewSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch view'**
+  String get viewSwitch;
+
+  /// No description provided for @boardAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref} assigned'**
+  String boardAssigned(String ref);
+
+  /// No description provided for @boardAssignTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign to…'**
+  String get boardAssignTo;
 }
 
 class _AppLocalizationsDelegate

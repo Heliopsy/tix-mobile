@@ -50,12 +50,7 @@ pending:
   # Wave 1, daily work: tasks, comments, fields, tags, dependencies, artifacts,
   # time, views, filters, inbox, search, stars, snooze, templates, bulk.
   wave1:
-    - filter.delete
-    - filter.list
-    - filter.order
-    - filter.save
     - filter.show
-    - filter.update
     - inbox.channel.add
     - inbox.channel.deliveries
     - inbox.channel.edit
@@ -70,7 +65,6 @@ pending:
     - inbox.read
     - inbox.read_all
     - inbox.unread
-    - task.bulk
     - task.lease
     - task.tags
     - task.transition
@@ -82,10 +76,6 @@ pending:
     - template.use
     - time.prefs.set
     - time.settings
-    - view.group.set
-    - view.groups
-    - view.order
-    - view.reset
   # Wave 2, team: projects, workflows, fields, users, members, invites, tokens, calendar, export.
   wave2:
     - account.log
@@ -114,7 +104,6 @@ pending:
     - project.update
     - snapshot.export
     - snapshot.import
-    - stats.read
     - status.read
     - task.export
     - task.import
@@ -126,7 +115,6 @@ pending:
     - user.list
     - user.update
     - workflow.delete
-    - workflow.list
     - workflow.put
     - workflow.put_by_key
   # Wave 3, admin: tenants, global admin, domains, webhooks, sync, retention, audit, second factor, SSH keys.

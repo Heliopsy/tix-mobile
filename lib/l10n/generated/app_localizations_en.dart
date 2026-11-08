@@ -1052,4 +1052,422 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get taskDetailYes => 'Yes';
+
+  @override
+  String get boardAllEmpty => 'No tasks yet.';
+
+  @override
+  String get boardAllEmptyBody => 'Tasks from every project show here.';
+
+  @override
+  String get boardArrangement => 'Arrangement';
+
+  @override
+  String get boardAssignMe => 'Assign to me';
+
+  @override
+  String boardAssignedToMe(String ref) {
+    return '$ref assigned to you';
+  }
+
+  @override
+  String get boardCollapse => 'Collapse';
+
+  @override
+  String get boardColumnEmpty => 'Nothing here';
+
+  @override
+  String boardCompleted(String ref) {
+    return '$ref completed';
+  }
+
+  @override
+  String boardCount(int count, String more) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count$more tasks',
+      one: '1$more task',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get boardExpand => 'Expand';
+
+  @override
+  String boardGroupMenu(String group) {
+    return 'Arrange $group';
+  }
+
+  @override
+  String boardHiddenCount(int count) {
+    return 'Hidden: $count';
+  }
+
+  @override
+  String get boardHide => 'Hide';
+
+  @override
+  String get boardLoadMore => 'Load more';
+
+  @override
+  String get boardMoveDown => 'Move down';
+
+  @override
+  String get boardMoveLeft => 'Move left';
+
+  @override
+  String get boardMoveRight => 'Move right';
+
+  @override
+  String boardMoveTitle(String ref) {
+    return 'Move $ref to';
+  }
+
+  @override
+  String get boardMoveTo => 'Move to…';
+
+  @override
+  String get boardMoveUp => 'Move up';
+
+  @override
+  String boardMoved(String ref, String status) {
+    return '$ref moved to $status';
+  }
+
+  @override
+  String get boardNext => 'Next task';
+
+  @override
+  String boardNoRoute(String ref) {
+    return '$ref has no way there in its workflow';
+  }
+
+  @override
+  String get boardOpen => 'Open';
+
+  @override
+  String get boardPrevious => 'Previous task';
+
+  @override
+  String get boardRefused =>
+      'These projects run different workflows, so they cannot share one board. Narrow the filter to one workflow\'s projects to see a board.';
+
+  @override
+  String boardRefusedGroup(String workflow, String projects) {
+    return '$workflow: $projects';
+  }
+
+  @override
+  String boardReopened(String ref) {
+    return '$ref reopened';
+  }
+
+  @override
+  String get boardResetArrangement => 'Reset arrangement';
+
+  @override
+  String boardShowGroup(String group) {
+    return 'Show $group';
+  }
+
+  @override
+  String get boardSnoozeLater => 'Later today';
+
+  @override
+  String boardSnoozeTitle(String ref) {
+    return 'Snooze $ref until';
+  }
+
+  @override
+  String get boardSnoozeTomorrow => 'Tomorrow morning';
+
+  @override
+  String get boardSnoozeWeek => 'Next week';
+
+  @override
+  String boardSnoozed(String ref) {
+    return '$ref snoozed';
+  }
+
+  @override
+  String boardStarred(String ref) {
+    return '$ref starred';
+  }
+
+  @override
+  String boardStrays(String refs) {
+    return 'Not on this board\'s columns: $refs';
+  }
+
+  @override
+  String get boardSwitchProject => 'Switch project';
+
+  @override
+  String boardUnstarred(String ref) {
+    return '$ref unstarred';
+  }
+
+  @override
+  String get boardWake => 'Wake now';
+
+  @override
+  String boardWoken(String ref) {
+    return '$ref is awake';
+  }
+
+  @override
+  String get bulkClear => 'Clear selection';
+
+  @override
+  String get bulkCopy => 'Copy to…';
+
+  @override
+  String bulkCopyTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Copy $count tasks to',
+      one: 'Copy 1 task to',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bulkDelete => 'Delete';
+
+  @override
+  String get bulkDeleteBody =>
+      'They go to the trash, and Undo brings them back.';
+
+  @override
+  String bulkDeleteTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Delete $count tasks?',
+      one: 'Delete 1 task?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bulkDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks changed',
+      one: '1 task changed',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bulkMove => 'Move';
+
+  @override
+  String bulkMoveTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Move $count tasks to',
+      one: 'Move 1 task to',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bulkPartly(int count, String refused) {
+    return '$count changed. Refused: $refused';
+  }
+
+  @override
+  String get bulkSelect => 'Select';
+
+  @override
+  String get bulkSelectAll => 'Select all';
+
+  @override
+  String bulkSelected(int count) {
+    return '$count selected';
+  }
+
+  @override
+  String get bulkTagAdd => 'Add tag';
+
+  @override
+  String get bulkTagRemove => 'Remove tag';
+
+  @override
+  String get filterBlocked => 'Blocked';
+
+  @override
+  String get filterClear => 'Clear';
+
+  @override
+  String get filterDelete => 'Delete filter';
+
+  @override
+  String get filterDeleteBody => 'Anyone it was shared with loses it too.';
+
+  @override
+  String filterDeleteTitle(String name) {
+    return 'Delete $name?';
+  }
+
+  @override
+  String get filterDueToday => 'Due today';
+
+  @override
+  String get filterDueWeek => 'Due this week';
+
+  @override
+  String get filterFinished => 'Finished';
+
+  @override
+  String get filterFocus => 'Filter tasks';
+
+  @override
+  String get filterMine => 'Mine';
+
+  @override
+  String get filterName => 'Name';
+
+  @override
+  String get filterNoMatch => 'Nothing matches this filter.';
+
+  @override
+  String get filterNoMatchBody => 'Change the filter or clear it.';
+
+  @override
+  String get filterOverdue => 'Overdue';
+
+  @override
+  String get filterRename => 'Rename';
+
+  @override
+  String get filterSave => 'Save filter';
+
+  @override
+  String get filterSaveTitle => 'Save this filter';
+
+  @override
+  String filterSaved(String name) {
+    return 'Saved $name';
+  }
+
+  @override
+  String get filterShare => 'Share with everyone';
+
+  @override
+  String get filterShared => 'Share with everyone in the tenant';
+
+  @override
+  String get filterSharedHelp =>
+      'Others see it under their saved filters; only you and administrators can change it.';
+
+  @override
+  String get filterSnoozed => 'Snoozed';
+
+  @override
+  String get filterUnshare => 'Stop sharing';
+
+  @override
+  String get goMyWork => 'Go to My work';
+
+  @override
+  String get goTasks => 'Go to Tasks';
+
+  @override
+  String get groupNone => 'No grouping';
+
+  @override
+  String get groupProject => 'Group by project';
+
+  @override
+  String get groupStatus => 'Group by status';
+
+  @override
+  String get lanesEmpty => 'No tasks';
+
+  @override
+  String get myWorkEmpty => 'Nothing assigned to you.';
+
+  @override
+  String get myWorkEmptyBody =>
+      'Open tasks assigned to you show here by deadline.';
+
+  @override
+  String get myWorkLater => 'Later';
+
+  @override
+  String get myWorkNoDate => 'No date';
+
+  @override
+  String get myWorkOverdue => 'Overdue';
+
+  @override
+  String get myWorkTitle => 'My work';
+
+  @override
+  String get myWorkToday => 'Today';
+
+  @override
+  String get myWorkWeek => 'This week';
+
+  @override
+  String projectOpenCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count open tasks',
+      one: '1 open task',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sortCreated => 'Created';
+
+  @override
+  String get sortDescending => 'Descending';
+
+  @override
+  String get sortMenu => 'Sort and group';
+
+  @override
+  String get sortNumber => 'Number';
+
+  @override
+  String get sortTitle => 'Title';
+
+  @override
+  String get sortUpdated => 'Updated';
+
+  @override
+  String get sortUrgency => 'Urgency';
+
+  @override
+  String get tasksTitle => 'Tasks';
+
+  @override
+  String get viewBoard => 'Board';
+
+  @override
+  String get viewLanes => 'Lanes';
+
+  @override
+  String get viewList => 'List';
+
+  @override
+  String get viewSwitch => 'Switch view';
+
+  @override
+  String boardAssigned(String ref) {
+    return '$ref assigned';
+  }
+
+  @override
+  String get boardAssignTo => 'Assign to…';
 }

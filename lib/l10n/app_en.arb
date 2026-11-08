@@ -573,5 +573,314 @@
   "taskDetailWake": "Wake now",
   "taskDetailWoken": "Back in the lists.",
   "taskDetailWrite": "Write",
-  "taskDetailYes": "Yes"
+  "taskDetailYes": "Yes",
+  "boardAllEmpty": "No tasks yet.",
+  "boardAllEmptyBody": "Tasks from every project show here.",
+  "boardArrangement": "Arrangement",
+  "boardAssignMe": "Assign to me",
+  "boardAssignedToMe": "{ref} assigned to you",
+  "@boardAssignedToMe": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "boardCollapse": "Collapse",
+  "boardColumnEmpty": "Nothing here",
+  "boardCompleted": "{ref} completed",
+  "@boardCompleted": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "boardCount": "{count, plural, =1{1{more} task} other{{count}{more} tasks}}",
+  "@boardCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "more": {
+        "type": "String"
+      }
+    }
+  },
+  "boardExpand": "Expand",
+  "boardGroupMenu": "Arrange {group}",
+  "@boardGroupMenu": {
+    "placeholders": {
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "boardHiddenCount": "Hidden: {count}",
+  "@boardHiddenCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "boardHide": "Hide",
+  "boardLoadMore": "Load more",
+  "boardMoveDown": "Move down",
+  "boardMoveLeft": "Move left",
+  "boardMoveRight": "Move right",
+  "boardMoveTitle": "Move {ref} to",
+  "@boardMoveTitle": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "boardMoveTo": "Move to…",
+  "boardMoveUp": "Move up",
+  "boardMoved": "{ref} moved to {status}",
+  "@boardMoved": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "boardNext": "Next task",
+  "boardNoRoute": "{ref} has no way there in its workflow",
+  "@boardNoRoute": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "boardOpen": "Open",
+  "boardPrevious": "Previous task",
+  "boardRefused": "These projects run different workflows, so they cannot share one board. Narrow the filter to one workflow's projects to see a board.",
+  "boardRefusedGroup": "{workflow}: {projects}",
+  "@boardRefusedGroup": {
+    "placeholders": {
+      "workflow": {
+        "type": "String"
+      },
+      "projects": {
+        "type": "String"
+      }
+    }
+  },
+  "boardReopened": "{ref} reopened",
+  "@boardReopened": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "boardResetArrangement": "Reset arrangement",
+  "boardShowGroup": "Show {group}",
+  "@boardShowGroup": {
+    "placeholders": {
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "boardSnoozeLater": "Later today",
+  "boardSnoozeTitle": "Snooze {ref} until",
+  "@boardSnoozeTitle": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "boardSnoozeTomorrow": "Tomorrow morning",
+  "boardSnoozeWeek": "Next week",
+  "boardSnoozed": "{ref} snoozed",
+  "@boardSnoozed": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "boardStarred": "{ref} starred",
+  "@boardStarred": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "boardStrays": "Not on this board's columns: {refs}",
+  "@boardStrays": {
+    "placeholders": {
+      "refs": {
+        "type": "String"
+      }
+    }
+  },
+  "boardSwitchProject": "Switch project",
+  "boardUnstarred": "{ref} unstarred",
+  "@boardUnstarred": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "boardWake": "Wake now",
+  "boardWoken": "{ref} is awake",
+  "@boardWoken": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "bulkClear": "Clear selection",
+  "bulkCopy": "Copy to…",
+  "bulkCopyTitle": "{count, plural, =1{Copy 1 task to} other{Copy {count} tasks to}}",
+  "@bulkCopyTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkDelete": "Delete",
+  "bulkDeleteBody": "They go to the trash, and Undo brings them back.",
+  "bulkDeleteTitle": "{count, plural, =1{Delete 1 task?} other{Delete {count} tasks?}}",
+  "@bulkDeleteTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkDone": "{count, plural, =1{1 task changed} other{{count} tasks changed}}",
+  "@bulkDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkMove": "Move",
+  "bulkMoveTitle": "{count, plural, =1{Move 1 task to} other{Move {count} tasks to}}",
+  "@bulkMoveTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkPartly": "{count} changed. Refused: {refused}",
+  "@bulkPartly": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "refused": {
+        "type": "String"
+      }
+    }
+  },
+  "bulkSelect": "Select",
+  "bulkSelectAll": "Select all",
+  "bulkSelected": "{count} selected",
+  "@bulkSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkTagAdd": "Add tag",
+  "bulkTagRemove": "Remove tag",
+  "filterBlocked": "Blocked",
+  "filterClear": "Clear",
+  "filterDelete": "Delete filter",
+  "filterDeleteBody": "Anyone it was shared with loses it too.",
+  "filterDeleteTitle": "Delete {name}?",
+  "@filterDeleteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "filterDueToday": "Due today",
+  "filterDueWeek": "Due this week",
+  "filterFinished": "Finished",
+  "filterFocus": "Filter tasks",
+  "filterMine": "Mine",
+  "filterName": "Name",
+  "filterNoMatch": "Nothing matches this filter.",
+  "filterNoMatchBody": "Change the filter or clear it.",
+  "filterOverdue": "Overdue",
+  "filterRename": "Rename",
+  "filterSave": "Save filter",
+  "filterSaveTitle": "Save this filter",
+  "filterSaved": "Saved {name}",
+  "@filterSaved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "filterShare": "Share with everyone",
+  "filterShared": "Share with everyone in the tenant",
+  "filterSharedHelp": "Others see it under their saved filters; only you and administrators can change it.",
+  "filterSnoozed": "Snoozed",
+  "filterUnshare": "Stop sharing",
+  "goMyWork": "Go to My work",
+  "goTasks": "Go to Tasks",
+  "groupNone": "No grouping",
+  "groupProject": "Group by project",
+  "groupStatus": "Group by status",
+  "lanesEmpty": "No tasks",
+  "myWorkEmpty": "Nothing assigned to you.",
+  "myWorkEmptyBody": "Open tasks assigned to you show here by deadline.",
+  "myWorkLater": "Later",
+  "myWorkNoDate": "No date",
+  "myWorkOverdue": "Overdue",
+  "myWorkTitle": "My work",
+  "myWorkToday": "Today",
+  "myWorkWeek": "This week",
+  "projectOpenCount": "{count, plural, =1{1 open task} other{{count} open tasks}}",
+  "@projectOpenCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sortCreated": "Created",
+  "sortDescending": "Descending",
+  "sortMenu": "Sort and group",
+  "sortNumber": "Number",
+  "sortTitle": "Title",
+  "sortUpdated": "Updated",
+  "sortUrgency": "Urgency",
+  "tasksTitle": "Tasks",
+  "viewBoard": "Board",
+  "viewLanes": "Lanes",
+  "viewList": "List",
+  "viewSwitch": "Switch view",
+  "boardAssigned": "{ref} assigned",
+  "@boardAssigned": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "boardAssignTo": "Assign to…"
 }

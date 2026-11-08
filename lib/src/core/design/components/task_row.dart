@@ -64,6 +64,10 @@ class TaskRow extends StatelessWidget {
     this.onToggleStar,
     this.onStatusTap,
     this.onPriorityTap,
+    this.onLongPress,
+    this.picked,
+    this.onPicked,
+    this.focused = false,
     this.now,
     super.key,
   });
@@ -92,6 +96,19 @@ class TaskRow extends StatelessWidget {
   /// Opens the priority menu.
   final VoidCallback? onPriorityTap;
 
+  /// Opens the row's actions: a long press, or a secondary click.
+  final VoidCallback? onLongPress;
+
+  /// Whether the row is picked for a bulk action; non-null draws a checkbox
+  /// in place of the tick.
+  final bool? picked;
+
+  /// Picks or unpicks the row.
+  final ValueChanged<bool>? onPicked;
+
+  /// Whether the keyboard cursor is on the row.
+  final bool focused;
+
   /// The clock for due marks.
   final DateTime? now;
 
@@ -119,14 +136,18 @@ class TaskRow extends StatelessWidget {
           now: now,
         );
         return Material(
-          color: selected ? t.accentSoft : Colors.transparent,
+          color: selected || (picked ?? false)
+              ? t.accentSoft
+              : Colors.transparent,
           child: InkWell(
             onTap: onTap,
+            onLongPress: onLongPress,
+            onSecondaryTap: onLongPress,
             child: Container(
               decoration: BoxDecoration(
                 border: Border(
                   left: BorderSide(
-                    color: stripe ?? Colors.transparent,
+                    color: focused ? t.accent : stripe ?? Colors.transparent,
                     width: 3,
                   ),
                   bottom: BorderSide(color: t.line),
@@ -150,7 +171,18 @@ class TaskRow extends StatelessWidget {
                     ? CrossAxisAlignment.center
                     : CrossAxisAlignment.start,
                 children: [
-                  TaskCheck(done: done, onChanged: onToggleDone),
+                  if (picked case final bool on)
+                    SizedBox.square(
+                      dimension: 40,
+                      child: Checkbox(
+                        value: on,
+                        onChanged: onPicked == null
+                            ? null
+                            : (v) => onPicked!(v ?? false),
+                      ),
+                    )
+                  else
+                    TaskCheck(done: done, onChanged: onToggleDone),
                   if (task.starred || onToggleStar != null)
                     _Star(starred: task.starred, onTap: onToggleStar),
                   const SizedBox(width: TixSpace.s1),

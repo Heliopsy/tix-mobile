@@ -141,4 +141,32 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('P31'), findsOneWidget);
   });
+
+  testWidgets('each project shows its open count', (tester) async {
+    final server = FakeTix(
+      tasks: {
+        'infra': [
+          taskJson('infra-1'),
+          taskJson('infra-2', status: 'doing'),
+          taskJson('infra-3', status: 'done'),
+        ],
+      },
+    );
+    await pump(tester, server);
+    expect(
+      tester.widget<Text>(find.byKey(const Key('project.infra.open'))).data,
+      '2',
+    );
+    expect(
+      tester.widget<Text>(find.byKey(const Key('project.web.open'))).data,
+      '0',
+    );
+    expect(
+      server.requestsTo('/api/v1/stats').map((r) => r.uri.queryParameters),
+      containsAll([
+        {'project': 'infra'},
+        {'project': 'web'},
+      ]),
+    );
+  });
 }

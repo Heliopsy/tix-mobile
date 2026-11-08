@@ -8,6 +8,7 @@ import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/page.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
+import 'package:tix_mobile/src/features/tasks/application/listing.dart';
 
 part 'tasks.g.dart';
 
@@ -47,8 +48,36 @@ class ProjectTasks extends _$ProjectTasks {
     final task = await ref
         .read(tasksRepositoryProvider)
         .quickAdd(projectKey, line);
-    ref.invalidateSelf();
+    ref
+      ..invalidateSelf()
+      ..invalidate(taskListingProvider);
     return task;
+  }
+}
+
+/// Creates tasks from a quick-add line and refreshes every listing, so the
+/// new task shows wherever the server sorts it. It holds itself alive while
+/// a line is in flight, since the sheet that calls it may outlive every
+/// listing watching the project.
+@riverpod
+class TaskCreator extends _$TaskCreator {
+  @override
+  void build() {}
+
+  /// Creates a task in [projectKey] from [line], which the server parses.
+  Future<Task> quickAdd(String projectKey, String line) async {
+    final link = ref.keepAlive();
+    try {
+      final task = await ref
+          .read(tasksRepositoryProvider)
+          .quickAdd(projectKey, line);
+      ref
+        ..invalidate(projectTasksProvider(projectKey))
+        ..invalidate(taskListingProvider);
+      return task;
+    } finally {
+      link.close();
+    }
   }
 }
 

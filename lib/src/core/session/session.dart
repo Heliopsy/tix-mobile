@@ -24,7 +24,9 @@ import 'package:tix_mobile/src/data/models/membership.dart';
 import 'package:tix_mobile/src/data/repositories/auth_repository.dart';
 import 'package:tix_mobile/src/data/repositories/instances_repository.dart';
 import 'package:tix_mobile/src/data/repositories/task_detail_repository.dart';
+import 'package:tix_mobile/src/data/repositories/task_list_repository.dart';
 import 'package:tix_mobile/src/data/repositories/tasks_repository.dart';
+import 'package:tix_mobile/src/data/repositories/view_prefs_repository.dart';
 
 part 'session.g.dart';
 
@@ -620,6 +622,20 @@ TasksRepository tasksRepository(Ref ref) => TasksRepository(
 /// What the task screen reads and changes, for the active session.
 @riverpod
 TaskDetailRepository taskDetailRepository(Ref ref) => TaskDetailRepository(
+  ref.watch(sessionApiProvider),
+  ref.watch(responseCacheProvider),
+);
+
+/// Listings, quick and bulk actions and workflows for the active session.
+@riverpod
+TaskListRepository taskListRepository(Ref ref) => TaskListRepository(
+  ref.watch(sessionApiProvider),
+  ref.watch(responseCacheProvider),
+);
+
+/// View arrangements and saved filters for the active session.
+@riverpod
+ViewPrefsRepository viewPrefsRepository(Ref ref) => ViewPrefsRepository(
   ref.watch(sessionApiProvider),
   ref.watch(responseCacheProvider),
 );

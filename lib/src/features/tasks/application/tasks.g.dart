@@ -61,7 +61,7 @@ final class ProjectTasksProvider
   }
 }
 
-String _$projectTasksHash() => r'fd2b2d8abd8fc2c293aed56cd0e11efb87346824';
+String _$projectTasksHash() => r'aa644fa65f37cf91dd2dbab05568e9bf385e0e7d';
 
 /// The tasks of one project, most urgent first, a page at a time: the
 /// cached first page at once, then the server's, and again whenever a task
@@ -118,6 +118,75 @@ abstract class _$ProjectTasks extends $AsyncNotifier<Paged<Task>> {
               Object?
             >;
     return element.handleCreate(ref, () => build(_$args));
+  }
+}
+
+/// Creates tasks from a quick-add line and refreshes every listing, so the
+/// new task shows wherever the server sorts it. It holds itself alive while
+/// a line is in flight, since the sheet that calls it may outlive every
+/// listing watching the project.
+
+@ProviderFor(TaskCreator)
+final taskCreatorProvider = TaskCreatorProvider._();
+
+/// Creates tasks from a quick-add line and refreshes every listing, so the
+/// new task shows wherever the server sorts it. It holds itself alive while
+/// a line is in flight, since the sheet that calls it may outlive every
+/// listing watching the project.
+final class TaskCreatorProvider extends $NotifierProvider<TaskCreator, void> {
+  /// Creates tasks from a quick-add line and refreshes every listing, so the
+  /// new task shows wherever the server sorts it. It holds itself alive while
+  /// a line is in flight, since the sheet that calls it may outlive every
+  /// listing watching the project.
+  TaskCreatorProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'taskCreatorProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$taskCreatorHash();
+
+  @$internal
+  @override
+  TaskCreator create() => TaskCreator();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
+
+String _$taskCreatorHash() => r'e0ce68cde807038c5fef1c5fc54eef3fcdfbc8e8';
+
+/// Creates tasks from a quick-add line and refreshes every listing, so the
+/// new task shows wherever the server sorts it. It holds itself alive while
+/// a line is in flight, since the sheet that calls it may outlive every
+/// listing watching the project.
+
+abstract class _$TaskCreator extends $Notifier<void> {
+  void build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<void, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<void, void>,
+              void,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
   }
 }
 

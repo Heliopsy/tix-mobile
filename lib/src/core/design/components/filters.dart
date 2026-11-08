@@ -67,8 +67,33 @@ class TixFilterBar extends StatelessWidget {
     this.onQuery,
     this.hint,
     this.trailing,
+    this.controller,
+    this.error,
+    this.fieldKey,
+    this.onSubmitted,
+    this.focusNode,
+    this.below,
     super.key,
   });
+
+  /// The query's text, when the caller writes into it (a chip that adds a
+  /// term, a saved filter that replaces it).
+  final TextEditingController? controller;
+
+  /// Why the query was refused, shown under the field.
+  final String? error;
+
+  /// The field's key.
+  final Key? fieldKey;
+
+  /// Called on Enter.
+  final ValueChanged<String>? onSubmitted;
+
+  /// The field's focus, so a shortcut can move to it.
+  final FocusNode? focusNode;
+
+  /// A second row of chips under the toggles, such as saved filters.
+  final Widget? below;
 
   /// The toggles.
   final List<Widget> chips;
@@ -103,6 +128,10 @@ class TixFilterBar extends StatelessWidget {
                   child: TixSearchField(
                     hint: hint ?? context.l10n.filterHint,
                     onChanged: query,
+                    onSubmitted: onSubmitted,
+                    controller: controller,
+                    fieldKey: fieldKey,
+                    focusNode: focusNode,
                   ),
                 ),
                 if (trailing != null) ...[
@@ -111,6 +140,14 @@ class TixFilterBar extends StatelessWidget {
                 ],
               ],
             ),
+          if (error case final String message) ...[
+            const SizedBox(height: TixSpace.s1),
+            Text(
+              message,
+              key: const Key('filter.error'),
+              style: TextStyle(color: context.tix.danger, fontSize: TixText.xs),
+            ),
+          ],
           if (chips.isNotEmpty) ...[
             const SizedBox(height: TixSpace.s2),
             SingleChildScrollView(
@@ -125,6 +162,7 @@ class TixFilterBar extends StatelessWidget {
               ),
             ),
           ],
+          ?below,
         ],
       ),
     );

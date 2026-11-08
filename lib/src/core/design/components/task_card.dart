@@ -20,6 +20,10 @@ class TaskCard extends StatelessWidget {
     this.facts = const TaskFacts(),
     this.selected = false,
     this.now,
+    this.onToggleDone,
+    this.onLongPress,
+    this.onMore,
+    this.showStatus = true,
     super.key,
   });
 
@@ -38,6 +42,19 @@ class TaskCard extends StatelessWidget {
   /// The clock for due marks.
   final DateTime? now;
 
+  /// Completes or reopens; null leaves the tick off, as on a board where
+  /// the column is the status.
+  final VoidCallback? onToggleDone;
+
+  /// Opens the card's actions on a long press or a secondary click.
+  final VoidCallback? onLongPress;
+
+  /// Opens the card's actions from the three dots; null leaves them off.
+  final VoidCallback? onMore;
+
+  /// Whether the status pill is drawn; a board column already says it.
+  final bool showStatus;
+
   @override
   Widget build(BuildContext context) {
     final t = context.tix;
@@ -53,6 +70,8 @@ class TaskCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
+        onLongPress: onLongPress,
+        onSecondaryTap: onLongPress,
         child: DecoratedBox(
           decoration: BoxDecoration(
             border: stripe == null
@@ -77,6 +96,22 @@ class TaskCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
+                    if (onToggleDone != null)
+                      Transform.translate(
+                        offset: const Offset(-TixSpace.s2, 0),
+                        child: SizedBox(
+                          width: 32,
+                          height: 24,
+                          child: OverflowBox(
+                            maxWidth: 40,
+                            maxHeight: 40,
+                            child: TaskCheck(
+                              done: done,
+                              onChanged: onToggleDone,
+                            ),
+                          ),
+                        ),
+                      ),
                     if (facts.projectIcon.isNotEmpty) ...[
                       Text(facts.projectIcon),
                       const SizedBox(width: TixSpace.s1),
@@ -86,6 +121,25 @@ class TaskCard extends StatelessWidget {
                     if (task.starred)
                       Icon(Icons.star_rounded, size: 16, color: t.accent),
                     PriorityMark(priority: task.priority),
+                    if (onMore != null)
+                      SizedBox(
+                        width: 28,
+                        height: 24,
+                        child: OverflowBox(
+                          maxWidth: 40,
+                          maxHeight: 40,
+                          child: IconButton(
+                            onPressed: onMore,
+                            tooltip: MaterialLocalizations.of(context)
+                                .moreButtonTooltip,
+                            icon: Icon(
+                              Icons.more_horiz,
+                              size: 18,
+                              color: t.muted,
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
                 const SizedBox(height: TixSpace.s1),
@@ -106,7 +160,7 @@ class TaskCard extends StatelessWidget {
                   runSpacing: TixSpace.s1,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    if (task.status.isNotEmpty)
+                    if (showStatus && task.status.isNotEmpty)
                       StatusPill(
                         label: task.status,
                         category: facts.statusCategory,

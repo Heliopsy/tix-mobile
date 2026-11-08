@@ -4,6 +4,7 @@ import 'package:tix_mobile/src/core/config/config.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/cache/response_cache.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
+import 'package:tix_mobile/src/data/models/bulk.dart';
 import 'package:tix_mobile/src/data/models/page.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
@@ -63,6 +64,10 @@ class TasksRepository {
   /// The first page of [project]'s tasks as last read, null when never read.
   Future<Page<Task>?> cachedTasks(String project) =>
       _cache.peek('tasks/$project', _tasks);
+
+  /// How many of project [key]'s tasks are in an unfinished category.
+  Future<int> projectOpenCount(String key) async =>
+      (await _api.stats.read(project: key)).open;
 
   /// The task [ref].
   Future<Task> task(String ref) =>
