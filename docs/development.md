@@ -155,6 +155,14 @@ builds anywhere.
 | `just engine-check KIND PATHS` | Fail unless a build carries libtix (`android` APKs, an `aab`, a `bundle` directory) |
 | `just engine-clean` | Remove the cached tix sources and libraries |
 
+### API
+
+| Recipe | What it does |
+| --- | --- |
+| `just openapi-sync` | Fetch tix's `api/openapi.yaml` at the commit `tix.lock` pins into `api/tix-openapi.yaml` |
+| `just openapi-check` | Fail if `api/tix-openapi.yaml` is not that document (CI runs it) |
+| `just parity` | How much of the tix API the app covers, per wave |
+
 ## The embedded engine
 
 Local databases are served by tix itself, compiled into the app as a C library (libtix). `hook/build.dart`, a
@@ -184,8 +192,17 @@ hooks:
 `--dart-define=TIX_LOCAL_INSTANCES=true` shows the local screens in a build without the engine (each attempt then
 fails with the "no engine" message), and `=false` hides them in one with it.
 
-**Bumping tix.** Change `commit` and `version` in `tix.lock`, then `just engine-notices` to regenerate the
-licence notices of the Go modules libtix links, and commit both. CI fails while the notices are stale.
+**Bumping tix.** Change `commit` and `version` in `tix.lock`, then:
+
+```sh
+just engine-notices     # licence notices of the Go modules libtix links
+just openapi-sync gen   # the vendored API description and the client generated from it
+flutter test test/core/capability   # names every new operation to classify
+```
+
+Commit everything they change. CI fails while the notices, the vendored spec or the generated client are stale,
+and the parity test fails until every new operation is bound, exempt or pending. `TIX_SOURCE=<tix checkout>`
+makes `openapi-sync` read a local clone instead of GitHub.
 
 ## Code generation
 
@@ -201,6 +218,10 @@ just run -d linux  # in another
 ```
 
 Never edit a generated file by hand. Change the source and regenerate.
+
+`just gen` first runs `tool/openapi.dart gen`, which writes `lib/src/data/api/gen/models.gen.dart` and
+`client.gen.dart` from `api/tix-openapi.yaml`; build_runner then generates their freezed and JSON parts. To change
+what is generated, change `tool/openapi/generator.dart`, never the output.
 
 `just gen` also writes `lib/src/core/licences/packages.g.dart`, the runtime and dev-only package sets the Licenses
 page filters by, from `dart pub deps --json`. Adding or removing a dependency changes it.

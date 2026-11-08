@@ -47,27 +47,122 @@ A feature does not import another feature. Anything two features need moves to `
 
 ## The data layer
 
-### API client
+### The pinned API description
 
-One client per active context, holding its base URL and a `Credential` read from secure storage. An API token
-goes out as `Authorization: Bearer <token>`. A sign-in session goes out as the `tix_session` cookie and nothing
-else: tix's bearer authenticator accepts API tokens only and refuses the request when a session token arrives
-there. The client sends and decodes JSON and maps failures to typed errors. It performs no
-validation and applies no rules: whatever the server decides is the answer. This mirrors tix's own
-`internal/client`, which marshals and nothing else.
+`api/tix-openapi.yaml` is tix's own `api/openapi.yaml` at the commit `tix.lock` pins, the same pin the engine is
+built from, so the app's client and its embedded engine always describe one tix version. `just openapi-check` (in
+CI) fails while the copy differs; `just openapi-sync` refreshes it.
 
-The client never logs a token, a full `Authorization` header, or a request body that may contain one.
+### Generated client
 
-### DTOs and models
+`tool/openapi.dart gen` turns the spec into two committed files under `lib/src/data/api/gen/`:
 
-Request and response shapes are immutable classes with generated JSON mapping. Unknown fields in a response are
-ignored rather than rejected, because tix adds fields without a version bump and an older app must keep working
-against a newer server.
+- `models.gen.dart`: one freezed + json_serializable class per schema and one enum per string enum. A schema a
+  request body uses is an input, with every field nullable so a PATCH sends only what is set; the rest default to
+  zero values and empty lists. Unknown fields are ignored and an unknown enum value reads as null, because tix adds
+  both without a version bump. `Connection`, `Membership` and `Session` are renamed `LiveConnection`,
+  `TenantMembership` and `AuthSession`, so they cannot be confused with the app's own classes.
+- `client.gen.dart`: `TixClient`, one group per area and one method per operation, named from the operationId:
+  `task.list` is `api.task.list(...)`, `inbox.channel.add` is `api.inbox.channelAdd(...)`. Path parameters are
+  positional, the body follows, query parameters are named. A listing returns `Page<T>`; a GET listing also has an
+  NDJSON twin (`listStream`) that streams items.
+
+Why a generator of our own rather than a package is in the `api-foundation` design
+(`openspec/changes/archive/*-api-foundation/design.md`). `data/models/*.dart` re-export the generated classes the
+app uses by name (`Task`, `Project`, `Actor`), so screens import a stable path.
+
+### Transport
+
+`TixApi` extends `TixClient` with one Dio per connection, holding its base URL and a `Credential` read from secure
+storage. An API token goes out as `Authorization: Bearer <token>`. A sign-in session goes out as the `tix_session`
+cookie and nothing else: tix's bearer authenticator accepts API tokens only and refuses the request when a session
+token arrives there. `X-Tix-Tenant` is sent only when a sign-in on a shared host names a tenant. `X-Tix-Client` is
+not sent: tix defines only `cli` and `mcp`.
+
+Every generated method goes through `TixTransport`, which encodes the query (lists repeated, instants in UTC),
+decodes JSON, text, files and NDJSON, and turns every failure, a failed stream included, into one `TixException`.
+It performs no validation and applies no rules: whatever the server decides is the answer. This mirrors tix's own
+`internal/client`, which marshals and nothing else. The client never logs a token, a full `Authorization` header,
+or a request body that may contain one.
 
 ### Repositories
 
 A repository is the only thing a provider talks to. It turns DTOs into the models the UI uses, hides which endpoint
-serves what, and is the seam a later offline cache slots into without the providers noticing.
+serves what, and keeps cached copies (below) without the providers noticing.
+
+## Live updates
+
+```mermaid
+flowchart LR
+  WS["tix /api/v1/events"] -- "subscribe, since_seq" --> ES["TixEventStream<br/>cursor, backoff"]
+  ES --> P["tixEventStreamProvider<br/>one per active context"]
+  P --> R["refreshOn / onEvents<br/>in a provider's build"]
+  R -- "invalidateSelf" --> L["lists and pages"]
+```
+
+`TixEventStream` (`data/events`) holds one WebSocket per active context, presenting the connection's credential.
+It subscribes, delivers each event once in `seq` order, and on a dropped connection retries after 1, 2, 4 … 60
+seconds (plus jitter), resuming with `since_seq`. Coming back to the foreground skips the wait. A refused
+handshake or subscription (a token without `event:subscribe`) makes it unavailable, with no retries. A cursor tix
+no longer keeps, or a reconnect before any event arrived, is reported as `EventsMissed`.
+
+A provider declares what it depends on in `build`:
+
+```dart
+refreshOn(ref, EventTopics.taskDetail, where: (e) => e.subjectId == task.id);
+```
+
+It refreshes when a matching event arrives, at most once per 300 ms burst, and on every gap. `onEvents` hands the
+batch over instead, for a provider that patches its state. `EventTopics` in `core/events/invalidation.dart` is the
+table of which events touch which data.
+
+## Cache
+
+The last good first page of each listing and the last read of each record are kept per context, one JSON file per
+entry under the app support directory (`cache/v1/<connection>/<tenant>/<key>.json`). Nothing is ever queried,
+only read by key, so files are enough and add no native code. The cache is best effort: an unreadable entry is a
+miss and a failed write is dropped. Removing a connection deletes its directory.
+
+A repository wraps a read in `ResponseCache.remember` and offers a `cached…` twin; a provider builds with
+`cachedFirst`, which returns the cached value at once and sets the server's when it arrives. Each key is served
+from the cache once per context, so a pull to refresh always asks the server and shows its error.
+
+## Optimistic updates
+
+The design system's `runOptimistic` (`core/design/components/toast.dart`) shows the change, the error toast and the
+Undo. It takes `apply` and `rollback` callbacks, which have to change provider state, so a notifier hands out an
+`OptimisticChange` (`core/cache/optimistic.dart`) and the widget passes its members on.
+
+## Parity with the web UI
+
+The app aims to do everything the tix web UI does. As in tix's `internal/capability`, every operation is
+classified once: bound in `core/capability/registry.dart` (operationId to feature, action and the wave it shipped
+in), or listed in `core/capability/exemptions.yaml` as exempt with a reason or pending in a wave.
+`test/core/capability/operations_test.dart` fails on an operation in neither, in both, or gone from the spec, so a
+tix bump that adds an operation fails until someone decides about it. `just parity` prints coverage per wave.
+
+## Building a feature on the data layer
+
+The steps for a screen that performs an operation, say `task.star`:
+
+1. **Find the method.** `lib/src/data/api/gen/client.gen.dart` has it: `api.task.star(ref)`. Its doc names the route
+   and scope. If tix lacks something, it is a tix change first; never hand-write a request.
+2. **Repository.** Add a method to the repository for the area (or a new one in `data/repositories/`, built in
+   `core/session/session.dart` from `sessionApiProvider` and `responseCacheProvider`). Reads that open a screen use
+   `_cache.remember(key, fresh, encode)` and get a `cached…` twin; first pages only, never a page after a cursor.
+   Never cache anything carrying a secret (tokens, sessions, recovery codes, invite links).
+3. **Provider.** In `features/<feature>/application/`, an `AsyncNotifier`:
+   - load with `cachedFirst(ref: ref, cached: repo.cachedX(), fresh: repo.x, onFresh: (v) => state = AsyncData(v))`;
+   - declare live updates with `refreshOn(ref, EventTopics.<topic>, where: ...)`;
+   - page with `loadNextPage` from `core/paging`;
+   - expose each mutation as a method returning an `OptimisticChange` (quick actions) or a `Future` (forms).
+4. **Screen.** Watch the provider; run a quick action with `runOptimistic(context, apply: c.apply, rollback:
+   c.rollback, commit: c.commit, undo: c.undo, ...)`; show errors with the shared error views.
+5. **Parity.** Move the operationId from `pending` in `exemptions.yaml` to `bindings` in `registry.dart` with the
+   feature, action and wave. Run `flutter test test/core/capability` and `just parity`.
+6. **Tests.** Extend `FakeTix` with the route, test the repository against it, the provider through a
+   `ProviderContainer`, and the screen at both widths. For live updates, pass a `FakeEventSockets` connector to
+   `fakeOverrides(events: ...)` and push events.
 
 ## Instances, connections and the active context
 
@@ -222,8 +317,8 @@ bottom navigation bar on phones and at the top of the navigation rail elsewhere.
   libsecret on Linux, DPAPI on Windows. Passwords are never stored.
 - The saved instances and connections (names, addresses, handles, tenants), the theme and the language are
   ordinary preferences.
-- Nothing the app stores is a copy of server data. The future offline cache will change that, and will be specified
-  in `openspec/` before it is built.
+- The response cache is the only copy of server data the app keeps: under the app support directory, per
+  connection and tenant, deleted with its connection. It never holds a token or a session.
 
 ## Specs
 
