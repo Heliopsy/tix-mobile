@@ -1,0 +1,103 @@
+name: Bug report
+description: Something in the app does not work as it should
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. If the server returns the wrong data, the bug is probably in
+        [heliopsy/tix](https://github.com/heliopsy/tix/issues); if you are not sure, file it here.
+        Never paste an API token.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, and what the app did.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      description: If a spec requirement in `openspec/specs/` covers this, name it.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Add a server
+        2. Open a project
+        3. Pull to refresh
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Android
+        - iOS
+        - Linux
+        - macOS
+        - Windows
+    validations:
+      required: true
+  - type: dropdown
+    id: form-factor
+    attributes:
+      label: Device type
+      options:
+        - Phone
+        - Tablet
+        - Desktop or laptop
+        - Emulator or simulator
+    validations:
+      required: true
+  - type: input
+    id: os-version
+    attributes:
+      label: OS and version
+      placeholder: Android 15, iOS 18.2, Ubuntu 24.04 (Wayland), macOS 15.1, Windows 11 24H2
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device model
+      placeholder: Pixel 8, iPhone 15, ThinkPad X1
+  - type: input
+    id: app-version
+    attributes:
+      label: App version
+      description: From Settings, or the release file name. A commit hash if you built from source.
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: install-source
+    attributes:
+      label: Installed from
+      options:
+        - GitHub release
+        - Built from source
+    validations:
+      required: true
+  - type: input
+    id: server-version
+    attributes:
+      label: tix server version
+      description: "`tix version` on the server, or `GET /healthz`."
+      placeholder: 0.8.0
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or error messages
+      description: Remove tokens, server addresses and anything else private before pasting.
+      render: text
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Drag images here. Crop out anything private.

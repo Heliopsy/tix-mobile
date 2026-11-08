@@ -1,0 +1,56 @@
+name: Feature request
+description: Propose new or changed behaviour in the app
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check [ROADMAP.md](https://github.com/heliopsy/tix-mobile/blob/main/ROADMAP.md) first; it may already be
+        planned. If the feature needs something the tix API does not offer, it starts as an issue in
+        [heliopsy/tix](https://github.com/heliopsy/tix/issues).
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you unable to do today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behaviour
+      description: What should happen instead. Behaviour, not implementation.
+    validations:
+      required: true
+  - type: dropdown
+    id: platforms
+    attributes:
+      label: Platforms
+      description: Where do you need it?
+      multiple: true
+      options:
+        - All
+        - Android
+        - iOS
+        - Linux
+        - macOS
+        - Windows
+        - Wear OS
+        - Apple Watch
+    validations:
+      required: true
+  - type: dropdown
+    id: api
+    attributes:
+      label: Does the tix API already support this?
+      options:
+        - "Yes"
+        - "No, it needs a server change too"
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Including how you work around it today, in the app, the CLI or the web UI.
