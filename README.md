@@ -104,12 +104,12 @@ live in `screenshots/` ([conventions](docs/development.md#screenshots)).
 
 Download the file for your platform from the [latest release](https://github.com/heliopsy/tix-mobile/releases/latest).
 Every release attaches the Android APK and AAB, Linux `.tar.gz` files for x64 and arm64, a macOS `.zip`, a
-Windows `.zip`, and a `SHA256SUMS` file. The checksums file carries GitHub build provenance and a cosign
-signature, so a matching checksum proves where a file came from:
+Windows `.zip`, and a `SHA256SUMS` file. Each file carries GitHub build provenance, and the checksums file a
+cosign signature, so you can check where a download came from:
 
 ```sh
 sha256sum --check --ignore-missing SHA256SUMS
-gh attestation verify SHA256SUMS --repo heliopsy/tix-mobile
+gh attestation verify tix-mobile-*-linux-x64.tar.gz --repo heliopsy/tix-mobile
 ```
 
 ### From source
