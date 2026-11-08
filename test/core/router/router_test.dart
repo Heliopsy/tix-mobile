@@ -4,19 +4,34 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
-import 'package:tix_mobile/src/data/models/server_context.dart';
+import 'package:tix_mobile/src/data/api/credential.dart';
+import 'package:tix_mobile/src/data/models/connection.dart';
+import 'package:tix_mobile/src/data/models/instance.dart';
 
 import '../../helpers/container.dart';
 import '../../helpers/fake_tix.dart';
 
 void main() {
-  const session = Session(
-    context: ServerContext(id: 'c', name: 'n', baseUrl: 'https://x'),
-    token: 't',
+  final session = Session(
+    instance: Instance(
+      id: 'i',
+      name: 'n',
+      kind: InstanceKind.remote,
+      baseUrl: 'https://x',
+      createdAt: DateTime(2026),
+    ),
+    connection: Connection(
+      id: 'c',
+      instanceId: 'i',
+      kind: ConnectionKind.token,
+      createdAt: DateTime(2026),
+    ),
+    baseUrl: 'https://x',
+    credential: const BearerCredential('t'),
   );
   const loading = AsyncLoading<Session?>();
   const out = AsyncData<Session?>(null);
-  const signedIn = AsyncData<Session?>(session);
+  final signedIn = AsyncData<Session?>(session);
 
   String? go(AsyncValue<Session?> s, String location) =>
       redirectFor(s, Uri.parse(location));
@@ -40,6 +55,9 @@ void main() {
     expect(go(signedIn, '/'), '/projects');
     expect(go(signedIn, '/connect'), '/projects');
     expect(go(signedIn, '/connect?add=1'), isNull);
+    expect(go(signedIn, '/connect?instance=i1'), isNull);
+    expect(go(signedIn, '/connect?connection=s1'), isNull);
+    expect(go(signedIn, '/connect?url=https%3A%2F%2Fa&email=x'), isNull);
     expect(go(signedIn, '/projects/infra/tasks/infra-1'), isNull);
   });
 
@@ -54,5 +72,12 @@ void main() {
   test('routes escape keys and refs', () {
     expect(Routes.project('a b'), '/projects/a%20b');
     expect(Routes.task('infra', 'infra-1'), '/projects/infra/tasks/infra-1');
+    expect(Routes.addConnection('i 1'), '/connect?instance=i+1');
+    expect(Routes.reconnect('s1'), '/connect?connection=s1');
+    expect(
+      Routes.addInstanceAt('https://own.example', email: 'a@b'),
+      '/connect?url=https%3A%2F%2Fown.example&email=a%40b',
+    );
+    expect(Routes.addInstanceAt('https://x'), '/connect?url=https%3A%2F%2Fx');
   });
 }

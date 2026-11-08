@@ -2,14 +2,14 @@
   "@@locale": "en",
   "appTitle": "tix",
   "connectTitle": "Connect to tix",
-  "connectAddTitle": "Add a server",
-  "connectIntro": "Sign in with the address of your tix server and an API token.",
+  "connectAddTitle": "Add an instance",
+  "connectIntro": "Connect to a tix server with an API token or by signing in, or open a tix database on this device.",
   "serverUrlLabel": "Server address",
   "serverUrlHint": "https://tix.example.com",
   "tokenLabel": "API token",
   "tokenHelp": "Create one with tix token create, or under Tokens in the web app.",
   "contextNameLabel": "Name (optional)",
-  "contextNameHelp": "Shown when you switch between servers.",
+  "contextNameHelp": "Shown in the switcher.",
   "connectButton": "Connect",
   "projectsTitle": "Projects",
   "projectsEmpty": "No projects yet.",
@@ -53,10 +53,8 @@
   "themeDark": "Dark",
   "languageLabel": "Language",
   "languageSystem": "System",
-  "serversLabel": "Servers",
-  "addServer": "Add a server",
   "signOut": "Sign out",
-  "signOutBody": "This forgets the token for {server} on this device.",
+  "signOutBody": "This forgets this connection to {server} on this device.",
   "@signOutBody": {
     "placeholders": {
       "server": {
@@ -82,7 +80,7 @@
       }
     }
   },
-  "errorUnauthenticated": "The token was not accepted. Check it, or create a new one.",
+  "errorUnauthenticated": "The server did not accept this connection. Check the token, or sign in again.",
   "errorForbidden": "This token is not allowed to do that.",
   "errorNotFound": "Not found.",
   "errorConflict": "Someone changed this at the same time. Reload and try again.",
@@ -108,5 +106,93 @@
         "type": "String"
       }
     }
-  }
+  },
+  "instanceRemote": "Server",
+  "instanceLocal": "This device",
+  "localUnavailableNote": "Databases on this device need tix built into the app, which is not in this build yet.",
+  "methodToken": "Token",
+  "methodSignIn": "Sign in",
+  "emailLabel": "Email",
+  "passwordLabel": "Password",
+  "signInHelp": "Sessions last about 12 hours. Use a token for a device that should stay connected.",
+  "signInButton": "Sign in",
+  "localIntro": "Create a new tix database or open one you already have.",
+  "dbNameLabel": "Database name",
+  "dbNameHelp": "Created in this app's documents folder.",
+  "localNewFile": "New database…",
+  "localCreate": "Create database",
+  "localOpenFile": "Open a database file…",
+  "localListTenants": "Show tenants",
+  "codeIntro": "This account has a second factor. Enter the code from your authenticator app.",
+  "codeLabel": "Code",
+  "codeHelp": "Six digits, or one of your recovery codes.",
+  "verifyButton": "Verify",
+  "chooseTenantIntro": "You belong to more than one tenant here. Which one should this connection open?",
+  "pinLabel": "Pin to this tenant",
+  "pinOnHelp": "The connection stays in this tenant. Add another connection for another tenant.",
+  "pinOffHelp": "Switch between your tenants from the switcher.",
+  "openButton": "Open",
+  "localTenantsIntro": "Open a tenant of this database.",
+  "newTenantTitle": "New tenant",
+  "tenantKeyLabel": "Key",
+  "tenantNameLabel": "Name",
+  "createTenantButton": "Create and open",
+  "servedAt": "Served at {host}",
+  "@servedAt": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "addAsInstance": "Add",
+  "instancesTitle": "Instances",
+  "addInstance": "Add an instance",
+  "instancesEmpty": "No instances yet.",
+  "removeInstance": "Remove instance",
+  "removeInstanceBody": "This forgets {name} and every connection to it on this device. Nothing on the server changes.",
+  "@removeInstanceBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "remove": "Remove",
+  "removeConnection": "Remove connection",
+  "removeConnectionBody": "This forgets {name} on this device.",
+  "@removeConnectionBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "openTenant": "Open a tenant",
+  "addConnection": "Add a connection",
+  "useConnection": "Use",
+  "makeSwitchable": "Make switchable",
+  "pin": "Pin to current tenant",
+  "signInAgain": "Sign in again",
+  "switchable": "Switchable",
+  "pinned": "Pinned",
+  "switchContext": "Switch instance or tenant",
+  "recentContexts": "Recent",
+  "manageInstances": "Manage instances",
+  "instanceCount": "{count, plural, =0{No instances} =1{1 instance} other{{count} instances}}",
+  "@instanceCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorBadCredentials": "That email and password were not accepted.",
+  "errorEmailRequired": "Enter your email.",
+  "errorPasswordRequired": "Enter your password.",
+  "errorCodeRequired": "Enter the code from your authenticator app.",
+  "errorSecondFactorSetup": "This account must set up a second factor first. Sign in once in the browser to do that.",
+  "errorPasswordChange": "This account must choose a new password first. Sign in once in the browser to do that.",
+  "errorTenantRequired": "Enter a key for the tenant.",
+  "errorEngineUnavailable": "Databases on this device are not available in this build yet."
 }

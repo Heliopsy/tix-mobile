@@ -4,28 +4,39 @@ import 'package:dio/dio.dart';
 import 'package:tix_mobile/src/core/config/config.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/logging/log.dart';
+import 'package:tix_mobile/src/data/api/credential.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
+import 'package:tix_mobile/src/data/models/auth.dart';
 import 'package:tix_mobile/src/data/models/health.dart';
 import 'package:tix_mobile/src/data/models/page.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
+import 'package:tix_mobile/src/data/models/tenant.dart';
+
+export 'package:tix_mobile/src/data/api/credential.dart';
+
+/// Builds a client for a server and the credential it presents.
+typedef TixApiFactory = TixApi Function(String baseUrl, Credential? credential);
 
 /// The tix HTTP API under `/api/v1`. Marshals and nothing else.
 class TixApi {
-  /// Talks to the server at [baseUrl], sending [token] as a bearer token.
-  TixApi({required String baseUrl, String? token, HttpClientAdapter? adapter})
-    : _dio = Dio(
-        BaseOptions(
-          baseUrl: baseUrl,
-          connectTimeout: connectTimeout,
-          receiveTimeout: receiveTimeout,
-          headers: {
-            'Accept': 'application/json',
-            if (token != null && token.isNotEmpty)
-              'Authorization': 'Bearer $token',
-          },
-        ),
-      ) {
+  /// Talks to the server at [baseUrl], presenting [credential].
+  TixApi({
+    required String baseUrl,
+    Credential? credential,
+    HttpClientAdapter? adapter,
+  }) : _dio = Dio(
+         BaseOptions(
+           baseUrl: baseUrl,
+           connectTimeout: connectTimeout,
+           receiveTimeout: receiveTimeout,
+           headers: {
+             'Accept': 'application/json',
+             if (credential != null && credential.secret.isNotEmpty)
+               ...credential.headers,
+           },
+         ),
+       ) {
     if (adapter != null) _dio.httpClientAdapter = adapter;
     _dio.interceptors.add(
       InterceptorsWrapper(
@@ -91,6 +102,42 @@ class TixApi {
       () => _dio.post<Object?>('/api/v1/tasks', data: request.toJson()),
     ),
   );
+
+  /// `GET /tenants/REF`: the caller's tenant; needs `tenant:admin`.
+  Future<Tenant> tenant(String ref) async => Tenant.fromJson(
+    await _get('/api/v1/tenants/${Uri.encodeComponent(ref)}'),
+  );
+
+  /// `POST /auth/login`: one step of a sign-in.
+  Future<LoginResult> login(LoginRequest request) async => LoginResult.fromJson(
+    await _send(
+      () => _dio.post<Object?>('/api/v1/auth/login', data: request.toJson()),
+    ),
+  );
+
+  /// `POST /auth/switch`: a session in [tenant] for the session presented,
+  /// which it ends.
+  Future<LoginResult> switchTenant(
+    String tenant, {
+    String? code,
+    String surface = 'cli',
+  }) async => LoginResult.fromJson(
+    await _send(
+      () => _dio.post<Object?>(
+        '/api/v1/auth/switch',
+        data: {'tenant': tenant, 'code': ?code, 'surface': surface},
+      ),
+    ),
+  );
+
+  /// `POST /auth/logout`: ends the session presented.
+  Future<void> logout() async {
+    try {
+      await _dio.post<Object?>('/api/v1/auth/logout');
+    } on DioException catch (e) {
+      throw TixException.fromDio(e);
+    }
+  }
 
   Future<Map<String, dynamic>> _get(
     String path, {

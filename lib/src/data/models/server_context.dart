@@ -5,7 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'server_context.freezed.dart';
 part 'server_context.g.dart';
 
-/// A saved server, like a `tix ctx` entry. The token lives in secure storage.
+/// A server saved by 0.1, read only to migrate it to an instance.
 @freezed
 abstract class ServerContext with _$ServerContext {
   const factory ServerContext({

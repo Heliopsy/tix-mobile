@@ -19,6 +19,14 @@ enum TixErrorKind {
   notTix,
   badUrl,
   tokenRequired,
+  badCredentials,
+  emailRequired,
+  passwordRequired,
+  codeRequired,
+  secondFactorSetup,
+  passwordChange,
+  tenantRequired,
+  engineUnavailable,
   unknown,
 }
 

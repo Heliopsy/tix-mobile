@@ -10,58 +10,104 @@ part of 'session.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The saved servers.
+/// The saved instances and connections.
 
-@ProviderFor(contextsRepository)
-final contextsRepositoryProvider = ContextsRepositoryProvider._();
+@ProviderFor(instancesRepository)
+final instancesRepositoryProvider = InstancesRepositoryProvider._();
 
-/// The saved servers.
+/// The saved instances and connections.
 
-final class ContextsRepositoryProvider
+final class InstancesRepositoryProvider
     extends
         $FunctionalProvider<
-          ContextsRepository,
-          ContextsRepository,
-          ContextsRepository
+          InstancesRepository,
+          InstancesRepository,
+          InstancesRepository
         >
-    with $Provider<ContextsRepository> {
-  /// The saved servers.
-  ContextsRepositoryProvider._()
+    with $Provider<InstancesRepository> {
+  /// The saved instances and connections.
+  InstancesRepositoryProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'contextsRepositoryProvider',
+        name: r'instancesRepositoryProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$contextsRepositoryHash();
+  String debugGetCreateSourceHash() => _$instancesRepositoryHash();
 
   @$internal
   @override
-  $ProviderElement<ContextsRepository> $createElement(
+  $ProviderElement<InstancesRepository> $createElement(
     $ProviderPointer pointer,
   ) => $ProviderElement(pointer);
 
   @override
-  ContextsRepository create(Ref ref) {
-    return contextsRepository(ref);
+  InstancesRepository create(Ref ref) {
+    return instancesRepository(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ContextsRepository value) {
+  Override overrideWithValue(InstancesRepository value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<ContextsRepository>(value),
+      providerOverride: $SyncValueProvider<InstancesRepository>(value),
     );
   }
 }
 
-String _$contextsRepositoryHash() =>
-    r'ece57fc908f764e77ae81bf80ee4361cddbdca1a';
+String _$instancesRepositoryHash() =>
+    r'b2d50ab3dc5683629e13e83047ad11d52489fe5a';
+
+/// Server checks, sign-in and tenant switches.
+
+@ProviderFor(authRepository)
+final authRepositoryProvider = AuthRepositoryProvider._();
+
+/// Server checks, sign-in and tenant switches.
+
+final class AuthRepositoryProvider
+    extends $FunctionalProvider<AuthRepository, AuthRepository, AuthRepository>
+    with $Provider<AuthRepository> {
+  /// Server checks, sign-in and tenant switches.
+  AuthRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'authRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$authRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<AuthRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AuthRepository create(Ref ref) {
+    return authRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AuthRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AuthRepository>(value),
+    );
+  }
+}
+
+String _$authRepositoryHash() => r'4686c63ff368de2d2809164c53a981223ac96509';
 
 /// The active session: null until someone connects.
 
@@ -91,7 +137,7 @@ final class SessionControllerProvider
   SessionController create() => SessionController();
 }
 
-String _$sessionControllerHash() => r'a179e48e0f9e5d035483f6afd0cc6e191fa06bef';
+String _$sessionControllerHash() => r'cf6a3af3a49627e8d707a0ccb65478d96743b11c';
 
 /// The active session: null until someone connects.
 
@@ -113,57 +159,56 @@ abstract class _$SessionController extends $AsyncNotifier<Session?> {
   }
 }
 
-/// Every saved context, refreshed whenever the session changes.
+/// The saved contexts, refreshed whenever the session changes.
 
-@ProviderFor(savedContexts)
-final savedContextsProvider = SavedContextsProvider._();
+@ProviderFor(contextDirectory)
+final contextDirectoryProvider = ContextDirectoryProvider._();
 
-/// Every saved context, refreshed whenever the session changes.
+/// The saved contexts, refreshed whenever the session changes.
 
-final class SavedContextsProvider
+final class ContextDirectoryProvider
     extends
         $FunctionalProvider<
-          List<ServerContext>,
-          List<ServerContext>,
-          List<ServerContext>
+          ContextDirectory,
+          ContextDirectory,
+          ContextDirectory
         >
-    with $Provider<List<ServerContext>> {
-  /// Every saved context, refreshed whenever the session changes.
-  SavedContextsProvider._()
+    with $Provider<ContextDirectory> {
+  /// The saved contexts, refreshed whenever the session changes.
+  ContextDirectoryProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'savedContextsProvider',
+        name: r'contextDirectoryProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$savedContextsHash();
+  String debugGetCreateSourceHash() => _$contextDirectoryHash();
 
   @$internal
   @override
-  $ProviderElement<List<ServerContext>> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  $ProviderElement<ContextDirectory> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
   @override
-  List<ServerContext> create(Ref ref) {
-    return savedContexts(ref);
+  ContextDirectory create(Ref ref) {
+    return contextDirectory(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<ServerContext> value) {
+  Override overrideWithValue(ContextDirectory value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<List<ServerContext>>(value),
+      providerOverride: $SyncValueProvider<ContextDirectory>(value),
     );
   }
 }
 
-String _$savedContextsHash() => r'ac1abaa5ae8605d9bb4648451902af895e086f3a';
+String _$contextDirectoryHash() => r'575aa0c3d9005ff43775aa1e31481c62660a75f0';
 
 /// The API client for the active session.
 
@@ -209,20 +254,20 @@ final class SessionApiProvider
   }
 }
 
-String _$sessionApiHash() => r'bec878317baf5c77c728ebb7e53b21968b75b6bd';
+String _$sessionApiHash() => r'd2d66389916b5d81e7b2160c39e498ad23f77d50';
 
-/// Projects and tasks on the active server; rebuilt when the session changes.
+/// Projects and tasks for the active session.
 
 @ProviderFor(tasksRepository)
 final tasksRepositoryProvider = TasksRepositoryProvider._();
 
-/// Projects and tasks on the active server; rebuilt when the session changes.
+/// Projects and tasks for the active session.
 
 final class TasksRepositoryProvider
     extends
         $FunctionalProvider<TasksRepository, TasksRepository, TasksRepository>
     with $Provider<TasksRepository> {
-  /// Projects and tasks on the active server; rebuilt when the session changes.
+  /// Projects and tasks for the active session.
   TasksRepositoryProvider._()
     : super(
         from: null,

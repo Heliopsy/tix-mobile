@@ -114,13 +114,13 @@ abstract class AppLocalizations {
   /// No description provided for @connectAddTitle.
   ///
   /// In en, this message translates to:
-  /// **'Add a server'**
+  /// **'Add an instance'**
   String get connectAddTitle;
 
   /// No description provided for @connectIntro.
   ///
   /// In en, this message translates to:
-  /// **'Sign in with the address of your tix server and an API token.'**
+  /// **'Connect to a tix server with an API token or by signing in, or open a tix database on this device.'**
   String get connectIntro;
 
   /// No description provided for @serverUrlLabel.
@@ -156,7 +156,7 @@ abstract class AppLocalizations {
   /// No description provided for @contextNameHelp.
   ///
   /// In en, this message translates to:
-  /// **'Shown when you switch between servers.'**
+  /// **'Shown in the switcher.'**
   String get contextNameHelp;
 
   /// No description provided for @connectButton.
@@ -333,18 +333,6 @@ abstract class AppLocalizations {
   /// **'System'**
   String get languageSystem;
 
-  /// No description provided for @serversLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Servers'**
-  String get serversLabel;
-
-  /// No description provided for @addServer.
-  ///
-  /// In en, this message translates to:
-  /// **'Add a server'**
-  String get addServer;
-
   /// No description provided for @signOut.
   ///
   /// In en, this message translates to:
@@ -354,7 +342,7 @@ abstract class AppLocalizations {
   /// No description provided for @signOutBody.
   ///
   /// In en, this message translates to:
-  /// **'This forgets the token for {server} on this device.'**
+  /// **'This forgets this connection to {server} on this device.'**
   String signOutBody(String server);
 
   /// No description provided for @signedInAs.
@@ -384,7 +372,7 @@ abstract class AppLocalizations {
   /// No description provided for @errorUnauthenticated.
   ///
   /// In en, this message translates to:
-  /// **'The token was not accepted. Check it, or create a new one.'**
+  /// **'The server did not accept this connection. Check the token, or sign in again.'**
   String get errorUnauthenticated;
 
   /// No description provided for @errorForbidden.
@@ -458,6 +446,366 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Request {id}.'**
   String errorRequestId(String id);
+
+  /// No description provided for @instanceRemote.
+  ///
+  /// In en, this message translates to:
+  /// **'Server'**
+  String get instanceRemote;
+
+  /// No description provided for @instanceLocal.
+  ///
+  /// In en, this message translates to:
+  /// **'This device'**
+  String get instanceLocal;
+
+  /// No description provided for @localUnavailableNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Databases on this device need tix built into the app, which is not in this build yet.'**
+  String get localUnavailableNote;
+
+  /// No description provided for @methodToken.
+  ///
+  /// In en, this message translates to:
+  /// **'Token'**
+  String get methodToken;
+
+  /// No description provided for @methodSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get methodSignIn;
+
+  /// No description provided for @emailLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get emailLabel;
+
+  /// No description provided for @passwordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get passwordLabel;
+
+  /// No description provided for @signInHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions last about 12 hours. Use a token for a device that should stay connected.'**
+  String get signInHelp;
+
+  /// No description provided for @signInButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get signInButton;
+
+  /// No description provided for @localIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new tix database or open one you already have.'**
+  String get localIntro;
+
+  /// No description provided for @dbNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Database name'**
+  String get dbNameLabel;
+
+  /// No description provided for @dbNameHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Created in this app\'s documents folder.'**
+  String get dbNameHelp;
+
+  /// No description provided for @localNewFile.
+  ///
+  /// In en, this message translates to:
+  /// **'New database…'**
+  String get localNewFile;
+
+  /// No description provided for @localCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create database'**
+  String get localCreate;
+
+  /// No description provided for @localOpenFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a database file…'**
+  String get localOpenFile;
+
+  /// No description provided for @localListTenants.
+  ///
+  /// In en, this message translates to:
+  /// **'Show tenants'**
+  String get localListTenants;
+
+  /// No description provided for @codeIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'This account has a second factor. Enter the code from your authenticator app.'**
+  String get codeIntro;
+
+  /// No description provided for @codeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get codeLabel;
+
+  /// No description provided for @codeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Six digits, or one of your recovery codes.'**
+  String get codeHelp;
+
+  /// No description provided for @verifyButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get verifyButton;
+
+  /// No description provided for @chooseTenantIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'You belong to more than one tenant here. Which one should this connection open?'**
+  String get chooseTenantIntro;
+
+  /// No description provided for @pinLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin to this tenant'**
+  String get pinLabel;
+
+  /// No description provided for @pinOnHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The connection stays in this tenant. Add another connection for another tenant.'**
+  String get pinOnHelp;
+
+  /// No description provided for @pinOffHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch between your tenants from the switcher.'**
+  String get pinOffHelp;
+
+  /// No description provided for @openButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get openButton;
+
+  /// No description provided for @localTenantsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a tenant of this database.'**
+  String get localTenantsIntro;
+
+  /// No description provided for @newTenantTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New tenant'**
+  String get newTenantTitle;
+
+  /// No description provided for @tenantKeyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Key'**
+  String get tenantKeyLabel;
+
+  /// No description provided for @tenantNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get tenantNameLabel;
+
+  /// No description provided for @createTenantButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Create and open'**
+  String get createTenantButton;
+
+  /// No description provided for @servedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Served at {host}'**
+  String servedAt(String host);
+
+  /// No description provided for @addAsInstance.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addAsInstance;
+
+  /// No description provided for @instancesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Instances'**
+  String get instancesTitle;
+
+  /// No description provided for @addInstance.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an instance'**
+  String get addInstance;
+
+  /// No description provided for @instancesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No instances yet.'**
+  String get instancesEmpty;
+
+  /// No description provided for @removeInstance.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove instance'**
+  String get removeInstance;
+
+  /// No description provided for @removeInstanceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This forgets {name} and every connection to it on this device. Nothing on the server changes.'**
+  String removeInstanceBody(String name);
+
+  /// No description provided for @remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
+
+  /// No description provided for @removeConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove connection'**
+  String get removeConnection;
+
+  /// No description provided for @removeConnectionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This forgets {name} on this device.'**
+  String removeConnectionBody(String name);
+
+  /// No description provided for @openTenant.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a tenant'**
+  String get openTenant;
+
+  /// No description provided for @addConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a connection'**
+  String get addConnection;
+
+  /// No description provided for @useConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Use'**
+  String get useConnection;
+
+  /// No description provided for @makeSwitchable.
+  ///
+  /// In en, this message translates to:
+  /// **'Make switchable'**
+  String get makeSwitchable;
+
+  /// No description provided for @pin.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin to current tenant'**
+  String get pin;
+
+  /// No description provided for @signInAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in again'**
+  String get signInAgain;
+
+  /// No description provided for @switchable.
+  ///
+  /// In en, this message translates to:
+  /// **'Switchable'**
+  String get switchable;
+
+  /// No description provided for @pinned.
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned'**
+  String get pinned;
+
+  /// No description provided for @switchContext.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch instance or tenant'**
+  String get switchContext;
+
+  /// No description provided for @recentContexts.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent'**
+  String get recentContexts;
+
+  /// No description provided for @manageInstances.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage instances'**
+  String get manageInstances;
+
+  /// No description provided for @instanceCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No instances} =1{1 instance} other{{count} instances}}'**
+  String instanceCount(int count);
+
+  /// No description provided for @errorBadCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'That email and password were not accepted.'**
+  String get errorBadCredentials;
+
+  /// No description provided for @errorEmailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email.'**
+  String get errorEmailRequired;
+
+  /// No description provided for @errorPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password.'**
+  String get errorPasswordRequired;
+
+  /// No description provided for @errorCodeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code from your authenticator app.'**
+  String get errorCodeRequired;
+
+  /// No description provided for @errorSecondFactorSetup.
+  ///
+  /// In en, this message translates to:
+  /// **'This account must set up a second factor first. Sign in once in the browser to do that.'**
+  String get errorSecondFactorSetup;
+
+  /// No description provided for @errorPasswordChange.
+  ///
+  /// In en, this message translates to:
+  /// **'This account must choose a new password first. Sign in once in the browser to do that.'**
+  String get errorPasswordChange;
+
+  /// No description provided for @errorTenantRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a key for the tenant.'**
+  String get errorTenantRequired;
+
+  /// No description provided for @errorEngineUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Databases on this device are not available in this build yet.'**
+  String get errorEngineUnavailable;
 }
 
 class _AppLocalizationsDelegate

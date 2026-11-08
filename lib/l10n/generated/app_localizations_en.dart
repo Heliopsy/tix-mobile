@@ -18,11 +18,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get connectTitle => 'Connect to tix';
 
   @override
-  String get connectAddTitle => 'Add a server';
+  String get connectAddTitle => 'Add an instance';
 
   @override
   String get connectIntro =>
-      'Sign in with the address of your tix server and an API token.';
+      'Connect to a tix server with an API token or by signing in, or open a tix database on this device.';
 
   @override
   String get serverUrlLabel => 'Server address';
@@ -41,7 +41,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contextNameLabel => 'Name (optional)';
 
   @override
-  String get contextNameHelp => 'Shown when you switch between servers.';
+  String get contextNameHelp => 'Shown in the switcher.';
 
   @override
   String get connectButton => 'Connect';
@@ -143,17 +143,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageSystem => 'System';
 
   @override
-  String get serversLabel => 'Servers';
-
-  @override
-  String get addServer => 'Add a server';
-
-  @override
   String get signOut => 'Sign out';
 
   @override
   String signOutBody(String server) {
-    return 'This forgets the token for $server on this device.';
+    return 'This forgets this connection to $server on this device.';
   }
 
   @override
@@ -174,7 +168,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorUnauthenticated =>
-      'The token was not accepted. Check it, or create a new one.';
+      'The server did not accept this connection. Check the token, or sign in again.';
 
   @override
   String get errorForbidden => 'This token is not allowed to do that.';
@@ -218,4 +212,209 @@ class AppLocalizationsEn extends AppLocalizations {
   String errorRequestId(String id) {
     return 'Request $id.';
   }
+
+  @override
+  String get instanceRemote => 'Server';
+
+  @override
+  String get instanceLocal => 'This device';
+
+  @override
+  String get localUnavailableNote =>
+      'Databases on this device need tix built into the app, which is not in this build yet.';
+
+  @override
+  String get methodToken => 'Token';
+
+  @override
+  String get methodSignIn => 'Sign in';
+
+  @override
+  String get emailLabel => 'Email';
+
+  @override
+  String get passwordLabel => 'Password';
+
+  @override
+  String get signInHelp =>
+      'Sessions last about 12 hours. Use a token for a device that should stay connected.';
+
+  @override
+  String get signInButton => 'Sign in';
+
+  @override
+  String get localIntro =>
+      'Create a new tix database or open one you already have.';
+
+  @override
+  String get dbNameLabel => 'Database name';
+
+  @override
+  String get dbNameHelp => 'Created in this app\'s documents folder.';
+
+  @override
+  String get localNewFile => 'New database…';
+
+  @override
+  String get localCreate => 'Create database';
+
+  @override
+  String get localOpenFile => 'Open a database file…';
+
+  @override
+  String get localListTenants => 'Show tenants';
+
+  @override
+  String get codeIntro =>
+      'This account has a second factor. Enter the code from your authenticator app.';
+
+  @override
+  String get codeLabel => 'Code';
+
+  @override
+  String get codeHelp => 'Six digits, or one of your recovery codes.';
+
+  @override
+  String get verifyButton => 'Verify';
+
+  @override
+  String get chooseTenantIntro =>
+      'You belong to more than one tenant here. Which one should this connection open?';
+
+  @override
+  String get pinLabel => 'Pin to this tenant';
+
+  @override
+  String get pinOnHelp =>
+      'The connection stays in this tenant. Add another connection for another tenant.';
+
+  @override
+  String get pinOffHelp => 'Switch between your tenants from the switcher.';
+
+  @override
+  String get openButton => 'Open';
+
+  @override
+  String get localTenantsIntro => 'Open a tenant of this database.';
+
+  @override
+  String get newTenantTitle => 'New tenant';
+
+  @override
+  String get tenantKeyLabel => 'Key';
+
+  @override
+  String get tenantNameLabel => 'Name';
+
+  @override
+  String get createTenantButton => 'Create and open';
+
+  @override
+  String servedAt(String host) {
+    return 'Served at $host';
+  }
+
+  @override
+  String get addAsInstance => 'Add';
+
+  @override
+  String get instancesTitle => 'Instances';
+
+  @override
+  String get addInstance => 'Add an instance';
+
+  @override
+  String get instancesEmpty => 'No instances yet.';
+
+  @override
+  String get removeInstance => 'Remove instance';
+
+  @override
+  String removeInstanceBody(String name) {
+    return 'This forgets $name and every connection to it on this device. Nothing on the server changes.';
+  }
+
+  @override
+  String get remove => 'Remove';
+
+  @override
+  String get removeConnection => 'Remove connection';
+
+  @override
+  String removeConnectionBody(String name) {
+    return 'This forgets $name on this device.';
+  }
+
+  @override
+  String get openTenant => 'Open a tenant';
+
+  @override
+  String get addConnection => 'Add a connection';
+
+  @override
+  String get useConnection => 'Use';
+
+  @override
+  String get makeSwitchable => 'Make switchable';
+
+  @override
+  String get pin => 'Pin to current tenant';
+
+  @override
+  String get signInAgain => 'Sign in again';
+
+  @override
+  String get switchable => 'Switchable';
+
+  @override
+  String get pinned => 'Pinned';
+
+  @override
+  String get switchContext => 'Switch instance or tenant';
+
+  @override
+  String get recentContexts => 'Recent';
+
+  @override
+  String get manageInstances => 'Manage instances';
+
+  @override
+  String instanceCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count instances',
+      one: '1 instance',
+      zero: 'No instances',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get errorBadCredentials =>
+      'That email and password were not accepted.';
+
+  @override
+  String get errorEmailRequired => 'Enter your email.';
+
+  @override
+  String get errorPasswordRequired => 'Enter your password.';
+
+  @override
+  String get errorCodeRequired => 'Enter the code from your authenticator app.';
+
+  @override
+  String get errorSecondFactorSetup =>
+      'This account must set up a second factor first. Sign in once in the browser to do that.';
+
+  @override
+  String get errorPasswordChange =>
+      'This account must choose a new password first. Sign in once in the browser to do that.';
+
+  @override
+  String get errorTenantRequired => 'Enter a key for the tenant.';
+
+  @override
+  String get errorEngineUnavailable =>
+      'Databases on this device are not available in this build yet.';
 }

@@ -56,21 +56,26 @@ void main() {
     expect(c.read(localeSettingProvider), isNull);
   });
 
-  testWidgets('lists the servers and switches between them', (tester) async {
-    final c = await pump(tester);
-    expect(find.text('@ana · https://tix.example'), findsOneWidget);
-    expect(find.text('https://home.example'), findsOneWidget);
-    await tester.tap(find.byKey(const Key('settings.server.c1')));
+  testWidgets('instances shows the active context and opens the list', (
+    tester,
+  ) async {
+    await pump(tester);
     await tester.pumpAndSettle();
-    expect(c.read(sessionControllerProvider).value!.context.id, 'c1');
-    await tester.tap(find.byKey(const Key('settings.server.c2')));
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('settings.instances')),
+        matching: find.text('2 instances · Work · Default'),
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(find.byKey(const Key('settings.instances')));
     await tester.pumpAndSettle();
-    expect(c.read(sessionControllerProvider).value!.context.id, 'c2');
+    expect(find.text('route:/settings/instances'), findsOneWidget);
   });
 
-  testWidgets('add a server goes to connect', (tester) async {
+  testWidgets('add an instance goes to connect', (tester) async {
     await pump(tester);
-    await tester.tap(find.text('Add a server'));
+    await tester.tap(find.byKey(const Key('settings.add')));
     await tester.pumpAndSettle();
     expect(find.text('route:/connect?add=1'), findsOneWidget);
   });
@@ -86,12 +91,15 @@ void main() {
 
     await tester.tap(find.byKey(const Key('settings.signOut')));
     await tester.pumpAndSettle();
-    expect(find.textContaining('forgets the token for Work'), findsOneWidget);
-    await tester.tap(find.byKey(const Key('settings.signOut.confirm')));
+    expect(
+      find.textContaining('forgets this connection to Work'),
+      findsOneWidget,
+    );
+    await tester.tap(find.byKey(const Key('confirm.ok')));
     await tester.pumpAndSettle();
     expect(stores.secrets.values.containsKey('token.c1'), isFalse);
-    expect(c.read(sessionControllerProvider).value!.context.id, 'c2');
-    expect(find.byKey(const Key('settings.server.c1')), findsNothing);
+    expect(c.read(sessionControllerProvider).value!.connection.id, 'c2');
+    expect(find.textContaining('1 instance · Home'), findsOneWidget);
   });
 
   testWidgets('about shows the tix mark beside the app name', (tester) async {

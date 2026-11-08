@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:tix_mobile/src/data/models/membership.dart';
 
 part 'actor.freezed.dart';
 part 'actor.g.dart';
@@ -17,6 +18,8 @@ abstract class Actor with _$Actor {
     @Default('') String tenantId,
     @Default('') String tenantKey,
     @Default('') String tenantName,
+    @Default('') String accountId,
+    @Default(<Membership>[]) List<Membership> memberships,
   }) = _Actor;
 
   const Actor._();

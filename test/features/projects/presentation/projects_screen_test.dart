@@ -84,11 +84,12 @@ void main() {
     await tester.drag(find.byType(ListView), const Offset(0, -3000));
     await tester.pumpAndSettle();
     expect(find.text('P29'), findsOneWidget);
-    expect(server.requests.map((r) => r.uri.queryParameters['cursor']), [
-      null,
-      '10',
-      '20',
-    ]);
+    expect(
+      server
+          .requestsTo('/api/v1/projects')
+          .map((r) => r.uri.queryParameters['cursor']),
+      [null, '10', '20'],
+    );
   });
 
   testWidgets('an empty server says so', (tester) async {
