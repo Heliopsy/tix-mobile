@@ -65,9 +65,7 @@ void main() {
     expect(bar.selectedIndex, 4);
   });
 
-  testWidgets('the shell lists Manage beside Projects and Settings', (
-    tester,
-  ) async {
+  testWidgets('the shell lists Manage before Settings', (tester) async {
     final stores = signedInStores();
     await pumpScreen(
       tester,
@@ -87,6 +85,6 @@ void main() {
         secrets: stores.secrets,
       ),
     );
-    expect(find.text('projects,manage,settings'), findsOneWidget);
+    expect(find.text('projects,tasks,myWork,manage,settings'), findsOneWidget);
   });
 }
