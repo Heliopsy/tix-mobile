@@ -37,7 +37,7 @@ Dependencies point one way, down and to the right. A layer never imports from th
 | Presentation | `lib/src/features/<feature>/presentation/` | Widgets, layout, user input, localised text | Calls a repository or the API client, holds business state |
 | Application | `lib/src/features/<feature>/application/` | Providers and notifiers: loading, paging, refreshing, mutating | Builds widgets, knows about HTTP |
 | Data | `lib/src/data/` | The API client, request and response DTOs, the models the app uses, repositories | Imports Flutter widgets or Riverpod |
-| Core | `lib/src/core/` | Configuration, the router, themes, localisation setup, the error types, logging | Depends on a feature |
+| Core | `lib/src/core/` | Configuration, the router, themes, localisation setup, the error types, logging, session, storage, paging, shared widgets | Depends on a feature (only `core/router` imports feature screens, to wire routes) |
 
 `lib/main.dart` only bootstraps: it initialises bindings, builds the root `ProviderScope` and runs `App` from
 `lib/src/app.dart`. `App` is a `MaterialApp.router` that wires the router, the light and dark themes and the
@@ -80,7 +80,7 @@ The API client reads `code` into a closed set of error kinds and keeps `message`
 | `code` | HTTP status | What the app does |
 | --- | --- | --- |
 | `invalid` | 400 | Shows the server's message next to the input that caused it |
-| `unauthenticated` | 401 | The token is wrong, expired or revoked: offer to replace it for that server |
+| `unauthenticated` | 401 | The token is wrong, expired or revoked: show the error and send the user back to the connect screen to fix that server (in-place token replacement is planned) |
 | `forbidden` | 403 | The token lacks a scope: say which action was refused, do not retry |
 | `not_found` | 404 | The item is gone or not visible to this token |
 | `conflict`, `lease_expired` | 409 | Someone changed it first: reload and show the current state |

@@ -69,7 +69,7 @@ for the CLI.
 | Android | 7.0, API 24 (Flutter's default `minSdk`) | APK, AAB | Android Keystore |
 | iOS | 15.0 | None yet, build from source | Keychain |
 | macOS | 12.0 | `.zip` | Keychain |
-| Linux | x64 desktop with GTK 3 | `.tar.gz` | libsecret (GNOME Keyring, KWallet) |
+| Linux | x64 and arm64 desktop with GTK 3 | `.tar.gz` | libsecret (GNOME Keyring, KWallet) |
 | Windows | Windows 10, x64 | `.zip` | DPAPI |
 
 iOS builds are not published until signing is set up. Store listings (Google Play, App Store, F-Droid, Flathub) are
@@ -103,12 +103,13 @@ live in `screenshots/` ([conventions](docs/development.md#screenshots)).
 ### From a release
 
 Download the file for your platform from the [latest release](https://github.com/heliopsy/tix-mobile/releases/latest).
-Every release attaches the Android APK and AAB, a Linux `.tar.gz`, a macOS `.zip`, a Windows `.zip`, and a
-`SHA256SUMS` file. The builds carry GitHub build provenance, so you can check where a file came from:
+Every release attaches the Android APK and AAB, Linux `.tar.gz` files for x64 and arm64, a macOS `.zip`, a
+Windows `.zip`, and a `SHA256SUMS` file. The checksums file carries GitHub build provenance and a cosign
+signature, so a matching checksum proves where a file came from:
 
 ```sh
 sha256sum --check --ignore-missing SHA256SUMS
-gh attestation verify tix-mobile-*.apk --repo heliopsy/tix-mobile
+gh attestation verify SHA256SUMS --repo heliopsy/tix-mobile
 ```
 
 ### From source
@@ -176,7 +177,7 @@ flowchart LR
 ```text
 lib/main.dart                 # bootstrap only
 lib/src/app.dart              # MaterialApp.router, theme, l10n
-lib/src/core/                 # config, router, theme, l10n, errors, logging
+lib/src/core/                 # config, router, theme, l10n, errors, logging, session, storage, paging, widgets
 lib/src/data/                 # API client, DTOs and models, repositories
 lib/src/features/<feature>/   # presentation/ and application/ (providers)
 lib/l10n/                     # app_en.arb, app_bg.arb

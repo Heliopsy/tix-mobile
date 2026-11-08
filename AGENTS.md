@@ -7,7 +7,7 @@ Coding standards for tix-mobile. Terse by design. Read before writing code.
 - `lib/main.dart` bootstraps only. `lib/src/app.dart` is the `MaterialApp.router` with theme and l10n. Nothing
   else goes in either.
 - Dependencies point one way: `features/*/presentation` → `features/*/application` → `data/`. `core/` may be used
-  by any layer and depends on no feature.
+  by any layer and depends on no feature, with one exception: `core/router` imports feature screens to wire routes.
 - A feature never imports another feature. Shared code moves to `data/` or `core/`.
 - Widgets never call a repository or the API client. They read providers.
 - Providers never build widgets and never speak HTTP. They call repositories.

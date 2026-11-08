@@ -68,7 +68,8 @@ session. Without one there is nowhere safe to keep the token, and the app does n
 
 | Recipe | What it does |
 | --- | --- |
-| `just setup` | First-time setup: toolchain, dependencies, generated code |
+| `just setup` | First-time setup: install the pinned toolchain from `.tool-versions`, fetch packages, precache this host's engines |
+| `just setup-linux` | Install the system packages a Linux desktop build needs (Debian/Ubuntu, uses sudo) |
 | `just get` | `flutter pub get` |
 | `just run *ARGS` | `flutter run`, passing arguments through: `just run -d linux`, `just run -d emulator-5554` |
 | `just gen` | Run `build_runner` once: Riverpod providers, JSON models, anything else annotated |
@@ -77,11 +78,12 @@ session. Without one there is nowhere safe to keep the token, and the app does n
 | `just l10n` | Regenerate the localisation classes from `lib/l10n/*.arb` |
 | `just fmt` | Format Dart sources |
 | `just fmt-check` | Fail on unformatted Dart sources |
-| `just analyze` | `flutter analyze` with the repository's lint rules |
+| `just analyze` | `flutter analyze` plus `dart analyze`, so analyzer plugins such as `riverpod_lint` run too |
 | `just lint` | Every linter: Dart analysis plus the repository linters below |
 | `just test` | The unit, widget and golden suite |
 | `just cover` | Tests with a coverage report |
 | `just cover-check` | Fail when coverage drops under the floor in [testing.md](testing.md#coverage) |
+| `just cover-floor` | Apply the floor to the `coverage/lcov.info` already on disk |
 
 ### Builds
 
@@ -95,6 +97,12 @@ session. Without one there is nowhere safe to keep the token, and the app does n
 | `just build-macos` | macOS app |
 | `just build-windows` | Windows desktop bundle |
 | `just build-all` | Every target the current host can build |
+| `just package-android` | Collect the APK and AAB into `dist/` |
+| `just package-linux ARCH` | Tar the Linux bundle into `dist/` (`x64` or `arm64`) |
+| `just package-macos` | Zip the macOS app into `dist/` |
+| `just package-windows` | Zip the Windows runner output into `dist/` |
+| `just package-ios` | Zip the unsigned iOS app into `dist/`, for inspection only |
+| `just checksums` | Write `dist/SHA256SUMS` over everything in `dist/` |
 
 A host builds only its own desktop target: Linux on Linux, macOS and iOS on macOS, Windows on Windows. Android
 builds anywhere.
@@ -105,7 +113,7 @@ builds anywhere.
 | --- | --- |
 | `just doctor` | `flutter doctor -v` against the pinned toolchain |
 | `just outdated` | Dependencies with newer versions available |
-| `just upgrade` | Upgrade dependencies within their constraints |
+| `just upgrade` | Upgrade dependencies across major versions; review the diff |
 | `just clean` | Remove build output and generated caches |
 
 ### Repository checks
@@ -118,6 +126,8 @@ builds anywhere.
 | `just reuse` | Check every file carries licence information (REUSE) |
 | `just secrets` | Scan for committed secrets |
 | `just spec` | Validate the OpenSpec specs and open changes |
+| `just shellcheck` | Shellcheck every tracked shell script |
+| `just release-files-check` | Fail if the release-please manifest disagrees with the newest tag |
 
 ### Gates
 

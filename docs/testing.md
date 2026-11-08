@@ -15,14 +15,14 @@ What the suite covers, how to write a test that earns its place, and the coverag
 Run one file or one test while working:
 
 ```sh
-flutter test test/data/api_client_test.dart
+flutter test test/data/api/tix_api_test.dart
 flutter test --plain-name 'next page appends' test/features/tasks/
 ```
 
 ## Layout
 
-`test/` mirrors `lib/src/`. The test for `lib/src/data/api_client.dart` is `test/data/api_client_test.dart`.
-Shared fakes and builders live in `test/helpers/`.
+`test/` mirrors `lib/src/`. The test for `lib/src/data/api/tix_api.dart` is `test/data/api/tix_api_test.dart`.
+Shared fakes and builders live in `test/helpers/`; `fake_tix.dart` is an in-memory tix server behind a Dio adapter, so tests run the real client.
 
 ## Kinds of test
 
