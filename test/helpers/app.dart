@@ -229,7 +229,27 @@ Future<ProviderContainer> pumpScreen(
           GoRoute(
             path: ':key',
             builder: stub,
-            routes: [GoRoute(path: 'tasks/:ref', builder: stub)],
+            routes: [
+              GoRoute(path: 'tasks/:ref', builder: stub),
+              GoRoute(path: 'settings', builder: stub),
+              GoRoute(path: 'fields', builder: stub),
+            ],
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/manage',
+        builder: stub,
+        routes: [
+          GoRoute(
+            path: 'workflows',
+            builder: stub,
+            routes: [GoRoute(path: ':key', builder: stub)],
+          ),
+          GoRoute(
+            path: 'fields',
+            builder: stub,
+            routes: [GoRoute(path: ':key', builder: stub)],
           ),
         ],
       ),
