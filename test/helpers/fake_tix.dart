@@ -69,9 +69,17 @@ Map<String, Object?> taskJson(
   String assignee = '',
   String? due,
   List<String> tags = const [],
+  String parentId = '',
+  String recurrence = '',
+  Map<String, Object?> fields = const {},
 }) => {
   'id': 'id-$ref',
   'ref': ref,
+  'project_id': ref.substring(0, ref.lastIndexOf('-')),
+  'version': 1,
+  'parent_id': parentId,
+  'recurrence': recurrence,
+  'custom_fields': fields,
   'title': title,
   'status': status,
   'priority': priority,
@@ -106,8 +114,13 @@ class FakeTix {
   }) : projects =
            projects ??
            [
-             {'id': 'p1', 'key': 'infra', 'name': 'Infrastructure'},
-             {'id': 'p2', 'key': 'web', 'name': 'Web'},
+             {
+               'id': 'p1',
+               'key': 'infra',
+               'name': 'Infrastructure',
+               'workflow_id': 'wf1',
+             },
+             {'id': 'p2', 'key': 'web', 'name': 'Web', 'workflow_id': 'wf1'},
            ],
        tasks =
            tasks ??
@@ -318,6 +331,8 @@ class FakeTix {
         list.insert(0, created);
         return FakeResponse(201, created);
     }
+    final detail = _detail(o, path);
+    if (detail != null) return detail;
     final segments = path.substring(1).split('/');
     if (o.method == 'GET' && segments.length == 4) {
       final id = segments[3];
@@ -421,6 +436,347 @@ class FakeTix {
       (o.headers['Cookie'] as String?)?.replaceFirst('tix_session=', ''),
     );
     return FakeResponse(200, _session(email, target));
+  }
+
+  /// The workflow every project follows: tix's default, with a comment
+  /// required to block a task that is being worked on.
+  Map<String, Object?> workflow = {
+    'id': 'wf1',
+    'key': 'default',
+    'name': 'Default',
+    'definition': {
+      'initial': 'todo',
+      'states': [
+        {'key': 'todo', 'label': 'To do', 'category': 'todo'},
+        {'key': 'doing', 'label': 'Doing', 'category': 'in_progress'},
+        {'key': 'blocked', 'label': 'Blocked', 'category': 'blocked'},
+        {'key': 'done', 'label': 'Done', 'category': 'done', 'terminal': true},
+        {
+          'key': 'cancelled',
+          'label': 'Cancelled',
+          'category': 'cancelled',
+          'terminal': true,
+        },
+      ],
+      'transitions': [
+        {'from': 'todo', 'to': 'doing'},
+        {'from': 'todo', 'to': 'cancelled'},
+        {'from': 'doing', 'to': 'todo'},
+        {'from': 'doing', 'to': 'blocked', 'requires_comment': true},
+        {'from': 'doing', 'to': 'done'},
+        {'from': 'blocked', 'to': 'doing'},
+        {'from': 'done', 'to': 'todo'},
+        {'from': 'cancelled', 'to': 'todo'},
+      ],
+    },
+  };
+
+  /// Custom fields per project key.
+  final fields = <String, List<Map<String, Object?>>>{
+    'infra': [
+      {
+        'key': 'env',
+        'label': 'Environment',
+        'type': 'enum',
+        'enum_options': ['production', 'staging'],
+      },
+      {'key': 'window', 'label': 'Change window', 'type': 'string'},
+      {'key': 'paged', 'label': 'Paged', 'type': 'bool'},
+    ],
+  };
+
+  /// Comments per task reference, oldest first.
+  final comments = <String, List<Map<String, Object?>>>{};
+
+  /// Ids of the tasks each task (by id) waits for.
+  final deps = <String, List<String>>{};
+
+  /// Artifacts per task reference.
+  final artifacts = <String, List<Map<String, Object?>>>{};
+
+  /// Audit entries per task reference, newest first.
+  final audit = <String, List<Map<String, Object?>>>{};
+
+  /// The tenant's tags.
+  final tagNames = <String>['auth', 'ops', 'backend'];
+
+  /// Whether deleted tasks go to the trash.
+  bool trashEnabled = true;
+
+  /// Deleted tasks, by reference.
+  final trash = <String, Map<String, Object?>>{};
+
+  /// Routes that stop at a state, by task reference: the state and why.
+  final routeStops = <String, ({String state, String reason})>{};
+
+  /// Canned answers by `'METHOD /api/v1/...'`, for failure paths.
+  final failures = <String, FakeResponse>{};
+
+  var _ids = 0;
+
+  /// The task [ref], by reference or id.
+  Map<String, Object?>? task(String ref) {
+    for (final list in tasks.values) {
+      for (final t in list) {
+        if (t['ref'] == ref || t['id'] == ref) return t;
+      }
+    }
+    return null;
+  }
+
+  FakeResponse _missing(String ref) =>
+      FakeResponse(404, envelope('not_found', 'task "$ref"'));
+
+  FakeResponse? _detail(RequestOptions o, String path) {
+    final failure = failures['${o.method} $path'];
+    if (failure != null) return failure;
+    final body = o.data is Map<String, dynamic>
+        ? o.data as Map<String, dynamic>
+        : const <String, dynamic>{};
+    final s = path.substring('/api/v1/'.length).split('/');
+    switch ((o.method, s)) {
+      case ('GET', ['actors']):
+        return FakeResponse(200, {'items': actors.values.toList()});
+      case ('GET', ['tags']):
+        return FakeResponse(200, {
+          'items': [
+            for (final n in tagNames) {'id': 't-$n', 'name': n},
+          ],
+        });
+      case ('GET', ['trash']):
+        return FakeResponse(200, {
+          'enabled': trashEnabled,
+          'held': trash.length,
+        });
+      case ('GET', ['workflows', _]):
+        return FakeResponse(200, workflow);
+      case ('GET', ['projects', final key]):
+        for (final p in projects) {
+          if (p['key'] == key || p['id'] == key) return FakeResponse(200, p);
+        }
+        return FakeResponse(404, envelope('not_found', 'project "$key"'));
+      case ('GET', ['projects', final key, 'fields']):
+        final project = projects.firstWhere(
+          (p) => p['key'] == key || p['id'] == key,
+          orElse: () => {'key': key},
+        );
+        return FakeResponse(200, {'items': fields[project['key']] ?? []});
+      case ('PATCH', ['comments', final id]):
+        for (final list in comments.values) {
+          for (final c in list) {
+            if (c['id'] == id) {
+              c['body'] = body['body'];
+              c['updated_at'] = '2026-11-08T12:00:00Z';
+              return FakeResponse(200, c);
+            }
+          }
+        }
+        return FakeResponse(404, envelope('not_found', 'comment'));
+      case ('DELETE', ['comments', final id]):
+        for (final list in comments.values) {
+          list.removeWhere((c) => c['id'] == id);
+        }
+        return const FakeResponse(204);
+      case ('POST', ['tasks', final ref, 'restore']):
+        final t = trash.remove(ref);
+        if (t == null) return _missing(ref);
+        tasks[t['project_id']]!.add(t);
+        return FakeResponse(200, t);
+    }
+    if (s.length < 2 || s[0] != 'tasks') return null;
+    final ref = s[1];
+    final t = task(ref);
+    if (t == null) return null;
+    final id = t['id']! as String;
+    final tref = t['ref']! as String;
+    void bump() => t['version'] = (t['version']! as int) + 1;
+    switch ((o.method, s.sublist(2))) {
+      case ('GET', []):
+        return FakeResponse(200, t);
+      case ('PATCH', []):
+        final version = body['version'] as int?;
+        if (version != null && version != 0 && version != t['version']) {
+          return FakeResponse(409, envelope('conflict', 'stale version'));
+        }
+        if (body['recurrence'] == 'every blue moon') {
+          return FakeResponse(400, envelope('invalid', 'cannot read rule'));
+        }
+        for (final MapEntry(:key, :value) in body.entries) {
+          if (key == 'version') continue;
+          if (key == 'custom_fields') {
+            final merged = {...t['custom_fields']! as Map<String, Object?>};
+            for (final e in (value as Map<String, dynamic>).entries) {
+              if (e.value == null) {
+                merged.remove(e.key);
+              } else {
+                merged[e.key] = e.value;
+              }
+            }
+            t['custom_fields'] = merged;
+          } else {
+            t[key] = value;
+          }
+        }
+        bump();
+        return FakeResponse(200, t);
+      case ('DELETE', []):
+        if (o.uri.queryParameters['cascade'] != 'true' &&
+            tasks.values.any((l) => l.any((x) => x['parent_id'] == id))) {
+          return FakeResponse(
+            422,
+            envelope('precondition_failed', 'task has subtasks'),
+          );
+        }
+        for (final list in tasks.values) {
+          list.removeWhere((x) => x['id'] == id);
+        }
+        if (trashEnabled && o.uri.queryParameters['hard'] != 'true') {
+          trash[tref] = t;
+        }
+        return const FakeResponse(204);
+      case ('POST', ['checklist']):
+        final version = body['version'] as int?;
+        if (version != null && version != t['version']) {
+          return FakeResponse(409, envelope('conflict', 'stale version'));
+        }
+        final lines = (t['body']! as String).split('\n');
+        var n = 0;
+        for (var i = 0; i < lines.length; i++) {
+          final m = RegExp(r'^(\s*[-*+] \[)[ xX](\].*)$').firstMatch(lines[i]);
+          if (m != null && ++n == body['item']) {
+            lines[i] =
+                '${m.group(1)}${body['done'] == true ? 'x' : ' '}${m.group(2)}';
+          }
+        }
+        if ((body['item'] as int) > n) {
+          return FakeResponse(400, envelope('invalid', 'no item'));
+        }
+        t['body'] = lines.join('\n');
+        bump();
+        return FakeResponse(200, t);
+      case ('POST', ['route']):
+        final from = t['status']! as String;
+        final to = body['to'] as String;
+        final stop = routeStops[tref];
+        if (stop != null) {
+          return FakeResponse(200, {
+            'from': from,
+            'route': [stop.state, to],
+            'applied': <String>[],
+            'stopped': stop.state,
+            'reason': stop.reason,
+            'task': t,
+          });
+        }
+        t['status'] = to;
+        bump();
+        return FakeResponse(200, {
+          'from': from,
+          'route': [to],
+          'applied': [to],
+          'task': t,
+        });
+      case ('PUT', ['star']):
+        t['starred'] = true;
+        return const FakeResponse(204);
+      case ('DELETE', ['star']):
+        t['starred'] = false;
+        return const FakeResponse(204);
+      case ('PUT', ['snooze']):
+        t['snoozed_until'] = body['until'];
+        bump();
+        return FakeResponse(200, t);
+      case ('DELETE', ['snooze']):
+        t.remove('snoozed_until');
+        bump();
+        return FakeResponse(200, t);
+      case ('POST', ['copy']):
+        final project = (body['project_ref'] as String?) ?? t['project_id'];
+        final list = tasks.putIfAbsent(project! as String, () => []);
+        final copy = {
+          ...t,
+          'id': 'id-$project-copy${list.length + 1}',
+          'ref': '$project-${list.length + 1}',
+          'title': body['title'] ?? t['title'],
+          'project_id': project,
+          if (body['link'] == true) 'copied_from_id': id,
+        };
+        list.add(copy);
+        return FakeResponse(201, copy);
+      case ('GET', ['tree']):
+        return FakeResponse(200, {
+          'items': [
+            t,
+            for (final list in tasks.values)
+              for (final x in list)
+                if (x['parent_id'] == id) x,
+          ],
+        });
+      case ('GET', ['audit']):
+        final rows = audit[tref] ?? const [];
+        return FakeResponse(200, _page(rows, o.uri.queryParameters['cursor']));
+      case ('POST', ['tags']):
+        final tags = [...(t['tags']! as List).cast<String>()];
+        if (!tags.contains(body['name'])) tags.add(body['name'] as String);
+        t['tags'] = tags;
+        if (!tagNames.contains(body['name'])) {
+          tagNames.add(body['name'] as String);
+        }
+        return const FakeResponse(204);
+      case ('DELETE', ['tags', final name]):
+        t['tags'] = [
+          for (final x in (t['tags']! as List).cast<String>())
+            if (x != name) x,
+        ];
+        return const FakeResponse(204);
+      case ('GET', ['comments']):
+        return FakeResponse(200, {'items': comments[tref] ?? []});
+      case ('POST', ['comments']):
+        final c = {
+          'id': 'c${++_ids}',
+          'task_id': id,
+          'author_actor_id': 'me',
+          'body': body['body'],
+          'created_at': '2026-11-08T10:00:00Z',
+          'updated_at': '2026-11-08T10:00:00Z',
+        };
+        comments.putIfAbsent(tref, () => []).add(c);
+        return FakeResponse(201, c);
+      case ('GET', ['deps']):
+        return FakeResponse(200, {
+          'items': [
+            for (final d in deps[id] ?? const <String>[])
+              {'task_id': id, 'depends_on': d},
+          ],
+        });
+      case ('POST', ['deps']):
+        final other = task(body['depends_on'] as String);
+        if (other == null) {
+          return FakeResponse(
+            400,
+            envelope('invalid', 'no task ${body['depends_on']}'),
+          );
+        }
+        deps.putIfAbsent(id, () => []).add(other['id']! as String);
+        return const FakeResponse(204);
+      case ('DELETE', ['deps', final dep]):
+        final other = task(dep);
+        deps[id]?.remove(other?['id'] ?? dep);
+        return const FakeResponse(204);
+      case ('GET', ['artifacts']):
+        return FakeResponse(200, {'items': artifacts[tref] ?? []});
+      case ('PUT', ['artifacts']):
+        final a = {
+          'id': 'a${++_ids}',
+          'task_id': id,
+          'actor_id': 'me',
+          ...body,
+          'created_at': '2026-11-08T10:00:00Z',
+        };
+        artifacts.putIfAbsent(tref, () => []).add(a);
+        return FakeResponse(200, a);
+    }
+    return null;
   }
 
   Map<String, Object?> _page(List<Map<String, Object?>> rows, String? cursor) {
