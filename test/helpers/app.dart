@@ -223,6 +223,7 @@ Future<ProviderContainer> pumpScreen(
   Widget stub(BuildContext _, GoRouterState s) =>
       Scaffold(body: Text('route:${s.uri}'));
   final router = GoRouter(
+    errorBuilder: stub,
     routes: [
       GoRoute(path: '/', builder: (_, _) => screen),
       GoRoute(path: '/connect', builder: stub),
