@@ -64,32 +64,34 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: ./.github/actions/tools
+      - id: tools
+        uses: ./.github/actions/tools
 
-      # `success() || failure()` so one finding does not hide the others: each
-      # gate reports, and the job fails if any did. A cancelled run stops.
+      # Each gate runs even when an earlier one failed, so one finding does not
+      # hide the others, but not when the tools never installed: then every
+      # step would only report "command not found". A cancelled run stops.
       - name: OpenSpec
         run: just spec
       - name: actionlint
-        if: success() || failure()
+        if: (success() || failure()) && steps.tools.outcome == 'success'
         run: just actionlint
       - name: yamllint
-        if: success() || failure()
+        if: (success() || failure()) && steps.tools.outcome == 'success'
         run: just yamllint
       - name: markdownlint
-        if: success() || failure()
+        if: (success() || failure()) && steps.tools.outcome == 'success'
         run: just mdlint
       - name: shellcheck
-        if: success() || failure()
+        if: (success() || failure()) && steps.tools.outcome == 'success'
         run: just shellcheck
       - name: REUSE
-        if: success() || failure()
+        if: (success() || failure()) && steps.tools.outcome == 'success'
         run: just reuse
       - name: Secrets in the history
-        if: success() || failure()
+        if: (success() || failure()) && steps.tools.outcome == 'success'
         run: just secrets
       - name: Release files match the newest release
-        if: success() || failure()
+        if: (success() || failure()) && steps.tools.outcome == 'success'
         env:
           HEAD_REF: ${{ github.head_ref }}
         run: just release-files-check "$HEAD_REF"
