@@ -2877,5 +2877,441 @@
   "totpWrongCode": "That code is not right. Check the time on this device and try the next one.",
   "tenantThemeSampleStatus": "Doing",
   "tenantSettingsSubtitle": "Name, theme, second factor, claims and trash",
-  "serverSubtitle": "Version and live connections"
+  "serverSubtitle": "Version and live connections",
+  "webhooksTitle": "Webhooks",
+  "webhooksSubtitle": "tix posts each event to these addresses, signed with the endpoint's secret.",
+  "webhookNew": "New endpoint",
+  "webhookEdit": "Edit endpoint",
+  "webhookEndpoints": "Endpoints",
+  "webhookEndpointsInfo": "An endpoint receives every event, or only the types it names. An inactive one receives nothing until it is turned back on.",
+  "webhooksEmpty": "No webhook endpoints yet.",
+  "webhooksEmptyBody": "Add an https address and tix will post events to it as they happen.",
+  "webhookEveryEvent": "Every event",
+  "webhookActive": "Active",
+  "webhookInactive": "Inactive",
+  "webhookActiveHelp": "An inactive endpoint receives nothing.",
+  "webhookShowDeliveries": "Show its deliveries",
+  "webhookDelete": "Delete endpoint",
+  "webhookDeleteTitle": "Delete this endpoint?",
+  "webhookDeleteBody": "{url} stops receiving events, and its pending deliveries are dropped. This cannot be undone.",
+  "@webhookDeleteBody": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "webhookDeleted": "Endpoint deleted.",
+  "webhookUrl": "Address",
+  "webhookUrlHelp": "Must use https, unless it is a loopback address.",
+  "webhookEvents": "Event types",
+  "webhookEventsHelp": "Separated by commas; a type may end in *. Empty sends every event.",
+  "webhookSecret": "Signing secret",
+  "webhookSecretNewHelp": "Leave it empty and the app generates one and shows it once.",
+  "webhookSecretKeepHelp": "Leave it empty to keep the current secret.",
+  "webhookSave": "Save endpoint",
+  "webhookSaved": "Endpoint saved.",
+  "webhookSecretHeading": "Copy this signing secret now",
+  "webhookSecretNote": "It is shown once and cannot be read back. Configure it on the receiving end; if you lose it, save the endpoint again with a secret of your own.",
+  "webhookSecretDone": "I have copied it",
+  "webhookDeliveries": "Deliveries",
+  "webhookDeliveriesAll": "Every endpoint, newest first.",
+  "webhookDeliveriesFor": "For {url}, newest first.",
+  "@webhookDeliveriesFor": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "webhookDeliveriesShowAll": "Show every endpoint",
+  "webhookDeliveriesEmpty": "No deliveries.",
+  "webhookDeliveriesEmptyBody": "Deliveries appear here as events are sent.",
+  "webhookStatusAny": "Any",
+  "webhookStatusPending": "Pending",
+  "webhookStatusDelivered": "Delivered",
+  "webhookStatusFailed": "Failed",
+  "webhookStatusUnknown": "Unknown",
+  "webhookEvent": "Event {seq}",
+  "@webhookEvent": {
+    "placeholders": {
+      "seq": {
+        "type": "int"
+      }
+    }
+  },
+  "webhookAttempts": "{count, plural, =1{1 attempt} other{{count} attempts}}",
+  "@webhookAttempts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "webhookHttpStatus": "HTTP {code}",
+  "@webhookHttpStatus": {
+    "placeholders": {
+      "code": {
+        "type": "int"
+      }
+    }
+  },
+  "webhookNextAttempt": "next attempt {when}",
+  "@webhookNextAttempt": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "webhookRedeliver": "Redeliver",
+  "webhookRedelivered": "Queued for another attempt.",
+  "syncTitle": "External sync",
+  "syncSubtitle": "Import work from Jira, OpenProject or a file. Runs happen on the server.",
+  "syncNew": "New source",
+  "syncSources": "Sources",
+  "syncSourcesInfo": "Each source keeps a cursor, so a run imports only what changed since the last one. A full run starts again from the beginning.",
+  "syncEmpty": "No sync sources yet.",
+  "syncEmptyBody": "Add a source to import tasks from another tracker.",
+  "syncStatusOk": "Last run ok",
+  "syncStatusFailed": "Last run failed",
+  "syncStatusRunning": "Running",
+  "syncStatusNever": "Never run",
+  "syncNeverRun": "Not run yet.",
+  "syncLastRun": "Last run {when}.",
+  "@syncLastRun": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "syncStoredCredentials": "Stored credentials: {names}",
+  "@syncStoredCredentials": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "syncMissing": "A run is refused until the server has:",
+  "syncReady": "Ready to run.",
+  "syncRunNow": "Run now",
+  "syncPreview": "Preview",
+  "syncEdit": "Edit",
+  "syncDelete": "Delete source",
+  "syncDeleteTitle": "Delete this source?",
+  "syncDeleteBody": "{name} and how far it had read are removed. Tasks it already imported stay. This cannot be undone.",
+  "@syncDeleteBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "syncDeleted": "Source deleted.",
+  "syncSaved": "Saved {name}.",
+  "@syncSaved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "syncRunTitle": "Run {name}",
+  "@syncRunTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "syncRunBody": "Preview counts what a run would do and changes nothing.",
+  "syncFull": "Full run",
+  "syncFullHelp": "Read everything again from the beginning instead of from where the last run stopped.",
+  "syncPreviewTitle": "Preview",
+  "syncDoneTitle": "Run finished",
+  "syncPreviewNote": "Nothing was changed.",
+  "syncCounts": "{created} created · {updated} updated · {skipped} skipped · {deleted} deleted",
+  "@syncCounts": {
+    "placeholders": {
+      "created": {
+        "type": "int"
+      },
+      "updated": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      },
+      "deleted": {
+        "type": "int"
+      }
+    }
+  },
+  "syncUnmatched": "People with no match here",
+  "syncWarnings": "Warnings",
+  "syncWarningCount": "{count, plural, =1{1 warning} other{{count} warnings}}",
+  "@syncWarningCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncRuns": "Run history",
+  "syncRunsEmpty": "No finished runs.",
+  "syncRunsEmptyBody": "A run that fails is not listed here; the source shows it.",
+  "syncEditTitle": "Edit {name}",
+  "@syncEditTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "syncFormIntro": "Settings and the mapping are stored on the server. Credentials are sealed there and never shown again.",
+  "syncName": "Name",
+  "syncNameHelp": "Names the source within its system.",
+  "syncMapping": "Mapping document (YAML)",
+  "syncMappingHelp": "Left empty, the stored document is kept.",
+  "syncMappingPath": "Mapping file on the server",
+  "syncMappingPathHelp": "Only read from this tenant's directory under the server's sync.file_root.",
+  "syncCredentials": "Credentials",
+  "syncCredentialsHelp": "Write only. Any of them replaces the stored set; leave all empty to keep it.",
+  "syncToken": "Token",
+  "syncUser": "User",
+  "syncPassword": "Password or API key",
+  "syncClearCredentials": "Remove the stored credentials",
+  "syncCheck": "Check",
+  "syncSave": "Save source",
+  "syncMappingFrom": "Mapping: {origin}",
+  "@syncMappingFrom": {
+    "placeholders": {
+      "origin": {
+        "type": "String"
+      }
+    }
+  },
+  "syncCredentialsFrom": "Credentials: {origin}",
+  "@syncCredentialsFrom": {
+    "placeholders": {
+      "origin": {
+        "type": "String"
+      }
+    }
+  },
+  "syncFromStored": "stored on the source",
+  "syncFromEnv": "from the environment",
+  "syncFromMappingPath": "file on the server",
+  "syncFromNone": "not needed",
+  "syncFromMissing": "missing",
+  "syncSummaryProject": "Lands in project {project}",
+  "@syncSummaryProject": {
+    "placeholders": {
+      "project": {
+        "type": "String"
+      }
+    }
+  },
+  "syncSummaryIdentity": "Matched by {field}",
+  "@syncSummaryIdentity": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "retentionTitle": "Retention",
+  "retentionSubtitle": "How long this tenant keeps its logs.",
+  "retentionWindows": "Keep for",
+  "retentionWindowsHelp": "In days. Older records are removed when the log is pruned.",
+  "retentionEvents": "Events",
+  "retentionEventsHelp": "The live update stream. Default 30 days.",
+  "retentionAudit": "Audit entries",
+  "retentionAuditHelp": "Who changed what. Default 365 days.",
+  "retentionDeliveries": "Webhook deliveries",
+  "retentionDeliveriesHelp": "The delivery log. Default 30 days.",
+  "retentionSave": "Save retention",
+  "retentionSaved": "Retention saved.",
+  "retentionPruneSection": "Prune now",
+  "retentionPruneHelp": "Removes everything past its window at once, instead of waiting for the server to do it.",
+  "retentionPreview": "Preview",
+  "retentionPrune": "Prune",
+  "retentionPruneTitle": "Prune old records?",
+  "retentionPruneBody": "Events, audit entries and webhook deliveries past their window are deleted for good.",
+  "retentionPruned": "Pruned.",
+  "retentionWouldPrune": "Would remove {events} events, {audit} audit entries and {deliveries} deliveries.",
+  "@retentionWouldPrune": {
+    "placeholders": {
+      "events": {
+        "type": "int"
+      },
+      "audit": {
+        "type": "int"
+      },
+      "deliveries": {
+        "type": "int"
+      }
+    }
+  },
+  "retentionDidPrune": "Removed {events} events, {audit} audit entries and {deliveries} deliveries.",
+  "@retentionDidPrune": {
+    "placeholders": {
+      "events": {
+        "type": "int"
+      },
+      "audit": {
+        "type": "int"
+      },
+      "deliveries": {
+        "type": "int"
+      }
+    }
+  },
+  "retentionKeptForSubscribers": "{count} events past their window are kept until a subscriber has read them.",
+  "@retentionKeptForSubscribers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "housekeepingTitle": "Housekeeping",
+  "housekeepingSubtitle": "Clears finished work out of the lists and empties the trash.",
+  "housekeepingPaused": "Housekeeping is paused while the trash is off: no rule runs.",
+  "housekeepingRules": "Rules",
+  "housekeepingRulesHelp": "A number of days, or off. Projects can override these.",
+  "housekeepingDone": "Done tasks move to the trash after",
+  "housekeepingDoneHelp": "Days since they were done.",
+  "housekeepingCancelled": "Cancelled tasks move to the trash after",
+  "housekeepingCancelledHelp": "Days since they were cancelled.",
+  "housekeepingTrash": "The trash deletes tasks for good after",
+  "housekeepingTrashHelp": "Days in the trash.",
+  "housekeepingPending": "{count, plural, =0{Nothing due now.} =1{1 task due now.} other{{count} tasks due now.}}",
+  "@housekeepingPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "housekeepingSave": "Save rules",
+  "housekeepingSaved": "Rules saved.",
+  "housekeepingRunSection": "Run now",
+  "housekeepingRunHelp": "Applies the rules once, in batches, instead of waiting for the server's next pass.",
+  "housekeepingPreview": "Preview",
+  "housekeepingRun": "Run housekeeping",
+  "housekeepingRunTitle": "Run housekeeping now?",
+  "housekeepingRunBody": "Finished tasks past their rule move to the trash, and tasks past the trash rule are deleted for good.",
+  "housekeepingWould": "Would move {done} done and {cancelled} cancelled tasks to the trash, and delete {trash} for good.",
+  "@housekeepingWould": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "cancelled": {
+        "type": "int"
+      },
+      "trash": {
+        "type": "int"
+      }
+    }
+  },
+  "housekeepingDid": "Moved {done} done and {cancelled} cancelled tasks to the trash, and deleted {trash} for good.",
+  "@housekeepingDid": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "cancelled": {
+        "type": "int"
+      },
+      "trash": {
+        "type": "int"
+      }
+    }
+  },
+  "trashTitle": "Trash",
+  "trashSubtitle": "Deleted tasks, until housekeeping empties them.",
+  "trashExplain": "Restore puts a task back where it was. tix deletes trashed tasks for good only through the housekeeping trash rule.",
+  "trashEmpty": "The trash is empty.",
+  "trashEmptyBody": "Deleted tasks wait here and can be restored.",
+  "trashRestore": "Restore",
+  "trashRestored": "Restored {ref}.",
+  "@trashRestored": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeletedAt": "deleted {when}",
+  "@trashDeletedAt": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "auditTitle": "Audit log",
+  "auditSubtitle": "Every change in this tenant, newest first.",
+  "auditSearch": "Search actions, records and values",
+  "auditVia": "Channel",
+  "auditSource": "Surface",
+  "auditMoreFilters": "More filters",
+  "auditMoreFiltersCount": "More filters ({count})",
+  "@auditMoreFiltersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "auditClear": "Clear filters",
+  "auditFilters": "Filter the audit log",
+  "auditApply": "Apply",
+  "auditActor": "Actor",
+  "auditActorHelp": "The actor's id.",
+  "auditAction": "Action",
+  "auditToken": "API token",
+  "auditTokenHelp": "The token's name.",
+  "auditSince": "From {day}",
+  "@auditSince": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "auditUntil": "To {day}",
+  "@auditUntil": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "auditAnyTime": "any time",
+  "auditEmpty": "Nothing recorded yet.",
+  "auditEmptyBody": "Changes appear here as people and agents make them.",
+  "auditNoMatch": "No entries match.",
+  "auditNoMatchBody": "Loosen or clear the filters.",
+  "auditPick": "Pick an entry",
+  "auditPickBody": "Its detail shows here.",
+  "auditSeq": "Entry",
+  "auditWhen": "When",
+  "auditSystem": "the system",
+  "auditSubject": "Record",
+  "auditTokenId": "Token id",
+  "auditSession": "Session",
+  "auditKey": "SSH key",
+  "auditClient": "Client address",
+  "auditOrigin": "Origin",
+  "auditHost": "Host",
+  "auditOsUser": "System user",
+  "auditJob": "Job",
+  "auditUserAgent": "User agent",
+  "auditBefore": "Before",
+  "auditAfter": "After"
 }

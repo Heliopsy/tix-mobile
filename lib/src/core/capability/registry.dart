@@ -325,4 +325,68 @@ const bindings = <String, Binding>{
     action: 'force-release-claim',
     wave: 3,
   ),
+  'audit.list': Binding(feature: 'audit', action: 'browse', wave: 3),
+  'webhook.list': Binding(feature: 'integrations', action: 'webhooks', wave: 3),
+  'webhook.put': Binding(
+    feature: 'integrations',
+    action: 'save-webhook',
+    wave: 3,
+  ),
+  'webhook.delete': Binding(
+    feature: 'integrations',
+    action: 'delete-webhook',
+    wave: 3,
+  ),
+  'webhook.deliveries': Binding(
+    feature: 'integrations',
+    action: 'delivery-log',
+    wave: 3,
+  ),
+  'webhook.redeliver': Binding(
+    feature: 'integrations',
+    action: 'redeliver',
+    wave: 3,
+  ),
+  'sync.source.list': Binding(
+    feature: 'integrations',
+    action: 'sync-sources',
+    wave: 3,
+  ),
+  'sync.source.put': Binding(
+    feature: 'integrations',
+    action: 'save-sync-source',
+    wave: 3,
+  ),
+  'sync.source.delete': Binding(
+    feature: 'integrations',
+    action: 'delete-sync-source',
+    wave: 3,
+  ),
+  'sync.run': Binding(feature: 'integrations', action: 'run-sync', wave: 3),
+  'retention.get': Binding(
+    feature: 'maintenance',
+    action: 'retention',
+    wave: 3,
+  ),
+  'retention.put': Binding(
+    feature: 'maintenance',
+    action: 'save-retention',
+    wave: 3,
+  ),
+  'retention.prune': Binding(feature: 'maintenance', action: 'prune', wave: 3),
+  'housekeeping.get': Binding(
+    feature: 'maintenance',
+    action: 'housekeeping',
+    wave: 3,
+  ),
+  'housekeeping.put': Binding(
+    feature: 'maintenance',
+    action: 'save-housekeeping',
+    wave: 3,
+  ),
+  'housekeeping.run': Binding(
+    feature: 'maintenance',
+    action: 'run-housekeeping',
+    wave: 3,
+  ),
 };

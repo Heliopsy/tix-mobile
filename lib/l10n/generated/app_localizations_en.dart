@@ -5038,4 +5038,709 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get serverSubtitle => 'Version and live connections';
+
+  @override
+  String get webhooksTitle => 'Webhooks';
+
+  @override
+  String get webhooksSubtitle =>
+      'tix posts each event to these addresses, signed with the endpoint\'s secret.';
+
+  @override
+  String get webhookNew => 'New endpoint';
+
+  @override
+  String get webhookEdit => 'Edit endpoint';
+
+  @override
+  String get webhookEndpoints => 'Endpoints';
+
+  @override
+  String get webhookEndpointsInfo =>
+      'An endpoint receives every event, or only the types it names. An inactive one receives nothing until it is turned back on.';
+
+  @override
+  String get webhooksEmpty => 'No webhook endpoints yet.';
+
+  @override
+  String get webhooksEmptyBody =>
+      'Add an https address and tix will post events to it as they happen.';
+
+  @override
+  String get webhookEveryEvent => 'Every event';
+
+  @override
+  String get webhookActive => 'Active';
+
+  @override
+  String get webhookInactive => 'Inactive';
+
+  @override
+  String get webhookActiveHelp => 'An inactive endpoint receives nothing.';
+
+  @override
+  String get webhookShowDeliveries => 'Show its deliveries';
+
+  @override
+  String get webhookDelete => 'Delete endpoint';
+
+  @override
+  String get webhookDeleteTitle => 'Delete this endpoint?';
+
+  @override
+  String webhookDeleteBody(String url) {
+    return '$url stops receiving events, and its pending deliveries are dropped. This cannot be undone.';
+  }
+
+  @override
+  String get webhookDeleted => 'Endpoint deleted.';
+
+  @override
+  String get webhookUrl => 'Address';
+
+  @override
+  String get webhookUrlHelp =>
+      'Must use https, unless it is a loopback address.';
+
+  @override
+  String get webhookEvents => 'Event types';
+
+  @override
+  String get webhookEventsHelp =>
+      'Separated by commas; a type may end in *. Empty sends every event.';
+
+  @override
+  String get webhookSecret => 'Signing secret';
+
+  @override
+  String get webhookSecretNewHelp =>
+      'Leave it empty and the app generates one and shows it once.';
+
+  @override
+  String get webhookSecretKeepHelp =>
+      'Leave it empty to keep the current secret.';
+
+  @override
+  String get webhookSave => 'Save endpoint';
+
+  @override
+  String get webhookSaved => 'Endpoint saved.';
+
+  @override
+  String get webhookSecretHeading => 'Copy this signing secret now';
+
+  @override
+  String get webhookSecretNote =>
+      'It is shown once and cannot be read back. Configure it on the receiving end; if you lose it, save the endpoint again with a secret of your own.';
+
+  @override
+  String get webhookSecretDone => 'I have copied it';
+
+  @override
+  String get webhookDeliveries => 'Deliveries';
+
+  @override
+  String get webhookDeliveriesAll => 'Every endpoint, newest first.';
+
+  @override
+  String webhookDeliveriesFor(String url) {
+    return 'For $url, newest first.';
+  }
+
+  @override
+  String get webhookDeliveriesShowAll => 'Show every endpoint';
+
+  @override
+  String get webhookDeliveriesEmpty => 'No deliveries.';
+
+  @override
+  String get webhookDeliveriesEmptyBody =>
+      'Deliveries appear here as events are sent.';
+
+  @override
+  String get webhookStatusAny => 'Any';
+
+  @override
+  String get webhookStatusPending => 'Pending';
+
+  @override
+  String get webhookStatusDelivered => 'Delivered';
+
+  @override
+  String get webhookStatusFailed => 'Failed';
+
+  @override
+  String get webhookStatusUnknown => 'Unknown';
+
+  @override
+  String webhookEvent(int seq) {
+    return 'Event $seq';
+  }
+
+  @override
+  String webhookAttempts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count attempts',
+      one: '1 attempt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String webhookHttpStatus(int code) {
+    return 'HTTP $code';
+  }
+
+  @override
+  String webhookNextAttempt(String when) {
+    return 'next attempt $when';
+  }
+
+  @override
+  String get webhookRedeliver => 'Redeliver';
+
+  @override
+  String get webhookRedelivered => 'Queued for another attempt.';
+
+  @override
+  String get syncTitle => 'External sync';
+
+  @override
+  String get syncSubtitle =>
+      'Import work from Jira, OpenProject or a file. Runs happen on the server.';
+
+  @override
+  String get syncNew => 'New source';
+
+  @override
+  String get syncSources => 'Sources';
+
+  @override
+  String get syncSourcesInfo =>
+      'Each source keeps a cursor, so a run imports only what changed since the last one. A full run starts again from the beginning.';
+
+  @override
+  String get syncEmpty => 'No sync sources yet.';
+
+  @override
+  String get syncEmptyBody =>
+      'Add a source to import tasks from another tracker.';
+
+  @override
+  String get syncStatusOk => 'Last run ok';
+
+  @override
+  String get syncStatusFailed => 'Last run failed';
+
+  @override
+  String get syncStatusRunning => 'Running';
+
+  @override
+  String get syncStatusNever => 'Never run';
+
+  @override
+  String get syncNeverRun => 'Not run yet.';
+
+  @override
+  String syncLastRun(String when) {
+    return 'Last run $when.';
+  }
+
+  @override
+  String syncStoredCredentials(String names) {
+    return 'Stored credentials: $names';
+  }
+
+  @override
+  String get syncMissing => 'A run is refused until the server has:';
+
+  @override
+  String get syncReady => 'Ready to run.';
+
+  @override
+  String get syncRunNow => 'Run now';
+
+  @override
+  String get syncPreview => 'Preview';
+
+  @override
+  String get syncEdit => 'Edit';
+
+  @override
+  String get syncDelete => 'Delete source';
+
+  @override
+  String get syncDeleteTitle => 'Delete this source?';
+
+  @override
+  String syncDeleteBody(String name) {
+    return '$name and how far it had read are removed. Tasks it already imported stay. This cannot be undone.';
+  }
+
+  @override
+  String get syncDeleted => 'Source deleted.';
+
+  @override
+  String syncSaved(String name) {
+    return 'Saved $name.';
+  }
+
+  @override
+  String syncRunTitle(String name) {
+    return 'Run $name';
+  }
+
+  @override
+  String get syncRunBody =>
+      'Preview counts what a run would do and changes nothing.';
+
+  @override
+  String get syncFull => 'Full run';
+
+  @override
+  String get syncFullHelp =>
+      'Read everything again from the beginning instead of from where the last run stopped.';
+
+  @override
+  String get syncPreviewTitle => 'Preview';
+
+  @override
+  String get syncDoneTitle => 'Run finished';
+
+  @override
+  String get syncPreviewNote => 'Nothing was changed.';
+
+  @override
+  String syncCounts(int created, int updated, int skipped, int deleted) {
+    return '$created created · $updated updated · $skipped skipped · $deleted deleted';
+  }
+
+  @override
+  String get syncUnmatched => 'People with no match here';
+
+  @override
+  String get syncWarnings => 'Warnings';
+
+  @override
+  String syncWarningCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count warnings',
+      one: '1 warning',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncRuns => 'Run history';
+
+  @override
+  String get syncRunsEmpty => 'No finished runs.';
+
+  @override
+  String get syncRunsEmptyBody =>
+      'A run that fails is not listed here; the source shows it.';
+
+  @override
+  String syncEditTitle(String name) {
+    return 'Edit $name';
+  }
+
+  @override
+  String get syncFormIntro =>
+      'Settings and the mapping are stored on the server. Credentials are sealed there and never shown again.';
+
+  @override
+  String get syncName => 'Name';
+
+  @override
+  String get syncNameHelp => 'Names the source within its system.';
+
+  @override
+  String get syncMapping => 'Mapping document (YAML)';
+
+  @override
+  String get syncMappingHelp => 'Left empty, the stored document is kept.';
+
+  @override
+  String get syncMappingPath => 'Mapping file on the server';
+
+  @override
+  String get syncMappingPathHelp =>
+      'Only read from this tenant\'s directory under the server\'s sync.file_root.';
+
+  @override
+  String get syncCredentials => 'Credentials';
+
+  @override
+  String get syncCredentialsHelp =>
+      'Write only. Any of them replaces the stored set; leave all empty to keep it.';
+
+  @override
+  String get syncToken => 'Token';
+
+  @override
+  String get syncUser => 'User';
+
+  @override
+  String get syncPassword => 'Password or API key';
+
+  @override
+  String get syncClearCredentials => 'Remove the stored credentials';
+
+  @override
+  String get syncCheck => 'Check';
+
+  @override
+  String get syncSave => 'Save source';
+
+  @override
+  String syncMappingFrom(String origin) {
+    return 'Mapping: $origin';
+  }
+
+  @override
+  String syncCredentialsFrom(String origin) {
+    return 'Credentials: $origin';
+  }
+
+  @override
+  String get syncFromStored => 'stored on the source';
+
+  @override
+  String get syncFromEnv => 'from the environment';
+
+  @override
+  String get syncFromMappingPath => 'file on the server';
+
+  @override
+  String get syncFromNone => 'not needed';
+
+  @override
+  String get syncFromMissing => 'missing';
+
+  @override
+  String syncSummaryProject(String project) {
+    return 'Lands in project $project';
+  }
+
+  @override
+  String syncSummaryIdentity(String field) {
+    return 'Matched by $field';
+  }
+
+  @override
+  String get retentionTitle => 'Retention';
+
+  @override
+  String get retentionSubtitle => 'How long this tenant keeps its logs.';
+
+  @override
+  String get retentionWindows => 'Keep for';
+
+  @override
+  String get retentionWindowsHelp =>
+      'In days. Older records are removed when the log is pruned.';
+
+  @override
+  String get retentionEvents => 'Events';
+
+  @override
+  String get retentionEventsHelp => 'The live update stream. Default 30 days.';
+
+  @override
+  String get retentionAudit => 'Audit entries';
+
+  @override
+  String get retentionAuditHelp => 'Who changed what. Default 365 days.';
+
+  @override
+  String get retentionDeliveries => 'Webhook deliveries';
+
+  @override
+  String get retentionDeliveriesHelp => 'The delivery log. Default 30 days.';
+
+  @override
+  String get retentionSave => 'Save retention';
+
+  @override
+  String get retentionSaved => 'Retention saved.';
+
+  @override
+  String get retentionPruneSection => 'Prune now';
+
+  @override
+  String get retentionPruneHelp =>
+      'Removes everything past its window at once, instead of waiting for the server to do it.';
+
+  @override
+  String get retentionPreview => 'Preview';
+
+  @override
+  String get retentionPrune => 'Prune';
+
+  @override
+  String get retentionPruneTitle => 'Prune old records?';
+
+  @override
+  String get retentionPruneBody =>
+      'Events, audit entries and webhook deliveries past their window are deleted for good.';
+
+  @override
+  String get retentionPruned => 'Pruned.';
+
+  @override
+  String retentionWouldPrune(int events, int audit, int deliveries) {
+    return 'Would remove $events events, $audit audit entries and $deliveries deliveries.';
+  }
+
+  @override
+  String retentionDidPrune(int events, int audit, int deliveries) {
+    return 'Removed $events events, $audit audit entries and $deliveries deliveries.';
+  }
+
+  @override
+  String retentionKeptForSubscribers(int count) {
+    return '$count events past their window are kept until a subscriber has read them.';
+  }
+
+  @override
+  String get housekeepingTitle => 'Housekeeping';
+
+  @override
+  String get housekeepingSubtitle =>
+      'Clears finished work out of the lists and empties the trash.';
+
+  @override
+  String get housekeepingPaused =>
+      'Housekeeping is paused while the trash is off: no rule runs.';
+
+  @override
+  String get housekeepingRules => 'Rules';
+
+  @override
+  String get housekeepingRulesHelp =>
+      'A number of days, or off. Projects can override these.';
+
+  @override
+  String get housekeepingDone => 'Done tasks move to the trash after';
+
+  @override
+  String get housekeepingDoneHelp => 'Days since they were done.';
+
+  @override
+  String get housekeepingCancelled => 'Cancelled tasks move to the trash after';
+
+  @override
+  String get housekeepingCancelledHelp => 'Days since they were cancelled.';
+
+  @override
+  String get housekeepingTrash => 'The trash deletes tasks for good after';
+
+  @override
+  String get housekeepingTrashHelp => 'Days in the trash.';
+
+  @override
+  String housekeepingPending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks due now.',
+      one: '1 task due now.',
+      zero: 'Nothing due now.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get housekeepingSave => 'Save rules';
+
+  @override
+  String get housekeepingSaved => 'Rules saved.';
+
+  @override
+  String get housekeepingRunSection => 'Run now';
+
+  @override
+  String get housekeepingRunHelp =>
+      'Applies the rules once, in batches, instead of waiting for the server\'s next pass.';
+
+  @override
+  String get housekeepingPreview => 'Preview';
+
+  @override
+  String get housekeepingRun => 'Run housekeeping';
+
+  @override
+  String get housekeepingRunTitle => 'Run housekeeping now?';
+
+  @override
+  String get housekeepingRunBody =>
+      'Finished tasks past their rule move to the trash, and tasks past the trash rule are deleted for good.';
+
+  @override
+  String housekeepingWould(int done, int cancelled, int trash) {
+    return 'Would move $done done and $cancelled cancelled tasks to the trash, and delete $trash for good.';
+  }
+
+  @override
+  String housekeepingDid(int done, int cancelled, int trash) {
+    return 'Moved $done done and $cancelled cancelled tasks to the trash, and deleted $trash for good.';
+  }
+
+  @override
+  String get trashTitle => 'Trash';
+
+  @override
+  String get trashSubtitle => 'Deleted tasks, until housekeeping empties them.';
+
+  @override
+  String get trashExplain =>
+      'Restore puts a task back where it was. tix deletes trashed tasks for good only through the housekeeping trash rule.';
+
+  @override
+  String get trashEmpty => 'The trash is empty.';
+
+  @override
+  String get trashEmptyBody => 'Deleted tasks wait here and can be restored.';
+
+  @override
+  String get trashRestore => 'Restore';
+
+  @override
+  String trashRestored(String ref) {
+    return 'Restored $ref.';
+  }
+
+  @override
+  String trashDeletedAt(String when) {
+    return 'deleted $when';
+  }
+
+  @override
+  String get auditTitle => 'Audit log';
+
+  @override
+  String get auditSubtitle => 'Every change in this tenant, newest first.';
+
+  @override
+  String get auditSearch => 'Search actions, records and values';
+
+  @override
+  String get auditVia => 'Channel';
+
+  @override
+  String get auditSource => 'Surface';
+
+  @override
+  String get auditMoreFilters => 'More filters';
+
+  @override
+  String auditMoreFiltersCount(int count) {
+    return 'More filters ($count)';
+  }
+
+  @override
+  String get auditClear => 'Clear filters';
+
+  @override
+  String get auditFilters => 'Filter the audit log';
+
+  @override
+  String get auditApply => 'Apply';
+
+  @override
+  String get auditActor => 'Actor';
+
+  @override
+  String get auditActorHelp => 'The actor\'s id.';
+
+  @override
+  String get auditAction => 'Action';
+
+  @override
+  String get auditToken => 'API token';
+
+  @override
+  String get auditTokenHelp => 'The token\'s name.';
+
+  @override
+  String auditSince(String day) {
+    return 'From $day';
+  }
+
+  @override
+  String auditUntil(String day) {
+    return 'To $day';
+  }
+
+  @override
+  String get auditAnyTime => 'any time';
+
+  @override
+  String get auditEmpty => 'Nothing recorded yet.';
+
+  @override
+  String get auditEmptyBody =>
+      'Changes appear here as people and agents make them.';
+
+  @override
+  String get auditNoMatch => 'No entries match.';
+
+  @override
+  String get auditNoMatchBody => 'Loosen or clear the filters.';
+
+  @override
+  String get auditPick => 'Pick an entry';
+
+  @override
+  String get auditPickBody => 'Its detail shows here.';
+
+  @override
+  String get auditSeq => 'Entry';
+
+  @override
+  String get auditWhen => 'When';
+
+  @override
+  String get auditSystem => 'the system';
+
+  @override
+  String get auditSubject => 'Record';
+
+  @override
+  String get auditTokenId => 'Token id';
+
+  @override
+  String get auditSession => 'Session';
+
+  @override
+  String get auditKey => 'SSH key';
+
+  @override
+  String get auditClient => 'Client address';
+
+  @override
+  String get auditOrigin => 'Origin';
+
+  @override
+  String get auditHost => 'Host';
+
+  @override
+  String get auditOsUser => 'System user';
+
+  @override
+  String get auditJob => 'Job';
+
+  @override
+  String get auditUserAgent => 'User agent';
+
+  @override
+  String get auditBefore => 'Before';
+
+  @override
+  String get auditAfter => 'After';
 }

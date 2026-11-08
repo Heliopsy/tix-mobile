@@ -135,6 +135,9 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 - **Administration**: tenant settings with a live theme preview, domains, the server's live connections, and for
   a global admin every tenant, its users and the global admins. Your own second factor (recovery codes shown once)
   and SSH keys under Settings, Security.
+- **Integrations and upkeep** for tenant admins: webhook endpoints and their delivery log with Redeliver, external
+  sync sources from Jira, OpenProject or a file (check, run, preview, history), retention and pruning, housekeeping,
+  the trash, and the audit log filtered by channel, surface, actor, action, token and time.
 - **Adaptive layout**: a bottom navigation bar on phones, a navigation rail and a two-pane list and detail on tablets
   and desktops.
 
