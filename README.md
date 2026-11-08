@@ -119,6 +119,9 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   mark read, mark all read, an unread badge, a summary of what is overdue and due today, and live updates.
 - **Notifications** for new inbox items while the app runs, per context and per kind, on every platform; the
   kinds the server sends you and your own Slack, Discord, ntfy or signed JSON channels, with their delivery log.
+- **Home screen widgets**: My work (tick to complete), Inbox, Quick add and Project, natively on Android (Glance),
+  iOS and macOS (WidgetKit), following the active context or pinned to one, with the inbox count on the iPhone lock
+  screen. See [docs/widgets.md](docs/widgets.md).
 - **Settings**: system, light, dark or OLED black theme, English, Bulgarian, French or German, and the saved
   instances.
 - **About**: the app, engine and server versions, links to the site, source, roadmap and changelog, and a bug
@@ -237,6 +240,7 @@ client maps tix's error envelope and keyset pagination.
 | --- | --- |
 | [docs/development.md](docs/development.md) | Prerequisites per OS, every `just` recipe, codegen, localisation, emulators, screenshots |
 | [docs/architecture.md](docs/architecture.md) | Layers, state management, navigation, errors, pagination |
+| [docs/widgets.md](docs/widgets.md) | Home screen widgets: platforms, data flow, the snapshot contract |
 | [docs/testing.md](docs/testing.md) | Unit, widget and golden tests, the coverage floor, watching a guard fail |
 | [docs/releasing.md](docs/releasing.md) | release-please, release artifacts, signing secrets |
 

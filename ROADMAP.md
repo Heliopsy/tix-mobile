@@ -39,12 +39,12 @@ Mentions, assignments and due dates on the lock screen.
 
 ## Home screen widgets
 
-My work and quick add on the home screen.
+My work, Inbox, Quick add and Project shipped on Android, iOS and macOS; [docs/widgets.md](docs/widgets.md) has
+the details. What is left:
 
-- Android through Glance, iOS and macOS through WidgetKit, wired to the Flutter side with the `home_widget` package.
-- Widgets cannot run Flutter, so they read a small snapshot the app writes, and quick add opens the app rather than
-  posting from the widget.
-- Depends on the offline cache for something to show when the app has not run recently.
+- Windows 11's widgets board, once the app is MSIX packaged: a Widget Provider reading the same snapshots.
+- Interactive ticks that reach the server from a closed Mac app (today they wait for the app to open).
+- Ticks on the Project widget, and moving a task to another state from a widget.
 
 ## Wear OS
 

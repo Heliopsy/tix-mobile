@@ -40,8 +40,10 @@ flowchart LR
 ```
 
 - **Writes.** `WidgetSync`, mounted around the signed-in shell, rebuilds the snapshots when the session changes,
-  when an event touches tasks, the inbox or projects (at most once per two seconds), after the app resumes, and
-  after a task is created. It writes one key per widget kind and context, then asks the platform to redraw.
+  when an event touches tasks, the inbox or projects (at most once per two seconds), after the app resumes, after a
+  task is created, when the theme, language or widget privacy changes, and when the app goes out of sight, which
+  catches any change the event stream missed just before the person looks at the home screen. It writes one key
+  per widget kind and context, then asks the platform to redraw.
 - **Background refresh.** Android schedules a periodic WorkManager job (every 30 minutes, network required) while
   any tix widget exists; it wakes the headless runner with `tixwidget://refresh`. iOS submits a `BGAppRefreshTask`
   whenever the app goes to the background, and runs the same refresh in a headless Flutter engine. WidgetKit
@@ -134,7 +136,7 @@ reads `index.active` and then that context's keys.
     "nothingDue": "Nothing assigned to you", "allRead": "All caught up", "noOpenTasks": "No open tasks",
     "updated": "Updated", "openApp": "Open tix to load this widget", "localStale": "Refreshes when tix is open",
     "overdue": "Overdue", "today": "Today", "complete": "Complete", "projectMissing": "Not in this context",
-    "signedOut": "Sign in to tix"
+    "signedOut": "Sign in to tix", "openUpdate": "Open tix to update", "pickProject": "Pick a project"
   }
 }
 ```
@@ -273,7 +275,7 @@ follow the tenant.
 - Release signing needs the extension's bundle id (`red.tix.tixMobile.TixWidgets`) and the App Group on the
   provisioning profiles. CI builds unsigned (iOS) and ad hoc (macOS).
 
-### Windows and linux
+### Windows and Linux
 
 Not offered. Windows 11's widgets board takes Adaptive Cards from a Widget Provider, a packaged COM server that
 needs MSIX packaging and package identity; the app ships as an unpackaged Flutter runner today. The plan: once the
@@ -284,8 +286,11 @@ the desktop answer there.
 
 ## Testing
 
-- `test/data/widgets/` covers the snapshot builder: ordering, caps, colours, labels and privacy flags.
-- `test/features/widgets/` covers the sync and the queue against a fake bridge, including the no-token guard and
-  that the headless runner never starts a local engine.
+- `test/features/widgets/application/snapshots_test.dart` covers the snapshot builder: ordering, caps, colours and
+  labels.
+- `test/features/widgets/application/widget_sync_test.dart` covers the sync, the queue, taps and the headless runner
+  against a fake bridge, including the no-secret guard and that the runner never starts a local engine.
+- `test/core/l10n/native_strings_test.dart` keeps the native widget text (Android resources, the iOS and macOS
+  String Catalog) complete in English, Bulgarian, French and German.
 - `android/app/src/test/` has JVM tests for the snapshot reader and the overdue rule.
 - iOS and macOS widgets are compiled by CI; they have not been run on a device by CI.
