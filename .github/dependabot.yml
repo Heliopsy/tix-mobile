@@ -1,0 +1,36 @@
+version: 2
+updates:
+  - package-ecosystem: pub
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: build
+      include: scope
+    groups:
+      pub:
+        patterns:
+          - "*"
+
+  # The composite actions under .github/actions pin actions too, and Dependabot
+  # only looks in the directories it is told about.
+  - package-ecosystem: github-actions
+    directories:
+      - /
+      - /.github/actions/*
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: ci
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+# No gradle entry. The Android Gradle plugin, Kotlin and the Gradle wrapper in
+# android/ are pinned by `flutter create` to versions the Flutter tool supports,
+# and it warns when they fall out of that range. Bumping them on Dependabot's
+# schedule rather than Flutter's breaks builds more often than it fixes
+# anything; they move with Flutter upgrades instead.

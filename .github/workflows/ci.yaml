@@ -1,0 +1,220 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: read-all
+
+# A new push to a pull request makes the run for the previous one worthless,
+# so that run is cancelled. Pushes to main are never cancelled: each one is
+# the record of what landed.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+# Git Bash on Windows too, so every step reads the same way on every runner.
+defaults:
+  run:
+    shell: bash
+
+# Every step below calls a `just` recipe rather than inlining a command, so
+# `just ci` locally and this workflow cannot drift apart. Tool versions come
+# from .tool-versions and scripts/tool.sh, never from this file.
+
+jobs:
+  # The Dart side of the gate: a formatting slip, an analyzer finding or stale
+  # generated code fails here in a couple of minutes, before any build runner
+  # is spent.
+  gate:
+    name: Gate (Dart)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/flutter
+
+      - name: Formatting
+        run: just fmt-check
+      - name: Analyze
+        if: success() || failure()
+        run: just analyze
+      - name: Generated code is committed and current
+        if: success() || failure()
+        run: just gen-check
+
+  # The repository side of the gate, which needs no Flutter at all.
+  lint:
+    name: Gate (repo)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      # fetch-depth: 0 because `just secrets` reads the whole history and
+      # refuses a shallow clone, and release-files-check needs the tags.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/tools
+
+      # `success() || failure()` so one finding does not hide the others: each
+      # gate reports, and the job fails if any did. A cancelled run stops.
+      - name: OpenSpec
+        run: just spec
+      - name: actionlint
+        if: success() || failure()
+        run: just actionlint
+      - name: yamllint
+        if: success() || failure()
+        run: just yamllint
+      - name: markdownlint
+        if: success() || failure()
+        run: just mdlint
+      - name: shellcheck
+        if: success() || failure()
+        run: just shellcheck
+      - name: REUSE
+        if: success() || failure()
+        run: just reuse
+      - name: Secrets in the history
+        if: success() || failure()
+        run: just secrets
+      - name: Release files match the newest release
+        if: success() || failure()
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: just release-files-check "$HEAD_REF"
+
+  test:
+    name: Test & coverage
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/flutter
+
+      - name: Test with coverage
+        run: just cover
+
+      # Uploaded before the floor is applied, so a pull request that drops
+      # below it still shows Codecov's view of where the lines went.
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5  # v7.1.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage/lcov.info
+          disable_search: true
+          fail_ci_if_error: false
+
+      - name: Coverage floor
+        run: just cover-floor
+
+      - name: Upload the coverage report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
+        with:
+          name: coverage
+          path: coverage/lcov.info
+          retention-days: 5
+          if-no-files-found: ignore
+
+  # One release build per platform. Behind both gates, so a lint slip costs two
+  # minutes of one runner instead of two macOS, one Windows and three Linux runners.
+  #
+  # Runner labels are exact images rather than *-latest: a label that moves
+  # when GitHub promotes a new image is how a green build starts failing on a
+  # morning nobody pushed anything.
+  build:
+    name: Build (${{ matrix.name }})
+    needs: [gate, lint]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Android
+            os: ubuntu-24.04
+            java: true
+            recipe: build-apk
+            artifact: build/app/outputs/flutter-apk/app-release.apk
+          - name: Linux x64
+            os: ubuntu-24.04
+            linux: true
+            recipe: build-linux
+            artifact: build/linux/x64/release/bundle/
+          - name: Linux arm64
+            os: ubuntu-24.04-arm
+            linux: true
+            recipe: build-linux
+            artifact: build/linux/arm64/release/bundle/
+          - name: iOS
+            os: macos-15
+            recipe: build-ios
+            artifact: build/ios/iphoneos/Runner.app/
+          - name: macOS
+            os: macos-15
+            recipe: build-macos
+            artifact: build/macos/Build/Products/Release/
+          - name: Windows
+            os: windows-2025
+            recipe: build-windows
+            artifact: build/windows/x64/runner/Release/
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/flutter
+        with:
+          java: ${{ matrix.java && 'true' || 'false' }}
+
+      - name: Linux build dependencies
+        if: matrix.linux
+        run: just setup-linux
+
+      - name: Build
+        env:
+          RECIPE: ${{ matrix.recipe }}
+        run: just "$RECIPE"
+
+      - name: Upload the build
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
+        with:
+          name: build-${{ matrix.recipe }}-${{ runner.arch }}
+          path: ${{ matrix.artifact }}
+          retention-days: 3
+          if-no-files-found: error
+
+  # The one check branch protection needs to require. A skipped job reads as a
+  # pass to a required check, so this fails unless every job it names actually
+  # succeeded, and it runs even when they did not.
+  ci-ok:
+    name: CI ok
+    if: always()
+    needs: [gate, lint, test, build]
+    runs-on: ubuntu-24.04
+    permissions: {}
+    steps:
+      - name: Every job succeeded
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "results: $RESULTS"
+          for r in $RESULTS; do
+            [ "$r" = success ] || { echo "a required job ended in $r"; exit 1; }
+          done

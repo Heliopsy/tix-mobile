@@ -1,0 +1,176 @@
+name: release-please
+
+on:
+  push:
+    branches: [main]
+
+permissions: read-all
+
+# Adapted from tix, where every step below was added after a release went
+# wrong without it. The comments keep the reasons short; tix's
+# release-please.yml has the full incident notes.
+#
+# Flow: a merged release pull request becomes a DRAFT release, this job tags it
+# and dispatches release.yaml, and release.yaml builds, attaches and publishes.
+# A release is therefore never visible without its downloads.
+
+jobs:
+  release-please:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+    steps:
+      # The manifest is read below to find out which release should exist.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      # A pull request opened with GITHUB_TOKEN gets its checks held as
+      # `action_required` until somebody presses a button, and shows an empty
+      # check list meanwhile. A GitHub App token avoids that. The App is
+      # optional: without RELEASE_APP_CLIENT_ID / RELEASE_APP_PRIVATE_KEY this
+      # falls back to GITHUB_TOKEN and the release pull request's checks need
+      # approving by hand.
+      - name: Decide which token release-please gets
+        id: creds
+        env:
+          CLIENT_ID: ${{ secrets.RELEASE_APP_CLIENT_ID }}
+          PRIVATE_KEY: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+        run: |
+          if [ -n "$CLIENT_ID" ] && [ -n "$PRIVATE_KEY" ]; then
+            echo 'app=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'app=false' >> "$GITHUB_OUTPUT"
+            echo "::notice::No release App credentials; the release pull request needs its checks approved by hand."
+          fi
+
+      # continue-on-error: a rotated key should cost the release its automatic
+      # checks, not the release itself.
+      - name: Mint an App token
+        id: app-token
+        if: steps.creds.outputs.app == 'true'
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510  # v3.3.0
+        with:
+          client-id: ${{ secrets.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+
+      - name: Say so if the App token could not be minted
+        if: steps.creds.outputs.app == 'true' && steps.app-token.outputs.token == ''
+        run: echo "::warning::App credentials set but no token minted; used GITHUB_TOKEN, so checks need approving."
+
+      # Two release-please passes with the tag written between them. Run as
+      # one, the version pass cannot see the release the release pass just
+      # made (the API hides drafts and the tag does not exist yet), so it
+      # walks the whole history from the manifest version and proposes the
+      # same release again. tix opened six such pull requests before this.
+      - name: Turn a merged release pull request into a draft release
+        id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7  # v5.0.0
+        with:
+          token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          skip-github-pull-request: true
+
+      # A draft release has no tag until it is published, and everything
+      # downstream needs one to check out. The commit is read back from the
+      # draft rather than assumed to be this push's head. The releases list,
+      # because /releases/tags/{tag} answers 404 for a draft.
+      - name: Create the tag for the draft release
+        if: steps.release.outputs.release_created
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.release.outputs.tag_name }}
+        run: |
+          set -euo pipefail
+          sha=$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
+                  | jq -r --arg t "$TAG" 'map(select(.tag_name == $t)) | first | .target_commitish // empty')
+          [ -n "$sha" ] || { echo "no draft for $TAG names a commit to tag" >&2; exit 1; }
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" >/dev/null 2>&1; then
+            echo "$TAG is already tagged"
+            exit 0
+          fi
+          gh api -X POST "repos/$GITHUB_REPOSITORY/git/refs" -f "ref=refs/tags/$TAG" -f "sha=$sha" >/dev/null
+          echo "tagged $TAG at $sha"
+
+      # GitHub raises no push event for a tag written with GITHUB_TOKEN, so the
+      # tag above cannot start release.yaml by itself (tix shipped v0.1.0 with
+      # nothing attached that way). workflow_dispatch is the one trigger
+      # GITHUB_TOKEN may fire. GITHUB_TOKEN on purpose, even with an App token:
+      # an App-written tag WOULD raise a push and the release would build twice.
+      - name: Build the release
+        if: steps.release.outputs.release_created
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.release.outputs.tag_name }}
+        run: gh workflow run release.yaml --repo "$GITHUB_REPOSITORY" --ref main -f ref="$TAG"
+
+      # Hold the version pass in the one state where it would go backwards: the
+      # manifest's release exists only as an untagged draft (the tag step died
+      # on an earlier run). The last step of this job writes that tag, so the
+      # next push computes normally.
+      - name: Check release-please can see where it last released
+        id: gate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="v$(jq -r '."."' .release-please-manifest.json)"
+          all=$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
+                  | jq -c --arg t "$tag" '[.[] | select(.tag_name == $t)]')
+          published=$(jq -c '[.[] | select(.draft == false)] | first // empty' <<<"$all")
+          if [ "$(jq 'length' <<<"$all")" = "0" ] || [ -n "$published" ] \
+             || gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$tag" >/dev/null 2>&1; then
+            echo 'held=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo 'held=true' >> "$GITHUB_OUTPUT"
+          echo "::warning::$tag is an untagged draft; skipping the version pass so it cannot go backwards"
+
+      - name: Compute the next version and open its pull request
+        if: steps.gate.outputs.held != 'true'
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7  # v5.0.0
+        with:
+          token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          skip-github-release: true
+
+      # release-please can create the release and then fail, leaving it
+      # unbuilt with nothing watching. Ask GitHub what the manifest's release
+      # looks like instead of trusting the outputs above: an unpublished draft
+      # with no build in flight gets tagged (if needed) and built.
+      - name: Finish any release left unbuilt
+        if: always() && !steps.release.outputs.release_created
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="v$(jq -r '."."' .release-please-manifest.json)"
+          all=$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
+                  | jq -c --arg t "$tag" '[.[] | select(.tag_name == $t)]')
+          if [ "$(jq 'length' <<<"$all")" = "0" ]; then
+            echo "no release exists for $tag yet"
+            exit 0
+          fi
+          if [ -n "$(jq -c '[.[] | select(.draft == false)] | first // empty' <<<"$all")" ]; then
+            echo "$tag is published"
+            exit 0
+          fi
+          busy=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow release.yaml --limit 20 --json status \
+                   -q '[.[] | select(.status == "in_progress" or .status == "queued")] | length')
+          if [ "$busy" != "0" ]; then
+            echo "$tag is a draft and $busy release runs are in flight"
+            exit 0
+          fi
+          if ! gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$tag" >/dev/null 2>&1; then
+            sha=$(jq -r 'first | .target_commitish // empty' <<<"$all")
+            [ -n "$sha" ] || { echo "$tag is an untagged draft naming no commit; it needs a person" >&2; exit 1; }
+            gh api -X POST "repos/$GITHUB_REPOSITORY/git/refs" -f "ref=refs/tags/$tag" -f "sha=$sha" >/dev/null
+            echo "tagged $tag at $sha"
+          fi
+          echo "$tag is an unpublished draft; asking for the build"
+          gh workflow run release.yaml --repo "$GITHUB_REPOSITORY" --ref main -f ref="$tag"
