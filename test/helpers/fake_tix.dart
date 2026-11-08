@@ -358,6 +358,10 @@ class FakeTix {
   /// Fails every poll as an unreachable server would.
   bool pollOffline = false;
 
+  /// The longest poll wait this server takes, as one with a short request
+  /// timeout refuses a longer one.
+  int maxWait = 25;
+
   /// The oldest event the log still keeps; a poll from before it is
   /// refused as tix refuses an expired cursor.
   int oldestRetained = 0;
@@ -410,6 +414,15 @@ class FakeTix {
       for (final e in eventLog)
         if ((e['seq']! as int) > since) e,
     ].take(limit).toList();
+    if (wait > maxWait) {
+      return FakeResponse(
+        400,
+        envelope(
+          'invalid',
+          "wait ${wait}s must be shorter than this server's request timeout",
+        ),
+      );
+    }
     var events = after();
     if (events.isEmpty && wait > 0) {
       await Future.any([

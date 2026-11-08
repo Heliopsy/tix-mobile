@@ -30,9 +30,7 @@ class Rig {
     live = LiveEvents(
       baseUrl: 'https://tix.example',
       headers: credential.headers,
-      poller: TixEventPoller(
-        server.factory('https://tix.example', credential).transport,
-      ),
+      poller: TixEventPoller(server.factory('https://tix.example', credential)),
       connector: sockets.connect,
       config: config,
       random: Random(1),
@@ -208,6 +206,37 @@ void main() {
       expect(r.server.polls, hasLength(2));
       expect(r.server.polls[1].uri.queryParameters['since_seq'], isNull);
       expect(r.mode, LiveMode.polling);
+    });
+  });
+
+  test('a server refusing a 25 s wait is polled with a shorter one', () {
+    fakeAsync((async) {
+      final r = Rig();
+      r.server.maxWait = 15;
+      r.breakSocket(async);
+      async.elapse(const Duration(seconds: 1));
+      expect(r.server.polls, hasLength(2));
+      expect(r.server.polls.last.uri.queryParameters['wait'], '10s');
+      expect(r.mode, LiveMode.polling);
+      r.server.addEvent(8, 'task.updated');
+      async.elapse(const Duration(seconds: 1));
+      expect(r.seqs, [7, 8]);
+    });
+  });
+
+  test('the cursor follows next_seq past events filtered out', () {
+    fakeAsync((async) {
+      final r = Rig()..breakSocket(async);
+      r.server.pollAnswer = const FakeResponse(200, {
+        'events': <Object?>[],
+        'next_seq': 30,
+      });
+      r.server.addEvent(8, 'task.updated');
+      async.elapse(const Duration(seconds: 1));
+      r.server.pollAnswer = null;
+      async.elapse(const Duration(seconds: 30));
+      expect(r.live.cursor, 30);
+      expect(r.server.polls.last.uri.queryParameters['since_seq'], '30');
     });
   });
 

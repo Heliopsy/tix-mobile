@@ -127,8 +127,11 @@ A cursor tix no longer keeps, or a handover without a cursor after having been l
 mode (`connecting`, `websocket`, `polling`, `refreshing`, `offline`, `unavailable`) and the last error; the
 `LiveIndicator` beside the context switcher shows it.
 
-The poll endpoint is not in the spec `tix.lock` pins yet, so `TixEventPoller` calls it by hand through the
-transport. When `tix.lock` moves to a tix that has it, switch to the generated method and drop the TODO.
+`TixEventPoller` calls the generated `api.event.poll` on a client of its own, whose Dio hands each poll a
+`CancelToken`, so pausing or switching context drops the request in flight. It keeps the cursor at `next_seq` even
+when no event came back (tix reads past events the filter or the credential leaves out), retries with a 10 s wait
+when a server with a shorter request timeout refuses 25 s, and turns 404 or 405 from an older tix into periodic
+refresh.
 
 A provider declares what it depends on in `build`:
 

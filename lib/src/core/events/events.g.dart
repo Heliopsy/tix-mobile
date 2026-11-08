@@ -285,7 +285,7 @@ final class TixEventStreamProvider
   }
 }
 
-String _$tixEventStreamHash() => r'34bd5729a9e2252a42f6f3bbe461326a17a29fbe';
+String _$tixEventStreamHash() => r'fcee16b2f7208eb3a64a4dd3d3d34f8999959013';
 
 /// Every update of the active context's live events.
 
