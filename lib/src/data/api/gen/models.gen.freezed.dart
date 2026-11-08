@@ -47620,7 +47620,7 @@ mixin _$UpdateTaskInput {
 /// clears that field.
 @JsonKey(name: 'custom_fields') Map<String, Object?>? get customFields;/// DueAt sets the due time, an RFC 3339 timestamp; null clears it and omitted
 /// leaves it.
-@JsonKey(name: 'due_at')@TixDateTime() DateTime? get dueAt;/// Lease sets how long a claim on the task holds; a pointer to zero clears it
+@JsonKey(name: 'due_at', includeFromJson: false, includeToJson: false) Patch<DateTime>? get dueAt;/// Lease sets how long a claim on the task holds; a pointer to zero clears it
 /// back to the project's.
 @JsonKey(name: 'lease') String? get lease;/// ParentRef moves the task under another task, refusing a cycle; empty
 /// detaches it and omitted leaves it.
@@ -47670,7 +47670,7 @@ abstract mixin class $UpdateTaskInputCopyWith<$Res>  {
   factory $UpdateTaskInputCopyWith(UpdateTaskInput value, $Res Function(UpdateTaskInput) _then) = _$UpdateTaskInputCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'assignee_actor_id') String? assigneeActorId,@JsonKey(name: 'body') String? body,@JsonKey(name: 'custom_fields') Map<String, Object?>? customFields,@JsonKey(name: 'due_at')@TixDateTime() DateTime? dueAt,@JsonKey(name: 'lease') String? lease,@JsonKey(name: 'parent_ref') String? parentRef,@JsonKey(name: 'priority') int? priority,@JsonKey(name: 'recurrence') String? recurrence,@JsonKey(name: 'tags') List<String>? tags,@JsonKey(name: 'title') String? title,@JsonKey(name: 'version') int? version
+@JsonKey(name: 'assignee_actor_id') String? assigneeActorId,@JsonKey(name: 'body') String? body,@JsonKey(name: 'custom_fields') Map<String, Object?>? customFields,@JsonKey(name: 'due_at', includeFromJson: false, includeToJson: false) Patch<DateTime>? dueAt,@JsonKey(name: 'lease') String? lease,@JsonKey(name: 'parent_ref') String? parentRef,@JsonKey(name: 'priority') int? priority,@JsonKey(name: 'recurrence') String? recurrence,@JsonKey(name: 'tags') List<String>? tags,@JsonKey(name: 'title') String? title,@JsonKey(name: 'version') int? version
 });
 
 
@@ -47693,7 +47693,7 @@ assigneeActorId: freezed == assigneeActorId ? _self.assigneeActorId : assigneeAc
 as String?,body: freezed == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
 as String?,customFields: freezed == customFields ? _self.customFields : customFields // ignore: cast_nullable_to_non_nullable
 as Map<String, Object?>?,dueAt: freezed == dueAt ? _self.dueAt : dueAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,lease: freezed == lease ? _self.lease : lease // ignore: cast_nullable_to_non_nullable
+as Patch<DateTime>?,lease: freezed == lease ? _self.lease : lease // ignore: cast_nullable_to_non_nullable
 as String?,parentRef: freezed == parentRef ? _self.parentRef : parentRef // ignore: cast_nullable_to_non_nullable
 as String?,priority: freezed == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
 as int?,recurrence: freezed == recurrence ? _self.recurrence : recurrence // ignore: cast_nullable_to_non_nullable
@@ -47785,7 +47785,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'assignee_actor_id')  String? assigneeActorId, @JsonKey(name: 'body')  String? body, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'due_at')@TixDateTime()  DateTime? dueAt, @JsonKey(name: 'lease')  String? lease, @JsonKey(name: 'parent_ref')  String? parentRef, @JsonKey(name: 'priority')  int? priority, @JsonKey(name: 'recurrence')  String? recurrence, @JsonKey(name: 'tags')  List<String>? tags, @JsonKey(name: 'title')  String? title, @JsonKey(name: 'version')  int? version)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'assignee_actor_id')  String? assigneeActorId, @JsonKey(name: 'body')  String? body, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'due_at', includeFromJson: false, includeToJson: false)  Patch<DateTime>? dueAt, @JsonKey(name: 'lease')  String? lease, @JsonKey(name: 'parent_ref')  String? parentRef, @JsonKey(name: 'priority')  int? priority, @JsonKey(name: 'recurrence')  String? recurrence, @JsonKey(name: 'tags')  List<String>? tags, @JsonKey(name: 'title')  String? title, @JsonKey(name: 'version')  int? version)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UpdateTaskInput() when $default != null:
 return $default(_that.assigneeActorId,_that.body,_that.customFields,_that.dueAt,_that.lease,_that.parentRef,_that.priority,_that.recurrence,_that.tags,_that.title,_that.version);case _:
@@ -47806,7 +47806,7 @@ return $default(_that.assigneeActorId,_that.body,_that.customFields,_that.dueAt,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'assignee_actor_id')  String? assigneeActorId, @JsonKey(name: 'body')  String? body, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'due_at')@TixDateTime()  DateTime? dueAt, @JsonKey(name: 'lease')  String? lease, @JsonKey(name: 'parent_ref')  String? parentRef, @JsonKey(name: 'priority')  int? priority, @JsonKey(name: 'recurrence')  String? recurrence, @JsonKey(name: 'tags')  List<String>? tags, @JsonKey(name: 'title')  String? title, @JsonKey(name: 'version')  int? version)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'assignee_actor_id')  String? assigneeActorId, @JsonKey(name: 'body')  String? body, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'due_at', includeFromJson: false, includeToJson: false)  Patch<DateTime>? dueAt, @JsonKey(name: 'lease')  String? lease, @JsonKey(name: 'parent_ref')  String? parentRef, @JsonKey(name: 'priority')  int? priority, @JsonKey(name: 'recurrence')  String? recurrence, @JsonKey(name: 'tags')  List<String>? tags, @JsonKey(name: 'title')  String? title, @JsonKey(name: 'version')  int? version)  $default,) {final _that = this;
 switch (_that) {
 case _UpdateTaskInput():
 return $default(_that.assigneeActorId,_that.body,_that.customFields,_that.dueAt,_that.lease,_that.parentRef,_that.priority,_that.recurrence,_that.tags,_that.title,_that.version);case _:
@@ -47826,7 +47826,7 @@ return $default(_that.assigneeActorId,_that.body,_that.customFields,_that.dueAt,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'assignee_actor_id')  String? assigneeActorId, @JsonKey(name: 'body')  String? body, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'due_at')@TixDateTime()  DateTime? dueAt, @JsonKey(name: 'lease')  String? lease, @JsonKey(name: 'parent_ref')  String? parentRef, @JsonKey(name: 'priority')  int? priority, @JsonKey(name: 'recurrence')  String? recurrence, @JsonKey(name: 'tags')  List<String>? tags, @JsonKey(name: 'title')  String? title, @JsonKey(name: 'version')  int? version)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'assignee_actor_id')  String? assigneeActorId, @JsonKey(name: 'body')  String? body, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'due_at', includeFromJson: false, includeToJson: false)  Patch<DateTime>? dueAt, @JsonKey(name: 'lease')  String? lease, @JsonKey(name: 'parent_ref')  String? parentRef, @JsonKey(name: 'priority')  int? priority, @JsonKey(name: 'recurrence')  String? recurrence, @JsonKey(name: 'tags')  List<String>? tags, @JsonKey(name: 'title')  String? title, @JsonKey(name: 'version')  int? version)?  $default,) {final _that = this;
 switch (_that) {
 case _UpdateTaskInput() when $default != null:
 return $default(_that.assigneeActorId,_that.body,_that.customFields,_that.dueAt,_that.lease,_that.parentRef,_that.priority,_that.recurrence,_that.tags,_that.title,_that.version);case _:
@@ -47841,7 +47841,7 @@ return $default(_that.assigneeActorId,_that.body,_that.customFields,_that.dueAt,
 @JsonSerializable()
 
 class _UpdateTaskInput implements UpdateTaskInput {
-  const _UpdateTaskInput({@JsonKey(name: 'assignee_actor_id') this.assigneeActorId, @JsonKey(name: 'body') this.body, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'due_at')@TixDateTime() this.dueAt, @JsonKey(name: 'lease') this.lease, @JsonKey(name: 'parent_ref') this.parentRef, @JsonKey(name: 'priority') this.priority, @JsonKey(name: 'recurrence') this.recurrence, @JsonKey(name: 'tags')  List<String>? tags, @JsonKey(name: 'title') this.title, @JsonKey(name: 'version') this.version}): _customFields = customFields,_tags = tags;
+  const _UpdateTaskInput({@JsonKey(name: 'assignee_actor_id') this.assigneeActorId, @JsonKey(name: 'body') this.body, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'due_at', includeFromJson: false, includeToJson: false) this.dueAt, @JsonKey(name: 'lease') this.lease, @JsonKey(name: 'parent_ref') this.parentRef, @JsonKey(name: 'priority') this.priority, @JsonKey(name: 'recurrence') this.recurrence, @JsonKey(name: 'tags')  List<String>? tags, @JsonKey(name: 'title') this.title, @JsonKey(name: 'version') this.version}): _customFields = customFields,_tags = tags;
   factory _UpdateTaskInput.fromJson(Map<String, dynamic> json) => _$UpdateTaskInputFromJson(json);
 
 /// AssigneeActorID assigns an actor by identifier or handle; empty unassigns
@@ -47864,7 +47864,7 @@ class _UpdateTaskInput implements UpdateTaskInput {
 
 /// DueAt sets the due time, an RFC 3339 timestamp; null clears it and omitted
 /// leaves it.
-@override@JsonKey(name: 'due_at')@TixDateTime() final  DateTime? dueAt;
+@override@JsonKey(name: 'due_at', includeFromJson: false, includeToJson: false) final  Patch<DateTime>? dueAt;
 /// Lease sets how long a claim on the task holds; a pointer to zero clears it
 /// back to the project's.
 @override@JsonKey(name: 'lease') final  String? lease;
@@ -47930,7 +47930,7 @@ abstract mixin class _$UpdateTaskInputCopyWith<$Res> implements $UpdateTaskInput
   factory _$UpdateTaskInputCopyWith(_UpdateTaskInput value, $Res Function(_UpdateTaskInput) _then) = __$UpdateTaskInputCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'assignee_actor_id') String? assigneeActorId,@JsonKey(name: 'body') String? body,@JsonKey(name: 'custom_fields') Map<String, Object?>? customFields,@JsonKey(name: 'due_at')@TixDateTime() DateTime? dueAt,@JsonKey(name: 'lease') String? lease,@JsonKey(name: 'parent_ref') String? parentRef,@JsonKey(name: 'priority') int? priority,@JsonKey(name: 'recurrence') String? recurrence,@JsonKey(name: 'tags') List<String>? tags,@JsonKey(name: 'title') String? title,@JsonKey(name: 'version') int? version
+@JsonKey(name: 'assignee_actor_id') String? assigneeActorId,@JsonKey(name: 'body') String? body,@JsonKey(name: 'custom_fields') Map<String, Object?>? customFields,@JsonKey(name: 'due_at', includeFromJson: false, includeToJson: false) Patch<DateTime>? dueAt,@JsonKey(name: 'lease') String? lease,@JsonKey(name: 'parent_ref') String? parentRef,@JsonKey(name: 'priority') int? priority,@JsonKey(name: 'recurrence') String? recurrence,@JsonKey(name: 'tags') List<String>? tags,@JsonKey(name: 'title') String? title,@JsonKey(name: 'version') int? version
 });
 
 
@@ -47953,7 +47953,7 @@ assigneeActorId: freezed == assigneeActorId ? _self.assigneeActorId : assigneeAc
 as String?,body: freezed == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
 as String?,customFields: freezed == customFields ? _self._customFields : customFields // ignore: cast_nullable_to_non_nullable
 as Map<String, Object?>?,dueAt: freezed == dueAt ? _self.dueAt : dueAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,lease: freezed == lease ? _self.lease : lease // ignore: cast_nullable_to_non_nullable
+as Patch<DateTime>?,lease: freezed == lease ? _self.lease : lease // ignore: cast_nullable_to_non_nullable
 as String?,parentRef: freezed == parentRef ? _self.parentRef : parentRef // ignore: cast_nullable_to_non_nullable
 as String?,priority: freezed == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
 as int?,recurrence: freezed == recurrence ? _self.recurrence : recurrence // ignore: cast_nullable_to_non_nullable

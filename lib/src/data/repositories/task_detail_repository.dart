@@ -40,23 +40,8 @@ class TaskDetailRepository {
   Future<Task> task(String ref) => _api.task.show(ref);
 
   /// Applies [patch] to [ref] (`task.update`).
-  Future<Task> update(String ref, TaskPatch patch, {int? version}) async {
-    if (!patch.clearsDue) {
-      return await _api.task.update(ref, patch.toInput(version: version));
-    }
-    // The generated input drops a null, and a null is how tix clears a due
-    // date, so this one body goes through the same operation with it kept.
-    return Task.fromJson(
-      await _api.transport.json(
-        'PATCH',
-        '/api/v1/tasks/${_api.transport.segment(ref)}',
-        body: {
-          ...patch.toInput(version: version).toJson(),
-          'due_at': null,
-        },
-      ),
-    );
-  }
+  Future<Task> update(String ref, TaskPatch patch, {int? version}) =>
+      _api.task.update(ref, patch.toInput(version: version));
 
   /// Ticks or clears checklist item [item] (`task.check`).
   Future<Task> check(

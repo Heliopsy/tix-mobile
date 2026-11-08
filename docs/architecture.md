@@ -59,7 +59,9 @@ CI) fails while the copy differs; `just openapi-sync` refreshes it.
 
 - `models.gen.dart`: one freezed + json_serializable class per schema and one enum per string enum. A schema a
   request body uses is an input, with every field nullable so a PATCH sends only what is set; the rest default to
-  zero values and empty lists. Unknown fields are ignored and an unknown enum value reads as null, because tix adds
+  zero values and empty lists. An input field whose description says null clears it is a `Patch<T>?` (`json.dart`):
+  null leaves it out, `Patch(v)` sends `v` and `Patch.clear()` sends a JSON null, through the class's generated
+  `toBody()`, which the client sends. Unknown fields are ignored and an unknown enum value reads as null, because tix adds
   both without a version bump. `Connection`, `Membership` and `Session` are renamed `LiveConnection`,
   `TenantMembership` and `AuthSession`, so they cannot be confused with the app's own classes.
 - `client.gen.dart`: `TixClient`, one group per area and one method per operation, named from the operationId:

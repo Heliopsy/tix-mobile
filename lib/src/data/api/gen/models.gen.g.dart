@@ -3975,10 +3975,6 @@ _UpdateTaskInput _$UpdateTaskInputFromJson(Map<String, dynamic> json) =>
       assigneeActorId: json['assignee_actor_id'] as String?,
       body: json['body'] as String?,
       customFields: json['custom_fields'] as Map<String, dynamic>?,
-      dueAt: _$JsonConverterFromJson<String, DateTime>(
-        json['due_at'],
-        const TixDateTime().fromJson,
-      ),
       lease: json['lease'] as String?,
       parentRef: json['parent_ref'] as String?,
       priority: (json['priority'] as num?)?.toInt(),
@@ -3993,10 +3989,6 @@ Map<String, dynamic> _$UpdateTaskInputToJson(_UpdateTaskInput instance) =>
       'assignee_actor_id': ?instance.assigneeActorId,
       'body': ?instance.body,
       'custom_fields': ?instance.customFields,
-      'due_at': ?_$JsonConverterToJson<String, DateTime>(
-        instance.dueAt,
-        const TixDateTime().toJson,
-      ),
       'lease': ?instance.lease,
       'parent_ref': ?instance.parentRef,
       'priority': ?instance.priority,

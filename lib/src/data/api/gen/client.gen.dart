@@ -2369,7 +2369,7 @@ class TaskOps {
       await _t.json(
         'PATCH',
         '/api/v1/tasks/${_t.segment(ref)}',
-        body: body.toJson(),
+        body: body.toBody(),
       ),
     );
   }
