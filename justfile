@@ -90,6 +90,7 @@ gen:
       exit 0
     fi
     dart run build_runner build
+    dart run tool/licences.dart gen
 
 # Regenerate the app icons and launch screens (needs rsvg-convert, ImageMagick).
 [group('dev')]
@@ -372,6 +373,49 @@ package-ios:
 [group('package')]
 checksums:
     cd dist && rm -f SHA256SUMS && sha256sum -- * > SHA256SUMS && cat SHA256SUMS
+
+# ---------------------------------------------------------------- engine
+#
+# The embedded tix engine (libtix) is built by hook/build.dart during every
+# flutter build, run and test, from the commit tix.lock pins. These recipes
+# are the maintenance around it.
+
+# The tix version and commit the engine is built from.
+[group('engine')]
+engine-version:
+    dart run tool/engine.dart version
+
+# Build libtix for this machine through the hook and run the engine's tests.
+[group('engine')]
+engine-test:
+    TIX_ENGINE_REQUIRED=1 flutter test test/data/local/ffi_local_engine_test.dart
+
+# Regenerate assets/licenses/libtix.json, the Go module notices of every target, from tix.lock.
+[group('engine')]
+engine-notices:
+    dart run tool/engine.dart notices
+
+# Fail if assets/licenses/libtix.json does not match tix.lock.
+[group('engine')]
+engine-notices-check: engine-notices
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [ -n "$(git status --porcelain -- assets/licenses)" ]; then
+      echo "assets/licenses/libtix.json is stale; run \`just engine-notices\` and commit:" >&2
+      git --no-pager diff --stat -- assets/licenses >&2
+      exit 1
+    fi
+    echo "engine notices match tix.lock"
+
+# Fail unless a build carries libtix: `android` APKs, an `aab`, or a desktop/iOS `bundle` directory.
+[group('engine')]
+engine-check KIND +PATHS:
+    scripts/engine-check.sh {{KIND}} {{PATHS}}
+
+# Remove the cached tix sources and libtix builds (~/.cache/tix-mobile/libtix).
+[group('engine')]
+engine-clean:
+    rm -rf "${LOCALAPPDATA:-$HOME/.cache}/tix-mobile/libtix"
 
 # ---------------------------------------------------------------- maintenance
 
