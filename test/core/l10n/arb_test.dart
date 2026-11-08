@@ -88,8 +88,9 @@ List<String> _problems(String english, String translated) {
             (k) => k.startsWith('=') || k == 'other',
           );
           final missing = need.where((k) => !a.cases.containsKey(k));
-          if (missing.isNotEmpty)
+          if (missing.isNotEmpty) {
             problems.add('plural ${a.name} lacks $missing');
+          }
         }
         continue;
       }

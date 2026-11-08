@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/platform/app_info.dart';
-import 'package:tix_mobile/src/core/platform/attachments.dart';
 import 'package:tix_mobile/src/data/local/local_engine.dart';
 import 'package:tix_mobile/src/features/about/application/about.dart';
 import 'package:tix_mobile/src/features/about/presentation/about_screen.dart';
