@@ -132,7 +132,9 @@ void main() {
     await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
     await tester.tap(find.text('Infrastructure'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Settings'));
+    await tester.tap(find.byKey(const Key('nav.more')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('nav.more.settings')));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Projects'));
     await tester.pumpAndSettle();
