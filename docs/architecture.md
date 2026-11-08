@@ -178,6 +178,18 @@ The task screen's list, board and lanes draw one query, as the web does. The lis
 states of the tenant's workflows when the expression names no status; the board and the lanes do not. A board
 needs one workflow, so projects whose workflows differ in states or transitions get the list and a notice.
 
+## What the credential may do
+
+`currentAccessProvider` (`core/session/access.dart`) reads `whoami` once per context, cached like any read, and
+answers `Access.has(scope)` as tix's `Actor.HasScope` does: direct scopes, then the role's bundle, `*` covering all
+but `global:admin` and `account:read`. Screens leave out what the credential cannot do rather than letting the
+server refuse it, and say when a screen is read only.
+
+The Manage destination lists every management area from `features/manage/manage_sections.dart`, a flat list of
+`ManageEntry` values (group, icon, title, route, scope). A new area adds one entry there and its route in
+`core/router`; the hub groups and filters the entries itself. On a phone the bottom bar holds at most five
+destinations, the rest open from More.
+
 ## Instances, connections and the active context
 
 - An **instance** is a tix server: `remote` (an address) or `local` (a `.db` file served by tix embedded in the

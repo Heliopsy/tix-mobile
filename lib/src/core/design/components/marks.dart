@@ -2,6 +2,8 @@
 
 import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/design/components/pickers.dart'
+    show projectIconGlyph;
 import 'package:tix_mobile/src/core/design/theme.dart';
 import 'package:tix_mobile/src/core/design/tokens.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
@@ -337,6 +339,8 @@ class ProjectMark extends StatelessWidget {
     required this.name,
     this.colour = '',
     this.icon = '',
+    this.iconName = '',
+    this.image,
     this.size = 36,
     super.key,
   });
@@ -350,6 +354,12 @@ class ProjectMark extends StatelessWidget {
   /// A text icon, which wins over the monogram.
   final String icon;
 
+  /// One of tix's built-in icons by name, which wins over [icon].
+  final String iconName;
+
+  /// The uploaded image, which wins over everything else.
+  final Widget? image;
+
   /// Width and height.
   final double size;
 
@@ -360,24 +370,30 @@ class ProjectMark extends StatelessWidget {
     final text = icon.isNotEmpty
         ? icon
         : name.characters.take(2).toString().toUpperCase();
+    final glyph = projectIconGlyph(iconName);
     return ExcludeSemantics(
       child: Container(
         width: size,
         height: size,
         alignment: Alignment.center,
+        clipBehavior: image == null ? Clip.none : Clip.antiAlias,
         decoration: BoxDecoration(
           color: c.withValues(alpha: 0.14),
           borderRadius: BorderRadius.circular(TixRadius.md),
         ),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: size * 0.42,
-            fontWeight: FontWeight.w700,
-            color: c,
-            height: 1,
-          ),
-        ),
+        child:
+            image ??
+            (glyph != null
+                ? Icon(glyph, size: size * 0.55, color: c)
+                : Text(
+                    text,
+                    style: TextStyle(
+                      fontSize: size * 0.42,
+                      fontWeight: FontWeight.w700,
+                      color: c,
+                      height: 1,
+                    ),
+                  )),
       ),
     );
   }

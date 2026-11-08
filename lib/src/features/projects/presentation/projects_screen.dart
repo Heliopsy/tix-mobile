@@ -6,11 +6,13 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
+import 'package:tix_mobile/src/core/session/access.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/core/widgets/paged_list_view.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/features/projects/application/projects.dart';
+import 'package:tix_mobile/src/features/projects/presentation/project_form.dart';
 
 /// Every project on the active server.
 class ProjectsScreen extends ConsumerWidget {
@@ -26,9 +28,19 @@ class ProjectsScreen extends ConsumerWidget {
         : session.connection.tenantLabel.isNotEmpty
         ? session.connection.tenantLabel
         : session.instance.name;
+    final access = ref.watch(currentAccessProvider).value ?? Access.none;
+    final create = access.has(Scope.projectWrite)
+        ? TixAction(
+            key: const Key('project.new'),
+            label: l10n.projectNew,
+            icon: Icons.add,
+            onPressed: () => showCreateProjectSheet(context),
+          )
+        : null;
     return TixPage(
       title: l10n.projectsTitle,
       subtitle: tenant.isEmpty ? null : l10n.projectsSubtitle(tenant),
+      primaryAction: create,
       body: AsyncBody(
         value: ref.watch(projectsProvider),
         onRetry: () => ref.invalidate(projectsProvider),
@@ -38,6 +50,7 @@ class ProjectsScreen extends ConsumerWidget {
             icon: Icons.folder_outlined,
             title: l10n.projectsEmpty,
             body: l10n.projectsEmptyBody,
+            action: create,
           ),
           onRefresh: () => ref.refresh(projectsProvider.future),
           onLoadMore: () => ref.read(projectsProvider.notifier).loadMore(),
@@ -79,7 +92,12 @@ class ProjectTile extends ConsumerWidget {
         ),
         child: Row(
           children: [
-            ProjectMark(name: name, colour: project.color, icon: project.icon),
+            ProjectMark(
+              name: name,
+              colour: project.color,
+              icon: project.icon,
+              iconName: project.iconName,
+            ),
             const SizedBox(width: TixSpace.s3),
             Expanded(
               child: Column(
@@ -128,7 +146,14 @@ class ProjectTile extends ConsumerWidget {
                   ),
                 ),
               ),
-            Icon(Icons.chevron_right, color: t.lineStrong),
+            if (project.archivedAt != null)
+              TixBadge(context.l10n.projectArchivedBadge),
+            TixIconButton(
+              key: Key('project.${project.key}.settings'),
+              icon: Icons.settings_outlined,
+              tooltip: context.l10n.projectSettingsTitle,
+              onPressed: () => context.go(Routes.projectSettings(project.key)),
+            ),
           ],
         ),
       ),

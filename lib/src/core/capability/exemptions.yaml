@@ -66,8 +66,6 @@ pending:
     - calendar.revoke
     - calendar.rotate
     - calendar.show
-    - field.delete
-    - field.put
     - invite.accept
     - invite.create
     - invite.list
@@ -77,11 +75,6 @@ pending:
     - member.add
     - member.list
     - member.remove
-    - project.create
-    - project.delete
-    - project.delete-plan
-    - project.icon
-    - project.update
     - snapshot.export
     - snapshot.import
     - status.read
@@ -93,9 +86,6 @@ pending:
     - user.delete
     - user.list
     - user.update
-    - workflow.delete
-    - workflow.put
-    - workflow.put_by_key
   # Wave 3, admin: tenants, global admin, domains, webhooks, sync, retention, audit, second factor, SSH keys.
   wave3:
     - account.log.any

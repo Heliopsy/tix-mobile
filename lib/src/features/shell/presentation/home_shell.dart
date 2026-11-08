@@ -13,6 +13,34 @@ import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/features/shell/presentation/context_switcher.dart';
 
+/// One top-level destination: the shell branch it opens, in branch order.
+@immutable
+class ShellDestination {
+  /// A destination drawn with [icon], [selectedIcon] and [label].
+  const ShellDestination({
+    required this.id,
+    required this.icon,
+    required this.selectedIcon,
+    required this.label,
+  });
+
+  /// A stable id, for keys and commands.
+  final String id;
+
+  /// The icon when not selected.
+  final IconData icon;
+
+  /// The icon when selected.
+  final IconData selectedIcon;
+
+  /// Its name.
+  final String label;
+}
+
+/// The most destinations a phone's bottom bar shows; past that the last
+/// slot is More, which lists the rest.
+const maxBarDestinations = 5;
+
 /// The frame around the signed-in screens: the context switcher above a
 /// bottom navigation bar on phones, atop a navigation rail on anything wider.
 class HomeShell extends StatelessWidget {
@@ -25,8 +53,50 @@ class HomeShell extends StatelessWidget {
   /// Draws the Inbox destination's icon, such as with its unread badge.
   final Widget Function(Widget icon)? inboxIcon;
 
-  static const _inbox = 3;
-  static const _settings = 4;
+  /// Every destination, in the shell's branch order.
+  static List<ShellDestination> destinations(AppLocalizations l10n) => [
+    ShellDestination(
+      id: 'projects',
+      icon: Icons.folder_outlined,
+      selectedIcon: Icons.folder,
+      label: l10n.projectsTitle,
+    ),
+    ShellDestination(
+      id: 'tasks',
+      icon: Icons.checklist,
+      selectedIcon: Icons.checklist,
+      label: l10n.tasksTitle,
+    ),
+    ShellDestination(
+      id: 'myWork',
+      icon: Icons.person_outline,
+      selectedIcon: Icons.person,
+      label: l10n.myWorkTitle,
+    ),
+    ShellDestination(
+      id: 'inbox',
+      icon: Icons.inbox_outlined,
+      selectedIcon: Icons.inbox,
+      label: l10n.inboxTitle,
+    ),
+    ShellDestination(
+      id: 'manage',
+      icon: Icons.admin_panel_settings_outlined,
+      selectedIcon: Icons.admin_panel_settings,
+      label: l10n.manageTitle,
+    ),
+    ShellDestination(
+      id: 'settings',
+      icon: Icons.settings_outlined,
+      selectedIcon: Icons.settings,
+      label: l10n.settingsTitle,
+    ),
+  ];
+
+  Widget _decorate(ShellDestination d, Widget icon) {
+    final decorate = inboxIcon;
+    return d.id == 'inbox' && decorate != null ? decorate(icon) : icon;
+  }
 
   void _select(int index) =>
       shell.goBranch(index, initialLocation: index == shell.currentIndex);
@@ -34,6 +104,8 @@ class HomeShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final all = destinations(l10n);
+    int at(String id) => all.indexWhere((d) => d.id == id);
     return TixShortcuts(
       child: CommandScope(
         commands: [
@@ -42,35 +114,42 @@ class HomeShell extends StatelessWidget {
             label: l10n.goProjects,
             group: l10n.commandsNavigate,
             icon: Icons.folder_outlined,
-            run: () => _select(0),
+            run: () => _select(at('projects')),
           ),
           TixCommand(
             id: 'go.tasks',
             label: l10n.goTasks,
             group: l10n.commandsNavigate,
             icon: Icons.checklist,
-            run: () => _select(1),
+            run: () => _select(at('tasks')),
           ),
           TixCommand(
             id: 'go.myWork',
             label: l10n.goMyWork,
             group: l10n.commandsNavigate,
             icon: Icons.person_outline,
-            run: () => _select(2),
+            run: () => _select(at('myWork')),
           ),
           TixCommand(
             id: 'go.inbox',
             label: l10n.goInbox,
             group: l10n.commandsNavigate,
             icon: Icons.inbox_outlined,
-            run: () => _select(_inbox),
+            run: () => _select(at('inbox')),
+          ),
+          TixCommand(
+            id: 'go.manage',
+            label: l10n.goManage,
+            group: l10n.commandsNavigate,
+            icon: Icons.admin_panel_settings_outlined,
+            run: () => _select(at('manage')),
           ),
           TixCommand(
             id: 'go.settings',
             label: l10n.goSettings,
             group: l10n.commandsNavigate,
             icon: Icons.settings_outlined,
-            run: () => _select(_settings),
+            run: () => _select(at('settings')),
           ),
           TixCommand(
             id: 'go.instances',
@@ -95,27 +174,13 @@ class HomeShell extends StatelessWidget {
               run: () => context.push(Routes.gallery),
             ),
         ],
-        child: ContextCommands(child: _frame(context)),
+        child: ContextCommands(child: _frame(context, all)),
       ),
     );
   }
 
-  Widget _frame(BuildContext context) {
-    final l10n = context.l10n;
+  Widget _frame(BuildContext context, List<ShellDestination> all) {
     final width = MediaQuery.sizeOf(context).width;
-    final destinations = [
-      (Icons.folder_outlined, Icons.folder, l10n.projectsTitle),
-      (Icons.checklist, Icons.checklist, l10n.tasksTitle),
-      (Icons.person_outline, Icons.person, l10n.myWorkTitle),
-      (Icons.inbox_outlined, Icons.inbox, l10n.inboxTitle),
-      (Icons.settings_outlined, Icons.settings, l10n.settingsTitle),
-    ];
-    Widget icon(int i, IconData data) {
-      final drawn = Icon(data);
-      final decorate = inboxIcon;
-      return i == _inbox && decorate != null ? decorate(drawn) : drawn;
-    }
-
     if (width < compactMaxWidth) {
       return Scaffold(
         body: shell,
@@ -135,18 +200,11 @@ class HomeShell extends StatelessWidget {
               ),
             ),
             const Divider(),
-            NavigationBar(
-              selectedIndex: shell.currentIndex,
-              onDestinationSelected: _select,
-              destinations: [
-                for (final (i, (outline, selected, label))
-                    in destinations.indexed)
-                  NavigationDestination(
-                    icon: icon(i, outline),
-                    selectedIcon: icon(i, selected),
-                    label: label,
-                  ),
-              ],
+            ShellBottomBar(
+              destinations: all,
+              currentIndex: shell.currentIndex,
+              onSelect: _select,
+              decorate: _decorate,
             ),
           ],
         ),
@@ -172,12 +230,11 @@ class HomeShell extends StatelessWidget {
               selectedIndex: shell.currentIndex,
               onDestinationSelected: _select,
               destinations: [
-                for (final (i, (outline, selected, label))
-                    in destinations.indexed)
+                for (final d in all)
                   NavigationRailDestination(
-                    icon: icon(i, outline),
-                    selectedIcon: icon(i, selected),
-                    label: Text(label),
+                    icon: _decorate(d, Icon(d.icon)),
+                    selectedIcon: _decorate(d, Icon(d.selectedIcon)),
+                    label: Text(d.label),
                   ),
               ],
             ),
@@ -255,6 +312,90 @@ class ContextCommands extends ConsumerWidget {
           ),
       ],
       child: child,
+    );
+  }
+}
+
+/// A phone's bottom bar: every destination when they fit in
+/// [maxBarDestinations], else the first four and More, which lists the
+/// rest in a sheet and shows as selected while one of them is open. More
+/// wears the decoration of a destination it hides, so an unread badge
+/// stays in sight.
+class ShellBottomBar extends StatelessWidget {
+  /// A bar over [destinations], [currentIndex] selected.
+  const ShellBottomBar({
+    required this.destinations,
+    required this.currentIndex,
+    required this.onSelect,
+    this.decorate,
+    super.key,
+  });
+
+  /// Every destination, in branch order.
+  final List<ShellDestination> destinations;
+
+  /// The open destination's index.
+  final int currentIndex;
+
+  /// Opens the destination at an index.
+  final ValueChanged<int> onSelect;
+
+  /// Draws a destination's icon, such as with a badge; null draws it plain.
+  final Widget Function(ShellDestination d, Widget icon)? decorate;
+
+  Widget _icon(ShellDestination d, IconData data) =>
+      decorate?.call(d, Icon(data)) ?? Icon(data);
+
+  Future<void> _more(BuildContext context, int first) async {
+    final picked = await showActionSheet<int>(
+      context,
+      title: context.l10n.navMore,
+      actions: [
+        for (var i = first; i < destinations.length; i++)
+          TixSheetAction(
+            key: Key('nav.more.${destinations[i].id}'),
+            value: i,
+            label: destinations[i].label,
+            icon: i == currentIndex
+                ? destinations[i].selectedIcon
+                : destinations[i].icon,
+          ),
+      ],
+    );
+    if (picked != null) onSelect(picked);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final overflow = destinations.length > maxBarDestinations;
+    final shown = overflow
+        ? destinations.sublist(0, maxBarDestinations - 1)
+        : destinations;
+    Widget more = const Icon(Icons.more_horiz);
+    if (overflow && decorate != null) {
+      for (final d in destinations.sublist(shown.length)) {
+        more = decorate!(d, more);
+      }
+    }
+    return NavigationBar(
+      selectedIndex: currentIndex < shown.length ? currentIndex : shown.length,
+      onDestinationSelected: (i) =>
+          i < shown.length ? onSelect(i) : _more(context, shown.length),
+      destinations: [
+        for (final d in shown)
+          NavigationDestination(
+            key: Key('nav.${d.id}'),
+            icon: _icon(d, d.icon),
+            selectedIcon: _icon(d, d.selectedIcon),
+            label: d.label,
+          ),
+        if (overflow)
+          NavigationDestination(
+            key: const Key('nav.more'),
+            icon: more,
+            label: context.l10n.navMore,
+          ),
+      ],
     );
   }
 }

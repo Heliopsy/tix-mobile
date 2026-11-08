@@ -22,12 +22,15 @@ import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
 import 'package:tix_mobile/src/data/models/membership.dart';
 import 'package:tix_mobile/src/data/repositories/auth_repository.dart';
+import 'package:tix_mobile/src/data/repositories/identity_repository.dart';
 import 'package:tix_mobile/src/data/repositories/inbox_repository.dart';
 import 'package:tix_mobile/src/data/repositories/instances_repository.dart';
+import 'package:tix_mobile/src/data/repositories/projects_repository.dart';
 import 'package:tix_mobile/src/data/repositories/task_detail_repository.dart';
 import 'package:tix_mobile/src/data/repositories/task_list_repository.dart';
 import 'package:tix_mobile/src/data/repositories/tasks_repository.dart';
 import 'package:tix_mobile/src/data/repositories/view_prefs_repository.dart';
+import 'package:tix_mobile/src/data/repositories/workflows_repository.dart';
 
 part 'session.g.dart';
 
@@ -644,6 +647,27 @@ ViewPrefsRepository viewPrefsRepository(Ref ref) => ViewPrefsRepository(
 /// The inbox, personal channels and the summary for the active session.
 @riverpod
 InboxRepository inboxRepository(Ref ref) => InboxRepository(
+  ref.watch(sessionApiProvider),
+  ref.watch(responseCacheProvider),
+);
+
+/// Who the active credential is, for the active session.
+@riverpod
+IdentityRepository identityRepository(Ref ref) => IdentityRepository(
+  ref.watch(sessionApiProvider),
+  ref.watch(responseCacheProvider),
+);
+
+/// Project administration and custom fields, for the active session.
+@riverpod
+ProjectsRepository projectsRepository(Ref ref) => ProjectsRepository(
+  ref.watch(sessionApiProvider),
+  ref.watch(responseCacheProvider),
+);
+
+/// The tenant's workflows, for the active session.
+@riverpod
+WorkflowsRepository workflowsRepository(Ref ref) => WorkflowsRepository(
   ref.watch(sessionApiProvider),
   ref.watch(responseCacheProvider),
 );

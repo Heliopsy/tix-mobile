@@ -148,4 +148,23 @@ const bindings = <String, Binding>{
     action: 'redeliver',
     wave: 1,
   ),
+  // Wave 2: projects, workflows and custom fields.
+  'project.create': Binding(feature: 'projects', action: 'create', wave: 2),
+  'project.update': Binding(feature: 'projects', action: 'settings', wave: 2),
+  'project.delete': Binding(
+    feature: 'projects',
+    action: 'archive-or-delete',
+    wave: 2,
+  ),
+  'project.delete-plan': Binding(
+    feature: 'projects',
+    action: 'delete-plan',
+    wave: 2,
+  ),
+  'project.icon': Binding(feature: 'projects', action: 'icon-image', wave: 2),
+  'field.put': Binding(feature: 'projects', action: 'define-field', wave: 2),
+  'field.delete': Binding(feature: 'projects', action: 'delete-field', wave: 2),
+  'workflow.put': Binding(feature: 'workflows', action: 'create', wave: 2),
+  'workflow.put_by_key': Binding(feature: 'workflows', action: 'edit', wave: 2),
+  'workflow.delete': Binding(feature: 'workflows', action: 'delete', wave: 2),
 };

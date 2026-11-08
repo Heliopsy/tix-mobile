@@ -536,7 +536,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get projectsEmptyBody =>
-      'Les projets se créent sur le serveur, dans le navigateur ou avec tix project add.';
+      'Créez-en un avec Nouveau projet, dans le navigateur ou avec tix project add.';
 
   @override
   String get tasksEmptyBody =>
@@ -2297,4 +2297,784 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get paletteThemeOled => 'Thème noir OLED';
+
+  @override
+  String get manageTitle => 'Gestion';
+
+  @override
+  String manageSubtitle(String tenant) {
+    return 'Ce que vous pouvez gérer dans $tenant';
+  }
+
+  @override
+  String get goManage => 'Aller à la gestion';
+
+  @override
+  String get navMore => 'Plus';
+
+  @override
+  String get manageEmpty => 'Rien à gérer avec ces identifiants.';
+
+  @override
+  String get manageEmptyBody =>
+      'Les projets, les workflows, les personnes et l’espace demandent des droits que ce jeton ou ce rôle n’a pas. Demandez-en de plus larges à un administrateur.';
+
+  @override
+  String get manageGroupProjects => 'Projets';
+
+  @override
+  String get manageGroupWorkflows => 'Workflows';
+
+  @override
+  String get manageGroupFields => 'Champs';
+
+  @override
+  String get manageGroupPeople => 'Personnes';
+
+  @override
+  String get manageGroupAccess => 'Accès';
+
+  @override
+  String get manageGroupTenant => 'Espace';
+
+  @override
+  String get manageGroupServer => 'Serveur';
+
+  @override
+  String get manageProjectsSubtitle =>
+      'Créer, renommer, recolorer, archiver et supprimer des projets';
+
+  @override
+  String get manageWorkflowsSubtitle =>
+      'Les états, les passages entre eux et qui peut les faire';
+
+  @override
+  String get manageFieldsSubtitle =>
+      'Les champs personnalisés des tâches de chaque projet';
+
+  @override
+  String get manageSave => 'Enregistrer';
+
+  @override
+  String get manageSaveChanges => 'Enregistrer les modifications';
+
+  @override
+  String get manageDelete => 'Supprimer';
+
+  @override
+  String get manageClear => 'Effacer';
+
+  @override
+  String get manageYes => 'Oui';
+
+  @override
+  String get manageNo => 'Non';
+
+  @override
+  String get manageDangerZone => 'Zone de danger';
+
+  @override
+  String get manageInherited => 'Hérité';
+
+  @override
+  String get manageDurationHelp =>
+      'Une durée comme 30m ou 4h. Vide pour hériter.';
+
+  @override
+  String get manageChanged => 'modifié';
+
+  @override
+  String manageTaskCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tâches',
+      one: '1 tâche',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get manageDragToReorder => 'Glisser pour réordonner';
+
+  @override
+  String get colourNone => 'Sans couleur';
+
+  @override
+  String get colourSlate => 'Ardoise';
+
+  @override
+  String get colourRed => 'Rouge';
+
+  @override
+  String get colourAmber => 'Ambre';
+
+  @override
+  String get colourGreen => 'Vert';
+
+  @override
+  String get colourTeal => 'Sarcelle';
+
+  @override
+  String get colourBlue => 'Bleu';
+
+  @override
+  String get colourViolet => 'Violet';
+
+  @override
+  String get colourPink => 'Rose';
+
+  @override
+  String get colourCustom => 'Couleur personnalisée';
+
+  @override
+  String get iconNone => 'Aucune';
+
+  @override
+  String get iconText => 'Emoji';
+
+  @override
+  String get iconBuiltin => 'Icône';
+
+  @override
+  String get iconImage => 'Image';
+
+  @override
+  String get iconNoneHelp => 'Les premières lettres du nom la remplacent.';
+
+  @override
+  String get iconTextLabel => 'Emoji ou lettres';
+
+  @override
+  String get iconTextHelp => 'Un emoji, ou une ou deux lettres.';
+
+  @override
+  String get iconImageHelp => 'PNG, JPEG, WebP ou SVG, 64 Ko au plus.';
+
+  @override
+  String get iconUpload => 'Choisir une image';
+
+  @override
+  String get projectNew => 'Nouveau projet';
+
+  @override
+  String get projectCreate => 'Créer le projet';
+
+  @override
+  String projectCreated(String name) {
+    return '$name a été créé.';
+  }
+
+  @override
+  String get projectName => 'Nom';
+
+  @override
+  String get projectKey => 'Clé';
+
+  @override
+  String get projectKeyHelp =>
+      'Préfixe de chaque référence de tâche, comme infra-1. Lettres, chiffres, - et _.';
+
+  @override
+  String get projectKeyChangeHelp =>
+      'La changer renomme toutes les références de tâches ; l’ancienne clé continue de fonctionner.';
+
+  @override
+  String get projectDescription => 'Description';
+
+  @override
+  String get projectWorkflow => 'Workflow';
+
+  @override
+  String get projectWorkflowInfo =>
+      'Les états par lesquels passent les tâches du projet. tix refuse le changement tant qu’une tâche est dans un état que le nouveau workflow n’a pas.';
+
+  @override
+  String get projectColour => 'Couleur';
+
+  @override
+  String get projectIcon => 'Icône';
+
+  @override
+  String get projectSettingsTitle => 'Paramètres du projet';
+
+  @override
+  String get projectSectionProject => 'Projet';
+
+  @override
+  String get projectSectionAppearance => 'Apparence';
+
+  @override
+  String get projectSectionClaims => 'Prises en charge';
+
+  @override
+  String get projectClaimsInfo =>
+      'Combien de temps dure une prise en charge des tâches de ce projet. La valeur du projet l’emporte sur celle du workflow et de l’espace ; la durée maximale ne peut être que plus courte que celle de l’espace.';
+
+  @override
+  String get projectLeaseDefault => 'Durée de prise en charge';
+
+  @override
+  String get projectLeaseMax => 'Durée maximale';
+
+  @override
+  String get projectLeaseMaxHelp =>
+      'Une durée comme 24h, sous le plafond de l’espace. Vide pour hériter.';
+
+  @override
+  String get projectManageFields => 'Champs personnalisés';
+
+  @override
+  String get projectManageFieldsHelp =>
+      'Définissez les champs des tâches de ce projet.';
+
+  @override
+  String get projectReadOnly =>
+      'Vous pouvez voir ces paramètres mais pas les modifier : il faut project:write.';
+
+  @override
+  String get projectSaved => 'Projet enregistré.';
+
+  @override
+  String get projectRekeyTitle => 'Changer la clé du projet ?';
+
+  @override
+  String get projectRekeyBody =>
+      'Chaque référence de tâche change avec la clé :';
+
+  @override
+  String projectRekeyAlias(String old) {
+    return 'Les liens, références et filtres qui utilisent $old continuent de fonctionner : l’ancienne clé reste un alias, et aucun autre projet ne peut la prendre.';
+  }
+
+  @override
+  String get projectRekeyConfirm => 'Changer la clé';
+
+  @override
+  String get projectArchive => 'Archiver le projet';
+
+  @override
+  String get projectArchiveHelp =>
+      'Le masque des listes et garde ses tâches et son historique. tix ne permet pas de le désarchiver.';
+
+  @override
+  String projectArchiveTitle(String name) {
+    return 'Archiver $name ?';
+  }
+
+  @override
+  String get projectArchiveBody =>
+      'Le projet quitte les listes par défaut. Ses tâches et son historique restent. tix ne peut pas désarchiver un projet.';
+
+  @override
+  String projectArchived(String name) {
+    return '$name est archivé.';
+  }
+
+  @override
+  String get projectArchivedBadge => 'archivé';
+
+  @override
+  String get projectIsArchived => 'Ce projet est archivé.';
+
+  @override
+  String get projectDelete => 'Supprimer le projet';
+
+  @override
+  String get projectDeleteHelp =>
+      'Le supprime définitivement. Ses tâches vont dans un autre projet ou disparaissent avec lui.';
+
+  @override
+  String projectDeleteTitle(String key) {
+    return 'Supprimer $key ?';
+  }
+
+  @override
+  String get projectDeleteEmpty =>
+      'Le projet ne contient aucune tâche. La suppression est définitive.';
+
+  @override
+  String projectDeleteHolds(int live, int trashed) {
+    String _temp0 = intl.Intl.pluralLogic(
+      live,
+      locale: localeName,
+      other: '$live tâches',
+      one: '1 tâche',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      trashed,
+      locale: localeName,
+      other: '$trashed dans la corbeille',
+      one: '1 dans la corbeille',
+    );
+    return 'Il contient $_temp0 et $_temp1. Que faut-il en faire ?';
+  }
+
+  @override
+  String get projectDeleteMove => 'Les déplacer vers un autre projet';
+
+  @override
+  String get projectDeleteNoTarget =>
+      'Aucun autre projet actif où les déplacer.';
+
+  @override
+  String get projectDeleteTarget => 'Déplacer vers';
+
+  @override
+  String get projectDeleteMapping => 'Statut après le déplacement';
+
+  @override
+  String get projectDeleteTasks => 'Les supprimer définitivement';
+
+  @override
+  String projectDeleteType(String key) {
+    return 'Saisissez $key pour confirmer';
+  }
+
+  @override
+  String get projectDeleteConfirm =>
+      'Le projet et ses tâches sont supprimés définitivement.';
+
+  @override
+  String projectDeleteMoveConfirm(String target) {
+    return 'Les tâches vont dans $target, puis le projet est supprimé définitivement.';
+  }
+
+  @override
+  String projectDeleted(String key) {
+    return '$key est supprimé.';
+  }
+
+  @override
+  String get fieldsTitle => 'Champs personnalisés';
+
+  @override
+  String get fieldProjectsSubtitle =>
+      'tix définit les champs par projet. Choisissez-en un.';
+
+  @override
+  String get fieldsEmpty => 'Aucun champ personnalisé pour l’instant.';
+
+  @override
+  String get fieldsEmptyBody =>
+      'Un champ ajoute une valeur de votre choix à chaque tâche du projet, comme un environnement ou un client.';
+
+  @override
+  String get fieldsReadOnly =>
+      'Vous pouvez voir ces champs mais pas les modifier : il faut project:write.';
+
+  @override
+  String get fieldNew => 'Nouveau champ';
+
+  @override
+  String fieldEdit(String key) {
+    return 'Modifier $key';
+  }
+
+  @override
+  String get fieldKey => 'Clé';
+
+  @override
+  String get fieldKeyHelp =>
+      'Le nom du champ dans les tâches et les filtres, comme env.';
+
+  @override
+  String get fieldKeyFixed =>
+      'La clé nomme le champ ; pour la changer, définissez un nouveau champ.';
+
+  @override
+  String get fieldLabel => 'Libellé';
+
+  @override
+  String get fieldLabelHelp => 'Ce que les gens voient. Vide affiche la clé.';
+
+  @override
+  String get fieldType => 'Type';
+
+  @override
+  String get fieldOptions => 'Options';
+
+  @override
+  String get fieldOptionsHelp =>
+      'Les valeurs permises, séparées par des virgules.';
+
+  @override
+  String get fieldDefault => 'Valeur par défaut';
+
+  @override
+  String get fieldNoDefault => 'Pas de valeur par défaut';
+
+  @override
+  String get fieldPickDefault => 'Choisir une valeur';
+
+  @override
+  String get fieldActorHint => 'Un identifiant, comme raj';
+
+  @override
+  String fieldDefaultIs(String value) {
+    return 'par défaut $value';
+  }
+
+  @override
+  String get fieldDefaultUnreadable =>
+      'Cette valeur ne se lit pas comme le type du champ.';
+
+  @override
+  String get fieldRequired => 'Obligatoire';
+
+  @override
+  String get fieldRequiredHelp =>
+      'Une nouvelle tâche sans valeur est refusée, sauf s’il y a une valeur par défaut.';
+
+  @override
+  String fieldSaved(String key) {
+    return '$key est enregistré.';
+  }
+
+  @override
+  String fieldDeleteTitle(String key) {
+    return 'Supprimer le champ $key ?';
+  }
+
+  @override
+  String get fieldDeleteBody => 'Les tâches n’affichent plus ce champ.';
+
+  @override
+  String fieldDeleted(String key) {
+    return '$key est supprimé.';
+  }
+
+  @override
+  String get fieldTypeString => 'Texte, une ligne';
+
+  @override
+  String get fieldTypeText => 'Texte, plusieurs lignes';
+
+  @override
+  String get fieldTypeInt => 'Nombre entier';
+
+  @override
+  String get fieldTypeFloat => 'Nombre';
+
+  @override
+  String get fieldTypeBool => 'Oui ou non';
+
+  @override
+  String get fieldTypeDate => 'Date';
+
+  @override
+  String get fieldTypeDatetime => 'Date et heure';
+
+  @override
+  String get fieldTypeEnum => 'Choix';
+
+  @override
+  String get fieldTypeActor => 'Personne ou agent';
+
+  @override
+  String get fieldTypeJson => 'JSON';
+
+  @override
+  String get fieldTypeUnknown => 'Inconnu';
+
+  @override
+  String get categoryTodo => 'À faire';
+
+  @override
+  String get categoryInProgress => 'En cours';
+
+  @override
+  String get categoryBlocked => 'Bloqué';
+
+  @override
+  String get categoryWaiting => 'En attente';
+
+  @override
+  String get categoryDone => 'Terminé';
+
+  @override
+  String get categoryCancelled => 'Annulé';
+
+  @override
+  String get categoryDerived => 'Selon l’état (tix décide)';
+
+  @override
+  String get workflowsTitle => 'Workflows';
+
+  @override
+  String get workflowsSubtitle =>
+      'Les états que traversent les tâches, et comment';
+
+  @override
+  String get workflowsEmpty => 'Aucun workflow.';
+
+  @override
+  String get workflowTitle => 'Workflow';
+
+  @override
+  String workflowSubtitle(String key) {
+    return 'Clé $key';
+  }
+
+  @override
+  String get workflowBuiltin => 'intégré';
+
+  @override
+  String workflowStateCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count états',
+      one: '1 état',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get workflowNew => 'Nouveau workflow';
+
+  @override
+  String get workflowCreate => 'Créer le workflow';
+
+  @override
+  String workflowCreated(String name) {
+    return '$name a été créé.';
+  }
+
+  @override
+  String get workflowKey => 'Clé';
+
+  @override
+  String get workflowKeyHelp =>
+      'Lettres, chiffres, - et _, en commençant par une lettre.';
+
+  @override
+  String get workflowKeyTaken =>
+      'Un workflow a déjà cette clé ; l’enregistrer le remplacerait.';
+
+  @override
+  String get workflowName => 'Nom';
+
+  @override
+  String get workflowStartFrom => 'Partir de';
+
+  @override
+  String get workflowMinimal => 'Ouvert et terminé';
+
+  @override
+  String workflowCopyOf(String name) {
+    return 'Une copie de $name';
+  }
+
+  @override
+  String get workflowReadOnly =>
+      'Vous pouvez voir ce workflow mais pas le modifier : il faut workflow:write.';
+
+  @override
+  String get workflowRefused => 'tix a refusé la modification';
+
+  @override
+  String get workflowSaved => 'Workflow enregistré.';
+
+  @override
+  String get workflowSectionGeneral => 'Workflow';
+
+  @override
+  String get workflowInitial => 'État initial';
+
+  @override
+  String get workflowInitialHelp => 'Là où commence une nouvelle tâche.';
+
+  @override
+  String get workflowDefaultLease => 'Durée de prise en charge';
+
+  @override
+  String get workflowSectionStates => 'États';
+
+  @override
+  String get workflowStatesHelp =>
+      'Faites glisser la poignée pour réordonner. Touchez un état pour le modifier.';
+
+  @override
+  String get workflowAddState => 'Ajouter un état';
+
+  @override
+  String workflowEditState(String name) {
+    return 'Modifier $name';
+  }
+
+  @override
+  String get workflowStateKey => 'Clé';
+
+  @override
+  String get workflowStateKeyHelp =>
+      'Ce que contient le statut d’une tâche, comme review.';
+
+  @override
+  String get workflowStateKeyRename =>
+      'Renommer déplace les tâches de cet état vers la nouvelle clé à l’enregistrement.';
+
+  @override
+  String get workflowStateKeyTaken => 'Un autre état a cette clé.';
+
+  @override
+  String get workflowStateLabel => 'Libellé';
+
+  @override
+  String get workflowStateCategory => 'Catégorie';
+
+  @override
+  String get workflowStateCategoryInfo =>
+      'Regroupe l’état pour les couleurs, les tableaux et les rapports. Laissée à tix : terminé si final, à faire pour l’état initial, en cours sinon.';
+
+  @override
+  String get workflowStateInitial => 'État initial';
+
+  @override
+  String get workflowTerminal => 'Final';
+
+  @override
+  String get workflowTerminalHelp =>
+      'L’atteindre termine la tâche et satisfait ce qui en dépend.';
+
+  @override
+  String get workflowRevert => 'Revenir quand la prise en charge expire';
+
+  @override
+  String get workflowRevertHelp =>
+      'Une tâche prise en charge ici revient en arrière quand sa durée expire.';
+
+  @override
+  String get workflowRevertTo => 'Revenir à';
+
+  @override
+  String workflowRevertsTo(String state) {
+    return 'revient à $state';
+  }
+
+  @override
+  String get workflowInitialBadge => 'initial';
+
+  @override
+  String get workflowSectionTransitions => 'Transitions';
+
+  @override
+  String get workflowTransitionsHelp =>
+      'Touchez un état pour autoriser le passage. Le bouton de règles d’un passage choisi exige un commentaire ou un droit.';
+
+  @override
+  String workflowCanMoveTo(String name) {
+    return 'Depuis $name, une tâche peut aller vers';
+  }
+
+  @override
+  String get workflowNoMoves => 'Aucun passage ne quitte cet état.';
+
+  @override
+  String get workflowMoveRules => 'Règles de ce passage';
+
+  @override
+  String workflowRulesTitle(String from, String to) {
+    return '$from vers $to';
+  }
+
+  @override
+  String get workflowNeedsComment => 'Exige un commentaire';
+
+  @override
+  String get workflowNeedsCommentHelp =>
+      'Le passage est refusé s’il n’a pas de commentaire.';
+
+  @override
+  String workflowNeedsScope(String scope) {
+    return 'Exige $scope';
+  }
+
+  @override
+  String get workflowRequiredScope => 'Droit requis';
+
+  @override
+  String get workflowRequiredScopeHelp =>
+      'Seul quelqu’un qui le détient peut faire ce passage.';
+
+  @override
+  String get workflowNoScope => 'Aucun';
+
+  @override
+  String get workflowSectionRoutes => 'Parcours';
+
+  @override
+  String get workflowRoutesInfo =>
+      'Combien de passages séparent chaque état de l’état initial. Aller vers un état plus éloigné traverse les états intermédiaires, une transition à la fois.';
+
+  @override
+  String workflowSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count étapes',
+      one: '1 étape',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get workflowUnreachable => 'Aucun parcours n’y mène';
+
+  @override
+  String get workflowSectionRemoved => 'États supprimés';
+
+  @override
+  String get workflowRemovedHelp =>
+      'Les tâches encore dans un état supprimé doivent aller quelque part, sinon tix refuse l’enregistrement.';
+
+  @override
+  String workflowMigrate(String state) {
+    return 'Déplacer les tâches de $state vers';
+  }
+
+  @override
+  String get workflowMigrateNone =>
+      'Nulle part (refusé s’il contient des tâches)';
+
+  @override
+  String get workflowDelete => 'Supprimer le workflow';
+
+  @override
+  String get workflowDeleteHelp =>
+      'Seul un workflow qu’aucun projet n’utilise peut être supprimé.';
+
+  @override
+  String workflowDeleteTitle(String key) {
+    return 'Supprimer $key ?';
+  }
+
+  @override
+  String get workflowDeleteBody => 'Le workflow est supprimé définitivement.';
+
+  @override
+  String workflowDeleted(String key) {
+    return '$key est supprimé.';
+  }
+
+  @override
+  String get manageUsersTitle => 'Utilisateurs';
+
+  @override
+  String get manageUsersSubtitle =>
+      'Les personnes de l’espace, leurs rôles et les invitations';
+
+  @override
+  String get manageTokensTitle => 'Jetons d’API';
+
+  @override
+  String get manageTokensSubtitle =>
+      'Les jetons des agents et des scripts, et ce que chacun peut faire';
+
+  @override
+  String get manageTransferTitle => 'Import et export';
+
+  @override
+  String get manageTransferSubtitle =>
+      'Faire entrer et sortir des tâches et des espaces entiers';
 }

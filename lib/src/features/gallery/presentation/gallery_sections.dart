@@ -766,3 +766,79 @@ class GalleryInbox extends StatelessWidget {
     ],
   );
 }
+
+/// What managing projects and workflows is built from: a select, the
+/// project colour and icon pickers, notices and project marks.
+class GalleryManage extends StatefulWidget {
+  /// Creates the samples.
+  const GalleryManage({super.key});
+
+  @override
+  State<GalleryManage> createState() => _GalleryManageState();
+}
+
+class _GalleryManageState extends State<GalleryManage> {
+  String _type = 'enum';
+  String _colour = 'violet';
+  ProjectIconValue _icon = const ProjectIconValue(
+    kind: ProjectIconKind.builtin,
+    name: 'rocket',
+  );
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      TixSelectField<String>(
+        label: 'Type',
+        value: _type,
+        help: 'The kind of value every task holds.',
+        options: const [
+          TixOption('string', 'Text, one line'),
+          TixOption('enum', 'Choice'),
+          TixOption('date', 'Date'),
+        ],
+        onChanged: (v) => setState(() => _type = v ?? _type),
+      ),
+      const SizedBox(height: TixSpace.s3),
+      const TixFieldLabel('Colour'),
+      TixColourPicker(
+        value: _colour,
+        onChanged: (c) => setState(() => _colour = c),
+      ),
+      const SizedBox(height: TixSpace.s3),
+      const TixFieldLabel('Icon'),
+      ProjectIconPicker(
+        value: _icon,
+        names: const ['folder', 'rocket', 'bug', 'server', 'chart', 'bolt'],
+        onChanged: (v) => setState(() => _icon = v),
+        onUpload: () {},
+      ),
+      const SizedBox(height: TixSpace.s3),
+      const Wrap(
+        spacing: TixSpace.s2,
+        children: [
+          ProjectMark(name: 'Infrastructure', colour: 'teal'),
+          ProjectMark(name: 'Web', colour: 'violet', iconName: 'rocket'),
+          ProjectMark(name: 'Mobile', colour: 'amber', icon: '📱'),
+        ],
+      ),
+      const SizedBox(height: TixSpace.s3),
+      const TixNotice(
+        'You can see these settings but not change them: that needs '
+        'project:write.',
+      ),
+      const SizedBox(height: TixSpace.s2),
+      const TixNotice(
+        'Tasks still in a removed state need somewhere to go.',
+        tone: TixNoticeTone.warn,
+      ),
+      const SizedBox(height: TixSpace.s2),
+      const TixNotice(
+        'state "review" still holds 2 tasks',
+        title: 'tix refused the change',
+        tone: TixNoticeTone.danger,
+      ),
+    ],
+  );
+}
