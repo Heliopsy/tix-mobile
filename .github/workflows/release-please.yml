@@ -29,10 +29,12 @@ jobs:
 
       # A pull request opened with GITHUB_TOKEN gets its checks held as
       # `action_required` until somebody presses a button, and shows an empty
-      # check list meanwhile. A GitHub App token avoids that. The App is
-      # optional: without RELEASE_APP_CLIENT_ID / RELEASE_APP_PRIVATE_KEY this
-      # falls back to GITHUB_TOKEN and the release pull request's checks need
-      # approving by hand.
+      # check list meanwhile, so the merge queue cannot take it without an
+      # admin. With a GitHub App token its checks run like any pull request's
+      # and it is enqueued like one. The App is optional: without
+      # RELEASE_APP_CLIENT_ID / RELEASE_APP_PRIVATE_KEY this falls back to
+      # GITHUB_TOKEN and the release pull request's checks need approving by
+      # hand. docs/releasing.md says how to create the App.
       - name: Decide which token release-please gets
         id: creds
         env:

@@ -188,7 +188,7 @@ cover-floor:
 
 # Every lint: Dart formatting and analysis, workflows, YAML, Markdown, shell.
 [group('gates')]
-lint: fmt-check analyze actionlint yamllint mdlint shellcheck
+lint: fmt-check analyze actionlint yamllint mdlint shellcheck store-text
 
 # Lint the GitHub workflows (shellchecks their run: blocks too).
 [group('gates')]
@@ -220,6 +220,11 @@ shellcheck:
     mapfile -t files < <(git ls-files -co --exclude-standard '*.sh')
     [ "${#files[@]}" -gt 0 ] || { echo "no shell scripts"; exit 0; }
     {{tool}} shellcheck --severity=style "${files[@]}"
+
+# Store listing text: every locale complete and within Google Play's length limits.
+[group('gates')]
+store-text:
+    scripts/store-text-check.sh
 
 # REUSE compliance: every file has a licence, via its header or REUSE.toml.
 [group('gates')]
@@ -260,8 +265,12 @@ release-files-check HEAD_REF="":
     case "{{HEAD_REF}}" in release-please--*) echo "release-please branch, skipped"; exit 0;; esac
     got=$(sed -nE 's/.*"\.": *"([^"]+)".*/\1/p' .release-please-manifest.json)
     # CI on the release commit starts before release-please tags it, so the
-    # commit that bumps the manifest is checked against its own subject.
-    if [ "$(git log -1 --format=%s)" = "chore(main): release $got" ]; then
+    # commit that bumps the manifest is checked against its own subject. That
+    # commit, not HEAD: in the merge queue, and on the push to main after it,
+    # other pull requests can sit on top of the release commit. A replayed old
+    # release commit names a version already tagged and still fails below.
+    last=$(git log -1 --format=%s -- .release-please-manifest.json)
+    if [ "$last" = "chore(main): release $got" ] && ! git rev-parse -q --verify "refs/tags/v$got" >/dev/null; then
       echo "release commit for $got, tagged by release-please after this run starts"
       exit 0
     fi
@@ -292,6 +301,11 @@ build-apk *ARGS:
 [group('build')]
 build-aab *ARGS:
     flutter build appbundle --release {{build_args}} {{ARGS}}
+
+# The APKs F-Droid builds: per ABI, version code from pubspec.yaml rather than BUILD_ARGS (docs/releasing.md#f-droid).
+[group('build')]
+build-fdroid *ARGS:
+    flutter build apk --release --split-per-abi {{ARGS}}
 
 # iOS app without code signing (macOS only); proves it builds, installs nowhere.
 [group('build')]
@@ -379,6 +393,17 @@ package-ios:
     ditto -c -k --sequesterRsrc --keepParent build/ios/iphoneos/Runner.app dist/{{app}}-{{version}}-ios-unsigned.zip
     ls -l dist
 
+# Write the store "what's new" for VERSION from CHANGELOG.md, as fastlane/metadata/android/en-US/changelogs/CODE.txt.
+[group('package')]
+store-changelog VERSION CODE:
+    scripts/store-changelog.sh {{VERSION}} {{CODE}}
+
+# Regenerate the <releases> of the Linux AppStream metainfo from CHANGELOG.md, and validate it.
+[group('package')]
+metainfo:
+    scripts/metainfo-releases.py CHANGELOG.md linux/packaging/red.tix.tix_mobile.metainfo.xml
+    if command -v appstreamcli >/dev/null; then appstreamcli validate --no-net linux/packaging/red.tix.tix_mobile.metainfo.xml; fi
+
 # Write dist/SHA256SUMS over everything in dist/.
 [group('package')]
 checksums:
@@ -421,6 +446,11 @@ engine-notices-check: engine-notices
 [group('engine')]
 engine-check KIND +PATHS:
     scripts/engine-check.sh {{KIND}} {{PATHS}}
+
+# Fail if any APK carries code F-Droid rejects as non-free (Play services, Firebase, Play Core, ...).
+[group('gates')]
+fdroid-check +APKS:
+    scripts/fdroid-check.sh {{APKS}}
 
 # Remove the cached tix sources and libtix builds (~/.cache/tix-mobile/libtix).
 [group('engine')]
@@ -475,4 +505,4 @@ check: fmt-check analyze test spec
 
 # Everything CI runs that this host can run.
 [group('aggregate')]
-ci: fmt-check analyze gen-check openapi-check spec actionlint yamllint mdlint shellcheck reuse secrets release-files-check cover-check build-all
+ci: fmt-check analyze gen-check openapi-check spec actionlint yamllint mdlint shellcheck store-text reuse secrets release-files-check cover-check build-all

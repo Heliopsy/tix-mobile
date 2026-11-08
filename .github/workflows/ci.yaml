@@ -88,6 +88,9 @@ jobs:
       - name: shellcheck
         if: (success() || failure()) && steps.tools.outcome == 'success'
         run: just shellcheck
+      - name: Store listing text
+        if: (success() || failure()) && steps.tools.outcome == 'success'
+        run: just store-text
       - name: REUSE
         if: (success() || failure()) && steps.tools.outcome == 'success'
         run: just reuse
@@ -251,6 +254,16 @@ jobs:
           # The APK path is a glob, so it is left to the shell to expand.
           # shellcheck disable=SC2086
           just engine-check "$CHECK" $ARTIFACT
+
+      # Android only: F-Droid builds from this source, and a dependency that
+      # pulls in Play services or Firebase should fail here, not there.
+      - name: No non-free code in the APKs
+        if: matrix.check == 'android'
+        env:
+          ARTIFACT: ${{ matrix.artifact }}
+        run: |
+          # shellcheck disable=SC2086
+          just fdroid-check $ARTIFACT
 
       - name: Sizes
         env:

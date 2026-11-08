@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Export options for `just build-ipa` (flutter build ipa), App Store Connect
+  distribution with manual signing. teamID and provisioningProfiles are left
+  empty on purpose: they are account details, and the release workflow's
+  fastlane lane (fastlane/Fastfile, `ios ipa`) fills them in on the runner.
+  To build a store IPA on your own Mac, set both here without committing them.
+-->
+<plist version="1.0">
+<dict>
+	<key>method</key>
+	<string>app-store-connect</string>
+	<key>destination</key>
+	<string>export</string>
+	<key>signingStyle</key>
+	<string>manual</string>
+	<key>signingCertificate</key>
+	<string>Apple Distribution</string>
+	<key>teamID</key>
+	<string></string>
+	<key>provisioningProfiles</key>
+	<dict/>
+	<key>uploadSymbols</key>
+	<true/>
+	<key>manageAppVersionAndBuildNumber</key>
+	<false/>
+</dict>
+</plist>

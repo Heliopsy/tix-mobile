@@ -1,0 +1,93 @@
+# SPDX-FileCopyrightText: tix-mobile contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Store uploads for the release workflow. Every credential comes from the
+# environment, which release.yaml fills from repository secrets only when they
+# all exist; docs/releasing.md lists them. Run locally with
+# `bundle exec fastlane <platform> <lane>` and the same variables set.
+
+# fastlane runs lane code from ./fastlane but actions from the project root, so
+# every path below is absolute to keep the two from being confused.
+ROOT = ENV.fetch("GITHUB_WORKSPACE") do
+  Dir.pwd.end_with?("/fastlane") ? File.expand_path("..") : Dir.pwd
+end
+
+default_platform(:android)
+
+platform :android do
+  desc "Upload an App Bundle to the internal track, with the store text and the changelog for its version code"
+  lane :internal do |options|
+    aab = File.expand_path(options.fetch(:aab), ROOT)
+    status = ENV["PLAY_RELEASE_STATUS"].to_s
+    upload_to_play_store(
+      track: "internal",
+      aab: aab,
+      json_key_data: ENV.fetch("PLAY_SERVICE_ACCOUNT_JSON"),
+      # "draft" until the app has passed its first review: Play refuses a
+      # completed release for an app that was never published.
+      release_status: status.empty? ? "draft" : status,
+      metadata_path: File.join(ROOT, "fastlane/metadata/android"),
+      # Screenshots and the feature graphic are uploaded by hand in the Play
+      # Console until real ones are committed; see docs/releasing.md.
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+end
+
+platform :ios do
+  desc "Build an App Store signed IPA from the distribution certificate and profile in the environment"
+  lane :ipa do
+    team = ENV.fetch("APPLE_TEAM_ID")
+    profile = ENV.fetch("IOS_PROFILE_PATH")
+
+    # A throwaway keychain, deleted with the runner. Only acts on CI.
+    setup_ci
+    import_certificate(
+      certificate_path: ENV.fetch("IOS_CERT_PATH"),
+      certificate_password: ENV.fetch("IOS_CERT_PASSWORD"),
+      keychain_name: "fastlane_tmp_keychain",
+      keychain_password: ""
+    )
+    install_provisioning_profile(path: profile)
+    profile_name = FastlaneCore::ProvisioningProfile.name(profile)
+
+    # The project keeps automatic signing for people building on their own
+    # Mac. CI has no Apple ID to sign in with, so the Runner target's Release
+    # configuration is switched to the installed profile for this build only.
+    update_code_signing_settings(
+      path: File.join(ROOT, "ios/Runner.xcodeproj"),
+      use_automatic_signing: false,
+      targets: ["Runner"],
+      build_configurations: ["Release"],
+      team_id: team,
+      code_sign_identity: "Apple Distribution",
+      profile_name: profile_name
+    )
+
+    # ios/ExportOptions.plist is committed without a team or profile, which
+    # are account details; they are filled in on the runner's copy.
+    plist = File.join(ROOT, "ios/ExportOptions.plist")
+    sh("/usr/libexec/PlistBuddy", "-c", "Set :teamID #{team}", plist)
+    sh("/usr/libexec/PlistBuddy", "-c", "Add :provisioningProfiles:red.tix.tixMobile string #{profile_name}", plist)
+
+    Dir.chdir(ROOT) { sh("just", "build-ipa") }
+  end
+
+  desc "Upload an IPA to TestFlight with the App Store Connect API key in the environment"
+  lane :testflight do |options|
+    api_key = app_store_connect_api_key(
+      key_id: ENV.fetch("APP_STORE_CONNECT_KEY_ID"),
+      issuer_id: ENV.fetch("APP_STORE_CONNECT_ISSUER_ID"),
+      key_content: ENV.fetch("APP_STORE_CONNECT_KEY_BASE64"),
+      is_key_content_base64: true
+    )
+    upload_to_testflight(
+      api_key: api_key,
+      ipa: File.expand_path(options.fetch(:ipa), ROOT),
+      # Processing takes minutes to an hour; the build appears in App Store
+      # Connect on its own and nothing here depends on it.
+      skip_waiting_for_build_processing: true
+    )
+  end
+end
