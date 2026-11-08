@@ -28,7 +28,8 @@ mixin _$APIToken {
 @JsonKey(name: 'name') String get name;/// ProjectID restricts the token to one project when set. Empty means every
 /// project the actor can reach.
 @JsonKey(name: 'project_id') String get projectId;/// RevokedAt is when the token was revoked, RFC 3339. A revoked token never
-/// authenticates again.
+/// authenticates again. A time still to come is a rotated token's grace window:
+/// it works until then.
 @JsonKey(name: 'revoked_at')@TixDateTime() DateTime? get revokedAt;/// Scopes are the permissions the token carries; a request outside them is
 /// refused.
 @JsonKey(name: 'scopes') List<String> get scopes;/// TenantID is the tenant the token authenticates to.
@@ -262,7 +263,8 @@ class _APIToken implements APIToken {
 /// project the actor can reach.
 @override@JsonKey(name: 'project_id') final  String projectId;
 /// RevokedAt is when the token was revoked, RFC 3339. A revoked token never
-/// authenticates again.
+/// authenticates again. A time still to come is a rotated token's grace window:
+/// it works until then.
 @override@JsonKey(name: 'revoked_at')@TixDateTime() final  DateTime? revokedAt;
 /// Scopes are the permissions the token carries; a request outside them is
 /// refused.
@@ -14180,6 +14182,645 @@ $ErrorBodyCopyWith<$Res>? get error {
 
 
 /// @nodoc
+mixin _$Event {
+
+/// ActorID is the actor who caused the event. Empty for a system event.
+@JsonKey(name: 'actor_id') String get actorId;/// ID is the event's unique identifier.
+@JsonKey(name: 'id') String get id;/// OccurredAt is when the event happened, RFC 3339.
+@JsonKey(name: 'occurred_at')@TixDateTime() DateTime? get occurredAt;/// Payload carries event-specific details, including the subject's ref when it
+/// has one.
+@JsonKey(name: 'payload') Map<String, Object?> get payload;/// ProjectID is the project the event concerns. Empty for a tenant-level event.
+@JsonKey(name: 'project_id') String get projectId;/// Seq is the event's position in the tenant's stream, increasing. Resume a
+/// stream after the last Seq seen.
+@JsonKey(name: 'seq') int get seq;/// SubjectID is the ID of the record the event is about.
+@JsonKey(name: 'subject_id') String get subjectId;/// SubjectType is the kind of record the event is about, such as "task".
+@JsonKey(name: 'subject_type') String get subjectType;/// TenantID is the tenant the event belongs to.
+@JsonKey(name: 'tenant_id') String get tenantId;/// Type is the kind of event.
+@JsonKey(name: 'type', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) EventType? get type;/// Via is the access channel the change arrived through: its kind and the
+/// token's name. Network details stay in the audit log.
+@JsonKey(name: 'via') Via? get via;
+/// Create a copy of Event
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$EventCopyWith<Event> get copyWith => _$EventCopyWithImpl<Event>(this as Event, _$identity);
+
+  /// Serializes this Event to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as Event;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Event&&(identical(other.actorId, _this.actorId) || other.actorId == _this.actorId)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.occurredAt, _this.occurredAt) || other.occurredAt == _this.occurredAt)&&const DeepCollectionEquality().equals(other.payload, _this.payload)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.seq, _this.seq) || other.seq == _this.seq)&&(identical(other.subjectId, _this.subjectId) || other.subjectId == _this.subjectId)&&(identical(other.subjectType, _this.subjectType) || other.subjectType == _this.subjectType)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.via, _this.via) || other.via == _this.via));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as Event;
+  return Object.hash(runtimeType,_this.actorId,_this.id,_this.occurredAt,const DeepCollectionEquality().hash(_this.payload),_this.projectId,_this.seq,_this.subjectId,_this.subjectType,_this.tenantId,_this.type,_this.via);
+}
+
+@override
+String toString() {
+  final _this = this as Event;
+  return 'Event(actorId: ${_this.actorId}, id: ${_this.id}, occurredAt: ${_this.occurredAt}, payload: ${_this.payload}, projectId: ${_this.projectId}, seq: ${_this.seq}, subjectId: ${_this.subjectId}, subjectType: ${_this.subjectType}, tenantId: ${_this.tenantId}, type: ${_this.type}, via: ${_this.via})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $EventCopyWith<$Res>  {
+  factory $EventCopyWith(Event value, $Res Function(Event) _then) = _$EventCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'actor_id') String actorId,@JsonKey(name: 'id') String id,@JsonKey(name: 'occurred_at')@TixDateTime() DateTime? occurredAt,@JsonKey(name: 'payload') Map<String, Object?> payload,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'seq') int seq,@JsonKey(name: 'subject_id') String subjectId,@JsonKey(name: 'subject_type') String subjectType,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'type', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) EventType? type,@JsonKey(name: 'via') Via? via
+});
+
+
+$ViaCopyWith<$Res>? get via;
+
+}
+/// @nodoc
+class _$EventCopyWithImpl<$Res>
+    implements $EventCopyWith<$Res> {
+  _$EventCopyWithImpl(this._self, this._then);
+
+  final Event _self;
+  final $Res Function(Event) _then;
+
+/// Create a copy of Event
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? actorId = null,Object? id = null,Object? occurredAt = freezed,Object? payload = null,Object? projectId = null,Object? seq = null,Object? subjectId = null,Object? subjectType = null,Object? tenantId = null,Object? type = freezed,Object? via = freezed,}) {
+  return _then(Event(
+actorId: null == actorId ? _self.actorId : actorId // ignore: cast_nullable_to_non_nullable
+as String,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,occurredAt: freezed == occurredAt ? _self.occurredAt : occurredAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,payload: null == payload ? _self.payload : payload // ignore: cast_nullable_to_non_nullable
+as Map<String, Object?>,projectId: null == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
+as String,seq: null == seq ? _self.seq : seq // ignore: cast_nullable_to_non_nullable
+as int,subjectId: null == subjectId ? _self.subjectId : subjectId // ignore: cast_nullable_to_non_nullable
+as String,subjectType: null == subjectType ? _self.subjectType : subjectType // ignore: cast_nullable_to_non_nullable
+as String,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as EventType?,via: freezed == via ? _self.via : via // ignore: cast_nullable_to_non_nullable
+as Via?,
+  ));
+}
+/// Create a copy of Event
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ViaCopyWith<$Res>? get via {
+    if (_self.via == null) {
+    return null;
+  }
+
+  return $ViaCopyWith<$Res>(_self.via!, (value) {
+    return _then(_self.copyWith(via: value));
+  });
+}
+}
+
+
+/// Adds pattern-matching-related methods to [Event].
+extension EventPatterns on Event {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Event value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Event() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Event value)  $default,){
+final _that = this;
+switch (_that) {
+case _Event():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Event value)?  $default,){
+final _that = this;
+switch (_that) {
+case _Event() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String actorId, @JsonKey(name: 'id')  String id, @JsonKey(name: 'occurred_at')@TixDateTime()  DateTime? occurredAt, @JsonKey(name: 'payload')  Map<String, Object?> payload, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'seq')  int seq, @JsonKey(name: 'subject_id')  String subjectId, @JsonKey(name: 'subject_type')  String subjectType, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'type', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  EventType? type, @JsonKey(name: 'via')  Via? via)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Event() when $default != null:
+return $default(_that.actorId,_that.id,_that.occurredAt,_that.payload,_that.projectId,_that.seq,_that.subjectId,_that.subjectType,_that.tenantId,_that.type,_that.via);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String actorId, @JsonKey(name: 'id')  String id, @JsonKey(name: 'occurred_at')@TixDateTime()  DateTime? occurredAt, @JsonKey(name: 'payload')  Map<String, Object?> payload, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'seq')  int seq, @JsonKey(name: 'subject_id')  String subjectId, @JsonKey(name: 'subject_type')  String subjectType, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'type', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  EventType? type, @JsonKey(name: 'via')  Via? via)  $default,) {final _that = this;
+switch (_that) {
+case _Event():
+return $default(_that.actorId,_that.id,_that.occurredAt,_that.payload,_that.projectId,_that.seq,_that.subjectId,_that.subjectType,_that.tenantId,_that.type,_that.via);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'actor_id')  String actorId, @JsonKey(name: 'id')  String id, @JsonKey(name: 'occurred_at')@TixDateTime()  DateTime? occurredAt, @JsonKey(name: 'payload')  Map<String, Object?> payload, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'seq')  int seq, @JsonKey(name: 'subject_id')  String subjectId, @JsonKey(name: 'subject_type')  String subjectType, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'type', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  EventType? type, @JsonKey(name: 'via')  Via? via)?  $default,) {final _that = this;
+switch (_that) {
+case _Event() when $default != null:
+return $default(_that.actorId,_that.id,_that.occurredAt,_that.payload,_that.projectId,_that.seq,_that.subjectId,_that.subjectType,_that.tenantId,_that.type,_that.via);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _Event implements Event {
+  const _Event({@JsonKey(name: 'actor_id') this.actorId = '', @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'occurred_at')@TixDateTime() this.occurredAt, @JsonKey(name: 'payload')  Map<String, Object?> payload = const <String, Object?>{}, @JsonKey(name: 'project_id') this.projectId = '', @JsonKey(name: 'seq') this.seq = 0, @JsonKey(name: 'subject_id') this.subjectId = '', @JsonKey(name: 'subject_type') this.subjectType = '', @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'type', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.type, @JsonKey(name: 'via') this.via}): _payload = payload;
+  factory _Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);
+
+/// ActorID is the actor who caused the event. Empty for a system event.
+@override@JsonKey(name: 'actor_id') final  String actorId;
+/// ID is the event's unique identifier.
+@override@JsonKey(name: 'id') final  String id;
+/// OccurredAt is when the event happened, RFC 3339.
+@override@JsonKey(name: 'occurred_at')@TixDateTime() final  DateTime? occurredAt;
+/// Payload carries event-specific details, including the subject's ref when it
+/// has one.
+ final  Map<String, Object?> _payload;
+/// Payload carries event-specific details, including the subject's ref when it
+/// has one.
+@override@JsonKey(name: 'payload') Map<String, Object?> get payload {
+  if (_payload is EqualUnmodifiableMapView) return _payload;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_payload);
+}
+
+/// ProjectID is the project the event concerns. Empty for a tenant-level event.
+@override@JsonKey(name: 'project_id') final  String projectId;
+/// Seq is the event's position in the tenant's stream, increasing. Resume a
+/// stream after the last Seq seen.
+@override@JsonKey(name: 'seq') final  int seq;
+/// SubjectID is the ID of the record the event is about.
+@override@JsonKey(name: 'subject_id') final  String subjectId;
+/// SubjectType is the kind of record the event is about, such as "task".
+@override@JsonKey(name: 'subject_type') final  String subjectType;
+/// TenantID is the tenant the event belongs to.
+@override@JsonKey(name: 'tenant_id') final  String tenantId;
+/// Type is the kind of event.
+@override@JsonKey(name: 'type', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) final  EventType? type;
+/// Via is the access channel the change arrived through: its kind and the
+/// token's name. Network details stay in the audit log.
+@override@JsonKey(name: 'via') final  Via? via;
+
+/// Create a copy of Event
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$EventCopyWith<_Event> get copyWith => __$EventCopyWithImpl<_Event>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$EventToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Event&&(identical(other.actorId, actorId) || other.actorId == actorId)&&(identical(other.id, id) || other.id == id)&&(identical(other.occurredAt, occurredAt) || other.occurredAt == occurredAt)&&const DeepCollectionEquality().equals(other.payload, _payload)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.seq, seq) || other.seq == seq)&&(identical(other.subjectId, subjectId) || other.subjectId == subjectId)&&(identical(other.subjectType, subjectType) || other.subjectType == subjectType)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.type, type) || other.type == type)&&(identical(other.via, via) || other.via == via));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,actorId,id,occurredAt,const DeepCollectionEquality().hash(_payload),projectId,seq,subjectId,subjectType,tenantId,type,via);
+}
+
+@override
+String toString() {
+    return 'Event(actorId: $actorId, id: $id, occurredAt: $occurredAt, payload: $payload, projectId: $projectId, seq: $seq, subjectId: $subjectId, subjectType: $subjectType, tenantId: $tenantId, type: $type, via: $via)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$EventCopyWith<$Res> implements $EventCopyWith<$Res> {
+  factory _$EventCopyWith(_Event value, $Res Function(_Event) _then) = __$EventCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'actor_id') String actorId,@JsonKey(name: 'id') String id,@JsonKey(name: 'occurred_at')@TixDateTime() DateTime? occurredAt,@JsonKey(name: 'payload') Map<String, Object?> payload,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'seq') int seq,@JsonKey(name: 'subject_id') String subjectId,@JsonKey(name: 'subject_type') String subjectType,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'type', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) EventType? type,@JsonKey(name: 'via') Via? via
+});
+
+
+@override $ViaCopyWith<$Res>? get via;
+
+}
+/// @nodoc
+class __$EventCopyWithImpl<$Res>
+    implements _$EventCopyWith<$Res> {
+  __$EventCopyWithImpl(this._self, this._then);
+
+  final _Event _self;
+  final $Res Function(_Event) _then;
+
+/// Create a copy of Event
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? actorId = null,Object? id = null,Object? occurredAt = freezed,Object? payload = null,Object? projectId = null,Object? seq = null,Object? subjectId = null,Object? subjectType = null,Object? tenantId = null,Object? type = freezed,Object? via = freezed,}) {
+  return _then(_Event(
+actorId: null == actorId ? _self.actorId : actorId // ignore: cast_nullable_to_non_nullable
+as String,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,occurredAt: freezed == occurredAt ? _self.occurredAt : occurredAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,payload: null == payload ? _self._payload : payload // ignore: cast_nullable_to_non_nullable
+as Map<String, Object?>,projectId: null == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
+as String,seq: null == seq ? _self.seq : seq // ignore: cast_nullable_to_non_nullable
+as int,subjectId: null == subjectId ? _self.subjectId : subjectId // ignore: cast_nullable_to_non_nullable
+as String,subjectType: null == subjectType ? _self.subjectType : subjectType // ignore: cast_nullable_to_non_nullable
+as String,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as EventType?,via: freezed == via ? _self.via : via // ignore: cast_nullable_to_non_nullable
+as Via?,
+  ));
+}
+
+/// Create a copy of Event
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ViaCopyWith<$Res>? get via {
+    if (_self.via == null) {
+    return null;
+  }
+
+  return $ViaCopyWith<$Res>(_self.via!, (value) {
+    return _then(_self.copyWith(via: value));
+  });
+}
+}
+
+
+/// @nodoc
+mixin _$EventPage {
+
+@JsonKey(name: 'events') List<Event> get events;@JsonKey(name: 'next_seq') int get nextSeq;
+/// Create a copy of EventPage
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$EventPageCopyWith<EventPage> get copyWith => _$EventPageCopyWithImpl<EventPage>(this as EventPage, _$identity);
+
+  /// Serializes this EventPage to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as EventPage;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventPage&&const DeepCollectionEquality().equals(other.events, _this.events)&&(identical(other.nextSeq, _this.nextSeq) || other.nextSeq == _this.nextSeq));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as EventPage;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.events),_this.nextSeq);
+}
+
+@override
+String toString() {
+  final _this = this as EventPage;
+  return 'EventPage(events: ${_this.events}, nextSeq: ${_this.nextSeq})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $EventPageCopyWith<$Res>  {
+  factory $EventPageCopyWith(EventPage value, $Res Function(EventPage) _then) = _$EventPageCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'events') List<Event> events,@JsonKey(name: 'next_seq') int nextSeq
+});
+
+
+
+
+}
+/// @nodoc
+class _$EventPageCopyWithImpl<$Res>
+    implements $EventPageCopyWith<$Res> {
+  _$EventPageCopyWithImpl(this._self, this._then);
+
+  final EventPage _self;
+  final $Res Function(EventPage) _then;
+
+/// Create a copy of EventPage
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? events = null,Object? nextSeq = null,}) {
+  return _then(EventPage(
+events: null == events ? _self.events : events // ignore: cast_nullable_to_non_nullable
+as List<Event>,nextSeq: null == nextSeq ? _self.nextSeq : nextSeq // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [EventPage].
+extension EventPagePatterns on EventPage {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _EventPage value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _EventPage() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _EventPage value)  $default,){
+final _that = this;
+switch (_that) {
+case _EventPage():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _EventPage value)?  $default,){
+final _that = this;
+switch (_that) {
+case _EventPage() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'events')  List<Event> events, @JsonKey(name: 'next_seq')  int nextSeq)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _EventPage() when $default != null:
+return $default(_that.events,_that.nextSeq);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'events')  List<Event> events, @JsonKey(name: 'next_seq')  int nextSeq)  $default,) {final _that = this;
+switch (_that) {
+case _EventPage():
+return $default(_that.events,_that.nextSeq);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'events')  List<Event> events, @JsonKey(name: 'next_seq')  int nextSeq)?  $default,) {final _that = this;
+switch (_that) {
+case _EventPage() when $default != null:
+return $default(_that.events,_that.nextSeq);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _EventPage implements EventPage {
+  const _EventPage({@JsonKey(name: 'events')  List<Event> events = const <Event>[], @JsonKey(name: 'next_seq') this.nextSeq = 0}): _events = events;
+  factory _EventPage.fromJson(Map<String, dynamic> json) => _$EventPageFromJson(json);
+
+ final  List<Event> _events;
+@override@JsonKey(name: 'events') List<Event> get events {
+  if (_events is EqualUnmodifiableListView) return _events;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_events);
+}
+
+@override@JsonKey(name: 'next_seq') final  int nextSeq;
+
+/// Create a copy of EventPage
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$EventPageCopyWith<_EventPage> get copyWith => __$EventPageCopyWithImpl<_EventPage>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$EventPageToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventPage&&const DeepCollectionEquality().equals(other.events, _events)&&(identical(other.nextSeq, nextSeq) || other.nextSeq == nextSeq));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_events),nextSeq);
+}
+
+@override
+String toString() {
+    return 'EventPage(events: $events, nextSeq: $nextSeq)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$EventPageCopyWith<$Res> implements $EventPageCopyWith<$Res> {
+  factory _$EventPageCopyWith(_EventPage value, $Res Function(_EventPage) _then) = __$EventPageCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'events') List<Event> events,@JsonKey(name: 'next_seq') int nextSeq
+});
+
+
+
+
+}
+/// @nodoc
+class __$EventPageCopyWithImpl<$Res>
+    implements _$EventPageCopyWith<$Res> {
+  __$EventPageCopyWithImpl(this._self, this._then);
+
+  final _EventPage _self;
+  final $Res Function(_EventPage) _then;
+
+/// Create a copy of EventPage
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? events = null,Object? nextSeq = null,}) {
+  return _then(_EventPage(
+events: null == events ? _self._events : events // ignore: cast_nullable_to_non_nullable
+as List<Event>,nextSeq: null == nextSeq ? _self.nextSeq : nextSeq // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$ExportInput {
 
 /// IncludeArtifacts adds the tasks' artifacts.
@@ -23590,7 +24231,8 @@ mixin _$IssuedToken {
 @JsonKey(name: 'name') String get name;/// ProjectID restricts the token to one project when set. Empty means every
 /// project the actor can reach.
 @JsonKey(name: 'project_id') String get projectId;/// RevokedAt is when the token was revoked, RFC 3339. A revoked token never
-/// authenticates again.
+/// authenticates again. A time still to come is a rotated token's grace window:
+/// it works until then.
 @JsonKey(name: 'revoked_at')@TixDateTime() DateTime? get revokedAt;/// Scopes are the permissions the token carries; a request outside them is
 /// refused.
 @JsonKey(name: 'scopes') List<String> get scopes;/// TenantID is the tenant the token authenticates to.
@@ -23827,7 +24469,8 @@ class _IssuedToken implements IssuedToken {
 /// project the actor can reach.
 @override@JsonKey(name: 'project_id') final  String projectId;
 /// RevokedAt is when the token was revoked, RFC 3339. A revoked token never
-/// authenticates again.
+/// authenticates again. A time still to come is a rotated token's grace window:
+/// it works until then.
 @override@JsonKey(name: 'revoked_at')@TixDateTime() final  DateTime? revokedAt;
 /// Scopes are the permissions the token carries; a request outside them is
 /// refused.
@@ -28082,6 +28725,287 @@ auditEntries: freezed == auditEntries ? _self.auditEntries : auditEntries // ign
 as String?,events: freezed == events ? _self.events : events // ignore: cast_nullable_to_non_nullable
 as String?,tenantId: freezed == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
 as String?,webhookDeliveries: freezed == webhookDeliveries ? _self.webhookDeliveries : webhookDeliveries // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$RotateTokenInput {
+
+/// ActorID, when set, is the actor the token must belong to, by identifier or
+/// handle; a token of anybody else is reported missing.
+@JsonKey(name: 'actor_id') String? get actorId;/// Grace is how long the old token keeps working beside the new one, from 0 (it
+/// stops at once, the default) up to 24h.
+@JsonKey(name: 'grace') String? get grace;
+/// Create a copy of RotateTokenInput
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RotateTokenInputCopyWith<RotateTokenInput> get copyWith => _$RotateTokenInputCopyWithImpl<RotateTokenInput>(this as RotateTokenInput, _$identity);
+
+  /// Serializes this RotateTokenInput to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as RotateTokenInput;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RotateTokenInput&&(identical(other.actorId, _this.actorId) || other.actorId == _this.actorId)&&(identical(other.grace, _this.grace) || other.grace == _this.grace));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as RotateTokenInput;
+  return Object.hash(runtimeType,_this.actorId,_this.grace);
+}
+
+@override
+String toString() {
+  final _this = this as RotateTokenInput;
+  return 'RotateTokenInput(actorId: ${_this.actorId}, grace: ${_this.grace})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $RotateTokenInputCopyWith<$Res>  {
+  factory $RotateTokenInputCopyWith(RotateTokenInput value, $Res Function(RotateTokenInput) _then) = _$RotateTokenInputCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'actor_id') String? actorId,@JsonKey(name: 'grace') String? grace
+});
+
+
+
+
+}
+/// @nodoc
+class _$RotateTokenInputCopyWithImpl<$Res>
+    implements $RotateTokenInputCopyWith<$Res> {
+  _$RotateTokenInputCopyWithImpl(this._self, this._then);
+
+  final RotateTokenInput _self;
+  final $Res Function(RotateTokenInput) _then;
+
+/// Create a copy of RotateTokenInput
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? actorId = freezed,Object? grace = freezed,}) {
+  return _then(RotateTokenInput(
+actorId: freezed == actorId ? _self.actorId : actorId // ignore: cast_nullable_to_non_nullable
+as String?,grace: freezed == grace ? _self.grace : grace // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [RotateTokenInput].
+extension RotateTokenInputPatterns on RotateTokenInput {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _RotateTokenInput value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _RotateTokenInput() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _RotateTokenInput value)  $default,){
+final _that = this;
+switch (_that) {
+case _RotateTokenInput():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _RotateTokenInput value)?  $default,){
+final _that = this;
+switch (_that) {
+case _RotateTokenInput() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String? actorId, @JsonKey(name: 'grace')  String? grace)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _RotateTokenInput() when $default != null:
+return $default(_that.actorId,_that.grace);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String? actorId, @JsonKey(name: 'grace')  String? grace)  $default,) {final _that = this;
+switch (_that) {
+case _RotateTokenInput():
+return $default(_that.actorId,_that.grace);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'actor_id')  String? actorId, @JsonKey(name: 'grace')  String? grace)?  $default,) {final _that = this;
+switch (_that) {
+case _RotateTokenInput() when $default != null:
+return $default(_that.actorId,_that.grace);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _RotateTokenInput implements RotateTokenInput {
+  const _RotateTokenInput({@JsonKey(name: 'actor_id') this.actorId, @JsonKey(name: 'grace') this.grace});
+  factory _RotateTokenInput.fromJson(Map<String, dynamic> json) => _$RotateTokenInputFromJson(json);
+
+/// ActorID, when set, is the actor the token must belong to, by identifier or
+/// handle; a token of anybody else is reported missing.
+@override@JsonKey(name: 'actor_id') final  String? actorId;
+/// Grace is how long the old token keeps working beside the new one, from 0 (it
+/// stops at once, the default) up to 24h.
+@override@JsonKey(name: 'grace') final  String? grace;
+
+/// Create a copy of RotateTokenInput
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$RotateTokenInputCopyWith<_RotateTokenInput> get copyWith => __$RotateTokenInputCopyWithImpl<_RotateTokenInput>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$RotateTokenInputToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RotateTokenInput&&(identical(other.actorId, actorId) || other.actorId == actorId)&&(identical(other.grace, grace) || other.grace == grace));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,actorId,grace);
+}
+
+@override
+String toString() {
+    return 'RotateTokenInput(actorId: $actorId, grace: $grace)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$RotateTokenInputCopyWith<$Res> implements $RotateTokenInputCopyWith<$Res> {
+  factory _$RotateTokenInputCopyWith(_RotateTokenInput value, $Res Function(_RotateTokenInput) _then) = __$RotateTokenInputCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'actor_id') String? actorId,@JsonKey(name: 'grace') String? grace
+});
+
+
+
+
+}
+/// @nodoc
+class __$RotateTokenInputCopyWithImpl<$Res>
+    implements _$RotateTokenInputCopyWith<$Res> {
+  __$RotateTokenInputCopyWithImpl(this._self, this._then);
+
+  final _RotateTokenInput _self;
+  final $Res Function(_RotateTokenInput) _then;
+
+/// Create a copy of RotateTokenInput
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? actorId = freezed,Object? grace = freezed,}) {
+  return _then(_RotateTokenInput(
+actorId: freezed == actorId ? _self.actorId : actorId // ignore: cast_nullable_to_non_nullable
+as String?,grace: freezed == grace ? _self.grace : grace // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

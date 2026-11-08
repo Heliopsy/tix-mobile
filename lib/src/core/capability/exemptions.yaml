@@ -82,6 +82,7 @@ pending:
     - token.create
     - token.list
     - token.revoke
+    - token.rotate
     - user.create
     - user.delete
     - user.list

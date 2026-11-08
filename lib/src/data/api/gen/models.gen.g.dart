@@ -1245,6 +1245,94 @@ _ErrorEnvelope _$ErrorEnvelopeFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$ErrorEnvelopeToJson(_ErrorEnvelope instance) =>
     <String, dynamic>{'error': ?instance.error?.toJson()};
 
+_Event _$EventFromJson(Map<String, dynamic> json) => _Event(
+  actorId: json['actor_id'] as String? ?? '',
+  id: json['id'] as String? ?? '',
+  occurredAt: _$JsonConverterFromJson<String, DateTime>(
+    json['occurred_at'],
+    const TixDateTime().fromJson,
+  ),
+  payload:
+      json['payload'] as Map<String, dynamic>? ?? const <String, Object?>{},
+  projectId: json['project_id'] as String? ?? '',
+  seq: (json['seq'] as num?)?.toInt() ?? 0,
+  subjectId: json['subject_id'] as String? ?? '',
+  subjectType: json['subject_type'] as String? ?? '',
+  tenantId: json['tenant_id'] as String? ?? '',
+  type: $enumDecodeNullable(
+    _$EventTypeEnumMap,
+    json['type'],
+    unknownValue: JsonKey.nullForUndefinedEnumValue,
+  ),
+  via: json['via'] == null
+      ? null
+      : Via.fromJson(json['via'] as Map<String, dynamic>),
+);
+
+Map<String, dynamic> _$EventToJson(_Event instance) => <String, dynamic>{
+  'actor_id': instance.actorId,
+  'id': instance.id,
+  'occurred_at': ?_$JsonConverterToJson<String, DateTime>(
+    instance.occurredAt,
+    const TixDateTime().toJson,
+  ),
+  'payload': instance.payload,
+  'project_id': instance.projectId,
+  'seq': instance.seq,
+  'subject_id': instance.subjectId,
+  'subject_type': instance.subjectType,
+  'tenant_id': instance.tenantId,
+  'type': ?_$EventTypeEnumMap[instance.type],
+  'via': ?instance.via?.toJson(),
+};
+
+const _$EventTypeEnumMap = {
+  EventType.taskCreated: 'task.created',
+  EventType.taskUpdated: 'task.updated',
+  EventType.taskTransitioned: 'task.transitioned',
+  EventType.taskClaimed: 'task.claimed',
+  EventType.taskReleased: 'task.released',
+  EventType.taskLeaseExpired: 'task.lease_expired',
+  EventType.taskReclaimed: 'task.reclaimed',
+  EventType.taskDeleted: 'task.deleted',
+  EventType.taskStarred: 'task.starred',
+  EventType.taskUnstarred: 'task.unstarred',
+  EventType.taskSnoozed: 'task.snoozed',
+  EventType.taskUnsnoozed: 'task.unsnoozed',
+  EventType.taskWoke: 'task.woke',
+  EventType.commentAdded: 'comment.added',
+  EventType.artifactAdded: 'artifact.added',
+  EventType.dependencyAdded: 'dependency.added',
+  EventType.tagAdded: 'tag.added',
+  EventType.projectCreated: 'project.created',
+  EventType.projectUpdated: 'project.updated',
+  EventType.workflowUpdated: 'workflow.updated',
+  EventType.fieldUpdated: 'field.updated',
+  EventType.webhookDelivered: 'webhook.delivered',
+  EventType.importCompleted: 'import.completed',
+  EventType.viewArranged: 'view.arranged',
+  EventType.filterSaved: 'filter.saved',
+  EventType.filterUpdated: 'filter.updated',
+  EventType.filterDeleted: 'filter.deleted',
+  EventType.inboxUpdated: 'inbox.updated',
+  EventType.templateUpdated: 'template.updated',
+};
+
+_EventPage _$EventPageFromJson(Map<String, dynamic> json) => _EventPage(
+  events:
+      (json['events'] as List<dynamic>?)
+          ?.map((e) => Event.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const <Event>[],
+  nextSeq: (json['next_seq'] as num?)?.toInt() ?? 0,
+);
+
+Map<String, dynamic> _$EventPageToJson(_EventPage instance) =>
+    <String, dynamic>{
+      'events': instance.events.map((e) => e.toJson()).toList(),
+      'next_seq': instance.nextSeq,
+    };
+
 _ExportInput _$ExportInputFromJson(Map<String, dynamic> json) => _ExportInput(
   includeArtifacts: json['include_artifacts'] as bool?,
   includeComments: json['include_comments'] as bool?,
@@ -2326,6 +2414,15 @@ Map<String, dynamic> _$RetentionPolicyToJson(_RetentionPolicy instance) =>
       'tenant_id': ?instance.tenantId,
       'webhook_deliveries': ?instance.webhookDeliveries,
     };
+
+_RotateTokenInput _$RotateTokenInputFromJson(Map<String, dynamic> json) =>
+    _RotateTokenInput(
+      actorId: json['actor_id'] as String?,
+      grace: json['grace'] as String?,
+    );
+
+Map<String, dynamic> _$RotateTokenInputToJson(_RotateTokenInput instance) =>
+    <String, dynamic>{'actor_id': ?instance.actorId, 'grace': ?instance.grace};
 
 _RouteInput _$RouteInputFromJson(Map<String, dynamic> json) => _RouteInput(
   comment: json['comment'] as String?,

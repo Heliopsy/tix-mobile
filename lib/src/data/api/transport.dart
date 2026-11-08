@@ -20,14 +20,13 @@ class TixTransport {
   String segment(String value) => Uri.encodeComponent(value);
 
   /// A request answered with a JSON object. A raw [body] is sent as
-  /// [contentType]; [cancel] abandons it.
+  /// [contentType].
   Future<Map<String, dynamic>> json(
     String method,
     String path, {
     Map<String, Object?>? query,
     Object? body,
     String? contentType,
-    CancelToken? cancel,
   }) async {
     final response = await _send(
       method,
@@ -35,7 +34,6 @@ class TixTransport {
       query: query,
       body: body,
       contentType: contentType,
-      cancel: cancel,
     );
     final data = response.data;
     if (data is! Map<String, dynamic>) {
@@ -179,13 +177,11 @@ class TixTransport {
     String? contentType,
     String? accept,
     ResponseType? type,
-    CancelToken? cancel,
   }) async {
     try {
       return await dio.request<Object?>(
         path,
         data: body,
-        cancelToken: cancel,
         queryParameters: query == null ? null : encodeQuery(query),
         options: Options(
           method: method,
