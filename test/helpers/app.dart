@@ -219,6 +219,7 @@ Future<ProviderContainer> pumpScreen(
             builder: stub,
             routes: [GoRoute(path: 'channels/:id', builder: stub)],
           ),
+          GoRoute(path: 'about', builder: stub),
         ],
       ),
       GoRoute(

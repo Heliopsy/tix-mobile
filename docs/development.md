@@ -228,16 +228,25 @@ page filters by, from `dart pub deps --json`. Adding or removing a dependency ch
 
 ## Localisation
 
-Strings live in `lib/l10n/app_en.arb` (the template) and `lib/l10n/app_bg.arb`. To add one:
+Strings live in `lib/l10n/app_en.arb` (the template) and one file per language: `app_bg.arb` (Bulgarian),
+`app_fr.arb` (French) and `app_de.arb` (German). To add one:
 
 1. Add the key to `app_en.arb` with an `@key` entry carrying a `description` for translators, and placeholders if
    it takes any.
-2. Add the Bulgarian translation under the same key in `app_bg.arb`.
+2. Add the translation under the same key in every other file. Translate the meaning, not the words, and keep
+   placeholders, plural and select cases exactly. tix's own syntax stays as it is: task references, `@handle`,
+   quick-add tokens (`!high`, `#tag`, `due:fri`) and filter expressions.
 3. Run `just l10n` and use the generated getter: `AppLocalizations.of(context).key`.
 
-A string a user can read never appears as a literal in a widget. A key missing from `app_bg.arb` is a review
-finding, not something to fix later; if you cannot translate it, say so in the pull request and the maintainer
-will.
+Typography: French puts a no-break space (U+00A0) before `:` and a narrow no-break space (U+202F) before `;`, `?`
+and `!`, and quotes with « »; German quotes with „ “.
+
+`test/l10n/arb_test.dart` fails when a language lacks a key of `app_en.arb`, has one the template does not, or
+differs in its placeholders or plural and select cases. A key missing from a language is a review finding, not
+something to fix later; if you cannot translate it, say so in the pull request and the maintainer will.
+
+German and French run about a third longer than English. The 200% text tests in `test/core/design/components/`
+run in English, German and French, so a label that only overflows in German fails there.
 
 ## Running
 

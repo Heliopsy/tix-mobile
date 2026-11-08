@@ -167,11 +167,13 @@ class SettingsScreen extends ConsumerWidget {
           TixSection(
             title: l10n.aboutTitle,
             children: [
-              AboutListTile(
+              ListTile(
                 key: const Key('settings.about'),
-                icon: const TixMark(size: 24),
-                applicationName: l10n.appTitle,
-                applicationIcon: const TixMark(size: 48),
+                leading: const TixMark(size: TixSpace.s5),
+                title: Text(l10n.aboutTitle),
+                subtitle: Text(l10n.aboutTagline),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.go(Routes.about),
               ),
               if (Routes.galleryEnabled)
                 ListTile(

@@ -6,6 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
+import 'package:tix_mobile/src/features/about/presentation/about_screen.dart';
 import 'package:tix_mobile/src/features/connect/presentation/connect_screen.dart';
 import 'package:tix_mobile/src/features/gallery/presentation/gallery_screen.dart';
 import 'package:tix_mobile/src/features/inbox/presentation/channel_screen.dart';
@@ -161,6 +162,10 @@ GoRouter router(Ref ref) {
                         ),
                       ),
                     ],
+                  ),
+                  GoRoute(
+                    path: 'about',
+                    builder: (_, _) => const AboutScreen(),
                   ),
                 ],
               ),

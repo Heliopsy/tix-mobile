@@ -32,6 +32,10 @@ class AuthRepository {
     return baseUrl;
   }
 
+  /// The tix version the server at [baseUrl] runs, from `GET /healthz`.
+  Future<String> serverVersion(String baseUrl) async =>
+      (await _build(baseUrl, null).server.health()).version;
+
   /// Who [credential] is at [baseUrl], with the tenant's key and name.
   ///
   /// tix names the tenant in `whoami` for a person's session only; an API

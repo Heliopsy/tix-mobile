@@ -79,6 +79,13 @@ class HomeShell extends StatelessWidget {
             icon: Icons.dns_outlined,
             run: () => context.go(Routes.instances),
           ),
+          TixCommand(
+            id: 'go.about',
+            label: l10n.goAbout,
+            group: l10n.commandsNavigate,
+            icon: Icons.info_outline,
+            run: () => context.go(Routes.about),
+          ),
           if (Routes.galleryEnabled)
             TixCommand(
               id: 'go.gallery',

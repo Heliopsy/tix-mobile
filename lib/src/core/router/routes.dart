@@ -49,6 +49,9 @@ abstract final class Routes {
   /// The saved instances and their connections.
   static const instances = '/settings/instances';
 
+  /// What the app is, its versions, links and the bug report.
+  static const about = '/settings/about';
+
   /// The query parameters that open the connect screen beside a session.
   static const connectParams = {'add', 'instance', 'connection', 'url'};
 
