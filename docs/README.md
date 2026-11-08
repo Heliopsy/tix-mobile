@@ -13,6 +13,7 @@ For the server, its API and its CLI, see [tix's documentation](https://github.co
 | [architecture.md](architecture.md) | Layers, state management rules, navigation and the adaptive shell, error mapping, keyset pagination, quick add |
 | [design.md](design.md) | Tokens, the tenant accent, every component and when to use it, the UX rules, accessibility, the new-screen checklist |
 | [testing.md](testing.md) | Unit, widget and golden tests, watching a guard fail, the coverage floor |
+| [widgets.md](widgets.md) | Home screen widgets: platforms, data flow, the snapshot contract |
 | [releasing.md](releasing.md) | release-please, version numbers, artifacts and provenance, signing secrets, recovering a failed release |
 
 ## Where to start
