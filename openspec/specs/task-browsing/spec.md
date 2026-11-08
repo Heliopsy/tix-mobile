@@ -48,8 +48,8 @@ A pull-down on any list SHALL reload it from the first page.
 
 ### Requirement: A project's tasks are listed
 
-The app SHALL list a project's tasks from `GET /api/v1/tasks?project=KEY` in the server's default order,
-each with its title, reference, status, due date and an icon for its priority that a screen reader names.
+The project screen SHALL show the project's tasks on the task screen, scoped to that project, with each task's
+title, reference, status, due date and an icon for its priority that a screen reader names.
 
 #### Scenario: Task row
 
@@ -65,3 +65,13 @@ description SHALL be drawn as Markdown. A missing assignee, due date or descript
 
 - **WHEN** a task is assigned to an actor whose display name is Raj
 - **THEN** the task view shows Raj, and the actor's id until the name has loaded
+
+### Requirement: Projects show their colour and open work
+
+Each project in the list SHALL carry its colour and the number of its tasks in open state categories, read
+from `GET /api/v1/stats?project=KEY`. A count that cannot be read SHALL be left out.
+
+#### Scenario: Open count
+
+- **WHEN** a project has three tasks in todo or in progress and two done
+- **THEN** its row shows 3
