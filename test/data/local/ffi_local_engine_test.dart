@@ -8,8 +8,12 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
+import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/local/ffi_local_engine.dart';
+import 'package:tix_mobile/src/data/local/in_place.dart';
+import 'package:tix_mobile/src/data/local/local_wake.dart';
+import 'package:tix_mobile/src/data/models/instance.dart';
 
 void main() {
   final engine = FfiLocalTixEngine.load();
@@ -91,5 +95,64 @@ void main() {
       throwsA(isA<TixException>()),
     );
     await e.stop(second);
+  }, skip: skip);
+
+  test('a stop leaves one whole file, no write-ahead log beside it', () async {
+    final e = engine!;
+    final db = '${dir.path}${Platform.pathSeparator}synced.db';
+    final h = await e.start(dbPath: db);
+    final token = await e.token(h, tenant: 'default', name: 'wal');
+    await TixApi(
+      baseUrl: h.baseUrl,
+      credential: BearerCredential(token),
+    ).project.list();
+    await e.stop(h);
+    expect(File(db).existsSync(), isTrue);
+    expect(File('$db-wal').existsSync(), isFalse);
+    expect(await syncFindings(db), SyncFindings.none);
+    await probeInPlace(db);
+  }, skip: skip);
+
+  test('an idle engine stops and the next request restarts it', () async {
+    final e = engine!;
+    final db = '${dir.path}${Platform.pathSeparator}idle.db';
+    final seed = await e.start(dbPath: db);
+    final token = await e.token(seed, tenant: 'default', name: 'idle');
+    await e.stop(seed);
+    final engines = LocalEngines(e, idleAfter: const Duration(seconds: 3));
+    final instance = Instance(
+      id: 'idle',
+      name: 'idle',
+      kind: InstanceKind.local,
+      dbPath: db,
+      createdAt: DateTime(2026),
+    );
+    final h = await engines.ensure(instance);
+    final api = TixApi(baseUrl: h.baseUrl, credential: BearerCredential(token))
+      ..transport.dio.interceptors.insert(
+        0,
+        LocalWakeInterceptor(
+          wake: () async => (await engines.ensure(instance)).baseUrl,
+          touch: () => engines.touch(instance.id),
+        ),
+      );
+    expect((await api.identity.whoami()).tenantKey, 'default');
+    var stopped = false;
+    for (var i = 0; i < 300 && !stopped; i++) {
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      try {
+        await e.tenants(h);
+      } on TixException catch (err) {
+        stopped = err.kind == TixErrorKind.notFound;
+      }
+    }
+    expect(stopped, isTrue);
+    expect(engines.statuses['idle']?.state, LocalEngineState.resting);
+    expect(File('$db-wal').existsSync(), isFalse);
+    expect((await api.identity.whoami()).tenantKey, 'default');
+    expect(engines.statuses['idle']?.state, LocalEngineState.running);
+    expect(engines.statuses['idle']?.baseUrl, h.baseUrl);
+    await engines.stopAll();
+    engines.dispose();
   }, skip: skip);
 }

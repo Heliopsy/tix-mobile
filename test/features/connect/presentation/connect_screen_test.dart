@@ -2,16 +2,21 @@
 
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/errors/tix_exception.dart';
+import 'package:tix_mobile/src/core/platform/local_access.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
+import 'package:tix_mobile/src/data/local/in_place.dart';
 import 'package:tix_mobile/src/data/local/local_engine.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
 import 'package:tix_mobile/src/features/connect/presentation/connect_screen.dart';
 
 import '../../../helpers/app.dart';
+import '../../../helpers/fake_local_access.dart';
 import '../../../helpers/fake_tix.dart';
 import '../../../helpers/stores.dart';
 
@@ -537,8 +542,8 @@ void main() {
         );
         expect(find.byKey(const Key('connect.localNote')), findsNothing);
         await tester.tap(find.text('This device'));
-        await tester.pump();
-        await tap(tester, find.byKey(const Key('connect.openDb')));
+        await tester.pumpAndSettle();
+        await tap(tester, find.byKey(const Key('connect.inPlace')));
         await tester.pumpAndSettle();
         expect(
           find.byKey(const Key('connect.localTenant.default')),
@@ -558,6 +563,7 @@ void main() {
         final s = c.read(sessionControllerProvider).value!;
         expect(s.instance.kind, InstanceKind.local);
         expect(s.instance.dbPath, '/data/team.db');
+        expect(s.instance.inPlace, isTrue);
         expect(s.connection.tenantKey, 'home');
         expect(secrets.values.values, ['local-home-1']);
         expect(engine.started, ['/data/team.db']);
@@ -581,7 +587,7 @@ void main() {
         ),
       );
       await tester.tap(find.text('This device'));
-      await tester.pump();
+      await tester.pumpAndSettle();
       await tester.enterText(find.byKey(const Key('connect.dbName')), 'notes');
       await tap(tester, find.byKey(const Key('connect.newDb')));
       await tester.pumpAndSettle();
@@ -608,7 +614,7 @@ void main() {
         ),
       );
       await tester.tap(find.text('This device'));
-      await tester.pump();
+      await tester.pumpAndSettle();
       expect(find.textContaining('own copy'), findsOneWidget);
       expect(find.byKey(const Key('connect.inPlaceNote')), findsNothing);
       expect(
@@ -646,9 +652,11 @@ void main() {
         ),
       );
       await tester.tap(find.text('This device'));
-      await tester.pump();
+      await tester.pumpAndSettle();
       expect(find.byKey(const Key('connect.inPlaceNote')), findsOneWidget);
-      await tap(tester, find.byKey(const Key('connect.openDb')));
+      expect(find.byKey(const Key('connect.syncWarning')), findsOneWidget);
+      expect(find.byKey(const Key('connect.openDb')), findsNothing);
+      await tap(tester, find.byKey(const Key('connect.inPlace')));
       await tester.pumpAndSettle();
       expect(files.imports, isEmpty);
       expect(engine.started, ['/data/team.db']);
@@ -670,7 +678,7 @@ void main() {
         ),
       );
       await tester.tap(find.text('This device'));
-      await tester.pump();
+      await tester.pumpAndSettle();
       expect(find.byKey(const Key('connect.dbName')), findsNothing);
       await tap(tester, find.byKey(const Key('connect.newDb')));
       await tester.pumpAndSettle();
@@ -686,8 +694,8 @@ void main() {
         overrides: fakeOverrides(server, engine: engine, local: true),
       );
       await tester.tap(find.text('This device'));
-      await tester.pump();
-      await tap(tester, find.byKey(const Key('connect.openDb')));
+      await tester.pumpAndSettle();
+      await tap(tester, find.byKey(const Key('connect.inPlace')));
       await tap(tester, find.byKey(const Key('connect.newDb')));
       await tester.pumpAndSettle();
       expect(engine.started, isEmpty);
@@ -708,8 +716,8 @@ void main() {
         ),
       );
       await tester.tap(find.text('This device'));
-      await tester.pump();
-      await tap(tester, find.byKey(const Key('connect.openDb')));
+      await tester.pumpAndSettle();
+      await tap(tester, find.byKey(const Key('connect.inPlace')));
       await tester.pumpAndSettle();
       expect(
         tester.widget<Text>(find.byKey(const Key('connect.error'))).data,
@@ -734,8 +742,8 @@ void main() {
         ),
       );
       await tester.tap(find.text('This device'));
-      await tester.pump();
-      await tap(tester, find.byKey(const Key('connect.openDb')));
+      await tester.pumpAndSettle();
+      await tap(tester, find.byKey(const Key('connect.inPlace')));
       await tester.pumpAndSettle();
       await tap(tester, find.byKey(const Key('connect.createTenant')));
       await tester.pumpAndSettle();
@@ -743,7 +751,202 @@ void main() {
       await tester.tap(find.byType(BackButton));
       await tester.pumpAndSettle();
       expect(engine.running, isEmpty);
-      expect(find.byKey(const Key('connect.openDb')), findsOneWidget);
+      expect(find.byKey(const Key('connect.inPlace')), findsOneWidget);
+    });
+
+    group('open in place', () {
+      Future<ProviderContainer> pumpLocal(
+        WidgetTester tester, {
+        required InMemoryLocalTixEngine engine,
+        required FakeLocalFileAccess access,
+        FakeFilePicking? files,
+      }) async {
+        final c = await pumpScreen(
+          tester,
+          const ConnectScreen(),
+          overrides: fakeOverrides(
+            server,
+            secrets: secrets,
+            engine: engine,
+            files: files ?? FakeFilePicking(desktop: false),
+            access: access,
+            local: true,
+          ),
+        );
+        await tester.tap(find.text('This device'));
+        await tester.pumpAndSettle();
+        return c;
+      }
+
+      testWidgets('Android asks for access, then browses shared storage', (
+        tester,
+      ) async {
+        const root = '/storage/emulated/0';
+        final engine = InMemoryLocalTixEngine(
+          existing: ['$root/Nextcloud/team.db'],
+        );
+        final access = FakeLocalFileAccess(
+          inPlace: InPlaceKind.sharedStorage,
+          granted: false,
+          folders: {
+            root: const [
+              FolderEntry(
+                name: 'Nextcloud',
+                path: '$root/Nextcloud',
+                dir: true,
+              ),
+            ],
+            '$root/Nextcloud': const [
+              FolderEntry(name: 'team.db', path: '$root/Nextcloud/team.db'),
+            ],
+          },
+        );
+        final c = await pumpLocal(tester, engine: engine, access: access);
+        expect(find.byKey(const Key('connect.syncWarning')), findsOneWidget);
+        await tap(tester, find.byKey(const Key('connect.inPlace')));
+        await tester.pumpAndSettle();
+        expect(find.text('Allow access to your files'), findsOneWidget);
+        await tap(tester, find.byKey(const Key('connect.permissionContinue')));
+        await tester.pumpAndSettle();
+        expect(access.requests, 1);
+        await tap(tester, find.byKey(const Key('browser.entry.Nextcloud')));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('browser.up')), findsOneWidget);
+        await tap(tester, find.byKey(const Key('browser.entry.team.db')));
+        await tester.pumpAndSettle();
+        expect(access.checked, ['$root/Nextcloud/team.db']);
+        await tap(tester, find.byKey(const Key('connect.localTenant.default')));
+        await tester.pumpAndSettle();
+        final s = c.read(sessionControllerProvider).value!;
+        expect(s.instance.dbPath, '$root/Nextcloud/team.db');
+        expect(s.instance.inPlace, isTrue);
+      });
+
+      testWidgets('Android refused: says so and offers to import a copy', (
+        tester,
+      ) async {
+        final engine = InMemoryLocalTixEngine(existing: ['/docs/team.db']);
+        final files = FakeFilePicking(desktop: false, open: '/cache/team.db');
+        final access = FakeLocalFileAccess(
+          inPlace: InPlaceKind.sharedStorage,
+          granted: false,
+          grants: false,
+        );
+        await pumpLocal(tester, engine: engine, access: access, files: files);
+        await tap(tester, find.byKey(const Key('connect.inPlace')));
+        await tester.pumpAndSettle();
+        await tap(tester, find.byKey(const Key('connect.permissionContinue')));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('connect.accessRefused')), findsOneWidget);
+        expect(engine.started, isEmpty);
+        await tap(tester, find.byKey(const Key('connect.importInstead')));
+        await tester.pumpAndSettle();
+        expect(files.imports, ['/cache/team.db']);
+        expect(engine.started, ['/docs/team.db']);
+      });
+
+      testWidgets('Android: cancelling the explanation asks for nothing', (
+        tester,
+      ) async {
+        final engine = InMemoryLocalTixEngine();
+        final access = FakeLocalFileAccess(
+          inPlace: InPlaceKind.sharedStorage,
+          granted: false,
+        );
+        await pumpLocal(tester, engine: engine, access: access);
+        await tap(tester, find.byKey(const Key('connect.inPlace')));
+        await tester.pumpAndSettle();
+        await tap(tester, find.text('Cancel'));
+        await tester.pumpAndSettle();
+        expect(access.requests, 0);
+        expect(engine.started, isEmpty);
+      });
+
+      testWidgets('Apple: a picked folder is bookmarked and a file created', (
+        tester,
+      ) async {
+        final engine = InMemoryLocalTixEngine();
+        const folder = PickedFolder(path: '/icloud/tix', bookmark: 'bm1');
+        final access = FakeLocalFileAccess(
+          inPlace: InPlaceKind.bookmark,
+          folder: folder,
+        );
+        final c = await pumpLocal(tester, engine: engine, access: access);
+        await tap(tester, find.byKey(const Key('connect.inPlace')));
+        await tester.pumpAndSettle();
+        expect(find.text('No folders or databases here.'), findsOneWidget);
+        await tester.enterText(find.byKey(const Key('browser.name')), 'team');
+        await tap(tester, find.byKey(const Key('browser.create')));
+        await tester.pumpAndSettle();
+        expect(access.released, [folder]);
+        expect(access.opened.single.bookmark, 'bm1');
+        expect(engine.exists('/icloud/tix/team.db'), isTrue);
+        await tap(tester, find.byKey(const Key('connect.localTenant.default')));
+        await tester.pumpAndSettle();
+        final s = c.read(sessionControllerProvider).value!;
+        expect(s.instance.bookmark, 'bm1');
+        expect(s.instance.inPlace, isTrue);
+        expect(access.closed, isEmpty);
+      });
+
+      testWidgets('a file SQLite cannot use is refused and nothing saved', (
+        tester,
+      ) async {
+        final engine = InMemoryLocalTixEngine(existing: ['/data/team.db']);
+        final access = FakeLocalFileAccess()
+          ..unusable = const TixException(
+            TixErrorKind.localNotUsable,
+            details: {'reason': 'notDatabase'},
+          );
+        await pumpLocal(
+          tester,
+          engine: engine,
+          access: access,
+          files: FakeFilePicking(open: '/data/team.db'),
+        );
+        await tap(tester, find.byKey(const Key('connect.inPlace')));
+        await tester.pumpAndSettle();
+        expect(
+          tester.widget<Text>(find.byKey(const Key('connect.error'))).data,
+          contains('not a tix database on this device'),
+        );
+        expect(engine.started, isEmpty);
+        expect(secrets.values, isEmpty);
+      });
+
+      testWidgets('conflict copies are named before a tenant is opened', (
+        tester,
+      ) async {
+        final engine = InMemoryLocalTixEngine(existing: ['/data/team.db']);
+        final access = FakeLocalFileAccess()
+          ..found = const SyncFindings(
+            conflicts: ['team (conflicted copy 2026-11-08).db'],
+            walLeftOver: true,
+          );
+        await pumpLocal(
+          tester,
+          engine: engine,
+          access: access,
+          files: FakeFilePicking(open: '/data/team.db'),
+        );
+        await tap(tester, find.byKey(const Key('connect.inPlace')));
+        await tester.pumpAndSettle();
+        final note = find.byKey(const Key('connect.findings'));
+        expect(
+          find.descendant(
+            of: note,
+            matching: find.textContaining('conflicted copy 2026-11-08'),
+          ),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(
+            of: note,
+            matching: find.textContaining('write-ahead log'),
+          ),
+          findsOneWidget,
+        );
+      });
     });
 
     testWidgets('a saved local instance opens another tenant', (tester) async {

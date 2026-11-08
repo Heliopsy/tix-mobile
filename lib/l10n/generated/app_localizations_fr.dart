@@ -3077,4 +3077,123 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get manageTransferSubtitle =>
       'Faire entrer et sortir des tâches et des espaces entiers';
+
+  @override
+  String get localInstanceAdvancedBody =>
+      'Utilisez une base de données là où elle se trouve, par exemple dans un dossier synchronisé par Nextcloud, Syncthing ou iCloud Drive, plutôt qu’une copie conservée dans l’application.';
+
+  @override
+  String get localInstanceAdvancedTitle => 'Avancé : ouvrir sur place';
+
+  @override
+  String get localInstanceBrowseCreate => 'Créer ici';
+
+  @override
+  String get localInstanceBrowseEmpty =>
+      'Aucun dossier ni base de données ici.';
+
+  @override
+  String get localInstanceBrowseNewLabel =>
+      'Nouvelle base de données dans ce dossier';
+
+  @override
+  String get localInstanceBrowseTitle => 'Choisir une base de données';
+
+  @override
+  String get localInstanceBrowseUp => 'Dossier parent';
+
+  @override
+  String localInstanceConflicts(String names) {
+    return 'Copies de conflit de synchronisation à côté de ce fichier : $names. Vérifiez laquelle contient votre travail le plus récent avant de continuer.';
+  }
+
+  @override
+  String get localInstanceDesktopIntro =>
+      'Créez une nouvelle base de données tix. Pour en utiliser une existante, ouvrez-la sur place ci-dessous.';
+
+  @override
+  String get localInstanceEngineResting => 'Arrêté, redémarre au besoin';
+
+  @override
+  String localInstanceEngineRunning(String address) {
+    return 'En cours sur $address';
+  }
+
+  @override
+  String get localInstanceEngineStarting => 'Démarrage';
+
+  @override
+  String get localInstanceEngineStop => 'Arrêter';
+
+  @override
+  String get localInstanceEngineStopped => 'Arrêté';
+
+  @override
+  String get localInstanceErrorAccess =>
+      'tix n’a plus accès à ce fichier. Autorisez de nouveau l’accès, ou supprimez l’instance et rouvrez le fichier.';
+
+  @override
+  String get localInstanceErrorFolder =>
+      'tix ne peut pas créer de fichiers dans ce dossier, alors que SQLite doit en garder deux à côté de la base de données. Choisissez un dossier où l’écriture est permise.';
+
+  @override
+  String get localInstanceErrorLock =>
+      'Ce fichier ne peut pas être verrouillé, SQLite ne peut donc pas le protéger ici. Il se trouve peut-être chez un fournisseur cloud qui ne propose pas de vrais fichiers.';
+
+  @override
+  String get localInstanceErrorNotDatabase =>
+      'Ce fichier n’est pas une base de données tix sur cet appareil. S’il se trouve dans un dossier cloud, il n’est peut-être pas encore téléchargé.';
+
+  @override
+  String get localInstanceErrorNotDownloaded =>
+      'Ce fichier n’est pas encore téléchargé sur cet appareil. Ouvrez-le dans l’app Fichiers pour le télécharger, puis réessayez.';
+
+  @override
+  String get localInstanceIdleHelp =>
+      'Un moteur qui n’a rien servi pendant cette durée s’arrête pour économiser la batterie, et redémarre dès que l’application en a besoin.';
+
+  @override
+  String get localInstanceIdleLabel => 'Arrêter un moteur inactif après';
+
+  @override
+  String localInstanceIdleMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get localInstanceIdleNever => 'Jamais';
+
+  @override
+  String get localInstanceIdleTitle => 'Bases de données locales';
+
+  @override
+  String get localInstanceImportInstead => 'Importer une copie';
+
+  @override
+  String get localInstanceInPlaceNote => 'Utilisée sur place';
+
+  @override
+  String get localInstanceOpenInPlace => 'Ouvrir sur place…';
+
+  @override
+  String get localInstancePermissionBody =>
+      'Pour ouvrir une base de données là où elle se trouve, Android doit accorder à tix « l’accès à tous les fichiers ». tix ne lit et n’écrit que la base de données que vous choisissez et les fichiers que SQLite garde à côté.';
+
+  @override
+  String get localInstancePermissionContinue => 'Continuer';
+
+  @override
+  String get localInstancePermissionRefused =>
+      'L’accès à tous les fichiers n’a pas été accordé : tix ne peut donc pas ouvrir de fichiers sur place. Vous pouvez importer une copie à la place.';
+
+  @override
+  String get localInstancePermissionTitle => 'Autoriser l’accès à vos fichiers';
+
+  @override
+  String get localInstanceSyncWarning =>
+      'Une base de données synchronisée ne doit être ouverte que sur un appareil à la fois. Fermez d’abord tix sur vos autres appareils et laissez la synchronisation se terminer. tix arrête la base de données dès qu’il passe en arrière-plan, pour que le client de synchronisation trouve toujours un fichier complet.';
+
+  @override
+  String get localInstanceWalLeftOver =>
+      'Un journal d’écriture anticipée (write-ahead log) se trouvait déjà à côté de ce fichier. Un autre programme l’a peut-être ouvert, ou un client de synchronisation en a copié un depuis un autre appareil.';
 }

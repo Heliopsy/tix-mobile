@@ -8,6 +8,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
+import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
@@ -142,6 +143,8 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ],
           ),
+          if (ref.watch(localInstancesEnabledProvider))
+            const LocalIdleSection(),
           if (session != null)
             TixSection(
               title: l10n.accountLabel,
@@ -208,6 +211,49 @@ class SettingsScreen extends ConsumerWidget {
       action: l10n.signOut,
     );
     if (ok) await ref.read(sessionControllerProvider.notifier).signOut();
+  }
+}
+
+/// How long a local engine may sit idle before it stops.
+class LocalIdleSection extends ConsumerWidget {
+  /// Creates the section.
+  const LocalIdleSection({super.key});
+
+  /// The choices offered, in minutes; 0 is never.
+  static const choices = [5, 10, 30, 0];
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final minutes = ref.watch(localIdleTimeoutProvider)?.inMinutes ?? 0;
+    return TixSection(
+      title: l10n.localInstanceIdleTitle,
+      info: l10n.localInstanceIdleHelp,
+      children: [
+        _Labelled(
+          label: l10n.localInstanceIdleLabel,
+          child: SegmentedButton<int>(
+            key: const Key('settings.localIdle'),
+            segments: [
+              for (final m in {...choices, minutes})
+                ButtonSegment(
+                  value: m,
+                  label: Text(
+                    m == 0
+                        ? l10n.localInstanceIdleNever
+                        : l10n.localInstanceIdleMinutes(m),
+                  ),
+                ),
+            ],
+            showSelectedIcon: false,
+            selected: {minutes},
+            onSelectionChanged: (s) => ref
+                .read(localIdleTimeoutProvider.notifier)
+                .set(s.first == 0 ? null : Duration(minutes: s.first)),
+          ),
+        ),
+      ],
+    );
   }
 }
 

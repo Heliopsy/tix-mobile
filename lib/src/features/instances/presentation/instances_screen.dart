@@ -7,7 +7,9 @@ import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/files.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
+import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/widgets/sync_findings_note.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
 
@@ -151,7 +153,10 @@ class InstanceCard extends ConsumerWidget {
     final l10n = context.l10n;
     final instance = group.instance;
     final local = instance.kind == InstanceKind.local;
-    final copy = local && !ref.watch(filePickingProvider).opensInPlace;
+    final copy =
+        local &&
+        !instance.inPlace &&
+        !ref.watch(filePickingProvider).opensInPlace;
     return Card(
       key: Key('instances.instance.${instance.id}'),
       margin: const EdgeInsets.only(bottom: TixSpace.s3),
@@ -169,6 +174,8 @@ class InstanceCard extends ConsumerWidget {
             subtitle: Text(
               copy
                   ? '${l10n.localCopyNote} · ${instance.location}'
+                  : instance.inPlace
+                  ? '${l10n.localInstanceInPlaceNote} · ${instance.location}'
                   : instance.location,
             ),
             trailing: PopupMenuButton<_InstanceAction>(
@@ -194,6 +201,7 @@ class InstanceCard extends ConsumerWidget {
               ],
             ),
           ),
+          if (local) LocalEngineRow(instance: instance),
           const Divider(height: 1),
           for (final c in group.connections)
             ListTile(
@@ -244,6 +252,64 @@ class InstanceCard extends ConsumerWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+/// A local instance's engine: running or stopped, the file it serves when
+/// that is not the one the card names, a Stop button while it runs, and
+/// what was found next to a file used in place.
+class LocalEngineRow extends ConsumerWidget {
+  /// Shows the engine of [instance].
+  const LocalEngineRow({required this.instance, super.key});
+
+  /// The local instance.
+  final Instance instance;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final status =
+        ref.watch(localEngineStatusesProvider).value?[instance.id] ??
+        const LocalEngineStatus();
+    final running = status.state == LocalEngineState.running;
+    final label = switch (status.state) {
+      LocalEngineState.running => l10n.localInstanceEngineRunning(
+        Uri.parse(status.baseUrl).authority,
+      ),
+      LocalEngineState.starting => l10n.localInstanceEngineStarting,
+      LocalEngineState.resting => l10n.localInstanceEngineResting,
+      LocalEngineState.stopped => l10n.localInstanceEngineStopped,
+    };
+    return Column(
+      key: Key('instances.engine.${instance.id}'),
+      children: [
+        ListTile(
+          leading: Icon(
+            running ? Icons.play_circle_outline : Icons.pause_circle_outline,
+            color: running ? context.tix.ok : context.tix.muted,
+          ),
+          title: Text(label, key: Key('instances.engine.${instance.id}.state')),
+          subtitle: status.dbPath.isEmpty || status.dbPath == instance.dbPath
+              ? null
+              : Text(status.dbPath),
+          trailing: running
+              ? TixButton(
+                  key: Key('instances.engine.${instance.id}.stop'),
+                  label: l10n.localInstanceEngineStop,
+                  icon: Icons.stop,
+                  size: TixButtonSize.small,
+                  onPressed: () =>
+                      ref.read(localEnginesProvider).rest(instance.id),
+                )
+              : null,
+        ),
+        if (instance.inPlace)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: TixSpace.s4),
+            child: SyncFindingsNote(findings: status.findings),
+          ),
+      ],
     );
   }
 }

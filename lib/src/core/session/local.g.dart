@@ -163,6 +163,68 @@ final class LocalEnginesStopInBackgroundProvider
 String _$localEnginesStopInBackgroundHash() =>
     r'acbee4b01440a83c46d2cfcf7d6d1169bede6636';
 
+/// How long a local engine may serve no request before it stops; null for
+/// never. Ten minutes until the person picks another.
+
+@ProviderFor(LocalIdleTimeout)
+final localIdleTimeoutProvider = LocalIdleTimeoutProvider._();
+
+/// How long a local engine may serve no request before it stops; null for
+/// never. Ten minutes until the person picks another.
+final class LocalIdleTimeoutProvider
+    extends $NotifierProvider<LocalIdleTimeout, Duration?> {
+  /// How long a local engine may serve no request before it stops; null for
+  /// never. Ten minutes until the person picks another.
+  LocalIdleTimeoutProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'localIdleTimeoutProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$localIdleTimeoutHash();
+
+  @$internal
+  @override
+  LocalIdleTimeout create() => LocalIdleTimeout();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Duration? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Duration?>(value),
+    );
+  }
+}
+
+String _$localIdleTimeoutHash() => r'1f79f411a403337ad625b1a83027cedbf9c9dd9b';
+
+/// How long a local engine may serve no request before it stops; null for
+/// never. Ten minutes until the person picks another.
+
+abstract class _$LocalIdleTimeout extends $Notifier<Duration?> {
+  Duration? build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<Duration?, Duration?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Duration?, Duration?>,
+              Duration?,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
 /// The running engines; all stop when the container goes.
 
 @ProviderFor(localEngines)
@@ -207,20 +269,71 @@ final class LocalEnginesProvider
   }
 }
 
-String _$localEnginesHash() => r'c6c30357d60ffa5861a528cbfa0b370cfd9257a0';
+String _$localEnginesHash() => r'48ca00fbd2b6810a0b2ceb25d5d02c687c4c85e9';
+
+/// Every local engine's status, refreshed as engines start and stop.
+
+@ProviderFor(localEngineStatuses)
+final localEngineStatusesProvider = LocalEngineStatusesProvider._();
+
+/// Every local engine's status, refreshed as engines start and stop.
+
+final class LocalEngineStatusesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Map<String, LocalEngineStatus>>,
+          Map<String, LocalEngineStatus>,
+          Stream<Map<String, LocalEngineStatus>>
+        >
+    with
+        $FutureModifier<Map<String, LocalEngineStatus>>,
+        $StreamProvider<Map<String, LocalEngineStatus>> {
+  /// Every local engine's status, refreshed as engines start and stop.
+  LocalEngineStatusesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'localEngineStatusesProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$localEngineStatusesHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<Map<String, LocalEngineStatus>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<Map<String, LocalEngineStatus>> create(Ref ref) {
+    return localEngineStatuses(ref);
+  }
+}
+
+String _$localEngineStatusesHash() =>
+    r'c4ee73ec6b47c97757e50ea56042fd10cd00544b';
 
 /// Stops every engine when the app exits, and on phones while it is in the
-/// background, starting them again on resume. Read when a local instance
-/// first becomes active; exit is a request on desktop and a detach on
-/// phones, where it is best effort.
+/// background, starting them again on resume. Engines of files used in
+/// place rest whenever the app is hidden, on every platform, so a sync
+/// client finds their log checkpointed into the file. Read when a local
+/// instance first becomes active; exit is a request on desktop and a detach
+/// on phones, where it is best effort.
 
 @ProviderFor(localEngineLifecycle)
 final localEngineLifecycleProvider = LocalEngineLifecycleProvider._();
 
 /// Stops every engine when the app exits, and on phones while it is in the
-/// background, starting them again on resume. Read when a local instance
-/// first becomes active; exit is a request on desktop and a detach on
-/// phones, where it is best effort.
+/// background, starting them again on resume. Engines of files used in
+/// place rest whenever the app is hidden, on every platform, so a sync
+/// client finds their log checkpointed into the file. Read when a local
+/// instance first becomes active; exit is a request on desktop and a detach
+/// on phones, where it is best effort.
 
 final class LocalEngineLifecycleProvider
     extends
@@ -231,9 +344,11 @@ final class LocalEngineLifecycleProvider
         >
     with $Provider<AppLifecycleListener> {
   /// Stops every engine when the app exits, and on phones while it is in the
-  /// background, starting them again on resume. Read when a local instance
-  /// first becomes active; exit is a request on desktop and a detach on
-  /// phones, where it is best effort.
+  /// background, starting them again on resume. Engines of files used in
+  /// place rest whenever the app is hidden, on every platform, so a sync
+  /// client finds their log checkpointed into the file. Read when a local
+  /// instance first becomes active; exit is a request on desktop and a detach
+  /// on phones, where it is best effort.
   LocalEngineLifecycleProvider._()
     : super(
         from: null,
@@ -269,4 +384,4 @@ final class LocalEngineLifecycleProvider
 }
 
 String _$localEngineLifecycleHash() =>
-    r'311b0e1ef46ac8ccc771b2781e5ed3a85c49d156';
+    r'cae7781423fe324e37f5ed109b3fff38e150525d';

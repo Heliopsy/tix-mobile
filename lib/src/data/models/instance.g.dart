@@ -15,6 +15,8 @@ _Instance _$InstanceFromJson(Map<String, dynamic> json) => _Instance(
   createdAt: DateTime.parse(json['created_at'] as String),
   baseUrl: json['base_url'] as String? ?? '',
   dbPath: json['db_path'] as String? ?? '',
+  inPlace: json['in_place'] as bool? ?? false,
+  bookmark: json['bookmark'] as String? ?? '',
   lastUsedAt: json['last_used_at'] == null
       ? null
       : DateTime.parse(json['last_used_at'] as String),
@@ -27,6 +29,8 @@ Map<String, dynamic> _$InstanceToJson(_Instance instance) => <String, dynamic>{
   'created_at': instance.createdAt.toIso8601String(),
   'base_url': instance.baseUrl,
   'db_path': instance.dbPath,
+  'in_place': instance.inPlace,
+  'bookmark': instance.bookmark,
   'last_used_at': ?instance.lastUsedAt?.toIso8601String(),
 };
 

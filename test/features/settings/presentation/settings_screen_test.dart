@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
@@ -22,6 +23,7 @@ void main() {
     WidgetTester tester, {
     Size size = const Size(500, 1000),
     Locale locale = const Locale('en'),
+    bool local = false,
   }) {
     final s = signedInStores();
     s.settings.values['contexts'] = jsonEncode([
@@ -44,9 +46,32 @@ void main() {
         FakeTix(),
         settings: s.settings,
         secrets: s.secrets,
+        local: local,
       ),
     );
   }
+
+  testWidgets('the idle timeout of local engines is chosen and kept', (
+    tester,
+  ) async {
+    final c = await pump(tester, local: true);
+    final idle = find.byKey(const Key('settings.localIdle'));
+    expect(tester.widget<SegmentedButton<int>>(idle).selected, {10});
+    await tester.tap(find.descendant(of: idle, matching: find.text('Never')));
+    await tester.pumpAndSettle();
+    expect(c.read(localIdleTimeoutProvider), isNull);
+    expect(stores.settings.values['settings.local_idle_minutes'], '0');
+    await tester.tap(find.descendant(of: idle, matching: find.text('30 min')));
+    await tester.pumpAndSettle();
+    expect(c.read(localEnginesProvider).idleAfter, const Duration(minutes: 30));
+  });
+
+  testWidgets('without local databases there is no idle timeout', (
+    tester,
+  ) async {
+    await pump(tester);
+    expect(find.byKey(const Key('settings.localIdle')), findsNothing);
+  });
 
   testWidgets('theme and language are chosen and remembered', (tester) async {
     final c = await pump(tester);

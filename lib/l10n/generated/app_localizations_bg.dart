@@ -3061,4 +3061,121 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get manageTransferSubtitle => 'Пренасяне на задачи и цели наематели';
+
+  @override
+  String get localInstanceAdvancedBody =>
+      'Използвайте база данни там, където е, например в папка, която Nextcloud, Syncthing или iCloud Drive синхронизира, вместо копие в приложението.';
+
+  @override
+  String get localInstanceAdvancedTitle => 'Разширено: отваряне на място';
+
+  @override
+  String get localInstanceBrowseCreate => 'Създаване тук';
+
+  @override
+  String get localInstanceBrowseEmpty => 'Тук няма папки или бази данни.';
+
+  @override
+  String get localInstanceBrowseNewLabel => 'Нова база данни в тази папка';
+
+  @override
+  String get localInstanceBrowseTitle => 'Изберете база данни';
+
+  @override
+  String get localInstanceBrowseUp => 'Нагоре';
+
+  @override
+  String localInstanceConflicts(String names) {
+    return 'Копия от конфликт при синхронизация до този файл: $names. Проверете кое съдържа последната ви работа, преди да продължите.';
+  }
+
+  @override
+  String get localInstanceDesktopIntro =>
+      'Създайте нова tix база данни. За да използвате вече съществуваща, отворете я на място по-долу.';
+
+  @override
+  String get localInstanceEngineResting => 'Спрян, стартира отново при нужда';
+
+  @override
+  String localInstanceEngineRunning(String address) {
+    return 'Работи на $address';
+  }
+
+  @override
+  String get localInstanceEngineStarting => 'Стартира';
+
+  @override
+  String get localInstanceEngineStop => 'Спиране';
+
+  @override
+  String get localInstanceEngineStopped => 'Спрян';
+
+  @override
+  String get localInstanceErrorAccess =>
+      'tix вече няма достъп до този файл. Разрешете достъпа отново или премахнете инстанцията и отворете файла наново.';
+
+  @override
+  String get localInstanceErrorFolder =>
+      'tix не може да създава файлове в тази папка, а SQLite държи два файла до базата данни. Изберете папка, в която може да се пише.';
+
+  @override
+  String get localInstanceErrorLock =>
+      'Този файл не може да бъде заключен, така че SQLite не може да го пази тук. Може да е при облачен доставчик, който не предлага истински файлове.';
+
+  @override
+  String get localInstanceErrorNotDatabase =>
+      'Този файл не е tix база данни на това устройство. Ако е в облачна папка, може още да не е изтеглен.';
+
+  @override
+  String get localInstanceErrorNotDownloaded =>
+      'Този файл още не е изтеглен на това устройство. Отворете го в приложението Файлове, за да се изтегли, и опитайте пак.';
+
+  @override
+  String get localInstanceIdleHelp =>
+      'Двигател, който не е обслужил нищо толкова време, спира, за да пести батерия, и стартира отново, когато приложението има нужда от него.';
+
+  @override
+  String get localInstanceIdleLabel => 'Спиране на неизползван двигател след';
+
+  @override
+  String localInstanceIdleMinutes(int minutes) {
+    return '$minutes мин';
+  }
+
+  @override
+  String get localInstanceIdleNever => 'Никога';
+
+  @override
+  String get localInstanceIdleTitle => 'Локални бази данни';
+
+  @override
+  String get localInstanceImportInstead => 'Внасяне на копие';
+
+  @override
+  String get localInstanceInPlaceNote => 'Използва се на място';
+
+  @override
+  String get localInstanceOpenInPlace => 'Отваряне на място…';
+
+  @override
+  String get localInstancePermissionBody =>
+      'За да отвори база данни там, където е, Android трябва да даде на tix „Достъп до всички файлове“. tix чете и пише само в базата данни, която изберете, и във файловете, които SQLite държи до нея.';
+
+  @override
+  String get localInstancePermissionContinue => 'Продължаване';
+
+  @override
+  String get localInstancePermissionRefused =>
+      'Достъпът до всички файлове не беше разрешен, така че tix не може да отваря файлове на място. Можете вместо това да внесете копие.';
+
+  @override
+  String get localInstancePermissionTitle => 'Разрешете достъп до файловете';
+
+  @override
+  String get localInstanceSyncWarning =>
+      'Синхронизирана база данни трябва да е отворена само на едно устройство наведнъж. Първо затворете tix на другите си устройства и изчакайте синхронизацията. tix спира базата данни всеки път, когато отиде във фонов режим, така че синхронизиращият клиент винаги намира цял файл.';
+
+  @override
+  String get localInstanceWalLeftOver =>
+      'До този файл вече имаше журнал за запис (write-ahead log). Друга програма може да го държи отворен или синхронизиращ клиент да е копирал такъв от друго устройство.';
 }

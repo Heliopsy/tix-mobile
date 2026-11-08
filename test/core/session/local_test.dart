@@ -7,12 +7,17 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/platform/files.dart';
+import 'package:tix_mobile/src/core/platform/local_access.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
+import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/data/local/ffi_local_engine.dart';
+import 'package:tix_mobile/src/data/local/in_place.dart';
 import 'package:tix_mobile/src/data/local/local_engine.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
 
 import '../../helpers/container.dart';
+import '../../helpers/fake_local_access.dart';
+import '../../helpers/stores.dart';
 
 void main() {
   Instance local(String id, String path) => Instance(
@@ -194,5 +199,184 @@ void main() {
       ..handleAppLifecycleStateChanged(AppLifecycleState.detached);
     await tester.pump();
     expect(engine.running, isEmpty);
+  });
+
+  group('idle', () {
+    testWidgets('an idle engine rests and the next ensure brings it back', (
+      tester,
+    ) async {
+      final engine = InMemoryLocalTixEngine(existing: ['/a.db']);
+      final engines = LocalEngines(
+        engine,
+        idleAfter: const Duration(minutes: 10),
+      );
+      final a = local('a', '/a.db');
+      final h = await engines.ensure(a);
+      await tester.pump(const Duration(minutes: 9));
+      engines.touch('a');
+      await tester.pump(const Duration(minutes: 9));
+      expect(engine.running, hasLength(1));
+      await tester.pump(const Duration(minutes: 1));
+      await tester.pump();
+      expect(engine.running, isEmpty);
+      expect(engines.statuses['a']?.state, LocalEngineState.resting);
+      final again = await engines.ensure(a);
+      expect(again.baseUrl, h.baseUrl);
+      expect(engines.statuses['a']?.state, LocalEngineState.running);
+      engines.dispose();
+    });
+
+    testWidgets('never keeps the engine running', (tester) async {
+      final engine = InMemoryLocalTixEngine(existing: ['/a.db']);
+      final engines = LocalEngines(
+        engine,
+        idleAfter: const Duration(minutes: 10),
+      )..idleAfter = null;
+      await engines.ensure(local('a', '/a.db'));
+      await tester.pump(const Duration(hours: 5));
+      expect(engine.running, hasLength(1));
+      engines.idleAfter = const Duration(minutes: 1);
+      await tester.pump(const Duration(minutes: 1));
+      await tester.pump();
+      expect(engine.running, isEmpty);
+      engines.dispose();
+    });
+
+    testWidgets('the setting reaches the engines, ten minutes by default', (
+      tester,
+    ) async {
+      final c = makeContainer([
+        keyValueStoreProvider.overrideWithValue(MemoryKeyValueStore()),
+      ]);
+      expect(c.read(localIdleTimeoutProvider), const Duration(minutes: 10));
+      expect(c.read(localEnginesProvider).idleAfter, LocalIdleTimeout.fallback);
+      await c.read(localIdleTimeoutProvider.notifier).set(null);
+      expect(c.read(localEnginesProvider).idleAfter, isNull);
+      await c
+          .read(localIdleTimeoutProvider.notifier)
+          .set(const Duration(minutes: 30));
+      expect(
+        c.read(localEnginesProvider).idleAfter,
+        const Duration(minutes: 30),
+      );
+      final again = makeContainer([
+        keyValueStoreProvider.overrideWithValue(
+          MemoryKeyValueStore()..values['settings.local_idle_minutes'] = '0',
+        ),
+      ]);
+      expect(again.read(localIdleTimeoutProvider), isNull);
+    });
+  });
+
+  group('in place', () {
+    Instance inPlace(String id, String path, {String bookmark = ''}) =>
+        local(id, path).copyWith(inPlace: true, bookmark: bookmark);
+
+    test('access opens before the engine and closes after it', () async {
+      final engine = InMemoryLocalTixEngine(existing: ['/sync/a.db']);
+      final access = FakeLocalFileAccess()
+        ..found = const SyncFindings(conflicts: ['a (1).db']);
+      final engines = LocalEngines(engine, access: access);
+      await engines.ensure(inPlace('a', '/sync/a.db', bookmark: 'bm'));
+      expect(access.opened.single.bookmark, 'bm');
+      expect(engines.statuses['a']?.findings.conflicts, ['a (1).db']);
+      await engines.stop('a');
+      expect(access.closed.single.dbPath, '/sync/a.db');
+      engines.dispose();
+    });
+
+    test('a renewed bookmark and a moved folder are reported', () async {
+      final engine = InMemoryLocalTixEngine(existing: ['/moved/a.db']);
+      final access = FakeLocalFileAccess()
+        ..grant = const AccessGrant(dbPath: '/moved/a.db', bookmark: 'bm2');
+      final engines = LocalEngines(engine, access: access);
+      final renewed = <Instance>[];
+      engines.renewed.listen(renewed.add);
+      await engines.ensure(inPlace('a', '/old/a.db', bookmark: 'bm1'));
+      await Future<void>.delayed(Duration.zero);
+      expect(renewed.single.bookmark, 'bm2');
+      expect(renewed.single.dbPath, '/moved/a.db');
+      expect(engine.started, ['/moved/a.db']);
+      expect(engines.statuses['a']?.dbPath, '/moved/a.db');
+      engines.dispose();
+    });
+
+    test('access that is refused is the start error; nothing runs', () async {
+      final engine = InMemoryLocalTixEngine(existing: ['/sync/a.db']);
+      final access = FakeLocalFileAccess()
+        ..denied = const TixException(TixErrorKind.localAccessDenied);
+      final engines = LocalEngines(engine, access: access);
+      await expectLater(
+        engines.ensure(inPlace('a', '/sync/a.db')),
+        throwsA(
+          isA<TixException>().having(
+            (e) => e.kind,
+            'kind',
+            TixErrorKind.localAccessDenied,
+          ),
+        ),
+      );
+      expect(engine.started, isEmpty);
+      expect(engines.running, isEmpty);
+      engines.dispose();
+    });
+
+    test('an engine that will not start closes the access', () async {
+      final engine = InMemoryLocalTixEngine();
+      final access = FakeLocalFileAccess();
+      final engines = LocalEngines(engine, access: access);
+      await expectLater(
+        engines.ensure(inPlace('a', '/sync/missing.db')),
+        throwsA(isA<TixException>()),
+      );
+      expect(access.closed, hasLength(1));
+      engines.dispose();
+    });
+
+    testWidgets('a hidden desktop app rests in-place engines only', (
+      tester,
+    ) async {
+      final engine = InMemoryLocalTixEngine(existing: ['/a.db', '/s/b.db']);
+      final c = makeContainer([
+        localTixEngineProvider.overrideWithValue(engine),
+        localFileAccessProvider.overrideWithValue(FakeLocalFileAccess()),
+        localEnginesStopInBackgroundProvider.overrideWithValue(false),
+      ]);
+      final engines = c.read(localEnginesProvider);
+      await engines.ensure(local('a', '/a.db'));
+      c.read(localEngineLifecycleProvider);
+      tester.binding
+        ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+        ..handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+      await tester.pump();
+      expect(engine.running, hasLength(1));
+      tester.binding
+        ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+        ..handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await engines.ensure(inPlace('b', '/s/b.db'));
+      tester.binding
+        ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+        ..handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+      await tester.pump();
+      expect(engine.running, isEmpty);
+      expect(engines.statuses['b']?.state, LocalEngineState.resting);
+    });
+  });
+
+  testWidgets('statuses follow engines as they start and stop', (tester) async {
+    final engine = InMemoryLocalTixEngine(existing: ['/a.db']);
+    final c = makeContainer([localTixEngineProvider.overrideWithValue(engine)]);
+    final seen = <LocalEngineState?>[];
+    c.listen(
+      localEngineStatusesProvider,
+      (_, next) => seen.add(next.value?['a']?.state),
+      fireImmediately: true,
+    );
+    await c.read(localEnginesProvider).ensure(local('a', '/a.db'));
+    await tester.pump();
+    await c.read(localEnginesProvider).stop('a');
+    await tester.pump();
+    expect(seen.last, LocalEngineState.stopped);
+    expect(seen, contains(LocalEngineState.running));
   });
 }

@@ -1754,5 +1754,59 @@
   "manageTokensTitle": "API tokens",
   "manageTokensSubtitle": "Tokens for agents and scripts, and what each may do",
   "manageTransferTitle": "Import and export",
-  "manageTransferSubtitle": "Move tasks and whole tenants in and out"
+  "manageTransferSubtitle": "Move tasks and whole tenants in and out",
+  "localInstanceAdvancedBody": "Use a database where it is, for example in a folder that Nextcloud, Syncthing or iCloud Drive keeps in sync, instead of a copy kept inside the app.",
+  "localInstanceAdvancedTitle": "Advanced: open in place",
+  "localInstanceBrowseCreate": "Create here",
+  "localInstanceBrowseEmpty": "No folders or databases here.",
+  "localInstanceBrowseNewLabel": "New database in this folder",
+  "localInstanceBrowseTitle": "Choose a database",
+  "localInstanceBrowseUp": "Up",
+  "localInstanceConflicts": "Sync conflict copies next to this file: {names}. Check which one holds your latest work before you go on.",
+  "@localInstanceConflicts": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "localInstanceDesktopIntro": "Create a new tix database. To use one you already have, open it in place below.",
+  "localInstanceEngineResting": "Stopped, starts again when needed",
+  "localInstanceEngineRunning": "Running at {address}",
+  "@localInstanceEngineRunning": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "localInstanceEngineStarting": "Starting",
+  "localInstanceEngineStop": "Stop",
+  "localInstanceEngineStopped": "Stopped",
+  "localInstanceErrorAccess": "tix can no longer reach this file. Allow access again, or remove the instance and open the file again.",
+  "localInstanceErrorFolder": "tix cannot create files in this folder, and SQLite needs to keep two files beside the database. Pick a folder you can write to.",
+  "localInstanceErrorLock": "This file cannot be locked, so SQLite cannot keep it safe here. It may be on a cloud provider that does not offer real files.",
+  "localInstanceErrorNotDatabase": "This file is not a tix database on this device. If it is in a cloud folder, it may not be downloaded yet.",
+  "localInstanceErrorNotDownloaded": "This file is not downloaded to this device yet. Open it in the Files app to download it, then try again.",
+  "localInstanceIdleHelp": "An engine that has served nothing for this long stops to save battery, and starts again the next time the app needs it.",
+  "localInstanceIdleLabel": "Stop an idle engine after",
+  "localInstanceIdleMinutes": "{minutes} min",
+  "@localInstanceIdleMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "localInstanceIdleNever": "Never",
+  "localInstanceIdleTitle": "Local databases",
+  "localInstanceImportInstead": "Import a copy",
+  "localInstanceInPlaceNote": "Used in place",
+  "localInstanceOpenInPlace": "Open in place…",
+  "localInstancePermissionBody": "To open a database where it is, Android has to give tix \"All files access\". tix reads and writes only the database you pick and the files SQLite keeps beside it.",
+  "localInstancePermissionContinue": "Continue",
+  "localInstancePermissionRefused": "All files access was not granted, so tix cannot open files in place. You can import a copy instead.",
+  "localInstancePermissionTitle": "Allow access to your files",
+  "localInstanceSyncWarning": "A synced database must be open on one device at a time. Close tix on your other devices and let the sync finish first. tix stops the database whenever it goes to the background, so the sync client always finds a whole file.",
+  "localInstanceWalLeftOver": "A write-ahead log was already beside this file. Another program may have it open, or a sync client copied one from another device."
 }

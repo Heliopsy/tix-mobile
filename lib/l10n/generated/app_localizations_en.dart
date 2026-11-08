@@ -3059,4 +3059,121 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get manageTransferSubtitle =>
       'Move tasks and whole tenants in and out';
+
+  @override
+  String get localInstanceAdvancedBody =>
+      'Use a database where it is, for example in a folder that Nextcloud, Syncthing or iCloud Drive keeps in sync, instead of a copy kept inside the app.';
+
+  @override
+  String get localInstanceAdvancedTitle => 'Advanced: open in place';
+
+  @override
+  String get localInstanceBrowseCreate => 'Create here';
+
+  @override
+  String get localInstanceBrowseEmpty => 'No folders or databases here.';
+
+  @override
+  String get localInstanceBrowseNewLabel => 'New database in this folder';
+
+  @override
+  String get localInstanceBrowseTitle => 'Choose a database';
+
+  @override
+  String get localInstanceBrowseUp => 'Up';
+
+  @override
+  String localInstanceConflicts(String names) {
+    return 'Sync conflict copies next to this file: $names. Check which one holds your latest work before you go on.';
+  }
+
+  @override
+  String get localInstanceDesktopIntro =>
+      'Create a new tix database. To use one you already have, open it in place below.';
+
+  @override
+  String get localInstanceEngineResting => 'Stopped, starts again when needed';
+
+  @override
+  String localInstanceEngineRunning(String address) {
+    return 'Running at $address';
+  }
+
+  @override
+  String get localInstanceEngineStarting => 'Starting';
+
+  @override
+  String get localInstanceEngineStop => 'Stop';
+
+  @override
+  String get localInstanceEngineStopped => 'Stopped';
+
+  @override
+  String get localInstanceErrorAccess =>
+      'tix can no longer reach this file. Allow access again, or remove the instance and open the file again.';
+
+  @override
+  String get localInstanceErrorFolder =>
+      'tix cannot create files in this folder, and SQLite needs to keep two files beside the database. Pick a folder you can write to.';
+
+  @override
+  String get localInstanceErrorLock =>
+      'This file cannot be locked, so SQLite cannot keep it safe here. It may be on a cloud provider that does not offer real files.';
+
+  @override
+  String get localInstanceErrorNotDatabase =>
+      'This file is not a tix database on this device. If it is in a cloud folder, it may not be downloaded yet.';
+
+  @override
+  String get localInstanceErrorNotDownloaded =>
+      'This file is not downloaded to this device yet. Open it in the Files app to download it, then try again.';
+
+  @override
+  String get localInstanceIdleHelp =>
+      'An engine that has served nothing for this long stops to save battery, and starts again the next time the app needs it.';
+
+  @override
+  String get localInstanceIdleLabel => 'Stop an idle engine after';
+
+  @override
+  String localInstanceIdleMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get localInstanceIdleNever => 'Never';
+
+  @override
+  String get localInstanceIdleTitle => 'Local databases';
+
+  @override
+  String get localInstanceImportInstead => 'Import a copy';
+
+  @override
+  String get localInstanceInPlaceNote => 'Used in place';
+
+  @override
+  String get localInstanceOpenInPlace => 'Open in place…';
+
+  @override
+  String get localInstancePermissionBody =>
+      'To open a database where it is, Android has to give tix \"All files access\". tix reads and writes only the database you pick and the files SQLite keeps beside it.';
+
+  @override
+  String get localInstancePermissionContinue => 'Continue';
+
+  @override
+  String get localInstancePermissionRefused =>
+      'All files access was not granted, so tix cannot open files in place. You can import a copy instead.';
+
+  @override
+  String get localInstancePermissionTitle => 'Allow access to your files';
+
+  @override
+  String get localInstanceSyncWarning =>
+      'A synced database must be open on one device at a time. Close tix on your other devices and let the sync finish first. tix stops the database whenever it goes to the background, so the sync client always finds a whole file.';
+
+  @override
+  String get localInstanceWalLeftOver =>
+      'A write-ahead log was already beside this file. Another program may have it open, or a sync client copied one from another device.';
 }

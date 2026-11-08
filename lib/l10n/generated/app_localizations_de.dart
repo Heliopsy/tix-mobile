@@ -3082,4 +3082,123 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get manageTransferSubtitle =>
       'Aufgaben und ganze Mandanten hinein- und herausbringen';
+
+  @override
+  String get localInstanceAdvancedBody =>
+      'Eine Datenbank dort verwenden, wo sie liegt, zum Beispiel in einem Ordner, den Nextcloud, Syncthing oder iCloud Drive synchronisiert, statt einer Kopie in der App.';
+
+  @override
+  String get localInstanceAdvancedTitle => 'Erweitert: direkt öffnen';
+
+  @override
+  String get localInstanceBrowseCreate => 'Hier erstellen';
+
+  @override
+  String get localInstanceBrowseEmpty =>
+      'Hier gibt es keine Ordner oder Datenbanken.';
+
+  @override
+  String get localInstanceBrowseNewLabel => 'Neue Datenbank in diesem Ordner';
+
+  @override
+  String get localInstanceBrowseTitle => 'Datenbank auswählen';
+
+  @override
+  String get localInstanceBrowseUp => 'Übergeordneter Ordner';
+
+  @override
+  String localInstanceConflicts(String names) {
+    return 'Konfliktkopien der Synchronisation neben dieser Datei: $names. Prüfen Sie, welche Ihren neuesten Stand enthält, bevor Sie fortfahren.';
+  }
+
+  @override
+  String get localInstanceDesktopIntro =>
+      'Eine neue tix-Datenbank erstellen. Um eine vorhandene zu verwenden, öffnen Sie sie unten direkt.';
+
+  @override
+  String get localInstanceEngineResting => 'Gestoppt, startet bei Bedarf neu';
+
+  @override
+  String localInstanceEngineRunning(String address) {
+    return 'Läuft auf $address';
+  }
+
+  @override
+  String get localInstanceEngineStarting => 'Startet';
+
+  @override
+  String get localInstanceEngineStop => 'Stoppen';
+
+  @override
+  String get localInstanceEngineStopped => 'Gestoppt';
+
+  @override
+  String get localInstanceErrorAccess =>
+      'tix kann diese Datei nicht mehr erreichen. Erlauben Sie den Zugriff erneut, oder entfernen Sie die Instanz und öffnen Sie die Datei noch einmal.';
+
+  @override
+  String get localInstanceErrorFolder =>
+      'tix kann in diesem Ordner keine Dateien anlegen, SQLite braucht aber zwei Dateien neben der Datenbank. Wählen Sie einen Ordner, in den geschrieben werden darf.';
+
+  @override
+  String get localInstanceErrorLock =>
+      'Diese Datei lässt sich nicht sperren, daher kann SQLite sie hier nicht schützen. Sie liegt vielleicht bei einem Cloud-Anbieter, der keine echten Dateien bereitstellt.';
+
+  @override
+  String get localInstanceErrorNotDatabase =>
+      'Diese Datei ist auf diesem Gerät keine tix-Datenbank. Liegt sie in einem Cloud-Ordner, ist sie vielleicht noch nicht heruntergeladen.';
+
+  @override
+  String get localInstanceErrorNotDownloaded =>
+      'Diese Datei ist noch nicht auf dieses Gerät heruntergeladen. Öffnen Sie sie in der Dateien-App, damit sie geladen wird, und versuchen Sie es dann erneut.';
+
+  @override
+  String get localInstanceIdleHelp =>
+      'Eine Engine, die so lange nichts bedient hat, stoppt, um Akku zu sparen, und startet wieder, sobald die App sie braucht.';
+
+  @override
+  String get localInstanceIdleLabel => 'Unbenutzte Engine stoppen nach';
+
+  @override
+  String localInstanceIdleMinutes(int minutes) {
+    return '$minutes Min.';
+  }
+
+  @override
+  String get localInstanceIdleNever => 'Nie';
+
+  @override
+  String get localInstanceIdleTitle => 'Lokale Datenbanken';
+
+  @override
+  String get localInstanceImportInstead => 'Kopie importieren';
+
+  @override
+  String get localInstanceInPlaceNote => 'Direkt verwendet';
+
+  @override
+  String get localInstanceOpenInPlace => 'Direkt öffnen…';
+
+  @override
+  String get localInstancePermissionBody =>
+      'Um eine Datenbank dort zu öffnen, wo sie liegt, muss Android tix „Zugriff auf alle Dateien“ geben. tix liest und schreibt nur die Datenbank, die Sie auswählen, und die Dateien, die SQLite daneben ablegt.';
+
+  @override
+  String get localInstancePermissionContinue => 'Weiter';
+
+  @override
+  String get localInstancePermissionRefused =>
+      'Der Zugriff auf alle Dateien wurde nicht erlaubt, daher kann tix keine Dateien direkt öffnen. Sie können stattdessen eine Kopie importieren.';
+
+  @override
+  String get localInstancePermissionTitle =>
+      'Zugriff auf Ihre Dateien erlauben';
+
+  @override
+  String get localInstanceSyncWarning =>
+      'Eine synchronisierte Datenbank darf nur auf einem Gerät gleichzeitig geöffnet sein. Schließen Sie tix zuerst auf Ihren anderen Geräten und warten Sie, bis die Synchronisation fertig ist. tix stoppt die Datenbank, sobald die App in den Hintergrund geht, damit der Sync-Client immer eine vollständige Datei vorfindet.';
+
+  @override
+  String get localInstanceWalLeftOver =>
+      'Neben dieser Datei lag bereits ein Write-Ahead-Log. Ein anderes Programm hat sie vielleicht geöffnet, oder ein Sync-Client hat eines von einem anderen Gerät kopiert.';
 }
