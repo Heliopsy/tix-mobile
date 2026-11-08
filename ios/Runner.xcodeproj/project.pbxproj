@@ -8,14 +8,31 @@
 
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		222EF7D53E231D4BAD23E95C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A60FF478504C0FA8410A79 /* Theme.swift */; };
+		318687DBBDD7BCD395BD37A9 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FD989E584E6585A26BA461 /* Configuration.swift */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		3C9B942295C7996C585B3E46 /* WidgetHeadless.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF6B5B162D5CBF65A061E999 /* WidgetHeadless.swift */; };
+		5C5FDABE35CAA01EB2E3096D /* ProjectWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6063BACEB88F59DC7FF3DA9 /* ProjectWidget.swift */; };
+		70D1CC74C141980F171A2273 /* WidgetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C338118B5CDE9C530A0B61B6 /* WidgetStore.swift */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		7628C0C1B3C7647F2395FBC4 /* MyWorkWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9AEF1A4CA79FD6316DBE59 /* MyWorkWidget.swift */; };
 		7884E8682EC3CC0700C636F2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
+		7B72A7877FCBCF36C1D39550 /* TixWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C1BC44059DC140CB921F94F3 /* TixWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		84058F05BA9B884F8CC431FA /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DBB4FA67249F55D6404F18 /* Components.swift */; };
+		8CE96F7E5E91E498DD0CA730 /* QuickAddWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71DD6DD7F8658F473A2EDB69 /* QuickAddWidget.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		98D6739E03307FBBBEBA2514 /* WidgetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C338118B5CDE9C530A0B61B6 /* WidgetStore.swift */; };
+		A69A98ED8D4ADD24377EB641 /* CompleteTaskIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C8276E40783AF0D4D8154D7 /* CompleteTaskIntent.swift */; };
+		BEA243071CE8FF4EA9E846BE /* TixWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FB41CA75C86969FE27218A4 /* TixWidgetsBundle.swift */; };
+		BFCDB0DBD7701A54F41E7429 /* Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E56DDA834483B0D6B8D476D /* Snapshot.swift */; };
+		CE3E763A38C6A283ADFA5ECF /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 065607BD1F93E2AC969E8BB7 /* Localizable.xcstrings */; };
+		D7D969D56598187EC72EECE4 /* CompleteTaskIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C8276E40783AF0D4D8154D7 /* CompleteTaskIntent.swift */; };
+		ECD4E3D7B4BB63F914B4F9CF /* Providers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0923EE3DFBC6D7FB5E1B0607 /* Providers.swift */; };
+		FAF63B9183E8A311FADD314D /* InboxWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B06D0DE1107ED1B3AC7E5D9 /* InboxWidget.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,6 +42,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
 			remoteInfo = Runner;
+		};
+		F38F07C813953959D95A4993 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 25611B9E8B159A9C9F7B540E;
+			remoteInfo = TixWidgets;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -39,19 +63,41 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EA69F0B8EEA15E38DD2E90A9 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				7B72A7877FCBCF36C1D39550 /* TixWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		065607BD1F93E2AC969E8BB7 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		0923EE3DFBC6D7FB5E1B0607 /* Providers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Providers.swift; sourceTree = "<group>"; };
+		13B23A8772F9C1399112B295 /* TixWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TixWidgets.entitlements; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+		15839EAAA1A2A26B55CF979A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+		5B06D0DE1107ED1B3AC7E5D9 /* InboxWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxWidget.swift; sourceTree = "<group>"; };
+		5FB41CA75C86969FE27218A4 /* TixWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TixWidgetsBundle.swift; sourceTree = "<group>"; };
+		71DD6DD7F8658F473A2EDB69 /* QuickAddWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAddWidget.swift; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterGeneratedPluginSwiftPackage; path = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
+		84DA5EB1BD509DF027FE1C2C /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
+		8C8276E40783AF0D4D8154D7 /* CompleteTaskIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompleteTaskIntent.swift; sourceTree = "<group>"; };
+		8C9AEF1A4CA79FD6316DBE59 /* MyWorkWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWorkWidget.swift; sourceTree = "<group>"; };
+		8E56DDA834483B0D6B8D476D /* Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapshot.swift; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -59,9 +105,23 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B0DBB4FA67249F55D6404F18 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		C1BC44059DC140CB921F94F3 /* TixWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TixWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C338118B5CDE9C530A0B61B6 /* WidgetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetStore.swift; sourceTree = "<group>"; };
+		C3A60FF478504C0FA8410A79 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		D3FD989E584E6585A26BA461 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		D6063BACEB88F59DC7FF3DA9 /* ProjectWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectWidget.swift; sourceTree = "<group>"; };
+		EF6B5B162D5CBF65A061E999 /* WidgetHeadless.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetHeadless.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		3514F6E73AC62EC453599FB7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		97C146EB1CF9000F007C117D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -100,6 +160,7 @@
 				97C146F01CF9000F007C117D /* Runner */,
 				97C146EF1CF9000F007C117D /* Products */,
 				331C8082294A63A400263BE5 /* RunnerTests */,
+				C085A5EC9951C2A164392566 /* TixWidgets */,
 			);
 			sourceTree = "<group>";
 		};
@@ -108,6 +169,7 @@
 			children = (
 				97C146EE1CF9000F007C117D /* Runner.app */,
 				331C8081294A63A400263BE5 /* RunnerTests.xctest */,
+				C1BC44059DC140CB921F94F3 /* TixWidgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -124,13 +186,55 @@
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
+				EF6B5B162D5CBF65A061E999 /* WidgetHeadless.swift */,
+				84DA5EB1BD509DF027FE1C2C /* Runner.entitlements */,
 			);
 			path = Runner;
+			sourceTree = "<group>";
+		};
+		C085A5EC9951C2A164392566 /* TixWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				C338118B5CDE9C530A0B61B6 /* WidgetStore.swift */,
+				8C8276E40783AF0D4D8154D7 /* CompleteTaskIntent.swift */,
+				5FB41CA75C86969FE27218A4 /* TixWidgetsBundle.swift */,
+				8E56DDA834483B0D6B8D476D /* Snapshot.swift */,
+				C3A60FF478504C0FA8410A79 /* Theme.swift */,
+				D3FD989E584E6585A26BA461 /* Configuration.swift */,
+				0923EE3DFBC6D7FB5E1B0607 /* Providers.swift */,
+				B0DBB4FA67249F55D6404F18 /* Components.swift */,
+				8C9AEF1A4CA79FD6316DBE59 /* MyWorkWidget.swift */,
+				5B06D0DE1107ED1B3AC7E5D9 /* InboxWidget.swift */,
+				71DD6DD7F8658F473A2EDB69 /* QuickAddWidget.swift */,
+				D6063BACEB88F59DC7FF3DA9 /* ProjectWidget.swift */,
+				065607BD1F93E2AC969E8BB7 /* Localizable.xcstrings */,
+				15839EAAA1A2A26B55CF979A /* Info.plist */,
+				13B23A8772F9C1399112B295 /* TixWidgets.entitlements */,
+			);
+			name = TixWidgets;
+			path = TixWidgets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		25611B9E8B159A9C9F7B540E /* TixWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 819D98085B3DC131E096F1C7 /* Build configuration list for PBXNativeTarget "TixWidgets" */;
+			buildPhases = (
+				EE176FEA57569FBB9A9E27AE /* Sources */,
+				3514F6E73AC62EC453599FB7 /* Frameworks */,
+				5AEE3E4CD819D1F4278D71E5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TixWidgets;
+			productName = TixWidgets;
+			productReference = C1BC44059DC140CB921F94F3 /* TixWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		331C8080294A63A400263BE5 /* RunnerTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 331C8087294A63A400263BE5 /* Build configuration list for PBXNativeTarget "RunnerTests" */;
@@ -157,11 +261,13 @@
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
+				EA69F0B8EEA15E38DD2E90A9 /* Embed Foundation Extensions */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				D3A9B20D1A75E75690E26B2D /* PBXTargetDependency */,
 			);
 			name = Runner;
 			packageProductDependencies = (
@@ -181,6 +287,9 @@
 				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
+					25611B9E8B159A9C9F7B540E = {
+						CreatedOnToolsVersion = 16.0;
+					};
 					331C8080294A63A400263BE5 = {
 						CreatedOnToolsVersion = 14.0;
 						TestTargetID = 97C146ED1CF9000F007C117D;
@@ -198,6 +307,9 @@
 			knownRegions = (
 				en,
 				Base,
+				bg,
+				fr,
+				de,
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
@@ -209,6 +321,7 @@
 			targets = (
 				97C146ED1CF9000F007C117D /* Runner */,
 				331C8080294A63A400263BE5 /* RunnerTests */,
+				25611B9E8B159A9C9F7B540E /* TixWidgets */,
 			);
 		};
 /* End PBXProject section */
@@ -218,6 +331,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5AEE3E4CD819D1F4278D71E5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE3E763A38C6A283ADFA5ECF /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,6 +405,28 @@
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 				7884E8682EC3CC0700C636F2 /* SceneDelegate.swift in Sources */,
+				70D1CC74C141980F171A2273 /* WidgetStore.swift in Sources */,
+				A69A98ED8D4ADD24377EB641 /* CompleteTaskIntent.swift in Sources */,
+				3C9B942295C7996C585B3E46 /* WidgetHeadless.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EE176FEA57569FBB9A9E27AE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BEA243071CE8FF4EA9E846BE /* TixWidgetsBundle.swift in Sources */,
+				BFCDB0DBD7701A54F41E7429 /* Snapshot.swift in Sources */,
+				222EF7D53E231D4BAD23E95C /* Theme.swift in Sources */,
+				318687DBBDD7BCD395BD37A9 /* Configuration.swift in Sources */,
+				ECD4E3D7B4BB63F914B4F9CF /* Providers.swift in Sources */,
+				84058F05BA9B884F8CC431FA /* Components.swift in Sources */,
+				7628C0C1B3C7647F2395FBC4 /* MyWorkWidget.swift in Sources */,
+				FAF63B9183E8A311FADD314D /* InboxWidget.swift in Sources */,
+				8CE96F7E5E91E498DD0CA730 /* QuickAddWidget.swift in Sources */,
+				5C5FDABE35CAA01EB2E3096D /* ProjectWidget.swift in Sources */,
+				98D6739E03307FBBBEBA2514 /* WidgetStore.swift in Sources */,
+				D7D969D56598187EC72EECE4 /* CompleteTaskIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,6 +437,12 @@
 			isa = PBXTargetDependency;
 			target = 97C146ED1CF9000F007C117D /* Runner */;
 			targetProxy = 331C8085294A63A400263BE5 /* PBXContainerItemProxy */;
+		};
+		D3A9B20D1A75E75690E26B2D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TixWidgets;
+			target = 25611B9E8B159A9C9F7B540E /* TixWidgets */;
+			targetProxy = F38F07C813953959D95A4993 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -317,6 +466,33 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		1AEEA5E6E07BA96B481BB962 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = TixWidgets/TixWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = TixWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = red.tix.tixMobile.TixWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) TIX_WIDGET_EXTENSION";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TIX_APP_GROUP = group.red.tix.tixMobile;
+			};
+			name = Profile;
+		};
 		249021D3217E4FDB00AE95B9 /* Profile */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -376,6 +552,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -387,6 +564,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				TIX_APP_GROUP = group.red.tix.tixMobile;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Profile;
@@ -437,6 +615,61 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner";
 			};
 			name = Profile;
+		};
+		48C739DA8A1AEFBA10D5D03B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = TixWidgets/TixWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = TixWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = red.tix.tixMobile.TixWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG TIX_WIDGET_EXTENSION";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TIX_APP_GROUP = group.red.tix.tixMobile;
+			};
+			name = Debug;
+		};
+		8D795CCDF9614C0402A61D14 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = TixWidgets/TixWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = TixWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = red.tix.tixMobile.TixWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) TIX_WIDGET_EXTENSION";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TIX_APP_GROUP = group.red.tix.tixMobile;
+			};
+			name = Release;
 		};
 		97C147031CF9000F007C117D /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -557,6 +790,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -569,6 +803,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TIX_APP_GROUP = group.red.tix.tixMobile;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -579,6 +814,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -590,6 +826,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				TIX_APP_GROUP = group.red.tix.tixMobile;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -603,6 +840,16 @@
 				331C8088294A63A400263BE5 /* Debug */,
 				331C8089294A63A400263BE5 /* Release */,
 				331C808A294A63A400263BE5 /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		819D98085B3DC131E096F1C7 /* Build configuration list for PBXNativeTarget "TixWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				48C739DA8A1AEFBA10D5D03B /* Debug */,
+				8D795CCDF9614C0402A61D14 /* Release */,
+				1AEEA5E6E07BA96B481BB962 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

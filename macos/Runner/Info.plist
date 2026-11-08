@@ -33,5 +33,18 @@
 	</dict>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>red.tix.tixMobile.widgets</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>tixwidget</string>
+			</array>
+		</dict>
+	</array>
+	<key>TixAppGroup</key>
+	<string>$(TIX_APP_GROUP)</string>
 </dict>
 </plist>
