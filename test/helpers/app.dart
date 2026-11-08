@@ -238,6 +238,9 @@ Future<ProviderContainer> pumpScreen(
             routes: [GoRoute(path: 'channels/:id', builder: stub)],
           ),
           GoRoute(path: 'about', builder: stub),
+          GoRoute(path: 'account', builder: stub),
+          GoRoute(path: 'calendar', builder: stub),
+          GoRoute(path: 'tokens', builder: stub),
         ],
       ),
       GoRoute(
@@ -269,6 +272,13 @@ Future<ProviderContainer> pumpScreen(
             builder: stub,
             routes: [GoRoute(path: ':key', builder: stub)],
           ),
+          GoRoute(
+            path: 'users',
+            builder: stub,
+            routes: [GoRoute(path: ':id', builder: stub)],
+          ),
+          GoRoute(path: 'tokens', builder: stub),
+          GoRoute(path: 'transfer', builder: stub),
         ],
       ),
     ],
