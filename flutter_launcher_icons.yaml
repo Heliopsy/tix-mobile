@@ -1,0 +1,31 @@
+# App icons. scripts/icons.sh renders the masters from assets/branding/mark.svg
+# and then runs `dart run flutter_launcher_icons`; regenerate with `just icons`.
+# Windows and Linux are left to the script: this tool writes a single-size
+# .ico and has no Linux support.
+flutter_launcher_icons:
+  image_path: assets/branding/icon-1024.png
+
+  android: true
+  min_sdk_android: 21
+  adaptive_icon_background: assets/branding/adaptive-background-1024.png
+  adaptive_icon_foreground: assets/branding/adaptive-foreground-1024.png
+  adaptive_icon_monochrome: assets/branding/adaptive-foreground-1024.png
+  # The masters already carry the 108 dp padding; the default 16% inset would
+  # shrink the glyph a second time.
+  adaptive_icon_foreground_inset: 0
+
+  ios: true
+  image_path_ios: assets/branding/icon-ios-1024.png
+  remove_alpha_ios: true
+  background_color_ios: "#0f766e"
+  image_path_ios_dark_transparent: assets/branding/icon-ios-dark-1024.png
+  image_path_ios_tinted_grayscale: assets/branding/icon-ios-tinted-1024.png
+
+  macos:
+    generate: true
+    image_path: assets/branding/icon-macos-1024.png
+
+  windows:
+    generate: false
+  web:
+    generate: false

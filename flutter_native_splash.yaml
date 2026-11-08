@@ -1,0 +1,16 @@
+# Launch screens for Android and iOS: the tix mark on the page background the
+# tix web UI uses, white in light mode and #14171b in dark. Regenerate with
+# `just icons`, which runs `dart run flutter_native_splash:create`.
+flutter_native_splash:
+  color: "#ffffff"
+  color_dark: "#14171b"
+  image: assets/branding/splash-384.png
+
+  android_12:
+    color: "#ffffff"
+    color_dark: "#14171b"
+    image: assets/branding/splash-android12-1152.png
+
+  android: true
+  ios: true
+  web: false

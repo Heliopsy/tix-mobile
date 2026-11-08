@@ -91,6 +91,11 @@ gen:
     fi
     dart run build_runner build
 
+# Regenerate the app icons and launch screens (needs rsvg-convert, ImageMagick).
+[group('dev')]
+icons:
+    scripts/icons.sh
+
 # Run build_runner in watch mode.
 [group('dev')]
 gen-watch:

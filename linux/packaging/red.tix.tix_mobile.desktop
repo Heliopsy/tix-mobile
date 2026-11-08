@@ -1,0 +1,13 @@
+# A template for packagers: Exec assumes the bundle's tix_mobile is on PATH,
+# and Icon names the hicolor icons installed beside this file under share/.
+[Desktop Entry]
+Type=Application
+Name=tix
+GenericName=Task tracker
+Comment=Mobile and desktop client for tix
+Exec=tix_mobile
+Icon=red.tix.tix_mobile
+Terminal=false
+Categories=Office;ProjectManagement;
+Keywords=tasks;todo;tickets;
+StartupWMClass=red.tix.tix_mobile
