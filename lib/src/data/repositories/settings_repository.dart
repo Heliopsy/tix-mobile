@@ -9,14 +9,23 @@ class SettingsRepository {
 
   static const _themeKey = 'settings.theme';
   static const _localeKey = 'settings.locale';
+  static const _systemBlackKey = 'settings.systemBlack';
 
   final KeyValueStore _store;
 
-  /// The chosen theme mode's name, null when never chosen.
+  /// The chosen theme's name, null when never chosen.
   String? themeMode() => _store.read(_themeKey);
 
-  /// Saves the theme mode named [name].
+  /// Saves the theme named [name].
   Future<void> setThemeMode(String name) => _store.write(_themeKey, name);
+
+  /// Whether the system theme's dark is pure black.
+  bool systemBlack() => _store.read(_systemBlackKey) == 'true';
+
+  /// Saves whether the system theme's dark is pure black.
+  Future<void> setSystemBlack({required bool on}) => on
+      ? _store.write(_systemBlackKey, 'true')
+      : _store.delete(_systemBlackKey);
 
   /// The chosen language code, null to follow the system.
   String? languageCode() => _store.read(_localeKey);

@@ -10,9 +10,9 @@ Everything here lives in `lib/src/core/design/`. Screens import one file:
 import 'package:tix_mobile/src/core/design/design.dart';
 ```
 
-Open the gallery to see every component in light, dark and any tenant accent: Settings, then Components, or the
-command palette (Ctrl+K), or `/gallery`. It is routed in debug and profile builds, and in a release build only with
-`--dart-define=TIX_GALLERY=true`.
+Open the gallery to see every component in light, dark, OLED black and any tenant accent: Settings, then
+Components, or the command palette (Ctrl+K), or `/gallery`. It is routed in debug and profile builds, and in a
+release build only with `--dart-define=TIX_GALLERY=true`.
 
 ## Tokens
 
@@ -40,6 +40,27 @@ with `context.tix`. Never write a colour literal in a screen.
 | `projects[...]` | `--proj-*` | eight shades | eight shades | Project colours: slate, red, amber, green, teal, blue, violet, pink |
 
 `TixTokens.dim` carries tix's low-contrast scheme for a later setting.
+
+### OLED black
+
+`TixTokens.oled` is the dark scheme for OLED screens, where a black pixel is switched off. tix's web interface has
+no equivalent; it is the dark tokens with these changes:
+
+| Token | OLED | Why |
+| --- | --- | --- |
+| `bg` | `#000000` | The page is off |
+| `surface` | `#0a0b0d` | Near black: sheets, dialogs and the rail are told apart by their hairline, not a fill |
+| `line` | `#24292f` | A little brighter than dark's, since it now does the work a fill did |
+| `accentSoft`, `brandSoft`, `dangerSoft`, `warnSoft`, `okSoft` | darker tints | Fewer lit pixels behind a pill |
+| `scrim` | 70% `#000000` | Dims to black rather than to slate |
+
+Text, status, priority and project colours are dark's, unchanged, so a status means the same thing in either dark
+theme. A tenant accent applies as in dark; its tint is mixed 40% towards black. `TixTokens.isBlack` tells the two
+dark schemes apart.
+
+Settings offers System, Light, Dark and OLED black. Under System a switch, "Pure black when dark", picks OLED black
+for the system's dark: a fourth segment alone could not say "follow the system, but black". Both are per device
+(`settings.theme`, `settings.systemBlack`).
 
 Status colours key off the category, never the state's name and never the accent:
 
@@ -127,6 +148,7 @@ All in `lib/src/core/design/components/`. Each has a doc comment saying when to 
 | `SkeletonList`, `SkeletonBox` | Loading. Never a spinner for a list's first page |
 | `SectionHeader`, `TixSection`, `InfoTip` | Headed, always-visible groups; a short explanation behind (i) |
 | `TixTextField`, `TixSearchField`, `TixSwitchRow` | Form inputs: label above, help and errors below, capped at the field measure |
+| `TixChoices` | A pick-one setting (theme, language): chips that wrap, so a long label or 200% text never hides an option |
 | `TixPropertyList`, `TixPropertyRow` | A record's attributes, each a 48 dp row that opens its editor; the label moves above the value at large text |
 | `TixMarkdown` | Descriptions and comments: images become links, only `http`, `https` and `mailto` open, and checklist items are ticks |
 | `TixFilterBar`, `TixFilterChip` | A list's query and toggles |
@@ -294,6 +316,20 @@ Measured with the WCAG 2 formula; `test/core/design/tokens_test.dart` fails if a
 | `warn` | 5.43:1 | 5.06:1 | 10.77:1 | 9.92:1 |
 | `ok` | 5.69:1 | 5.31:1 | 9.35:1 | 8.61:1 |
 
+OLED black, against `#000000` and the `#0a0b0d` surface:
+
+| Token | OLED on page | OLED on surface |
+| --- | --- | --- |
+| `ink` | 17.40:1 | 16.32:1 |
+| `muted` | 8.15:1 | 7.65:1 |
+| `accent` (default) | 11.28:1 | 10.58:1 |
+| `danger` | 7.59:1 | 7.12:1 |
+| `warn` | 12.58:1 | 11.79:1 |
+| `ok` | 10.92:1 | 10.24:1 |
+| `line`, `lineStrong` (not text) | 1.43:1, 2.06:1 | 1.34:1, 1.93:1 |
+
+Nothing needed moving: every text token is brighter against black than against dark's page.
+
 Every built-in tenant theme, and a sample custom accent (`#ffcc00`), is tested for text on the accent (4.5:1),
 the accent on its tint (3:1) and the accent on the page (3:1):
 
@@ -307,6 +343,9 @@ the accent on its tint (3:1) and the accent on the page (3:1):
 | ocean | 5.59:1 | 5.59:1 (`#ffffff`) | 12.40:1 | 11.45:1 (`#08231a`) |
 | plum | 7.21:1 | 7.21:1 (`#ffffff`) | 9.91:1 | 9.15:1 (`#08231a`) |
 | slate | 10.35:1 | 10.35:1 (`#ffffff`) | 8.72:1 | 8.05:1 (`#08231a`) |
+
+On OLED black every dark accent reads higher still: default 11.28:1, indigo 8.69:1, forest 13.64:1, ember 9.28:1,
+violet 11.38:1, ocean 14.49:1, plum 11.58:1, slate 10.19:1 on the page, with text on the accent as in dark.
 
 A custom accent is derived to 4.5:1 on both pages, so it passes by construction.
 
@@ -349,16 +388,16 @@ Follow this for every screen. Reviewers check it.
 8. Register the screen's actions with `CommandScope`; give the main ones a single-letter key when it does not
    clash with the list in the `?` help.
 9. Every string from `lib/l10n/`, in English and Bulgarian.
-10. Check it at 400 and 1280 wide, light and dark, a non-default accent (the gallery's palette menu shows how), and
-    at 200% text.
+10. Check it at 400 and 1280 wide, light, dark and OLED black, a non-default accent (the gallery's palette menu
+    shows how), and at 200% text, in English, German and French.
 11. Tests: loading, data, empty and error at a compact and an expanded width; that the primary action and any
     destructive action work; that a guard fails when broken.
 
 ## Goldens
 
-The components have goldens under `test/core/design/goldens/`, light and dark at 400 and 1280 wide, plus a tenant
-accent. They render real Roboto and the Material icons, loaded from the pinned Flutter SDK's cache by
-`test/core/design/flutter_test_config.dart`, so any Linux host with that Flutter draws the same pixels.
+The components have goldens under `test/core/design/goldens/`, light, dark and OLED black at 400 and 1280 wide,
+plus a tenant accent in each. They render real Roboto and the Material icons, loaded from the pinned Flutter SDK's
+cache by `test/core/design/flutter_test_config.dart`, so any Linux host with that Flutter draws the same pixels.
 
 ```sh
 just goldens          # regenerate, then look at every changed image before committing

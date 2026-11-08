@@ -306,6 +306,45 @@ class TixTokens extends ThemeExtension<TixTokens> {
     },
   );
 
+  /// The pure black scheme for OLED screens: the dark tokens on a `#000000`
+  /// page, with near-black surfaces told apart by hairlines rather than
+  /// fills, so unlit pixels stay off. tix's web interface has no equivalent.
+  static const oled = TixTokens(
+    brightness: Brightness.dark,
+    bg: Color(0xFF000000),
+    surface: Color(0xFF0A0B0D),
+    ink: Color(0xFFE7EAEE),
+    muted: Color(0xFF98A2B3),
+    line: Color(0xFF24292F),
+    lineStrong: Color(0xFF3A424B),
+    accent: Color(0xFF2DD4BF),
+    accentSoft: Color(0xFF0B2925),
+    onAccent: Color(0xFF08231A),
+    brand: Color(0xFF2DD4BF),
+    brandSoft: Color(0xFF0B2925),
+    danger: Color(0xFFF87171),
+    dangerSoft: Color(0xFF261212),
+    onDanger: Color(0xFF08231A),
+    warn: Color(0xFFFBBF24),
+    warnSoft: Color(0xFF241B08),
+    ok: Color(0xFF34D399),
+    okSoft: Color(0xFF0A2219),
+    onOk: Color(0xFF08231A),
+    scrim: Color(0xB3000000),
+    shadow: [],
+    shadowStrong: [],
+    projects: {
+      ProjectColour.slate: Color(0xFF94A3B8),
+      ProjectColour.red: Color(0xFFF87171),
+      ProjectColour.amber: Color(0xFFFBBF24),
+      ProjectColour.green: Color(0xFF4ADE80),
+      ProjectColour.teal: Color(0xFF2DD4BF),
+      ProjectColour.blue: Color(0xFF60A5FA),
+      ProjectColour.violet: Color(0xFFA78BFA),
+      ProjectColour.pink: Color(0xFFF472B6),
+    },
+  );
+
   /// The low-contrast scheme, `:root[data-theme="dim"]`. Not offered in
   /// settings yet; here so a later setting needs no new tokens.
   static const dim = TixTokens(
@@ -424,6 +463,9 @@ class TixTokens extends ThemeExtension<TixTokens> {
   /// Whether this is a dark scheme.
   bool get isDark => brightness == Brightness.dark;
 
+  /// Whether the page is pure black, as in [oled].
+  bool get isBlack => bg == const Color(0xFF000000);
+
   /// These tokens with [a]'s accent for this scheme.
   ///
   /// The accent is moved just far enough to reach 4.5:1 on the page and the
@@ -437,7 +479,11 @@ class TixTokens extends ThemeExtension<TixTokens> {
     ]);
     return copyWith(
       accent: accent,
-      accentSoft: isDark ? a.accentSoftDark : a.accentSoft,
+      accentSoft: !isDark
+          ? a.accentSoft
+          : isBlack
+          ? mix(a.accentSoftDark, bg, 0.4)
+          : a.accentSoftDark,
       onAccent: onColour(accent),
     );
   }

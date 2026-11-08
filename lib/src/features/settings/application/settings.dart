@@ -12,24 +12,67 @@ part 'settings.g.dart';
 SettingsRepository settingsRepository(Ref ref) =>
     SettingsRepository(ref.watch(keyValueStoreProvider));
 
-/// The chosen theme mode.
+/// The theme a person picks. [oled] is dark on a pure black page.
+enum ThemeChoice {
+  /// Follow the platform's light or dark.
+  system,
+
+  /// Always light.
+  light,
+
+  /// Always dark.
+  dark,
+
+  /// Always dark, on pure black.
+  oled;
+
+  /// The Material theme mode this choice runs in.
+  ThemeMode get mode => switch (this) {
+    system => ThemeMode.system,
+    light => ThemeMode.light,
+    dark || oled => ThemeMode.dark,
+  };
+}
+
+/// The chosen theme.
 @Riverpod(keepAlive: true)
-class ThemeModeSetting extends _$ThemeModeSetting {
+class ThemeSetting extends _$ThemeSetting {
   @override
-  ThemeMode build() {
+  ThemeChoice build() {
     final name = ref.watch(settingsRepositoryProvider).themeMode();
-    return ThemeMode.values.firstWhere(
+    return ThemeChoice.values.firstWhere(
       (m) => m.name == name,
-      orElse: () => ThemeMode.system,
+      orElse: () => ThemeChoice.system,
     );
   }
 
-  /// Switches to [mode] and remembers it.
-  Future<void> set(ThemeMode mode) async {
-    state = mode;
-    await ref.read(settingsRepositoryProvider).setThemeMode(mode.name);
+  /// Switches to [choice] and remembers it.
+  Future<void> set(ThemeChoice choice) async {
+    state = choice;
+    await ref.read(settingsRepositoryProvider).setThemeMode(choice.name);
   }
 }
+
+/// Whether the system theme goes pure black when the platform is dark.
+@Riverpod(keepAlive: true)
+class SystemBlackSetting extends _$SystemBlackSetting {
+  @override
+  bool build() => ref.watch(settingsRepositoryProvider).systemBlack();
+
+  /// Turns pure black for the system's dark on or off and remembers it.
+  Future<void> set({required bool on}) async {
+    state = on;
+    await ref.read(settingsRepositoryProvider).setSystemBlack(on: on);
+  }
+}
+
+/// Whether the dark theme is drawn on pure black.
+@Riverpod(keepAlive: true)
+bool darkIsBlack(Ref ref) => switch (ref.watch(themeSettingProvider)) {
+  ThemeChoice.oled => true,
+  ThemeChoice.system => ref.watch(systemBlackSettingProvider),
+  ThemeChoice.light || ThemeChoice.dark => false,
+};
 
 /// The chosen language, null to follow the system.
 @Riverpod(keepAlive: true)

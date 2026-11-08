@@ -2160,4 +2160,14 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get notifMoreBody => 'Отворете входящите, за да ги видите.';
+
+  @override
+  String get themeOled => 'OLED черна';
+
+  @override
+  String get themeSystemBlack => 'Чисто черно при тъмна тема';
+
+  @override
+  String get themeSystemBlackHelp =>
+      'Използва OLED черна тема, когато системата е тъмна. Пести батерия на OLED екрани.';
 }
