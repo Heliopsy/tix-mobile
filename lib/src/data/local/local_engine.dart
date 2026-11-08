@@ -47,10 +47,11 @@ class TenantRef {
 /// FFI library implements this; everything else talks to it over HTTP.
 abstract interface class LocalTixEngine {
   /// Opens [dbPath], creating it when missing and [initIfMissing], and serves
-  /// it.
+  /// it on [listen] (a loopback `IP:PORT`), or on any free port.
   Future<LocalHandle> start({
     required String dbPath,
     bool initIfMissing = true,
+    String? listen,
   });
 
   /// Stops serving [h].
@@ -90,6 +91,7 @@ class UnavailableLocalTixEngine implements LocalTixEngine {
   Future<LocalHandle> start({
     required String dbPath,
     bool initIfMissing = true,
+    String? listen,
   }) async => _unavailable();
 
   @override
@@ -140,6 +142,9 @@ class InMemoryLocalTixEngine implements LocalTixEngine {
   /// Handles stopped, in order.
   final stopped = <LocalHandle>[];
 
+  /// Addresses some other program holds: asking for one gets another port.
+  final taken = <String>{};
+
   /// The handles running now.
   Iterable<String> get running => _running.keys;
 
@@ -150,6 +155,7 @@ class InMemoryLocalTixEngine implements LocalTixEngine {
   Future<LocalHandle> start({
     required String dbPath,
     bool initIfMissing = true,
+    String? listen,
   }) async {
     if (!_databases.containsKey(dbPath)) {
       if (!initIfMissing) {
@@ -158,7 +164,10 @@ class InMemoryLocalTixEngine implements LocalTixEngine {
       _databases[dbPath] = [const TenantRef(key: 'default', name: 'Default')];
     }
     final n = _next++;
-    final h = LocalHandle(id: 'h$n', baseUrl: 'http://127.0.0.1:${49152 + n}');
+    final address = listen != null && !taken.contains(listen)
+        ? listen
+        : '127.0.0.1:${49152 + n}';
+    final h = LocalHandle(id: 'h$n', baseUrl: 'http://$address');
     _running[h.id] = dbPath;
     started.add(dbPath);
     return h;

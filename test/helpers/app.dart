@@ -118,18 +118,40 @@ List<Override> fakeOverrides(
 
 /// File dialogs that answer from fields.
 class FakeFilePicking implements FilePicking {
-  FakeFilePicking({this.desktop = true, this.open, this.created});
+  FakeFilePicking({
+    this.desktop = true,
+    this.open,
+    this.created,
+    this.exported = true,
+  });
 
   final bool desktop;
   String? open;
   String? created;
+  bool exported;
   final names = <String>[];
+  final imports = <String>[];
+  final exports = <String>[];
 
   @override
-  bool get canChooseNewFile => desktop;
+  bool get opensInPlace => desktop;
 
   @override
   Future<String?> openDatabase() async => open;
+
+  @override
+  Future<String?> importDatabase() async {
+    final picked = open;
+    if (picked == null) return null;
+    imports.add(picked);
+    return '/docs/${picked.split('/').last}';
+  }
+
+  @override
+  Future<bool> exportDatabase(String path, {Rect? origin}) async {
+    exports.add(path);
+    return exported;
+  }
 
   @override
   Future<String?> newDatabase(String name) async {

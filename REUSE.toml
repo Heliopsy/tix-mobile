@@ -21,7 +21,7 @@ SPDX-PackageDownloadLocation = "https://github.com/heliopsy/tix-mobile"
 # It comes first because the last matching annotation wins, and the generated
 # Dart below (*.g.dart, lib/l10n/) has to get its licence from there.
 [[annotations]]
-path = ["lib/**.dart", "test/**.dart", "integration_test/**.dart"]
+path = ["lib/**.dart", "test/**.dart", "integration_test/**.dart", "hook/**.dart", "tool/**.dart"]
 SPDX-FileCopyrightText = "tix-mobile contributors"
 
 # Platform scaffolding from `flutter create`: Gradle, Xcode projects, CMake,

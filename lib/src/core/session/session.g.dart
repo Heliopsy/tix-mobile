@@ -137,7 +137,7 @@ final class SessionControllerProvider
   SessionController create() => SessionController();
 }
 
-String _$sessionControllerHash() => r'cf6a3af3a49627e8d707a0ccb65478d96743b11c';
+String _$sessionControllerHash() => r'682d2c1352117aded9286280b4a763a22dd97d84';
 
 /// The active session: null until someone connects.
 

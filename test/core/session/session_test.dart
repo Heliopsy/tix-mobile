@@ -480,7 +480,7 @@ void main() {
     setUp(TestWidgetsFlutterBinding.ensureInitialized);
 
     Future<({ProviderContainer c, InMemoryLocalTixEngine engine})>
-    localContainer() async {
+    localContainer({FakeFilePicking? files}) async {
       final engine = InMemoryLocalTixEngine();
       final c = makeContainer(
         fakeOverrides(
@@ -488,6 +488,7 @@ void main() {
           settings: settings,
           secrets: secrets,
           engine: engine,
+          files: files,
         ),
       );
       await c.read(sessionControllerProvider.future);
@@ -524,6 +525,41 @@ void main() {
         server.requestsTo('/api/v1/projects').single.uri.host,
         '127.0.0.1',
       );
+    });
+
+    test(
+      'export stops the engine for a whole file, then restarts it',
+      () async {
+        final files = FakeFilePicking(desktop: false);
+        final (:c, :engine) = await localContainer(files: files);
+        final s = c.read(sessionControllerProvider).value!;
+        final first = engine.running.single;
+        final done = await c
+            .read(sessionControllerProvider.notifier)
+            .exportLocal(s.instance.id);
+        expect(done, isTrue);
+        expect(files.exports, ['/data/notes.db']);
+        expect(engine.running, isNot(contains(first)));
+        expect(engine.running, hasLength(1));
+        expect(c.read(sessionControllerProvider).value!.problem, isNull);
+        expect(
+          await c.read(sessionControllerProvider.notifier).exportLocal('nope'),
+          isFalse,
+        );
+      },
+    );
+
+    test('an engine back on another port rebuilds the session', () async {
+      final (:c, :engine) = await localContainer();
+      final before = c.read(sessionControllerProvider).value!.baseUrl;
+      final engines = c.read(localEnginesProvider);
+      await engines.suspend();
+      engine.taken.add(Uri.parse(before).authority);
+      await engines.resume();
+      await pumpEventQueue();
+      final after = await c.read(sessionControllerProvider.future);
+      expect(after!.baseUrl, isNot(before));
+      expect(after.baseUrl, startsWith('http://127.0.0.1:'));
     });
 
     test('switching to a remote context stops the engine', () async {

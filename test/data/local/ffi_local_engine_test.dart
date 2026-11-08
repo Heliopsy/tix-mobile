@@ -1,0 +1,95 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+// Drives the real libtix that hook/build.dart bundled into this test run,
+// over a throwaway database. Skipped when the build has no engine (no Go),
+// unless TIX_ENGINE_REQUIRED=1, which CI sets so a missing library fails.
+
+import 'dart:io';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:tix_mobile/src/core/errors/tix_exception.dart';
+import 'package:tix_mobile/src/data/api/tix_api.dart';
+import 'package:tix_mobile/src/data/local/ffi_local_engine.dart';
+
+void main() {
+  final engine = FfiLocalTixEngine.load();
+  final required = Platform.environment['TIX_ENGINE_REQUIRED'] == '1';
+  final skip = engine == null && !required
+      ? 'this build has no libtix (Go not on PATH)'
+      : null;
+
+  late Directory dir;
+  setUp(() async {
+    dir = await Directory.systemTemp.createTemp('tix-mobile-engine-');
+  });
+  tearDown(() => dir.delete(recursive: true));
+
+  Matcher kind(TixErrorKind k) =>
+      throwsA(isA<TixException>().having((e) => e.kind, 'kind', k));
+
+  test('the library is bundled', () {
+    expect(engine, isNotNull);
+  }, skip: skip);
+
+  test('start, create a tenant, mint a token, call the API, stop', () async {
+    final e = engine!;
+    expect(await e.version(), isNotEmpty);
+    final db = '${dir.path}${Platform.pathSeparator}new.db';
+    await expectLater(
+      e.start(dbPath: db, initIfMissing: false),
+      kind(TixErrorKind.notFound),
+    );
+    final h = await e.start(dbPath: db);
+    expect(File(db).existsSync(), isTrue);
+    expect(h.baseUrl, startsWith('http://127.0.0.1:'));
+    try {
+      expect((await e.tenants(h)).map((t) => t.key), contains('default'));
+      final home = await e.createTenant(h, key: 'home', name: 'Home');
+      expect(home.key, 'home');
+      await expectLater(
+        e.createTenant(h, key: 'home', name: 'Again'),
+        throwsA(isA<TixException>()),
+      );
+      final token = await e.token(h, tenant: 'home', name: 'tix-mobile');
+      final api = TixApi(
+        baseUrl: h.baseUrl,
+        credential: BearerCredential(token),
+      );
+      final me = await api.whoami();
+      expect(me.tenantKey, 'home');
+      final projects = await api.projects();
+      expect(projects.items, isA<List<Object?>>());
+
+      final starter = await e.token(h, tenant: 'default', name: 'starter');
+      final defaults = await TixApi(
+        baseUrl: h.baseUrl,
+        credential: BearerCredential(starter),
+      ).projects();
+      expect(defaults.items, isNotEmpty);
+    } finally {
+      await e.stop(h);
+    }
+    await expectLater(e.tenants(h), kind(TixErrorKind.notFound));
+    final again = await e.start(dbPath: db, initIfMissing: false);
+    expect(
+      (await e.tenants(again)).map((t) => t.key),
+      containsAll(['default', 'home']),
+    );
+    await e.stop(again);
+  }, skip: skip);
+
+  test('restarts on the address it asked for', () async {
+    final e = engine!;
+    final db = '${dir.path}${Platform.pathSeparator}port.db';
+    final first = await e.start(dbPath: db);
+    final address = Uri.parse(first.baseUrl).authority;
+    await e.stop(first);
+    final second = await e.start(dbPath: db, listen: address);
+    expect(second.baseUrl, first.baseUrl);
+    await expectLater(
+      e.start(dbPath: db, listen: address),
+      throwsA(isA<TixException>()),
+    );
+    await e.stop(second);
+  }, skip: skip);
+}

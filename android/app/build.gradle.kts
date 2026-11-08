@@ -64,6 +64,16 @@ android {
         }
     }
 
+    // libtix (the embedded engine) is ~32 MB per ABI. Stored uncompressed it
+    // is mapped straight from the APK, 16 KB aligned by AGP 8.5.1+, which
+    // Google Play requires for Android 15 devices with 16 KB pages.
+    // scripts/engine-check.sh verifies both in CI.
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false
+        }
+    }
+
     buildTypes {
         release {
             signingConfig =

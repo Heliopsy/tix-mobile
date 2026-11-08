@@ -109,7 +109,7 @@
   },
   "instanceRemote": "Server",
   "instanceLocal": "This device",
-  "localUnavailableNote": "Databases on this device need tix built into the app, which is not in this build yet.",
+  "localUnavailableNote": "Databases on this device need the tix engine built into the app, and this build was made without it.",
   "methodToken": "Token",
   "methodSignIn": "Sign in",
   "emailLabel": "Email",
@@ -194,5 +194,11 @@
   "errorSecondFactorSetup": "This account must set up a second factor first. Sign in once in the browser to do that.",
   "errorPasswordChange": "This account must choose a new password first. Sign in once in the browser to do that.",
   "errorTenantRequired": "Enter a key for the tenant.",
-  "errorEngineUnavailable": "Databases on this device are not available in this build yet."
+  "errorEngineUnavailable": "Databases on this device are not available: this build was made without the tix engine.",
+  "localIntroImport": "Create a new tix database or import one. The app works on its own copy, kept inside the app; export it to take your changes elsewhere.",
+  "localOpenInPlace": "The file stays where it is, and changes are saved straight to it.",
+  "localImportFile": "Import a database file…",
+  "exportDatabase": "Export database…",
+  "databaseExported": "Database exported.",
+  "localCopyNote": "Copy kept in the app"
 }

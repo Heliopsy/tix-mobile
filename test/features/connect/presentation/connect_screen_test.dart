@@ -591,6 +591,69 @@ void main() {
       expect(c.read(sessionControllerProvider).value!.instance.name, 'notes');
     });
 
+    testWidgets('on a phone an existing database is imported as a copy', (
+      tester,
+    ) async {
+      final engine = InMemoryLocalTixEngine(existing: ['/docs/team.db']);
+      final files = FakeFilePicking(desktop: false, open: '/cache/team.db');
+      final c = await pumpScreen(
+        tester,
+        const ConnectScreen(),
+        overrides: fakeOverrides(
+          server,
+          secrets: secrets,
+          engine: engine,
+          files: files,
+          local: true,
+        ),
+      );
+      await tester.tap(find.text('This device'));
+      await tester.pump();
+      expect(find.textContaining('own copy'), findsOneWidget);
+      expect(find.byKey(const Key('connect.inPlaceNote')), findsNothing);
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('connect.openDb')),
+          matching: find.text('Import a database file…'),
+        ),
+        findsOneWidget,
+      );
+      await tap(tester, find.byKey(const Key('connect.openDb')));
+      await tester.pumpAndSettle();
+      expect(files.imports, ['/cache/team.db']);
+      expect(engine.started, ['/docs/team.db']);
+      await tap(tester, find.byKey(const Key('connect.localTenant.default')));
+      await tester.pumpAndSettle();
+      expect(
+        c.read(sessionControllerProvider).value!.instance.dbPath,
+        '/docs/team.db',
+      );
+    });
+
+    testWidgets('on a desktop the file is opened in place and says so', (
+      tester,
+    ) async {
+      final engine = InMemoryLocalTixEngine(existing: ['/data/team.db']);
+      final files = FakeFilePicking(open: '/data/team.db');
+      await pumpScreen(
+        tester,
+        const ConnectScreen(),
+        overrides: fakeOverrides(
+          server,
+          engine: engine,
+          files: files,
+          local: true,
+        ),
+      );
+      await tester.tap(find.text('This device'));
+      await tester.pump();
+      expect(find.byKey(const Key('connect.inPlaceNote')), findsOneWidget);
+      await tap(tester, find.byKey(const Key('connect.openDb')));
+      await tester.pumpAndSettle();
+      expect(files.imports, isEmpty);
+      expect(engine.started, ['/data/team.db']);
+    });
+
     testWidgets('on a desktop a new database uses the save dialog', (
       tester,
     ) async {
@@ -650,7 +713,8 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         tester.widget<Text>(find.byKey(const Key('connect.error'))).data,
-        'Databases on this device are not available in this build yet.',
+        'Databases on this device are not available: '
+        'this build was made without the tix engine.',
       );
       expect(secrets.values, isEmpty);
     });
