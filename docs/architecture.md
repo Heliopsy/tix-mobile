@@ -122,12 +122,16 @@ each event is delivered once and in order whichever transport carried it.
   everything, with no retries.
 - **Background.** On phones polling, refresh and the background tries stop while the app is paused, cancelling
   the request in flight; coming back to the foreground retries everything at once from the cursor.
+- **Asleep with a local engine.** When the active local instance's engine stops (idle, hidden, suspended or
+  stopped from Instances) `LocalEngines.halted` puts `LiveEvents` to sleep before the engine goes: the socket
+  closes and nothing is polled, refreshed or retried, so live updates never wake it. The mode is `paused` and the
+  indicator shows nothing. `LocalEngines.started` wakes them, WebSocket first, from the cursor.
 
 A cursor tix no longer keeps, or a handover without a cursor after having been live, is reported as
 `EventsMissed`. The thresholds and timings are `LiveConfig` (`liveConfigProvider`). `liveStatusProvider` gives the
-mode (`connecting`, `websocket`, `polling`, `refreshing`, `offline`, `unavailable`) and the last error; the
-`LiveIndicator` shows it: on a phone right after the context's name in the switcher bar, on the rail as a dot at
-the avatar's end corner.
+mode (`connecting`, `websocket`, `polling`, `refreshing`, `offline`, `unavailable`, `paused`) and the last error;
+the `LiveIndicator` shows it: on a phone right after the context's name in the switcher bar, on the rail as a dot
+at the avatar's end corner.
 
 `TixEventPoller` calls the generated `api.event.poll` on a client of its own, whose Dio hands each poll a
 `CancelToken`, so pausing or switching context drops the request in flight. It keeps the cursor at `next_seq` even
@@ -333,7 +337,10 @@ flowchart LR
   `LocalWakeInterceptor`, which calls `LocalEngines.wake` before every request and rewrites its base URL, so a
   resting engine starts again, on the same address when it is free, before the request goes out. A request in
   flight holds the engine awake, and requests to the engine do not reuse connections, since a pooled socket to an
-  engine that stopped and came back on the same port is dead. The Instances
+  engine that stopped and came back on the same port is dead. Event polls are background work: they go to the
+  running engine without touching the idle timer and never start a stopped one. So are the reads in the five
+  seconds after a periodic live refresh (`LocalEngines.quiet`). Navigation and the app coming back to the
+  foreground call `SessionController.wakeLocal`, which starts a resting engine. The Instances
   screen shows each engine's state from `localEngineStatusesProvider`, with a Stop button that rests it.
 - **Talking to it.** Once started, a local instance is an ordinary server on loopback: the same `TixApi`, the same
   errors. Android allows cleartext HTTP to `127.0.0.1` only; Apple platforms set `NSAllowsLocalNetworking`.

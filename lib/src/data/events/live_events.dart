@@ -35,6 +35,10 @@ enum LiveMode {
   /// The server refused this credential live updates. No retry is made.
   unavailable,
 
+  /// Asleep with the local engine that serves them: nothing is attempted
+  /// until [LiveEvents.wake].
+  paused,
+
   /// [LiveEvents.close] was called.
   closed,
 }
@@ -129,6 +133,7 @@ class LiveEvents {
     this._connector = ioEventSocket,
     this.config = const LiveConfig(),
     this._types = const [],
+    this.onRefresh,
     Random? random,
   }) : _random = random ?? Random() {
     _updates = StreamController<EventStreamUpdate>.broadcast(onListen: _start);
@@ -137,6 +142,10 @@ class LiveEvents {
 
   /// The thresholds and timings in use.
   final LiveConfig config;
+
+  /// Called before each timed refresh reports its gap, so a local engine can
+  /// tell the reads that follow from the person's own.
+  final void Function()? onRefresh;
   final String _baseUrl;
   final Map<String, String> _headers;
   final EventPoller _poller;
@@ -147,6 +156,7 @@ class LiveEvents {
   late final StreamController<LiveStatus> _statuses;
 
   var _started = false;
+  var _asleep = false;
   var _awake = true;
   var _hadLive = false;
   var _pollUnsupported = false;
@@ -217,6 +227,30 @@ class LiveEvents {
     unawaited(_dropProbe());
   }
 
+  /// Stops everything until [wake]: the WebSocket closes and nothing is
+  /// polled, refreshed or retried. For a local engine that stopped, which
+  /// any attempt would only fail against or start again.
+  void sleep() {
+    if (_asleep || _mode == LiveMode.closed || _mode == LiveMode.unavailable) {
+      return;
+    }
+    _asleep = true;
+    _set(LiveMode.paused);
+    unawaited(_stopAll());
+  }
+
+  /// Ends a [sleep]: the WebSocket again, from the cursor.
+  void wake() {
+    if (!_asleep) return;
+    _asleep = false;
+    _awake = true;
+    _set(LiveMode.connecting);
+    if (!_started) return;
+    if (_cursor == 0 && _hadLive) _gap();
+    _transport = _Transport.socket;
+    _socket = _openStream(since: _cursor, probe: false);
+  }
+
   /// Stops everything. Nothing reconnects after this.
   Future<void> close() async {
     if (_mode == LiveMode.closed) return;
@@ -229,6 +263,7 @@ class LiveEvents {
   void _start() {
     if (_started || _mode == LiveMode.closed) return;
     _started = true;
+    if (_asleep) return;
     _transport = _Transport.socket;
     _socket = _openStream(since: _cursor, probe: false);
   }
@@ -412,7 +447,10 @@ class LiveEvents {
     _refreshTimer?.cancel();
     _refreshTimer = null;
     if (_transport != _Transport.refresh || !_awake) return;
-    _refreshTimer = Timer.periodic(config.refreshEvery, (_) => _gap());
+    _refreshTimer = Timer.periodic(config.refreshEvery, (_) {
+      onRefresh?.call();
+      _gap();
+    });
   }
 
   void _scheduleProbe() {

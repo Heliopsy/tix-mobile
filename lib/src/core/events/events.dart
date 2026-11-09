@@ -7,8 +7,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
     show ProviderListenableSelect;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/events/live_events.dart';
+import 'package:tix_mobile/src/data/models/instance.dart';
 
 export 'package:tix_mobile/src/data/events/live_events.dart';
 
@@ -64,14 +66,28 @@ bool livePausesInBackground(Ref ref) => Platform.isAndroid || Platform.isIOS;
 @Riverpod(keepAlive: true)
 LiveConfig liveConfig(Ref ref) => const LiveConfig();
 
+/// How long after a timed refresh the reads to a local engine count as
+/// background work: past the refresh debounce, with room for slow reads.
+const localRefreshQuiet = Duration(seconds: 5);
+
 /// Live updates of the active context, null while there is none or it
 /// cannot be reached: the WebSocket, or the HTTP fallback when it keeps
 /// failing. Rebuilt, with a fresh cursor, when the context changes.
+///
+/// For a local instance they sleep while its engine is stopped, so neither
+/// a poll nor a reconnect keeps it from resting, and wake when it starts.
 @Riverpod(keepAlive: true)
 LiveEvents? tixEventStream(Ref ref) {
-  final (baseUrl, credential, problem) = ref.watch(
+  final (baseUrl, credential, problem, localId) = ref.watch(
     sessionControllerProvider.select(
-      (s) => (s.value?.baseUrl, s.value?.credential, s.value?.problem),
+      (s) => (
+        s.value?.baseUrl,
+        s.value?.credential,
+        s.value?.problem,
+        s.value?.instance.kind == InstanceKind.local
+            ? s.value?.instance.id
+            : null,
+      ),
     ),
   );
   if (baseUrl == null ||
@@ -81,14 +97,34 @@ LiveEvents? tixEventStream(Ref ref) {
     return null;
   }
   final api = ref.watch(sessionApiProvider);
+  final engines = localId == null ? null : ref.watch(localEnginesProvider);
   final live = LiveEvents(
     baseUrl: baseUrl,
     headers: credential.headers,
     poller: TixEventPoller(api),
     connector: ref.watch(eventSocketConnectorProvider),
     config: ref.watch(liveConfigProvider),
+    onRefresh: localId == null || engines == null
+        ? null
+        : () => engines.quiet(localId, localRefreshQuiet),
   );
-  ref.listen(appResumedProvider, (_, _) => live.reconnectNow());
+  if (engines != null) {
+    final halted = engines.halted.listen((id) {
+      if (id == localId) live.sleep();
+    });
+    final started = engines.started.listen((id) {
+      if (id == localId) live.wake();
+    });
+    ref
+      ..onDispose(halted.cancel)
+      ..onDispose(started.cancel);
+  }
+  ref.listen(appResumedProvider, (_, _) {
+    live.reconnectNow();
+    if (engines != null) {
+      unawaited(ref.read(sessionControllerProvider.notifier).wakeLocal());
+    }
+  });
   if (ref.watch(livePausesInBackgroundProvider)) {
     ref.listen(appPausedProvider, (_, _) => live.pause());
   }

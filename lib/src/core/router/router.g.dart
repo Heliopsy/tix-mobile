@@ -11,19 +11,19 @@ part of 'router.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// The app's router, which follows the session in and out of the connect
-/// screen.
+/// screen. Every navigation counts as activity for a local engine.
 
 @ProviderFor(router)
 final routerProvider = RouterProvider._();
 
 /// The app's router, which follows the session in and out of the connect
-/// screen.
+/// screen. Every navigation counts as activity for a local engine.
 
 final class RouterProvider
     extends $FunctionalProvider<GoRouter, GoRouter, GoRouter>
     with $Provider<GoRouter> {
   /// The app's router, which follows the session in and out of the connect
-  /// screen.
+  /// screen. Every navigation counts as activity for a local engine.
   RouterProvider._()
     : super(
         from: null,
@@ -57,4 +57,4 @@ final class RouterProvider
   }
 }
 
-String _$routerHash() => r'8a4e1ad5d7dae0f088248b3ea202331e537b65e5';
+String _$routerHash() => r'7a6f4d77b03774633bd0cbc3a479799b6b2eba01';

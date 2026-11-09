@@ -19,9 +19,9 @@ void main() {
     api.transport.dio.interceptors.insert(
       0,
       LocalWakeInterceptor(
-        wake: () async {
+        wake: ({required background}) async {
           wakes++;
-          return 'http://127.0.0.1:4242';
+          return ('http://127.0.0.1:4242', true);
         },
         done: () => touches++,
       ),
@@ -43,7 +43,7 @@ void main() {
           ..transport.dio.interceptors.insert(
             0,
             LocalWakeInterceptor(
-              wake: () async =>
+              wake: ({required background}) async =>
                   throw const TixException(TixErrorKind.engineUnavailable),
               done: () {},
             ),
@@ -59,5 +59,51 @@ void main() {
       ),
     );
     expect(server.requests, isEmpty);
+  });
+
+  test('a poll is background work, and only a held wake is released', () async {
+    final server = FakeTix();
+    final api = server.factory(
+      'http://127.0.0.1:1',
+      const BearerCredential('tok'),
+    );
+    final asked = <bool>[];
+    var released = 0;
+    api.transport.dio.interceptors.insert(
+      0,
+      LocalWakeInterceptor(
+        wake: ({required background}) async {
+          asked.add(background);
+          return ('http://127.0.0.1:4242', !background);
+        },
+        done: () => released++,
+      ),
+    );
+    await api.event.poll();
+    expect(asked, [true]);
+    expect(released, 0);
+    await api.identity.whoami();
+    expect(asked, [true, false]);
+    expect(released, 1);
+  });
+
+  test('requests a predicate picks are background work', () async {
+    final server = FakeTix();
+    final asked = <bool>[];
+    final api =
+        server.factory('http://127.0.0.1:1', const BearerCredential('tok'))
+          ..transport.dio.interceptors.insert(
+            0,
+            LocalWakeInterceptor(
+              wake: ({required background}) async {
+                asked.add(background);
+                return ('http://127.0.0.1:4242', false);
+              },
+              done: () {},
+              background: (o) => o.path.endsWith('/whoami'),
+            ),
+          );
+    await api.identity.whoami();
+    expect(asked, [true]);
   });
 }
