@@ -121,6 +121,8 @@ const Set<String> _contextFree = {Routes.instances, Routes.about};
 /// tab's stack and the sheets on it, gives way to the switching screen
 /// until the new context lands. The hosts around the shell stay.
 class _ContextMover {
+  /// The tabs' shell, gone from the tree once its old screens are.
+  final shell = GlobalKey<StatefulNavigationShellState>();
   late final GoRouter router;
   bool moving = false;
   Uri? _left;
@@ -132,10 +134,13 @@ class _ContextMover {
       (r) => r.settings is Page,
     );
     router.go(Routes.switching);
-    for (var i = 0; i < 3 && !_switching; i++) {
+    for (
+      var i = 0;
+      i < 30 && (!_switching || shell.currentContext != null);
+      i++
+    ) {
       await _nextFrame();
     }
-    await _nextFrame();
   }
 
   void land(String? landing, String home) {
@@ -232,6 +237,7 @@ GoRouter router(Ref ref) {
                 const NoTransitionPage(child: SplashScreen()),
           ),
           StatefulShellRoute.indexedStack(
+            key: mover.shell,
             builder: (_, _, shell) => HomeShell(
               shell: shell,
               inboxIcon: (icon) => InboxNavIcon(icon: icon),
