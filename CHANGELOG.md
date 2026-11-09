@@ -1,5 +1,41 @@
 # Changelog
 
+## [0.5.0](https://github.com/Heliopsy/tix-mobile/compare/v0.4.0...v0.5.0) (2026-11-09)
+
+
+### Features
+
+* **api:** a bytes twin for operations that answer in a format the request picks ([2682418](https://github.com/Heliopsy/tix-mobile/commit/268241876526802b0919bb17ca5c17849261ecdb))
+* **design:** a panel for values tix shows only once ([a1ac52e](https://github.com/Heliopsy/tix-mobile/commit/a1ac52ecab3ef9a6c074f77d227ac9cad9d76cf9))
+* fall back to HTTP polling when the event WebSocket keeps failing ([e26f35c](https://github.com/Heliopsy/tix-mobile/commit/e26f35c005c37cdef4ba42ebde0712d03fc9db36))
+* Glance home screen widgets on Android ([fb7ff58](https://github.com/Heliopsy/tix-mobile/commit/fb7ff58bdc4f744355770f1fae12d65b49ba517d))
+* home screen widgets on iOS and macOS ([db5787f](https://github.com/Heliopsy/tix-mobile/commit/db5787f5216a6a80ab701ecf922fb27274143662))
+* home widget snapshots, sync, queue and taps on the Dart side ([c63adfd](https://github.com/Heliopsy/tix-mobile/commit/c63adfd138e2f1530b1d8ba5698d58004c762526))
+* keep Inbox's unread badge in sight with six destinations ([e90247d](https://github.com/Heliopsy/tix-mobile/commit/e90247d6adf1112414da077e16d9432282f08fea))
+* list the tenant and server screens under Manage ([931aa3f](https://github.com/Heliopsy/tix-mobile/commit/931aa3f6fe478bd3594fa18a1de963f099e75881))
+* list users, tokens and transfer in the Manage hub ([4c2c162](https://github.com/Heliopsy/tix-mobile/commit/4c2c1626994a1a4108366fb2f4c3e5d7b001cf1e))
+* manage projects, workflows and custom fields from a Manage hub ([7d0e441](https://github.com/Heliopsy/tix-mobile/commit/7d0e441ab3e3ff60911053a356f1855cda73389c))
+* poll events through the generated event.poll ([8e43223](https://github.com/Heliopsy/tix-mobile/commit/8e43223b73d5a49edcf8178250a2a0a6648fa19f))
+* rest idle local engines and open databases in place ([107b1a6](https://github.com/Heliopsy/tix-mobile/commit/107b1a6c0b826a6d95cb6c56a2dfb02b0392ae64))
+* show whether live updates are live, polling or refreshing ([54126f0](https://github.com/Heliopsy/tix-mobile/commit/54126f024f07227e6f3660897bf309fd945c5250))
+* tenant and server administration, and your own second factor and SSH keys ([bcb2656](https://github.com/Heliopsy/tix-mobile/commit/bcb265670958ec8c629dd4c78392e8b88c4b75b8))
+* users, invites, API tokens, account, calendar feed and export in the app ([c170cf9](https://github.com/Heliopsy/tix-mobile/commit/c170cf94e9ec3535940d3992e0755c4334bfcaa1))
+* webhooks, external sync, retention, housekeeping, trash and the audit log ([2875a6d](https://github.com/Heliopsy/tix-mobile/commit/2875a6d085557a7d91995983dfd8a8de7246cd1b))
+
+
+### Bug Fixes
+
+* **api:** send an explicit null to clear a due date through the generated client ([5610371](https://github.com/Heliopsy/tix-mobile/commit/5610371d12eadda4e520b5caa15444c73e74a09b))
+* hold a local engine awake while a request is in flight ([b8dd671](https://github.com/Heliopsy/tix-mobile/commit/b8dd67160171eed18779ad07c28cf65353f02b26))
+* read the keyguard host category from AppWidgetProviderInfo ([690c7c9](https://github.com/Heliopsy/tix-mobile/commit/690c7c93be5b27fd6e8f549ddfe6c43df2f49da6))
+
+
+### Dependencies
+
+* leave All files access out of the Play bundle ([d0cbd14](https://github.com/Heliopsy/tix-mobile/commit/d0cbd14e5e44d534d6479090f343af36366c506b))
+* pin tix with the event poll endpoint ([a37441a](https://github.com/Heliopsy/tix-mobile/commit/a37441ae696d43e93d80a14b8481bd08eb743f6b))
+* regenerate the session provider hash ([024658d](https://github.com/Heliopsy/tix-mobile/commit/024658d67ee270c939560285ecac5a5de1776ecd))
+
 ## [0.4.0](https://github.com/Heliopsy/tix-mobile/compare/v0.3.0...v0.4.0) (2026-11-08)
 
 
