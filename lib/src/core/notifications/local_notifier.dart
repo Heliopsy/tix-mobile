@@ -11,6 +11,31 @@ import 'package:tix_mobile/src/core/logging/log.dart';
 
 part 'local_notifier.g.dart';
 
+/// What a button on a notification does.
+enum NoteActionKind {
+  /// Completes the task.
+  done,
+
+  /// Snoozes the task until tomorrow morning.
+  snooze,
+
+  /// Posts the typed text as a comment.
+  reply,
+}
+
+/// A button on a notification, run in the background when pressed.
+@immutable
+class LocalNoteAction {
+  /// A button for [kind] reading [label].
+  const LocalNoteAction(this.kind, this.label);
+
+  /// What it does.
+  final NoteActionKind kind;
+
+  /// What it reads.
+  final String label;
+}
+
 /// One notification to show.
 @immutable
 class LocalNote {
@@ -23,6 +48,9 @@ class LocalNote {
     this.badge,
     this.publicTitle,
     this.publicBody,
+    this.actions = const [],
+    this.replyLabel = '',
+    this.unlockForActions = false,
   });
 
   /// Stable per item, so showing it again replaces it.
@@ -46,6 +74,16 @@ class LocalNote {
 
   /// What a locked screen shows in place of [body].
   final String? publicBody;
+
+  /// The buttons, where the platform runs them in the background (Android).
+  final List<LocalNoteAction> actions;
+
+  /// The hint in the field a reply is typed into.
+  final String replyLabel;
+
+  /// Whether the buttons ask for the device to be unlocked first, where the
+  /// platform can (Android 12 and later).
+  final bool unlockForActions;
 }
 
 /// The platform's local notifications, behind an interface tests fake.
@@ -81,7 +119,8 @@ class PluginLocalNotifier implements LocalNotifier {
   final FlutterLocalNotificationsPlugin _plugin;
 
   // flutter_local_notifications cannot set a public version, so
-  // MainActivity adds one to the posted notification.
+  // MainActivity adds one to the posted notification, and with it the
+  // actions, whose intents go to the app's own receiver (PublicNotes.kt).
   static const _public = MethodChannel('tix/notes');
   final _taps = StreamController<String>.broadcast();
   Future<void>? _ready;
@@ -220,6 +259,17 @@ class PluginLocalNotifier implements LocalNotifier {
         'id': note.id,
         'title': title,
         'body': note.publicBody ?? '',
+        'payload': note.payload,
+        'replyLabel': note.replyLabel,
+        'unlock': note.unlockForActions,
+        'actions': [
+          for (final a in note.actions)
+            {
+              'id': a.kind.name,
+              'label': a.label,
+              'reply': a.kind == NoteActionKind.reply,
+            },
+        ],
       });
     } on Object catch (e) {
       log('notifications: public version failed: ${e.runtimeType}');

@@ -64,12 +64,15 @@ first with any [command](#commands), for example `help`, or open it.
 adb shell am start -a android.intent.action.VIEW -d "tix://inbox"
 adb shell am start -a android.intent.action.VIEW -d "tix://mine"
 adb shell am start -a android.intent.action.VIEW -d "tix://tasks"
+adb shell am start -a android.intent.action.VIEW -d "'tix://tasks?filter=Due soon'"
 adb shell am start -a android.intent.action.VIEW -d "tix://projects"
 adb shell am start -a android.intent.action.VIEW -d "tix://projects/OPS"
 adb shell am start -a android.intent.action.VIEW -d "tix://projects/OPS/tasks/OPS-12"
 adb shell am start -a android.intent.action.VIEW -d "tix://settings"
 adb shell am start -a android.intent.action.VIEW -d "tix://about"
 adb shell am start -a android.intent.action.VIEW -d "tix://connection"
+adb shell am start -a android.intent.action.VIEW -d "tix://quick-add"
+adb shell am start -a android.intent.action.VIEW -d "'tix://quick-add?project=OPS'"
 ```
 
 | Link | Opens |
@@ -77,12 +80,14 @@ adb shell am start -a android.intent.action.VIEW -d "tix://connection"
 | `tix://inbox` | Inbox |
 | `tix://mine` | My work |
 | `tix://tasks` | Tasks |
+| `tix://tasks?filter=<name or id>` | Tasks, on that saved filter |
 | `tix://projects` | Projects |
 | `tix://projects/<KEY>` | The project's tasks |
 | `tix://projects/<KEY>/tasks/<ref>` | The task |
 | `tix://settings` | Settings |
 | `tix://about` | About |
 | `tix://connection` | Connection details, over the screen on show |
+| `tix://quick-add` | Quick add over the screen on show; `?project=<KEY>` picks the project |
 
 Add `?context=<id or name>` to switch context first. The name is matched, ignoring case, against the context id
 from `dumpsys ... contexts`, the connection id, the instance name, the tenant's key or name, the connection's label,
@@ -98,7 +103,13 @@ link goes nowhere if you cancel. A link the app does not know, or one naming no 
 recognised" and goes to the start screen. A link that arrives while nobody is signed in waits until a context is
 active.
 
-Links work in release builds and from any app, a browser included, which is why they only navigate.
+Links work in release builds and from any app, a browser included, which is why they only navigate. Quick add
+opens the sheet and adds nothing until you do.
+
+The app uses the same links itself. The Quick Settings tiles open `tix://quick-add` and
+`tix://inbox?context=<id>`, and a project or saved filter added to the home screen (Add to home screen, where the
+launcher supports pinned shortcuts) opens `tix://projects/<KEY>?context=<id>` or `tix://tasks?filter=<id>&context=<id>`,
+so a shortcut made in one context keeps opening in it.
 
 ### Why not Flutter deep linking
 

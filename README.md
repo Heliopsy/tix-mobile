@@ -124,13 +124,20 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 - **Templates**: save a task as a template, edit or delete it, and create a task from one in one tap.
 - **Share to tix** on Android: shared text and links open quick add as a draft. Launcher shortcuts for Quick add,
   Inbox and My work on Android and iOS.
+- **Quick Settings tiles** on Android: Quick add opens the sheet over the app, and Inbox shows the unread count and
+  opens the inbox.
+- **Add to home screen** on a project or a saved filter, on Android launchers that pin shortcuts. The shortcut
+  opens it in the context it was made in.
 - **Command palette** (Ctrl+K or Cmd+K): every command, projects, recent tasks and any task by reference; `?` lists
   the shortcuts.
 - **Inbox**: mentions, assignments, comments and status changes, grouped by day, with filters per kind, swipe to
   mark read, mark all read, an unread badge, a summary of what is overdue and due today, and live updates.
 - **Notifications** for new inbox items while the app runs, per context and per kind, on every platform; the
   kinds the server sends you and your own Slack, Discord, ntfy or signed JSON channels, with their delivery log.
-  Task content can be hidden per context, and an Android lock screen only ever shows "New in your inbox".
+  Task content can be hidden per context, and an Android lock screen only ever shows "New in your inbox". On
+  Android, Done, Snooze and an inline Reply act on the task from the notification without opening the app, offline
+  too: they go through the outbox and are sent when the server is back. With content hidden there is no Reply, and
+  Done and Snooze ask for an unlock first.
 - **Home screen widgets**: My work (tick to complete), Inbox, Quick add and Project, natively on Android (Glance),
   iOS and macOS (WidgetKit), following the active context or pinned to one, with the inbox count on the iPhone lock
   screen. See [docs/widgets.md](docs/widgets.md).

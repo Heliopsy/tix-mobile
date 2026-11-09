@@ -14,6 +14,9 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import red.tix.tix_mobile.adb.AdbHub
 import red.tix.tix_mobile.adb.AdbService
+import red.tix.tix_mobile.notes.NoteActionHub
+import red.tix.tix_mobile.notes.NoteButton
+import red.tix.tix_mobile.shortcuts.Pins
 
 // tix/share holds the latest text shared to the app until Dart takes it, so
 // a share made before Dart listens is not lost.
@@ -29,6 +32,10 @@ import red.tix.tix_mobile.adb.AdbService
 //
 // tix/adb is this engine's end of AdbHub, which answers dumpsys and
 // am broadcast (docs/adb.md).
+//
+// tix/note-actions is this engine's end of NoteActionHub, which runs a
+// pressed notification button here while the app is open. tix/pins puts
+// shortcuts on the home screen.
 class MainActivity : FlutterActivity() {
     private var pending: Map<String, String>? = null
     private var channel: MethodChannel? = null
@@ -36,6 +43,7 @@ class MainActivity : FlutterActivity() {
     private var link: String? = null
     private var links: MethodChannel? = null
     private var adb: MethodChannel? = null
+    private var noteActions: MethodChannel? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -45,7 +53,18 @@ class MainActivity : FlutterActivity() {
                 val id = call.argument<Int>("id")
                 val title = call.argument<String>("title").orEmpty()
                 val body = call.argument<String>("body").orEmpty()
-                result.success(id != null && PublicNotes.attach(this, id, title, body))
+                result.success(
+                    id != null && PublicNotes.attach(
+                        this,
+                        id,
+                        title,
+                        body,
+                        buttons = NoteButton.list(call.argument<Any>("actions")),
+                        payload = call.argument<String>("payload").orEmpty(),
+                        replyLabel = call.argument<String>("replyLabel").orEmpty(),
+                        unlock = call.argument<Boolean>("unlock") == true,
+                    ),
+                )
             } else {
                 result.notImplemented()
             }
@@ -71,6 +90,21 @@ class MainActivity : FlutterActivity() {
             }
         }
         adb = MethodChannel(messenger, AdbHub.CHANNEL).also { AdbHub.attachUi(it) }
+        noteActions = MethodChannel(messenger, NoteActionHub.CHANNEL).also { NoteActionHub.attachUi(it) }
+        MethodChannel(messenger, Pins.CHANNEL).setMethodCallHandler { call, result ->
+            when (call.method) {
+                "supported" -> result.success(Pins.supported(this))
+                "pin" -> result.success(
+                    Pins.pin(
+                        this,
+                        call.argument<String>("id").orEmpty(),
+                        call.argument<String>("label").orEmpty(),
+                        call.argument<String>("link").orEmpty(),
+                    ),
+                )
+                else -> result.notImplemented()
+            }
+        }
         MethodChannel(messenger, "red.tix/local_access").setMethodCallHandler { call, result ->
             when (call.method) {
                 "declared" -> result.success(declared())
@@ -85,6 +119,8 @@ class MainActivity : FlutterActivity() {
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
         adb?.let { AdbHub.detachUi(it) }
         adb = null
+        noteActions?.let { NoteActionHub.detachUi(it) }
+        noteActions = null
         super.cleanUpFlutterEngine(flutterEngine)
     }
 

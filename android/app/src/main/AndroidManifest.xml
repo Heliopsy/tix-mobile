@@ -121,6 +121,33 @@
                 <action android:name="red.tix.ADB" />
             </intent-filter>
         </receiver>
+        <!-- Quick Settings tiles (Android 7+). Both open tix:// links in
+             MainActivity; Inbox reads its count from the widget snapshot. -->
+        <service
+            android:name=".tiles.QuickAddTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_stat_tix"
+            android:label="@string/tile_quick_add"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".tiles.InboxTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_tile_inbox"
+            android:label="@string/tile_inbox"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+        <!-- Notification actions (Done, Snooze, Reply) arrive here from the
+             app's own PendingIntents only. -->
+        <receiver
+            android:name=".notes.NoteActionReceiver"
+            android:exported="false" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

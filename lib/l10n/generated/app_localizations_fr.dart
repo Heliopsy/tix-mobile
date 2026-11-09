@@ -7423,4 +7423,34 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get linkPickContextBody =>
       'Le lien correspond à plusieurs de vos contextes.';
+
+  @override
+  String get notifActionDone => 'Terminé';
+
+  @override
+  String get notifActionSnooze => 'Reporter';
+
+  @override
+  String get notifActionReply => 'Répondre';
+
+  @override
+  String get notifReplyLabel => 'Écrire un commentaire';
+
+  @override
+  String get notifActionFailedDone => 'Impossible de le marquer comme terminé';
+
+  @override
+  String get notifActionFailedSnooze => 'Impossible de le reporter';
+
+  @override
+  String get notifActionFailedReply => 'Impossible d\'envoyer votre réponse';
+
+  @override
+  String get notifActionFailedBody => 'Ouvrez tix pour réessayer.';
+
+  @override
+  String get pinToHome => 'Ajouter à l\'écran d\'accueil';
+
+  @override
+  String get pinFailed => 'Impossible de l\'ajouter à l\'écran d\'accueil';
 }

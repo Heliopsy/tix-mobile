@@ -16,6 +16,7 @@ import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/core/storage/stores.dart';
 import 'package:tix_mobile/src/data/local/ffi_local_engine.dart';
+import 'package:tix_mobile/src/features/inbox/application/note_actions.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
 import 'package:tix_mobile/src/features/widgets/application/headless.dart';
 
@@ -36,7 +37,10 @@ Future<void> main() async {
       adbAppearanceProvider.overrideWith(LiveAppearance.new),
     ],
   );
-  if (Platform.isAndroid) unawaited(container.read(adbBridgeProvider).listen());
+  if (Platform.isAndroid) {
+    unawaited(container.read(adbBridgeProvider).listen());
+    unawaited(container.read(noteActionBridgeProvider).listen());
+  }
   runApp(UncontrolledProviderScope(container: container, child: const App()));
 }
 
@@ -58,6 +62,25 @@ Future<void> adbHeadlessMain() async {
     ],
   );
   await container.read(adbBridgeProvider).listen();
+}
+
+/// Android starts a headless engine here to run a notification button
+/// pressed while the app is not open. It writes through the stored
+/// context's outbox and never builds the session or a local engine.
+@pragma('vm:entry-point')
+Future<void> noteActionHeadlessMain() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  DartPluginRegistrant.ensureInitialized();
+  final prefs = await SharedPreferencesWithCache.create(
+    cacheOptions: const SharedPreferencesWithCacheOptions(),
+  );
+  final container = ProviderContainer(
+    retry: noRetry,
+    overrides: [
+      keyValueStoreProvider.overrideWithValue(PrefsKeyValueStore(prefs)),
+    ],
+  );
+  await container.read(noteActionBridgeProvider).listen();
 }
 
 /// What an Android widget's tick or the refresh worker runs, in the

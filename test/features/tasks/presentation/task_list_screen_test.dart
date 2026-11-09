@@ -5,11 +5,14 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
+import 'package:tix_mobile/src/core/platform/deep_links.dart';
+import 'package:tix_mobile/src/core/platform/pinned_shortcuts.dart';
 import 'package:tix_mobile/src/features/quick/presentation/quick_actions_host.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_list_screen.dart';
 
 import '../../../helpers/app.dart';
+import '../../../helpers/fake_pins.dart';
 import '../../../helpers/fake_tix.dart';
 
 void main() {
@@ -22,6 +25,7 @@ void main() {
     Widget screen, {
     Size size = phone,
     bool settle = true,
+    FakePins? pins,
   }) {
     final stores = signedInStores();
     return pumpScreen(
@@ -29,13 +33,40 @@ void main() {
       screen,
       size: size,
       settle: settle,
-      overrides: fakeOverrides(
-        server,
-        settings: stores.settings,
-        secrets: stores.secrets,
-      ),
+      overrides: [
+        ...fakeOverrides(
+          server,
+          settings: stores.settings,
+          secrets: stores.secrets,
+        ),
+        if (pins != null) pinnedShortcutsProvider.overrideWithValue(pins),
+      ],
     );
   }
+
+  testWidgets('a project goes on the home screen where the launcher pins', (
+    tester,
+  ) async {
+    final pins = FakePins();
+    await pump(tester, const TaskListScreen(projectKey: 'infra'), pins: pins);
+    await tester.tap(find.byKey(const Key('project.infra.pin')));
+    await tester.pumpAndSettle();
+    final shortcut = pins.pinned.single;
+    expect(shortcut.label, 'Infrastructure');
+    final link = parseTixLink(shortcut.link)!;
+    expect(link.route, '/projects/infra');
+    expect(link.context, startsWith('c1.'));
+  });
+
+  testWidgets('no pin button where the launcher cannot pin', (tester) async {
+    await pump(
+      tester,
+      const TaskListScreen(projectKey: 'infra'),
+      pins: FakePins(canPin: false),
+    );
+    expect(find.text('Fix login'), findsOneWidget);
+    expect(find.byTooltip('Add to home screen'), findsNothing);
+  });
 
   for (final MapEntry(key: width, value: size) in widths.entries) {
     group(width, () {

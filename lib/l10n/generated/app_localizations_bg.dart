@@ -7374,4 +7374,34 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String get linkPickContextBody =>
       'Връзката съвпада с повече от един от вашите контексти.';
+
+  @override
+  String get notifActionDone => 'Готово';
+
+  @override
+  String get notifActionSnooze => 'Отложи';
+
+  @override
+  String get notifActionReply => 'Отговори';
+
+  @override
+  String get notifReplyLabel => 'Напишете коментар';
+
+  @override
+  String get notifActionFailedDone => 'Не можа да се маркира като готово';
+
+  @override
+  String get notifActionFailedSnooze => 'Не можа да се отложи';
+
+  @override
+  String get notifActionFailedReply => 'Отговорът ви не можа да се изпрати';
+
+  @override
+  String get notifActionFailedBody => 'Отворете tix, за да опитате отново.';
+
+  @override
+  String get pinToHome => 'Добави на началния екран';
+
+  @override
+  String get pinFailed => 'Не можа да се добави на началния екран';
 }

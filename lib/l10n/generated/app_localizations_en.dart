@@ -7366,4 +7366,34 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get linkPickContextBody =>
       'The link fits more than one of your contexts.';
+
+  @override
+  String get notifActionDone => 'Done';
+
+  @override
+  String get notifActionSnooze => 'Snooze';
+
+  @override
+  String get notifActionReply => 'Reply';
+
+  @override
+  String get notifReplyLabel => 'Write a comment';
+
+  @override
+  String get notifActionFailedDone => 'Couldn\'t mark it done';
+
+  @override
+  String get notifActionFailedSnooze => 'Couldn\'t snooze it';
+
+  @override
+  String get notifActionFailedReply => 'Couldn\'t send your reply';
+
+  @override
+  String get notifActionFailedBody => 'Open tix to try again.';
+
+  @override
+  String get pinToHome => 'Add to home screen';
+
+  @override
+  String get pinFailed => 'Couldn\'t add it to the home screen';
 }

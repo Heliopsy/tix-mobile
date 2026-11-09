@@ -8,9 +8,12 @@ import 'package:flutter_test/flutter_test.dart';
 /// The languages the app speaks, which the native widget text must too.
 const _languages = ['en', 'bg', 'fr', 'de'];
 
-Map<String, String> _androidStrings(String dir) {
-  final text = File('android/app/src/main/res/$dir/widget_strings.xml')
-      .readAsStringSync();
+/// The Android string files: widget text, then the tiles' and the
+/// notification follow-up's.
+const _androidFiles = ['widget_strings.xml', 'app_strings.xml'];
+
+Map<String, String> _androidStrings(String dir, String file) {
+  final text = File('android/app/src/main/res/$dir/$file').readAsStringSync();
   return {
     for (final m in RegExp(
       '<string name="([^"]+)">(.*?)</string>',
@@ -20,15 +23,17 @@ Map<String, String> _androidStrings(String dir) {
 }
 
 void main() {
-  test('Android widget text has every key in every language', () {
-    final en = _androidStrings('values');
-    expect(en, isNotEmpty);
-    for (final lang in _languages.skip(1)) {
-      final other = _androidStrings('values-$lang');
-      expect(other.keys.toSet(), en.keys.toSet(), reason: lang);
-      expect(other.values, everyElement(isNotEmpty), reason: lang);
-    }
-  });
+  for (final file in _androidFiles) {
+    test('Android $file has every key in every language', () {
+      final en = _androidStrings('values', file);
+      expect(en, isNotEmpty);
+      for (final lang in _languages.skip(1)) {
+        final other = _androidStrings('values-$lang', file);
+        expect(other.keys.toSet(), en.keys.toSet(), reason: '$lang $file');
+        expect(other.values, everyElement(isNotEmpty), reason: '$lang $file');
+      }
+    });
+  }
 
   test('iOS and macOS widget text is translated into every language', () {
     final catalog = jsonDecode(

@@ -17,6 +17,7 @@ import 'package:tix_mobile/src/core/notifications/local_notifier.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
+import 'package:tix_mobile/src/core/storage/stores.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/repositories/notification_settings_repository.dart';
 import 'package:tix_mobile/src/data/repositories/settings_repository.dart';
@@ -169,6 +170,8 @@ class NoteTarget {
     required this.route,
     required this.item,
     required this.context,
+    this.taskRef = '',
+    this.projectKey = '',
   });
 
   /// Reads a notification's payload, or null when it is not one of ours.
@@ -182,6 +185,8 @@ class NoteTarget {
         route: route,
         item: json['item'] as String? ?? '',
         context: json['context'] as String? ?? '',
+        taskRef: json['ref'] as String? ?? '',
+        projectKey: json['project'] as String? ?? '',
       );
     } on FormatException {
       return null;
@@ -197,9 +202,54 @@ class NoteTarget {
   /// The notification context key it was shown for.
   final String context;
 
+  /// The task the item is about, empty when it is about none.
+  final String taskRef;
+
+  /// The task's project key.
+  final String projectKey;
+
   /// The payload to hand the platform.
-  String encode() =>
-      jsonEncode({'route': route, 'item': item, 'context': context});
+  String encode() => jsonEncode({
+    'route': route,
+    'item': item,
+    'context': context,
+    if (taskRef.isNotEmpty) 'ref': taskRef,
+    if (projectKey.isNotEmpty) 'project': projectKey,
+  });
+}
+
+/// The buttons a notification about an inbox item carries: Done, Snooze and
+/// Reply when it is about a task, without Reply when its content is hidden,
+/// since the person could not see what they answer.
+List<NoteActionKind> noteActionsFor({
+  required bool opensTask,
+  required bool hidden,
+}) => [
+  if (opensTask) ...[
+    NoteActionKind.done,
+    NoteActionKind.snooze,
+    if (!hidden) NoteActionKind.reply,
+  ],
+];
+
+/// The label of the button for [kind].
+String noteActionLabel(AppLocalizations l10n, NoteActionKind kind) =>
+    switch (kind) {
+      NoteActionKind.done => l10n.notifActionDone,
+      NoteActionKind.snooze => l10n.notifActionSnooze,
+      NoteActionKind.reply => l10n.notifActionReply,
+    };
+
+/// Notification text in the app's language, read from [store] so it works
+/// without a screen.
+AppLocalizations notificationL10n(KeyValueStore store) {
+  final code =
+      SettingsRepository(store).languageCode() ??
+      PlatformDispatcher.instance.locale.languageCode;
+  final supported = AppLocalizations.supportedLocales.any(
+    (l) => l.languageCode == code,
+  );
+  return lookupAppLocalizations(Locale(supported ? code : 'en'));
 }
 
 /// The most notifications one check shows before it sums the rest up.
@@ -306,8 +356,19 @@ class InboxAlerts extends _$InboxAlerts {
             route: route,
             item: item.id,
             context: key,
+            taskRef: item.opensTask ? item.taskRef : '',
+            projectKey: item.opensTask ? item.projectKey : '',
           ).encode(),
           badge: badge,
+          actions: [
+            for (final kind in noteActionsFor(
+              opensTask: item.opensTask,
+              hidden: hide,
+            ))
+              LocalNoteAction(kind, noteActionLabel(l10n, kind)),
+          ],
+          replyLabel: l10n.notifReplyLabel,
+          unlockForActions: hide,
         ),
       );
     }
@@ -331,15 +392,7 @@ class InboxAlerts extends _$InboxAlerts {
     }
   }
 
-  AppLocalizations _l10n() {
-    final code =
-        SettingsRepository(ref.read(keyValueStoreProvider)).languageCode() ??
-        PlatformDispatcher.instance.locale.languageCode;
-    final supported = AppLocalizations.supportedLocales.any(
-      (l) => l.languageCode == code,
-    );
-    return lookupAppLocalizations(Locale(supported ? code : 'en'));
-  }
+  AppLocalizations _l10n() => notificationL10n(ref.read(keyValueStoreProvider));
 
   /// Handles a tap on a notification: marks its item read when it belongs
   /// to the active context, and answers where to go, or null to stay.

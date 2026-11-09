@@ -4345,5 +4345,45 @@
   "linkPickContextBody": "The link fits more than one of your contexts.",
   "@linkPickContextBody": {
     "description": "Body of the sheet asking which context a link means"
+  },
+  "notifActionDone": "Done",
+  "@notifActionDone": {
+    "description": "Notification action that completes the task"
+  },
+  "notifActionSnooze": "Snooze",
+  "@notifActionSnooze": {
+    "description": "Notification action that snoozes the task until tomorrow morning"
+  },
+  "notifActionReply": "Reply",
+  "@notifActionReply": {
+    "description": "Notification action that posts a comment"
+  },
+  "notifReplyLabel": "Write a comment",
+  "@notifReplyLabel": {
+    "description": "Hint in the inline reply field of a notification"
+  },
+  "notifActionFailedDone": "Couldn't mark it done",
+  "@notifActionFailedDone": {
+    "description": "Follow-up notification when Done failed; names no task"
+  },
+  "notifActionFailedSnooze": "Couldn't snooze it",
+  "@notifActionFailedSnooze": {
+    "description": "Follow-up notification when Snooze failed; names no task"
+  },
+  "notifActionFailedReply": "Couldn't send your reply",
+  "@notifActionFailedReply": {
+    "description": "Follow-up notification when Reply failed; names no task"
+  },
+  "notifActionFailedBody": "Open tix to try again.",
+  "@notifActionFailedBody": {
+    "description": "Body of the follow-up notification after a failed action"
+  },
+  "pinToHome": "Add to home screen",
+  "@pinToHome": {
+    "description": "Puts a shortcut to a project or saved filter on the home screen"
+  },
+  "pinFailed": "Couldn't add it to the home screen",
+  "@pinFailed": {
+    "description": "Toast when the launcher could not be asked to pin a shortcut"
   }
 }

@@ -12372,6 +12372,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The link fits more than one of your contexts.'**
   String get linkPickContextBody;
+
+  /// Notification action that completes the task
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get notifActionDone;
+
+  /// Notification action that snoozes the task until tomorrow morning
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze'**
+  String get notifActionSnooze;
+
+  /// Notification action that posts a comment
+  ///
+  /// In en, this message translates to:
+  /// **'Reply'**
+  String get notifActionReply;
+
+  /// Hint in the inline reply field of a notification
+  ///
+  /// In en, this message translates to:
+  /// **'Write a comment'**
+  String get notifReplyLabel;
+
+  /// Follow-up notification when Done failed; names no task
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t mark it done'**
+  String get notifActionFailedDone;
+
+  /// Follow-up notification when Snooze failed; names no task
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t snooze it'**
+  String get notifActionFailedSnooze;
+
+  /// Follow-up notification when Reply failed; names no task
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t send your reply'**
+  String get notifActionFailedReply;
+
+  /// Body of the follow-up notification after a failed action
+  ///
+  /// In en, this message translates to:
+  /// **'Open tix to try again.'**
+  String get notifActionFailedBody;
+
+  /// Puts a shortcut to a project or saved filter on the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Add to home screen'**
+  String get pinToHome;
+
+  /// Toast when the launcher could not be asked to pin a shortcut
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t add it to the home screen'**
+  String get pinFailed;
 }
 
 class _AppLocalizationsDelegate

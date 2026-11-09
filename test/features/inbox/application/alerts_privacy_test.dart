@@ -2,6 +2,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tix_mobile/src/core/notifications/local_notifier.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/features/inbox/application/alerts.dart';
 
@@ -74,6 +75,40 @@ void main() {
     expect(note.body, contains('Cut over'));
     expect(note.publicTitle, 'New in your inbox');
     expect(note.publicBody, isNot(contains('Cut over')));
+  });
+
+  test('a note about a task offers Done, Snooze and Reply', () async {
+    await container();
+    await arrive('i9', '2026-11-01T11:45:00Z');
+    final note = notes.shown.single;
+    expect(
+      [for (final a in note.actions) a.kind],
+      [NoteActionKind.done, NoteActionKind.snooze, NoteActionKind.reply],
+    );
+    expect(
+      [for (final a in note.actions) a.label],
+      ['Done', 'Snooze', 'Reply'],
+    );
+    expect(note.replyLabel, 'Write a comment');
+    expect(note.unlockForActions, isFalse);
+    final target = NoteTarget.parse(note.payload)!;
+    expect(target.taskRef, 'infra-4');
+    expect(target.projectKey, 'infra');
+    expect(target.item, 'i9');
+  });
+
+  test('hidden content drops Reply and asks for an unlock', () async {
+    final c = await container();
+    await c
+        .read(notificationPrefsStateProvider.notifier)
+        .setHideContent(on: true);
+    await arrive('i9', '2026-11-01T11:45:00Z');
+    final note = notes.shown.single;
+    expect(
+      [for (final a in note.actions) a.kind],
+      [NoteActionKind.done, NoteActionKind.snooze],
+    );
+    expect(note.unlockForActions, isTrue);
   });
 
   test('hiding content leaves the task out, for this context only', () async {

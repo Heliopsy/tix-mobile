@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<resources>
+    <string name="tile_quick_add">Ajout rapide</string>
+    <string name="tile_inbox">Boîte de réception</string>
+    <string name="tile_inbox_unread">%1$d non lus</string>
+    <string name="tile_inbox_none">Tout est lu</string>
+    <string name="tile_open_app">Ouvrir tix</string>
+    <string name="note_action_failed">tix n\'a pas pu terminer cela</string>
+    <string name="note_action_failed_body">Ouvrez tix pour réessayer.</string>
+</resources>

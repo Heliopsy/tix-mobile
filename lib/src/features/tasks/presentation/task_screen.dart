@@ -9,12 +9,14 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/platform/pinned_shortcuts.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/project_stars.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
+import 'package:tix_mobile/src/core/widgets/pin_shortcut_button.dart';
 import 'package:tix_mobile/src/core/widgets/project_star_button.dart';
 import 'package:tix_mobile/src/core/widgets/saved_copy_mark.dart';
 import 'package:tix_mobile/src/data/models/group_pref.dart';
@@ -547,6 +549,14 @@ class _ProjectTitle extends ConsumerWidget {
       children: [
         Flexible(child: switcher),
         ProjectStarButton(project: project),
+        PinShortcutButton(
+          key: Key('project.${project.key}.pin'),
+          shortcut: (ctx) => PinnedShortcut.project(
+            context: ctx,
+            key: project.key,
+            name: project.name,
+          ),
+        ),
       ],
     );
   }

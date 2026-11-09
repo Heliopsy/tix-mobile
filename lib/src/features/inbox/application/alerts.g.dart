@@ -156,7 +156,7 @@ final class InboxAlertsProvider
   InboxAlerts create() => InboxAlerts();
 }
 
-String _$inboxAlertsHash() => r'952f033c760fbba638da35cbef26e41ccd7e153c';
+String _$inboxAlertsHash() => r'f102bfe2b369f17c895d24101e701b14b859a644';
 
 /// Notifies new inbox items of the active context while the app runs:
 /// each item once, none that was there when the app started.

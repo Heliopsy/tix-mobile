@@ -7,7 +7,9 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/platform/pinned_shortcuts.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
+import 'package:tix_mobile/src/core/widgets/pin_shortcut_button.dart';
 import 'package:tix_mobile/src/data/models/saved_filter.dart';
 import 'package:tix_mobile/src/data/query/filter_expression.dart';
 import 'package:tix_mobile/src/features/tasks/application/screen.dart';
@@ -274,10 +276,10 @@ class _SavedFilterRow extends ConsumerWidget {
           children: [
             for (final f in filters) ...[
               GestureDetector(
-                onLongPress: f.editable
+                onLongPress: hasSavedFilterMenu(ref, f)
                     ? () => manageSavedFilter(context, ref, f)
                     : null,
-                onSecondaryTap: f.editable
+                onSecondaryTap: hasSavedFilterMenu(ref, f)
                     ? () => manageSavedFilter(context, ref, f)
                     : null,
                 child: TixFilterChip(
@@ -459,58 +461,84 @@ class _SaveSheetState extends State<_SaveSheet> {
   }
 }
 
-enum _FilterAction { rename, share, earlier, later, delete }
+enum _FilterAction { rename, share, earlier, later, delete, pin }
 
-/// The menu of a saved filter the reader may change.
+/// Whether [filter] has a menu: the reader may change it, or this device can
+/// put it on the home screen.
+bool hasSavedFilterMenu(WidgetRef ref, SavedFilter filter) =>
+    filter.editable || ref.watch(pinSupportedProvider).value == true;
+
+/// The menu of a saved filter: changes the reader may make, and Add to home
+/// screen where the launcher can pin it.
 Future<void> manageSavedFilter(
   BuildContext context,
   WidgetRef ref,
   SavedFilter filter,
 ) async {
   final l10n = context.l10n;
+  final pinnable = ref.read(pinSupportedProvider).value == true;
   final action = await showActionSheet<_FilterAction>(
     context,
     title: filter.name,
     actions: [
-      TixSheetAction(
-        key: const Key('saved.rename'),
-        value: _FilterAction.rename,
-        label: l10n.filterRename,
-        icon: Icons.edit_outlined,
-      ),
-      TixSheetAction(
-        key: const Key('saved.share'),
-        value: _FilterAction.share,
-        label: filter.shared ? l10n.filterUnshare : l10n.filterShare,
-        icon: filter.shared ? Icons.person_outline : Icons.group_outlined,
-      ),
-      if (filter.mine) ...[
+      if (pinnable)
         TixSheetAction(
-          key: const Key('saved.earlier'),
-          value: _FilterAction.earlier,
-          label: l10n.boardMoveUp,
-          icon: Icons.arrow_upward,
+          key: const Key('saved.pin'),
+          value: _FilterAction.pin,
+          label: l10n.pinToHome,
+          icon: Icons.add_to_home_screen,
+        ),
+      if (filter.editable) ...[
+        TixSheetAction(
+          key: const Key('saved.rename'),
+          value: _FilterAction.rename,
+          label: l10n.filterRename,
+          icon: Icons.edit_outlined,
         ),
         TixSheetAction(
-          key: const Key('saved.later'),
-          value: _FilterAction.later,
-          label: l10n.boardMoveDown,
-          icon: Icons.arrow_downward,
+          key: const Key('saved.share'),
+          value: _FilterAction.share,
+          label: filter.shared ? l10n.filterUnshare : l10n.filterShare,
+          icon: filter.shared ? Icons.person_outline : Icons.group_outlined,
+        ),
+        if (filter.mine) ...[
+          TixSheetAction(
+            key: const Key('saved.earlier'),
+            value: _FilterAction.earlier,
+            label: l10n.boardMoveUp,
+            icon: Icons.arrow_upward,
+          ),
+          TixSheetAction(
+            key: const Key('saved.later'),
+            value: _FilterAction.later,
+            label: l10n.boardMoveDown,
+            icon: Icons.arrow_downward,
+          ),
+        ],
+        TixSheetAction(
+          key: const Key('saved.delete'),
+          value: _FilterAction.delete,
+          label: l10n.filterDelete,
+          icon: Icons.delete_outline,
+          destructive: true,
         ),
       ],
-      TixSheetAction(
-        key: const Key('saved.delete'),
-        value: _FilterAction.delete,
-        label: l10n.filterDelete,
-        icon: Icons.delete_outline,
-        destructive: true,
-      ),
     ],
   );
   if (action == null || !context.mounted) return;
   final filters = ref.read(savedFiltersProvider.notifier);
   try {
     switch (action) {
+      case _FilterAction.pin:
+        await pinToHomeScreen(
+          context,
+          ref,
+          (ctx) => PinnedShortcut.savedFilter(
+            context: ctx,
+            id: filter.id,
+            name: filter.name,
+          ),
+        );
       case _FilterAction.rename:
         final name = await askText(
           context,
