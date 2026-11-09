@@ -69,6 +69,34 @@ void main() {
     expect(go(reloading, '/settings'), isNull);
   });
 
+  test('moving to another context waits on the switching screen', () {
+    String? moving(String location) =>
+        redirectFor(signedIn, Uri.parse(location), moving: true);
+    expect(moving('/projects/infra/tasks/infra-1'), '/switching');
+    expect(moving('/settings'), '/switching');
+    expect(moving('/switching'), isNull);
+    expect(go(signedIn, '/switching'), '/projects');
+    expect(go(out, '/switching'), '/connect');
+  });
+
+  test('a move without a target lands on the root of its tab', () {
+    String? from(String location) => landingFrom(Uri.parse(location));
+    expect(from('/projects/infra/tasks/infra-1'), '/projects');
+    expect(from('/projects/infra/settings'), '/projects');
+    expect(from('/tasks?filter=f1'), '/tasks');
+    expect(from('/inbox'), '/inbox');
+    expect(from('/mine'), '/mine');
+    expect(from('/templates'), '/templates');
+    expect(from('/manage/workflows/default'), '/manage');
+    expect(from('/manage/users/u1'), '/manage');
+    expect(from('/manage/fields/infra'), '/manage');
+    expect(from('/settings/notifications/channels/ch1'), '/settings');
+    expect(from('/settings/instances'), '/settings/instances');
+    expect(from('/settings/about'), '/settings/about');
+    expect(from('/switching'), isNull);
+    expect(from('/'), isNull);
+  });
+
   test('routes escape keys and refs', () {
     expect(Routes.project('a b'), '/projects/a%20b');
     expect(Routes.task('infra', 'infra-1'), '/projects/infra/tasks/infra-1');

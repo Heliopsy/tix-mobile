@@ -355,14 +355,23 @@ class SessionController extends _$SessionController {
   /// another tenant switches its session first, sending [code] when the
   /// target asks for one; without it a code challenge throws
   /// [TixErrorKind.codeRequired].
-  Future<void> activate(ContextRef target, {String? code}) async {
+  ///
+  /// Moving to another context clears the old one's screens and lands on
+  /// [landing], a location in the new context, or else on the root of the
+  /// tab that was showing. Activating the active context again moves
+  /// nothing.
+  Future<void> activate(
+    ContextRef target, {
+    String? code,
+    String? landing,
+  }) async {
     final repo = ref.read(instancesRepositoryProvider);
     final connection = repo.connection(target.connectionId);
     if (connection == null) return;
     if (!connection.switchable ||
         target.tenantKey.isEmpty ||
         target.tenantKey == connection.tenantKey) {
-      await _activate(connection.ref);
+      await _move(connection.ref, landing);
       return;
     }
     final instance = repo.instance(connection.instanceId)!;
@@ -383,7 +392,31 @@ class SessionController extends _$SessionController {
     );
     final updated = _withIdentity(connection, me);
     await repo.update(updated);
-    await _activate(updated.ref);
+    await _move(updated.ref, landing);
+  }
+
+  /// Activates [target], first clearing the screens of the active context
+  /// when [target] is another one, then landing on [landing].
+  Future<void> _move(ContextRef target, String? landing) async {
+    final current = state.value?.ref;
+    if (current == null || _sameContext(current, target)) {
+      await _activate(target);
+      return;
+    }
+    await _moving(() => _activate(target), landing: landing);
+  }
+
+  Future<void> _moving(
+    Future<void> Function() change, {
+    String? landing,
+  }) async {
+    final moves = ref.read(contextMovesProvider);
+    await moves.leave?.call();
+    try {
+      await change();
+    } finally {
+      moves.land?.call(landing);
+    }
   }
 
   /// Pins the sign-in [connectionId] to its tenant, or makes it switchable.
@@ -449,7 +482,16 @@ class SessionController extends _$SessionController {
   }
 
   /// Forgets the connection [id] and its secret, ending a sign-in's session.
+  /// Forgetting the active one clears its screens like a switch.
   Future<void> removeConnection(String id) async {
+    if (state.value?.connection.id == id) {
+      await _moving(() => _removeConnection(id));
+      return;
+    }
+    await _removeConnection(id);
+  }
+
+  Future<void> _removeConnection(String id) async {
     final repo = ref.read(instancesRepositoryProvider);
     final connection = repo.connection(id);
     if (connection == null) return;
@@ -465,8 +507,17 @@ class SessionController extends _$SessionController {
     await future;
   }
 
-  /// Forgets the instance [id] with all its connections.
+  /// Forgets the instance [id] with all its connections. Forgetting the
+  /// active one clears its screens like a switch.
   Future<void> removeInstance(String id) async {
+    if (state.value?.instance.id == id) {
+      await _moving(() => _removeInstance(id));
+      return;
+    }
+    await _removeInstance(id);
+  }
+
+  Future<void> _removeInstance(String id) async {
     final repo = ref.read(instancesRepositoryProvider);
     for (final c in repo.connectionsOf(id)) {
       await ref.read(connectionJobsProvider).stop(c.id);
@@ -535,6 +586,14 @@ class SessionController extends _$SessionController {
     await future;
   }
 
+  /// Whether [a] and [b] are one context: a tenant not known yet on either
+  /// side is the connection's only one.
+  static bool _sameContext(ContextRef a, ContextRef b) =>
+      a.connectionId == b.connectionId &&
+      (a.tenantKey.isEmpty ||
+          b.tenantKey.isEmpty ||
+          a.tenantKey == b.tenantKey);
+
   Instance _remoteInstance(String baseUrl, String name) =>
       ref.read(instancesRepositoryProvider).remoteAt(baseUrl) ??
       Instance(
@@ -550,6 +609,22 @@ class SessionController extends _$SessionController {
     return name.endsWith('.db') ? name.substring(0, name.length - 3) : name;
   }
 }
+
+/// The router's part in moving to another context. Without a router a
+/// move only changes the session.
+class ContextMoves {
+  /// Takes down the screens of the context being left, before the session
+  /// changes, so none of them asks the new context for what it showed.
+  Future<void> Function()? leave;
+
+  /// Opens a location in the new context once it is active, or the root of
+  /// the tab that was showing when given null.
+  void Function(String? landing)? land;
+}
+
+/// The hooks a move to another context calls; the router sets them.
+@Riverpod(keepAlive: true)
+ContextMoves contextMoves(Ref ref) => ContextMoves();
 
 /// One place the switcher can go: a connection in one tenant.
 @immutable

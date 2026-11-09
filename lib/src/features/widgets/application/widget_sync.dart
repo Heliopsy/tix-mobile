@@ -152,15 +152,16 @@ class WidgetSync extends _$WidgetSync {
   Future<String?> open(Uri uri) async {
     if (uri.scheme != 'tixwidget') return null;
     final q = uri.queryParameters;
+    final route = uri.host == 'open' ? q['route'] ?? '' : '';
+    final landing = route.startsWith('/') ? route : null;
     final target = widgetContextRef(q['ctx']);
-    if (target != null && !await _switchTo(target)) return null;
+    if (target != null && !await _switchTo(target, landing)) return null;
     if (!ref.mounted) return null;
     switch (uri.host) {
       case 'open':
         final item = q['item'] ?? '';
         if (item.isNotEmpty) await _markRead(item);
-        final route = q['route'] ?? '';
-        return route.startsWith('/') ? route : null;
+        return landing;
       case 'quickadd':
         ref.read(quickAddDraftsProvider.notifier).open(project: q['project']);
         return null;
@@ -169,7 +170,7 @@ class WidgetSync extends _$WidgetSync {
     }
   }
 
-  Future<bool> _switchTo(ContextRef target) async {
+  Future<bool> _switchTo(ContextRef target, String? landing) async {
     final current = _session?.ref;
     if (current != null &&
         current.connectionId == target.connectionId &&
@@ -177,7 +178,9 @@ class WidgetSync extends _$WidgetSync {
       return true;
     }
     try {
-      await ref.read(sessionControllerProvider.notifier).activate(target);
+      await ref
+          .read(sessionControllerProvider.notifier)
+          .activate(target, landing: landing);
       return true;
     } on Object catch (e) {
       log('widgets: could not switch context: ${e.runtimeType}');

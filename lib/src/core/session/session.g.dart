@@ -137,7 +137,7 @@ final class SessionControllerProvider
   SessionController create() => SessionController();
 }
 
-String _$sessionControllerHash() => r'2e0d7d1d42c6a0d4c77d0712fd6b4679d52780fa';
+String _$sessionControllerHash() => r'5ca13bd8bb77125fb47bff21bc9bd3b4798f50ff';
 
 /// The active session: null until someone connects.
 
@@ -158,6 +158,52 @@ abstract class _$SessionController extends $AsyncNotifier<Session?> {
     return element.handleCreate(ref, build);
   }
 }
+
+/// The hooks a move to another context calls; the router sets them.
+
+@ProviderFor(contextMoves)
+final contextMovesProvider = ContextMovesProvider._();
+
+/// The hooks a move to another context calls; the router sets them.
+
+final class ContextMovesProvider
+    extends $FunctionalProvider<ContextMoves, ContextMoves, ContextMoves>
+    with $Provider<ContextMoves> {
+  /// The hooks a move to another context calls; the router sets them.
+  ContextMovesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'contextMovesProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$contextMovesHash();
+
+  @$internal
+  @override
+  $ProviderElement<ContextMoves> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ContextMoves create(Ref ref) {
+    return contextMoves(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ContextMoves value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ContextMoves>(value),
+    );
+  }
+}
+
+String _$contextMovesHash() => r'9678d5d09fc240daf4eeba7258ffc814abca1c53';
 
 /// The saved contexts, refreshed whenever the session changes.
 
