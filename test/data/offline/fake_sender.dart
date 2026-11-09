@@ -173,6 +173,17 @@ class FakeSender implements OutboxSender {
     if (op == OutboxOp.restore && trash.containsKey(target)) {
       return tasks[target] = trash.remove(target)!;
     }
+    if (op.onProject) {
+      if (!projects.contains(target)) {
+        throw const TixException(TixErrorKind.notFound, status: 404);
+      }
+      if (op == OutboxOp.projectStar) {
+        projectStars.add(target);
+      } else {
+        projectStars.remove(target);
+      }
+      return null;
+    }
     final t = tasks[target];
     if (t == null) throw const TixException(TixErrorKind.notFound);
     if (version != null && version != t.version) {
@@ -230,6 +241,12 @@ class FakeSender implements OutboxSender {
         return null;
     }
   }
+
+  /// The project keys the server knows.
+  final projects = <String>{'infra', 'web'};
+
+  /// The project keys the caller starred.
+  final projectStars = <String>{};
 
   /// Tasks in the trash, by reference.
   final trash = <String, Task>{};

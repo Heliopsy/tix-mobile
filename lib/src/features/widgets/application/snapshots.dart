@@ -273,9 +273,10 @@ class WidgetSnapshots {
     );
   }
 
-  /// The projects the pickers offer for this context.
+  /// The projects the pickers offer for this context, the reader's starred
+  /// ones first.
   List<WidgetProject> catalog() => [
-    for (final p in data.projects)
+    for (final p in starredFirst(data.projects, (p) => p.starred))
       if (p.archivedAt == null)
         WidgetProject(key: p.key, name: p.name, colour: widgetColour(p.color)),
   ];

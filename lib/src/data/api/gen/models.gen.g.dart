@@ -2275,6 +2275,20 @@ Map<String, dynamic> _$TenantMembershipToJson(_TenantMembership instance) =>
       'tenant_id': instance.tenantId,
     };
 
+_NumberingLag _$NumberingLagFromJson(Map<String, dynamic> json) =>
+    _NumberingLag(
+      counter: (json['counter'] as num?)?.toInt() ?? 0,
+      highest: (json['highest'] as num?)?.toInt() ?? 0,
+      project: json['project'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$NumberingLagToJson(_NumberingLag instance) =>
+    <String, dynamic>{
+      'counter': instance.counter,
+      'highest': instance.highest,
+      'project': instance.project,
+    };
+
 _Project _$ProjectFromJson(Map<String, dynamic> json) => _Project(
   archivedAt: _$JsonConverterFromJson<String, DateTime>(
     json['archived_at'],
@@ -2294,6 +2308,7 @@ _Project _$ProjectFromJson(Map<String, dynamic> json) => _Project(
   leaseDefault: json['lease_default'] as String? ?? '',
   leaseMax: json['lease_max'] as String? ?? '',
   name: json['name'] as String? ?? '',
+  starred: json['starred'] as bool? ?? false,
   tenantId: json['tenant_id'] as String? ?? '',
   updatedAt: _$JsonConverterFromJson<String, DateTime>(
     json['updated_at'],
@@ -2321,6 +2336,7 @@ Map<String, dynamic> _$ProjectToJson(_Project instance) => <String, dynamic>{
   'lease_default': instance.leaseDefault,
   'lease_max': instance.leaseMax,
   'name': instance.name,
+  'starred': instance.starred,
   'tenant_id': instance.tenantId,
   'updated_at': ?_$JsonConverterToJson<String, DateTime>(
     instance.updatedAt,
@@ -4463,6 +4479,11 @@ Map<String, dynamic> _$WebhookInputToJson(_WebhookInput instance) =>
 _Work _$WorkFromJson(Map<String, dynamic> json) => _Work(
   claimed: (json['claimed'] as num?)?.toInt() ?? 0,
   leasesExpiredUnswept: (json['leases_expired_unswept'] as num?)?.toInt() ?? 0,
+  numberingBehind:
+      (json['numbering_behind'] as List<dynamic>?)
+          ?.map((e) => NumberingLag.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const <NumberingLag>[],
   projects: (json['projects'] as num?)?.toInt() ?? 0,
   tasks: (json['tasks'] as num?)?.toInt() ?? 0,
   tenants: (json['tenants'] as num?)?.toInt() ?? 0,
@@ -4473,6 +4494,7 @@ _Work _$WorkFromJson(Map<String, dynamic> json) => _Work(
 Map<String, dynamic> _$WorkToJson(_Work instance) => <String, dynamic>{
   'claimed': instance.claimed,
   'leases_expired_unswept': instance.leasesExpiredUnswept,
+  'numbering_behind': instance.numberingBehind.map((e) => e.toJson()).toList(),
   'projects': instance.projects,
   'tasks': instance.tasks,
   'tenants': instance.tenants,

@@ -6909,6 +6909,38 @@ class AppLocalizationsFr extends AppLocalizations {
   String get projectsShowArchived => 'Afficher les archivés';
 
   @override
+  String get projectStar => 'Ajouter le projet aux favoris';
+
+  @override
+  String get projectUnstar => 'Retirer des favoris';
+
+  @override
+  String projectStarred(String name) {
+    return '$name ajouté aux favoris';
+  }
+
+  @override
+  String projectUnstarred(String name) {
+    return '$name retiré des favoris';
+  }
+
+  @override
+  String get projectsStarredHeading => 'Favoris';
+
+  @override
+  String get projectsRestHeading => 'Autres projets';
+
+  @override
+  String syncOpStarProject(String key) {
+    return '$key : projet en favori';
+  }
+
+  @override
+  String syncOpUnstarProject(String key) {
+    return '$key : projet retiré des favoris';
+  }
+
+  @override
   String get manageBundlesSubtitle =>
       'Workflows, champs, étiquettes et webhooks en un fichier';
 

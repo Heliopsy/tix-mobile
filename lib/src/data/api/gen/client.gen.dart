@@ -1794,6 +1794,48 @@ class ProjectOps {
     );
   }
 
+  /// StarProject stars a project for the caller alone, which lists it first on
+  /// the projects screen and in the sidebar and leads its lane.
+  ///
+  /// `PUT /api/v1/projects/{ref}/star` (`project.star`), scope `project:read`.
+  Future<void> star(String ref, {String? idempotencyKey}) async {
+    await _t.empty(
+      'PUT',
+      '/api/v1/projects/${_t.segment(ref)}/star',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
+  }
+
+  /// ListStarredProjects lists the projects the caller starred, in the order
+  /// their lanes are drawn.
+  ///
+  /// `GET /api/v1/me/starred-projects` (`project.starred`), scope `project:read`.
+  Future<Page<Project>> starred() async {
+    return Page.fromJson(
+      await _t.json('GET', '/api/v1/me/starred-projects'),
+      (e) => Project.fromJson(e! as Map<String, dynamic>),
+    );
+  }
+
+  /// ListStarredProjects lists the projects the caller starred, in the order
+  /// their lanes are drawn.
+  ///
+  /// `GET /api/v1/me/starred-projects` (`project.starred`) as NDJSON, one item per line, scope `project:read`.
+  Stream<Project> starredStream() => _t
+      .ndjson('GET', '/api/v1/me/starred-projects')
+      .map((e) => Project.fromJson(e! as Map<String, dynamic>));
+
+  /// UnstarProject clears the caller's own star on a project.
+  ///
+  /// `DELETE /api/v1/projects/{ref}/star` (`project.unstar`), scope `project:read`.
+  Future<void> unstar(String ref, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/projects/${_t.segment(ref)}/star',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
+  }
+
   /// UpdateProject changes a project's name, key, description, colour, icon,
   /// workflow or lease bounds; fields left out are unchanged.
   ///
@@ -2515,6 +2557,7 @@ class TaskOps {
     String? cursor,
     String? sort,
     String? direction,
+    int? page,
     List<String>? project,
     List<String>? projectId,
     List<String>? status,
@@ -2557,6 +2600,7 @@ class TaskOps {
           'cursor': cursor,
           'sort': sort,
           'direction': direction,
+          'page': page,
           'project': project,
           'project_id': projectId,
           'status': status,
@@ -2604,6 +2648,7 @@ class TaskOps {
     int? limit,
     String? sort,
     String? direction,
+    int? page,
     List<String>? project,
     List<String>? projectId,
     List<String>? status,
@@ -2644,6 +2689,7 @@ class TaskOps {
           'limit': limit,
           'sort': sort,
           'direction': direction,
+          'page': page,
           'project': project,
           'project_id': projectId,
           'status': status,
@@ -2690,6 +2736,7 @@ class TaskOps {
     String? cursor,
     String? sort,
     String? direction,
+    int? page,
     List<String>? project,
     List<String>? projectId,
     List<String>? status,
@@ -2731,6 +2778,7 @@ class TaskOps {
         'cursor': cursor,
         'sort': sort,
         'direction': direction,
+        'page': page,
         'project': project,
         'project_id': projectId,
         'status': status,

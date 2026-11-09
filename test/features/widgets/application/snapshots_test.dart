@@ -167,6 +167,33 @@ void main() {
     });
   });
 
+  test('the project picker offers starred projects first', () {
+    Project p(String key, {bool starred = false, DateTime? archived}) =>
+        Project(key: key, name: key, starred: starred, archivedAt: archived);
+    final snaps = WidgetSnapshots(
+      WidgetFeedData(
+        ctx: ctx,
+        accent: TixAccent.standard,
+        projects: [
+          p('ops'),
+          p('web', starred: true),
+          p('old', starred: true, archived: now),
+          p('infra'),
+          p('docs', starred: true),
+        ],
+        workflows: [workflow],
+        mine: const [],
+        mineMore: false,
+        unread: 0,
+        unreadMore: false,
+        inbox: const [],
+      ),
+      en,
+      now,
+    );
+    expect(snaps.catalog().map((p) => p.key), ['web', 'docs', 'ops', 'infra']);
+  });
+
   test('every label is translated', () {
     final strings = widgetStrings(lookupAppLocalizations(const Locale('de')));
     expect(strings['myWork'], 'Meine Arbeit');

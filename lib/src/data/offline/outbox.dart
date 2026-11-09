@@ -238,6 +238,13 @@ class Outbox {
     return Task.fromJson(json);
   }
 
+  /// The stars and unstars of projects still waiting to be sent, oldest
+  /// first; each one's target is the project's key.
+  List<OutboxEntry> projectStarWrites() => [
+    for (final e in _now.entries)
+      if (e.op.onProject && e.state == OutboxState.pending) e,
+  ]..sort((a, b) => a.seq.compareTo(b.seq));
+
   /// The comments queued for [ref].
   List<QueuedComment> comments(String ref) => [
     for (final e in pendingFor(ref))

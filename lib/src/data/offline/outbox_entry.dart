@@ -44,15 +44,24 @@ enum OutboxOp {
   artifactAdd,
 
   /// Brings the task back from the trash before the writes after it.
-  restore;
+  restore,
+
+  /// Stars a project for the reader; the target is the project's key.
+  projectStar,
+
+  /// Takes the reader's star off a project; the target is its key.
+  projectUnstar;
 
   /// Whether the write only adds and so never conflicts with someone
   /// else's change: two people commenting, tagging or starring both win.
   bool get additive => switch (this) {
     comment || tagAdd || tagRemove || star || unstar => true,
-    dependencyAdd || artifactAdd => true,
+    dependencyAdd || artifactAdd || projectStar || projectUnstar => true,
     _ => false,
   };
+
+  /// Whether the write is to a project, not a task.
+  bool get onProject => this == projectStar || this == projectUnstar;
 }
 
 /// Where a queued write stands.

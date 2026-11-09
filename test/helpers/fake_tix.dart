@@ -369,6 +369,20 @@ class FakeTix {
   /// Whether `/me/time` exists; an older server answers 404.
   bool keepsTime = false;
 
+  /// Whether project stars exist; an older server answers 404.
+  bool keepsProjectStars = false;
+
+  /// The keys of the projects the caller starred, in order.
+  final projectStars = <String>[];
+
+  List<Map<String, Object?>> _starMarked(List<Map<String, Object?>> list) => [
+    for (final p in list)
+      if (keepsProjectStars && projectStars.contains(p['key']))
+        {...p, 'starred': true}
+      else
+        p,
+  ];
+
   /// The date preferences at each level, as `/me/time` reports them.
   final timeGlobal = <String, String>{'time_format': '', 'timezone': ''};
   final timeTenant = <String, String>{'time_format': '', 'timezone': ''};
@@ -598,6 +612,14 @@ class FakeTix {
         return await _poll(q);
       case ('GET', '/api/v1/me/time') when keepsTime:
         return FakeResponse(200, _timeSettings());
+      case ('GET', '/api/v1/me/starred-projects') when keepsProjectStars:
+        return FakeResponse(200, {
+          'items': [
+            for (final key in projectStars)
+              for (final p in projects)
+                if (p['key'] == key) {...p, 'starred': true},
+          ],
+        });
       case ('PATCH', '/api/v1/me/time') when keepsTime:
         if (!timePersonal) {
           return FakeResponse(403, envelope('forbidden', 'not a person'));
@@ -640,7 +662,10 @@ class FakeTix {
       case ('GET', '/api/v1/projects'):
         return FakeResponse(
           200,
-          _page(tenantProjects[caller.tenant] ?? projects, q['cursor']),
+          _page(
+            _starMarked(tenantProjects[caller.tenant] ?? projects),
+            q['cursor'],
+          ),
         );
       case ('GET', '/api/v1/tasks'):
         return FakeResponse(200, _page(_list(o.uri), q['cursor']));
@@ -1045,6 +1070,17 @@ class FakeTix {
         });
       case ('GET', ['workflows', _]):
         return FakeResponse(200, workflow);
+      case ('PUT' || 'DELETE', ['projects', final key, 'star'])
+          when keepsProjectStars:
+        if (!projects.any((p) => p['key'] == key)) {
+          return FakeResponse(404, envelope('not_found', 'project "$key"'));
+        }
+        if (o.method == 'DELETE') {
+          projectStars.remove(key);
+        } else if (!projectStars.contains(key)) {
+          projectStars.add(key);
+        }
+        return const FakeResponse(204);
       case ('GET', ['projects', final key]):
         for (final p in projects) {
           if (p['key'] == key || p['id'] == key) return FakeResponse(200, p);

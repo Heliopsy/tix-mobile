@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/cache/response_cache.dart';
 import 'package:tix_mobile/src/data/models/project_admin.dart';
+import 'package:tix_mobile/src/data/offline/outbox.dart';
 import 'package:tix_mobile/src/data/repositories/projects_repository.dart';
 import 'package:tix_mobile/src/data/repositories/workflows_repository.dart';
 
@@ -93,6 +94,64 @@ void main() {
   test('a project is cached for its settings', () async {
     expect((await projects.project('infra')).name, 'Infrastructure');
     expect((await projects.cachedProject('infra'))!.key, 'infra');
+  });
+
+  group('stars', () {
+    test('the starred projects are read and kept', () async {
+      server
+        ..keepsProjectStars = true
+        ..projectStars.add('web');
+      final starred = await projects.starred();
+      expect(last().line, 'GET /api/v1/me/starred-projects');
+      expect(starred!.map((p) => (p.key, p.starred)), [('web', true)]);
+      expect((await projects.cachedStarred())!.single.key, 'web');
+    });
+
+    test('a server without project stars answers null', () async {
+      expect(await projects.starred(), isNull);
+    });
+
+    test('star and unstar put and delete the star', () async {
+      server.keepsProjectStars = true;
+      const infra = Project(id: 'p1', key: 'infra', name: 'Infrastructure');
+      await projects.star(infra);
+      expect(last().line, 'PUT /api/v1/projects/infra/star');
+      expect(server.projectStars, ['infra']);
+      await projects.unstar(infra);
+      expect(last().line, 'DELETE /api/v1/projects/infra/star');
+      expect(server.projectStars, isEmpty);
+    });
+
+    test('offline, a star is queued and drawn on the list', () async {
+      server
+        ..keepsProjectStars = true
+        ..projectStars.add('infra');
+      final outbox = Outbox(
+        SyncStore(MemoryCacheStore(), const CacheScope('c1', '')),
+        offline: () => true,
+      );
+      final queued = ProjectsRepository(
+        server.factory('https://tix.example', const BearerCredential('tok')),
+        cache,
+        outbox: outbox,
+      );
+      const web = Project(id: 'p2', key: 'web', name: 'Web');
+      const infra = Project(id: 'p1', key: 'infra', name: 'Infrastructure');
+      final before = server.requests.length;
+
+      await queued.star(web);
+      await queued.unstar(infra);
+
+      expect(server.requests.length, before, reason: 'nothing was sent');
+      expect(outbox.projectStarWrites().map((e) => (e.op, e.target)), [
+        (OutboxOp.projectStar, 'web'),
+        (OutboxOp.projectUnstar, 'infra'),
+      ]);
+      final starred = await queued.starred();
+      expect(starred!.map((p) => (p.key, p.name, p.starred)), [
+        ('web', 'Web', true),
+      ]);
+    });
   });
 
   test('workflows list, read, create, save and delete', () async {

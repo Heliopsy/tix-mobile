@@ -103,6 +103,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -186,6 +194,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -327,6 +343,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -412,6 +436,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -614,6 +646,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -1918,6 +1958,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -2206,6 +2254,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -2682,6 +2738,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -3146,6 +3210,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -3289,6 +3361,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -3536,6 +3616,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -4012,6 +4100,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -4413,6 +4509,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -4649,6 +4753,68 @@ paths:
         - invite
       x-tix-openspec:
         - http-api
+  /api/v1/me/starred-projects:
+    get:
+      description: |-
+        ListStarredProjects lists the projects the caller starred, in the order their lanes are drawn. A star is the caller's own: nobody else's is ever listed, and a project the caller can no longer read is left out.
+
+        Command line: `tix project ls`.
+      operationId: project.starred
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Project'
+                    type:
+                      - array
+                      - "null"
+                  next_cursor:
+                    type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
+                type: object
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/Project'
+              x-tix-stream: one item per line, no envelope and no cursor
+          description: OK
+        "400":
+          $ref: '#/components/responses/Error400'
+        "401":
+          $ref: '#/components/responses/Error401'
+        "403":
+          $ref: '#/components/responses/Error403'
+        "404":
+          $ref: '#/components/responses/Error404'
+        "409":
+          $ref: '#/components/responses/Error409'
+        "422":
+          $ref: '#/components/responses/Error422'
+        "500":
+          $ref: '#/components/responses/Error500'
+        "502":
+          $ref: '#/components/responses/Error502'
+        "504":
+          $ref: '#/components/responses/Error504'
+      security:
+        - bearer:
+            - project:read
+        - session:
+            - project:read
+      summary: ListStarredProjects lists the projects the caller starred, in the order
+        their lanes are drawn
+      tags:
+        - project
   /api/v1/me/time:
     get:
       description: |-
@@ -4779,6 +4945,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -5028,6 +5202,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -5427,6 +5609,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -5644,6 +5834,120 @@ paths:
         - project
       x-tix-openspec:
         - http-api
+  /api/v1/projects/{ref}/star:
+    delete:
+      description: |-
+        UnstarProject clears the caller's own star on a project. A project that is not starred is left as it is, with nothing written.
+
+        Command line: `tix project unstar`.
+      operationId: project.unstar
+      parameters:
+        - description: Project key, such as infra, not case sensitive, or the project's
+            ID.
+          in: path
+          name: ref
+          required: true
+          schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: '#/components/responses/Error400'
+        "401":
+          $ref: '#/components/responses/Error401'
+        "403":
+          $ref: '#/components/responses/Error403'
+        "404":
+          $ref: '#/components/responses/Error404'
+        "409":
+          $ref: '#/components/responses/Error409'
+        "422":
+          $ref: '#/components/responses/Error422'
+        "500":
+          $ref: '#/components/responses/Error500'
+        "502":
+          $ref: '#/components/responses/Error502'
+        "504":
+          $ref: '#/components/responses/Error504'
+      security:
+        - bearer:
+            - project:read
+        - session:
+            - project:read
+      summary: UnstarProject clears the caller's own star on a project
+      tags:
+        - project
+    put:
+      description: |-
+        StarProject stars a project for the caller alone, which lists it first on the projects screen and in the sidebar and leads its lane. Starring a starred project writes nothing.
+
+        Command line: `tix project star`.
+      operationId: project.star
+      parameters:
+        - description: Project key, such as infra, not case sensitive, or the project's
+            ID.
+          in: path
+          name: ref
+          required: true
+          schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: '#/components/responses/Error400'
+        "401":
+          $ref: '#/components/responses/Error401'
+        "403":
+          $ref: '#/components/responses/Error403'
+        "404":
+          $ref: '#/components/responses/Error404'
+        "409":
+          $ref: '#/components/responses/Error409'
+        "413":
+          $ref: '#/components/responses/Error413'
+        "415":
+          $ref: '#/components/responses/Error415'
+        "422":
+          $ref: '#/components/responses/Error422'
+        "500":
+          $ref: '#/components/responses/Error500'
+        "502":
+          $ref: '#/components/responses/Error502'
+        "504":
+          $ref: '#/components/responses/Error504'
+      security:
+        - bearer:
+            - project:read
+        - session:
+            - project:read
+      summary: StarProject stars a project for the caller alone, which lists it first
+        on the projects screen and in the sidebar and leads its lane
+      tags:
+        - project
   /api/v1/projects/{ref}/tasks/export:
     post:
       description: |-
@@ -6088,6 +6392,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -6453,6 +6765,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -6630,6 +6950,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -6698,6 +7026,15 @@ paths:
               - asc
               - desc
             type: string
+        - description: Page reads the listing from page N, counting from one, of limit
+            tasks each, instead of from a cursor; the two cannot be combined. A number
+            past the end answers the last page, and the response says which page it
+            served. The cursor stays the way to walk a listing; this is for landing
+            on a page a person asked for.
+          in: query
+          name: page
+          schema:
+            type: integer
         - description: Project keeps tasks in a project, named by key, not case sensitive;
             repeat it for several. An unknown key is an error.
           in: query
@@ -6941,6 +7278,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -7339,6 +7684,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -7554,6 +7907,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -7969,6 +8330,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -8173,6 +8542,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -8813,6 +9190,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -9134,6 +9519,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -9225,6 +9618,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -9619,6 +10020,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -9930,6 +10339,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -10097,6 +10514,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -10372,6 +10797,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -10694,6 +11127,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -11116,6 +11557,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -11282,6 +11731,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -11341,6 +11798,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -11499,6 +11964,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -11772,6 +12245,14 @@ paths:
                       - "null"
                   next_cursor:
                     type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
                 type: object
             application/x-ndjson:
               schema:
@@ -13726,7 +14207,9 @@ components:
           type: boolean
         group:
           description: 'Group names the group on that view: a state key on a board,
-            a project key on lanes, or a deadline bucket on mine.'
+            a project key on lanes, a handle, priority, tag or deadline bucket on
+            the other lanes (- for no assignee or no tag), or a deadline bucket on
+            mine.'
           type: string
         hidden:
           description: Hidden leaves the group out of the view.
@@ -13739,7 +14222,8 @@ components:
           description: Starred moves the group ahead of the unstarred ones.
           type: boolean
         view:
-          description: 'View names the view: board, lanes, mine or project:KEY.'
+          description: 'View names the view: board, lanes, lanes:assignee, lanes:priority,
+            lanes:tag, lanes:due, mine or project:KEY.'
           type: string
       type: object
     GroupPrefInput:
@@ -14635,6 +15119,22 @@ components:
           description: TenantID is the tenant the membership belongs to.
           type: string
       type: object
+    NumberingLag:
+      description: NumberingLag is one project whose task number counter is behind
+        its tasks.
+      properties:
+        counter:
+          description: Counter is the last number the project's counter issued.
+          format: int64
+          type: integer
+        highest:
+          description: Highest is the highest number a task of the project holds.
+          format: int64
+          type: integer
+        project:
+          description: Project is the project's key.
+          type: string
+      type: object
     Project:
       description: Project groups tasks and is assigned exactly one workflow.
       properties:
@@ -14690,6 +15190,11 @@ components:
         name:
           description: Name is the project's display name.
           type: string
+        starred:
+          description: Starred is the reading actor's own star on the project, never
+            anybody else's. Only a read that knows its reader sets it, so it is omitted
+            rather than false wherever nobody asked.
+          type: boolean
         tenant_id:
           description: TenantID is the tenant that owns the project.
           type: string
@@ -17402,6 +17907,13 @@ components:
             sweeper has not yet cleared. They read as unclaimed already; the figure
             says how much the sweeper is behind.
           type: integer
+        numbering_behind:
+          description: NumberingBehind lists the projects whose task number counter
+            reads below the highest number one of their tasks holds, trashed ones
+            included. Empty on a sound store.
+          items:
+            $ref: '#/components/schemas/NumberingLag'
+          type: array
         projects:
           description: Projects is how many projects the tenant holds.
           type: integer

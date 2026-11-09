@@ -11593,6 +11593,54 @@ abstract class AppLocalizations {
   /// **'Show archived'**
   String get projectsShowArchived;
 
+  /// No description provided for @projectStar.
+  ///
+  /// In en, this message translates to:
+  /// **'Star project'**
+  String get projectStar;
+
+  /// No description provided for @projectUnstar.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove star'**
+  String get projectUnstar;
+
+  /// Toast after starring a project.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} starred'**
+  String projectStarred(String name);
+
+  /// Toast after taking the star off a project.
+  ///
+  /// In en, this message translates to:
+  /// **'Star removed from {name}'**
+  String projectUnstarred(String name);
+
+  /// No description provided for @projectsStarredHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Starred'**
+  String get projectsStarredHeading;
+
+  /// No description provided for @projectsRestHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Other projects'**
+  String get projectsRestHeading;
+
+  /// No description provided for @syncOpStarProject.
+  ///
+  /// In en, this message translates to:
+  /// **'{key}: star project'**
+  String syncOpStarProject(String key);
+
+  /// No description provided for @syncOpUnstarProject.
+  ///
+  /// In en, this message translates to:
+  /// **'{key}: remove project star'**
+  String syncOpUnstarProject(String key);
+
   /// No description provided for @manageBundlesSubtitle.
   ///
   /// In en, this message translates to:

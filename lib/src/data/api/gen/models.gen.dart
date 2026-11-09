@@ -1948,7 +1948,8 @@ abstract class GroupPref with _$GroupPref {
     @JsonKey(name: 'collapsed') @Default(false) bool collapsed,
 
     /// Group names the group on that view: a state key on a board, a project key on
-    /// lanes, or a deadline bucket on mine.
+    /// lanes, a handle, priority, tag or deadline bucket on the other lanes (- for
+    /// no assignee or no tag), or a deadline bucket on mine.
     @JsonKey(name: 'group') @Default('') String group,
 
     /// Hidden leaves the group out of the view.
@@ -1961,7 +1962,8 @@ abstract class GroupPref with _$GroupPref {
     /// Starred moves the group ahead of the unstarred ones.
     @JsonKey(name: 'starred') @Default(false) bool starred,
 
-    /// View names the view: board, lanes, mine or project:KEY.
+    /// View names the view: board, lanes, lanes:assignee, lanes:priority,
+    /// lanes:tag, lanes:due, mine or project:KEY.
     @JsonKey(name: 'view') @Default('') String view,
   }) = _GroupPref;
 
@@ -2985,6 +2987,26 @@ abstract class TenantMembership with _$TenantMembership {
       _$TenantMembershipFromJson(json);
 }
 
+/// NumberingLag is one project whose task number counter is behind its tasks.
+@freezed
+abstract class NumberingLag with _$NumberingLag {
+  /// Creates a [NumberingLag].
+  const factory NumberingLag({
+    /// Counter is the last number the project's counter issued.
+    @JsonKey(name: 'counter') @Default(0) int counter,
+
+    /// Highest is the highest number a task of the project holds.
+    @JsonKey(name: 'highest') @Default(0) int highest,
+
+    /// Project is the project's key.
+    @JsonKey(name: 'project') @Default('') String project,
+  }) = _NumberingLag;
+
+  /// Reads a [NumberingLag] from its JSON object.
+  factory NumberingLag.fromJson(Map<String, dynamic> json) =>
+      _$NumberingLagFromJson(json);
+}
+
 /// Project groups tasks and is assigned exactly one workflow.
 @freezed
 abstract class Project with _$Project {
@@ -3035,6 +3057,11 @@ abstract class Project with _$Project {
 
     /// Name is the project's display name.
     @JsonKey(name: 'name') @Default('') String name,
+
+    /// Starred is the reading actor's own star on the project, never anybody
+    /// else's. Only a read that knows its reader sets it, so it is omitted rather
+    /// than false wherever nobody asked.
+    @JsonKey(name: 'starred') @Default(false) bool starred,
 
     /// TenantID is the tenant that owns the project.
     @JsonKey(name: 'tenant_id') @Default('') String tenantId,
@@ -6079,6 +6106,13 @@ abstract class Work with _$Work {
     @JsonKey(name: 'leases_expired_unswept')
     @Default(0)
     int leasesExpiredUnswept,
+
+    /// NumberingBehind lists the projects whose task number counter reads below the
+    /// highest number one of their tasks holds, trashed ones included. Empty on a
+    /// sound store.
+    @JsonKey(name: 'numbering_behind')
+    @Default(<NumberingLag>[])
+    List<NumberingLag> numberingBehind,
 
     /// Projects is how many projects the tenant holds.
     @JsonKey(name: 'projects') @Default(0) int projects,

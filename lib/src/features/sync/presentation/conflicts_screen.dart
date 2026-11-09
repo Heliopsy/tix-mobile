@@ -429,6 +429,8 @@ String describeEntry(AppLocalizations l10n, OutboxEntry e) {
     ),
     OutboxOp.artifactAdd => l10n.syncOpArtifact(ref),
     OutboxOp.restore => l10n.syncOpRestore(ref),
+    OutboxOp.projectStar => l10n.syncOpStarProject(ref),
+    OutboxOp.projectUnstar => l10n.syncOpUnstarProject(ref),
   };
 }
 

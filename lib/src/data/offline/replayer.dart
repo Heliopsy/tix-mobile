@@ -272,11 +272,14 @@ class OutboxReplayer {
         case KeyedAnswer.inFlight:
           throw const _Stop(unreachable: true);
         case KeyedAnswer.appliedLost:
-          await _done(e, await _sender.fetch(target));
+          await _done(e, e.op.onProject ? null : await _sender.fetch(target));
           return const _Outcome(sent: 1);
         case KeyedAnswer.mismatch:
           return await _fail(e, x);
         case KeyedAnswer.none:
+      }
+      if (x.kind == TixErrorKind.notFound && e.op.onProject) {
+        return await _fail(e, x);
       }
       if (x.kind == TixErrorKind.notFound && e.op != OutboxOp.create) {
         return await _open(e, target, ConflictKind.deleted, reason: x.message);

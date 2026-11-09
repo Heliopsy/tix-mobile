@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/data/api/credential.dart';
+import 'package:tix_mobile/src/data/offline/outbox_entry.dart';
 import 'package:tix_mobile/src/data/offline/sender.dart';
 
 import '../../helpers/fake_tix.dart';
@@ -104,5 +105,21 @@ void main() {
       await sender.findComment('infra-1', ' Before  Friday, please', since),
       isTrue,
     );
+  });
+
+  test('a project star is put and taken off under the write key', () async {
+    server.keepsProjectStars = true;
+    await sender.send(OutboxOp.projectStar, 'infra', const {}, key: 'k1');
+    var sent = server.requests.last;
+    expect(
+      (sent.method, sent.uri.path),
+      ('PUT', '/api/v1/projects/infra/star'),
+    );
+    expect(sent.headers['Idempotency-Key'], 'k1');
+    expect(server.projectStars, ['infra']);
+    await sender.send(OutboxOp.projectUnstar, 'infra', const {}, key: 'k2');
+    sent = server.requests.last;
+    expect(sent.method, 'DELETE');
+    expect(server.projectStars, isEmpty);
   });
 }

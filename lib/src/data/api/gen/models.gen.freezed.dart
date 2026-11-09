@@ -16616,12 +16616,14 @@ mixin _$GroupPref {
 
 /// Collapsed draws the group as a narrow strip.
 @JsonKey(name: 'collapsed') bool get collapsed;/// Group names the group on that view: a state key on a board, a project key on
-/// lanes, or a deadline bucket on mine.
+/// lanes, a handle, priority, tag or deadline bucket on the other lanes (- for
+/// no assignee or no tag), or a deadline bucket on mine.
 @JsonKey(name: 'group') String get group;/// Hidden leaves the group out of the view.
 @JsonKey(name: 'hidden') bool get hidden;/// Position is the place the reader moved the group to, from 1, or 0 when the
 /// group keeps the order the view draws it in.
 @JsonKey(name: 'position') int get position;/// Starred moves the group ahead of the unstarred ones.
-@JsonKey(name: 'starred') bool get starred;/// View names the view: board, lanes, mine or project:KEY.
+@JsonKey(name: 'starred') bool get starred;/// View names the view: board, lanes, lanes:assignee, lanes:priority,
+/// lanes:tag, lanes:due, mine or project:KEY.
 @JsonKey(name: 'view') String get view;
 /// Create a copy of GroupPref
 /// with the given fields replaced by the non-null parameter values.
@@ -16832,7 +16834,8 @@ class _GroupPref implements GroupPref {
 /// Collapsed draws the group as a narrow strip.
 @override@JsonKey(name: 'collapsed') final  bool collapsed;
 /// Group names the group on that view: a state key on a board, a project key on
-/// lanes, or a deadline bucket on mine.
+/// lanes, a handle, priority, tag or deadline bucket on the other lanes (- for
+/// no assignee or no tag), or a deadline bucket on mine.
 @override@JsonKey(name: 'group') final  String group;
 /// Hidden leaves the group out of the view.
 @override@JsonKey(name: 'hidden') final  bool hidden;
@@ -16841,7 +16844,8 @@ class _GroupPref implements GroupPref {
 @override@JsonKey(name: 'position') final  int position;
 /// Starred moves the group ahead of the unstarred ones.
 @override@JsonKey(name: 'starred') final  bool starred;
-/// View names the view: board, lanes, mine or project:KEY.
+/// View names the view: board, lanes, lanes:assignee, lanes:priority,
+/// lanes:tag, lanes:due, mine or project:KEY.
 @override@JsonKey(name: 'view') final  String view;
 
 /// Create a copy of GroupPref
@@ -26130,6 +26134,288 @@ as String,
 
 
 /// @nodoc
+mixin _$NumberingLag {
+
+/// Counter is the last number the project's counter issued.
+@JsonKey(name: 'counter') int get counter;/// Highest is the highest number a task of the project holds.
+@JsonKey(name: 'highest') int get highest;/// Project is the project's key.
+@JsonKey(name: 'project') String get project;
+/// Create a copy of NumberingLag
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$NumberingLagCopyWith<NumberingLag> get copyWith => _$NumberingLagCopyWithImpl<NumberingLag>(this as NumberingLag, _$identity);
+
+  /// Serializes this NumberingLag to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as NumberingLag;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NumberingLag&&(identical(other.counter, _this.counter) || other.counter == _this.counter)&&(identical(other.highest, _this.highest) || other.highest == _this.highest)&&(identical(other.project, _this.project) || other.project == _this.project));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as NumberingLag;
+  return Object.hash(runtimeType,_this.counter,_this.highest,_this.project);
+}
+
+@override
+String toString() {
+  final _this = this as NumberingLag;
+  return 'NumberingLag(counter: ${_this.counter}, highest: ${_this.highest}, project: ${_this.project})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $NumberingLagCopyWith<$Res>  {
+  factory $NumberingLagCopyWith(NumberingLag value, $Res Function(NumberingLag) _then) = _$NumberingLagCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'counter') int counter,@JsonKey(name: 'highest') int highest,@JsonKey(name: 'project') String project
+});
+
+
+
+
+}
+/// @nodoc
+class _$NumberingLagCopyWithImpl<$Res>
+    implements $NumberingLagCopyWith<$Res> {
+  _$NumberingLagCopyWithImpl(this._self, this._then);
+
+  final NumberingLag _self;
+  final $Res Function(NumberingLag) _then;
+
+/// Create a copy of NumberingLag
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? counter = null,Object? highest = null,Object? project = null,}) {
+  return _then(NumberingLag(
+counter: null == counter ? _self.counter : counter // ignore: cast_nullable_to_non_nullable
+as int,highest: null == highest ? _self.highest : highest // ignore: cast_nullable_to_non_nullable
+as int,project: null == project ? _self.project : project // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [NumberingLag].
+extension NumberingLagPatterns on NumberingLag {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _NumberingLag value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _NumberingLag() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _NumberingLag value)  $default,){
+final _that = this;
+switch (_that) {
+case _NumberingLag():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _NumberingLag value)?  $default,){
+final _that = this;
+switch (_that) {
+case _NumberingLag() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'counter')  int counter, @JsonKey(name: 'highest')  int highest, @JsonKey(name: 'project')  String project)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _NumberingLag() when $default != null:
+return $default(_that.counter,_that.highest,_that.project);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'counter')  int counter, @JsonKey(name: 'highest')  int highest, @JsonKey(name: 'project')  String project)  $default,) {final _that = this;
+switch (_that) {
+case _NumberingLag():
+return $default(_that.counter,_that.highest,_that.project);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'counter')  int counter, @JsonKey(name: 'highest')  int highest, @JsonKey(name: 'project')  String project)?  $default,) {final _that = this;
+switch (_that) {
+case _NumberingLag() when $default != null:
+return $default(_that.counter,_that.highest,_that.project);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _NumberingLag implements NumberingLag {
+  const _NumberingLag({@JsonKey(name: 'counter') this.counter = 0, @JsonKey(name: 'highest') this.highest = 0, @JsonKey(name: 'project') this.project = ''});
+  factory _NumberingLag.fromJson(Map<String, dynamic> json) => _$NumberingLagFromJson(json);
+
+/// Counter is the last number the project's counter issued.
+@override@JsonKey(name: 'counter') final  int counter;
+/// Highest is the highest number a task of the project holds.
+@override@JsonKey(name: 'highest') final  int highest;
+/// Project is the project's key.
+@override@JsonKey(name: 'project') final  String project;
+
+/// Create a copy of NumberingLag
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$NumberingLagCopyWith<_NumberingLag> get copyWith => __$NumberingLagCopyWithImpl<_NumberingLag>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$NumberingLagToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _NumberingLag&&(identical(other.counter, counter) || other.counter == counter)&&(identical(other.highest, highest) || other.highest == highest)&&(identical(other.project, project) || other.project == project));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,counter,highest,project);
+}
+
+@override
+String toString() {
+    return 'NumberingLag(counter: $counter, highest: $highest, project: $project)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$NumberingLagCopyWith<$Res> implements $NumberingLagCopyWith<$Res> {
+  factory _$NumberingLagCopyWith(_NumberingLag value, $Res Function(_NumberingLag) _then) = __$NumberingLagCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'counter') int counter,@JsonKey(name: 'highest') int highest,@JsonKey(name: 'project') String project
+});
+
+
+
+
+}
+/// @nodoc
+class __$NumberingLagCopyWithImpl<$Res>
+    implements _$NumberingLagCopyWith<$Res> {
+  __$NumberingLagCopyWithImpl(this._self, this._then);
+
+  final _NumberingLag _self;
+  final $Res Function(_NumberingLag) _then;
+
+/// Create a copy of NumberingLag
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? counter = null,Object? highest = null,Object? project = null,}) {
+  return _then(_NumberingLag(
+counter: null == counter ? _self.counter : counter // ignore: cast_nullable_to_non_nullable
+as int,highest: null == highest ? _self.highest : highest // ignore: cast_nullable_to_non_nullable
+as int,project: null == project ? _self.project : project // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$Project {
 
 /// ArchivedAt is when the project was archived, RFC 3339. Absent on an active
@@ -26154,7 +26440,10 @@ mixin _$Project {
 /// as "24h". It narrows the tenant's ceiling and never raises it; zero or
 /// absent inherits.
 @JsonKey(name: 'lease_max') String get leaseMax;/// Name is the project's display name.
-@JsonKey(name: 'name') String get name;/// TenantID is the tenant that owns the project.
+@JsonKey(name: 'name') String get name;/// Starred is the reading actor's own star on the project, never anybody
+/// else's. Only a read that knows its reader sets it, so it is omitted rather
+/// than false wherever nobody asked.
+@JsonKey(name: 'starred') bool get starred;/// TenantID is the tenant that owns the project.
 @JsonKey(name: 'tenant_id') String get tenantId;/// UpdatedAt is when the project was last changed, RFC 3339.
 @JsonKey(name: 'updated_at')@TixDateTime() DateTime? get updatedAt;/// WorkflowID is the ID of the workflow the project's tasks follow.
 @JsonKey(name: 'workflow_id') String get workflowId;
@@ -26171,20 +26460,20 @@ $ProjectCopyWith<Project> get copyWith => _$ProjectCopyWithImpl<Project>(this as
 @override
 bool operator ==(Object other) {
   final _this = this as Project;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Project&&(identical(other.archivedAt, _this.archivedAt) || other.archivedAt == _this.archivedAt)&&(identical(other.color, _this.color) || other.color == _this.color)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.icon, _this.icon) || other.icon == _this.icon)&&(identical(other.iconImage, _this.iconImage) || other.iconImage == _this.iconImage)&&(identical(other.iconName, _this.iconName) || other.iconName == _this.iconName)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.workflowId, _this.workflowId) || other.workflowId == _this.workflowId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Project&&(identical(other.archivedAt, _this.archivedAt) || other.archivedAt == _this.archivedAt)&&(identical(other.color, _this.color) || other.color == _this.color)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.icon, _this.icon) || other.icon == _this.icon)&&(identical(other.iconImage, _this.iconImage) || other.iconImage == _this.iconImage)&&(identical(other.iconName, _this.iconName) || other.iconName == _this.iconName)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.starred, _this.starred) || other.starred == _this.starred)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.workflowId, _this.workflowId) || other.workflowId == _this.workflowId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Project;
-  return Object.hash(runtimeType,_this.archivedAt,_this.color,_this.createdAt,_this.description,_this.icon,_this.iconImage,_this.iconName,_this.id,_this.key,_this.leaseDefault,_this.leaseMax,_this.name,_this.tenantId,_this.updatedAt,_this.workflowId);
+  return Object.hash(runtimeType,_this.archivedAt,_this.color,_this.createdAt,_this.description,_this.icon,_this.iconImage,_this.iconName,_this.id,_this.key,_this.leaseDefault,_this.leaseMax,_this.name,_this.starred,_this.tenantId,_this.updatedAt,_this.workflowId);
 }
 
 @override
 String toString() {
   final _this = this as Project;
-  return 'Project(archivedAt: ${_this.archivedAt}, color: ${_this.color}, createdAt: ${_this.createdAt}, description: ${_this.description}, icon: ${_this.icon}, iconImage: ${_this.iconImage}, iconName: ${_this.iconName}, id: ${_this.id}, key: ${_this.key}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, name: ${_this.name}, tenantId: ${_this.tenantId}, updatedAt: ${_this.updatedAt}, workflowId: ${_this.workflowId})';
+  return 'Project(archivedAt: ${_this.archivedAt}, color: ${_this.color}, createdAt: ${_this.createdAt}, description: ${_this.description}, icon: ${_this.icon}, iconImage: ${_this.iconImage}, iconName: ${_this.iconName}, id: ${_this.id}, key: ${_this.key}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, name: ${_this.name}, starred: ${_this.starred}, tenantId: ${_this.tenantId}, updatedAt: ${_this.updatedAt}, workflowId: ${_this.workflowId})';
 }
 
 
@@ -26195,7 +26484,7 @@ abstract mixin class $ProjectCopyWith<$Res>  {
   factory $ProjectCopyWith(Project value, $Res Function(Project) _then) = _$ProjectCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'archived_at')@TixDateTime() DateTime? archivedAt,@JsonKey(name: 'color') String color,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'description') String description,@JsonKey(name: 'icon') String icon,@JsonKey(name: 'icon_image') String iconImage,@JsonKey(name: 'icon_name') String iconName,@JsonKey(name: 'id') String id,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'name') String name,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt,@JsonKey(name: 'workflow_id') String workflowId
+@JsonKey(name: 'archived_at')@TixDateTime() DateTime? archivedAt,@JsonKey(name: 'color') String color,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'description') String description,@JsonKey(name: 'icon') String icon,@JsonKey(name: 'icon_image') String iconImage,@JsonKey(name: 'icon_name') String iconName,@JsonKey(name: 'id') String id,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'name') String name,@JsonKey(name: 'starred') bool starred,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt,@JsonKey(name: 'workflow_id') String workflowId
 });
 
 
@@ -26212,7 +26501,7 @@ class _$ProjectCopyWithImpl<$Res>
 
 /// Create a copy of Project
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? archivedAt = freezed,Object? color = null,Object? createdAt = freezed,Object? description = null,Object? icon = null,Object? iconImage = null,Object? iconName = null,Object? id = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? name = null,Object? tenantId = null,Object? updatedAt = freezed,Object? workflowId = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? archivedAt = freezed,Object? color = null,Object? createdAt = freezed,Object? description = null,Object? icon = null,Object? iconImage = null,Object? iconName = null,Object? id = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? name = null,Object? starred = null,Object? tenantId = null,Object? updatedAt = freezed,Object? workflowId = null,}) {
   return _then(Project(
 archivedAt: freezed == archivedAt ? _self.archivedAt : archivedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,color: null == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
@@ -26226,7 +26515,8 @@ as String,key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nul
 as String,leaseDefault: null == leaseDefault ? _self.leaseDefault : leaseDefault // ignore: cast_nullable_to_non_nullable
 as String,leaseMax: null == leaseMax ? _self.leaseMax : leaseMax // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String,starred: null == starred ? _self.starred : starred // ignore: cast_nullable_to_non_nullable
+as bool,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,workflowId: null == workflowId ? _self.workflowId : workflowId // ignore: cast_nullable_to_non_nullable
 as String,
@@ -26314,10 +26604,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'archived_at')@TixDateTime()  DateTime? archivedAt, @JsonKey(name: 'color')  String color, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'description')  String description, @JsonKey(name: 'icon')  String icon, @JsonKey(name: 'icon_image')  String iconImage, @JsonKey(name: 'icon_name')  String iconName, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'name')  String name, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'workflow_id')  String workflowId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'archived_at')@TixDateTime()  DateTime? archivedAt, @JsonKey(name: 'color')  String color, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'description')  String description, @JsonKey(name: 'icon')  String icon, @JsonKey(name: 'icon_image')  String iconImage, @JsonKey(name: 'icon_name')  String iconName, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'name')  String name, @JsonKey(name: 'starred')  bool starred, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'workflow_id')  String workflowId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Project() when $default != null:
-return $default(_that.archivedAt,_that.color,_that.createdAt,_that.description,_that.icon,_that.iconImage,_that.iconName,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.name,_that.tenantId,_that.updatedAt,_that.workflowId);case _:
+return $default(_that.archivedAt,_that.color,_that.createdAt,_that.description,_that.icon,_that.iconImage,_that.iconName,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.name,_that.starred,_that.tenantId,_that.updatedAt,_that.workflowId);case _:
   return orElse();
 
 }
@@ -26335,10 +26625,10 @@ return $default(_that.archivedAt,_that.color,_that.createdAt,_that.description,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'archived_at')@TixDateTime()  DateTime? archivedAt, @JsonKey(name: 'color')  String color, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'description')  String description, @JsonKey(name: 'icon')  String icon, @JsonKey(name: 'icon_image')  String iconImage, @JsonKey(name: 'icon_name')  String iconName, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'name')  String name, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'workflow_id')  String workflowId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'archived_at')@TixDateTime()  DateTime? archivedAt, @JsonKey(name: 'color')  String color, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'description')  String description, @JsonKey(name: 'icon')  String icon, @JsonKey(name: 'icon_image')  String iconImage, @JsonKey(name: 'icon_name')  String iconName, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'name')  String name, @JsonKey(name: 'starred')  bool starred, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'workflow_id')  String workflowId)  $default,) {final _that = this;
 switch (_that) {
 case _Project():
-return $default(_that.archivedAt,_that.color,_that.createdAt,_that.description,_that.icon,_that.iconImage,_that.iconName,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.name,_that.tenantId,_that.updatedAt,_that.workflowId);case _:
+return $default(_that.archivedAt,_that.color,_that.createdAt,_that.description,_that.icon,_that.iconImage,_that.iconName,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.name,_that.starred,_that.tenantId,_that.updatedAt,_that.workflowId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -26355,10 +26645,10 @@ return $default(_that.archivedAt,_that.color,_that.createdAt,_that.description,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'archived_at')@TixDateTime()  DateTime? archivedAt, @JsonKey(name: 'color')  String color, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'description')  String description, @JsonKey(name: 'icon')  String icon, @JsonKey(name: 'icon_image')  String iconImage, @JsonKey(name: 'icon_name')  String iconName, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'name')  String name, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'workflow_id')  String workflowId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'archived_at')@TixDateTime()  DateTime? archivedAt, @JsonKey(name: 'color')  String color, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'description')  String description, @JsonKey(name: 'icon')  String icon, @JsonKey(name: 'icon_image')  String iconImage, @JsonKey(name: 'icon_name')  String iconName, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'name')  String name, @JsonKey(name: 'starred')  bool starred, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'workflow_id')  String workflowId)?  $default,) {final _that = this;
 switch (_that) {
 case _Project() when $default != null:
-return $default(_that.archivedAt,_that.color,_that.createdAt,_that.description,_that.icon,_that.iconImage,_that.iconName,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.name,_that.tenantId,_that.updatedAt,_that.workflowId);case _:
+return $default(_that.archivedAt,_that.color,_that.createdAt,_that.description,_that.icon,_that.iconImage,_that.iconName,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.name,_that.starred,_that.tenantId,_that.updatedAt,_that.workflowId);case _:
   return null;
 
 }
@@ -26370,7 +26660,7 @@ return $default(_that.archivedAt,_that.color,_that.createdAt,_that.description,_
 @JsonSerializable()
 
 class _Project implements Project {
-  const _Project({@JsonKey(name: 'archived_at')@TixDateTime() this.archivedAt, @JsonKey(name: 'color') this.color = '', @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'description') this.description = '', @JsonKey(name: 'icon') this.icon = '', @JsonKey(name: 'icon_image') this.iconImage = '', @JsonKey(name: 'icon_name') this.iconName = '', @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'key') this.key = '', @JsonKey(name: 'lease_default') this.leaseDefault = '', @JsonKey(name: 'lease_max') this.leaseMax = '', @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt, @JsonKey(name: 'workflow_id') this.workflowId = ''});
+  const _Project({@JsonKey(name: 'archived_at')@TixDateTime() this.archivedAt, @JsonKey(name: 'color') this.color = '', @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'description') this.description = '', @JsonKey(name: 'icon') this.icon = '', @JsonKey(name: 'icon_image') this.iconImage = '', @JsonKey(name: 'icon_name') this.iconName = '', @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'key') this.key = '', @JsonKey(name: 'lease_default') this.leaseDefault = '', @JsonKey(name: 'lease_max') this.leaseMax = '', @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'starred') this.starred = false, @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt, @JsonKey(name: 'workflow_id') this.workflowId = ''});
   factory _Project.fromJson(Map<String, dynamic> json) => _$ProjectFromJson(json);
 
 /// ArchivedAt is when the project was archived, RFC 3339. Absent on an active
@@ -26407,6 +26697,10 @@ class _Project implements Project {
 @override@JsonKey(name: 'lease_max') final  String leaseMax;
 /// Name is the project's display name.
 @override@JsonKey(name: 'name') final  String name;
+/// Starred is the reading actor's own star on the project, never anybody
+/// else's. Only a read that knows its reader sets it, so it is omitted rather
+/// than false wherever nobody asked.
+@override@JsonKey(name: 'starred') final  bool starred;
 /// TenantID is the tenant that owns the project.
 @override@JsonKey(name: 'tenant_id') final  String tenantId;
 /// UpdatedAt is when the project was last changed, RFC 3339.
@@ -26427,18 +26721,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Project&&(identical(other.archivedAt, archivedAt) || other.archivedAt == archivedAt)&&(identical(other.color, color) || other.color == color)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.description, description) || other.description == description)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage)&&(identical(other.iconName, iconName) || other.iconName == iconName)&&(identical(other.id, id) || other.id == id)&&(identical(other.key, key) || other.key == key)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.name, name) || other.name == name)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.workflowId, workflowId) || other.workflowId == workflowId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Project&&(identical(other.archivedAt, archivedAt) || other.archivedAt == archivedAt)&&(identical(other.color, color) || other.color == color)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.description, description) || other.description == description)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage)&&(identical(other.iconName, iconName) || other.iconName == iconName)&&(identical(other.id, id) || other.id == id)&&(identical(other.key, key) || other.key == key)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.name, name) || other.name == name)&&(identical(other.starred, starred) || other.starred == starred)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.workflowId, workflowId) || other.workflowId == workflowId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,archivedAt,color,createdAt,description,icon,iconImage,iconName,id,key,leaseDefault,leaseMax,name,tenantId,updatedAt,workflowId);
+    return Object.hash(runtimeType,archivedAt,color,createdAt,description,icon,iconImage,iconName,id,key,leaseDefault,leaseMax,name,starred,tenantId,updatedAt,workflowId);
 }
 
 @override
 String toString() {
-    return 'Project(archivedAt: $archivedAt, color: $color, createdAt: $createdAt, description: $description, icon: $icon, iconImage: $iconImage, iconName: $iconName, id: $id, key: $key, leaseDefault: $leaseDefault, leaseMax: $leaseMax, name: $name, tenantId: $tenantId, updatedAt: $updatedAt, workflowId: $workflowId)';
+    return 'Project(archivedAt: $archivedAt, color: $color, createdAt: $createdAt, description: $description, icon: $icon, iconImage: $iconImage, iconName: $iconName, id: $id, key: $key, leaseDefault: $leaseDefault, leaseMax: $leaseMax, name: $name, starred: $starred, tenantId: $tenantId, updatedAt: $updatedAt, workflowId: $workflowId)';
 }
 
 
@@ -26449,7 +26743,7 @@ abstract mixin class _$ProjectCopyWith<$Res> implements $ProjectCopyWith<$Res> {
   factory _$ProjectCopyWith(_Project value, $Res Function(_Project) _then) = __$ProjectCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'archived_at')@TixDateTime() DateTime? archivedAt,@JsonKey(name: 'color') String color,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'description') String description,@JsonKey(name: 'icon') String icon,@JsonKey(name: 'icon_image') String iconImage,@JsonKey(name: 'icon_name') String iconName,@JsonKey(name: 'id') String id,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'name') String name,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt,@JsonKey(name: 'workflow_id') String workflowId
+@JsonKey(name: 'archived_at')@TixDateTime() DateTime? archivedAt,@JsonKey(name: 'color') String color,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'description') String description,@JsonKey(name: 'icon') String icon,@JsonKey(name: 'icon_image') String iconImage,@JsonKey(name: 'icon_name') String iconName,@JsonKey(name: 'id') String id,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'name') String name,@JsonKey(name: 'starred') bool starred,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt,@JsonKey(name: 'workflow_id') String workflowId
 });
 
 
@@ -26466,7 +26760,7 @@ class __$ProjectCopyWithImpl<$Res>
 
 /// Create a copy of Project
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? archivedAt = freezed,Object? color = null,Object? createdAt = freezed,Object? description = null,Object? icon = null,Object? iconImage = null,Object? iconName = null,Object? id = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? name = null,Object? tenantId = null,Object? updatedAt = freezed,Object? workflowId = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? archivedAt = freezed,Object? color = null,Object? createdAt = freezed,Object? description = null,Object? icon = null,Object? iconImage = null,Object? iconName = null,Object? id = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? name = null,Object? starred = null,Object? tenantId = null,Object? updatedAt = freezed,Object? workflowId = null,}) {
   return _then(_Project(
 archivedAt: freezed == archivedAt ? _self.archivedAt : archivedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,color: null == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
@@ -26480,7 +26774,8 @@ as String,key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nul
 as String,leaseDefault: null == leaseDefault ? _self.leaseDefault : leaseDefault // ignore: cast_nullable_to_non_nullable
 as String,leaseMax: null == leaseMax ? _self.leaseMax : leaseMax // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String,starred: null == starred ? _self.starred : starred // ignore: cast_nullable_to_non_nullable
+as bool,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,workflowId: null == workflowId ? _self.workflowId : workflowId // ignore: cast_nullable_to_non_nullable
 as String,
@@ -53058,7 +53353,10 @@ mixin _$Work {
 @JsonKey(name: 'claimed') int get claimed;/// LeasesExpiredUnswept are claims past their expiry that the sweeper has not
 /// yet cleared. They read as unclaimed already; the figure says how much the
 /// sweeper is behind.
-@JsonKey(name: 'leases_expired_unswept') int get leasesExpiredUnswept;/// Projects is how many projects the tenant holds.
+@JsonKey(name: 'leases_expired_unswept') int get leasesExpiredUnswept;/// NumberingBehind lists the projects whose task number counter reads below the
+/// highest number one of their tasks holds, trashed ones included. Empty on a
+/// sound store.
+@JsonKey(name: 'numbering_behind') List<NumberingLag> get numberingBehind;/// Projects is how many projects the tenant holds.
 @JsonKey(name: 'projects') int get projects;/// Tasks is how many tasks the tenant holds, trashed ones excluded.
 @JsonKey(name: 'tasks') int get tasks;/// Tenants is how many tenants the caller can see.
 @JsonKey(name: 'tenants') int get tenants;/// WebhooksFailed is how many webhook deliveries have failed for good.
@@ -53078,20 +53376,20 @@ $WorkCopyWith<Work> get copyWith => _$WorkCopyWithImpl<Work>(this as Work, _$ide
 @override
 bool operator ==(Object other) {
   final _this = this as Work;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Work&&(identical(other.claimed, _this.claimed) || other.claimed == _this.claimed)&&(identical(other.leasesExpiredUnswept, _this.leasesExpiredUnswept) || other.leasesExpiredUnswept == _this.leasesExpiredUnswept)&&(identical(other.projects, _this.projects) || other.projects == _this.projects)&&(identical(other.tasks, _this.tasks) || other.tasks == _this.tasks)&&(identical(other.tenants, _this.tenants) || other.tenants == _this.tenants)&&(identical(other.webhooksFailed, _this.webhooksFailed) || other.webhooksFailed == _this.webhooksFailed)&&(identical(other.webhooksPending, _this.webhooksPending) || other.webhooksPending == _this.webhooksPending));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Work&&(identical(other.claimed, _this.claimed) || other.claimed == _this.claimed)&&(identical(other.leasesExpiredUnswept, _this.leasesExpiredUnswept) || other.leasesExpiredUnswept == _this.leasesExpiredUnswept)&&const DeepCollectionEquality().equals(other.numberingBehind, _this.numberingBehind)&&(identical(other.projects, _this.projects) || other.projects == _this.projects)&&(identical(other.tasks, _this.tasks) || other.tasks == _this.tasks)&&(identical(other.tenants, _this.tenants) || other.tenants == _this.tenants)&&(identical(other.webhooksFailed, _this.webhooksFailed) || other.webhooksFailed == _this.webhooksFailed)&&(identical(other.webhooksPending, _this.webhooksPending) || other.webhooksPending == _this.webhooksPending));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Work;
-  return Object.hash(runtimeType,_this.claimed,_this.leasesExpiredUnswept,_this.projects,_this.tasks,_this.tenants,_this.webhooksFailed,_this.webhooksPending);
+  return Object.hash(runtimeType,_this.claimed,_this.leasesExpiredUnswept,const DeepCollectionEquality().hash(_this.numberingBehind),_this.projects,_this.tasks,_this.tenants,_this.webhooksFailed,_this.webhooksPending);
 }
 
 @override
 String toString() {
   final _this = this as Work;
-  return 'Work(claimed: ${_this.claimed}, leasesExpiredUnswept: ${_this.leasesExpiredUnswept}, projects: ${_this.projects}, tasks: ${_this.tasks}, tenants: ${_this.tenants}, webhooksFailed: ${_this.webhooksFailed}, webhooksPending: ${_this.webhooksPending})';
+  return 'Work(claimed: ${_this.claimed}, leasesExpiredUnswept: ${_this.leasesExpiredUnswept}, numberingBehind: ${_this.numberingBehind}, projects: ${_this.projects}, tasks: ${_this.tasks}, tenants: ${_this.tenants}, webhooksFailed: ${_this.webhooksFailed}, webhooksPending: ${_this.webhooksPending})';
 }
 
 
@@ -53102,7 +53400,7 @@ abstract mixin class $WorkCopyWith<$Res>  {
   factory $WorkCopyWith(Work value, $Res Function(Work) _then) = _$WorkCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'claimed') int claimed,@JsonKey(name: 'leases_expired_unswept') int leasesExpiredUnswept,@JsonKey(name: 'projects') int projects,@JsonKey(name: 'tasks') int tasks,@JsonKey(name: 'tenants') int tenants,@JsonKey(name: 'webhooks_failed') int webhooksFailed,@JsonKey(name: 'webhooks_pending') int webhooksPending
+@JsonKey(name: 'claimed') int claimed,@JsonKey(name: 'leases_expired_unswept') int leasesExpiredUnswept,@JsonKey(name: 'numbering_behind') List<NumberingLag> numberingBehind,@JsonKey(name: 'projects') int projects,@JsonKey(name: 'tasks') int tasks,@JsonKey(name: 'tenants') int tenants,@JsonKey(name: 'webhooks_failed') int webhooksFailed,@JsonKey(name: 'webhooks_pending') int webhooksPending
 });
 
 
@@ -53119,11 +53417,12 @@ class _$WorkCopyWithImpl<$Res>
 
 /// Create a copy of Work
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? claimed = null,Object? leasesExpiredUnswept = null,Object? projects = null,Object? tasks = null,Object? tenants = null,Object? webhooksFailed = null,Object? webhooksPending = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? claimed = null,Object? leasesExpiredUnswept = null,Object? numberingBehind = null,Object? projects = null,Object? tasks = null,Object? tenants = null,Object? webhooksFailed = null,Object? webhooksPending = null,}) {
   return _then(Work(
 claimed: null == claimed ? _self.claimed : claimed // ignore: cast_nullable_to_non_nullable
 as int,leasesExpiredUnswept: null == leasesExpiredUnswept ? _self.leasesExpiredUnswept : leasesExpiredUnswept // ignore: cast_nullable_to_non_nullable
-as int,projects: null == projects ? _self.projects : projects // ignore: cast_nullable_to_non_nullable
+as int,numberingBehind: null == numberingBehind ? _self.numberingBehind : numberingBehind // ignore: cast_nullable_to_non_nullable
+as List<NumberingLag>,projects: null == projects ? _self.projects : projects // ignore: cast_nullable_to_non_nullable
 as int,tasks: null == tasks ? _self.tasks : tasks // ignore: cast_nullable_to_non_nullable
 as int,tenants: null == tenants ? _self.tenants : tenants // ignore: cast_nullable_to_non_nullable
 as int,webhooksFailed: null == webhooksFailed ? _self.webhooksFailed : webhooksFailed // ignore: cast_nullable_to_non_nullable
@@ -53213,10 +53512,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'claimed')  int claimed, @JsonKey(name: 'leases_expired_unswept')  int leasesExpiredUnswept, @JsonKey(name: 'projects')  int projects, @JsonKey(name: 'tasks')  int tasks, @JsonKey(name: 'tenants')  int tenants, @JsonKey(name: 'webhooks_failed')  int webhooksFailed, @JsonKey(name: 'webhooks_pending')  int webhooksPending)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'claimed')  int claimed, @JsonKey(name: 'leases_expired_unswept')  int leasesExpiredUnswept, @JsonKey(name: 'numbering_behind')  List<NumberingLag> numberingBehind, @JsonKey(name: 'projects')  int projects, @JsonKey(name: 'tasks')  int tasks, @JsonKey(name: 'tenants')  int tenants, @JsonKey(name: 'webhooks_failed')  int webhooksFailed, @JsonKey(name: 'webhooks_pending')  int webhooksPending)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Work() when $default != null:
-return $default(_that.claimed,_that.leasesExpiredUnswept,_that.projects,_that.tasks,_that.tenants,_that.webhooksFailed,_that.webhooksPending);case _:
+return $default(_that.claimed,_that.leasesExpiredUnswept,_that.numberingBehind,_that.projects,_that.tasks,_that.tenants,_that.webhooksFailed,_that.webhooksPending);case _:
   return orElse();
 
 }
@@ -53234,10 +53533,10 @@ return $default(_that.claimed,_that.leasesExpiredUnswept,_that.projects,_that.ta
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'claimed')  int claimed, @JsonKey(name: 'leases_expired_unswept')  int leasesExpiredUnswept, @JsonKey(name: 'projects')  int projects, @JsonKey(name: 'tasks')  int tasks, @JsonKey(name: 'tenants')  int tenants, @JsonKey(name: 'webhooks_failed')  int webhooksFailed, @JsonKey(name: 'webhooks_pending')  int webhooksPending)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'claimed')  int claimed, @JsonKey(name: 'leases_expired_unswept')  int leasesExpiredUnswept, @JsonKey(name: 'numbering_behind')  List<NumberingLag> numberingBehind, @JsonKey(name: 'projects')  int projects, @JsonKey(name: 'tasks')  int tasks, @JsonKey(name: 'tenants')  int tenants, @JsonKey(name: 'webhooks_failed')  int webhooksFailed, @JsonKey(name: 'webhooks_pending')  int webhooksPending)  $default,) {final _that = this;
 switch (_that) {
 case _Work():
-return $default(_that.claimed,_that.leasesExpiredUnswept,_that.projects,_that.tasks,_that.tenants,_that.webhooksFailed,_that.webhooksPending);case _:
+return $default(_that.claimed,_that.leasesExpiredUnswept,_that.numberingBehind,_that.projects,_that.tasks,_that.tenants,_that.webhooksFailed,_that.webhooksPending);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -53254,10 +53553,10 @@ return $default(_that.claimed,_that.leasesExpiredUnswept,_that.projects,_that.ta
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'claimed')  int claimed, @JsonKey(name: 'leases_expired_unswept')  int leasesExpiredUnswept, @JsonKey(name: 'projects')  int projects, @JsonKey(name: 'tasks')  int tasks, @JsonKey(name: 'tenants')  int tenants, @JsonKey(name: 'webhooks_failed')  int webhooksFailed, @JsonKey(name: 'webhooks_pending')  int webhooksPending)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'claimed')  int claimed, @JsonKey(name: 'leases_expired_unswept')  int leasesExpiredUnswept, @JsonKey(name: 'numbering_behind')  List<NumberingLag> numberingBehind, @JsonKey(name: 'projects')  int projects, @JsonKey(name: 'tasks')  int tasks, @JsonKey(name: 'tenants')  int tenants, @JsonKey(name: 'webhooks_failed')  int webhooksFailed, @JsonKey(name: 'webhooks_pending')  int webhooksPending)?  $default,) {final _that = this;
 switch (_that) {
 case _Work() when $default != null:
-return $default(_that.claimed,_that.leasesExpiredUnswept,_that.projects,_that.tasks,_that.tenants,_that.webhooksFailed,_that.webhooksPending);case _:
+return $default(_that.claimed,_that.leasesExpiredUnswept,_that.numberingBehind,_that.projects,_that.tasks,_that.tenants,_that.webhooksFailed,_that.webhooksPending);case _:
   return null;
 
 }
@@ -53269,7 +53568,7 @@ return $default(_that.claimed,_that.leasesExpiredUnswept,_that.projects,_that.ta
 @JsonSerializable()
 
 class _Work implements Work {
-  const _Work({@JsonKey(name: 'claimed') this.claimed = 0, @JsonKey(name: 'leases_expired_unswept') this.leasesExpiredUnswept = 0, @JsonKey(name: 'projects') this.projects = 0, @JsonKey(name: 'tasks') this.tasks = 0, @JsonKey(name: 'tenants') this.tenants = 0, @JsonKey(name: 'webhooks_failed') this.webhooksFailed = 0, @JsonKey(name: 'webhooks_pending') this.webhooksPending = 0});
+  const _Work({@JsonKey(name: 'claimed') this.claimed = 0, @JsonKey(name: 'leases_expired_unswept') this.leasesExpiredUnswept = 0, @JsonKey(name: 'numbering_behind')  List<NumberingLag> numberingBehind = const <NumberingLag>[], @JsonKey(name: 'projects') this.projects = 0, @JsonKey(name: 'tasks') this.tasks = 0, @JsonKey(name: 'tenants') this.tenants = 0, @JsonKey(name: 'webhooks_failed') this.webhooksFailed = 0, @JsonKey(name: 'webhooks_pending') this.webhooksPending = 0}): _numberingBehind = numberingBehind;
   factory _Work.fromJson(Map<String, dynamic> json) => _$WorkFromJson(json);
 
 /// Claimed is how many tasks hold an unexpired lease.
@@ -53278,6 +53577,19 @@ class _Work implements Work {
 /// yet cleared. They read as unclaimed already; the figure says how much the
 /// sweeper is behind.
 @override@JsonKey(name: 'leases_expired_unswept') final  int leasesExpiredUnswept;
+/// NumberingBehind lists the projects whose task number counter reads below the
+/// highest number one of their tasks holds, trashed ones included. Empty on a
+/// sound store.
+ final  List<NumberingLag> _numberingBehind;
+/// NumberingBehind lists the projects whose task number counter reads below the
+/// highest number one of their tasks holds, trashed ones included. Empty on a
+/// sound store.
+@override@JsonKey(name: 'numbering_behind') List<NumberingLag> get numberingBehind {
+  if (_numberingBehind is EqualUnmodifiableListView) return _numberingBehind;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_numberingBehind);
+}
+
 /// Projects is how many projects the tenant holds.
 @override@JsonKey(name: 'projects') final  int projects;
 /// Tasks is how many tasks the tenant holds, trashed ones excluded.
@@ -53303,18 +53615,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Work&&(identical(other.claimed, claimed) || other.claimed == claimed)&&(identical(other.leasesExpiredUnswept, leasesExpiredUnswept) || other.leasesExpiredUnswept == leasesExpiredUnswept)&&(identical(other.projects, projects) || other.projects == projects)&&(identical(other.tasks, tasks) || other.tasks == tasks)&&(identical(other.tenants, tenants) || other.tenants == tenants)&&(identical(other.webhooksFailed, webhooksFailed) || other.webhooksFailed == webhooksFailed)&&(identical(other.webhooksPending, webhooksPending) || other.webhooksPending == webhooksPending));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Work&&(identical(other.claimed, claimed) || other.claimed == claimed)&&(identical(other.leasesExpiredUnswept, leasesExpiredUnswept) || other.leasesExpiredUnswept == leasesExpiredUnswept)&&const DeepCollectionEquality().equals(other.numberingBehind, _numberingBehind)&&(identical(other.projects, projects) || other.projects == projects)&&(identical(other.tasks, tasks) || other.tasks == tasks)&&(identical(other.tenants, tenants) || other.tenants == tenants)&&(identical(other.webhooksFailed, webhooksFailed) || other.webhooksFailed == webhooksFailed)&&(identical(other.webhooksPending, webhooksPending) || other.webhooksPending == webhooksPending));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,claimed,leasesExpiredUnswept,projects,tasks,tenants,webhooksFailed,webhooksPending);
+    return Object.hash(runtimeType,claimed,leasesExpiredUnswept,const DeepCollectionEquality().hash(_numberingBehind),projects,tasks,tenants,webhooksFailed,webhooksPending);
 }
 
 @override
 String toString() {
-    return 'Work(claimed: $claimed, leasesExpiredUnswept: $leasesExpiredUnswept, projects: $projects, tasks: $tasks, tenants: $tenants, webhooksFailed: $webhooksFailed, webhooksPending: $webhooksPending)';
+    return 'Work(claimed: $claimed, leasesExpiredUnswept: $leasesExpiredUnswept, numberingBehind: $numberingBehind, projects: $projects, tasks: $tasks, tenants: $tenants, webhooksFailed: $webhooksFailed, webhooksPending: $webhooksPending)';
 }
 
 
@@ -53325,7 +53637,7 @@ abstract mixin class _$WorkCopyWith<$Res> implements $WorkCopyWith<$Res> {
   factory _$WorkCopyWith(_Work value, $Res Function(_Work) _then) = __$WorkCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'claimed') int claimed,@JsonKey(name: 'leases_expired_unswept') int leasesExpiredUnswept,@JsonKey(name: 'projects') int projects,@JsonKey(name: 'tasks') int tasks,@JsonKey(name: 'tenants') int tenants,@JsonKey(name: 'webhooks_failed') int webhooksFailed,@JsonKey(name: 'webhooks_pending') int webhooksPending
+@JsonKey(name: 'claimed') int claimed,@JsonKey(name: 'leases_expired_unswept') int leasesExpiredUnswept,@JsonKey(name: 'numbering_behind') List<NumberingLag> numberingBehind,@JsonKey(name: 'projects') int projects,@JsonKey(name: 'tasks') int tasks,@JsonKey(name: 'tenants') int tenants,@JsonKey(name: 'webhooks_failed') int webhooksFailed,@JsonKey(name: 'webhooks_pending') int webhooksPending
 });
 
 
@@ -53342,11 +53654,12 @@ class __$WorkCopyWithImpl<$Res>
 
 /// Create a copy of Work
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? claimed = null,Object? leasesExpiredUnswept = null,Object? projects = null,Object? tasks = null,Object? tenants = null,Object? webhooksFailed = null,Object? webhooksPending = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? claimed = null,Object? leasesExpiredUnswept = null,Object? numberingBehind = null,Object? projects = null,Object? tasks = null,Object? tenants = null,Object? webhooksFailed = null,Object? webhooksPending = null,}) {
   return _then(_Work(
 claimed: null == claimed ? _self.claimed : claimed // ignore: cast_nullable_to_non_nullable
 as int,leasesExpiredUnswept: null == leasesExpiredUnswept ? _self.leasesExpiredUnswept : leasesExpiredUnswept // ignore: cast_nullable_to_non_nullable
-as int,projects: null == projects ? _self.projects : projects // ignore: cast_nullable_to_non_nullable
+as int,numberingBehind: null == numberingBehind ? _self._numberingBehind : numberingBehind // ignore: cast_nullable_to_non_nullable
+as List<NumberingLag>,projects: null == projects ? _self.projects : projects // ignore: cast_nullable_to_non_nullable
 as int,tasks: null == tasks ? _self.tasks : tasks // ignore: cast_nullable_to_non_nullable
 as int,tenants: null == tenants ? _self.tenants : tenants // ignore: cast_nullable_to_non_nullable
 as int,webhooksFailed: null == webhooksFailed ? _self.webhooksFailed : webhooksFailed // ignore: cast_nullable_to_non_nullable

@@ -3,19 +3,30 @@
 import 'dart:typed_data';
 
 import 'package:tix_mobile/src/core/config/config.dart';
+import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/cache/response_cache.dart';
 import 'package:tix_mobile/src/data/models/page.dart';
 import 'package:tix_mobile/src/data/models/project_admin.dart';
+import 'package:tix_mobile/src/data/offline/outbox.dart';
 
-/// Creating, changing, archiving and deleting projects, and their custom
-/// field definitions.
+/// Creating, changing, archiving, deleting and starring projects, and their
+/// custom field definitions.
 class ProjectsRepository {
-  /// Sends through [_api], keeping reads in [_cache].
-  ProjectsRepository(this._api, this._cache);
+  /// Sends through [_api], keeping reads in [_cache] and queueing stars in
+  /// [_outbox] while the server is out of reach.
+  ProjectsRepository(this._api, this._cache, {this._outbox});
 
   final TixApi _api;
   final ResponseCache _cache;
+  final Outbox? _outbox;
+
+  static const _starredKey = 'projects/starred';
+
+  static Page<Project> _page(Object? json) => Page.fromJson(
+    json! as Map<String, dynamic>,
+    (e) => Project.fromJson(e! as Map<String, dynamic>),
+  );
 
   static List<FieldDef> _fields(Object? j) => [
     for (final e in j! as List<Object?>)
@@ -25,6 +36,72 @@ class ProjectsRepository {
   /// One page of projects, archived ones included (`project.list`).
   Future<Page<Project>> all({String? cursor}) =>
       _api.project.list(cursor: cursor, limit: pageSize, includeArchived: true);
+
+  /// The projects the reader starred, in the order their lanes are drawn,
+  /// with the stars still waiting in the outbox drawn on top
+  /// (`project.starred`). Null when the server keeps no project stars.
+  Future<List<Project>?> starred() async {
+    final Page<Project> page;
+    try {
+      page = await _cache.remember(
+        _starredKey,
+        _api.project.starred(),
+        (p) => p.toJson((e) => e.toJson()),
+        decode: _page,
+      );
+    } on TixException catch (e) {
+      if (e.status == 404 || e.status == 405) return null;
+      rethrow;
+    }
+    return await _withQueued(page.items);
+  }
+
+  /// The starred projects as last read, null when never read.
+  Future<List<Project>?> cachedStarred() async {
+    final page = await _cache.peek(_starredKey, _page);
+    return page == null ? null : await _withQueued(page.items);
+  }
+
+  Future<List<Project>> _withQueued(List<Project> read) async {
+    final outbox = _outbox;
+    if (outbox == null) return read;
+    await outbox.store.load();
+    final out = [...read];
+    for (final e in outbox.projectStarWrites()) {
+      final listed = out.any((p) => p.key == e.target);
+      final json = e.values['project'];
+      if (e.op == OutboxOp.projectUnstar) {
+        out.removeWhere((p) => p.key == e.target);
+      } else if (!listed && json is Map<String, Object?>) {
+        out.add(Project.fromJson(json).copyWith(starred: true));
+      }
+    }
+    return out;
+  }
+
+  /// Stars [project] for the reader alone (`project.star`), queued while
+  /// the server is out of reach.
+  Future<void> star(Project project) => _star(project, starred: true);
+
+  /// Takes the reader's star off [project] (`project.unstar`), queued while
+  /// the server is out of reach.
+  Future<void> unstar(Project project) => _star(project, starred: false);
+
+  Future<void> _star(Project project, {required bool starred}) {
+    final key = project.key;
+    Future<void> send(String? idempotencyKey) => starred
+        ? _api.project.star(key, idempotencyKey: idempotencyKey)
+        : _api.project.unstar(key, idempotencyKey: idempotencyKey);
+    final outbox = _outbox;
+    if (outbox == null) return send(null);
+    return outbox.write(
+      op: starred ? OutboxOp.projectStar : OutboxOp.projectUnstar,
+      target: key,
+      values: {'project': project.copyWith(starred: starred).toJson()},
+      online: send,
+      local: (_) {},
+    );
+  }
 
   /// The project [ref] (`project.show`).
   Future<Project> project(String ref) => _cache.remember(

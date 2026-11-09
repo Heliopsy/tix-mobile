@@ -7,9 +7,9 @@ import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/quick/quick_add.dart';
+import 'package:tix_mobile/src/core/session/project_stars.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
-import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/quick_preview.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/models/template.dart';
@@ -225,6 +225,7 @@ class _GlobalQuickAddSheetState extends ConsumerState<GlobalQuickAddSheet> {
     final t = context.tix;
     final projects = ref.watch(quickProjectsProvider);
     final recent = ref.watch(recentQuickValuesProvider);
+    final starred = ref.watch(projectStarsProvider).value?.keys ?? const {};
     final preview = ref.watch(quickPreviewerProvider).value;
     final blocked = ref.watch(previewBlockedProvider);
     final templates =
@@ -252,6 +253,7 @@ class _GlobalQuickAddSheetState extends ConsumerState<GlobalQuickAddSheet> {
           _ProjectPicker(
             projects: list,
             recent: recent.projects,
+            starred: starred,
             selected: project,
             onPick: _busy ? null : _pickProject,
           ),
@@ -491,12 +493,14 @@ class _ProjectPicker extends StatelessWidget {
   const _ProjectPicker({
     required this.projects,
     required this.recent,
+    required this.starred,
     required this.selected,
     required this.onPick,
   });
 
   final List<Project> projects;
   final List<String> recent;
+  final Set<String> starred;
   final String? selected;
   final ValueChanged<String>? onPick;
 
@@ -505,10 +509,10 @@ class _ProjectPicker extends StatelessWidget {
     final l10n = context.l10n;
     final t = context.tix;
     final current = projects.where((p) => p.key == selected).firstOrNull;
-    final ordered = [
+    final ordered = starredFirst([
       for (final k in recent) ...projects.where((p) => p.key == k),
       ...projects.where((p) => !recent.contains(p.key)),
-    ];
+    ], (p) => starred.contains(p.key));
     return Row(
       children: [
         Text(
@@ -527,7 +531,11 @@ class _ProjectPicker extends StatelessWidget {
                 PopupMenuItem(
                   key: Key('quickAdd.project.${p.key}'),
                   value: p.key,
-                  child: ProjectOption(project: p, selected: p.key == selected),
+                  child: ProjectOption(
+                    project: p,
+                    selected: p.key == selected,
+                    starred: starred.contains(p.key),
+                  ),
                 ),
             ],
             child: ConstrainedBox(

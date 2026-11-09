@@ -63,6 +63,8 @@ const _$OutboxOpEnumMap = {
   OutboxOp.dependencyAdd: 'dependencyAdd',
   OutboxOp.artifactAdd: 'artifactAdd',
   OutboxOp.restore: 'restore',
+  OutboxOp.projectStar: 'projectStar',
+  OutboxOp.projectUnstar: 'projectUnstar',
 };
 
 const _$OutboxStateEnumMap = {
