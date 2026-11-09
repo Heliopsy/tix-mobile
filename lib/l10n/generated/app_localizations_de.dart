@@ -7375,4 +7375,24 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get syncStateUnreadable =>
       'Die auf diesem Gerät wartenden Änderungen konnten nicht gelesen werden. Sie bleiben unverändert erhalten und werden nicht gesendet.';
+
+  @override
+  String get settingsAdvanced => 'Erweitert';
+
+  @override
+  String get settingsAdbControl => 'Steuerung über ADB erlauben';
+
+  @override
+  String get settingsAdbControlHelp =>
+      'Erlaubt einem per USB-Debugging verbundenen Computer, in tix den Kontext zu wechseln, Aufgaben anzulegen und Einstellungen zu ändern. Den Zustand der App lesen und tix://-Links öffnen geht auch ohne.';
+
+  @override
+  String get linkNotRecognised => 'Link nicht erkannt';
+
+  @override
+  String get linkPickContextTitle => 'In welchem Kontext soll der Link öffnen?';
+
+  @override
+  String get linkPickContextBody =>
+      'Der Link passt zu mehreren Ihrer Kontexte.';
 }

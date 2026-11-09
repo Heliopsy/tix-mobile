@@ -243,7 +243,8 @@ Keyed by widget: `android:<appWidgetId>` on Android, `<kind>:<ctx>:<project>` on
 
 On iOS, links carry an extra `homeWidget` query item so `home_widget` recognises them. Flutter's own deep linking
 is off on Android and iOS (`flutter_deeplinking_enabled`, `FlutterDeepLinkingEnabled`), so these never reach the
-router as paths.
+router as paths. The app's own `tix://` links come in over a channel of their own, for the same reason
+([adb.md](adb.md#links)).
 
 ### Colours
 

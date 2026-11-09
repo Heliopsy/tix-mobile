@@ -448,7 +448,8 @@ the line and says so.
 ## Navigation
 
 `go_router` owns navigation, configured in `core/router`. Routes are paths, so a task has a stable address
-(`/projects/:key/tasks/:ref`) that works for back navigation, desktop windows and, later, deep links.
+(`/projects/:key/tasks/:ref`) that works for back navigation, desktop windows and `tix://` links on Android, which
+`DeepLinkHost` (`core/widgets`) maps onto routes ([adb.md](adb.md#links)).
 
 The shell adapts to the window width, using Material 3's window size classes:
 

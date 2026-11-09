@@ -44,6 +44,9 @@ enum SettingsSection {
   /// What the active context keeps on this device for offline use.
   offline(SettingsScope.device),
 
+  /// Developer controls: commands over ADB.
+  advanced(SettingsScope.device),
+
   /// The app itself.
   about(SettingsScope.device),
 
@@ -128,6 +131,7 @@ String settingsSectionTitle(AppLocalizations l10n, SettingsSection section) =>
       SettingsSection.localEngine => l10n.localInstanceIdleTitle,
       SettingsSection.widgets => l10n.settingsWidgets,
       SettingsSection.offline => l10n.offlineTitle,
+      SettingsSection.advanced => l10n.settingsAdvanced,
       SettingsSection.about => l10n.aboutTitle,
       SettingsSection.profile => l10n.settingsProfileTitle,
       SettingsSection.security => l10n.securityTitle,
@@ -150,7 +154,8 @@ String settingsScopeLabel(AppLocalizations l10n, SettingsScope scope) =>
 /// Every setting the screen offers right now: account settings only with
 /// a session, tenant settings only for an administrator, the black switch
 /// only under the system theme, the idle timeout only where local databases
-/// are offered, widgets only where the platform has them.
+/// are offered, widgets only where the platform has them, ADB control only
+/// on Android.
 List<SettingsItem> settingsCatalogue(
   AppLocalizations l10n, {
   required bool signedIn,
@@ -159,6 +164,7 @@ List<SettingsItem> settingsCatalogue(
   bool Function(String scope)? can,
   bool localEngines = false,
   bool widgets = false,
+  bool adb = false,
   String tenant = '',
 }) => [
   SettingsItem(
@@ -252,6 +258,14 @@ List<SettingsItem> settingsCatalogue(
       icon: Icons.cloud_off_outlined,
       keywords: '${l10n.offlineAvailableTitle} ${l10n.offlineSyncTitle}',
       route: Routes.offline,
+    ),
+  if (adb)
+    SettingsItem(
+      id: 'advanced.adb',
+      section: SettingsSection.advanced,
+      label: l10n.settingsAdbControl,
+      icon: Icons.usb,
+      keywords: 'ADB adb dumpsys tix://',
     ),
   SettingsItem(
     id: 'about.app',

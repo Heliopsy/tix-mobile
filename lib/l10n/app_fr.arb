@@ -2028,5 +2028,11 @@
   "syncDiscardAllTitle": "Abandonner toutes les modifications non synchronisées ?",
   "syncDiscardAllBody": "{count, plural, =1{1 modification hors ligne est abandonnée et ne sera jamais envoyée. Les brouillons disparaissent.} other{{count} modifications hors ligne sont abandonnées et ne seront jamais envoyées. Les brouillons disparaissent.}}",
   "syncUnsentLost": "{count, plural, =1{1 modification hors ligne n'a pas encore été envoyée et sera perdue.} other{{count} modifications hors ligne n'ont pas encore été envoyées et seront perdues.}}",
-  "syncStateUnreadable": "Les modifications en attente sur cet appareil n'ont pas pu être lues. Elles sont conservées telles quelles et ne sont pas envoyées."
+  "syncStateUnreadable": "Les modifications en attente sur cet appareil n'ont pas pu être lues. Elles sont conservées telles quelles et ne sont pas envoyées.",
+  "settingsAdvanced": "Avancé",
+  "settingsAdbControl": "Autoriser le contrôle par ADB",
+  "settingsAdbControlHelp": "Permet à un ordinateur connecté en débogage USB de changer de contexte, d'ajouter des tâches et de modifier les réglages de tix. Lire l'état de l'application et ouvrir des liens tix:// fonctionne sans cela.",
+  "linkNotRecognised": "Lien non reconnu",
+  "linkPickContextTitle": "Ouvrir ce lien dans quel contexte ?",
+  "linkPickContextBody": "Le lien correspond à plusieurs de vos contextes."
 }

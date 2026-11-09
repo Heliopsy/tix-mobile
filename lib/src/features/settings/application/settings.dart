@@ -2,6 +2,7 @@
 
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tix_mobile/src/core/platform/adb_bridge.dart';
 import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
@@ -96,6 +97,26 @@ class LocaleSetting extends _$LocaleSetting {
         .setLanguageCode(locale?.languageCode);
     ref.read(widgetsStaleProvider.notifier).touch();
   }
+}
+
+/// Theme and language changed over ADB, through the same notifiers as the
+/// Settings screen, so the app redraws at once. `main` puts it in place of
+/// the stored-only default.
+class LiveAppearance implements AdbAppearance {
+  /// Changes settings through [_ref].
+  LiveAppearance(this._ref);
+
+  final Ref _ref;
+
+  @override
+  Future<void> setTheme(String name) => _ref
+      .read(themeSettingProvider.notifier)
+      .set(ThemeChoice.values.byName(name));
+
+  @override
+  Future<void> setLocale(String? code) => _ref
+      .read(localeSettingProvider.notifier)
+      .set(code == null ? null : Locale(code));
 }
 
 /// Whether widgets on the lock screen show counts only.

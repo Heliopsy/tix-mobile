@@ -12282,6 +12282,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The changes waiting on this device could not be read. They are kept untouched and are not sent.'**
   String get syncStateUnreadable;
+
+  /// Settings group for developer controls
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get settingsAdvanced;
+
+  /// Switch that lets adb shell commands change the app
+  ///
+  /// In en, this message translates to:
+  /// **'Allow control over ADB'**
+  String get settingsAdbControl;
+
+  /// Explains the ADB control switch
+  ///
+  /// In en, this message translates to:
+  /// **'Lets a computer connected with USB debugging switch context, add tasks and change settings in tix. Reading the app\'s state and opening tix:// links work without it.'**
+  String get settingsAdbControlHelp;
+
+  /// Toast for a tix:// link the app does not know
+  ///
+  /// In en, this message translates to:
+  /// **'Link not recognised'**
+  String get linkNotRecognised;
+
+  /// Title of the sheet asking which context a link means
+  ///
+  /// In en, this message translates to:
+  /// **'Open this link in which context?'**
+  String get linkPickContextTitle;
+
+  /// Body of the sheet asking which context a link means
+  ///
+  /// In en, this message translates to:
+  /// **'The link fits more than one of your contexts.'**
+  String get linkPickContextBody;
 }
 
 class _AppLocalizationsDelegate

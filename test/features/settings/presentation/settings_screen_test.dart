@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/platform/adb_bridge.dart';
 import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
@@ -35,6 +36,7 @@ void main() {
     bool local = false,
     FakeWidgetBridge? widgets,
     CacheStore? cache,
+    bool adb = false,
   }) async {
     server = tix ?? FakeTix();
     final s = signedInStores();
@@ -54,14 +56,17 @@ void main() {
       SettingsScreen(initialQuery: query),
       size: size,
       locale: locale,
-      overrides: fakeOverrides(
-        server,
-        settings: s.settings,
-        secrets: s.secrets,
-        local: local,
-        widgets: widgets,
-        cache: cache,
-      ),
+      overrides: [
+        ...fakeOverrides(
+          server,
+          settings: s.settings,
+          secrets: s.secrets,
+          local: local,
+          widgets: widgets,
+          cache: cache,
+        ),
+        adbControlOfferedProvider.overrideWithValue(adb),
+      ],
     );
     // The date settings are read in the background; let that request land
     // even when its answer changes nothing on screen.
@@ -69,6 +74,22 @@ void main() {
     await tester.pumpAndSettle();
     return c;
   }
+
+  testWidgets('ADB control is offered only where there is ADB', (tester) async {
+    await pump(tester);
+    expect(find.byKey(const Key('settings.section.advanced')), findsNothing);
+  });
+
+  testWidgets('ADB control is off until turned on, and kept', (tester) async {
+    final c = await pump(tester, adb: true);
+    expect(find.byKey(const Key('settings.section.advanced')), findsOneWidget);
+    expect(find.text('Allow control over ADB'), findsOneWidget);
+    expect(c.read(adbControlSettingProvider), isFalse);
+    await tester.tap(find.byKey(const Key('settings.adbControl')));
+    await tester.pumpAndSettle();
+    expect(c.read(adbControlSettingProvider), isTrue);
+    expect(stores.settings.values[AdbControlSetting.key], 'true');
+  });
 
   testWidgets('the idle timeout of local engines is chosen and kept', (
     tester,
@@ -588,6 +609,7 @@ void main() {
           tix: timeServer(),
           local: true,
           widgets: FakeWidgetBridge(),
+          adb: true,
         );
         await tester.pumpAndSettle();
         final list = find

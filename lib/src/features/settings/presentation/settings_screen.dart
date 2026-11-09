@@ -9,6 +9,7 @@ import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/offline/outbox.dart';
 import 'package:tix_mobile/src/core/offline/unsent_warning.dart';
+import 'package:tix_mobile/src/core/platform/adb_bridge.dart';
 import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
@@ -56,6 +57,7 @@ List<SettingsItem> currentSettings(WidgetRef ref, AppLocalizations l10n) {
     systemTheme: ref.watch(themeSettingProvider) == ThemeChoice.system,
     localEngines: ref.watch(localInstancesEnabledProvider),
     widgets: ref.watch(widgetBridgeProvider).supported,
+    adb: ref.watch(adbControlOfferedProvider),
     tenant: session?.connection.tenantLabel ?? '',
   );
 }
@@ -285,6 +287,7 @@ class _Entry extends StatelessWidget {
       'servers.instances' => const _InstancesEntry(),
       'localEngine.idle' => const LocalIdleEntry(),
       'widgets.lockCounts' => const _WidgetLockCountsEntry(),
+      'advanced.adb' => const _AdbControlEntry(),
       'offline.open' => _LinkEntry(item: item, subtitle: l10n.offlineSubtitle),
       'about.app' => _LinkEntry(
         item: item,
@@ -578,6 +581,19 @@ class _WidgetLockCountsEntry extends ConsumerWidget {
     value: ref.watch(widgetLockCountsSettingProvider),
     onChanged: (on) =>
         ref.read(widgetLockCountsSettingProvider.notifier).set(on: on),
+  );
+}
+
+class _AdbControlEntry extends ConsumerWidget {
+  const _AdbControlEntry();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => TixSwitchRow(
+    key: const Key('settings.adbControl'),
+    title: context.l10n.settingsAdbControl,
+    subtitle: context.l10n.settingsAdbControlHelp,
+    value: ref.watch(adbControlSettingProvider),
+    onChanged: (on) => ref.read(adbControlSettingProvider.notifier).set(on: on),
   );
 }
 

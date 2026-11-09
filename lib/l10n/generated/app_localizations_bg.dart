@@ -7318,4 +7318,24 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String get syncStateUnreadable =>
       'Чакащите промени на това устройство не можаха да бъдат прочетени. Запазени са непроменени и не се изпращат.';
+
+  @override
+  String get settingsAdvanced => 'Разширени';
+
+  @override
+  String get settingsAdbControl => 'Разрешаване на управление през ADB';
+
+  @override
+  String get settingsAdbControlHelp =>
+      'Позволява на компютър, свързан чрез USB отстраняване на грешки, да сменя контекста, да добавя задачи и да променя настройките в tix. Четенето на състоянието на приложението и отварянето на връзки tix:// работят и без това.';
+
+  @override
+  String get linkNotRecognised => 'Връзката не е разпозната';
+
+  @override
+  String get linkPickContextTitle => 'В кой контекст да се отвори връзката?';
+
+  @override
+  String get linkPickContextBody =>
+      'Връзката съвпада с повече от един от вашите контексти.';
 }

@@ -7310,4 +7310,24 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get syncStateUnreadable =>
       'The changes waiting on this device could not be read. They are kept untouched and are not sent.';
+
+  @override
+  String get settingsAdvanced => 'Advanced';
+
+  @override
+  String get settingsAdbControl => 'Allow control over ADB';
+
+  @override
+  String get settingsAdbControlHelp =>
+      'Lets a computer connected with USB debugging switch context, add tasks and change settings in tix. Reading the app\'s state and opening tix:// links work without it.';
+
+  @override
+  String get linkNotRecognised => 'Link not recognised';
+
+  @override
+  String get linkPickContextTitle => 'Open this link in which context?';
+
+  @override
+  String get linkPickContextBody =>
+      'The link fits more than one of your contexts.';
 }

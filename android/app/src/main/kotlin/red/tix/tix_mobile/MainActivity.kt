@@ -12,6 +12,8 @@ import android.provider.Settings
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import red.tix.tix_mobile.adb.AdbHub
+import red.tix.tix_mobile.adb.AdbService
 
 // tix/share holds the latest text shared to the app until Dart takes it, so
 // a share made before Dart listens is not lost.
@@ -20,10 +22,20 @@ import io.flutter.plugin.common.MethodChannel
 // permission it needs is declared only by the allFilesAccess manifest
 // overlay (see build.gradle.kts), so "declared" tells the app whether this
 // build may offer open in place at all.
+//
+// tix/links holds the latest tix:// link the same way. Flutter's own deep
+// linking stays off so home_widget's tixwidget:// launches never reach the
+// router as a path (docs/widgets.md, docs/adb.md).
+//
+// tix/adb is this engine's end of AdbHub, which answers dumpsys and
+// am broadcast (docs/adb.md).
 class MainActivity : FlutterActivity() {
     private var pending: Map<String, String>? = null
     private var channel: MethodChannel? = null
     private var permission: MethodChannel.Result? = null
+    private var link: String? = null
+    private var links: MethodChannel? = null
+    private var adb: MethodChannel? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -48,6 +60,17 @@ class MainActivity : FlutterActivity() {
                 }
             }
         }
+        links = MethodChannel(messenger, "tix/links").apply {
+            setMethodCallHandler { call, result ->
+                if (call.method == "take") {
+                    result.success(link)
+                    link = null
+                } else {
+                    result.notImplemented()
+                }
+            }
+        }
+        adb = MethodChannel(messenger, AdbHub.CHANNEL).also { AdbHub.attachUi(it) }
         MethodChannel(messenger, "red.tix/local_access").setMethodCallHandler { call, result ->
             when (call.method) {
                 "declared" -> result.success(declared())
@@ -59,14 +82,33 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
+        adb?.let { AdbHub.detachUi(it) }
+        adb = null
+        super.cleanUpFlutterEngine(flutterEngine)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) keep(intent)
+        AdbService.keep(this)
+        if (savedInstanceState == null) {
+            keep(intent)
+            keepLink(intent)
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (keep(intent)) channel?.invokeMethod("shared", null)
+        if (keepLink(intent)) links?.invokeMethod("opened", null)
+    }
+
+    private fun keepLink(intent: Intent?): Boolean {
+        if (intent?.action != Intent.ACTION_VIEW) return false
+        val data = intent.data ?: return false
+        if (!data.scheme.equals("tix", ignoreCase = true)) return false
+        link = data.toString()
+        return true
     }
 
     private fun keep(intent: Intent?): Boolean {
