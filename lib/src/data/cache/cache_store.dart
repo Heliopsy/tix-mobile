@@ -34,11 +34,12 @@ abstract interface class CacheStore {
   /// The text under [key] in [scope], null when there is none.
   Future<String?> read(CacheScope scope, String key);
 
-  /// Replaces the text under [key] in [scope].
+  /// Replaces the text under [key] in [scope]. Throws [ConnectionForgotten]
+  /// once [clearConnection] has run for the scope's connection.
   Future<void> write(CacheScope scope, String key, String value);
 
   /// Forgets everything cached for [connectionId], in every tenant,
-  /// [syncPrefix] included.
+  /// [syncPrefix] included, and refuses every later [write] for it.
   Future<void> clearConnection(String connectionId);
 
   /// How many bytes [scope] takes, entries under [syncPrefix] included.
@@ -53,10 +54,24 @@ abstract interface class CacheStore {
   static const syncPrefix = 'sync/';
 }
 
+/// Thrown by [CacheStore.write] for a connection that was forgotten.
+class ConnectionForgotten implements Exception {
+  /// The write to [connectionId] that was refused.
+  const ConnectionForgotten(this.connectionId);
+
+  /// The forgotten connection.
+  final String connectionId;
+
+  @override
+  String toString() => 'ConnectionForgotten($connectionId)';
+}
+
 /// A [CacheStore] in memory, for tests.
 class MemoryCacheStore implements CacheStore {
   /// The entries, by connection, tenant and key.
   final entries = <String, Map<String, String>>{};
+
+  final _forgotten = <String>{};
 
   static String _scope(CacheScope s) => '${s.connectionId}/${s.tenantKey}';
 
@@ -65,12 +80,18 @@ class MemoryCacheStore implements CacheStore {
       entries[_scope(scope)]?[key];
 
   @override
-  Future<void> write(CacheScope scope, String key, String value) async =>
-      (entries[_scope(scope)] ??= {})[key] = value;
+  Future<void> write(CacheScope scope, String key, String value) async {
+    if (_forgotten.contains(scope.connectionId)) {
+      throw ConnectionForgotten(scope.connectionId);
+    }
+    (entries[_scope(scope)] ??= {})[key] = value;
+  }
 
   @override
-  Future<void> clearConnection(String connectionId) async =>
-      entries.removeWhere((k, _) => k.startsWith('$connectionId/'));
+  Future<void> clearConnection(String connectionId) async {
+    _forgotten.add(connectionId);
+    entries.removeWhere((k, _) => k.startsWith('$connectionId/'));
+  }
 
   @override
   Future<int> sizeOf(CacheScope scope) async => (entries[_scope(scope)] ?? {})
@@ -93,6 +114,7 @@ class FileCacheStore implements CacheStore {
 
   final Future<Directory> Function() _root;
   Future<Directory>? _resolved;
+  final _forgotten = <String>{};
 
   /// Bump when the stored form changes; older files are never read.
   static const version = 'v1';
@@ -122,15 +144,29 @@ class FileCacheStore implements CacheStore {
 
   @override
   Future<void> write(CacheScope scope, String key, String value) async {
+    final id = scope.connectionId;
+    if (_forgotten.contains(id)) throw ConnectionForgotten(id);
     final file = await _file(scope, key);
-    await file.parent.create(recursive: true);
-    final tmp = File('${file.path}.tmp');
-    await tmp.writeAsString(value, flush: true);
-    await tmp.rename(file.path);
+    try {
+      await file.parent.create(recursive: true);
+      final tmp = File('${file.path}.tmp');
+      await tmp.writeAsString(value, flush: true);
+      await tmp.rename(file.path);
+    } finally {
+      // A write that passed the check while the connection was being
+      // forgotten may have created its folder again after the delete.
+      if (_forgotten.contains(id)) await _deleteConnection(id);
+    }
+    if (_forgotten.contains(id)) throw ConnectionForgotten(id);
   }
 
   @override
   Future<void> clearConnection(String connectionId) async {
+    _forgotten.add(connectionId);
+    await _deleteConnection(connectionId);
+  }
+
+  Future<void> _deleteConnection(String connectionId) async {
     final base = await _base();
     final dir = Directory(
       '${base.path}${Platform.pathSeparator}${_seg(connectionId)}',

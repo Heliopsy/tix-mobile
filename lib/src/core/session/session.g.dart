@@ -137,7 +137,7 @@ final class SessionControllerProvider
   SessionController create() => SessionController();
 }
 
-String _$sessionControllerHash() => r'8c1581ba484daa64e4045303e7df757ee140bd6f';
+String _$sessionControllerHash() => r'a4a30db3512e7b78356790bed254fb445a11156f';
 
 /// The active session: null until someone connects.
 
@@ -267,6 +267,55 @@ final class SessionApiProvider
 }
 
 String _$sessionApiHash() => r'3faedeaa65ed91ca6e28e72528b6575fde4a3838';
+
+/// The background work running per connection, stopped before a forgotten
+/// connection's files are deleted.
+
+@ProviderFor(connectionJobs)
+final connectionJobsProvider = ConnectionJobsProvider._();
+
+/// The background work running per connection, stopped before a forgotten
+/// connection's files are deleted.
+
+final class ConnectionJobsProvider
+    extends $FunctionalProvider<ConnectionJobs, ConnectionJobs, ConnectionJobs>
+    with $Provider<ConnectionJobs> {
+  /// The background work running per connection, stopped before a forgotten
+  /// connection's files are deleted.
+  ConnectionJobsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'connectionJobsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$connectionJobsHash();
+
+  @$internal
+  @override
+  $ProviderElement<ConnectionJobs> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ConnectionJobs create(Ref ref) {
+    return connectionJobs(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ConnectionJobs value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ConnectionJobs>(value),
+    );
+  }
+}
+
+String _$connectionJobsHash() => r'6d03adf5a2af6d256ed900a0b7a503b5a17ddedf';
 
 /// The cache scope of the active context, null with no session.
 ///

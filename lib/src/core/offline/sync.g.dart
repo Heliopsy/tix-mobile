@@ -295,7 +295,7 @@ final class OfflineSyncProvider
   }
 }
 
-String _$offlineSyncHash() => r'67207d37e311c94cadd71f34780843e0d56a8df6';
+String _$offlineSyncHash() => r'c8b39d16a8a979138b3e0915f0e25f946813b5dc';
 
 /// Keeps what the active context chose available offline: runs the
 /// [SyncSteps], then fetches every listing, task, comment and subtask the
