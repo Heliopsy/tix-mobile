@@ -74,7 +74,7 @@ final class TaskDetailControllerProvider
 }
 
 String _$taskDetailControllerHash() =>
-    r'82d38a5b9e3b6165e167f0baec3864a539b24ce8';
+    r'e50ae27ef636e59ba509c69a1f5cd1d91912be03';
 
 /// One task, as the task screen edits it.
 ///
@@ -191,7 +191,7 @@ final class TaskCommentsProvider
   }
 }
 
-String _$taskCommentsHash() => r'a99c619ff6dc116721d895ab4082c31c304522f9';
+String _$taskCommentsHash() => r'62767d25a6681393945f96a73bb89eb6d0d0d07e';
 
 /// A task's comments, oldest first.
 
@@ -290,7 +290,7 @@ final class TaskDependenciesProvider
   }
 }
 
-String _$taskDependenciesHash() => r'bcc949ce9e178dbf5df9497edad9380353cdd45a';
+String _$taskDependenciesHash() => r'66e73eb0e529c05abc2b65a8b59d85ed386b2bdb';
 
 /// The tasks a task waits for, each read in full.
 
@@ -389,7 +389,7 @@ final class TaskSubtasksProvider
   }
 }
 
-String _$taskSubtasksHash() => r'3cb0974df4c3ea98b0913867bde920f9a3e26d50';
+String _$taskSubtasksHash() => r'e7f9dd7bf38b12676cf6319cbefe6c019e614ccc';
 
 /// A task's direct subtasks.
 
@@ -488,7 +488,7 @@ final class TaskArtifactsProvider
   }
 }
 
-String _$taskArtifactsHash() => r'0c4f50c028df17b0cec84923c48b25d1a3f6b297';
+String _$taskArtifactsHash() => r'9f69c9f4f354fafea3306026b87911b62cca5365';
 
 /// A task's artifacts, oldest first.
 
@@ -587,7 +587,7 @@ final class TaskHistoryProvider
   }
 }
 
-String _$taskHistoryHash() => r'98fae7c4af54576738f58566f5f5cc98068ba731';
+String _$taskHistoryHash() => r'69f9992e0d2ec88ffd297f6dc4abd308bebd3ddb';
 
 /// A task's history, newest first, a page at a time.
 

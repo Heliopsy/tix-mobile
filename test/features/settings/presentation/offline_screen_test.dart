@@ -7,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
+import 'package:tix_mobile/src/core/offline/outbox.dart';
+import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/cache/cache_store.dart';
 import 'package:tix_mobile/src/features/settings/application/offline.dart';
 import 'package:tix_mobile/src/features/settings/presentation/offline_screen.dart';
@@ -201,5 +203,63 @@ void main() {
     expect(formatBytes(512, 'en'), '512 B');
     expect(formatBytes(1536, 'en'), '1.5 KB');
     expect(formatBytes(5 * 1024 * 1024, 'de'), '5,0 MB');
+  });
+
+  testWidgets('the conflict policy is kept for the context', (tester) async {
+    final c = await pump(tester, phone);
+    await tester.dragUntilVisible(
+      find.byKey(const Key('offline.policy')),
+      find.byType(ListView),
+      const Offset(0, -200),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.descendant(
+        of: find.byKey(const Key('offline.policy')),
+        matching: find.text('Keep theirs'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(c.read(conflictPolicySettingProvider), ConflictPolicy.keepTheirs);
+    expect(stores.settings.values['sync.policy.c1.'], 'keepTheirs');
+  });
+
+  testWidgets('discard all asks first, then empties the outbox', (
+    tester,
+  ) async {
+    final snap = SyncSnapshot(
+      entries: [
+        OutboxEntry(
+          id: 'e1',
+          seq: 1,
+          op: OutboxOp.comment,
+          target: 'infra-1',
+          idempotencyKey: 'k',
+          createdAt: DateTime.utc(2026, 11),
+          values: const {'body': 'hi'},
+          state: OutboxState.failed,
+        ),
+      ],
+    );
+    await cache.write(scope, SyncStore.key, jsonEncode(snap.toJson()));
+    final c = await pump(tester, phone);
+    await tester.dragUntilVisible(
+      find.byKey(const Key('offline.discardAll')),
+      find.byType(ListView),
+      const Offset(0, -200),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('offline.discardAll')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('1 change made offline'), findsOneWidget);
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(c.read(syncStoreProvider).now.entries, hasLength(1));
+
+    await tester.tap(find.byKey(const Key('offline.discardAll')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('confirm.ok')));
+    await tester.pumpAndSettle();
+    expect(c.read(syncStoreProvider).now.entries, isEmpty);
   });
 }

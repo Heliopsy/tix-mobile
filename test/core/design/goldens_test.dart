@@ -90,6 +90,7 @@ void main() {
     ),
     'tasks': () => const GalleryBlock(title: 'Tasks', child: GalleryTasks()),
     'inbox': () => const GalleryBlock(title: 'Inbox', child: GalleryInbox()),
+    'sync': () => const GalleryBlock(title: 'Sync', child: GallerySync()),
     'forms': () => const Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

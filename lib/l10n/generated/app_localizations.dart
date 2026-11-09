@@ -8878,13 +8878,13 @@ abstract class AppLocalizations {
   /// No description provided for @syncTitle.
   ///
   /// In en, this message translates to:
-  /// **'External sync'**
+  /// **'Conflicts'**
   String get syncTitle;
 
   /// No description provided for @syncSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Import work from Jira, OpenProject or a file. Runs happen on the server.'**
+  /// **'Changes made offline and how they synced'**
   String get syncSubtitle;
 
   /// No description provided for @syncNew.
@@ -8914,7 +8914,7 @@ abstract class AppLocalizations {
   /// No description provided for @syncEmptyBody.
   ///
   /// In en, this message translates to:
-  /// **'Add a source to import tasks from another tracker.'**
+  /// **'Changes you make while offline wait here until the server is back.'**
   String get syncEmptyBody;
 
   /// No description provided for @syncStatusOk.
@@ -9106,7 +9106,7 @@ abstract class AppLocalizations {
   /// No description provided for @syncEditTitle.
   ///
   /// In en, this message translates to:
-  /// **'Edit {name}'**
+  /// **'Edit before sending'**
   String syncEditTitle(String name);
 
   /// No description provided for @syncFormIntro.
@@ -11232,6 +11232,474 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I have copied it'**
   String get tokenUnsavedDone;
+
+  /// No description provided for @syncMarkUnsynced.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsynced'**
+  String get syncMarkUnsynced;
+
+  /// No description provided for @syncMarkDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get syncMarkDraft;
+
+  /// No description provided for @syncMarkCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Check'**
+  String get syncMarkCheck;
+
+  /// No description provided for @syncMarkConflict.
+  ///
+  /// In en, this message translates to:
+  /// **'Conflict'**
+  String get syncMarkConflict;
+
+  /// No description provided for @syncMarkFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Refused'**
+  String get syncMarkFailed;
+
+  /// No description provided for @syncSendNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Send now'**
+  String get syncSendNow;
+
+  /// No description provided for @syncEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything is synced'**
+  String get syncEmptyTitle;
+
+  /// No description provided for @syncConflicts.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 conflict} other{{count} conflicts}}'**
+  String syncConflicts(int count);
+
+  /// No description provided for @syncConflictsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone changed the same thing on the server while you were offline.'**
+  String get syncConflictsHelp;
+
+  /// No description provided for @syncKeepAllMine.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep all mine'**
+  String get syncKeepAllMine;
+
+  /// No description provided for @syncKeepAllTheirs.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep all theirs'**
+  String get syncKeepAllTheirs;
+
+  /// No description provided for @syncWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change waiting} other{{count} changes waiting}}'**
+  String syncWaiting(int count);
+
+  /// No description provided for @syncHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get syncHistory;
+
+  /// No description provided for @syncHistoryHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Settled conflicts. Reverse one to send the side that was not kept.'**
+  String get syncHistoryHelp;
+
+  /// No description provided for @syncFieldTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get syncFieldTitle;
+
+  /// No description provided for @syncFieldBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get syncFieldBody;
+
+  /// No description provided for @syncFieldPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority'**
+  String get syncFieldPriority;
+
+  /// No description provided for @syncFieldAssignee.
+  ///
+  /// In en, this message translates to:
+  /// **'Assignee'**
+  String get syncFieldAssignee;
+
+  /// No description provided for @syncFieldDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Due'**
+  String get syncFieldDue;
+
+  /// No description provided for @syncFieldTags.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get syncFieldTags;
+
+  /// No description provided for @syncFieldStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get syncFieldStatus;
+
+  /// No description provided for @syncFieldRecurrence.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat'**
+  String get syncFieldRecurrence;
+
+  /// No description provided for @syncFieldParent.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent'**
+  String get syncFieldParent;
+
+  /// No description provided for @syncValueEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'(empty)'**
+  String get syncValueEmpty;
+
+  /// No description provided for @syncMine.
+  ///
+  /// In en, this message translates to:
+  /// **'Mine'**
+  String get syncMine;
+
+  /// No description provided for @syncTheirs.
+  ///
+  /// In en, this message translates to:
+  /// **'Theirs'**
+  String get syncTheirs;
+
+  /// No description provided for @syncKeepMine.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep mine'**
+  String get syncKeepMine;
+
+  /// No description provided for @syncKeepTheirs.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep theirs'**
+  String get syncKeepTheirs;
+
+  /// No description provided for @syncEditSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get syncEditSend;
+
+  /// No description provided for @syncTheirsWas.
+  ///
+  /// In en, this message translates to:
+  /// **'On the server: {value}'**
+  String syncTheirsWas(String value);
+
+  /// No description provided for @syncDeletedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This task was deleted on the server after you changed it.'**
+  String get syncDeletedBody;
+
+  /// No description provided for @syncRestoreApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore and apply'**
+  String get syncRestoreApply;
+
+  /// No description provided for @syncDiscardMine.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard mine'**
+  String get syncDiscardMine;
+
+  /// No description provided for @syncDiscardMineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard your changes?'**
+  String get syncDiscardMineTitle;
+
+  /// No description provided for @syncDiscardMineBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything you changed on this task while offline is dropped. The task stays deleted.'**
+  String get syncDiscardMineBody;
+
+  /// No description provided for @syncMoveRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'Moving to {status} was refused: {reason}'**
+  String syncMoveRefused(String status, String reason);
+
+  /// No description provided for @syncMoveElsewhere.
+  ///
+  /// In en, this message translates to:
+  /// **'Move elsewhere'**
+  String get syncMoveElsewhere;
+
+  /// No description provided for @syncOpUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref}: {fields}'**
+  String syncOpUpdate(String ref, String fields);
+
+  /// No description provided for @syncOpCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref}: checklist item'**
+  String syncOpCheck(String ref);
+
+  /// No description provided for @syncOpMove.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref}: move to {status}'**
+  String syncOpMove(String ref, String status);
+
+  /// No description provided for @syncOpStar.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref}: star'**
+  String syncOpStar(String ref);
+
+  /// No description provided for @syncOpUnstar.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref}: remove star'**
+  String syncOpUnstar(String ref);
+
+  /// No description provided for @syncOpSnooze.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref}: snooze'**
+  String syncOpSnooze(String ref);
+
+  /// No description provided for @syncOpCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'New task: {title}'**
+  String syncOpCreate(String title);
+
+  /// No description provided for @syncOpComment.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref}: comment'**
+  String syncOpComment(String ref);
+
+  /// No description provided for @syncOpTagAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref}: add #{tag}'**
+  String syncOpTagAdd(String ref, String tag);
+
+  /// No description provided for @syncOpTagRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref}: remove #{tag}'**
+  String syncOpTagRemove(String ref, String tag);
+
+  /// No description provided for @syncOpDependency.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref}: waits for {other}'**
+  String syncOpDependency(String ref, String other);
+
+  /// No description provided for @syncOpArtifact.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref}: attachment'**
+  String syncOpArtifact(String ref);
+
+  /// No description provided for @syncOpRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref}: restore'**
+  String syncOpRestore(String ref);
+
+  /// No description provided for @syncDiscardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard this change?'**
+  String get syncDiscardTitle;
+
+  /// No description provided for @syncDiscard.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get syncDiscard;
+
+  /// No description provided for @syncRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'The server refused it: {reason}'**
+  String syncRefused(String reason);
+
+  /// No description provided for @syncCheckBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The answer was lost, so this task may already exist. Look at the project, then send it or drop it.'**
+  String get syncCheckBody;
+
+  /// No description provided for @syncSendAnyway.
+  ///
+  /// In en, this message translates to:
+  /// **'Send anyway'**
+  String get syncSendAnyway;
+
+  /// No description provided for @syncAlreadyThere.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s already there'**
+  String get syncAlreadyThere;
+
+  /// No description provided for @syncRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get syncRetry;
+
+  /// No description provided for @syncKeptMine.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept mine'**
+  String get syncKeptMine;
+
+  /// No description provided for @syncKeptTheirs.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept theirs'**
+  String get syncKeptTheirs;
+
+  /// No description provided for @syncKeptEdited.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent an edit'**
+  String get syncKeptEdited;
+
+  /// No description provided for @syncKeptRestored.
+  ///
+  /// In en, this message translates to:
+  /// **'Restored and applied'**
+  String get syncKeptRestored;
+
+  /// No description provided for @syncKeptDiscarded.
+  ///
+  /// In en, this message translates to:
+  /// **'Discarded mine'**
+  String get syncKeptDiscarded;
+
+  /// No description provided for @syncByPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'{what}, by your setting'**
+  String syncByPolicy(String what);
+
+  /// No description provided for @syncReverse.
+  ///
+  /// In en, this message translates to:
+  /// **'Reverse'**
+  String get syncReverse;
+
+  /// No description provided for @syncBannerWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change waits to sync.} other{{count} changes wait to sync.}}'**
+  String syncBannerWaiting(int count);
+
+  /// No description provided for @syncBannerConflict.
+  ///
+  /// In en, this message translates to:
+  /// **'Your offline changes need a decision.'**
+  String get syncBannerConflict;
+
+  /// No description provided for @syncBannerDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Created offline. It gets its reference when it syncs.'**
+  String get syncBannerDraft;
+
+  /// No description provided for @syncResolve.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolve'**
+  String get syncResolve;
+
+  /// No description provided for @syncBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 conflict to resolve} other{{count} conflicts to resolve}}'**
+  String syncBadge(int count);
+
+  /// No description provided for @syncPolicyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'When a change conflicts'**
+  String get syncPolicyLabel;
+
+  /// No description provided for @syncPolicyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For changes made offline that someone else also changed. Every conflict is kept under Conflicts, where it can be reversed.'**
+  String get syncPolicyHelp;
+
+  /// No description provided for @syncPolicyAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask'**
+  String get syncPolicyAsk;
+
+  /// No description provided for @syncPolicyMine.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep mine'**
+  String get syncPolicyMine;
+
+  /// No description provided for @syncPolicyTheirs.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep theirs'**
+  String get syncPolicyTheirs;
+
+  /// No description provided for @syncOpenConflicts.
+  ///
+  /// In en, this message translates to:
+  /// **'Conflicts and unsynced changes'**
+  String get syncOpenConflicts;
+
+  /// No description provided for @syncDiscardAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard all unsynced changes'**
+  String get syncDiscardAll;
+
+  /// No description provided for @syncDiscardAllTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard every unsynced change?'**
+  String get syncDiscardAllTitle;
+
+  /// No description provided for @syncDiscardAllBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change made offline is dropped and never sent. Drafts disappear.} other{{count} changes made offline are dropped and never sent. Drafts disappear.}}'**
+  String syncDiscardAllBody(int count);
 }
 
 class _AppLocalizationsDelegate

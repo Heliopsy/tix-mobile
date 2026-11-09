@@ -100,13 +100,19 @@ class TaskListing extends _$TaskListing {
     );
     _request = request;
     final repo = ref.read(taskListRepositoryProvider);
+    final project = switch (query.scope) {
+      ProjectScope(:final key) => key,
+      _ => null,
+    };
+    Paged<Task> shown(Page<Task> p) =>
+        _paged(repo.withQueued(p, project: project));
     final page = await cachedFirst(
       ref: ref,
       cached: repo.cachedList(request),
       fresh: () => repo.list(request),
-      onFresh: (p) => state = AsyncData(_paged(p)),
+      onFresh: (p) => state = AsyncData(shown(p)),
     );
-    return _paged(page);
+    return shown(page);
   }
 
   static Paged<Task> _paged(Page<Task> p) =>

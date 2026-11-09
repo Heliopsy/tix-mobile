@@ -466,6 +466,10 @@ class LiveEvents {
     unawaited(_stopAll());
   }
 
+  /// Reports [EventsMissed], so everything that refreshes on a gap reads the
+  /// server again: after queued writes went out, for one.
+  void reportGap() => _gap();
+
   void _deliver(TixEvent event) {
     if (event.seq <= _cursor || _updates.isClosed) return;
     _cursor = event.seq;

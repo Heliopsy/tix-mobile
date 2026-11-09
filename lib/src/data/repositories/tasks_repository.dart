@@ -13,6 +13,7 @@ import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/quick_preview.dart';
 import 'package:tix_mobile/src/data/models/tag.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
+import 'package:tix_mobile/src/data/offline/outbox.dart';
 import 'package:tix_mobile/src/data/repositories/task_detail_repository.dart'
     show TaskDetailRepository;
 
@@ -23,10 +24,11 @@ import 'package:tix_mobile/src/data/repositories/task_detail_repository.dart'
 /// to draw before the server answers.
 class TasksRepository {
   /// Reads through [_api], keeping copies in [_cache].
-  TasksRepository(this._api, this._cache);
+  TasksRepository(this._api, this._cache, {this._outbox});
 
   final TixApi _api;
   final ResponseCache _cache;
+  final Outbox? _outbox;
   final _actors = <String, Future<Actor>>{};
 
   static Page<Project> _projects(Object? json) => Page.fromJson(
@@ -102,16 +104,33 @@ class TasksRepository {
   Future<int> projectOpenCount(String key) async =>
       (await _api.stats.read(project: key)).open;
 
-  /// The task [ref].
-  Future<Task> task(String ref) => _cache.remember(
-    'task/$ref',
-    _api.task.show(ref),
-    (t) => t.toJson(),
-    decode: _task,
-  );
+  /// The task [ref], with the writes still waiting for it drawn on top. A
+  /// draft made offline answers from the outbox; a draft already sent, from
+  /// the task it became.
+  Future<Task> task(String ref) async {
+    final outbox = _outbox;
+    final real = outbox?.realRef(ref) ?? ref;
+    if (outbox != null && isDraftRef(real)) {
+      return outbox.draft(real) ??
+          (throw const TixException(TixErrorKind.notFound));
+    }
+    final task = await _cache.remember(
+      'task/$real',
+      _api.task.show(real),
+      (t) => t.toJson(),
+      decode: _task,
+    );
+    return outbox?.overlay(task) ?? task;
+  }
 
   /// The task [ref] as last read, null when never read.
-  Future<Task?> cachedTask(String ref) => _cache.peek('task/$ref', _task);
+  Future<Task?> cachedTask(String ref) async {
+    final outbox = _outbox;
+    final real = outbox?.realRef(ref) ?? ref;
+    if (outbox != null && isDraftRef(real)) return outbox.draft(real);
+    final task = await _cache.peek('task/$real', _task);
+    return task == null ? null : outbox?.overlay(task) ?? task;
+  }
 
   static Task _task(Object? json) =>
       Task.fromJson(json! as Map<String, dynamic>);
@@ -141,9 +160,34 @@ class TasksRepository {
 
   /// Creates a task in [project] from a quick-add [line], which the server
   /// parses: `Fix login !high #auth @raj due:fri`.
-  Future<Task> quickAdd(String project, String line) => _api.task.create(
-    CreateTaskRequest(title: line, projectRef: project, parse: true),
-  );
+  /// Offline, it waits in the outbox and answers with a draft.
+  Future<Task> quickAdd(String project, String line) {
+    final request = CreateTaskRequest(
+      title: line,
+      projectRef: project,
+      parse: true,
+    );
+    final outbox = _outbox;
+    if (outbox == null) return _api.task.create(request);
+    return outbox.create(
+      request.toJson(),
+      online: (key) => _api.task.create(request, idempotencyKey: key),
+    );
+  }
+
+  /// [page] with the writes waiting in the outbox drawn on its tasks.
+  Page<Task> withQueued(Page<Task> page) {
+    final outbox = _outbox;
+    if (outbox == null) return page;
+    return Page(
+      items: [for (final t in page.items) outbox.overlay(t)],
+      nextCursor: page.nextCursor,
+    );
+  }
+
+  /// The tasks created offline in [project] and not yet sent.
+  List<Task> drafts(String project) =>
+      _outbox?.drafts(key: project) ?? const [];
 
   /// Every tag in the tenant.
   Future<List<Tag>> tags() async => (await _api.tag.list()).items;

@@ -189,6 +189,7 @@ class LanesView extends ConsumerWidget {
                                     task,
                                     taskContext,
                                     handle: assigneeHandle(ref, task),
+                                    sync: syncMarkOf(ref, task),
                                     showProject: false,
                                   ),
                                   now: now,

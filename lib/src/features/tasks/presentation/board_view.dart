@@ -115,6 +115,7 @@ class _BoardViewState extends ConsumerState<BoardView> {
             task,
             taskContext,
             handle: assigneeHandle(ref, task),
+            sync: syncMarkOf(ref, task),
             showProject: widget.query.scope is! ProjectScope,
           ),
           now: ref.watch(clockProvider)(),

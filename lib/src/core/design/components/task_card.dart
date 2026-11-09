@@ -3,6 +3,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/components/avatar.dart';
 import 'package:tix_mobile/src/core/design/components/marks.dart';
+import 'package:tix_mobile/src/core/design/components/sync.dart';
 import 'package:tix_mobile/src/core/design/components/task_row.dart';
 import 'package:tix_mobile/src/core/design/tokens.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
@@ -117,6 +118,10 @@ class TaskCard extends StatelessWidget {
                       const SizedBox(width: TixSpace.s1),
                     ],
                     RefText(task.ref, size: TixText.xs),
+                    if (facts.sync case final SyncMarkKind kind) ...[
+                      const SizedBox(width: TixSpace.s1),
+                      SyncMark(kind),
+                    ],
                     const Spacer(),
                     if (task.starred)
                       Icon(Icons.star_rounded, size: 16, color: t.accent),

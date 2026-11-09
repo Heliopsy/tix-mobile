@@ -23,17 +23,22 @@ class ProjectTasks extends _$ProjectTasks {
     final repo = ref.watch(tasksRepositoryProvider);
     ref.watch(tasksChangedProvider);
     refreshOn(ref, EventTopics.tasks);
+    Paged<Task> shown(Page<Task> p) {
+      final queued = repo.withQueued(p);
+      return Paged(
+        items: [...repo.drafts(projectKey), ...queued.items],
+        cursor: queued.nextCursor,
+      );
+    }
+
     final page = await cachedFirst(
       ref: ref,
       cached: repo.cachedTasks(projectKey),
       fresh: () => repo.tasks(projectKey),
-      onFresh: (p) => state = AsyncData(_paged(p)),
+      onFresh: (p) => state = AsyncData(shown(p)),
     );
-    return _paged(page);
+    return shown(page);
   }
-
-  static Paged<Task> _paged(Page<Task> p) =>
-      Paged(items: p.items, cursor: p.nextCursor);
 
   /// Fetches the next page, if there is one and none is in flight.
   Future<void> loadMore() => loadNextPage(

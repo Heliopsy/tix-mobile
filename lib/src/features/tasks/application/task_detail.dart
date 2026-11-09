@@ -13,6 +13,7 @@ import 'package:tix_mobile/src/data/events/tix_event.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
+import 'package:tix_mobile/src/data/offline/sync_store.dart' show isDraftRef;
 import 'package:tix_mobile/src/data/repositories/task_detail_repository.dart';
 
 export 'package:tix_mobile/src/data/repositories/task_detail_repository.dart';
@@ -38,14 +39,20 @@ class TaskChange {
           server.ref,
           patch,
           version: checkVersion ? server.version : null,
+          base: server,
         ),
       );
 
   /// Ticks or clears checklist item [item] of the description.
   factory TaskChange.check(int item, {required bool done}) => TaskChange(
     apply: (t) => t.copyWith(body: setChecklistItem(t.body, item, done: done)),
-    send: (repo, server) =>
-        repo.check(server.ref, item, done: done, version: server.version),
+    send: (repo, server) => repo.check(
+      server.ref,
+      item,
+      done: done,
+      version: server.version,
+      base: server,
+    ),
   );
 
   /// Stars or unstars the task for the reader.
@@ -60,7 +67,7 @@ class TaskChange {
   /// Snoozes the task until [until], or wakes it when null.
   factory TaskChange.snooze(DateTime? until) => TaskChange(
     apply: (t) => t.copyWith(snoozedUntil: until),
-    send: (repo, server) => repo.snooze(server.ref, until),
+    send: (repo, server) => repo.snooze(server.ref, until, base: server),
   );
 
   /// Draws the change on a task.
@@ -165,7 +172,7 @@ class TaskDetailController extends _$TaskDetailController {
                 applied: [to],
                 task: await _repo.transition(taskRef, to, comment: comment),
               )
-            : await _repo.move(taskRef, to, comment: comment);
+            : await _repo.move(taskRef, to, comment: comment, base: _server);
         _server = result.task ?? _server;
         return result;
       } finally {
@@ -212,11 +219,18 @@ class TaskComments extends _$TaskComments {
   @override
   Future<List<Comment>> build(String taskRef) async {
     final repo = ref.watch(taskDetailRepositoryProvider);
-    final comments = await cachedFirst(
-      ref: ref,
-      cached: repo.cachedComments(taskRef),
-      fresh: () => repo.comments(taskRef),
-      onFresh: (v) => state = AsyncData(v),
+    if (isDraftRef(taskRef)) return repo.queuedComments(taskRef);
+    List<Comment> shown(List<Comment> v) => [
+      ...v,
+      ...repo.queuedComments(taskRef),
+    ];
+    final comments = shown(
+      await cachedFirst(
+        ref: ref,
+        cached: repo.cachedComments(taskRef),
+        fresh: () => repo.comments(taskRef),
+        onFresh: (v) => state = AsyncData(shown(v)),
+      ),
     );
     final task = ref.read(taskDetailControllerProvider(taskRef)).value;
     if (ref.mounted && task != null) {
@@ -265,6 +279,7 @@ class TaskDependencies extends _$TaskDependencies {
     if (task != null) {
       refreshOn(ref, EventTopics.dependencies, where: (e) => _about(e, task));
     }
+    if (isDraftRef(taskRef)) return const [];
     final edges = await repo.dependencies(taskRef);
     return await Future.wait([
       for (final e in edges)
@@ -301,11 +316,15 @@ class TaskSubtasks extends _$TaskSubtasks {
   @override
   Future<List<Task>> build(String taskRef) async {
     final repo = ref.watch(taskDetailRepositoryProvider);
-    final subtasks = await cachedFirst(
-      ref: ref,
-      cached: repo.cachedSubtasks(taskRef),
-      fresh: () => repo.subtasks(taskRef),
-      onFresh: (v) => state = AsyncData(v),
+    if (isDraftRef(taskRef)) return repo.draftSubtasks(taskRef);
+    List<Task> shown(List<Task> v) => [...v, ...repo.draftSubtasks(taskRef)];
+    final subtasks = shown(
+      await cachedFirst(
+        ref: ref,
+        cached: repo.cachedSubtasks(taskRef),
+        fresh: () => repo.subtasks(taskRef),
+        onFresh: (v) => state = AsyncData(shown(v)),
+      ),
     );
     if (ref.mounted) refreshOn(ref, EventTopics.tasks);
     return subtasks;
@@ -330,6 +349,7 @@ class TaskArtifacts extends _$TaskArtifacts {
     if (task != null) {
       refreshOn(ref, EventTopics.artifacts, where: (e) => _about(e, task));
     }
+    if (isDraftRef(taskRef)) return Future.value(const []);
     return ref.watch(taskDetailRepositoryProvider).artifacts(taskRef);
   }
 
@@ -348,6 +368,7 @@ class TaskArtifacts extends _$TaskArtifacts {
 class TaskHistory extends _$TaskHistory {
   @override
   Future<Paged<AuditEntry>> build(String taskRef) async {
+    if (isDraftRef(taskRef)) return const Paged(items: []);
     final page = await ref.watch(taskDetailRepositoryProvider).history(taskRef);
     return Paged(items: page.items, cursor: page.nextCursor);
   }

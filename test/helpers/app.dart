@@ -126,6 +126,7 @@ List<Override> fakeOverrides(
   FakeNotes? notes,
   FakeWidgetBridge? widgets,
   NetworkState network = NetworkState.unmetered,
+  Stream<NetworkState>? networks,
   bool autoSync = false,
 }) => [
   keyValueStoreProvider.overrideWithValue(settings ?? MemoryKeyValueStore()),
@@ -151,7 +152,10 @@ List<Override> fakeOverrides(
   widgetBridgeProvider.overrideWithValue(
     widgets ?? FakeWidgetBridge(supported: false),
   ),
-  networkStateProvider.overrideWithValue(AsyncData(network)),
+  if (networks == null)
+    networkStateProvider.overrideWithValue(AsyncData(network))
+  else
+    networkStateProvider.overrideWith((ref) => networks),
   autoSyncProvider.overrideWithValue(autoSync),
 ];
 
@@ -251,6 +255,7 @@ Future<ProviderContainer> pumpScreen(
           GoRoute(path: 'calendar', builder: stub),
           GoRoute(path: 'tokens', builder: stub),
           GoRoute(path: 'offline', builder: stub),
+          GoRoute(path: 'conflicts', builder: stub),
         ],
       ),
       GoRoute(

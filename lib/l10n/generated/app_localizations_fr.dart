@@ -5239,11 +5239,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get webhookRedelivered => 'Remis en file pour une nouvelle tentative.';
 
   @override
-  String get syncTitle => 'Synchronisation externe';
+  String get syncTitle => 'Conflits';
 
   @override
   String get syncSubtitle =>
-      'Importez le travail depuis Jira, OpenProject ou un fichier. Les exécutions ont lieu sur le serveur.';
+      'Modifications faites hors ligne et leur synchronisation';
 
   @override
   String get syncNew => 'Nouvelle source';
@@ -5260,7 +5260,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get syncEmptyBody =>
-      'Ajoutez une source pour importer des tâches d’un autre outil de suivi.';
+      'Les modifications faites hors ligne attendent ici le retour du serveur.';
 
   @override
   String get syncStatusOk => 'Dernière exécution réussie';
@@ -5381,7 +5381,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String syncEditTitle(String name) {
-    return 'Modifier $name';
+    return 'Modifier avant l\'envoi';
   }
 
   @override
@@ -6709,4 +6709,323 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get tokenUnsavedDone => 'Je l’ai copié';
+
+  @override
+  String get syncMarkUnsynced => 'Non synchronisé';
+
+  @override
+  String get syncMarkDraft => 'Brouillon';
+
+  @override
+  String get syncMarkCheck => 'À vérifier';
+
+  @override
+  String get syncMarkConflict => 'Conflit';
+
+  @override
+  String get syncMarkFailed => 'Refusé';
+
+  @override
+  String get syncSendNow => 'Envoyer maintenant';
+
+  @override
+  String get syncEmptyTitle => 'Tout est synchronisé';
+
+  @override
+  String syncConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count conflits',
+      one: '1 conflit',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncConflictsHelp =>
+      'Quelqu\'un a modifié la même chose sur le serveur pendant que vous étiez hors ligne.';
+
+  @override
+  String get syncKeepAllMine => 'Tout garder (les miennes)';
+
+  @override
+  String get syncKeepAllTheirs => 'Tout garder (les leurs)';
+
+  @override
+  String syncWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count modifications en attente',
+      one: '1 modification en attente',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncHistory => 'Historique';
+
+  @override
+  String get syncHistoryHelp =>
+      'Conflits réglés. Inversez-en un pour envoyer le côté qui n\'a pas été gardé.';
+
+  @override
+  String get syncFieldTitle => 'Titre';
+
+  @override
+  String get syncFieldBody => 'Description';
+
+  @override
+  String get syncFieldPriority => 'Priorité';
+
+  @override
+  String get syncFieldAssignee => 'Responsable';
+
+  @override
+  String get syncFieldDue => 'Échéance';
+
+  @override
+  String get syncFieldTags => 'Étiquettes';
+
+  @override
+  String get syncFieldStatus => 'Statut';
+
+  @override
+  String get syncFieldRecurrence => 'Répétition';
+
+  @override
+  String get syncFieldParent => 'Parent';
+
+  @override
+  String get syncValueEmpty => '(vide)';
+
+  @override
+  String get syncMine => 'La mienne';
+
+  @override
+  String get syncTheirs => 'La leur';
+
+  @override
+  String get syncKeepMine => 'Garder la mienne';
+
+  @override
+  String get syncKeepTheirs => 'Garder la leur';
+
+  @override
+  String get syncEditSend => 'Envoyer';
+
+  @override
+  String syncTheirsWas(String value) {
+    return 'Sur le serveur : $value';
+  }
+
+  @override
+  String get syncDeletedBody =>
+      'Cette tâche a été supprimée sur le serveur après votre modification.';
+
+  @override
+  String get syncRestoreApply => 'Restaurer et appliquer';
+
+  @override
+  String get syncDiscardMine => 'Abandonner la mienne';
+
+  @override
+  String get syncDiscardMineTitle => 'Abandonner vos modifications ?';
+
+  @override
+  String get syncDiscardMineBody =>
+      'Tout ce que vous avez modifié sur cette tâche hors ligne est abandonné. La tâche reste supprimée.';
+
+  @override
+  String syncMoveRefused(String status, String reason) {
+    return 'Le passage à $status a été refusé : $reason';
+  }
+
+  @override
+  String get syncMoveElsewhere => 'Déplacer ailleurs';
+
+  @override
+  String syncOpUpdate(String ref, String fields) {
+    return '$ref : $fields';
+  }
+
+  @override
+  String syncOpCheck(String ref) {
+    return '$ref : élément de liste';
+  }
+
+  @override
+  String syncOpMove(String ref, String status) {
+    return '$ref : passer à $status';
+  }
+
+  @override
+  String syncOpStar(String ref) {
+    return '$ref : favori';
+  }
+
+  @override
+  String syncOpUnstar(String ref) {
+    return '$ref : retirer le favori';
+  }
+
+  @override
+  String syncOpSnooze(String ref) {
+    return '$ref : mise en veille';
+  }
+
+  @override
+  String syncOpCreate(String title) {
+    return 'Nouvelle tâche : $title';
+  }
+
+  @override
+  String syncOpComment(String ref) {
+    return '$ref : commentaire';
+  }
+
+  @override
+  String syncOpTagAdd(String ref, String tag) {
+    return '$ref : ajouter #$tag';
+  }
+
+  @override
+  String syncOpTagRemove(String ref, String tag) {
+    return '$ref : retirer #$tag';
+  }
+
+  @override
+  String syncOpDependency(String ref, String other) {
+    return '$ref : attend $other';
+  }
+
+  @override
+  String syncOpArtifact(String ref) {
+    return '$ref : pièce jointe';
+  }
+
+  @override
+  String syncOpRestore(String ref) {
+    return '$ref : restaurer';
+  }
+
+  @override
+  String get syncDiscardTitle => 'Abandonner cette modification ?';
+
+  @override
+  String get syncDiscard => 'Abandonner';
+
+  @override
+  String syncRefused(String reason) {
+    return 'Le serveur a refusé : $reason';
+  }
+
+  @override
+  String get syncCheckBody =>
+      'La réponse a été perdue, cette tâche existe peut-être déjà. Vérifiez le projet, puis envoyez-la ou abandonnez-la.';
+
+  @override
+  String get syncSendAnyway => 'Envoyer quand même';
+
+  @override
+  String get syncAlreadyThere => 'Elle existe déjà';
+
+  @override
+  String get syncRetry => 'Réessayer';
+
+  @override
+  String get syncKeptMine => 'La mienne gardée';
+
+  @override
+  String get syncKeptTheirs => 'La leur gardée';
+
+  @override
+  String get syncKeptEdited => 'Modification envoyée';
+
+  @override
+  String get syncKeptRestored => 'Restaurée et appliquée';
+
+  @override
+  String get syncKeptDiscarded => 'La mienne abandonnée';
+
+  @override
+  String syncByPolicy(String what) {
+    return '$what, selon votre réglage';
+  }
+
+  @override
+  String get syncReverse => 'Inverser';
+
+  @override
+  String syncBannerWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count modifications attendent la synchronisation.',
+      one: '1 modification attend la synchronisation.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncBannerConflict =>
+      'Vos modifications hors ligne demandent une décision.';
+
+  @override
+  String get syncBannerDraft =>
+      'Créée hors ligne. Elle reçoit sa référence à la synchronisation.';
+
+  @override
+  String get syncResolve => 'Résoudre';
+
+  @override
+  String syncBadge(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count conflits à résoudre',
+      one: '1 conflit à résoudre',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncPolicyLabel => 'En cas de conflit';
+
+  @override
+  String get syncPolicyHelp =>
+      'Pour les modifications hors ligne que quelqu\'un d\'autre a aussi faites. Chaque conflit reste dans Conflits, où il peut être inversé.';
+
+  @override
+  String get syncPolicyAsk => 'Demander';
+
+  @override
+  String get syncPolicyMine => 'Garder la mienne';
+
+  @override
+  String get syncPolicyTheirs => 'Garder la leur';
+
+  @override
+  String get syncOpenConflicts => 'Conflits et modifications non synchronisées';
+
+  @override
+  String get syncDiscardAll =>
+      'Abandonner toutes les modifications non synchronisées';
+
+  @override
+  String get syncDiscardAllTitle =>
+      'Abandonner toutes les modifications non synchronisées ?';
+
+  @override
+  String syncDiscardAllBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count modifications hors ligne sont abandonnées et ne seront jamais envoyées. Les brouillons disparaissent.',
+      one: '1 modification hors ligne est abandonnée et ne sera jamais envoyée. Les brouillons disparaissent.',
+    );
+    return '$_temp0';
+  }
 }

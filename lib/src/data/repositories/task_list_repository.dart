@@ -11,6 +11,7 @@ import 'package:tix_mobile/src/data/models/bulk.dart';
 import 'package:tix_mobile/src/data/models/page.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/models/workflow.dart';
+import 'package:tix_mobile/src/data/offline/outbox.dart';
 import 'package:tix_mobile/src/data/query/filter_expression.dart';
 import 'package:tix_mobile/src/data/query/task_index.dart';
 import 'package:tix_mobile/src/data/query/task_query.dart';
@@ -28,10 +29,30 @@ typedef ListingRequest = ({
 /// cache, each with a `cached…` twin for a screen to draw at once.
 class TaskListRepository {
   /// Reads through [_api], keeping copies in [_cache].
-  TaskListRepository(this._api, this._cache);
+  TaskListRepository(this._api, this._cache, {this._outbox});
 
   final TixApi _api;
   final ResponseCache _cache;
+  final Outbox? _outbox;
+
+  Future<void> _write(
+    OutboxOp op,
+    String ref,
+    Future<void> Function() send, {
+    Task? base,
+    Map<String, Object?> values = const {},
+  }) {
+    final outbox = _outbox;
+    if (outbox == null) return send();
+    return outbox.write(
+      op: op,
+      target: ref,
+      base: base,
+      values: values,
+      online: (_) => send(),
+      local: (_) {},
+    );
+  }
 
   /// The request the task screen sends for [query], read at [now] against
   /// [context]: one place, so a prefetch keeps exactly what a screen reads.
@@ -152,20 +173,46 @@ class TaskListRepository {
     );
   }
 
+  /// [page] with the writes waiting in the outbox drawn on its tasks, and
+  /// the drafts of [project], when given, in front.
+  Page<Task> withQueued(Page<Task> page, {String? project}) {
+    final outbox = _outbox;
+    if (outbox == null) return page;
+    return Page(
+      items: [
+        if (project != null) ...outbox.drafts(key: project),
+        for (final t in page.items) outbox.overlay(t),
+      ],
+      nextCursor: page.nextCursor,
+    );
+  }
+
   /// Applies one action to many tasks.
   Future<BulkResult> bulk(BulkTaskInput request) => _api.task.bulk(request);
 
-  /// Moves [ref] to [status] by its workflow's shortest route.
-  Future<void> move(String ref, String status) =>
-      _one(BulkTaskInput(action: BulkAction.move, refs: [ref], to: status));
+  /// Moves [ref] to [status] by its workflow's shortest route. [base] is
+  /// the task as the person saw it, for a move the outbox keeps.
+  Future<void> move(String ref, String status, {Task? base}) => _write(
+    OutboxOp.move,
+    ref,
+    () => _one(BulkTaskInput(action: BulkAction.move, refs: [ref], to: status)),
+    base: base,
+    values: {'to': status},
+  );
 
   /// Assigns [ref] to [actorId], or clears it when empty.
-  Future<void> assign(String ref, String actorId) => _one(
-    BulkTaskInput(
-      action: BulkAction.assign,
-      refs: [ref],
-      assigneeActorId: actorId,
+  Future<void> assign(String ref, String actorId, {Task? base}) => _write(
+    OutboxOp.update,
+    ref,
+    () => _one(
+      BulkTaskInput(
+        action: BulkAction.assign,
+        refs: [ref],
+        assigneeActorId: actorId,
+      ),
     ),
+    base: base,
+    values: {'assignee_actor_id': actorId},
   );
 
   Future<void> _one(BulkTaskInput request) async {
@@ -174,17 +221,48 @@ class TaskListRepository {
   }
 
   /// Stars [ref] for the caller.
-  Future<void> star(String ref) => _api.task.star(ref);
+  Future<void> star(String ref) =>
+      _write(OutboxOp.star, ref, () => _api.task.star(ref));
 
   /// Takes the caller's star off [ref].
-  Future<void> unstar(String ref) => _api.task.unstar(ref);
+  Future<void> unstar(String ref) =>
+      _write(OutboxOp.unstar, ref, () => _api.task.unstar(ref));
 
-  /// Hides [ref] until [until].
-  Future<Task> snooze(String ref, DateTime until) =>
-      _api.task.snooze(ref, SnoozeInput(until: until.toUtc()));
+  /// Hides [ref] until [until]. Offline, the answer carries only the
+  /// reference and the snooze.
+  Future<Task> snooze(String ref, DateTime until) => _writeTask(
+    OutboxOp.snooze,
+    ref,
+    () => _api.task.snooze(ref, SnoozeInput(until: until.toUtc())),
+    Task(id: ref, ref: ref, snoozedUntil: until.toUtc()),
+    values: {'until': until.toUtc().toIso8601String()},
+  );
 
-  /// Wakes [ref].
-  Future<Task> unsnooze(String ref) => _api.task.unsnooze(ref);
+  /// Wakes [ref]. Offline, the answer carries only the reference.
+  Future<Task> unsnooze(String ref) => _writeTask(
+    OutboxOp.snooze,
+    ref,
+    () => _api.task.unsnooze(ref),
+    Task(id: ref, ref: ref),
+  );
+
+  Future<Task> _writeTask(
+    OutboxOp op,
+    String ref,
+    Future<Task> Function() send,
+    Task local, {
+    Map<String, Object?> values = const {},
+  }) {
+    final outbox = _outbox;
+    if (outbox == null) return send();
+    return outbox.write(
+      op: op,
+      target: ref,
+      values: values,
+      online: (_) => send(),
+      local: (_) => local,
+    );
+  }
 
   /// Every workflow in the tenant.
   Future<List<Workflow>> workflows() async => (await _cache.remember(

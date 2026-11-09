@@ -9,6 +9,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/offline/outbox.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
@@ -513,6 +514,7 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
               ),
               children: [
                 header,
+                _SyncStrip(task: task),
                 const SizedBox(height: TixSpace.s4),
                 if (wide)
                   Row(
@@ -531,6 +533,55 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+/// What the outbox says about the task [ref] with [writes] waiting.
+SyncMarkKind? _markOf(List<OutboxEntry> writes, String ref) {
+  if (writes.any((e) => e.state == OutboxState.conflict)) {
+    return SyncMarkKind.conflict;
+  }
+  if (writes.any((e) => e.state == OutboxState.failed)) {
+    return SyncMarkKind.failed;
+  }
+  if (writes.any((e) => e.state == OutboxState.needsCheck)) {
+    return SyncMarkKind.check;
+  }
+  if (isDraftRef(ref)) return SyncMarkKind.draft;
+  return writes.isEmpty ? null : SyncMarkKind.unsynced;
+}
+
+/// Says the task's changes wait to sync, or need a decision, with the way
+/// to the Conflicts screen.
+class _SyncStrip extends ConsumerWidget {
+  const _SyncStrip({required this.task});
+
+  final Task task;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final writes = ref.watch(pendingWritesProvider(task.ref));
+    final mark = _markOf(writes, task.ref);
+    if (mark == null) return const SizedBox.shrink();
+    final attention =
+        mark == SyncMarkKind.conflict ||
+        mark == SyncMarkKind.failed ||
+        mark == SyncMarkKind.check;
+    return Padding(
+      padding: const EdgeInsets.only(top: TixSpace.s3),
+      child: SyncBanner(
+        key: const Key('task.syncBanner'),
+        message: attention
+            ? l10n.syncBannerConflict
+            : mark == SyncMarkKind.draft
+            ? l10n.syncBannerDraft
+            : l10n.syncBannerWaiting(writes.length),
+        attention: attention,
+        actionLabel: attention ? l10n.syncResolve : null,
+        onAction: attention ? () => context.go(Routes.conflicts) : null,
       ),
     );
   }
@@ -573,6 +624,11 @@ class _Header extends ConsumerWidget {
         Row(
           children: [
             if (showRef) RefText(task.ref, size: TixText.sm),
+            if (_markOf(ref.watch(pendingWritesProvider(task.ref)), task.ref)
+                case final SyncMarkKind kind) ...[
+              const SizedBox(width: TixSpace.s2),
+              SyncMark(kind, key: const Key('task.syncMark')),
+            ],
             if (task.recurrence.isNotEmpty) ...[
               const SizedBox(width: TixSpace.s2),
               Icon(

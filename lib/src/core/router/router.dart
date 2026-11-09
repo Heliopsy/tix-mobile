@@ -7,6 +7,7 @@ import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
+import 'package:tix_mobile/src/data/offline/sync_store.dart';
 import 'package:tix_mobile/src/data/repositories/settings_repository.dart';
 import 'package:tix_mobile/src/features/about/presentation/about_screen.dart';
 import 'package:tix_mobile/src/features/account/presentation/account_screen.dart';
@@ -47,6 +48,7 @@ import 'package:tix_mobile/src/features/settings/presentation/settings_screen.da
 import 'package:tix_mobile/src/features/shell/presentation/home_shell.dart';
 import 'package:tix_mobile/src/features/shell/presentation/splash_screen.dart';
 import 'package:tix_mobile/src/features/status/presentation/status_screen.dart';
+import 'package:tix_mobile/src/features/sync/presentation/conflicts_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/saved_filters_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_list_screen.dart';
@@ -156,7 +158,11 @@ GoRouter router(Ref ref) {
                       projectKey: state.pathParameters['key']!,
                     ),
                     routes: [
-                      GoRoute(path: 'tasks/:ref', pageBuilder: _taskPage),
+                      GoRoute(
+                        path: 'tasks/:ref',
+                        pageBuilder: _taskPage,
+                        redirect: (_, state) => _sentDraft(ref, state),
+                      ),
                       GoRoute(
                         path: 'settings',
                         builder: (_, state) => ProjectSettingsScreen(
@@ -296,6 +302,10 @@ GoRouter router(Ref ref) {
                     path: 'offline',
                     builder: (_, _) => const OfflineScreen(),
                   ),
+                  GoRoute(
+                    path: 'conflicts',
+                    builder: (_, _) => const ConflictsScreen(),
+                  ),
                 ],
               ),
             ],
@@ -306,6 +316,16 @@ GoRouter router(Ref ref) {
   );
   ref.onDispose(router.dispose);
   return router;
+}
+
+/// The real task a sent draft became, so a link to the draft still opens.
+String? _sentDraft(Ref ref, GoRouterState state) {
+  final draft = state.pathParameters['ref'] ?? '';
+  if (!isDraftRef(draft)) return null;
+  if (ref.read(activeCacheScopeProvider) == null) return null;
+  final real = ref.read(syncStoreProvider).now.drafts[draft];
+  if (real == null) return null;
+  return Routes.task(state.pathParameters['key'] ?? '', real);
 }
 
 Page<void> _taskPage(BuildContext context, GoRouterState state) {

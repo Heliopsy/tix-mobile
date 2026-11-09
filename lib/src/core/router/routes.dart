@@ -98,6 +98,9 @@ abstract final class Routes {
   /// What stays available offline, its storage and sync.
   static const offline = '/settings/offline';
 
+  /// Conflicts, changes waiting to sync, and the history of settled ones.
+  static const conflicts = '/settings/conflicts';
+
   /// The query parameters that open the connect screen beside a session.
   static const connectParams = {
     'add',

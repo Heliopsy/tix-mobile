@@ -25,6 +25,7 @@ import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
 import 'package:tix_mobile/src/data/models/membership.dart';
 import 'package:tix_mobile/src/data/offline/connection_jobs.dart';
+import 'package:tix_mobile/src/data/offline/outbox.dart';
 import 'package:tix_mobile/src/data/repositories/auth_repository.dart';
 import 'package:tix_mobile/src/data/repositories/identity_repository.dart';
 import 'package:tix_mobile/src/data/repositories/inbox_repository.dart';
@@ -723,11 +724,46 @@ ResponseCache responseCache(Ref ref) {
   return cache;
 }
 
+/// The outbox, conflicts and drafts of the active context, kept beside its
+/// cache under `sync/`.
+@Riverpod(keepAlive: true)
+SyncStore syncStore(Ref ref) {
+  final scope = ref.watch(activeCacheScopeProvider);
+  if (scope == null) throw StateError('no active session');
+  final store = SyncStore(ref.watch(cacheStoreProvider), scope);
+  unawaited(store.load());
+  ref.onDispose(store.close);
+  return store;
+}
+
+/// Whether the active context's server is known to be out of reach, so
+/// writes go straight to the outbox instead of waiting for a timeout. The
+/// outbox replay (`core/offline/outbox.dart`) keeps it current.
+@Riverpod(keepAlive: true)
+class ServerOffline extends _$ServerOffline {
+  @override
+  bool build() => false;
+
+  /// Records whether the server is out of reach.
+  void set({required bool offline}) {
+    if (state != offline) state = offline;
+  }
+}
+
+/// Writes made while the server cannot be reached, for the active context.
+@Riverpod(keepAlive: true)
+Outbox outbox(Ref ref) => Outbox(
+  ref.watch(syncStoreProvider),
+  offline: () => ref.mounted && ref.read(serverOfflineProvider),
+  clock: ref.watch(clockProvider),
+);
+
 /// Projects and tasks for the active session.
 @riverpod
 TasksRepository tasksRepository(Ref ref) => TasksRepository(
   ref.watch(sessionApiProvider),
   ref.watch(responseCacheProvider),
+  outbox: ref.watch(outboxProvider),
 );
 
 /// What the task screen reads and changes, for the active session.
@@ -735,6 +771,7 @@ TasksRepository tasksRepository(Ref ref) => TasksRepository(
 TaskDetailRepository taskDetailRepository(Ref ref) => TaskDetailRepository(
   ref.watch(sessionApiProvider),
   ref.watch(responseCacheProvider),
+  outbox: ref.watch(outboxProvider),
 );
 
 /// Listings, quick and bulk actions and workflows for the active session.
@@ -742,6 +779,7 @@ TaskDetailRepository taskDetailRepository(Ref ref) => TaskDetailRepository(
 TaskListRepository taskListRepository(Ref ref) => TaskListRepository(
   ref.watch(sessionApiProvider),
   ref.watch(responseCacheProvider),
+  outbox: ref.watch(outboxProvider),
 );
 
 /// View arrangements and saved filters for the active session.

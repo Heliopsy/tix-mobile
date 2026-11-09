@@ -173,6 +173,23 @@ low battery on a phone; Sync now always runs. Steps in `syncStepsProvider` (the 
 Keys under `sync/` are reserved for work waiting to be sent: `CacheStore.clearScope` keeps them, `sizeOf` counts
 them, and only removing the connection deletes them.
 
+### Outbox
+
+A write the server cannot take now (no network, a timeout, a 502/503/504, or earlier writes to the same task still
+waiting) goes into the context's outbox (`data/offline`, kept under `sync/state`) with the task's version and JSON
+as the person saw it, the new values and an `Idempotency-Key`. Repositories do this themselves through
+`Outbox.write`, so providers and screens keep their calls; a queued write answers with how it will look, lists and
+records draw waiting writes on top of the server's answer, and rows carry a `SyncMark`. Tasks created offline get a
+draft reference such as `infra-draft1`; work queued on a draft is rewritten to the real reference once it exists,
+and the router redirects links to a sent draft.
+
+`OutboxSync` (`core/offline/outbox.dart`) replays the outbox: on reconnect, when the event stream goes live, when a
+write is queued, every minute while writes wait, and first in every sync. Writes to one task go in order, tasks in
+parallel. A 409 is merged three ways per attribute (`merge3`); same-attribute conflicts follow the per-context
+policy (Ask, Keep mine, Keep theirs) and every one is recorded on the Conflicts screen (`/settings/conflicts`),
+where it can be settled or reversed. After a replay sends anything, `LiveEvents.reportGap()` makes every
+`refreshOn` provider reload.
+
 ## Optimistic updates
 
 The design system's `runOptimistic` (`core/design/components/toast.dart`) shows the change, the error toast and the
