@@ -207,6 +207,7 @@ class HomeShell extends StatelessWidget {
               currentIndex: shell.currentIndex,
               onSelect: _select,
               decorate: _decorate,
+              onAbout: () => context.go(Routes.about),
             ),
           ],
         ),
@@ -227,6 +228,10 @@ class HomeShell extends StatelessWidget {
                   QuickAddButton(extended: extended),
                 ],
               ),
+              trailing: Padding(
+                padding: const EdgeInsets.only(top: TixSpace.s2),
+                child: ShellAboutButton(extended: extended),
+              ),
               labelType: extended
                   ? NavigationRailLabelType.none
                   : NavigationRailLabelType.all,
@@ -246,6 +251,35 @@ class HomeShell extends StatelessWidget {
           Expanded(child: shell),
         ],
       ),
+    );
+  }
+}
+
+/// Opens About from the foot of the rail, where a phone has it under More.
+class ShellAboutButton extends StatelessWidget {
+  /// A button; [extended] gives it its label, for a rail with labels.
+  const ShellAboutButton({this.extended = false, super.key});
+
+  /// Whether it shows its label.
+  final bool extended;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    void open() => context.go(Routes.about);
+    if (extended) {
+      return TixButton.quiet(
+        key: const Key('shell.about'),
+        label: l10n.aboutTitle,
+        icon: Icons.info_outline,
+        onPressed: open,
+      );
+    }
+    return TixIconButton(
+      key: const Key('shell.about'),
+      icon: Icons.info_outline,
+      tooltip: l10n.aboutTitle,
+      onPressed: open,
     );
   }
 }
@@ -367,7 +401,8 @@ class ContextCommands extends ConsumerWidget {
 /// [maxBarDestinations], else the first four and More, which lists the
 /// rest in a sheet and shows as selected while one of them is open. More
 /// wears the decoration of a destination it hides, so an unread badge
-/// stays in sight.
+/// stays in sight. With [onAbout], More is always there and ends with
+/// About.
 class ShellBottomBar extends StatelessWidget {
   /// A bar over [destinations], [currentIndex] selected.
   const ShellBottomBar({
@@ -375,6 +410,7 @@ class ShellBottomBar extends StatelessWidget {
     required this.currentIndex,
     required this.onSelect,
     this.decorate,
+    this.onAbout,
     super.key,
   });
 
@@ -390,13 +426,19 @@ class ShellBottomBar extends StatelessWidget {
   /// Draws a destination's icon, such as with a badge; null draws it plain.
   final Widget Function(ShellDestination d, Widget icon)? decorate;
 
+  /// Opens About, listed last under More; null leaves it out.
+  final VoidCallback? onAbout;
+
+  static const _about = -1;
+
   Widget _icon(ShellDestination d, IconData data) =>
       decorate?.call(d, Icon(data)) ?? Icon(data);
 
   Future<void> _more(BuildContext context, int first) async {
+    final l10n = context.l10n;
     final picked = await showActionSheet<int>(
       context,
-      title: context.l10n.navMore,
+      title: l10n.navMore,
       actions: [
         for (var i = first; i < destinations.length; i++)
           TixSheetAction(
@@ -407,15 +449,27 @@ class ShellBottomBar extends StatelessWidget {
                 ? destinations[i].selectedIcon
                 : destinations[i].icon,
           ),
+        if (onAbout != null)
+          TixSheetAction(
+            key: const Key('nav.more.about'),
+            value: _about,
+            label: l10n.aboutTitle,
+            icon: Icons.info_outline,
+          ),
       ],
     );
-    if (picked != null) onSelect(picked);
+    if (picked == _about) {
+      onAbout?.call();
+    } else if (picked != null) {
+      onSelect(picked);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final overflow = destinations.length > maxBarDestinations;
-    final shown = overflow
+    final overflow =
+        destinations.length > maxBarDestinations || onAbout != null;
+    final shown = overflow && destinations.length >= maxBarDestinations
         ? destinations.sublist(0, maxBarDestinations - 1)
         : destinations;
     Widget more = const Icon(Icons.more_horiz);
