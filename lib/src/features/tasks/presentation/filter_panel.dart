@@ -465,8 +465,12 @@ enum _FilterAction { rename, share, earlier, later, delete, pin }
 
 /// Whether [filter] has a menu: the reader may change it, or this device can
 /// put it on the home screen.
-bool hasSavedFilterMenu(WidgetRef ref, SavedFilter filter) =>
-    filter.editable || ref.watch(pinSupportedProvider).value == true;
+/// Watches pin support whatever the filter, so the menu knows it when it
+/// opens.
+bool hasSavedFilterMenu(WidgetRef ref, SavedFilter filter) {
+  final pinnable = ref.watch(pinSupportedProvider).value == true;
+  return filter.editable || pinnable;
+}
 
 /// The menu of a saved filter: changes the reader may make, and Add to home
 /// screen where the launcher can pin it.
@@ -476,8 +480,7 @@ Future<void> manageSavedFilter(
   SavedFilter filter,
 ) async {
   final l10n = context.l10n;
-  final pinnable = await ref.read(pinSupportedProvider.future);
-  if (!context.mounted) return;
+  final pinnable = ref.read(pinSupportedProvider).value == true;
   final action = await showActionSheet<_FilterAction>(
     context,
     title: filter.name,
