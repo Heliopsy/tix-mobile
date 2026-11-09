@@ -2,8 +2,9 @@
 
 ## Purge
 
-`MaintenanceRepository.purge(ref)` calls `task.purge`. `Trash.purge(task)` drops the task from the list and then
-invalidates `trashProvider` so the next page and the count come from the server. The trash screen shows the
+`MaintenanceRepository.purge(ref)` calls `task.purge` and drops the task from the kept first page (read with
+`stored`, not `peek`, which serves a key once per cache). `Trash.purge(task)` then invalidates `trashProvider` and
+`housekeepingProvider`, so the list and the counts come from the server. The trash screen shows the
 button only when the credential `can(Scopes.taskDelete)`, the scope tix asks for, and confirms with
 `confirmDestructive` before anything is sent.
 

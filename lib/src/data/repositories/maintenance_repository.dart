@@ -99,11 +99,11 @@ class MaintenanceRepository {
   Future<Task> restore(String ref) => _api.task.restore(ref);
 
   /// Deletes the trashed task [ref] for good, with its trashed subtasks
-  /// (`task.purge`), and drops it from the kept first page so a reload
-  /// does not show it again before the server answers.
+  /// (`task.purge`), and drops it from the kept first page, so neither the
+  /// next start nor an offline fallback shows it again.
   Future<void> purge(String ref) async {
     await _api.task.purge(ref);
-    final kept = await cachedTrash();
+    final kept = (await _cache.stored('trash', _tasks))?.value;
     if (kept == null) return;
     await _cache.keep(
       'trash',
