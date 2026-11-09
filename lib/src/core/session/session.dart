@@ -403,17 +403,10 @@ class SessionController extends _$SessionController {
       await _activate(target);
       return;
     }
-    await _moving(() => _activate(target), landing: landing);
-  }
-
-  Future<void> _moving(
-    Future<void> Function() change, {
-    String? landing,
-  }) async {
     final moves = ref.read(contextMovesProvider);
     await moves.leave?.call();
     try {
-      await change();
+      await _activate(target);
     } finally {
       moves.land?.call(landing);
     }
@@ -482,16 +475,7 @@ class SessionController extends _$SessionController {
   }
 
   /// Forgets the connection [id] and its secret, ending a sign-in's session.
-  /// Forgetting the active one clears its screens like a switch.
   Future<void> removeConnection(String id) async {
-    if (state.value?.connection.id == id) {
-      await _moving(() => _removeConnection(id));
-      return;
-    }
-    await _removeConnection(id);
-  }
-
-  Future<void> _removeConnection(String id) async {
     final repo = ref.read(instancesRepositoryProvider);
     final connection = repo.connection(id);
     if (connection == null) return;
@@ -507,17 +491,8 @@ class SessionController extends _$SessionController {
     await future;
   }
 
-  /// Forgets the instance [id] with all its connections. Forgetting the
-  /// active one clears its screens like a switch.
+  /// Forgets the instance [id] with all its connections.
   Future<void> removeInstance(String id) async {
-    if (state.value?.instance.id == id) {
-      await _moving(() => _removeInstance(id));
-      return;
-    }
-    await _removeInstance(id);
-  }
-
-  Future<void> _removeInstance(String id) async {
     final repo = ref.read(instancesRepositoryProvider);
     for (final c in repo.connectionsOf(id)) {
       await ref.read(connectionJobsProvider).stop(c.id);

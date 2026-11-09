@@ -10,7 +10,7 @@ the session.
 `SessionController.activate` compares the target with the active context: same connection, and the same tenant
 where both sides know it. A different one calls `leave`, activates, then `land(landing)` in a `finally`, so a
 failed activation still leaves the switching screen. Code challenges and refusals throw before `leave`, so a
-switch that never happens moves nothing. Removing the active connection or instance goes through the same path.
+switch that never happens moves nothing.
 
 ## Why the shell is taken down, not patched
 

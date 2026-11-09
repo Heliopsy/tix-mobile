@@ -23,6 +23,7 @@ import '../../helpers/fake_tix.dart';
 import '../../helpers/stores.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   const acme = ContextRef(connectionId: 's1', tenantKey: 'acme');
   const channel = MethodChannel('tix/links-switch-test');
   final messenger =
