@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- Quick Settings tiles, and the follow-up posted when a notification action never reached Dart. Keys match in every language; test/core/l10n/native_strings_test.dart checks. -->
+<resources>
+    <string name="tile_quick_add">Quick add</string>
+    <string name="tile_inbox">Inbox</string>
+    <string name="tile_inbox_unread">%1$d unread</string>
+    <string name="tile_inbox_none">All caught up</string>
+    <string name="tile_brand" translatable="false">tix</string>
+    <string name="tile_open_app">Open tix</string>
+    <string name="note_action_failed">tix could not finish that</string>
+    <string name="note_action_failed_body">Open tix to try again.</string>
+</resources>

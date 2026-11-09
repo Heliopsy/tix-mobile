@@ -2043,5 +2043,15 @@
   "settingsAdbControlHelp": "Позволява на компютър, свързан чрез USB отстраняване на грешки, да сменя контекста, да добавя задачи и да променя настройките в tix. Четенето на състоянието на приложението и отварянето на връзки tix:// работят и без това.",
   "linkNotRecognised": "Връзката не е разпозната",
   "linkPickContextTitle": "В кой контекст да се отвори връзката?",
-  "linkPickContextBody": "Връзката съвпада с повече от един от вашите контексти."
+  "linkPickContextBody": "Връзката съвпада с повече от един от вашите контексти.",
+  "notifActionDone": "Готово",
+  "notifActionSnooze": "Отложи",
+  "notifActionReply": "Отговори",
+  "notifReplyLabel": "Напишете коментар",
+  "notifActionFailedDone": "Не можа да се маркира като готово",
+  "notifActionFailedSnooze": "Не можа да се отложи",
+  "notifActionFailedReply": "Отговорът ви не можа да се изпрати",
+  "notifActionFailedBody": "Отворете tix, за да опитате отново.",
+  "pinToHome": "Добави на началния екран",
+  "pinFailed": "Не можа да се добави на началния екран"
 }

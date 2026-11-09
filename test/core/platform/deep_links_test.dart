@@ -52,6 +52,28 @@ void main() {
       expect(parse('tix://inbox?x=1'), const TixLink(route: '/inbox'));
     });
 
+    test('tix://tasks with a filter opens that saved filter', () {
+      expect(
+        parse('tix://tasks?filter=f7&context=s1.acme'),
+        const TixLink(route: '/tasks?filter=f7', context: 's1.acme'),
+      );
+      expect(
+        parse('tix://tasks?filter=Due%20soon'),
+        const TixLink(route: '/tasks?filter=Due+soon'),
+      );
+      expect(parse('tix://tasks?filter=%20'), const TixLink(route: '/tasks'));
+    });
+
+    test('tix://quick-add opens quick add, in a project when named', () {
+      expect(parse('tix://quick-add'), const TixLink(quickAdd: true));
+      expect(
+        parse('tix://quick-add?project=OPS&context=s1.acme'),
+        const TixLink(quickAdd: true, project: 'OPS', context: 's1.acme'),
+      );
+      expect(parse('tix://quick-add?project=..%2Fx'), isNull);
+      expect(parse('tix://quick-add/now'), isNull);
+    });
+
     for (final link in [
       'https://tix.example/inbox',
       'tixwidget://open?route=/inbox',
@@ -69,6 +91,31 @@ void main() {
         expect(parse(link), isNull);
       });
     }
+  });
+
+  group('tixLinkTo', () {
+    test('builds a link that parses back with its context', () {
+      final project = tixLinkTo('projects/OPS', context: 's1.acme');
+      expect(project.toString(), 'tix://projects/OPS?context=s1.acme');
+      expect(
+        parseTixLink(project),
+        const TixLink(route: '/projects/OPS', context: 's1.acme'),
+      );
+      final filter = tixLinkTo(
+        'tasks',
+        context: 'c1.',
+        query: {'filter': 'f 7'},
+      );
+      expect(
+        parseTixLink(filter),
+        const TixLink(route: '/tasks?filter=f+7', context: 'c1.'),
+      );
+    });
+
+    test('leaves the context out when there is none', () {
+      expect(tixLinkTo('inbox').toString(), 'tix://inbox');
+      expect(tixLinkTo('quick-add', context: '').toString(), 'tix://quick-add');
+    });
   });
 
   group('DeepLinkIntake', () {

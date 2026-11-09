@@ -2043,5 +2043,15 @@
   "settingsAdbControlHelp": "Erlaubt einem per USB-Debugging verbundenen Computer, in tix den Kontext zu wechseln, Aufgaben anzulegen und Einstellungen zu ändern. Den Zustand der App lesen und tix://-Links öffnen geht auch ohne.",
   "linkNotRecognised": "Link nicht erkannt",
   "linkPickContextTitle": "In welchem Kontext soll der Link öffnen?",
-  "linkPickContextBody": "Der Link passt zu mehreren Ihrer Kontexte."
+  "linkPickContextBody": "Der Link passt zu mehreren Ihrer Kontexte.",
+  "notifActionDone": "Erledigt",
+  "notifActionSnooze": "Zurückstellen",
+  "notifActionReply": "Antworten",
+  "notifReplyLabel": "Kommentar schreiben",
+  "notifActionFailedDone": "Konnte nicht als erledigt markiert werden",
+  "notifActionFailedSnooze": "Konnte nicht zurückgestellt werden",
+  "notifActionFailedReply": "Ihre Antwort konnte nicht gesendet werden",
+  "notifActionFailedBody": "Öffnen Sie tix, um es erneut zu versuchen.",
+  "pinToHome": "Zum Startbildschirm hinzufügen",
+  "pinFailed": "Konnte nicht zum Startbildschirm hinzugefügt werden"
 }

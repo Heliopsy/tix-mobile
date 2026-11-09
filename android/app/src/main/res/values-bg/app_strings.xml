@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<resources>
+    <string name="tile_quick_add">Бързо добавяне</string>
+    <string name="tile_inbox">Входящи</string>
+    <string name="tile_inbox_unread">%1$d непрочетени</string>
+    <string name="tile_inbox_none">Всичко е прочетено</string>
+    <string name="tile_open_app">Отворете tix</string>
+    <string name="note_action_failed">tix не можа да завърши това</string>
+    <string name="note_action_failed_body">Отворете tix, за да опитате отново.</string>
+</resources>

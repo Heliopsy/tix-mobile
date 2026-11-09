@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/platform/deep_links.dart';
+import 'package:tix_mobile/src/core/quick/quick_add.dart';
 import 'package:tix_mobile/src/core/widgets/deep_link_host.dart';
 
 import '../../helpers/app.dart';
@@ -58,6 +60,7 @@ void main() {
     'tix://settings': 'route:/settings',
     'tix://about': 'route:/settings/about',
     'tix://tasks': 'route:/tasks',
+    'tix://tasks?filter=f7': 'route:/tasks?filter=f7',
   };
   for (final MapEntry(key: link, value: shown) in routes.entries) {
     testWidgets('$link opens its screen', (tester) async {
@@ -66,6 +69,20 @@ void main() {
       expect(find.text('Link not recognised'), findsNothing);
     });
   }
+
+  testWidgets('tix://quick-add asks for quick add in the named project', (
+    tester,
+  ) async {
+    await open(tester, 'tix://quick-add?project=OPS');
+    final container = ProviderScope.containerOf(
+      tester.element(find.text('home')),
+    );
+    final draft = container.read(quickAddDraftsProvider);
+    expect(draft, isNotNull);
+    expect(draft!.project, 'OPS');
+    expect(draft.text, isEmpty);
+    expect(find.text('Link not recognised'), findsNothing);
+  });
 
   testWidgets('an unknown link says so and goes home', (tester) async {
     await open(tester, 'tix://nowhere/at/all');

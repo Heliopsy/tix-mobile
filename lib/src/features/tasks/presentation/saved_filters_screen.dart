@@ -71,8 +71,10 @@ class _FilterTile extends ConsumerWidget {
             : '${filter.query}\n${l10n.savedFilterTheirs}',
         style: tixMono(context, size: TixText.xs),
       ),
-      trailing: filter.editable ? const Icon(Icons.more_vert) : null,
-      onTap: filter.editable
+      trailing: hasSavedFilterMenu(ref, filter)
+          ? const Icon(Icons.more_vert)
+          : null,
+      onTap: hasSavedFilterMenu(ref, filter)
           ? () => manageSavedFilter(context, ref, filter)
           : null,
     );

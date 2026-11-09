@@ -7431,4 +7431,37 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get linkPickContextBody =>
       'Der Link passt zu mehreren Ihrer Kontexte.';
+
+  @override
+  String get notifActionDone => 'Erledigt';
+
+  @override
+  String get notifActionSnooze => 'Zurückstellen';
+
+  @override
+  String get notifActionReply => 'Antworten';
+
+  @override
+  String get notifReplyLabel => 'Kommentar schreiben';
+
+  @override
+  String get notifActionFailedDone =>
+      'Konnte nicht als erledigt markiert werden';
+
+  @override
+  String get notifActionFailedSnooze => 'Konnte nicht zurückgestellt werden';
+
+  @override
+  String get notifActionFailedReply =>
+      'Ihre Antwort konnte nicht gesendet werden';
+
+  @override
+  String get notifActionFailedBody =>
+      'Öffnen Sie tix, um es erneut zu versuchen.';
+
+  @override
+  String get pinToHome => 'Zum Startbildschirm hinzufügen';
+
+  @override
+  String get pinFailed => 'Konnte nicht zum Startbildschirm hinzugefügt werden';
 }

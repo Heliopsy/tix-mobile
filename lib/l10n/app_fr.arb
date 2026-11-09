@@ -2043,5 +2043,15 @@
   "settingsAdbControlHelp": "Permet à un ordinateur connecté en débogage USB de changer de contexte, d'ajouter des tâches et de modifier les réglages de tix. Lire l'état de l'application et ouvrir des liens tix:// fonctionne sans cela.",
   "linkNotRecognised": "Lien non reconnu",
   "linkPickContextTitle": "Ouvrir ce lien dans quel contexte ?",
-  "linkPickContextBody": "Le lien correspond à plusieurs de vos contextes."
+  "linkPickContextBody": "Le lien correspond à plusieurs de vos contextes.",
+  "notifActionDone": "Terminé",
+  "notifActionSnooze": "Reporter",
+  "notifActionReply": "Répondre",
+  "notifReplyLabel": "Écrire un commentaire",
+  "notifActionFailedDone": "Impossible de le marquer comme terminé",
+  "notifActionFailedSnooze": "Impossible de le reporter",
+  "notifActionFailedReply": "Impossible d'envoyer votre réponse",
+  "notifActionFailedBody": "Ouvrez tix pour réessayer.",
+  "pinToHome": "Ajouter à l'écran d'accueil",
+  "pinFailed": "Impossible de l'ajouter à l'écran d'accueil"
 }

@@ -16,25 +16,40 @@ const tixLinkScheme = 'tix';
 @immutable
 class TixLink {
   /// A link to [route], in the context [context] names when given.
-  const TixLink({this.route, this.context});
+  const TixLink({
+    this.route,
+    this.context,
+    this.quickAdd = false,
+    this.project,
+  });
 
   /// The route to go to; null for the connection details, which open over
-  /// the screen on show.
+  /// the screen on show, and for quick add.
   final String? route;
 
   /// The context to open it in, as the link names it; null for the active
   /// one.
   final String? context;
 
+  /// Whether the link opens quick add over the screen on show.
+  final bool quickAdd;
+
+  /// The project quick add starts in, when the link names one.
+  final String? project;
+
   @override
   bool operator ==(Object other) =>
-      other is TixLink && other.route == route && other.context == context;
+      other is TixLink &&
+      other.route == route &&
+      other.context == context &&
+      other.quickAdd == quickAdd &&
+      other.project == project;
 
   @override
-  int get hashCode => Object.hash(route, context);
+  int get hashCode => Object.hash(route, context, quickAdd, project);
 
   @override
-  String toString() => 'TixLink($route, $context)';
+  String toString() => 'TixLink($route, $context, $quickAdd, $project)';
 }
 
 final _name = RegExp(r'^[A-Za-z0-9][A-Za-z0-9_.-]*$');
@@ -43,26 +58,41 @@ final _name = RegExp(r'^[A-Za-z0-9][A-Za-z0-9_.-]*$');
 ///
 /// `tix://inbox`, `tix://mine`, `tix://tasks`, `tix://projects`,
 /// `tix://projects/<KEY>`, `tix://projects/<KEY>/tasks/<ref>`,
-/// `tix://settings`, `tix://about` and `tix://connection`, each with an
-/// optional `?context=<connection or name>`.
+/// `tix://settings`, `tix://about`, `tix://connection`,
+/// `tix://tasks?filter=<name or id>` and `tix://quick-add?project=<KEY>`,
+/// each with an optional `?context=<connection or name>`.
 TixLink? parseTixLink(Uri uri) {
   if (uri.scheme.toLowerCase() != tixLinkScheme) return null;
   final List<String> segments;
   final String? context;
+  final String filter;
+  final String project;
   try {
     segments = [
       if (uri.host.isNotEmpty) uri.host.toLowerCase(),
       ...uri.pathSegments.where((s) => s.isNotEmpty),
     ];
-    final named = uri.queryParameters['context']?.trim() ?? '';
+    final q = uri.queryParameters;
+    final named = q['context']?.trim() ?? '';
     context = named.isEmpty ? null : named;
+    filter = q['filter']?.trim() ?? '';
+    project = q['project']?.trim() ?? '';
   } on FormatException {
     return null;
   }
   bool ok(String s) => _name.hasMatch(s);
+  if (segments case ['quick-add']) {
+    if (project.isNotEmpty && !ok(project)) return null;
+    return TixLink(
+      context: context,
+      quickAdd: true,
+      project: project.isEmpty ? null : project,
+    );
+  }
   final route = switch (segments) {
     ['inbox'] => Routes.inbox,
     ['mine'] => Routes.myWork,
+    ['tasks'] when filter.isNotEmpty => Routes.tasksFiltered(filter),
     ['tasks'] => Routes.tasks,
     ['projects'] => Routes.projects,
     ['projects', final key] when ok(key) => Routes.project(key),
@@ -75,6 +105,26 @@ TixLink? parseTixLink(Uri uri) {
   };
   if (route == null) return null;
   return TixLink(route: route.isEmpty ? null : route, context: context);
+}
+
+/// The link that opens [path] (such as `projects/OPS`) in the context
+/// [context], a `<connection>.<tenant>` key, with [query] added.
+Uri tixLinkTo(
+  String path, {
+  String? context,
+  Map<String, String> query = const {},
+}) {
+  final segments = path.split('/').where((s) => s.isNotEmpty).toList();
+  final params = {
+    ...query,
+    if (context != null && context.isNotEmpty) 'context': context,
+  };
+  return Uri(
+    scheme: tixLinkScheme,
+    host: segments.first,
+    pathSegments: segments.length > 1 ? segments.skip(1) : null,
+    queryParameters: params.isEmpty ? null : params,
+  );
 }
 
 /// `tix://` links the platform opened the app with. Android's

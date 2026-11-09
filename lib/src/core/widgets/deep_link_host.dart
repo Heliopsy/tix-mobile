@@ -8,6 +8,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/deep_links.dart';
+import 'package:tix_mobile/src/core/quick/quick_add.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/context_match.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
@@ -18,7 +19,9 @@ import 'package:tix_mobile/src/data/repositories/settings_repository.dart';
 /// Mounted around the signed-in screens by the router: follows `tix://`
 /// links, including the one that launched the app. A link naming a context
 /// switches to it first, asking which one when the name fits several. A
-/// link the app does not know says so and goes home. Links only navigate.
+/// link the app does not know says so and goes home. Links only navigate;
+/// `tix://quick-add` opens the quick-add sheet, which adds nothing until the
+/// person does.
 class DeepLinkHost extends ConsumerStatefulWidget {
   /// Follows links around [child].
   const DeepLinkHost({required this.child, super.key});
@@ -67,7 +70,9 @@ class _DeepLinkHostState extends ConsumerState<DeepLinkHost> {
     final named = link.context;
     if (named != null && !await _switchFor(named, router)) return;
     final route = link.route;
-    if (route != null) {
+    if (link.quickAdd) {
+      ref.read(quickAddDraftsProvider.notifier).open(project: link.project);
+    } else if (route != null) {
       router.go(route);
     } else if (mounted) {
       await showLiveDetails(context);
