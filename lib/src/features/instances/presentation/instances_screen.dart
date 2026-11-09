@@ -64,7 +64,7 @@ class InstancesScreen extends ConsumerWidget {
 
 enum _InstanceAction { addConnection, export, remove }
 
-enum _ConnectionAction { use, pin, unpin, reconnect, remove }
+enum _ConnectionAction { use, pin, unpin, reconnect, rotate, remove }
 
 /// One instance and its connections, with what can be done to them.
 class InstanceCard extends ConsumerWidget {
@@ -137,6 +137,22 @@ class InstanceCard extends ConsumerWidget {
         await session.setPinned(c.id, pinned: false);
       case _ConnectionAction.reconnect:
         context.go(Routes.reconnect(c.id));
+      case _ConnectionAction.rotate:
+        final ok = await confirmDestructive(
+          context,
+          title: l10n.rotateToken,
+          body: l10n.rotateTokenBody(connectionTitle(c)),
+          action: l10n.rotateToken,
+        );
+        if (!ok || !context.mounted) return;
+        try {
+          await session.rotateToken(c.id);
+          if (context.mounted) showTixToast(context, l10n.tokenRotated);
+        } on Object catch (e) {
+          if (context.mounted) {
+            showTixToast(context, errorMessage(l10n, e), tone: TixTone.danger);
+          }
+        }
       case _ConnectionAction.remove:
         final ok = await confirmDestructive(
           context,
@@ -240,6 +256,11 @@ class InstanceCard extends ConsumerWidget {
                       child: Text(l10n.signInAgain),
                     ),
                   ],
+                  if (c.kind == ConnectionKind.token && !local)
+                    PopupMenuItem(
+                      value: _ConnectionAction.rotate,
+                      child: Text(l10n.rotateToken),
+                    ),
                   PopupMenuItem(
                     value: _ConnectionAction.remove,
                     child: Text(

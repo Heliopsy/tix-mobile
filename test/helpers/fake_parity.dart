@@ -171,10 +171,45 @@ class FakeParity {
     return FakeResponse(200, _session(invite.email, invite.tenant));
   }
 
+  /// API token ids by value, for `whoami` and `token.rotate`.
+  final tokenIds = <String, String>{};
+
+  /// Every rotation: the token id and the grace asked for.
+  final rotations = <({String id, String? grace})>[];
+
+  var _minted = 0;
+
   FakeResponse? _handle(RequestOptions o, String path, FakeCaller caller) {
     final s = path.substring('/api/v1/'.length).split('/');
     final q = o.uri.queryParameters;
+    final bearer = (o.headers['Authorization'] as String?)?.replaceFirst(
+      'Bearer ',
+      '',
+    );
     switch ((o.method, s)) {
+      case ('GET', ['whoami']) when tokenIds.containsKey(bearer):
+        return FakeResponse(200, {
+          ...server.actors['me']!,
+          'kind': 'agent',
+          'tenant_id': 'id-${caller.tenant}',
+          'token_id': tokenIds[bearer],
+        });
+      case ('POST', ['tokens', final id, 'rotate']):
+        final body = o.data as Map<String, dynamic>? ?? const {};
+        rotations.add((id: id, grace: body['grace'] as String?));
+        final value = 'tok-rotated-${++_minted}';
+        server.tokens[value] = caller.tenant;
+        tokenIds[value] = id;
+        if (body['grace'] == null) {
+          server.tokens.remove(bearer);
+          tokenIds.remove(bearer);
+        }
+        return FakeResponse(201, {
+          'id': id,
+          'name': 'phone',
+          'token': value,
+          'scopes': ['*'],
+        });
       case ('GET', ['tasks', final ref, 'lease']):
         if (server.task(ref) == null) return _missing(ref);
         return FakeResponse(200, lease);

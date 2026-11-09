@@ -365,6 +365,33 @@ class SessionController extends _$SessionController {
     await future;
   }
 
+  /// Swaps the API token of the remote connection [connectionId] for a
+  /// rotated one and keeps only the new value. Throws when the server
+  /// refuses; the old token then stays.
+  Future<void> rotateToken(String connectionId) async {
+    final repo = ref.read(instancesRepositoryProvider);
+    final connection = repo.connection(connectionId);
+    final instance = repo.instance(connection?.instanceId ?? '');
+    if (connection == null ||
+        instance == null ||
+        connection.kind != ConnectionKind.token ||
+        instance.kind != InstanceKind.remote) {
+      return;
+    }
+    final secret = await repo.secret(connection);
+    if (secret == null || secret.isEmpty) {
+      throw const TixException(TixErrorKind.tokenRequired);
+    }
+    final issued = await ref
+        .read(authRepositoryProvider)
+        .rotateToken(instance.baseUrl, BearerCredential(secret));
+    await repo.writeSecret(connection, issued.token);
+    if (state.value?.connection.id == connectionId) {
+      ref.invalidateSelf();
+      await future;
+    }
+  }
+
   /// Forgets the active connection, falling back to another saved context
   /// if there is one.
   Future<void> signOut() async {

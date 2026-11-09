@@ -207,6 +207,25 @@ void main() {
       });
     });
 
+    test('a token is rotated by the id whoami names, with a grace', () async {
+      parity.tokenIds['tok'] = 'tk0';
+      final issued = await auth.rotateToken(
+        'https://tix.example',
+        const BearerCredential('tok'),
+      );
+      expect(issued.token, 'tok-rotated-1');
+      expect(last().uri.path, '/api/v1/tokens/tk0/rotate');
+      expect(last().body, {'grace': '1m'});
+    });
+
+    test('a credential that is not a token cannot be rotated', () async {
+      await expectLater(
+        auth.rotateToken('https://tix.example', const BearerCredential('tok')),
+        kind(TixErrorKind.tokenRequired),
+      );
+      expect(parity.rotations, isEmpty);
+    });
+
     test('a wrong password on an existing account says so', () async {
       parity.invites['tix_inv_new'] = FakeInvite(
         email: 'ana@example.com',

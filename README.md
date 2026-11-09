@@ -82,6 +82,7 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   (second factor included). A sign-in can follow you between your tenants on that server or stay pinned to one.
 - **Invite links**: paste one, or share it to tix, see what it admits you to, accept it, and the server and the
   sign-in are added for you.
+- **Token rotation** for a token connection: one tap swaps its API token for a new one and keeps only the new value.
 - **A switcher on every screen** showing Instance › Tenant, recent ones first.
 - **Local databases** on every platform: tix itself is built into the app and serves a `.db` file on this device,
   with no server anywhere. Android, iOS and macOS import a copy into the app and export it back through the share

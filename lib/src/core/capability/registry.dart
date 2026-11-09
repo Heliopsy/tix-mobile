@@ -427,4 +427,9 @@ const bindings = <String, Binding>{
     action: 'import-snapshot',
     wave: 2,
   ),
+  'token.rotate': Binding(
+    feature: 'instances',
+    action: 'rotate-own-token',
+    wave: 2,
+  ),
 };
