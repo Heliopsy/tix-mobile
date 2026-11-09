@@ -218,7 +218,7 @@ void main() {
       final until = DateTime.parse(
         server.task('infra-1')!['snoozed_until']! as String,
       );
-      expect(until, DateTime(2026, 11, 4, 9).toUtc());
+      expect(until.isAtSameMomentAs(DateTime(2026, 11, 4, 9)), isTrue);
       expect(
         server
             .requestsTo('/tasks/infra-1/snooze')

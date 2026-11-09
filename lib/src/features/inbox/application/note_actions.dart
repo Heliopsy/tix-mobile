@@ -246,7 +246,7 @@ class NoteActionRunner {
           if (to == null) return NoteActionOutcome.failed;
           if (to.isNotEmpty) await ctx.detail.move(ref, to);
         case NoteActionKind.snooze:
-          await ctx.detail.snooze(ref, snoozeUntil(now()));
+          await ctx.detail.snooze(ref, snoozeUntil(now()).toUtc());
         case NoteActionKind.reply:
           final body = r.text.trim();
           if (body.isEmpty) return NoteActionOutcome.failed;

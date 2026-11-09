@@ -476,7 +476,8 @@ Future<void> manageSavedFilter(
   SavedFilter filter,
 ) async {
   final l10n = context.l10n;
-  final pinnable = ref.read(pinSupportedProvider).value == true;
+  final pinnable = await ref.read(pinSupportedProvider.future);
+  if (!context.mounted) return;
   final action = await showActionSheet<_FilterAction>(
     context,
     title: filter.name,
