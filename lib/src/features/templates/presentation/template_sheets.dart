@@ -329,7 +329,10 @@ class TemplateProjectPicker extends StatelessWidget {
                 PopupMenuItem(
                   key: Key('template.project.${p.key}'),
                   value: p.key,
-                  child: Text(p.name.isEmpty ? p.key : '${p.name} (${p.key})'),
+                  child: ProjectOption(
+                    project: p,
+                    selected: !every && p.key == selected,
+                  ),
                 ),
             ],
             child: ConstrainedBox(
@@ -346,12 +349,10 @@ class TemplateProjectPicker extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     )
+                  else if (current == null)
+                    ProjectChip(projectKey: selected!)
                   else
-                    ProjectChip(
-                      projectKey: selected!,
-                      colour: current?.color ?? '',
-                      icon: current?.icon ?? '',
-                    ),
+                    Flexible(child: ProjectOption(project: current)),
                   Icon(Icons.expand_more, size: 18, color: t.muted),
                 ],
               ),

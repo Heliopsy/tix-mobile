@@ -507,17 +507,14 @@ class _ProjectTitle extends ConsumerWidget {
       onTap: projects.length < 2
           ? null
           : () async {
-              final key = await showActionSheet<String>(
+              final key = await showProjectPicker(
                 context,
                 title: l10n.boardSwitchProject,
-                actions: [
+                keyPrefix: 'project.switch',
+                current: project?.key ?? projectKey,
+                projects: [
                   for (final p in projects)
-                    if (p.archivedAt == null)
-                      TixSheetAction(
-                        key: Key('project.switch.${p.key}'),
-                        value: p.key,
-                        label: p.name.isEmpty ? p.key : '${p.name}  ${p.key}',
-                      ),
+                    if (p.archivedAt == null || p.key == project?.key) p,
                 ],
               );
               if (key != null && context.mounted) {
@@ -528,9 +525,11 @@ class _ProjectTitle extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ProjectMark(
+            key: const Key('project.switch.mark'),
             name: name,
             colour: project?.color ?? '',
             icon: project?.icon ?? '',
+            iconName: project?.iconName ?? '',
           ),
           const SizedBox(width: TixSpace.s2),
           Flexible(child: Text(name, overflow: TextOverflow.ellipsis)),

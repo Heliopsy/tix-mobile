@@ -355,11 +355,14 @@ class _ProjectPicker extends StatelessWidget {
       initialValue: value,
       isExpanded: true,
       decoration: InputDecoration(labelText: context.l10n.columnProject),
+      selectedItemBuilder: (_) => [
+        for (final p in projects) ProjectOption(project: p),
+      ],
       items: [
         for (final p in projects)
           DropdownMenuItem(
             value: p.key,
-            child: Text(p.name.isEmpty ? p.key : '${p.name} (${p.key})'),
+            child: ProjectOption(project: p, selected: p.key == value),
           ),
       ],
       onChanged: (v) {

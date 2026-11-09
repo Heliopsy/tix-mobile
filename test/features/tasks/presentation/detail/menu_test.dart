@@ -31,7 +31,7 @@ void main() {
       await pumpTask(tester, server);
       await menu(tester, 'copy');
       await press(tester, find.byKey(const Key('copy.project')));
-      await press(tester, find.text('Web (web)').last);
+      await press(tester, find.byKey(const Key('copy.project.web')).last);
       await press(tester, find.byKey(const Key('copy.subtasks')));
       await press(tester, find.byKey(const Key('copy.confirm')));
       expect(bodies(server, 'POST', '/tasks/infra-1/copy'), [

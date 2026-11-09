@@ -5,6 +5,7 @@ import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/markdown/checklist.dart';
 import 'package:tix_mobile/src/data/models/inbox.dart';
+import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 
 // Sample content in English only: the gallery is a debug tool for
@@ -557,8 +558,8 @@ class GalleryStates extends StatelessWidget {
   }
 }
 
-/// Buttons that open each overlay: confirm, action sheet, sheet, toast,
-/// palette and shortcut help.
+/// Buttons that open each overlay: confirm, action sheet, project picker,
+/// sheet, toast, palette and shortcut help.
 class GalleryOverlays extends StatelessWidget {
   /// Creates the launchers.
   const GalleryOverlays({required this.registry, super.key});
@@ -594,6 +595,31 @@ class GalleryOverlays extends StatelessWidget {
               icon: Icons.delete_outline,
               destructive: true,
             ),
+          ],
+        ),
+      ),
+      TixButton(
+        label: 'Project picker',
+        onPressed: () => showProjectPicker(
+          context,
+          title: 'Switch project',
+          keyPrefix: 'gallery.project',
+          current: 'INFRA',
+          projects: [
+            const Project(
+              key: 'INFRA',
+              name: 'Infrastructure',
+              color: 'teal',
+              iconName: 'server',
+            ),
+            const Project(key: 'WEB', name: 'Web', color: '#7a3ef0', icon: 'W'),
+            const Project(
+              key: 'MOB',
+              name: 'Mobile',
+              color: 'amber',
+              icon: '📱',
+            ),
+            Project(key: 'OLD', name: 'Legacy', archivedAt: DateTime(2026)),
           ],
         ),
       ),

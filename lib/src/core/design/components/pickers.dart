@@ -10,14 +10,17 @@ import 'package:tix_mobile/src/core/l10n/l10n.dart';
 /// One option of a [TixSelectField].
 @immutable
 class TixOption<T> {
-  /// The option [value], shown as [label].
-  const TixOption(this.value, this.label);
+  /// The option [value], shown as [label] after [leading].
+  const TixOption(this.value, this.label, {this.leading});
 
   /// What choosing it answers.
   final T value;
 
   /// What it reads as.
   final String label;
+
+  /// A decorative mark before the label, such as a project mark.
+  final Widget? leading;
 }
 
 /// A labelled choice of one value from a short list, drawn like a
@@ -111,7 +114,20 @@ class TixSelectField<T> extends StatelessWidget {
                 for (final o in options)
                   DropdownMenuItem<T>(
                     value: o.value,
-                    child: Text(o.label, overflow: TextOverflow.ellipsis),
+                    child: o.leading == null
+                        ? Text(o.label, overflow: TextOverflow.ellipsis)
+                        : Row(
+                            children: [
+                              ExcludeSemantics(child: o.leading),
+                              const SizedBox(width: TixSpace.s2),
+                              Flexible(
+                                child: Text(
+                                  o.label,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
                   ),
               ],
             ),

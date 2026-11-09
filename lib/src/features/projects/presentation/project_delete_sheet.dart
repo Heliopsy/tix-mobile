@@ -168,6 +168,13 @@ class _DeleteSheetState extends ConsumerState<_DeleteSheet> {
                     TixOption(
                       p.key,
                       p.name.isEmpty ? p.key : '${p.name} (${p.key})',
+                      leading: ProjectMark(
+                        name: p.name.isEmpty ? p.key : p.name,
+                        colour: p.color,
+                        icon: p.icon,
+                        iconName: p.iconName,
+                        size: TixSize.controlSmall,
+                      ),
                     ),
                 ],
                 onChanged: (k) => setState(() => _target = k),

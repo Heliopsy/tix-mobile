@@ -140,6 +140,7 @@ All in `lib/src/core/design/components/`. Each has a doc comment saying when to 
 | `PriorityMark` | A priority, caret and word |
 | `TagChip`, `MoreMark` | Tags, and the count of the ones left out |
 | `ProjectChip`, `ProjectMark` | A project in its colour on a row; its square mark in a list |
+| `ProjectOption`, `showProjectPicker` | A project as a choice: mark, name, key, archived, a check on the current one; a sheet of them for every project picker |
 | `AssigneeRef`, `TixAvatar` | `@handle` on a row; initials in a circle (accent, or `hued` from the handle) |
 | `RefText`, `DueMark`, `SnoozeMark` | The reference in mono; due dates; snoozes |
 | `TixBadge`, `TixCounter`, `Kbd` | A non-task state or role; a count; a key. `compactCount` writes a count for a fixed-width tile: in full below 1000, then the locale's compact form, three significant figures ("1.23K") |
