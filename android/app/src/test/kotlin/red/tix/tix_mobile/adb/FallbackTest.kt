@@ -35,6 +35,6 @@ class FallbackTest {
     fun saysWhenThereIsNoIndex() {
         val text = Fallback.text("red.tix.tix_mobile", "0.8.0 (build 8)", null, starting = false)
         assertTrue(text.contains("open tix once"))
-        assertFalse(text.contains("== contexts =="))
+        assertFalse(text.contains("[contexts]"))
     }
 }

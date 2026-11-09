@@ -65,8 +65,8 @@ void main() {
   test('a dump of one section prints only that section', () async {
     final c = container();
     final text = await c.read(adbBridgeProvider).snapshot('contexts');
-    expect(text, contains('== contexts =='));
-    expect(text, isNot(contains('== outbox ==')));
+    expect(text, contains('[contexts]'));
+    expect(text, isNot(contains('[outbox]')));
   });
 
   test('a release build runs commands once the setting is on', () async {
@@ -136,6 +136,6 @@ void main() {
 
     final dump = await send('snapshot', {'section': 'engine'});
     expect(dump, isA<String>());
-    expect(dump! as String, contains('== engine =='));
+    expect(dump! as String, contains('[engine]'));
   });
 }

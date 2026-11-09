@@ -43,10 +43,10 @@ void main() {
     );
     expect(text, contains('Theme: oled\nLanguage: bg\nADB control: on'));
     for (final heading in [
-      '== contexts ==',
-      '== connection ==',
-      '== outbox ==',
-      '== engine ==',
+      '[contexts]',
+      '[connection]',
+      '[outbox]',
+      '[engine]',
     ]) {
       expect(text, contains(heading));
     }
@@ -68,10 +68,10 @@ void main() {
   test('a section prints only itself under the app line', () {
     final text = formatAdbSnapshot(snapshot, AdbSection.outbox);
     expect(text, contains('tix-mobile 0.8.0 (8)'));
-    expect(text, contains('== outbox =='));
-    expect(text, isNot(contains('== contexts ==')));
-    expect(text, isNot(contains('== connection ==')));
-    expect(text, isNot(contains('== engine ==')));
+    expect(text, contains('[outbox]'));
+    expect(text, isNot(contains('[contexts]')));
+    expect(text, isNot(contains('[connection]')));
+    expect(text, isNot(contains('[engine]')));
   });
 
   test('no credential, cookie or query reaches the report', () {

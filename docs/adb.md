@@ -42,7 +42,7 @@ Theme: system
 Language: system
 ADB control: off
 
-== contexts ==
+[contexts]
 Active: Work (tix.example.com) · Acme [s1.acme]
   * s1.acme  Work (tix.example.com) · Acme, sign-in
     l1.  Laptop (local tix.db), token
