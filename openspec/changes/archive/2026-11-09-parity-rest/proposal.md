@@ -4,7 +4,7 @@
 
 After the wave 2 and 3 pull requests, `just parity` still lists a tail of operations no screen offers: accepting an
 invite inside the app, a task's lease, single workflow transitions, a task's own tags, a saved filter by name, the
-caller's date display, the status report, bundles, snapshot imports, token rotation and archived projects. A person
+status report, bundles, snapshot imports, token rotation and archived projects. A person
 who receives an invite link has to open a browser to accept it and then type the server address into the app.
 Notifications also show task titles on a locked screen, and lease lengths read as Go durations ("2h0m0s").
 
@@ -15,7 +15,6 @@ Notifications also show task titles on a locked screen, and lease lengths read a
 - The task screen shows how long a claim on the task lasts and where that comes from; a move one transition away is
   a single transition; the tag picker reads the task's tags fresh.
 - Saved filters open by name from `/tasks?filter=<name>`, and a tapped chip is checked against the server.
-- Settings gain Date and time (format and timezone, kept with the account).
 - Manage gains Server status, Bundles (export and import with a preview) and Import a snapshot (dry run first).
 - The projects list can show archived projects, with a badge.
 - A token connection can rotate its own API token from the instances screen; the app keeps only the new value.
@@ -26,7 +25,7 @@ Notifications also show task titles on a locked screen, and lease lengths read a
 ## Impact
 
 - Operations bound: `invite.preview`, `invite.accept`, `task.lease`, `task.tags`, `task.transition`, `filter.show`,
-  `time.settings`, `time.prefs.set`, `status.read`, `bundle.export`, `bundle.import`, `snapshot.import`,
+  `status.read`, `bundle.export`, `bundle.import`, `snapshot.import`,
   `token.rotate`; `project.list` gains `include_archived`.
 - `just parity` reports no pending operation.
 - Android: `MainActivity` adds a `tix/notes` channel that gives a posted notification its public version, because

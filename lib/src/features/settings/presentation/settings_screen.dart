@@ -120,15 +120,6 @@ class SettingsScreen extends ConsumerWidget {
                       .set(c.isEmpty ? null : Locale(c)),
                 ),
               ),
-              if (session != null)
-                ListTile(
-                  key: const Key('settings.time'),
-                  leading: const Icon(Icons.schedule),
-                  title: Text(l10n.timeTitle),
-                  subtitle: Text(l10n.timeSubtitle),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.go(Routes.timeSettings),
-                ),
             ],
           ),
           TixSection(

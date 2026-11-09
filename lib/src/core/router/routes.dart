@@ -68,9 +68,6 @@ abstract final class Routes {
   /// Theme, language and instances.
   static const settings = '/settings';
 
-  /// The caller's date format and timezone.
-  static const timeSettings = '/settings/time';
-
   /// The saved instances and their connections.
   static const instances = '/settings/instances';
 

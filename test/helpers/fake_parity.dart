@@ -23,9 +23,8 @@ class FakeInvite {
 }
 
 /// The operations the parity-rest change binds, on a [FakeTix]: invites,
-/// a task's lease and tags, a saved filter by name,
-/// the caller's date display, the status report, bundles and snapshot
-/// imports. Install it with [FakeParity.on].
+/// a task's lease and tags, a saved filter by name, the status report,
+/// bundles and snapshot imports. Install it with [FakeParity.on].
 class FakeParity {
   FakeParity._(this.server);
 
@@ -48,17 +47,6 @@ class FakeParity {
     'source': 'project',
     'max': '24h0m0s',
     'max_source': 'tenant',
-  };
-
-  /// The caller's date display, as `GET /me/time` answers it.
-  Map<String, Object?> time = {
-    'effective': {'time_format': 'short', 'timezone': 'UTC'},
-    'format_source': 'tenant',
-    'timezone_source': 'global',
-    'global': {'time_format': 'iso', 'timezone': 'UTC'},
-    'tenant': {'time_format': 'short', 'timezone': ''},
-    'user': {'time_format': '', 'timezone': ''},
-    'personal': true,
   };
 
   /// What `GET /status` answers.
@@ -226,35 +214,6 @@ class FakeParity {
           }
         }
         return FakeResponse(404, envelope('not_found', 'filter "$name"'));
-      case ('GET', ['me', 'time']):
-        return FakeResponse(200, time);
-      case ('PATCH', ['me', 'time']):
-        final body = o.data as Map<String, dynamic>;
-        final user = {...time['user']! as Map<String, Object?>};
-        final effective = {...time['effective']! as Map<String, Object?>};
-        final zone = body['timezone'] as String?;
-        if (zone != null && zone.isNotEmpty && !zone.contains('/')) {
-          return FakeResponse(
-            400,
-            envelope('invalid', 'unknown time zone "$zone"'),
-          );
-        }
-        for (final key in ['time_format', 'timezone']) {
-          final value = body[key] as String?;
-          if (value == null) continue;
-          user[key] = value;
-          if (value.isNotEmpty) effective[key] = value;
-        }
-        time = {
-          ...time,
-          'user': user,
-          'effective': effective,
-          if (body['time_format'] case final String f when f.isNotEmpty)
-            'format_source': 'user',
-          if (body['timezone'] case final String z when z.isNotEmpty)
-            'timezone_source': 'user',
-        };
-        return FakeResponse(200, time);
       case ('GET', ['status']):
         return FakeResponse(200, status);
       case ('POST', ['bundles', 'export']):

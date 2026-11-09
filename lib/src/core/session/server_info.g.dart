@@ -10,14 +10,12 @@ part of 'server_info.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The installation's status and the caller's date display, for the active
-/// session.
+/// The installation's status, for the active session.
 
 @ProviderFor(serverInfoRepository)
 final serverInfoRepositoryProvider = ServerInfoRepositoryProvider._();
 
-/// The installation's status and the caller's date display, for the active
-/// session.
+/// The installation's status, for the active session.
 
 final class ServerInfoRepositoryProvider
     extends
@@ -27,8 +25,7 @@ final class ServerInfoRepositoryProvider
           ServerInfoRepository
         >
     with $Provider<ServerInfoRepository> {
-  /// The installation's status and the caller's date display, for the active
-  /// session.
+  /// The installation's status, for the active session.
   ServerInfoRepositoryProvider._()
     : super(
         from: null,

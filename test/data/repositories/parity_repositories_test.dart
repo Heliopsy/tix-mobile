@@ -82,17 +82,6 @@ void main() {
       expect(report.servers, hasLength(2));
       expect((await repo.cachedStatus())?.work?.tasks, 17);
     });
-
-    test('time reads every level and sets only what is named', () async {
-      expect((await repo.time()).formatSource, 'tenant');
-      final next = await repo.setTime(format: 'long');
-      expect(last().method, 'PATCH');
-      expect(last().uri.path, '/api/v1/me/time');
-      expect(last().body, {'time_format': 'long'});
-      expect(next.effective?.timeFormat, 'long');
-      await repo.setTime(timezone: '');
-      expect(last().body, {'timezone': ''});
-    });
   });
 
   group('bundles', () {

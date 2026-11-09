@@ -390,17 +390,11 @@ const bindings = <String, Binding>{
     wave: 3,
   ),
   // The rest of waves 1 and 2: claims shown, single transitions, fresh
-  // tags, saved filters by name, date display, invites, status and bundles.
+  // tags, saved filters by name, invites, status and bundles.
   'task.lease': Binding(feature: 'tasks', action: 'lease-shown', wave: 1),
   'task.tags': Binding(feature: 'tasks', action: 'fresh-tags', wave: 1),
   'task.transition': Binding(feature: 'tasks', action: 'transition', wave: 1),
   'filter.show': Binding(feature: 'tasks', action: 'open-filter', wave: 1),
-  'time.settings': Binding(feature: 'settings', action: 'date-time', wave: 1),
-  'time.prefs.set': Binding(
-    feature: 'settings',
-    action: 'set-date-time',
-    wave: 1,
-  ),
   'invite.preview': Binding(
     feature: 'connect',
     action: 'preview-invite',
