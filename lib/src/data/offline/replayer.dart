@@ -4,10 +4,41 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
+import 'package:tix_mobile/src/data/cache/cache_store.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
+import 'package:tix_mobile/src/data/offline/connection_jobs.dart';
 import 'package:tix_mobile/src/data/offline/merge.dart';
 import 'package:tix_mobile/src/data/offline/sender.dart';
 import 'package:tix_mobile/src/data/offline/sync_store.dart';
+
+/// How long after its first send a create's `Idempotency-Key` is trusted.
+/// tix forgets a key a day after it first sees it; the hour short of that
+/// covers a clock that runs behind the server's.
+const idempotencyKeyLife = Duration(hours: 23);
+
+/// One replay at a time per context, across every replayer: one is built
+/// for each session change, and two replays of the same outbox would send
+/// the same writes twice.
+class ReplayLocks {
+  final _tails = <CacheScope, Completer<void>>{};
+
+  /// Runs [body] once every replay of [scope] asked for before it ended.
+  Future<T> run<T>(CacheScope scope, Future<T> Function() body) async {
+    final before = _tails[scope];
+    final mine = Completer<void>();
+    _tails[scope] = mine;
+    try {
+      if (before != null) await before.future;
+      return await body();
+    } finally {
+      mine.complete();
+      if (identical(_tails[scope], mine)) _tails.remove(scope);
+    }
+  }
+
+  /// Whether a replay of [scope] runs or waits.
+  bool busy(CacheScope scope) => _tails.containsKey(scope);
+}
 
 /// What one replay did.
 @immutable
@@ -75,30 +106,39 @@ class _Stop implements Exception {
 /// create, and is rewritten to the real reference once it is known.
 class OutboxReplayer {
   /// Replays the outbox in [_store] through [_sender], settling conflicts by
-  /// `policy`.
+  /// `policy`, read once at the start of each replay. Replays of the same
+  /// context wait for each other through [locks].
   OutboxReplayer(
     this._store,
     this._sender, {
     required this._policy,
+    ReplayLocks? locks,
     this._clock = DateTime.now,
     this._uuid = newUuid,
-  });
+  }) : _locks = locks ?? ReplayLocks();
 
   final SyncStore _store;
   final OutboxSender _sender;
   final ConflictPolicy Function() _policy;
+  final ReplayLocks _locks;
   final DateTime Function() _clock;
   final String Function() _uuid;
   Future<ReplayReport>? _running;
+  ConflictPolicy _policyNow = ConflictPolicy.ask;
 
   /// Whether a replay is under way.
   bool get running => _running != null;
 
-  /// Sends every waiting write. A replay asked for while one runs joins it.
-  Future<ReplayReport> replay() =>
-      _running ??= _replay().whenComplete(() => _running = null);
+  /// Sends every waiting write, after any replay of the same context still
+  /// running. A replay asked for while this replayer's runs joins it. It
+  /// stops with [JobCancelled] once [job] is cancelled.
+  Future<ReplayReport> replay({ConnectionJob? job}) => _running ??= _locks
+      .run(_store.scope, () => _replay(job))
+      .whenComplete(() => _running = null);
 
-  Future<ReplayReport> _replay() async {
+  Future<ReplayReport> _replay(ConnectionJob? job) async {
+    job?.check();
+    _policyNow = _policy();
     var snap = await _store.load();
     if (snap.idempotency == null && snap.entries.isNotEmpty) {
       final bool keyed;
@@ -137,6 +177,7 @@ class OutboxReplayer {
 
     Future<void> runChain(List<OutboxEntry> chain) async {
       for (final queued in chain) {
+        if (job?.cancelled ?? false) break;
         final current = _find(queued.id);
         if (current == null) continue;
         try {
@@ -160,6 +201,8 @@ class OutboxReplayer {
     }
 
     await Future.wait([for (final c in chains.values) runChain(c)]);
+    job?.check();
+    await _store.prune(_clock());
     return ReplayReport(
       sent: sent,
       conflicts: conflicts,
@@ -292,7 +335,7 @@ class OutboxReplayer {
         await _done(entry, theirs);
         return _Outcome(conflicts: found);
       }
-      final policy = _policy();
+      final policy = _policyNow;
       final settled = settle(merged, policy);
       if (merged.conflicts.isNotEmpty) {
         found++;
@@ -420,7 +463,7 @@ class OutboxReplayer {
           x.kind != TixErrorKind.conflict) {
         rethrow;
       }
-      if (_policy() == ConflictPolicy.keepTheirs) {
+      if (_policyNow == ConflictPolicy.keepTheirs) {
         final theirs = await _sender.fetch(target);
         await _addRecord(
           _record(
@@ -456,7 +499,7 @@ class OutboxReplayer {
     FieldConflict conflict,
     Future<_Outcome> Function() mine,
   ) async {
-    final policy = _policy();
+    final policy = _policyNow;
     final record = _record(
       e,
       target,
@@ -502,19 +545,41 @@ class OutboxReplayer {
     }
   }
 
+  bool _keyExpired(OutboxEntry e) {
+    final first = e.firstSentAt;
+    return first != null && _clock().difference(first) >= idempotencyKeyLife;
+  }
+
   Future<_Outcome> _create(
-    OutboxEntry e,
+    OutboxEntry queued,
     Map<String, Object?> values,
     Map<String, Completer<String?>> drafts,
   ) async {
+    var e = queued;
     final keyed = _store.now.idempotency ?? false;
-    if (e.state == OutboxState.needsCheck && !keyed) {
+    final expired = keyed && _keyExpired(e);
+    if (expired && e.state == OutboxState.pending) {
+      e = e.copyWith(state: OutboxState.needsCheck);
+      await _replace(e);
+    }
+    if (e.state == OutboxState.needsCheck && (!keyed || expired)) {
       final found = await _sender.findCreated(values, e.createdAt);
       if (found.length == 1) {
         await _created(e, found.single, drafts);
         return const _Outcome(sent: 1);
       }
       if (found.length > 1) return const _Outcome(stop: true);
+      if (expired) {
+        e = e.copyWith(
+          state: OutboxState.pending,
+          idempotencyKey: _uuid(),
+          firstSentAt: null,
+        );
+      }
+    }
+    if (e.firstSentAt == null) {
+      e = e.copyWith(firstSentAt: _clock());
+      await _replace(e);
     }
     final Task? task;
     try {

@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/offline/outbox.dart';
+import 'package:tix_mobile/src/core/offline/unsent_warning.dart';
 import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
@@ -603,10 +605,18 @@ class _ProfileEntry extends ConsumerWidget {
               label: l10n.signOut,
               icon: Icons.logout,
               onPressed: () async {
+                final unsent = await ref
+                    .read(outboxSyncProvider.notifier)
+                    .unsentForConnection(session.connection.id);
+                if (!context.mounted) return;
                 final ok = await confirmDestructive(
                   context,
                   title: l10n.signOut,
-                  body: l10n.signOutBody(session.instance.name),
+                  body: withUnsentWarning(
+                    l10n,
+                    l10n.signOutBody(session.instance.name),
+                    unsent,
+                  ),
                   action: l10n.signOut,
                 );
                 if (ok) {

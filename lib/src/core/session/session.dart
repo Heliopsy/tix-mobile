@@ -730,7 +730,11 @@ ResponseCache responseCache(Ref ref) {
 SyncStore syncStore(Ref ref) {
   final scope = ref.watch(activeCacheScopeProvider);
   if (scope == null) throw StateError('no active session');
-  final store = SyncStore(ref.watch(cacheStoreProvider), scope);
+  final store = SyncStore(
+    ref.watch(cacheStoreProvider),
+    scope,
+    now: ref.watch(clockProvider),
+  );
   unawaited(store.load());
   ref.onDispose(store.close);
   return store;

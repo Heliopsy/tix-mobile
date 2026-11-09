@@ -11730,6 +11730,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 change made offline is dropped and never sent. Drafts disappear.} other{{count} changes made offline are dropped and never sent. Drafts disappear.}}'**
   String syncDiscardAllBody(int count);
+
+  /// No description provided for @syncUnsentLost.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change made offline has not been sent yet and will be lost.} other{{count} changes made offline have not been sent yet and will be lost.}}'**
+  String syncUnsentLost(int count);
+
+  /// No description provided for @syncStateUnreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'The changes waiting on this device could not be read. They are kept untouched and are not sent.'**
+  String get syncStateUnreadable;
 }
 
 class _AppLocalizationsDelegate

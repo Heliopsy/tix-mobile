@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/data/cache/cache_store.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
+import 'package:tix_mobile/src/data/offline/connection_jobs.dart';
 import 'package:tix_mobile/src/data/offline/outbox.dart';
 
 import 'fake_sender.dart';
@@ -649,6 +652,228 @@ void main() {
       await queue(OutboxOp.update, a.ref, base: a, values: {'title': 'One'});
       final kept = SyncStore(cache, store.scope);
       expect((await kept.load()).entries.single.values, {'title': 'One'});
+    });
+  });
+
+  group('one replay at a time', () {
+    test('two replayers of one outbox never send a write twice', () async {
+      final locks = ReplayLocks();
+      OutboxReplayer make() =>
+          OutboxReplayer(store, server, policy: () => policy, locks: locks);
+      await queue(OutboxOp.update, a.ref, base: a, values: {'title': 'One'});
+      server.hold = Completer<void>();
+      final first = make().replay();
+      await pumpEventQueue();
+      final second = make().replay();
+      await pumpEventQueue();
+      server.hold!.complete();
+      final reports = await Future.wait([first, second]);
+      expect(reports.map((r) => r.sent), [1, 0]);
+      expect(server.calls, hasLength(1));
+      expect(locks.busy(store.scope), isFalse);
+    });
+
+    test('the policy is read once, when the replay starts', () async {
+      var reads = 0;
+      final counted = OutboxReplayer(
+        store,
+        server,
+        policy: () {
+          reads++;
+          return ConflictPolicy.keepMine;
+        },
+        clock: () => t0,
+      );
+      server
+        ..edit(a.ref, (t) => t.copyWith(title: 'Theirs'))
+        ..edit(b.ref, (t) => t.copyWith(title: 'Theirs too'));
+      await queue(OutboxOp.update, a.ref, base: a, values: {'title': 'Mine'});
+      await queue(OutboxOp.update, b.ref, base: b, values: {'title': 'Mine'});
+
+      final report = await counted.replay();
+
+      expect(report.conflicts, 2);
+      expect(reads, 1);
+    });
+
+    test('a cancelled job stops before the next write', () async {
+      final jobs = ConnectionJobs();
+      await queue(OutboxOp.update, a.ref, base: a, values: {'title': 'One'});
+      await queue(OutboxOp.update, a.ref, base: a, values: {'priority': 1});
+      server.hold = Completer<void>();
+      final replay = jobs.run('c1', (job) => replayer.replay(job: job));
+      await pumpEventQueue();
+      final stop = jobs.stop('c1');
+      server.hold!.complete();
+      await expectLater(replay, throwsA(isA<JobCancelled>()));
+      await stop;
+      expect(server.calls, hasLength(1));
+      expect(entries(), hasLength(1));
+    });
+  });
+
+  group('idempotency keys a day old', () {
+    late DateTime now;
+    late OutboxReplayer aged;
+
+    setUp(() async {
+      now = t0;
+      server.honoursKeys = true;
+      aged = OutboxReplayer(
+        store,
+        server,
+        policy: () => policy,
+        clock: () => now,
+        uuid: () => 'k${ids++}',
+      );
+      await outbox.create({
+        'title': 'Spike',
+        'project_ref': 'infra',
+      }, online: (_) => fail('sent while offline'));
+    });
+
+    List<SentCall> creates() =>
+        server.calls.where((c) => c.op == OutboxOp.create).toList();
+
+    test('a create sent over 23 hours ago is looked up, not sent '
+        'again', () async {
+      server.loseNextAnswer = true;
+      await aged.replay();
+      expect(entries().single.firstSentAt, t0);
+      server.forgetKeys();
+      now = t0.add(idempotencyKeyLife);
+
+      await aged.replay();
+
+      expect(entries(), isEmpty);
+      expect(creates(), hasLength(1));
+      expect(
+        server.tasks.values.where((t) => t.title == 'Spike'),
+        hasLength(1),
+      );
+    });
+
+    test('found twice, it waits for the person as a create to check', () async {
+      server.loseNextAnswer = true;
+      await aged.replay();
+      server
+        ..forgetKeys()
+        ..tasks['infra-x'] = const Task(
+          ref: 'infra-x',
+          title: 'Spike',
+          projectId: 'infra',
+        );
+      now = t0.add(const Duration(days: 2));
+
+      await aged.replay();
+
+      expect(entries().single.state, OutboxState.needsCheck);
+      expect(creates(), hasLength(1));
+    });
+
+    test('found nowhere, it is sent with a fresh key', () async {
+      await store.update((s) => s.copyWith(idempotency: true));
+      server.down = true;
+      await aged.replay();
+      final first = entries().single;
+      expect(first.firstSentAt, t0);
+      server.down = false;
+      now = t0.add(const Duration(hours: 30));
+
+      await aged.replay();
+
+      expect(entries(), isEmpty);
+      expect(creates().single.key, isNot(first.idempotencyKey));
+    });
+
+    test('a create never sent keeps its key however old', () async {
+      final key = entries().single.idempotencyKey;
+      now = t0.add(const Duration(days: 3));
+
+      await aged.replay();
+
+      expect(entries(), isEmpty);
+      expect(creates().single.key, key);
+    });
+  });
+
+  group('pruning', () {
+    ConflictRecord settled(String id, DateTime at) => ConflictRecord(
+      id: id,
+      entryId: 'e',
+      taskRef: a.ref,
+      kind: ConflictKind.fields,
+      createdAt: at,
+      resolution: Resolution.mine,
+      resolvedAt: at,
+    );
+
+    test('settled conflicts go after 30 days or past the newest 100', () {
+      final open = ConflictRecord(
+        id: 'open',
+        entryId: 'e',
+        taskRef: a.ref,
+        kind: ConflictKind.deleted,
+        createdAt: t0.subtract(const Duration(days: 90)),
+      );
+      final snap = SyncSnapshot(
+        conflicts: [
+          for (var i = 0; i < 120; i++)
+            settled('s$i', t0.subtract(Duration(hours: i))),
+          settled('old', t0.subtract(const Duration(days: 31))),
+          open,
+        ],
+      );
+
+      final pruned = pruneSnapshot(snap, t0);
+
+      expect(pruned.conflicts, hasLength(settledConflictsMax + 1));
+      expect(pruned.conflicts.first.id, 's0');
+      expect(pruned.conflicts.map((r) => r.id), contains('open'));
+      expect(pruned.conflicts.map((r) => r.id), isNot(contains('old')));
+      expect(pruned.conflicts.map((r) => r.id), isNot(contains('s100')));
+    });
+
+    test('sent drafts keep the newest and any a write still names', () {
+      final snap = SyncSnapshot(
+        drafts: {
+          for (var i = 0; i < sentDraftsMax + 10; i++)
+            'infra-draft$i': 'infra-${1000 + i}',
+        },
+        entries: [
+          OutboxEntry(
+            id: 'e',
+            seq: 1,
+            op: OutboxOp.dependencyAdd,
+            target: b.ref,
+            idempotencyKey: 'k',
+            createdAt: t0,
+            values: const {'depends_on': 'infra-draft0'},
+          ),
+        ],
+      );
+
+      final pruned = pruneSnapshot(snap, t0);
+
+      expect(pruned.drafts, hasLength(sentDraftsMax + 1));
+      expect(pruned.drafts['infra-draft0'], 'infra-1000');
+      expect(pruned.drafts.containsKey('infra-draft1'), isFalse);
+      expect(
+        pruned.drafts.containsKey('infra-draft${sentDraftsMax + 9}'),
+        isTrue,
+      );
+    });
+
+    test('a replay prunes, and nothing pruned means nothing written', () async {
+      await store.update(
+        (s) => s.copyWith(
+          conflicts: [settled('old', t0.subtract(const Duration(days: 40)))],
+        ),
+      );
+      await replayer.replay();
+      expect(conflicts(), isEmpty);
+      final kept = pruneSnapshot(store.now, t0);
+      expect(identical(kept, store.now), isTrue);
     });
   });
 

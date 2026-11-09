@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/offline/outbox.dart';
+import 'package:tix_mobile/src/core/offline/unsent_warning.dart';
 import 'package:tix_mobile/src/core/platform/files.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
@@ -106,10 +108,18 @@ class InstanceCard extends ConsumerWidget {
           );
         }
       case _InstanceAction.remove:
+        final unsent = await ref
+            .read(outboxSyncProvider.notifier)
+            .unsentForInstance(instance.id);
+        if (!context.mounted) return;
         final ok = await confirmDestructive(
           context,
           title: l10n.removeInstance,
-          body: l10n.removeInstanceBody(instance.name),
+          body: withUnsentWarning(
+            l10n,
+            l10n.removeInstanceBody(instance.name),
+            unsent,
+          ),
           action: l10n.remove,
         );
         if (ok) {
@@ -163,10 +173,18 @@ class InstanceCard extends ConsumerWidget {
           }
         }
       case _ConnectionAction.remove:
+        final unsent = await ref
+            .read(outboxSyncProvider.notifier)
+            .unsentForConnection(c.id);
+        if (!context.mounted) return;
         final ok = await confirmDestructive(
           context,
           title: l10n.removeConnection,
-          body: l10n.removeConnectionBody(connectionTitle(c)),
+          body: withUnsentWarning(
+            l10n,
+            l10n.removeConnectionBody(connectionTitle(c)),
+            unsent,
+          ),
           action: l10n.remove,
         );
         if (ok) await session.removeConnection(c.id);

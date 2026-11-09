@@ -6998,4 +6998,19 @@ class AppLocalizationsBg extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String syncUnsentLost(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count офлайн промени още не са изпратени и ще бъдат загубени.',
+      one: '1 офлайн промяна още не е изпратена и ще бъде загубена.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncStateUnreadable =>
+      'Чакащите промени на това устройство не можаха да бъдат прочетени. Запазени са непроменени и не се изпращат.';
 }

@@ -35,6 +35,16 @@ waiting to be sent included.
 - **WHEN** a person removes a connection
 - **THEN** its cached responses are deleted
 
+### Requirement: Forgetting a connection stops its background work
+
+Before a connection's cache is deleted, a sync running for it SHALL be stopped, and the cache SHALL refuse every
+later write for that connection, so nothing is written back under a removed connection.
+
+#### Scenario: Signed out during a sync
+
+- **WHEN** a person signs out while a prefetch for that connection is running
+- **THEN** the prefetch stops, and nothing is left cached under the removed connection
+
 ### Requirement: Optimistic changes plug into the shared undo flow
 
 A provider SHALL be able to describe a change as apply, rollback, commit and undo steps that the design system's optimistic runner executes, so a refused change restores the previous state.

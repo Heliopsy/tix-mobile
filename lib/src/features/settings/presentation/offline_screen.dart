@@ -271,6 +271,7 @@ class _ConflictSection extends ConsumerWidget {
     final waiting = ref.watch(
       syncStateProvider.select((s) => s.value?.entries.length ?? 0),
     );
+    final unreadable = ref.watch(syncSetAsideProvider) != null;
     return TixSection(
       key: const Key('offline.conflicts'),
       title: l10n.syncConflictsTitle,
@@ -281,6 +282,14 @@ class _ConflictSection extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (unreadable) ...[
+                TixNotice(
+                  l10n.syncStateUnreadable,
+                  key: const Key('offline.unreadable'),
+                  tone: TixNoticeTone.danger,
+                ),
+                const SizedBox(height: TixSpace.s3),
+              ],
               Text(
                 l10n.syncPolicyLabel,
                 style: Theme.of(context).textTheme.labelLarge,

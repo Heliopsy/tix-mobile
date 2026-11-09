@@ -25,6 +25,9 @@ _OutboxEntry _$OutboxEntryFromJson(Map<String, dynamic> json) => _OutboxEntry(
   errorMessage: json['error_message'] as String? ?? '',
   draftRef: json['draft_ref'] as String? ?? '',
   attempts: (json['attempts'] as num?)?.toInt() ?? 0,
+  firstSentAt: json['first_sent_at'] == null
+      ? null
+      : DateTime.parse(json['first_sent_at'] as String),
 );
 
 Map<String, dynamic> _$OutboxEntryToJson(_OutboxEntry instance) =>
@@ -43,6 +46,7 @@ Map<String, dynamic> _$OutboxEntryToJson(_OutboxEntry instance) =>
       'error_message': instance.errorMessage,
       'draft_ref': instance.draftRef,
       'attempts': instance.attempts,
+      'first_sent_at': ?instance.firstSentAt?.toIso8601String(),
     };
 
 const _$OutboxOpEnumMap = {
