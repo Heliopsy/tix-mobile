@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.6.0](https://github.com/Heliopsy/tix-mobile/compare/v0.5.0...v0.6.0) (2026-11-09)
+
+
+### Features
+
+* accept invites, show leases, date settings, status, bundles and private notifications ([2fc9c94](https://github.com/Heliopsy/tix-mobile/commit/2fc9c948386ae4508f617c133f79676c076ffd86))
+* archived projects, manage entries for status and bundles, readable lease lengths ([90f419a](https://github.com/Heliopsy/tix-mobile/commit/90f419a5e8ec0d54fc6096771213ef7c6f80f0eb))
+* keep chosen projects available offline ([eeeaad5](https://github.com/Heliopsy/tix-mobile/commit/eeeaad55bc4582e76fa2f71d8352e7d606edccd1))
+* link account, security, tokens, calendar and tenant settings from their Settings groups ([2342fe0](https://github.com/Heliopsy/tix-mobile/commit/2342fe0892b988ebee261f8f9c31f963e700dec0))
+* queue changes made offline and sync them, asking about conflicts ([23ce41f](https://github.com/Heliopsy/tix-mobile/commit/23ce41f3a588e2feb23678de332974c641f8792e))
+* rotate a token connection's API token from the instances screen ([bed725d](https://github.com/Heliopsy/tix-mobile/commit/bed725dea6ee6eb387a12a21d3640a0632e15e55))
+* settings grouped by device, account and tenant, with dates that follow your tix preference ([1bcb192](https://github.com/Heliopsy/tix-mobile/commit/1bcb19213ba83c9c6390c42b9e41db9f03cc7d42))
+
+
+### Bug Fixes
+
+* date settings say why they're missing, and resets reach open views ([70c7f83](https://github.com/Heliopsy/tix-mobile/commit/70c7f83720fd61602c799d9131d06fd3f2867f74))
+* keep rotated tokens, name the invite host, and reread the lease ([9390ef9](https://github.com/Heliopsy/tix-mobile/commit/9390ef98b5dd15d78343d5c295c958b8c6e475b6))
+* **offline:** stop the prefetch before forgetting a connection ([f15190c](https://github.com/Heliopsy/tix-mobile/commit/f15190c21341527bf911d027e6dee3219309b87e))
+* read bundles as bytes so an NDJSON bundle survives its +json type ([df488cc](https://github.com/Heliopsy/tix-mobile/commit/df488cc4331578c0e69a2fb80fe70c69ccf21492))
+* **sync:** give the offline sync strings their own keys ([4d40519](https://github.com/Heliopsy/tix-mobile/commit/4d40519fe29f7891ad6ea0a6aa50d227d69d174c))
+* **sync:** one outbox per context, and stricter lookups before a resend ([9d36d39](https://github.com/Heliopsy/tix-mobile/commit/9d36d39299af61be670d64615bd1f950145ce3af))
+* **sync:** one replay per context, day-old keys, kept outbox, and a warning on sign-out ([0a0958c](https://github.com/Heliopsy/tix-mobile/commit/0a0958c5b424bba88bd44f32b9b9e9b92931d2c6))
+* **webhooks:** read the endpoint from the new webhook.put answer ([8cee23b](https://github.com/Heliopsy/tix-mobile/commit/8cee23b806293d6bc1bcc9096c24239c22d5ee28))
+
+
+### Dependencies
+
+* pin tix with Idempotency-Key and generate header parameters ([80bfd21](https://github.com/Heliopsy/tix-mobile/commit/80bfd21d264cacd798b5cdfae20c56997db07b67))
+
 ## [0.5.0](https://github.com/Heliopsy/tix-mobile/compare/v0.4.0...v0.5.0) (2026-11-09)
 
 
