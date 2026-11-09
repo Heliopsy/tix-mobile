@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/offline/outbox.dart';
 import 'package:tix_mobile/src/core/quick/quick_add.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
@@ -192,6 +193,7 @@ class HomeShell extends StatelessWidget {
               child: const Row(
                 children: [
                   Expanded(child: ContextSwitcherButton()),
+                  SyncBadgeButton(),
                   Padding(
                     padding: EdgeInsets.only(right: TixSpace.s2),
                     child: QuickAddButton(),
@@ -220,6 +222,7 @@ class HomeShell extends StatelessWidget {
               leading: Column(
                 children: [
                   ContextSwitcherButton(rail: true, extended: extended),
+                  const SyncBadgeButton(),
                   const SizedBox(height: TixSpace.s2),
                   QuickAddButton(extended: extended),
                 ],
@@ -276,6 +279,50 @@ class QuickAddButton extends ConsumerWidget {
       onPressed: open,
     );
   }
+}
+
+/// Says how many offline changes wait, or need a decision, and opens the
+/// Conflicts screen. Drawn only while something waits; it also keeps the
+/// outbox replay running for the active context.
+class SyncBadgeButton extends ConsumerWidget {
+  /// Creates the button.
+  const SyncBadgeButton({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(outboxSyncProvider);
+    final l10n = context.l10n;
+    final snap = ref.watch(syncStateProvider).value;
+    if (snap == null || (snap.entries.isEmpty && !_open(snap))) {
+      return const SizedBox.shrink();
+    }
+    final attention =
+        snap.conflicts.where((r) => r.resolution == null).length +
+        snap.entries
+            .where(
+              (e) =>
+                  e.state == OutboxState.failed ||
+                  e.state == OutboxState.needsCheck,
+            )
+            .length;
+    final count = attention > 0 ? attention : snap.entries.length;
+    return Badge(
+      key: const Key('shell.sync'),
+      label: Text('$count'),
+      backgroundColor: attention > 0 ? context.tix.warn : context.tix.muted,
+      offset: const Offset(-TixSpace.s1, TixSpace.s1),
+      child: TixIconButton(
+        icon: attention > 0 ? Icons.call_split : Icons.cloud_off_outlined,
+        tooltip: attention > 0
+            ? l10n.syncBadge(attention)
+            : l10n.syncBannerWaiting(count),
+        onPressed: () => context.go(Routes.conflicts),
+      ),
+    );
+  }
+
+  static bool _open(SyncSnapshot s) =>
+      s.conflicts.any((r) => r.resolution == null);
 }
 
 /// Registers a "Switch to" command for every saved context but the active

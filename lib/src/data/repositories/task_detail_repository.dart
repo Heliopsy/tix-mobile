@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:tix_mobile/src/core/config/config.dart';
+import 'package:tix_mobile/src/core/errors/tix_exception.dart';
+import 'package:tix_mobile/src/core/markdown/checklist.dart';
 import 'package:tix_mobile/src/data/api/gen/models.gen.dart'
     show ForceReclaimInput;
 import 'package:tix_mobile/src/data/api/tix_api.dart';
@@ -11,6 +13,7 @@ import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/models/task_detail.dart';
 import 'package:tix_mobile/src/data/models/task_patch.dart';
+import 'package:tix_mobile/src/data/offline/outbox.dart';
 
 export 'package:tix_mobile/src/data/models/task_detail.dart';
 export 'package:tix_mobile/src/data/models/task_patch.dart';
@@ -20,11 +23,37 @@ export 'package:tix_mobile/src/data/models/task_patch.dart';
 /// The reads that open a section are kept in the response cache and have a
 /// `cached…` twin, so the section draws at once from the last answer.
 class TaskDetailRepository {
-  /// Reads and writes through [_api], keeping copies in [_cache].
-  TaskDetailRepository(this._api, this._cache);
+  /// Reads and writes through [_api], keeping copies in [_cache]. With
+  /// `outbox`, writes the server cannot take now wait there and answer with
+  /// how they will look.
+  TaskDetailRepository(this._api, this._cache, {this._outbox});
 
   final TixApi _api;
   final ResponseCache _cache;
+  final Outbox? _outbox;
+
+  Future<T> _write<T>(
+    OutboxOp op,
+    String ref, {
+    required Future<T> Function(String? key) send,
+    required T Function(OutboxEntry entry) local,
+    Task? base,
+    Map<String, Object?> values = const {},
+  }) {
+    final outbox = _outbox;
+    if (outbox == null) return send(null);
+    return outbox.write(
+      op: op,
+      target: ref,
+      base: base,
+      values: values,
+      online: send,
+      local: local,
+    );
+  }
+
+  Task _shown(String ref, Task? base) =>
+      base ?? _outbox?.draft(ref) ?? Task(id: ref, ref: ref);
 
   static List<T> _list<T>(
     Object? json,
@@ -38,12 +67,37 @@ class TaskDetailRepository {
     Map<String, Object?> Function(T) toJson,
   ) => [for (final e in items) toJson(e)];
 
-  /// The task [ref], by reference or id (`task.show`).
-  Future<Task> task(String ref) => _api.task.show(ref);
+  /// The task [ref], by reference or id (`task.show`). A draft made offline
+  /// answers from the outbox, and one already sent from its real task.
+  Future<Task> task(String ref) {
+    final real = _outbox?.realRef(ref) ?? ref;
+    if (isDraftRef(real)) {
+      final draft = _outbox?.draft(real);
+      if (draft == null) throw const TixException(TixErrorKind.notFound);
+      return Future.value(draft);
+    }
+    return _api.task.show(real).then((t) => _outbox?.overlay(t) ?? t);
+  }
 
-  /// Applies [patch] to [ref] (`task.update`).
-  Future<Task> update(String ref, TaskPatch patch, {int? version}) =>
-      _api.task.update(ref, patch.toInput(version: version));
+  /// Applies [patch] to [ref] (`task.update`). [base] is the task the
+  /// person changed: an update the outbox keeps is merged against it.
+  Future<Task> update(
+    String ref,
+    TaskPatch patch, {
+    int? version,
+    Task? base,
+  }) => _write(
+    OutboxOp.update,
+    ref,
+    base: base,
+    values: patch.toJson(),
+    send: (key) => _api.task.update(
+      ref,
+      patch.toInput(version: version),
+      idempotencyKey: key,
+    ),
+    local: (_) => patch.applyTo(_shown(ref, base)),
+  );
 
   /// Ticks or clears checklist item [item] (`task.check`).
   Future<Task> check(
@@ -51,14 +105,41 @@ class TaskDetailRepository {
     int item, {
     required bool done,
     int? version,
-  }) => _api.task.check(
+    Task? base,
+  }) => _write(
+    OutboxOp.check,
     ref,
-    CheckItemInput(item: item, done: done, version: version),
+    base: base,
+    values: {'item': item, 'done': done},
+    send: (key) => _api.task.check(
+      ref,
+      CheckItemInput(item: item, done: done, version: version),
+      idempotencyKey: key,
+    ),
+    local: (_) {
+      final t = _shown(ref, base);
+      return t.copyWith(body: setChecklistItem(t.body, item, done: done));
+    },
   );
 
   /// Moves [ref] to the state [to] by the workflow's route (`task.route`).
-  Future<RouteResult> move(String ref, String to, {String? comment}) =>
-      _api.task.route(ref, RouteInput(to: to, comment: comment));
+  Future<RouteResult> move(
+    String ref,
+    String to, {
+    String? comment,
+    Task? base,
+  }) => _write(
+    OutboxOp.move,
+    ref,
+    base: base,
+    values: {'to': to, 'comment': ?comment},
+    send: (key) => _api.task.route(
+      ref,
+      RouteInput(to: to, comment: comment),
+      idempotencyKey: key,
+    ),
+    local: (_) => RouteResult(task: _shown(ref, base).copyWith(status: to)),
+  );
 
   /// Moves [ref] one transition to [to] (`task.transition`). With
   /// [version], a task changed since that version is refused as a conflict.
@@ -85,14 +166,27 @@ class TaskDetailRepository {
       (await _api.task.tags(ref)).items;
 
   /// Stars or unstars [ref] for the reader (`task.star`, `task.unstar`).
-  Future<void> setStar(String ref, {required bool starred}) =>
-      starred ? _api.task.star(ref) : _api.task.unstar(ref);
+  Future<void> setStar(String ref, {required bool starred}) => _write(
+    starred ? OutboxOp.star : OutboxOp.unstar,
+    ref,
+    send: (key) => starred
+        ? _api.task.star(ref, idempotencyKey: key)
+        : _api.task.unstar(ref, idempotencyKey: key),
+    local: (_) {},
+  );
 
   /// Snoozes [ref] until [until] (`task.snooze`), or wakes it when null
   /// (`task.unsnooze`).
-  Future<Task> snooze(String ref, DateTime? until) => until == null
-      ? _api.task.unsnooze(ref)
-      : _api.task.snooze(ref, SnoozeInput(until: until));
+  Future<Task> snooze(String ref, DateTime? until, {Task? base}) => _write(
+    OutboxOp.snooze,
+    ref,
+    base: base,
+    values: {'until': ?until?.toUtc().toIso8601String()},
+    send: (key) => until == null
+        ? _api.task.unsnooze(ref, idempotencyKey: key)
+        : _api.task.snooze(ref, SnoozeInput(until: until), idempotencyKey: key),
+    local: (_) => _shown(ref, base).copyWith(snoozedUntil: until),
+  );
 
   /// Copies [ref] (`task.copy`).
   Future<Task> copy(String ref, CopyTaskInput request) =>
@@ -129,21 +223,42 @@ class TaskDetailRepository {
 
   /// Creates a subtask of [parent] in [project] titled [title]
   /// (`task.create`).
-  Future<Task> addSubtask(String project, String parent, String title) =>
-      _api.task.create(
-        CreateTaskRequest(title: title, projectRef: project, parentRef: parent),
-      );
+  Future<Task> addSubtask(String project, String parent, String title) {
+    final request = CreateTaskRequest(
+      title: title,
+      projectRef: project,
+      parentRef: parent,
+    );
+    final outbox = _outbox;
+    if (outbox == null) return _api.task.create(request);
+    return outbox.create(
+      request.toJson(),
+      online: (key) => _api.task.create(request, idempotencyKey: key),
+    );
+  }
 
   /// One page of [ref]'s history, newest first (`task.audit`).
   Future<Page<AuditEntry>> history(String ref, {String? cursor}) =>
       _api.task.audit(ref, cursor: cursor, limit: pageSize, direction: 'desc');
 
   /// Puts the tag [name] on [ref] (`tag.add`).
-  Future<void> addTag(String ref, String name) =>
-      _api.tag.add(ref, TagRequest(name: name));
+  Future<void> addTag(String ref, String name) => _write(
+    OutboxOp.tagAdd,
+    ref,
+    values: {'name': name},
+    send: (key) =>
+        _api.tag.add(ref, TagRequest(name: name), idempotencyKey: key),
+    local: (_) {},
+  );
 
   /// Takes the tag [name] off [ref] (`tag.remove`).
-  Future<void> removeTag(String ref, String name) => _api.tag.remove(ref, name);
+  Future<void> removeTag(String ref, String name) => _write(
+    OutboxOp.tagRemove,
+    ref,
+    values: {'name': name},
+    send: (key) => _api.tag.remove(ref, name, idempotencyKey: key),
+    local: (_) {},
+  );
 
   /// Every tag in the tenant (`tag.list`).
   Future<List<Tag>> tags() => _cache.remember(
@@ -169,8 +284,24 @@ class TaskDetailRepository {
       _cache.peek('task/$ref/comments', (j) => _list(j, Comment.fromJson));
 
   /// Adds a comment to [ref] (`comment.add`).
-  Future<Comment> addComment(String ref, String body) =>
-      _api.comment.add(ref, CommentRequest(body: body));
+  Future<Comment> addComment(String ref, String body) => _write(
+    OutboxOp.comment,
+    ref,
+    values: {'body': body},
+    send: (key) =>
+        _api.comment.add(ref, CommentRequest(body: body), idempotencyKey: key),
+    local: (e) => Comment(id: e.id, body: body, createdAt: e.createdAt),
+  );
+
+  /// The comments on [ref] still waiting in the outbox, oldest first.
+  List<Comment> queuedComments(String ref) => [
+    for (final c in _outbox?.comments(ref) ?? const <QueuedComment>[])
+      Comment(id: c.id, body: c.body, createdAt: c.at),
+  ];
+
+  /// The subtasks of [ref] created offline and not yet sent.
+  List<Task> draftSubtasks(String ref) =>
+      _outbox?.drafts(parent: _outbox.realRef(ref)) ?? const [];
 
   /// Rewrites the comment [id] (`comment.edit`).
   Future<Comment> editComment(String id, String body) =>
@@ -184,8 +315,17 @@ class TaskDetailRepository {
       (await _api.dependency.list(ref)).items;
 
   /// Records that [ref] waits for [dependsOn] (`dependency.add`).
-  Future<void> addDependency(String ref, String dependsOn) =>
-      _api.dependency.add(ref, DependencyRequest(dependsOn: dependsOn));
+  Future<void> addDependency(String ref, String dependsOn) => _write(
+    OutboxOp.dependencyAdd,
+    ref,
+    values: {'depends_on': dependsOn},
+    send: (key) => _api.dependency.add(
+      ref,
+      DependencyRequest(dependsOn: dependsOn),
+      idempotencyKey: key,
+    ),
+    local: (_) {},
+  );
 
   /// Removes the edge from [ref] to [dependsOn] (`dependency.remove`).
   Future<void> removeDependency(String ref, String dependsOn) =>
@@ -196,8 +336,18 @@ class TaskDetailRepository {
       (await _api.artifact.list(ref)).items;
 
   /// Attaches an artifact to [ref] (`artifact.put`).
-  Future<Artifact> attach(String ref, ArtifactInput input) =>
-      _api.artifact.put(ref, input);
+  Future<Artifact> attach(String ref, ArtifactInput input) => _write(
+    OutboxOp.artifactAdd,
+    ref,
+    values: input.toJson(),
+    send: (key) => _api.artifact.put(ref, input, idempotencyKey: key),
+    local: (e) => Artifact(
+      id: e.id,
+      name: input.name ?? '',
+      contentType: input.contentType ?? '',
+      createdAt: e.createdAt,
+    ),
+  );
 
   /// The custom fields of [project], in display order (`field.list`).
   Future<List<FieldDef>> fields(String project) => _cache.remember(

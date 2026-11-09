@@ -868,3 +868,51 @@ class GalleryLive extends StatelessWidget {
     ],
   );
 }
+
+/// The marks and banners that say a change has not synced yet.
+class GallerySync extends StatelessWidget {
+  /// Creates the samples.
+  const GallerySync({super.key});
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Wrap(
+        spacing: TixSpace.s2,
+        runSpacing: TixSpace.s2,
+        children: [for (final kind in SyncMarkKind.values) SyncMark(kind)],
+      ),
+      const SizedBox(height: TixSpace.s3),
+      TaskRow(
+        task: galleryTasks.first.copyWith(ref: 'ops-draft1'),
+        facts: const TaskFacts(
+          projectKey: 'ops',
+          projectColour: 'amber',
+          sync: SyncMarkKind.draft,
+        ),
+        onTap: () {},
+        now: galleryNow,
+      ),
+      TaskRow(
+        task: galleryTasks[1],
+        facts: const TaskFacts(
+          projectKey: 'infra',
+          projectColour: 'slate',
+          sync: SyncMarkKind.unsynced,
+        ),
+        onTap: () {},
+        now: galleryNow,
+      ),
+      const SizedBox(height: TixSpace.s3),
+      const SyncBanner(message: '2 changes wait to sync.'),
+      const SizedBox(height: TixSpace.s2),
+      SyncBanner(
+        message: 'Your offline changes need a decision.',
+        attention: true,
+        actionLabel: 'Resolve',
+        onAction: () {},
+      ),
+    ],
+  );
+}

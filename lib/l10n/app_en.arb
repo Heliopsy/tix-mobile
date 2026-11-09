@@ -3843,5 +3843,260 @@
   "tokenUnsavedTitle": "Token rotated but not saved",
   "tokenUnsavedHeading": "Copy this token now",
   "tokenUnsavedNote": "Secure storage on this device refused the new token. It is shown only this once, and the old token stops working in a minute. The app uses the new one until it closes; after that, reconnect with it.",
-  "tokenUnsavedDone": "I have copied it"
+  "tokenUnsavedDone": "I have copied it",
+  "syncMarkUnsynced": "Unsynced",
+  "syncMarkDraft": "Draft",
+  "syncMarkCheck": "Check",
+  "syncMarkConflict": "Conflict",
+  "syncMarkFailed": "Refused",
+  "syncTitle": "Conflicts",
+  "syncSubtitle": "Changes made offline and how they synced",
+  "syncSendNow": "Send now",
+  "syncEmptyTitle": "Everything is synced",
+  "syncEmptyBody": "Changes you make while offline wait here until the server is back.",
+  "syncConflicts": "{count, plural, =1{1 conflict} other{{count} conflicts}}",
+  "@syncConflicts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncConflictsHelp": "Someone changed the same thing on the server while you were offline.",
+  "syncKeepAllMine": "Keep all mine",
+  "syncKeepAllTheirs": "Keep all theirs",
+  "syncWaiting": "{count, plural, =1{1 change waiting} other{{count} changes waiting}}",
+  "@syncWaiting": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncHistory": "History",
+  "syncHistoryHelp": "Settled conflicts. Reverse one to send the side that was not kept.",
+  "syncFieldTitle": "Title",
+  "syncFieldBody": "Description",
+  "syncFieldPriority": "Priority",
+  "syncFieldAssignee": "Assignee",
+  "syncFieldDue": "Due",
+  "syncFieldTags": "Tags",
+  "syncFieldStatus": "Status",
+  "syncFieldRecurrence": "Repeat",
+  "syncFieldParent": "Parent",
+  "syncValueEmpty": "(empty)",
+  "syncMine": "Mine",
+  "syncTheirs": "Theirs",
+  "syncKeepMine": "Keep mine",
+  "syncKeepTheirs": "Keep theirs",
+  "syncEdit": "Edit",
+  "syncEditTitle": "Edit before sending",
+  "syncEditSend": "Send",
+  "syncTheirsWas": "On the server: {value}",
+  "@syncTheirsWas": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "syncDeletedBody": "This task was deleted on the server after you changed it.",
+  "syncRestoreApply": "Restore and apply",
+  "syncDiscardMine": "Discard mine",
+  "syncDiscardMineTitle": "Discard your changes?",
+  "syncDiscardMineBody": "Everything you changed on this task while offline is dropped. The task stays deleted.",
+  "syncMoveRefused": "Moving to {status} was refused: {reason}",
+  "@syncMoveRefused": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "syncMoveElsewhere": "Move elsewhere",
+  "syncOpUpdate": "{ref}: {fields}",
+  "@syncOpUpdate": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      },
+      "fields": {
+        "type": "String"
+      }
+    }
+  },
+  "syncOpCheck": "{ref}: checklist item",
+  "@syncOpCheck": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "syncOpMove": "{ref}: move to {status}",
+  "@syncOpMove": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "syncOpStar": "{ref}: star",
+  "@syncOpStar": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "syncOpUnstar": "{ref}: remove star",
+  "@syncOpUnstar": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "syncOpSnooze": "{ref}: snooze",
+  "@syncOpSnooze": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "syncOpCreate": "New task: {title}",
+  "@syncOpCreate": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "syncOpComment": "{ref}: comment",
+  "@syncOpComment": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "syncOpTagAdd": "{ref}: add #{tag}",
+  "@syncOpTagAdd": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      },
+      "tag": {
+        "type": "String"
+      }
+    }
+  },
+  "syncOpTagRemove": "{ref}: remove #{tag}",
+  "@syncOpTagRemove": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      },
+      "tag": {
+        "type": "String"
+      }
+    }
+  },
+  "syncOpDependency": "{ref}: waits for {other}",
+  "@syncOpDependency": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "syncOpArtifact": "{ref}: attachment",
+  "@syncOpArtifact": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "syncOpRestore": "{ref}: restore",
+  "@syncOpRestore": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "syncDiscardTitle": "Discard this change?",
+  "syncDiscard": "Discard",
+  "syncRefused": "The server refused it: {reason}",
+  "@syncRefused": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "syncCheckBody": "The answer was lost, so this task may already exist. Look at the project, then send it or drop it.",
+  "syncSendAnyway": "Send anyway",
+  "syncAlreadyThere": "It's already there",
+  "syncRetry": "Try again",
+  "syncKeptMine": "Kept mine",
+  "syncKeptTheirs": "Kept theirs",
+  "syncKeptEdited": "Sent an edit",
+  "syncKeptRestored": "Restored and applied",
+  "syncKeptDiscarded": "Discarded mine",
+  "syncByPolicy": "{what}, by your setting",
+  "@syncByPolicy": {
+    "placeholders": {
+      "what": {
+        "type": "String"
+      }
+    }
+  },
+  "syncReverse": "Reverse",
+  "syncBannerWaiting": "{count, plural, =1{1 change waits to sync.} other{{count} changes wait to sync.}}",
+  "@syncBannerWaiting": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncBannerConflict": "Your offline changes need a decision.",
+  "syncBannerDraft": "Created offline. It gets its reference when it syncs.",
+  "syncResolve": "Resolve",
+  "syncBadge": "{count, plural, =1{1 conflict to resolve} other{{count} conflicts to resolve}}",
+  "@syncBadge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncPolicyLabel": "When a change conflicts",
+  "syncPolicyHelp": "For changes made offline that someone else also changed. Every conflict is kept under Conflicts, where it can be reversed.",
+  "syncPolicyAsk": "Ask",
+  "syncPolicyMine": "Keep mine",
+  "syncPolicyTheirs": "Keep theirs",
+  "syncOpenConflicts": "Conflicts and unsynced changes",
+  "syncDiscardAll": "Discard all unsynced changes",
+  "syncDiscardAllTitle": "Discard every unsynced change?",
+  "syncDiscardAllBody": "{count, plural, =1{1 change made offline is dropped and never sent. Drafts disappear.} other{{count} changes made offline are dropped and never sent. Drafts disappear.}}",
+  "@syncDiscardAllBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -427,6 +427,166 @@ final class ResponseCacheProvider
 
 String _$responseCacheHash() => r'c5f322dab90f541372a7ee09d6d4661419f3131c';
 
+/// The outbox, conflicts and drafts of the active context, kept beside its
+/// cache under `sync/`.
+
+@ProviderFor(syncStore)
+final syncStoreProvider = SyncStoreProvider._();
+
+/// The outbox, conflicts and drafts of the active context, kept beside its
+/// cache under `sync/`.
+
+final class SyncStoreProvider
+    extends $FunctionalProvider<SyncStore, SyncStore, SyncStore>
+    with $Provider<SyncStore> {
+  /// The outbox, conflicts and drafts of the active context, kept beside its
+  /// cache under `sync/`.
+  SyncStoreProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'syncStoreProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$syncStoreHash();
+
+  @$internal
+  @override
+  $ProviderElement<SyncStore> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SyncStore create(Ref ref) {
+    return syncStore(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SyncStore value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SyncStore>(value),
+    );
+  }
+}
+
+String _$syncStoreHash() => r'eecf02eb2b77d4bc072e184b39313259d7c31bc7';
+
+/// Whether the active context's server is known to be out of reach, so
+/// writes go straight to the outbox instead of waiting for a timeout. The
+/// outbox replay (`core/offline/outbox.dart`) keeps it current.
+
+@ProviderFor(ServerOffline)
+final serverOfflineProvider = ServerOfflineProvider._();
+
+/// Whether the active context's server is known to be out of reach, so
+/// writes go straight to the outbox instead of waiting for a timeout. The
+/// outbox replay (`core/offline/outbox.dart`) keeps it current.
+final class ServerOfflineProvider
+    extends $NotifierProvider<ServerOffline, bool> {
+  /// Whether the active context's server is known to be out of reach, so
+  /// writes go straight to the outbox instead of waiting for a timeout. The
+  /// outbox replay (`core/offline/outbox.dart`) keeps it current.
+  ServerOfflineProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'serverOfflineProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$serverOfflineHash();
+
+  @$internal
+  @override
+  ServerOffline create() => ServerOffline();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$serverOfflineHash() => r'b829a43a9a05d6801110ca586e183dec30d206e4';
+
+/// Whether the active context's server is known to be out of reach, so
+/// writes go straight to the outbox instead of waiting for a timeout. The
+/// outbox replay (`core/offline/outbox.dart`) keeps it current.
+
+abstract class _$ServerOffline extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
+/// Writes made while the server cannot be reached, for the active context.
+
+@ProviderFor(outbox)
+final outboxProvider = OutboxProvider._();
+
+/// Writes made while the server cannot be reached, for the active context.
+
+final class OutboxProvider extends $FunctionalProvider<Outbox, Outbox, Outbox>
+    with $Provider<Outbox> {
+  /// Writes made while the server cannot be reached, for the active context.
+  OutboxProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'outboxProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$outboxHash();
+
+  @$internal
+  @override
+  $ProviderElement<Outbox> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  Outbox create(Ref ref) {
+    return outbox(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Outbox value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Outbox>(value),
+    );
+  }
+}
+
+String _$outboxHash() => r'e8afaa0cba8128f147888fd36acae5945501f3a9';
+
 /// Projects and tasks for the active session.
 
 @ProviderFor(tasksRepository)
@@ -472,7 +632,7 @@ final class TasksRepositoryProvider
   }
 }
 
-String _$tasksRepositoryHash() => r'72846e1303a9b1f6af595bfdb4e5895f14cd51cd';
+String _$tasksRepositoryHash() => r'1c12db88d3bd82b80915e80f7f69da644bdf02bc';
 
 /// What the task screen reads and changes, for the active session.
 
@@ -525,7 +685,7 @@ final class TaskDetailRepositoryProvider
 }
 
 String _$taskDetailRepositoryHash() =>
-    r'aa1e8a555b0e7d640d1eef45546f10cfc40c4a05';
+    r'422712685ac06d7152519463bb51c9fd18a8a6bf';
 
 /// Listings, quick and bulk actions and workflows for the active session.
 
@@ -578,7 +738,7 @@ final class TaskListRepositoryProvider
 }
 
 String _$taskListRepositoryHash() =>
-    r'3d494889773e0ece6aee791be1483799ce903381';
+    r'dafd267ebc6ac291d11b85acc0290fd9600012a3';
 
 /// View arrangements and saved filters for the active session.
 

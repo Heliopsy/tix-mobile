@@ -212,14 +212,20 @@ void main() {
     expect(closed, isEmpty);
   });
 
-  testWidgets('without a network the line stays and says so', (tester) async {
+  testWidgets('without a network the line becomes a draft to sync later', (
+    tester,
+  ) async {
     await pump(tester, project: 'infra');
     await type(tester, 'Offline line');
     server.offline = true;
     await tester.tap(find.byKey(const Key('quickAdd.submit')));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Adding needs a connection'), findsOneWidget);
-    expect(tester.widget<TextField>(line()).controller!.text, 'Offline line');
+    expect(closed.single!.ref, 'infra-draft1');
+    expect(closed.single!.title, 'Offline line');
+    expect(
+      server.requestsTo('/api/v1/tasks').where((r) => r.method == 'POST'),
+      hasLength(1),
+    );
   });
 
   testWidgets('a template creates a task in one tap', (tester) async {

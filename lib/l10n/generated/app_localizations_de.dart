@@ -5248,11 +5248,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get webhookRedelivered => 'Für einen weiteren Versuch eingereiht.';
 
   @override
-  String get syncTitle => 'Externe Synchronisierung';
+  String get syncTitle => 'Konflikte';
 
   @override
   String get syncSubtitle =>
-      'Arbeit aus Jira, OpenProject oder einer Datei importieren. Die Läufe finden auf dem Server statt.';
+      'Offline gemachte Änderungen und wie sie synchronisiert wurden';
 
   @override
   String get syncNew => 'Neue Quelle';
@@ -5269,7 +5269,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get syncEmptyBody =>
-      'Fügen Sie eine Quelle hinzu, um Aufgaben aus einem anderen Tracker zu importieren.';
+      'Änderungen, die du offline machst, warten hier, bis der Server wieder erreichbar ist.';
 
   @override
   String get syncStatusOk => 'Letzter Lauf erfolgreich';
@@ -5390,7 +5390,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String syncEditTitle(String name) {
-    return '$name bearbeiten';
+    return 'Vor dem Senden bearbeiten';
   }
 
   @override
@@ -6717,4 +6717,324 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tokenUnsavedDone => 'Ich habe es kopiert';
+
+  @override
+  String get syncMarkUnsynced => 'Nicht synchronisiert';
+
+  @override
+  String get syncMarkDraft => 'Entwurf';
+
+  @override
+  String get syncMarkCheck => 'Prüfen';
+
+  @override
+  String get syncMarkConflict => 'Konflikt';
+
+  @override
+  String get syncMarkFailed => 'Abgelehnt';
+
+  @override
+  String get syncSendNow => 'Jetzt senden';
+
+  @override
+  String get syncEmptyTitle => 'Alles ist synchronisiert';
+
+  @override
+  String syncConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Konflikte',
+      one: '1 Konflikt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncConflictsHelp =>
+      'Jemand hat dasselbe auf dem Server geändert, während du offline warst.';
+
+  @override
+  String get syncKeepAllMine => 'Alle meine behalten';
+
+  @override
+  String get syncKeepAllTheirs => 'Alle ihre behalten';
+
+  @override
+  String syncWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count wartende Änderungen',
+      one: '1 wartende Änderung',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncHistory => 'Verlauf';
+
+  @override
+  String get syncHistoryHelp =>
+      'Gelöste Konflikte. Kehre einen um, um die nicht behaltene Seite zu senden.';
+
+  @override
+  String get syncFieldTitle => 'Titel';
+
+  @override
+  String get syncFieldBody => 'Beschreibung';
+
+  @override
+  String get syncFieldPriority => 'Priorität';
+
+  @override
+  String get syncFieldAssignee => 'Zuständig';
+
+  @override
+  String get syncFieldDue => 'Fällig';
+
+  @override
+  String get syncFieldTags => 'Tags';
+
+  @override
+  String get syncFieldStatus => 'Status';
+
+  @override
+  String get syncFieldRecurrence => 'Wiederholung';
+
+  @override
+  String get syncFieldParent => 'Übergeordnet';
+
+  @override
+  String get syncValueEmpty => '(leer)';
+
+  @override
+  String get syncMine => 'Meins';
+
+  @override
+  String get syncTheirs => 'Ihres';
+
+  @override
+  String get syncKeepMine => 'Meins behalten';
+
+  @override
+  String get syncKeepTheirs => 'Ihres behalten';
+
+  @override
+  String get syncEditSend => 'Senden';
+
+  @override
+  String syncTheirsWas(String value) {
+    return 'Auf dem Server: $value';
+  }
+
+  @override
+  String get syncDeletedBody =>
+      'Diese Aufgabe wurde auf dem Server gelöscht, nachdem du sie geändert hast.';
+
+  @override
+  String get syncRestoreApply => 'Wiederherstellen und anwenden';
+
+  @override
+  String get syncDiscardMine => 'Meins verwerfen';
+
+  @override
+  String get syncDiscardMineTitle => 'Deine Änderungen verwerfen?';
+
+  @override
+  String get syncDiscardMineBody =>
+      'Alles, was du offline an dieser Aufgabe geändert hast, wird verworfen. Die Aufgabe bleibt gelöscht.';
+
+  @override
+  String syncMoveRefused(String status, String reason) {
+    return 'Das Verschieben nach $status wurde abgelehnt: $reason';
+  }
+
+  @override
+  String get syncMoveElsewhere => 'Woandershin verschieben';
+
+  @override
+  String syncOpUpdate(String ref, String fields) {
+    return '$ref: $fields';
+  }
+
+  @override
+  String syncOpCheck(String ref) {
+    return '$ref: Checklistenpunkt';
+  }
+
+  @override
+  String syncOpMove(String ref, String status) {
+    return '$ref: nach $status verschieben';
+  }
+
+  @override
+  String syncOpStar(String ref) {
+    return '$ref: Stern';
+  }
+
+  @override
+  String syncOpUnstar(String ref) {
+    return '$ref: Stern entfernen';
+  }
+
+  @override
+  String syncOpSnooze(String ref) {
+    return '$ref: zurückstellen';
+  }
+
+  @override
+  String syncOpCreate(String title) {
+    return 'Neue Aufgabe: $title';
+  }
+
+  @override
+  String syncOpComment(String ref) {
+    return '$ref: Kommentar';
+  }
+
+  @override
+  String syncOpTagAdd(String ref, String tag) {
+    return '$ref: #$tag hinzufügen';
+  }
+
+  @override
+  String syncOpTagRemove(String ref, String tag) {
+    return '$ref: #$tag entfernen';
+  }
+
+  @override
+  String syncOpDependency(String ref, String other) {
+    return '$ref: wartet auf $other';
+  }
+
+  @override
+  String syncOpArtifact(String ref) {
+    return '$ref: Anhang';
+  }
+
+  @override
+  String syncOpRestore(String ref) {
+    return '$ref: wiederherstellen';
+  }
+
+  @override
+  String get syncDiscardTitle => 'Diese Änderung verwerfen?';
+
+  @override
+  String get syncDiscard => 'Verwerfen';
+
+  @override
+  String syncRefused(String reason) {
+    return 'Der Server hat abgelehnt: $reason';
+  }
+
+  @override
+  String get syncCheckBody =>
+      'Die Antwort ging verloren, die Aufgabe gibt es vielleicht schon. Sieh im Projekt nach und sende sie oder verwirf sie.';
+
+  @override
+  String get syncSendAnyway => 'Trotzdem senden';
+
+  @override
+  String get syncAlreadyThere => 'Ist schon da';
+
+  @override
+  String get syncRetry => 'Erneut versuchen';
+
+  @override
+  String get syncKeptMine => 'Meins behalten';
+
+  @override
+  String get syncKeptTheirs => 'Ihres behalten';
+
+  @override
+  String get syncKeptEdited => 'Bearbeitung gesendet';
+
+  @override
+  String get syncKeptRestored => 'Wiederhergestellt und angewendet';
+
+  @override
+  String get syncKeptDiscarded => 'Meins verworfen';
+
+  @override
+  String syncByPolicy(String what) {
+    return '$what, laut deiner Einstellung';
+  }
+
+  @override
+  String get syncReverse => 'Umkehren';
+
+  @override
+  String syncBannerWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Änderungen warten auf die Synchronisierung.',
+      one: '1 Änderung wartet auf die Synchronisierung.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncBannerConflict =>
+      'Deine Offline-Änderungen brauchen eine Entscheidung.';
+
+  @override
+  String get syncBannerDraft =>
+      'Offline erstellt. Sie bekommt ihre Referenz bei der Synchronisierung.';
+
+  @override
+  String get syncResolve => 'Lösen';
+
+  @override
+  String syncBadge(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Konflikte zu lösen',
+      one: '1 Konflikt zu lösen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncPolicyLabel => 'Bei einem Konflikt';
+
+  @override
+  String get syncPolicyHelp =>
+      'Für offline gemachte Änderungen, die auch jemand anderes geändert hat. Jeder Konflikt bleibt unter Konflikte, wo er umgekehrt werden kann.';
+
+  @override
+  String get syncPolicyAsk => 'Fragen';
+
+  @override
+  String get syncPolicyMine => 'Meins behalten';
+
+  @override
+  String get syncPolicyTheirs => 'Ihres behalten';
+
+  @override
+  String get syncOpenConflicts =>
+      'Konflikte und nicht synchronisierte Änderungen';
+
+  @override
+  String get syncDiscardAll =>
+      'Alle nicht synchronisierten Änderungen verwerfen';
+
+  @override
+  String get syncDiscardAllTitle =>
+      'Alle nicht synchronisierten Änderungen verwerfen?';
+
+  @override
+  String syncDiscardAllBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count offline gemachte Änderungen werden verworfen und nie gesendet. Entwürfe verschwinden.',
+      one: '1 offline gemachte Änderung wird verworfen und nie gesendet. Entwürfe verschwinden.',
+    );
+    return '$_temp0';
+  }
 }

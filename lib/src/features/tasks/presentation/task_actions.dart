@@ -7,6 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/offline/outbox.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/models/workflow.dart';
 import 'package:tix_mobile/src/features/tasks/application/listing.dart';
@@ -30,6 +31,7 @@ TaskFacts factsFor(
   TaskIndex? context, {
   String handle = '',
   bool showProject = true,
+  SyncMarkKind? sync,
 }) {
   final project = context?.projectOf(task);
   final category = context?.categoryOf(task);
@@ -39,7 +41,16 @@ TaskFacts factsFor(
     projectIcon: showProject ? project?.icon ?? '' : '',
     assigneeHandle: handle,
     statusCategory: category == null ? null : statusCategoryOf(category),
+    sync: sync,
   );
+}
+
+/// What the outbox says about [task], for its row or card.
+SyncMarkKind? syncMarkOf(WidgetRef ref, Task task) {
+  if (isDraftRef(task.ref)) return SyncMarkKind.draft;
+  return ref.watch(unsyncedRefsProvider.select((r) => r.contains(task.ref)))
+      ? SyncMarkKind.unsynced
+      : null;
 }
 
 /// The handle of [task]'s assignee, once looked up.

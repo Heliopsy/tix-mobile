@@ -5205,11 +5205,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get webhookRedelivered => 'Queued for another attempt.';
 
   @override
-  String get syncTitle => 'External sync';
+  String get syncTitle => 'Conflicts';
 
   @override
-  String get syncSubtitle =>
-      'Import work from Jira, OpenProject or a file. Runs happen on the server.';
+  String get syncSubtitle => 'Changes made offline and how they synced';
 
   @override
   String get syncNew => 'New source';
@@ -5226,7 +5225,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get syncEmptyBody =>
-      'Add a source to import tasks from another tracker.';
+      'Changes you make while offline wait here until the server is back.';
 
   @override
   String get syncStatusOk => 'Last run ok';
@@ -5346,7 +5345,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String syncEditTitle(String name) {
-    return 'Edit $name';
+    return 'Edit before sending';
   }
 
   @override
@@ -6658,4 +6657,320 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tokenUnsavedDone => 'I have copied it';
+
+  @override
+  String get syncMarkUnsynced => 'Unsynced';
+
+  @override
+  String get syncMarkDraft => 'Draft';
+
+  @override
+  String get syncMarkCheck => 'Check';
+
+  @override
+  String get syncMarkConflict => 'Conflict';
+
+  @override
+  String get syncMarkFailed => 'Refused';
+
+  @override
+  String get syncSendNow => 'Send now';
+
+  @override
+  String get syncEmptyTitle => 'Everything is synced';
+
+  @override
+  String syncConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count conflicts',
+      one: '1 conflict',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncConflictsHelp =>
+      'Someone changed the same thing on the server while you were offline.';
+
+  @override
+  String get syncKeepAllMine => 'Keep all mine';
+
+  @override
+  String get syncKeepAllTheirs => 'Keep all theirs';
+
+  @override
+  String syncWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes waiting',
+      one: '1 change waiting',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncHistory => 'History';
+
+  @override
+  String get syncHistoryHelp =>
+      'Settled conflicts. Reverse one to send the side that was not kept.';
+
+  @override
+  String get syncFieldTitle => 'Title';
+
+  @override
+  String get syncFieldBody => 'Description';
+
+  @override
+  String get syncFieldPriority => 'Priority';
+
+  @override
+  String get syncFieldAssignee => 'Assignee';
+
+  @override
+  String get syncFieldDue => 'Due';
+
+  @override
+  String get syncFieldTags => 'Tags';
+
+  @override
+  String get syncFieldStatus => 'Status';
+
+  @override
+  String get syncFieldRecurrence => 'Repeat';
+
+  @override
+  String get syncFieldParent => 'Parent';
+
+  @override
+  String get syncValueEmpty => '(empty)';
+
+  @override
+  String get syncMine => 'Mine';
+
+  @override
+  String get syncTheirs => 'Theirs';
+
+  @override
+  String get syncKeepMine => 'Keep mine';
+
+  @override
+  String get syncKeepTheirs => 'Keep theirs';
+
+  @override
+  String get syncEditSend => 'Send';
+
+  @override
+  String syncTheirsWas(String value) {
+    return 'On the server: $value';
+  }
+
+  @override
+  String get syncDeletedBody =>
+      'This task was deleted on the server after you changed it.';
+
+  @override
+  String get syncRestoreApply => 'Restore and apply';
+
+  @override
+  String get syncDiscardMine => 'Discard mine';
+
+  @override
+  String get syncDiscardMineTitle => 'Discard your changes?';
+
+  @override
+  String get syncDiscardMineBody =>
+      'Everything you changed on this task while offline is dropped. The task stays deleted.';
+
+  @override
+  String syncMoveRefused(String status, String reason) {
+    return 'Moving to $status was refused: $reason';
+  }
+
+  @override
+  String get syncMoveElsewhere => 'Move elsewhere';
+
+  @override
+  String syncOpUpdate(String ref, String fields) {
+    return '$ref: $fields';
+  }
+
+  @override
+  String syncOpCheck(String ref) {
+    return '$ref: checklist item';
+  }
+
+  @override
+  String syncOpMove(String ref, String status) {
+    return '$ref: move to $status';
+  }
+
+  @override
+  String syncOpStar(String ref) {
+    return '$ref: star';
+  }
+
+  @override
+  String syncOpUnstar(String ref) {
+    return '$ref: remove star';
+  }
+
+  @override
+  String syncOpSnooze(String ref) {
+    return '$ref: snooze';
+  }
+
+  @override
+  String syncOpCreate(String title) {
+    return 'New task: $title';
+  }
+
+  @override
+  String syncOpComment(String ref) {
+    return '$ref: comment';
+  }
+
+  @override
+  String syncOpTagAdd(String ref, String tag) {
+    return '$ref: add #$tag';
+  }
+
+  @override
+  String syncOpTagRemove(String ref, String tag) {
+    return '$ref: remove #$tag';
+  }
+
+  @override
+  String syncOpDependency(String ref, String other) {
+    return '$ref: waits for $other';
+  }
+
+  @override
+  String syncOpArtifact(String ref) {
+    return '$ref: attachment';
+  }
+
+  @override
+  String syncOpRestore(String ref) {
+    return '$ref: restore';
+  }
+
+  @override
+  String get syncDiscardTitle => 'Discard this change?';
+
+  @override
+  String get syncDiscard => 'Discard';
+
+  @override
+  String syncRefused(String reason) {
+    return 'The server refused it: $reason';
+  }
+
+  @override
+  String get syncCheckBody =>
+      'The answer was lost, so this task may already exist. Look at the project, then send it or drop it.';
+
+  @override
+  String get syncSendAnyway => 'Send anyway';
+
+  @override
+  String get syncAlreadyThere => 'It\'s already there';
+
+  @override
+  String get syncRetry => 'Try again';
+
+  @override
+  String get syncKeptMine => 'Kept mine';
+
+  @override
+  String get syncKeptTheirs => 'Kept theirs';
+
+  @override
+  String get syncKeptEdited => 'Sent an edit';
+
+  @override
+  String get syncKeptRestored => 'Restored and applied';
+
+  @override
+  String get syncKeptDiscarded => 'Discarded mine';
+
+  @override
+  String syncByPolicy(String what) {
+    return '$what, by your setting';
+  }
+
+  @override
+  String get syncReverse => 'Reverse';
+
+  @override
+  String syncBannerWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes wait to sync.',
+      one: '1 change waits to sync.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncBannerConflict => 'Your offline changes need a decision.';
+
+  @override
+  String get syncBannerDraft =>
+      'Created offline. It gets its reference when it syncs.';
+
+  @override
+  String get syncResolve => 'Resolve';
+
+  @override
+  String syncBadge(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count conflicts to resolve',
+      one: '1 conflict to resolve',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncPolicyLabel => 'When a change conflicts';
+
+  @override
+  String get syncPolicyHelp =>
+      'For changes made offline that someone else also changed. Every conflict is kept under Conflicts, where it can be reversed.';
+
+  @override
+  String get syncPolicyAsk => 'Ask';
+
+  @override
+  String get syncPolicyMine => 'Keep mine';
+
+  @override
+  String get syncPolicyTheirs => 'Keep theirs';
+
+  @override
+  String get syncOpenConflicts => 'Conflicts and unsynced changes';
+
+  @override
+  String get syncDiscardAll => 'Discard all unsynced changes';
+
+  @override
+  String get syncDiscardAllTitle => 'Discard every unsynced change?';
+
+  @override
+  String syncDiscardAllBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count changes made offline are dropped and never sent. Drafts disappear.',
+      one: '1 change made offline is dropped and never sent. Drafts disappear.',
+    );
+    return '$_temp0';
+  }
 }

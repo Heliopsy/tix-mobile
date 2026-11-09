@@ -5205,11 +5205,11 @@ class AppLocalizationsBg extends AppLocalizations {
   String get webhookRedelivered => 'Добавена е за нов опит.';
 
   @override
-  String get syncTitle => 'Външна синхронизация';
+  String get syncTitle => 'Конфликти';
 
   @override
   String get syncSubtitle =>
-      'Внасяне от Jira, OpenProject или файл. Изпълнява се на сървъра.';
+      'Промени, направени офлайн, и как са синхронизирани';
 
   @override
   String get syncNew => 'Нов източник';
@@ -5226,7 +5226,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get syncEmptyBody =>
-      'Добавете източник, за да внасяте задачи от друга система.';
+      'Промените, които правите офлайн, чакат тук, докато сървърът се върне.';
 
   @override
   String get syncStatusOk => 'Последно: успешно';
@@ -5346,7 +5346,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String syncEditTitle(String name) {
-    return 'Редактиране на $name';
+    return 'Редактиране преди изпращане';
   }
 
   @override
@@ -6664,4 +6664,321 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get tokenUnsavedDone => 'Копирах го';
+
+  @override
+  String get syncMarkUnsynced => 'Неизпратено';
+
+  @override
+  String get syncMarkDraft => 'Чернова';
+
+  @override
+  String get syncMarkCheck => 'Провери';
+
+  @override
+  String get syncMarkConflict => 'Конфликт';
+
+  @override
+  String get syncMarkFailed => 'Отказано';
+
+  @override
+  String get syncSendNow => 'Изпрати сега';
+
+  @override
+  String get syncEmptyTitle => 'Всичко е синхронизирано';
+
+  @override
+  String syncConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count конфликта',
+      one: '1 конфликт',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncConflictsHelp =>
+      'Някой е променил същото на сървъра, докато бяхте офлайн.';
+
+  @override
+  String get syncKeepAllMine => 'Запази всички мои';
+
+  @override
+  String get syncKeepAllTheirs => 'Запази всички техни';
+
+  @override
+  String syncWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count чакащи промени',
+      one: '1 чакаща промяна',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncHistory => 'История';
+
+  @override
+  String get syncHistoryHelp =>
+      'Решени конфликти. Обърнете някой, за да изпратите страната, която не беше запазена.';
+
+  @override
+  String get syncFieldTitle => 'Заглавие';
+
+  @override
+  String get syncFieldBody => 'Описание';
+
+  @override
+  String get syncFieldPriority => 'Приоритет';
+
+  @override
+  String get syncFieldAssignee => 'Отговорник';
+
+  @override
+  String get syncFieldDue => 'Срок';
+
+  @override
+  String get syncFieldTags => 'Етикети';
+
+  @override
+  String get syncFieldStatus => 'Статус';
+
+  @override
+  String get syncFieldRecurrence => 'Повторение';
+
+  @override
+  String get syncFieldParent => 'Родител';
+
+  @override
+  String get syncValueEmpty => '(празно)';
+
+  @override
+  String get syncMine => 'Мое';
+
+  @override
+  String get syncTheirs => 'Тяхно';
+
+  @override
+  String get syncKeepMine => 'Запази моето';
+
+  @override
+  String get syncKeepTheirs => 'Запази тяхното';
+
+  @override
+  String get syncEditSend => 'Изпрати';
+
+  @override
+  String syncTheirsWas(String value) {
+    return 'На сървъра: $value';
+  }
+
+  @override
+  String get syncDeletedBody =>
+      'Тази задача е изтрита на сървъра, след като сте я променили.';
+
+  @override
+  String get syncRestoreApply => 'Възстанови и приложи';
+
+  @override
+  String get syncDiscardMine => 'Отхвърли моето';
+
+  @override
+  String get syncDiscardMineTitle => 'Да се отхвърлят ли промените ви?';
+
+  @override
+  String get syncDiscardMineBody =>
+      'Всичко, което сте променили по задачата офлайн, отпада. Задачата остава изтрита.';
+
+  @override
+  String syncMoveRefused(String status, String reason) {
+    return 'Преместването в $status е отказано: $reason';
+  }
+
+  @override
+  String get syncMoveElsewhere => 'Премести другаде';
+
+  @override
+  String syncOpUpdate(String ref, String fields) {
+    return '$ref: $fields';
+  }
+
+  @override
+  String syncOpCheck(String ref) {
+    return '$ref: точка от списъка';
+  }
+
+  @override
+  String syncOpMove(String ref, String status) {
+    return '$ref: преместване в $status';
+  }
+
+  @override
+  String syncOpStar(String ref) {
+    return '$ref: звезда';
+  }
+
+  @override
+  String syncOpUnstar(String ref) {
+    return '$ref: махане на звезда';
+  }
+
+  @override
+  String syncOpSnooze(String ref) {
+    return '$ref: отлагане';
+  }
+
+  @override
+  String syncOpCreate(String title) {
+    return 'Нова задача: $title';
+  }
+
+  @override
+  String syncOpComment(String ref) {
+    return '$ref: коментар';
+  }
+
+  @override
+  String syncOpTagAdd(String ref, String tag) {
+    return '$ref: добавяне на #$tag';
+  }
+
+  @override
+  String syncOpTagRemove(String ref, String tag) {
+    return '$ref: махане на #$tag';
+  }
+
+  @override
+  String syncOpDependency(String ref, String other) {
+    return '$ref: чака $other';
+  }
+
+  @override
+  String syncOpArtifact(String ref) {
+    return '$ref: прикачен файл';
+  }
+
+  @override
+  String syncOpRestore(String ref) {
+    return '$ref: възстановяване';
+  }
+
+  @override
+  String get syncDiscardTitle => 'Да се отхвърли ли тази промяна?';
+
+  @override
+  String get syncDiscard => 'Отхвърли';
+
+  @override
+  String syncRefused(String reason) {
+    return 'Сървърът отказа: $reason';
+  }
+
+  @override
+  String get syncCheckBody =>
+      'Отговорът се изгуби, така че задачата може вече да съществува. Погледнете проекта и я изпратете или отхвърлете.';
+
+  @override
+  String get syncSendAnyway => 'Изпрати въпреки това';
+
+  @override
+  String get syncAlreadyThere => 'Вече е там';
+
+  @override
+  String get syncRetry => 'Опитай отново';
+
+  @override
+  String get syncKeptMine => 'Запазено моето';
+
+  @override
+  String get syncKeptTheirs => 'Запазено тяхното';
+
+  @override
+  String get syncKeptEdited => 'Изпратена редакция';
+
+  @override
+  String get syncKeptRestored => 'Възстановено и приложено';
+
+  @override
+  String get syncKeptDiscarded => 'Моето е отхвърлено';
+
+  @override
+  String syncByPolicy(String what) {
+    return '$what, според настройката ви';
+  }
+
+  @override
+  String get syncReverse => 'Обърни';
+
+  @override
+  String syncBannerWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count промени чакат синхронизация.',
+      one: '1 промяна чака синхронизация.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncBannerConflict => 'Офлайн промените ви изискват решение.';
+
+  @override
+  String get syncBannerDraft =>
+      'Създадена офлайн. Ще получи номер при синхронизация.';
+
+  @override
+  String get syncResolve => 'Реши';
+
+  @override
+  String syncBadge(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count конфликта за решаване',
+      one: '1 конфликт за решаване',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncPolicyLabel => 'При конфликт на промени';
+
+  @override
+  String get syncPolicyHelp =>
+      'За офлайн промени, които някой друг също е променил. Всеки конфликт остава в „Конфликти“, където може да бъде обърнат.';
+
+  @override
+  String get syncPolicyAsk => 'Питай';
+
+  @override
+  String get syncPolicyMine => 'Запази моето';
+
+  @override
+  String get syncPolicyTheirs => 'Запази тяхното';
+
+  @override
+  String get syncOpenConflicts => 'Конфликти и неизпратени промени';
+
+  @override
+  String get syncDiscardAll => 'Отхвърли всички неизпратени промени';
+
+  @override
+  String get syncDiscardAllTitle =>
+      'Да се отхвърлят ли всички неизпратени промени?';
+
+  @override
+  String syncDiscardAllBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count офлайн промени отпадат и няма да бъдат изпратени. Черновите изчезват.',
+      one: '1 офлайн промяна отпада и няма да бъде изпратена. Черновите изчезват.',
+    );
+    return '$_temp0';
+  }
 }

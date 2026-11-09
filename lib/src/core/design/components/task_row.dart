@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/components/marks.dart';
 import 'package:tix_mobile/src/core/design/components/motion.dart';
+import 'package:tix_mobile/src/core/design/components/sync.dart';
 import 'package:tix_mobile/src/core/design/tokens.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
@@ -20,6 +21,7 @@ class TaskFacts {
     this.projectIcon = '',
     this.assigneeHandle = '',
     this.statusCategory,
+    this.sync,
   });
 
   /// The project's key, empty to leave the project off.
@@ -36,6 +38,9 @@ class TaskFacts {
 
   /// The status's category when the workflow is known.
   final StatusCategory? statusCategory;
+
+  /// What the outbox says about the task, null when it is in sync.
+  final SyncMarkKind? sync;
 }
 
 /// Whether [task] is finished, by its completion time or its status.
@@ -124,7 +129,7 @@ class TaskRow extends StatelessWidget {
       builder: (context, box) {
         final wide = box.maxWidth >= columnsMinWidth;
         final narrow = box.maxWidth < 600;
-        final title = _Title(task: task, done: done);
+        final title = _Title(task: task, done: done, sync: facts.sync);
         final meta = _Meta(
           task: task,
           facts: facts,
@@ -221,10 +226,11 @@ class TaskRow extends StatelessWidget {
 }
 
 class _Title extends StatelessWidget {
-  const _Title({required this.task, required this.done});
+  const _Title({required this.task, required this.done, this.sync});
 
   final Task task;
   final bool done;
+  final SyncMarkKind? sync;
 
   @override
   Widget build(BuildContext context) {
@@ -257,6 +263,13 @@ class _Title extends StatelessWidget {
             ),
           ),
         ),
+        if (sync case final SyncMarkKind kind) ...[
+          const SizedBox(width: TixSpace.s1),
+          Padding(
+            padding: const EdgeInsets.only(top: 2),
+            child: SyncMark(kind),
+          ),
+        ],
       ],
     );
   }

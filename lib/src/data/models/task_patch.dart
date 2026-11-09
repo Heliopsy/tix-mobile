@@ -13,6 +13,13 @@ import 'package:tix_mobile/src/data/models/task.dart';
 class TaskPatch {
   const TaskPatch._(this._fields);
 
+  /// The change [json], a PATCH body as [toJson] writes it.
+  TaskPatch.fromJson(Map<String, Object?> json)
+    : this._({
+        for (final MapEntry(:key, :value) in json.entries)
+          if (key != 'version') key: value,
+      });
+
   /// Renames the task.
   TaskPatch.title(String title) : this._({'title': title});
 

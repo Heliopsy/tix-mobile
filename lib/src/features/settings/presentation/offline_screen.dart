@@ -3,10 +3,13 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/offline/outbox.dart';
+import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/features/settings/application/offline.dart';
 
@@ -68,7 +71,12 @@ class OfflineScreen extends ConsumerWidget {
                   ],
                 ),
               ]
-            : const [_ChoiceSection(), _StorageSection(), _SyncSection()],
+            : const [
+                _ChoiceSection(),
+                _StorageSection(),
+                _SyncSection(),
+                _ConflictSection(),
+              ],
       ),
     );
   }
@@ -250,5 +258,81 @@ class OfflineSyncScope extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(offlineSyncProvider, (_, _) {});
     return child;
+  }
+}
+
+class _ConflictSection extends ConsumerWidget {
+  const _ConflictSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final policy = ref.watch(conflictPolicySettingProvider);
+    final waiting = ref.watch(
+      syncStateProvider.select((s) => s.value?.entries.length ?? 0),
+    );
+    return TixSection(
+      key: const Key('offline.conflicts'),
+      title: l10n.syncTitle,
+      subtitle: l10n.syncPolicyHelp,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(TixSpace.s3),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.syncPolicyLabel,
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+              const SizedBox(height: TixSpace.s2),
+              TixChoices<ConflictPolicy>(
+                key: const Key('offline.policy'),
+                choices: [
+                  TixChoice(ConflictPolicy.ask, l10n.syncPolicyAsk),
+                  TixChoice(ConflictPolicy.keepMine, l10n.syncPolicyMine),
+                  TixChoice(ConflictPolicy.keepTheirs, l10n.syncPolicyTheirs),
+                ],
+                selected: policy,
+                onSelected: (p) => unawaited(
+                  ref.read(conflictPolicySettingProvider.notifier).set(p),
+                ),
+              ),
+              const SizedBox(height: TixSpace.s3),
+              Wrap(
+                spacing: TixSpace.s2,
+                runSpacing: TixSpace.s2,
+                children: [
+                  TixButton(
+                    key: const Key('offline.openConflicts'),
+                    label: l10n.syncOpenConflicts,
+                    icon: Icons.call_split,
+                    onPressed: () => context.go(Routes.conflicts),
+                  ),
+                  if (waiting > 0)
+                    TixButton.danger(
+                      key: const Key('offline.discardAll'),
+                      label: l10n.syncDiscardAll,
+                      onPressed: () async {
+                        final ok = await confirmDestructive(
+                          context,
+                          title: l10n.syncDiscardAllTitle,
+                          body: l10n.syncDiscardAllBody(waiting),
+                          action: l10n.syncDiscard,
+                        );
+                        if (ok) {
+                          await ref
+                              .read(outboxSyncProvider.notifier)
+                              .discardAll();
+                        }
+                      },
+                    ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

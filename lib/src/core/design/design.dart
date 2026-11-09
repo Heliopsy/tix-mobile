@@ -25,6 +25,7 @@ export 'components/secret.dart';
 export 'components/section.dart';
 export 'components/states.dart';
 export 'components/swipe.dart';
+export 'components/sync.dart';
 export 'components/task_card.dart';
 export 'components/task_row.dart';
 export 'components/toast.dart';
