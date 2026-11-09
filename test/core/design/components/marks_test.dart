@@ -102,4 +102,26 @@ void main() {
       for (final h in ['raj', 'nadia', 'mint', 'tom', 'lena']) hueOf(h),
     }, hasLength(greaterThan(1)));
   });
+
+  group('compactCount', () {
+    test('is the number in full below a thousand', () {
+      expect(compactCount(9, 'en'), '9');
+      expect(compactCount(10, 'en'), '10');
+      expect(compactCount(999, 'en'), '999');
+    });
+
+    test('abbreviates from a thousand, in the locale', () {
+      expect(compactCount(1000, 'en'), '1K');
+      expect(compactCount(1234, 'en'), '1.2K');
+      expect(compactCount(12345, 'en'), '12K');
+      expect(compactCount(1234, 'fr'), isNot(contains('.')));
+      for (final locale in ['en', 'fr', 'de', 'bg']) {
+        expect(
+          compactCount(1234567, locale),
+          isNot(contains('234')),
+          reason: locale,
+        );
+      }
+    });
+  });
 }

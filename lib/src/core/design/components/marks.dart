@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'package:intl/intl.dart' show NumberFormat;
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/components/pickers.dart'
     show projectIconGlyph;
@@ -609,6 +610,13 @@ class TixBadge extends StatelessWidget {
     );
   }
 }
+
+/// [value] written for [locale] short enough for a fixed-width tile: in
+/// full below 1000, then in the locale's compact form ("1.2K", "1,2 k",
+/// "1,2 хил."). Say the full number to screen readers.
+String compactCount(int value, String locale) => value.abs() < 1000
+    ? NumberFormat.decimalPattern(locale).format(value)
+    : NumberFormat.compact(locale: locale).format(value);
 
 /// A count beside a navigation entry or a heading, filled with the accent.
 class TixCounter extends StatelessWidget {
