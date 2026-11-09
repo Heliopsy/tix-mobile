@@ -126,7 +126,8 @@ each event is delivered once and in order whichever transport carried it.
 A cursor tix no longer keeps, or a handover without a cursor after having been live, is reported as
 `EventsMissed`. The thresholds and timings are `LiveConfig` (`liveConfigProvider`). `liveStatusProvider` gives the
 mode (`connecting`, `websocket`, `polling`, `refreshing`, `offline`, `unavailable`) and the last error; the
-`LiveIndicator` beside the context switcher shows it.
+`LiveIndicator` shows it: on a phone right after the context's name in the switcher bar, on the rail as a dot at
+the avatar's end corner.
 
 `TixEventPoller` calls the generated `api.event.poll` on a client of its own, whose Dio hands each poll a
 `CancelToken`, so pausing or switching context drops the request in flight. It keeps the cursor at `next_seq` even
@@ -252,7 +253,7 @@ server refuse it, and say when a screen is read only.
 The Manage destination lists every management area from `features/manage/manage_sections.dart`, a flat list of
 `ManageEntry` values (group, icon, title, route, scope). A new area adds one entry there and its route in
 `core/router`; the hub groups and filters the entries itself. On a phone the bottom bar holds at most five
-destinations, the rest open from More.
+destinations, the rest open from More, which ends with About. The rail ends with an About button.
 
 ## Instances, connections and the active context
 
