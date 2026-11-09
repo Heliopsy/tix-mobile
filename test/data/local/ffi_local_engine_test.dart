@@ -135,7 +135,13 @@ void main() {
             ..transport.dio.interceptors.insert(
               0,
               LocalWakeInterceptor(
-                wake: () async => (await engines.wake(instance)).baseUrl,
+                wake: ({required background}) async {
+                  final (h, held) = await engines.attend(
+                    instance,
+                    background: background,
+                  );
+                  return (h.baseUrl, held);
+                },
                 done: () => engines.done(instance.id),
               ),
             );
