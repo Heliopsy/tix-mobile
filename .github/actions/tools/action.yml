@@ -14,6 +14,10 @@ runs:
           for t in actionlint shellcheck yamllint gitleaks reuse; do
             echo "$t=$(scripts/tool.sh version "$t")"
           done
+          printf 'binaries=al%s-sc%s-gl%s\n' \
+            "$(scripts/tool.sh version actionlint)" \
+            "$(scripts/tool.sh version shellcheck)" \
+            "$(scripts/tool.sh version gitleaks)"
           echo "just=$(awk '$1 == "just" { print $2 }' .tool-versions)"
         } >> "$GITHUB_OUTPUT"
 
@@ -28,6 +32,14 @@ runs:
         node-version: 22
         package-manager-cache: false
 
+    # The release downloads below come from github.com, which now and then
+    # answers 504 for minutes at a time; a cache hit skips them entirely.
+    - id: cache
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
+      with:
+        path: ${{ runner.temp }}/tools/bin
+        key: gate-tools-${{ runner.os }}-${{ steps.versions.outputs.binaries }}
+
     # TOOL_MODE=path makes scripts/tool.sh fail rather than fall back to a
     # container or another version: here the exact versions are installed, so
     # anything else on PATH would be a bug in this action and should say so.
@@ -38,25 +50,31 @@ runs:
         YAMLLINT: ${{ steps.versions.outputs.yamllint }}
         GITLEAKS: ${{ steps.versions.outputs.gitleaks }}
         REUSE: ${{ steps.versions.outputs.reuse }}
+        CACHED: ${{ steps.cache.outputs.cache-hit }}
       run: |
         set -euo pipefail
         bin="$RUNNER_TEMP/tools/bin"
         mkdir -p "$bin"
         cd "$RUNNER_TEMP/tools"
 
-        fetch() { curl -fsSL --retry 3 -o "$2" "https://github.com/$1"; }
+        fetch() {
+          curl -fsSL --retry 6 --retry-delay 10 --retry-all-errors \
+            -o "$2" "https://github.com/$1"
+        }
 
-        fetch "rhysd/actionlint/releases/download/v${ACTIONLINT}/actionlint_${ACTIONLINT}_linux_amd64.tar.gz" \
-          actionlint.tgz
-        tar -xzf actionlint.tgz -C "$bin" actionlint
+        if [ "$CACHED" != "true" ]; then
+          fetch "rhysd/actionlint/releases/download/v${ACTIONLINT}/actionlint_${ACTIONLINT}_linux_amd64.tar.gz" \
+            actionlint.tgz
+          tar -xzf actionlint.tgz -C "$bin" actionlint
 
-        fetch "koalaman/shellcheck/releases/download/v${SHELLCHECK}/shellcheck-v${SHELLCHECK}.linux.x86_64.tar.xz" \
-          shellcheck.txz
-        tar -xJf shellcheck.txz --strip-components=1 -C "$bin" "shellcheck-v${SHELLCHECK}/shellcheck"
+          fetch "koalaman/shellcheck/releases/download/v${SHELLCHECK}/shellcheck-v${SHELLCHECK}.linux.x86_64.tar.xz" \
+            shellcheck.txz
+          tar -xJf shellcheck.txz --strip-components=1 -C "$bin" "shellcheck-v${SHELLCHECK}/shellcheck"
 
-        fetch "gitleaks/gitleaks/releases/download/v${GITLEAKS}/gitleaks_${GITLEAKS}_linux_x64.tar.gz" \
-          gitleaks.tgz
-        tar -xzf gitleaks.tgz -C "$bin" gitleaks
+          fetch "gitleaks/gitleaks/releases/download/v${GITLEAKS}/gitleaks_${GITLEAKS}_linux_x64.tar.gz" \
+            gitleaks.tgz
+          tar -xzf gitleaks.tgz -C "$bin" gitleaks
+        fi
 
         pipx install --quiet "yamllint==${YAMLLINT}"
         pipx install --quiet "reuse==${REUSE}"
