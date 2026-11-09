@@ -76,11 +76,48 @@ runs:
           android/*.gradle*
           android/**/gradle-wrapper.properties
 
-    # An exact just version, because an empty one makes the action list every
-    # release and pick the newest, and that lookup has failed mid-run in tix.
-    - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3  # v4.0.0
+    # just from its release, cached by version and OS, and downloaded with the
+    # workflow token: setup-just resolves releases through the API, which
+    # GitHub throttles first under load, and that has failed whole runs.
+    - id: just-cache
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
       with:
-        just-version: ${{ steps.versions.outputs.just }}
+        path: ${{ runner.temp }}/just-bin
+        key: just-${{ runner.os }}-${{ runner.arch }}-${{ steps.versions.outputs.just }}
+
+    - shell: bash
+      env:
+        JUST: ${{ steps.versions.outputs.just }}
+        CACHED: ${{ steps.just-cache.outputs.cache-hit }}
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        set -euo pipefail
+        bin="$RUNNER_TEMP/just-bin"
+        mkdir -p "$bin"
+        if [ "$CACHED" != "true" ]; then
+          case "$RUNNER_ARCH" in
+            X64) arch=x86_64 ;;
+            ARM64) arch=aarch64 ;;
+            *) echo "no just build for $RUNNER_ARCH" >&2; exit 1 ;;
+          esac
+          case "$RUNNER_OS" in
+            Linux) asset="just-${JUST}-${arch}-unknown-linux-musl.tar.gz" ;;
+            macOS) asset="just-${JUST}-${arch}-apple-darwin.tar.gz" ;;
+            Windows) asset="just-${JUST}-${arch}-pc-windows-msvc.zip" ;;
+          esac
+          cd "$RUNNER_TEMP"
+          for try in 1 2 3 4 5 6; do
+            gh release download "$JUST" -R casey/just -p "$asset" -O "$asset" --clobber && break
+            [ "$try" = 6 ] && exit 1
+            echo "download of $asset failed (try $try), retrying in 10s" >&2
+            sleep 10
+          done
+          case "$asset" in
+            *.zip) 7z x -y -o"$bin" "$asset" just.exe >/dev/null ;;
+            *) tar -xzf "$asset" -C "$bin" just ;;
+          esac
+        fi
+        echo "$bin" >> "$GITHUB_PATH"
 
     - shell: bash
       run: |
