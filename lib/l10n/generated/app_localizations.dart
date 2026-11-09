@@ -11070,6 +11070,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Token rotated. The old one stops in a minute.'**
   String get tokenRotated;
+
+  /// No description provided for @offlineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get offlineTitle;
+
+  /// No description provided for @offlineSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What stays available without a connection'**
+  String get offlineSubtitle;
+
+  /// No description provided for @offlineLocal.
+  ///
+  /// In en, this message translates to:
+  /// **'This instance is a database on this device, so it is always available. Offline mode applies to remote instances only.'**
+  String get offlineLocal;
+
+  /// No description provided for @offlineAvailableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Available offline'**
+  String get offlineAvailableTitle;
+
+  /// No description provided for @offlineAvailableSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept on this device for the active instance and tenant, with each task\'s comments and subtasks.'**
+  String get offlineAvailableSubtitle;
+
+  /// No description provided for @offlineStorageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage'**
+  String get offlineStorageTitle;
+
+  /// No description provided for @offlineStorageSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved copies of this context, changes waiting to be sent included.'**
+  String get offlineStorageSubtitle;
+
+  /// No description provided for @offlineStorageCounting.
+  ///
+  /// In en, this message translates to:
+  /// **'Counting…'**
+  String get offlineStorageCounting;
+
+  /// No description provided for @offlineStorageUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Size unknown'**
+  String get offlineStorageUnknown;
+
+  /// No description provided for @offlineClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear saved copies'**
+  String get offlineClear;
+
+  /// No description provided for @offlineClearTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear saved copies?'**
+  String get offlineClearTitle;
+
+  /// No description provided for @offlineClearBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Screens load from the server again, and nothing is available offline until the next sync. Changes waiting to be sent are kept.'**
+  String get offlineClearBody;
+
+  /// No description provided for @offlineSyncTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync'**
+  String get offlineSyncTitle;
+
+  /// No description provided for @offlineSyncSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs when this context opens and every 30 minutes. On a phone it waits for Wi-Fi and enough battery; Sync now always runs.'**
+  String get offlineSyncSubtitle;
+
+  /// No description provided for @offlineSyncNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync now'**
+  String get offlineSyncNow;
+
+  /// No description provided for @offlineNeverSynced.
+  ///
+  /// In en, this message translates to:
+  /// **'Not synced yet'**
+  String get offlineNeverSynced;
+
+  /// No description provided for @offlineStorageUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'{size} used'**
+  String offlineStorageUsed(String size);
+
+  /// No description provided for @offlineLastSynced.
+  ///
+  /// In en, this message translates to:
+  /// **'Last synced {time}'**
+  String offlineLastSynced(String time);
+
+  /// No description provided for @offlineSavedCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline, showing saved copy from {time}'**
+  String offlineSavedCopy(String time);
 }
 
 class _AppLocalizationsDelegate

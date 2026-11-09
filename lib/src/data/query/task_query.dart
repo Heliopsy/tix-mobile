@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
 
 /// How the task screen draws its selection.
 enum TaskView {

@@ -42,6 +42,7 @@ import 'package:tix_mobile/src/features/projects/presentation/project_settings_s
 import 'package:tix_mobile/src/features/projects/presentation/projects_screen.dart';
 import 'package:tix_mobile/src/features/quick/presentation/quick_actions_host.dart';
 import 'package:tix_mobile/src/features/security/presentation/security_screen.dart';
+import 'package:tix_mobile/src/features/settings/presentation/offline_screen.dart';
 import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';
 import 'package:tix_mobile/src/features/shell/presentation/home_shell.dart';
 import 'package:tix_mobile/src/features/shell/presentation/splash_screen.dart';
@@ -131,9 +132,11 @@ GoRouter router(Ref ref) {
             child: QuickActionsHost(
               child: TemplatesCommands(
                 child: SettingsCommands(
-                  child: HomeShell(
-                    shell: shell,
-                    inboxIcon: (icon) => InboxNavIcon(icon: icon),
+                  child: OfflineSyncScope(
+                    child: HomeShell(
+                      shell: shell,
+                      inboxIcon: (icon) => InboxNavIcon(icon: icon),
+                    ),
                   ),
                 ),
               ),
@@ -288,6 +291,10 @@ GoRouter router(Ref ref) {
                   GoRoute(
                     path: 'security',
                     builder: (_, _) => const SecurityScreen(),
+                  ),
+                  GoRoute(
+                    path: 'offline',
+                    builder: (_, _) => const OfflineScreen(),
                   ),
                 ],
               ),

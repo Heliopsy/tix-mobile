@@ -26,7 +26,12 @@ class TemplatesRepository {
   Future<Page<TaskTemplate>> list({String? cursor}) {
     final fresh = _api.template.list(cursor: cursor);
     if (cursor != null) return fresh;
-    return _cache.remember(_key, fresh, (p) => p.toJson((e) => e.toJson()));
+    return _cache.remember(
+      _key,
+      fresh,
+      (p) => p.toJson((e) => e.toJson()),
+      decode: _page,
+    );
   }
 
   /// The first page as last read, null when never read.

@@ -6611,4 +6611,72 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get tokenRotated =>
       'Jeton renouvelé. L’ancien s’arrête dans une minute.';
+
+  @override
+  String get offlineTitle => 'Hors ligne';
+
+  @override
+  String get offlineSubtitle => 'Ce qui reste disponible sans connexion';
+
+  @override
+  String get offlineLocal =>
+      'Cette instance est une base de données sur cet appareil, elle est donc toujours disponible. Le mode hors ligne ne concerne que les instances distantes.';
+
+  @override
+  String get offlineAvailableTitle => 'Disponible hors ligne';
+
+  @override
+  String get offlineAvailableSubtitle =>
+      'Conservé sur cet appareil pour l\'instance et l\'organisation actives, avec les commentaires et sous-tâches de chaque tâche.';
+
+  @override
+  String get offlineStorageTitle => 'Stockage';
+
+  @override
+  String get offlineStorageSubtitle =>
+      'Copies enregistrées de ce contexte, modifications en attente d\'envoi comprises.';
+
+  @override
+  String get offlineStorageCounting => 'Calcul…';
+
+  @override
+  String get offlineStorageUnknown => 'Taille inconnue';
+
+  @override
+  String get offlineClear => 'Effacer les copies';
+
+  @override
+  String get offlineClearTitle => 'Effacer les copies enregistrées ?';
+
+  @override
+  String get offlineClearBody =>
+      'Les écrans se rechargent depuis le serveur et rien n\'est disponible hors ligne jusqu\'à la prochaine synchronisation. Les modifications en attente d\'envoi sont conservées.';
+
+  @override
+  String get offlineSyncTitle => 'Synchronisation';
+
+  @override
+  String get offlineSyncSubtitle =>
+      'S\'exécute à l\'ouverture de ce contexte et toutes les 30 minutes. Sur un téléphone, attend le Wi-Fi et assez de batterie ; « Synchroniser » s\'exécute toujours.';
+
+  @override
+  String get offlineSyncNow => 'Synchroniser';
+
+  @override
+  String get offlineNeverSynced => 'Pas encore synchronisé';
+
+  @override
+  String offlineStorageUsed(String size) {
+    return '$size utilisés';
+  }
+
+  @override
+  String offlineLastSynced(String time) {
+    return 'Dernière synchronisation $time';
+  }
+
+  @override
+  String offlineSavedCopy(String time) {
+    return 'Hors ligne, copie enregistrée du $time';
+  }
 }

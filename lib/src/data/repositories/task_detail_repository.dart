@@ -120,6 +120,7 @@ class TaskDetailRepository {
     'task/$ref/subtasks',
     _api.task.tree(ref, depth: 1).then((p) => p.items.skip(1).toList()),
     (v) => _encode(v, (t) => t.toJson()),
+    decode: (j) => _list(j, Task.fromJson),
   );
 
   /// The subtasks of [ref] as last read.
@@ -145,13 +146,22 @@ class TaskDetailRepository {
   Future<void> removeTag(String ref, String name) => _api.tag.remove(ref, name);
 
   /// Every tag in the tenant (`tag.list`).
-  Future<List<Tag>> tags() async => (await _api.tag.list()).items;
+  Future<List<Tag>> tags() => _cache.remember(
+    tagsKey,
+    _api.tag.list().then((p) => p.items),
+    (v) => _encode(v, (t) => t.toJson()),
+    decode: (j) => _list(j, Tag.fromJson),
+  );
+
+  /// Where [tags] keeps its answer.
+  static const tagsKey = 'tags';
 
   /// [ref]'s comments, oldest first (`comment.list`).
   Future<List<Comment>> comments(String ref) => _cache.remember(
     'task/$ref/comments',
     _api.comment.list(ref).then((p) => p.items),
     (v) => _encode(v, (c) => c.toJson()),
+    decode: (j) => _list(j, Comment.fromJson),
   );
 
   /// [ref]'s comments as last read.
@@ -194,6 +204,7 @@ class TaskDetailRepository {
     'project/$project/fields',
     _api.field.list(project).then((p) => p.items),
     (v) => _encode(v, (f) => f.toJson()),
+    decode: (j) => _list(j, FieldDef.fromJson),
   );
 
   /// The custom fields of [project] as last read.
@@ -203,23 +214,37 @@ class TaskDetailRepository {
   );
 
   /// The project [ref] (`project.show`).
-  Future<Project> project(String ref) => _api.project.show(ref);
+  Future<Project> project(String ref) => _cache.remember(
+    'project/$ref',
+    _api.project.show(ref),
+    (p) => p.toJson(),
+    decode: (j) => Project.fromJson(j! as Map<String, dynamic>),
+  );
 
   /// The workflow [key] or id (`workflow.get`).
   Future<Workflow> workflow(String key) => _cache.remember(
     'workflow/$key',
     _api.workflow.get(key),
     (w) => w.toJson(),
+    decode: _workflow,
   );
 
   /// The workflow [key] as last read.
-  Future<Workflow?> cachedWorkflow(String key) => _cache.peek(
-    'workflow/$key',
-    (j) => Workflow.fromJson(j! as Map<String, dynamic>),
-  );
+  Future<Workflow?> cachedWorkflow(String key) =>
+      _cache.peek('workflow/$key', _workflow);
+
+  static Workflow _workflow(Object? j) =>
+      Workflow.fromJson(j! as Map<String, dynamic>);
 
   /// Every actor in the tenant (`actor.list`, every page).
-  Future<List<Actor>> actors() async {
+  Future<List<Actor>> actors() => _cache.remember(
+    actorsKey,
+    _allActors(),
+    (v) => _encode(v, (a) => a.toJson()),
+    decode: decodeActors,
+  );
+
+  Future<List<Actor>> _allActors() async {
     final all = <Actor>[];
     String? cursor;
     do {
@@ -229,6 +254,12 @@ class TaskDetailRepository {
     } while (cursor != null);
     return all;
   }
+
+  /// Where [actors] keeps its answer.
+  static const actorsKey = 'actors';
+
+  /// Reads what [actors] keeps.
+  static List<Actor> decodeActors(Object? json) => _list(json, Actor.fromJson);
 
   /// Whether the tenant keeps a trash (`trash.status`).
   Future<TrashStatus> trash() => _api.trash.status();

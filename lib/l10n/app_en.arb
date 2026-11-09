@@ -3782,5 +3782,48 @@
       }
     }
   },
-  "tokenRotated": "Token rotated. The old one stops in a minute."
+  "tokenRotated": "Token rotated. The old one stops in a minute.",
+  "offlineTitle": "Offline",
+  "offlineSubtitle": "What stays available without a connection",
+  "offlineLocal": "This instance is a database on this device, so it is always available. Offline mode applies to remote instances only.",
+  "offlineAvailableTitle": "Available offline",
+  "offlineAvailableSubtitle": "Kept on this device for the active instance and tenant, with each task's comments and subtasks.",
+  "offlineStorageTitle": "Storage",
+  "offlineStorageSubtitle": "Saved copies of this context, changes waiting to be sent included.",
+  "offlineStorageCounting": "Counting…",
+  "offlineStorageUnknown": "Size unknown",
+  "offlineClear": "Clear saved copies",
+  "offlineClearTitle": "Clear saved copies?",
+  "offlineClearBody": "Screens load from the server again, and nothing is available offline until the next sync. Changes waiting to be sent are kept.",
+  "offlineSyncTitle": "Sync",
+  "offlineSyncSubtitle": "Runs when this context opens and every 30 minutes. On a phone it waits for Wi-Fi and enough battery; Sync now always runs.",
+  "offlineSyncNow": "Sync now",
+  "offlineNeverSynced": "Not synced yet",
+  "offlineStorageUsed": "{size} used",
+  "@offlineStorageUsed": {
+    "placeholders": {
+      "size": {
+        "type": "String",
+        "example": "A file size such as 1.5 MB"
+      }
+    }
+  },
+  "offlineLastSynced": "Last synced {time}",
+  "@offlineLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "A date and time"
+      }
+    }
+  },
+  "offlineSavedCopy": "Offline, showing saved copy from {time}",
+  "@offlineSavedCopy": {
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "A date and time"
+      }
+    }
+  }
 }
