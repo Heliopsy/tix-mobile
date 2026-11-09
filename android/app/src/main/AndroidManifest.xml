@@ -25,7 +25,8 @@
               android:resource="@style/NormalTheme"
               />
             <!-- Widget links (tixwidget://) are handled by Dart through
-                 home_widget, never pushed to the router as a path. -->
+                 home_widget, and tix:// links over the tix/links channel;
+                 neither is pushed to the router as a path (docs/adb.md). -->
             <meta-data
               android:name="flutter_deeplinking_enabled"
               android:value="false" />
@@ -38,6 +39,13 @@
                 <action android:name="android.intent.action.SEND"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <data android:mimeType="text/plain"/>
+            </intent-filter>
+            <!-- tix:// links only navigate (docs/adb.md). -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="tix"/>
             </intent-filter>
         </activity>
         <!-- Home screen widgets (docs/widgets.md). -->
@@ -97,6 +105,20 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="es.antonborri.home_widget.action.BACKGROUND" />
+            </intent-filter>
+        </receiver>
+        <!-- ADB (docs/adb.md). dumpsys reaches the service through the
+             system only; the receiver takes broadcasts only from senders
+             holding DUMP, which the shell has and apps cannot get. -->
+        <service
+            android:name=".adb.AdbService"
+            android:exported="false" />
+        <receiver
+            android:name=".adb.AdbReceiver"
+            android:exported="true"
+            android:permission="android.permission.DUMP">
+            <intent-filter>
+                <action android:name="red.tix.ADB" />
             </intent-filter>
         </receiver>
         <!-- Don't delete the meta-data below.

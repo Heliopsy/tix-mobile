@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
+import 'dart:io';
+import 'dart:ui' show DartPluginRegistrant;
+
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -7,10 +11,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tix_mobile/src/app.dart';
 import 'package:tix_mobile/src/core/config/config.dart';
 import 'package:tix_mobile/src/core/licences/binding.dart';
+import 'package:tix_mobile/src/core/platform/adb_bridge.dart';
 import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/core/storage/stores.dart';
 import 'package:tix_mobile/src/data/local/ffi_local_engine.dart';
+import 'package:tix_mobile/src/features/settings/application/settings.dart';
 import 'package:tix_mobile/src/features/widgets/application/headless.dart';
 
 Future<void> main() async {
@@ -20,18 +26,38 @@ Future<void> main() async {
   final prefs = await SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions(),
   );
-  runApp(
-    ProviderScope(
-      retry: noRetry,
-      overrides: [
-        keyValueStoreProvider.overrideWithValue(PrefsKeyValueStore(prefs)),
-        widgetBridgeProvider.overrideWithValue(
-          platformWidgetBridge(background: widgetBackgroundCallback),
-        ),
-      ],
-      child: const App(),
-    ),
+  final container = ProviderContainer(
+    retry: noRetry,
+    overrides: [
+      keyValueStoreProvider.overrideWithValue(PrefsKeyValueStore(prefs)),
+      widgetBridgeProvider.overrideWithValue(
+        platformWidgetBridge(background: widgetBackgroundCallback),
+      ),
+      adbAppearanceProvider.overrideWith(LiveAppearance.new),
+    ],
   );
+  if (Platform.isAndroid) unawaited(container.read(adbBridgeProvider).listen());
+  runApp(UncontrolledProviderScope(container: container, child: const App()));
+}
+
+/// Android starts a headless engine here to answer `dumpsys` and
+/// `am broadcast` while the app is not open (docs/adb.md). It reads what is
+/// stored and never builds the session, live updates or a local engine.
+@pragma('vm:entry-point')
+Future<void> adbHeadlessMain() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  DartPluginRegistrant.ensureInitialized();
+  final prefs = await SharedPreferencesWithCache.create(
+    cacheOptions: const SharedPreferencesWithCacheOptions(),
+  );
+  final container = ProviderContainer(
+    retry: noRetry,
+    overrides: [
+      keyValueStoreProvider.overrideWithValue(PrefsKeyValueStore(prefs)),
+      adbHeadlessProvider.overrideWithValue(true),
+    ],
+  );
+  await container.read(adbBridgeProvider).listen();
 }
 
 /// What an Android widget's tick or the refresh worker runs, in the

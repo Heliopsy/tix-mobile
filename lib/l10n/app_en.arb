@@ -4282,5 +4282,29 @@
       }
     }
   },
-  "syncStateUnreadable": "The changes waiting on this device could not be read. They are kept untouched and are not sent."
+  "syncStateUnreadable": "The changes waiting on this device could not be read. They are kept untouched and are not sent.",
+  "settingsAdvanced": "Advanced",
+  "@settingsAdvanced": {
+    "description": "Settings group for developer controls"
+  },
+  "settingsAdbControl": "Allow control over ADB",
+  "@settingsAdbControl": {
+    "description": "Switch that lets adb shell commands change the app"
+  },
+  "settingsAdbControlHelp": "Lets a computer connected with USB debugging switch context, add tasks and change settings in tix. Reading the app's state and opening tix:// links work without it.",
+  "@settingsAdbControlHelp": {
+    "description": "Explains the ADB control switch"
+  },
+  "linkNotRecognised": "Link not recognised",
+  "@linkNotRecognised": {
+    "description": "Toast for a tix:// link the app does not know"
+  },
+  "linkPickContextTitle": "Open this link in which context?",
+  "@linkPickContextTitle": {
+    "description": "Title of the sheet asking which context a link means"
+  },
+  "linkPickContextBody": "The link fits more than one of your contexts.",
+  "@linkPickContextBody": {
+    "description": "Body of the sheet asking which context a link means"
+  }
 }

@@ -132,6 +132,9 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 - **Home screen widgets**: My work (tick to complete), Inbox, Quick add and Project, natively on Android (Glance),
   iOS and macOS (WidgetKit), following the active context or pinned to one, with the inbox count on the iPhone lock
   screen. See [docs/widgets.md](docs/widgets.md).
+- **ADB control** on Android: `adb shell dumpsys` prints the app's state (contexts, live status, outbox, engine),
+  `tix://` links open any screen, and `am broadcast` commands switch context, add tasks, sync or change the theme,
+  from the shell only. See [docs/adb.md](docs/adb.md).
 - **People and access**: the tenant's users with their roles, invite links, role changes, disabling and
   deleting; API tokens issued with scopes and an expiry, shown once, listed with their last use and revoked; your
   account, tenants and history; the private calendar feed for Google, Apple or Outlook. Each shows only when your
@@ -317,6 +320,7 @@ client maps tix's error envelope and keyset pagination.
 | [docs/development.md](docs/development.md) | Prerequisites per OS, every `just` recipe, codegen, localisation, emulators, screenshots |
 | [docs/architecture.md](docs/architecture.md) | Layers, state management, navigation, errors, pagination |
 | [docs/widgets.md](docs/widgets.md) | Home screen widgets: platforms, data flow, the snapshot contract |
+| [docs/adb.md](docs/adb.md) | ADB control: dumpsys sections, `tix://` links, shell commands and their security |
 | [docs/testing.md](docs/testing.md) | Unit, widget and golden tests, the coverage floor, watching a guard fail |
 | [docs/releasing.md](docs/releasing.md) | release-please, release artifacts, signing secrets |
 

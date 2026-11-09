@@ -2028,5 +2028,11 @@
   "syncDiscardAllTitle": "Alle nicht synchronisierten Änderungen verwerfen?",
   "syncDiscardAllBody": "{count, plural, =1{1 offline gemachte Änderung wird verworfen und nie gesendet. Entwürfe verschwinden.} other{{count} offline gemachte Änderungen werden verworfen und nie gesendet. Entwürfe verschwinden.}}",
   "syncUnsentLost": "{count, plural, =1{1 offline gemachte Änderung wurde noch nicht gesendet und geht verloren.} other{{count} offline gemachte Änderungen wurden noch nicht gesendet und gehen verloren.}}",
-  "syncStateUnreadable": "Die auf diesem Gerät wartenden Änderungen konnten nicht gelesen werden. Sie bleiben unverändert erhalten und werden nicht gesendet."
+  "syncStateUnreadable": "Die auf diesem Gerät wartenden Änderungen konnten nicht gelesen werden. Sie bleiben unverändert erhalten und werden nicht gesendet.",
+  "settingsAdvanced": "Erweitert",
+  "settingsAdbControl": "Steuerung über ADB erlauben",
+  "settingsAdbControlHelp": "Erlaubt einem per USB-Debugging verbundenen Computer, in tix den Kontext zu wechseln, Aufgaben anzulegen und Einstellungen zu ändern. Den Zustand der App lesen und tix://-Links öffnen geht auch ohne.",
+  "linkNotRecognised": "Link nicht erkannt",
+  "linkPickContextTitle": "In welchem Kontext soll der Link öffnen?",
+  "linkPickContextBody": "Der Link passt zu mehreren Ihrer Kontexte."
 }

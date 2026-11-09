@@ -7367,4 +7367,24 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get syncStateUnreadable =>
       'Les modifications en attente sur cet appareil n\'ont pas pu être lues. Elles sont conservées telles quelles et ne sont pas envoyées.';
+
+  @override
+  String get settingsAdvanced => 'Avancé';
+
+  @override
+  String get settingsAdbControl => 'Autoriser le contrôle par ADB';
+
+  @override
+  String get settingsAdbControlHelp =>
+      'Permet à un ordinateur connecté en débogage USB de changer de contexte, d\'ajouter des tâches et de modifier les réglages de tix. Lire l\'état de l\'application et ouvrir des liens tix:// fonctionne sans cela.';
+
+  @override
+  String get linkNotRecognised => 'Lien non reconnu';
+
+  @override
+  String get linkPickContextTitle => 'Ouvrir ce lien dans quel contexte ?';
+
+  @override
+  String get linkPickContextBody =>
+      'Le lien correspond à plusieurs de vos contextes.';
 }
