@@ -3486,7 +3486,9 @@
     }
   },
   "settingsDatesNotPersonal": "This credential is not a person, so it reads your tenant’s defaults and cannot keep its own.",
-  "settingsDatesUnavailable": "This server keeps no date preferences, or has not answered yet, so dates follow this device.",
+  "settingsDatesLoading": "Reading your date settings from the server…",
+  "settingsDatesUnsupported": "This version of tix keeps no date preferences, so dates follow this device. A newer tix server adds them.",
+  "settingsDatesFailed": "The server did not answer, so dates follow this device for now.",
   "settingsDatesSaved": "Saved with your account",
   "settingsZoneSearch": "Search time zones",
   "settingsZoneNone": "No time zone matches.",

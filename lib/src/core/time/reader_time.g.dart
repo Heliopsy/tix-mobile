@@ -11,8 +11,11 @@ part of 'reader_time.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// The active context's date settings: what was remembered for it at once,
-/// then the server's answer. Null without a context, and from a server
-/// that keeps none, which leaves the device's formats in force.
+/// then the server's answer, read again when the app comes back to the
+/// foreground and whenever [ReaderTime.refresh] is called. tix sends no
+/// event when a preference changes, so nothing on the live stream triggers
+/// a read. No settings without a context, and from a server that keeps
+/// none, which leaves the device's formats in force.
 ///
 /// A connection that reaches one tenant is keyed by the connection alone,
 /// as the response cache is, so `whoami` naming the tenant later does not
@@ -22,17 +25,23 @@ part of 'reader_time.dart';
 final readerTimeProvider = ReaderTimeProvider._();
 
 /// The active context's date settings: what was remembered for it at once,
-/// then the server's answer. Null without a context, and from a server
-/// that keeps none, which leaves the device's formats in force.
+/// then the server's answer, read again when the app comes back to the
+/// foreground and whenever [ReaderTime.refresh] is called. tix sends no
+/// event when a preference changes, so nothing on the live stream triggers
+/// a read. No settings without a context, and from a server that keeps
+/// none, which leaves the device's formats in force.
 ///
 /// A connection that reaches one tenant is keyed by the connection alone,
 /// as the response cache is, so `whoami` naming the tenant later does not
 /// read the settings twice.
 final class ReaderTimeProvider
-    extends $NotifierProvider<ReaderTime, TimeSettings?> {
+    extends $NotifierProvider<ReaderTime, ReaderTimeState> {
   /// The active context's date settings: what was remembered for it at once,
-  /// then the server's answer. Null without a context, and from a server
-  /// that keeps none, which leaves the device's formats in force.
+  /// then the server's answer, read again when the app comes back to the
+  /// foreground and whenever [ReaderTime.refresh] is called. tix sends no
+  /// event when a preference changes, so nothing on the live stream triggers
+  /// a read. No settings without a context, and from a server that keeps
+  /// none, which leaves the device's formats in force.
   ///
   /// A connection that reaches one tenant is keyed by the connection alone,
   /// as the response cache is, so `whoami` naming the tenant later does not
@@ -56,35 +65,38 @@ final class ReaderTimeProvider
   ReaderTime create() => ReaderTime();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(TimeSettings? value) {
+  Override overrideWithValue(ReaderTimeState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<TimeSettings?>(value),
+      providerOverride: $SyncValueProvider<ReaderTimeState>(value),
     );
   }
 }
 
-String _$readerTimeHash() => r'e1f0396d53444eb69d279eb31e733af05cce8c5f';
+String _$readerTimeHash() => r'3d52ec61e37a9f0f4db8eb79471f8c7e5fb09651';
 
 /// The active context's date settings: what was remembered for it at once,
-/// then the server's answer. Null without a context, and from a server
-/// that keeps none, which leaves the device's formats in force.
+/// then the server's answer, read again when the app comes back to the
+/// foreground and whenever [ReaderTime.refresh] is called. tix sends no
+/// event when a preference changes, so nothing on the live stream triggers
+/// a read. No settings without a context, and from a server that keeps
+/// none, which leaves the device's formats in force.
 ///
 /// A connection that reaches one tenant is keyed by the connection alone,
 /// as the response cache is, so `whoami` naming the tenant later does not
 /// read the settings twice.
 
-abstract class _$ReaderTime extends $Notifier<TimeSettings?> {
-  TimeSettings? build();
+abstract class _$ReaderTime extends $Notifier<ReaderTimeState> {
+  ReaderTimeState build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<TimeSettings?, TimeSettings?>;
+    final ref = this.ref as $Ref<ReaderTimeState, ReaderTimeState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<TimeSettings?, TimeSettings?>,
-              TimeSettings?,
+              AnyNotifier<ReaderTimeState, ReaderTimeState>,
+              ReaderTimeState,
               Object?,
               Object?
             >;
@@ -145,4 +157,4 @@ final class ReaderTimeStyleProvider
   }
 }
 
-String _$readerTimeStyleHash() => r'ce8ce0a9d16b09ae0d6f8319a41701d614ab0670';
+String _$readerTimeStyleHash() => r'47401693a220f22277d9217f6bcc07f13bd2048c';

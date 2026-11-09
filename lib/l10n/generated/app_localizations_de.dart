@@ -6074,8 +6074,16 @@ class AppLocalizationsDe extends AppLocalizations {
       'Diese Anmeldung gehört keiner Person, sie nutzt daher die Vorgaben des Mandanten und kann keine eigenen haben.';
 
   @override
-  String get settingsDatesUnavailable =>
-      'Dieser Server speichert keine Datumseinstellungen oder hat noch nicht geantwortet, daher folgen Daten diesem Gerät.';
+  String get settingsDatesLoading =>
+      'Ihre Datumseinstellungen werden vom Server gelesen…';
+
+  @override
+  String get settingsDatesUnsupported =>
+      'Diese tix-Version speichert keine Datumseinstellungen, daher folgen Daten diesem Gerät. Ein neuerer tix-Server bringt sie mit.';
+
+  @override
+  String get settingsDatesFailed =>
+      'Der Server hat nicht geantwortet, daher folgen Daten vorerst diesem Gerät.';
 
   @override
   String get settingsDatesSaved => 'Mit Ihrem Konto gespeichert';

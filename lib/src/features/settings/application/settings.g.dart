@@ -555,7 +555,7 @@ final class ArrangementSettingsProvider
 }
 
 String _$arrangementSettingsHash() =>
-    r'66f6f33a623ef8cf2b2ad3ba4d2bc32348a0ec96';
+    r'e1b9fb5293419d6b8531a5bb973cf85e9a551efd';
 
 /// The reader's arrangements of the shared views, kept with their account.
 

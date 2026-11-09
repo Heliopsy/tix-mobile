@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -412,8 +413,56 @@ void main() {
     tester,
   ) async {
     await pump(tester);
-    expect(find.textContaining('dates follow this device'), findsOneWidget);
+    expect(find.byKey(const Key('settings.datesUnsupported')), findsOneWidget);
+    expect(find.textContaining('This version of tix'), findsOneWidget);
+    expect(find.byKey(const Key('settings.datesRetry')), findsNothing);
+    expect(find.byKey(const Key('settings.datesLoading')), findsNothing);
     expect(find.byKey(const Key('settings.timeZone')), findsNothing);
+  });
+
+  testWidgets('date settings still on their way show a spinner', (
+    tester,
+  ) async {
+    final tix = timeServer();
+    final s = signedInStores();
+    final gate = Completer<void>();
+    tix.gate = gate;
+    await pumpScreen(
+      tester,
+      const SettingsScreen(),
+      size: const Size(500, 4000),
+      settle: false,
+      overrides: fakeOverrides(tix, settings: s.settings, secrets: s.secrets),
+    );
+    await tester.pump(const Duration(milliseconds: 50));
+    expect(find.byKey(const Key('settings.datesLoading')), findsOneWidget);
+    expect(find.byKey(const Key('settings.datesRetry')), findsNothing);
+    expect(find.byKey(const Key('settings.datesUnsupported')), findsNothing);
+    tix.gate = null;
+    gate.complete();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('settings.datesLoading')), findsNothing);
+    expect(find.byKey(const Key('settings.dateFormat')), findsOneWidget);
+  });
+
+  testWidgets('date settings that failed to load offer a retry', (
+    tester,
+  ) async {
+    final tix = timeServer();
+    tix.failing['/api/v1/me/time'] = FakeResponse(
+      500,
+      envelope('internal', 'down'),
+    );
+    await pump(tester, tix: tix);
+    expect(find.byKey(const Key('settings.datesFailed')), findsOneWidget);
+    expect(find.byKey(const Key('settings.datesUnsupported')), findsNothing);
+    tix.failing.remove('/api/v1/me/time');
+    await tester.tap(find.byKey(const Key('settings.datesRetry')));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('settings.datesFailed')), findsNothing);
+    expect(find.byKey(const Key('settings.dateFormat')), findsOneWidget);
   });
 
   testWidgets('resetting the arrangement asks, then resets three views', (

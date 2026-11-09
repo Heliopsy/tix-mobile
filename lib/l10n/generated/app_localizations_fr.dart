@@ -6065,8 +6065,16 @@ class AppLocalizationsFr extends AppLocalizations {
       'Cet identifiant n’est pas une personne : il lit les valeurs de l’espace et ne peut pas avoir les siennes.';
 
   @override
-  String get settingsDatesUnavailable =>
-      'Ce serveur ne garde pas de préférences de date, ou n’a pas encore répondu : les dates suivent cet appareil.';
+  String get settingsDatesLoading =>
+      'Lecture de vos réglages de date sur le serveur…';
+
+  @override
+  String get settingsDatesUnsupported =>
+      'Cette version de tix ne conserve pas de préférences de date, les dates suivent donc cet appareil. Un serveur tix plus récent les ajoute.';
+
+  @override
+  String get settingsDatesFailed =>
+      'Le serveur n’a pas répondu, les dates suivent donc cet appareil pour l’instant.';
 
   @override
   String get settingsDatesSaved => 'Enregistré avec votre compte';

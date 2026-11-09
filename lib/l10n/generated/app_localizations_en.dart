@@ -6019,8 +6019,16 @@ class AppLocalizationsEn extends AppLocalizations {
       'This credential is not a person, so it reads your tenant’s defaults and cannot keep its own.';
 
   @override
-  String get settingsDatesUnavailable =>
-      'This server keeps no date preferences, or has not answered yet, so dates follow this device.';
+  String get settingsDatesLoading =>
+      'Reading your date settings from the server…';
+
+  @override
+  String get settingsDatesUnsupported =>
+      'This version of tix keeps no date preferences, so dates follow this device. A newer tix server adds them.';
+
+  @override
+  String get settingsDatesFailed =>
+      'The server did not answer, so dates follow this device for now.';
 
   @override
   String get settingsDatesSaved => 'Saved with your account';
