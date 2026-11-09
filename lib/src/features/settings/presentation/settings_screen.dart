@@ -9,9 +9,8 @@ import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
-import 'package:tix_mobile/src/core/session/access.dart';
-import 'package:tix_mobile/src/core/session/people.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
+import 'package:tix_mobile/src/core/session/people.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/time/reader_time.dart';
 import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
@@ -51,7 +50,7 @@ List<SettingsItem> currentSettings(WidgetRef ref, AppLocalizations l10n) {
     l10n,
     signedIn: session != null,
     tenantAdmin: access != null && administers(access),
-    can: access == null ? null : access.can,
+    can: access?.can,
     systemTheme: ref.watch(themeSettingProvider) == ThemeChoice.system,
     localEngines: ref.watch(localInstancesEnabledProvider),
     widgets: ref.watch(widgetBridgeProvider).supported,

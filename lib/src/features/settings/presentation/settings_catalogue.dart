@@ -151,8 +151,8 @@ List<SettingsItem> settingsCatalogue(
   AppLocalizations l10n, {
   required bool signedIn,
   required bool tenantAdmin,
-  bool Function(String scope)? can,
   required bool systemTheme,
+  bool Function(String scope)? can,
   bool localEngines = false,
   bool widgets = false,
   String tenant = '',
