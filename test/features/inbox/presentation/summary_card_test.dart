@@ -128,7 +128,7 @@ void main() {
     expect(number().data, '999');
     set(1234);
     await tester.pumpAndSettle();
-    expect(number().data, '1.2K');
+    expect(number().data, '1.23K');
     final semantics = tester.widget<Semantics>(
       find.descendant(of: stat('overdue'), matching: find.byType(Semantics)),
     );

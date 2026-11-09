@@ -612,8 +612,8 @@ class TixBadge extends StatelessWidget {
 }
 
 /// [value] written for [locale] short enough for a fixed-width tile: in
-/// full below 1000, then in the locale's compact form ("1.2K", "1,2 k",
-/// "1,2 хил."). Say the full number to screen readers.
+/// full below 1000, then in the locale's compact form ("1.23K", "1,23 k",
+/// "1,23 хил."). Say the full number to screen readers.
 String compactCount(int value, String locale) => value.abs() < 1000
     ? NumberFormat.decimalPattern(locale).format(value)
     : NumberFormat.compact(locale: locale).format(value);
