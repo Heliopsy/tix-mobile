@@ -124,11 +124,13 @@ void main() {
     final sub = c.listen(p, (_, _) {});
     addTearDown(sub.close);
     c.read(p.notifier).enter();
-    expect((c.read(p).active, c.read(p).refs), (true, <String>{}));
+    expect(c.read(p).active, isTrue);
+    expect(c.read(p).refs, isEmpty);
     c.read(p.notifier)
       ..toggle('a')
       ..toggle('a');
-    expect((c.read(p).active, c.read(p).refs), (true, <String>{}));
+    expect(c.read(p).active, isTrue);
+    expect(c.read(p).refs, isEmpty);
   });
 
   test('a range runs from the anchor in either direction', () async {
