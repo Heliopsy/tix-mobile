@@ -2,6 +2,8 @@
 
 import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
+import 'package:tix_mobile/src/data/api/gen/models.gen.dart'
+    show IssuedToken, RotateTokenInput;
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/auth.dart';
@@ -104,6 +106,26 @@ class AuthRepository {
     ),
     signingIn: false,
   );
+
+  /// Rotates the API token [credential] presents at [baseUrl]: a new one of
+  /// the same name, scopes and lifetime, whose value is in the answer and
+  /// nowhere else (`token.rotate`). The old one keeps working for [grace],
+  /// so requests already sent with it still land.
+  Future<IssuedToken> rotateToken(
+    String baseUrl,
+    BearerCredential credential, {
+    String grace = '1m',
+  }) async {
+    final api = _build(baseUrl, credential);
+    final me = await api.identity.whoami();
+    if (me.tokenId.isEmpty) {
+      throw const TixException(TixErrorKind.tokenRequired);
+    }
+    return await api.token.rotate(
+      me.tokenId,
+      body: RotateTokenInput(grace: grace),
+    );
+  }
 
   /// What the invite [link] admits to, read without a credential
   /// (`invite.preview`). Never cached: the link is a secret.

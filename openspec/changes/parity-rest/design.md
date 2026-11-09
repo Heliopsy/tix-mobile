@@ -39,6 +39,12 @@ A bundle is NDJSON served as `application/vnd.tix.bundle+json`, and Dio decodes 
 for text, which fails on NDJSON. `TixTransport.text` therefore reads bytes and decodes UTF-8 itself; a refusal read as
 bytes still yields the server's error envelope.
 
+## Token rotation
+
+A remote token connection offers Rotate token. The app asks `whoami` for the token's id, calls `token.rotate` with a
+one minute grace so requests already in flight still land, writes the new value over the old one in secure storage
+and rebuilds the session when the connection is the active one. The value never reaches a log or the cache.
+
 ## Notifications
 
 `hideContent` is stored per notification context beside `enabled`. When on, the title and body are the generic

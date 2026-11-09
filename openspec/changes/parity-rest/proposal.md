@@ -18,7 +18,7 @@ Notifications also show task titles on a locked screen, and lease lengths read a
 - Settings gain Date and time (format and timezone, kept with the account).
 - Manage gains Server status, Bundles (export and import with a preview) and Import a snapshot (dry run first).
 - The projects list can show archived projects, with a badge.
-- Your own API tokens can be rotated, and the app swaps in the new secret when it rotates the one it uses.
+- A token connection can rotate its own API token from the instances screen; the app keeps only the new value.
 - Notifications: a per-context switch hides task content; Android notifications are private with a public version.
 - Lease lengths read as human durations wherever tix returns them.
 - Every new string in English, Bulgarian, French and German.
