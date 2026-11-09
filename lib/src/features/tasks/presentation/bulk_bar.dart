@@ -321,17 +321,13 @@ Future<void> runBulkChoice(
       request = BulkTaskInput(action: BulkAction.unstar, refs: refs);
     case BulkChoice.copy:
       final projects = taskContext?.projects ?? const <Project>[];
-      final to = await showActionSheet<String>(
+      final to = await showProjectPicker(
         context,
         title: l10n.bulkCopyTitle(refs.length),
-        actions: [
+        keyPrefix: 'copy',
+        projects: [
           for (final p in projects)
-            if (p.archivedAt == null)
-              TixSheetAction(
-                key: Key('copy.${p.key}'),
-                value: p.key,
-                label: p.name.isEmpty ? p.key : '${p.name}  ${p.key}',
-              ),
+            if (p.archivedAt == null) p,
         ],
       );
       if (to != null) {

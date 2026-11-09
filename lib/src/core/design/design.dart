@@ -20,6 +20,7 @@ export 'components/motion.dart';
 export 'components/notice.dart';
 export 'components/page.dart';
 export 'components/pickers.dart';
+export 'components/project_option.dart';
 export 'components/property.dart';
 export 'components/secret.dart';
 export 'components/section.dart';

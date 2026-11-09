@@ -504,4 +504,95 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('route:/projects/web'), findsOneWidget);
   });
+
+  group('the project switcher', () {
+    setUp(() {
+      server = FakeTix(
+        projects: [
+          {
+            'id': 'p1',
+            'key': 'infra',
+            'name': 'Infrastructure',
+            'color': 'blue',
+            'icon_name': 'server',
+            'workflow_id': 'wf1',
+          },
+          {
+            'id': 'p2',
+            'key': 'web',
+            'name': 'Web',
+            'color': 'violet',
+            'icon': 'W',
+            'workflow_id': 'wf1',
+          },
+          {
+            'id': 'p3',
+            'key': 'ops',
+            'name': 'Operations',
+            'workflow_id': 'wf1',
+          },
+        ],
+        tasks: {
+          'infra': [taskJson('infra-1', title: 'Fix login')],
+        },
+      );
+    });
+
+    Finder within(Key key, Finder matching) =>
+        find.descendant(of: find.byKey(key), matching: matching);
+
+    testWidgets("closed, it shows the current project's icon", (tester) async {
+      await pump(tester, const TaskListScreen(projectKey: 'infra'));
+      final glyph = tester.widget<Icon>(
+        within(const Key('project.switch.mark'), find.byType(Icon)),
+      );
+      expect(glyph.icon, Icons.dns_outlined);
+      expect(glyph.color, TixTokens.light.projects[ProjectColour.blue]);
+    });
+
+    testWidgets('open, every project wears its mark and the current one a '
+        'check', (tester) async {
+      await pump(tester, const TaskListScreen(projectKey: 'infra'));
+      await tester.tap(find.byKey(const Key('project.switch')));
+      await tester.pumpAndSettle();
+      for (final key in ['infra', 'web', 'ops']) {
+        expect(
+          within(Key('project.switch.$key'), find.byType(ProjectMark)),
+          findsOneWidget,
+        );
+      }
+      expect(
+        within(
+          const Key('project.switch.infra'),
+          find.byIcon(Icons.dns_outlined),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        within(const Key('project.switch.web'), find.text('W')),
+        findsOneWidget,
+      );
+      expect(
+        within(const Key('project.switch.infra'), find.byIcon(Icons.check)),
+        findsOneWidget,
+      );
+      expect(
+        within(const Key('project.switch.web'), find.byIcon(Icons.check)),
+        findsNothing,
+      );
+    });
+
+    testWidgets('a project with no icon or colour gets its monogram', (
+      tester,
+    ) async {
+      await pump(tester, const TaskListScreen(projectKey: 'infra'));
+      await tester.tap(find.byKey(const Key('project.switch')));
+      await tester.pumpAndSettle();
+      final monogram = tester.widget<Text>(
+        within(const Key('projectOption.ops.mark'), find.byType(Text)),
+      );
+      expect(monogram.data, 'OP');
+      expect(monogram.style!.color, TixTokens.light.muted);
+    });
+  });
 }

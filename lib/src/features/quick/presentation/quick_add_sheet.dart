@@ -527,24 +527,7 @@ class _ProjectPicker extends StatelessWidget {
                 PopupMenuItem(
                   key: Key('quickAdd.project.${p.key}'),
                   value: p.key,
-                  child: Row(
-                    children: [
-                      ProjectMark(
-                        name: p.name.isEmpty ? p.key : p.name,
-                        colour: p.color,
-                        icon: p.icon,
-                      ),
-                      const SizedBox(width: TixSpace.s3),
-                      Flexible(
-                        child: Text(
-                          p.name.isEmpty ? p.key : p.name,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: TixSpace.s2),
-                      Text(p.key, style: tixMono(context)),
-                    ],
-                  ),
+                  child: ProjectOption(project: p, selected: p.key == selected),
                 ),
             ],
             child: ConstrainedBox(
@@ -559,12 +542,10 @@ class _ProjectPicker extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     )
+                  else if (current == null)
+                    ProjectChip(projectKey: selected!)
                   else
-                    ProjectChip(
-                      projectKey: selected!,
-                      colour: current?.color ?? '',
-                      icon: current?.icon ?? '',
-                    ),
+                    Flexible(child: ProjectOption(project: current)),
                   Icon(Icons.expand_more, size: 18, color: t.muted),
                 ],
               ),

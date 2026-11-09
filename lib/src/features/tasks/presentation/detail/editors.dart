@@ -643,13 +643,17 @@ class _CopySheetState extends ConsumerState<_CopySheet> {
                   ? _project
                   : null,
               isExpanded: true,
+              selectedItemBuilder: (_) => [
+                for (final p in value) ProjectOption(project: p),
+              ],
               items: [
                 for (final p in value)
                   DropdownMenuItem(
+                    key: Key('copy.project.${p.key}'),
                     value: p.key.toLowerCase(),
-                    child: Text(
-                      p.name.isEmpty ? p.key : '${p.name} (${p.key})',
-                      overflow: TextOverflow.ellipsis,
+                    child: ProjectOption(
+                      project: p,
+                      selected: p.key.toLowerCase() == _project,
                     ),
                   ),
               ],
