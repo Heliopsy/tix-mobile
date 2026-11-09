@@ -221,4 +221,18 @@ void main() {
     expect(find.text('old dialog'), findsNothing);
     expect(location(c), Routes.projects);
   });
+  testWidgets('signing out of the only context ends on connect', (
+    tester,
+  ) async {
+    final c = await pumpApp(tester);
+    await visit(tester, c, Routes.task('infra', 'infra-1'));
+
+    final done = c.read(sessionControllerProvider.notifier).signOut();
+    await tester.pumpAndSettle();
+    await done;
+
+    expect(c.read(sessionControllerProvider).value, isNull);
+    expect(location(c), Routes.connect);
+    expect(find.byType(TaskDetailScreen), findsNothing);
+  });
 }
