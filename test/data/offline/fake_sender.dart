@@ -39,6 +39,12 @@ class FakeSender implements OutboxSender {
   /// Applies the next create, then loses the answer.
   bool loseNextAnswer = false;
 
+  /// Applies the next comment, then loses the answer.
+  bool loseNextComment = false;
+
+  /// Times out the next send before it reaches the fake server.
+  bool timeOutNext = false;
+
   /// Whether the server honours `Idempotency-Key`.
   bool honoursKeys = false;
 
@@ -75,16 +81,36 @@ class FakeSender implements OutboxSender {
     return t;
   }
 
+  /// Comment lookups asked for, by task.
+  final commentLookups = <String>[];
+
   @override
-  Future<List<Task>> findCreated(
+  Future<CreateLookup> findCreated(
     Map<String, Object?> values,
     DateTime since,
-  ) async => [
-    for (final t in tasks.values)
-      if ('${values['title']}'.startsWith(t.title) &&
-          t.projectId == values['project_ref'])
-        t,
-  ];
+  ) async {
+    final line = normalizeText('${values['title']}');
+    final exact = <Task>[];
+    var similar = 0;
+    for (final t in tasks.values) {
+      if (t.projectId != values['project_ref'] || t.title.isEmpty) continue;
+      final title = normalizeText(t.title);
+      if (title == line) {
+        exact.add(t);
+      } else if (line.startsWith(title) || title.startsWith(line)) {
+        similar++;
+      }
+    }
+    return CreateLookup(exact: exact, similar: similar);
+  }
+
+  @override
+  Future<bool> findComment(String target, String body, DateTime since) async {
+    commentLookups.add(target);
+    return (comments[target] ?? const []).any(
+      (c) => normalizeText(c) == normalizeText(body),
+    );
+  }
 
   @override
   Future<Task?> send(
@@ -97,6 +123,10 @@ class FakeSender implements OutboxSender {
     if (down) throw const TixException(TixErrorKind.network);
     final held = hold;
     if (held != null) await held.future;
+    if (timeOutNext) {
+      timeOutNext = false;
+      throw const TixException(TixErrorKind.timeout);
+    }
     calls.add((
       op: op,
       target: target,
@@ -111,6 +141,10 @@ class FakeSender implements OutboxSender {
     if (honoursKeys) _keys[key] = answer;
     if (op == OutboxOp.create && loseNextAnswer) {
       loseNextAnswer = false;
+      throw const TixException(TixErrorKind.timeout);
+    }
+    if (op == OutboxOp.comment && loseNextComment) {
+      loseNextComment = false;
       throw const TixException(TixErrorKind.timeout);
     }
     return answer;

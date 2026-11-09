@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'package:meta/meta.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/data/api/gen/models.gen.dart'
     show
@@ -32,13 +33,49 @@ abstract interface class OutboxSender {
   });
 
   /// The tasks a create made before its answer was lost may have become:
-  /// tasks in its project, by the caller, made since [since], whose title
-  /// the queued line starts with.
-  Future<List<Task>> findCreated(Map<String, Object?> values, DateTime since);
+  /// tasks in its project, by the caller, made since [since].
+  Future<CreateLookup> findCreated(Map<String, Object?> values, DateTime since);
+
+  /// Whether the caller added a comment reading [body] to [target] since
+  /// [since], so a comment whose answer was lost is not added twice.
+  Future<bool> findComment(String target, String body, DateTime since);
 
   /// Whether the server honours `Idempotency-Key`, asked once.
   Future<bool> detectIdempotency();
 }
+
+/// What a lookup for a create whose answer was lost found: tasks whose
+/// title is the queued title, and how many others only resemble it (one
+/// title starts with the other). Only a single exact match and nothing
+/// similar is safe to adopt.
+@immutable
+class CreateLookup {
+  /// A lookup that found [exact] and [similar] others.
+  const CreateLookup({this.exact = const [], this.similar = 0});
+
+  /// Tasks whose normalized title equals the queued one.
+  final List<Task> exact;
+
+  /// Tasks whose title only shares a prefix with the queued one.
+  final int similar;
+
+  /// Whether nothing was found at all, so sending is safe.
+  bool get none => exact.isEmpty && similar == 0;
+
+  /// The one task the create became, when that is certain.
+  Task? get certain => exact.length == 1 && similar == 0 ? exact.single : null;
+}
+
+/// [s] with its ends trimmed and every run of white space made one space.
+String normalizeText(String s) => s.trim().replaceAll(RegExp(r'\s+'), ' ');
+
+/// Whether a write that failed with [e] may still have reached the server:
+/// it went out and its answer was lost. A refused connection never left the
+/// device.
+bool mayHaveArrived(TixException e) => switch (e.kind) {
+  TixErrorKind.timeout || TixErrorKind.upstream || TixErrorKind.notTix => true,
+  _ => false,
+};
 
 /// The header that makes a retried write safe.
 const idempotencyHeader = 'Idempotency-Key';
@@ -207,28 +244,69 @@ class ApiOutboxSender implements OutboxSender {
     }
   }
 
+  /// How many tasks one page of a lookup asks for.
+  static const lookupPage = 100;
+
+  /// How many pages a lookup reads at most.
+  static const lookupPages = 20;
+
+  Future<String> _whoami() async => _me ??= (await _api.identity.whoami()).id;
+
   @override
-  Future<List<Task>> findCreated(
+  Future<CreateLookup> findCreated(
     Map<String, Object?> values,
     DateTime since,
   ) async {
-    final me = _me ??= (await _api.identity.whoami()).id;
-    final line = values['title']?.toString() ?? '';
+    final me = await _whoami();
+    final line = normalizeText(values['title']?.toString() ?? '');
     final project = values['project_ref']?.toString();
-    final page = await _api.task.list(
-      project: project == null ? null : [project],
-      creator: [me],
-      sort: 'created_at',
-      direction: 'desc',
-      limit: 50,
-    );
     final from = since.subtract(const Duration(minutes: 5));
-    return [
-      for (final t in page.items)
-        if (t.title.isNotEmpty &&
-            line.startsWith(t.title) &&
-            (t.createdAt == null || !t.createdAt!.isBefore(from)))
-          t,
-    ];
+    final exact = <Task>[];
+    var similar = 0;
+    String? cursor;
+    for (var n = 0; n < lookupPages; n++) {
+      final page = await _api.task.list(
+        project: project == null ? null : [project],
+        creator: [me],
+        sort: 'created_at',
+        direction: 'desc',
+        limit: lookupPage,
+        cursor: cursor,
+      );
+      var older = false;
+      for (final t in page.items) {
+        final at = t.createdAt;
+        if (at != null && at.isBefore(from)) {
+          older = true;
+          continue;
+        }
+        final title = normalizeText(t.title);
+        if (title.isEmpty) continue;
+        if (title == line) {
+          exact.add(t);
+        } else if (line.startsWith(title) || title.startsWith(line)) {
+          similar++;
+        }
+      }
+      cursor = page.nextCursor;
+      if (older || cursor == null) break;
+    }
+    return CreateLookup(exact: exact, similar: similar);
+  }
+
+  @override
+  Future<bool> findComment(String target, String body, DateTime since) async {
+    final me = await _whoami();
+    final want = normalizeText(body);
+    final from = since.subtract(const Duration(minutes: 5));
+    await for (final c in _api.comment.listStream(target)) {
+      final at = c.createdAt;
+      if (c.authorActorId == me &&
+          normalizeText(c.body) == want &&
+          (at == null || !at.isBefore(from))) {
+        return true;
+      }
+    }
+    return false;
   }
 }

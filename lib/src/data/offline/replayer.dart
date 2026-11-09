@@ -263,6 +263,7 @@ class OutboxReplayer {
         OutboxOp.check => await _check(e, target, values),
         OutboxOp.move => await _move(e, target, values),
         OutboxOp.create => await _create(e, values, drafts),
+        OutboxOp.comment => await _comment(e, target, values),
         _ => await _plain(e, target, values),
       };
     } on TixException catch (x) {
@@ -564,22 +565,20 @@ class OutboxReplayer {
     }
     if (e.state == OutboxState.needsCheck && (!keyed || expired)) {
       final found = await _sender.findCreated(values, e.createdAt);
-      if (found.length == 1) {
-        await _created(e, found.single, drafts);
+      final task = found.certain;
+      if (task != null) {
+        await _created(e, task, drafts);
         return const _Outcome(sent: 1);
       }
-      if (found.length > 1) return const _Outcome(stop: true);
+      if (!found.none) return const _Outcome(stop: true);
       if (expired) {
         e = e.copyWith(
           state: OutboxState.pending,
           idempotencyKey: _uuid(),
           firstSentAt: null,
         );
+        await _replace(e);
       }
-    }
-    if (e.firstSentAt == null) {
-      e = e.copyWith(firstSentAt: _clock());
-      await _replace(e);
     }
     final Task? task;
     try {
@@ -592,19 +591,57 @@ class OutboxReplayer {
     } on TixException catch (x) {
       if (keyedAnswer(x) == KeyedAnswer.appliedLost) {
         final found = await _sender.findCreated(values, e.createdAt);
-        if (found.length == 1) {
-          await _created(e, found.single, drafts);
+        final adopted = found.certain;
+        if (adopted != null) {
+          await _created(e, adopted, drafts);
           return const _Outcome(sent: 1);
         }
         await _replace(e.copyWith(state: OutboxState.needsCheck));
         return const _Outcome(stop: true);
       }
       if (!isUnreachable(x)) rethrow;
-      if (!keyed) await _replace(e.copyWith(state: OutboxState.needsCheck));
+      if (mayHaveArrived(x)) {
+        await _replace(
+          e.copyWith(
+            firstSentAt: e.firstSentAt ?? _clock(),
+            state: keyed ? e.state : OutboxState.needsCheck,
+          ),
+        );
+      }
       throw const _Stop(unreachable: true);
     }
     await _created(e, task!, drafts);
     return const _Outcome(sent: 1);
+  }
+
+  /// Adds a comment. One whose earlier attempt may have arrived is looked
+  /// up first when its key cannot be trusted (an older server, or a key a
+  /// day old), and counts as done when the caller's comment is there.
+  Future<_Outcome> _comment(
+    OutboxEntry queued,
+    String target,
+    Map<String, Object?> values,
+  ) async {
+    var e = queued;
+    final keyed = _store.now.idempotency ?? false;
+    final first = e.firstSentAt;
+    if (first != null && (!keyed || _keyExpired(e))) {
+      final body = values['body']?.toString() ?? '';
+      if (await _sender.findComment(target, body, first)) {
+        await _done(e, null);
+        return const _Outcome(sent: 1);
+      }
+      e = e.copyWith(idempotencyKey: _uuid(), firstSentAt: null);
+      await _replace(e);
+    }
+    try {
+      return await _plain(e, target, values);
+    } on TixException catch (x) {
+      if (mayHaveArrived(x) && e.firstSentAt == null) {
+        await _replace(e.copyWith(firstSentAt: _clock()));
+      }
+      rethrow;
+    }
   }
 
   Future<void> _created(

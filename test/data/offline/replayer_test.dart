@@ -773,17 +773,134 @@ void main() {
 
     test('found nowhere, it is sent with a fresh key', () async {
       await store.update((s) => s.copyWith(idempotency: true));
-      server.down = true;
+      server.timeOutNext = true;
       await aged.replay();
       final first = entries().single;
       expect(first.firstSentAt, t0);
-      server.down = false;
       now = t0.add(const Duration(hours: 30));
 
       await aged.replay();
 
       expect(entries(), isEmpty);
       expect(creates().single.key, isNot(first.idempotencyKey));
+    });
+
+    test(
+      'a refused connection is not an attempt: no stamp, same key',
+      () async {
+        await store.update((s) => s.copyWith(idempotency: false));
+        final key = entries().single.idempotencyKey;
+        server.down = true;
+        await aged.replay();
+        expect(entries().single.firstSentAt, isNull);
+        expect(entries().single.state, OutboxState.pending);
+        server.down = false;
+        now = t0.add(const Duration(days: 2));
+
+        await aged.replay();
+
+        expect(entries(), isEmpty);
+        expect(creates().single.key, key);
+      },
+    );
+
+    test(
+      'a title that only starts like the queued one is never adopted',
+      () async {
+        await outbox.discardAll();
+        await store.update((s) => s.copyWith(idempotency: false));
+        final draft = await outbox.create({
+          'title': 'Call Bob re invoice',
+          'project_ref': 'infra',
+        }, online: (_) => fail('sent while offline'));
+        server
+          ..timeOutNext = true
+          ..tasks['infra-50'] = const Task(
+            ref: 'infra-50',
+            title: 'Call Bob',
+            projectId: 'infra',
+          );
+        await aged.replay();
+        expect(entries().single.state, OutboxState.needsCheck);
+
+        await aged.replay();
+
+        expect(entries().single.state, OutboxState.needsCheck);
+        expect(outbox.realRef(draft.ref), draft.ref);
+        expect(creates(), isEmpty);
+      },
+    );
+
+    test('an exact title, spaced differently, is adopted', () async {
+      await outbox.discardAll();
+      await store.update((s) => s.copyWith(idempotency: false));
+      final draft = await outbox.create({
+        'title': '  Call   Bob ',
+        'project_ref': 'infra',
+      }, online: (_) => fail('sent while offline'));
+      server
+        ..timeOutNext = true
+        ..tasks['infra-50'] = const Task(
+          ref: 'infra-50',
+          title: 'Call Bob',
+          projectId: 'infra',
+        );
+      await aged.replay();
+      await aged.replay();
+      expect(entries(), isEmpty);
+      expect(outbox.realRef(draft.ref), 'infra-50');
+    });
+
+    group('comments', () {
+      setUp(() async {
+        await outbox.discardAll();
+        await store.update((s) => s.copyWith(idempotency: true));
+        await queue(OutboxOp.comment, a.ref, values: {'body': 'Before Friday'});
+      });
+
+      List<SentCall> adds() =>
+          server.calls.where((c) => c.op == OutboxOp.comment).toList();
+
+      test('a day-old comment that arrived is not added again', () async {
+        server.loseNextComment = true;
+        await aged.replay();
+        expect(entries().single.firstSentAt, t0);
+        server.forgetKeys();
+        now = t0.add(const Duration(hours: 24));
+
+        await aged.replay();
+
+        expect(entries(), isEmpty);
+        expect(server.comments[a.ref], ['Before Friday']);
+        expect(adds(), hasLength(1));
+      });
+
+      test(
+        'a day-old comment that never arrived goes with a new key',
+        () async {
+          server.timeOutNext = true;
+          await aged.replay();
+          final key = entries().single.idempotencyKey;
+          now = t0.add(const Duration(hours: 24));
+
+          await aged.replay();
+
+          expect(entries(), isEmpty);
+          expect(server.comments[a.ref], ['Before Friday']);
+          expect(adds().single.key, isNot(key));
+        },
+      );
+
+      test('a fresh key is trusted without a lookup', () async {
+        server.loseNextComment = true;
+        await aged.replay();
+        now = t0.add(const Duration(hours: 1));
+
+        await aged.replay();
+
+        expect(server.commentLookups, isEmpty);
+        expect(server.comments[a.ref], ['Before Friday']);
+      });
     });
 
     test('a create never sent keeps its key however old', () async {

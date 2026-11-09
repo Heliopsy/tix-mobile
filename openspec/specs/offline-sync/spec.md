@@ -67,12 +67,17 @@ Every replayed write SHALL carry its entry's `Idempotency-Key`, and the app SHAL
 
 ### Requirement: Lost creates are checked on older servers
 
-On a server that does not honour `Idempotency-Key`, a create whose answer was lost SHALL be marked "needs check": the app SHALL look for a task the caller made in that project since the write, whose title the queued line starts with, adopt a single match, send it when there is none, and ask the person when there are several.
+On a server that does not honour `Idempotency-Key`, a create whose answer may have reached the server SHALL be marked "needs check". The app SHALL look for tasks the caller made in that project since the write, adopt the one whose normalized title equals the queued one when nothing else resembles it, send it when nothing matches, and otherwise ask.
 
 #### Scenario: Lost answer without key support
 
 - **WHEN** a create's answer is lost and the server ignores the key
 - **THEN** the create is marked to be checked and is not sent twice when the task is found
+
+#### Scenario: Only a prefix matches
+
+- **WHEN** the queued title is "Call Bob re invoice" and the lookup finds only "Call Bob"
+- **THEN** nothing is adopted or sent, and the person is asked
 
 ### Requirement: A stale update is merged three ways
 
@@ -141,24 +146,34 @@ Settings SHALL offer to discard every unsynced change of the context, as a red b
 ### Requirement: One replay at a time per context
 
 Replays of one context SHALL never overlap, however many times the session changes: a replay asked for while
-another runs SHALL wait for it to end. Each replay SHALL settle conflicts by the policy of its own context, read
-once when it starts.
+another runs SHALL wait for it to end. Every writer of a context SHALL share one outbox for the life of the app.
+Each replay SHALL settle conflicts by the policy of its own context, read once when it starts.
 
 #### Scenario: Session changes during a replay
 
 - **WHEN** the session changes while a replay is sending and a new replay starts
 - **THEN** the new one waits, and no write is sent twice
 
+#### Scenario: Away and back
+
+- **WHEN** the person switches to another context and back while a replay is sending, and queues a write
+- **THEN** each write is sent once and the new write is kept
+
 ### Requirement: Day-old idempotency keys are not trusted
 
-tix forgets an `Idempotency-Key` a day after it first sees it. A create first sent 23 hours ago or more and still
-waiting SHALL be marked "needs check" and looked up as on a server without key support; when no match is found it
-SHALL be sent with a new key.
+tix forgets an `Idempotency-Key` a day after it first sees it. Only a send that may have reached the server (a
+timeout or an unreadable answer, not a refused connection) SHALL start that clock. A create or comment first sent
+23 hours ago or more SHALL be looked up before it is sent again, and sent with a new key when it is not found.
 
 #### Scenario: Create retried the next day
 
 - **WHEN** a create's answer was lost and the app retries it 23 hours later
 - **THEN** the task it made is found and adopted, and the create is not sent again
+
+#### Scenario: Comment retried the next day
+
+- **WHEN** a comment's answer was lost and the caller's comment with the same text is on the task 23 hours later
+- **THEN** the comment is not added again
 
 ### Requirement: An unreadable outbox is kept
 

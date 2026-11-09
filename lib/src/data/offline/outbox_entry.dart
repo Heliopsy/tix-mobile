@@ -115,8 +115,9 @@ abstract class OutboxEntry with _$OutboxEntry {
     @Default('') String draftRef,
     @Default(0) int attempts,
 
-    /// When [idempotencyKey] was first sent, null while it never was. tix
-    /// forgets a key a day after it first sees it.
+    /// When a send under [idempotencyKey] first may have reached the server
+    /// (it timed out or its answer was unreadable), null while none did.
+    /// tix forgets a key a day after it first sees it.
     DateTime? firstSentAt,
   }) = _OutboxEntry;
 

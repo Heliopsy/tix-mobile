@@ -84,4 +84,27 @@ void main() {
 
     expect(cache.entries, isEmpty);
   });
+
+  test('one store per context: coming back sets nothing aside twice', () async {
+    final cache = MemoryCacheStore();
+    await cache.write(scope, SyncStore.key, garbage);
+    var tick = 0;
+    final stores = SyncStores(
+      cache,
+      now: () => at.add(Duration(seconds: tick++)),
+    );
+    final first = stores.of(scope);
+    await first.load();
+    stores.of(const CacheScope('c2', ''));
+    final again = stores.of(scope);
+    await again.load();
+    expect(identical(first, again), isTrue);
+    final copies = cache.entries['c1/']!.keys.where(
+      (k) => k.contains('corrupt'),
+    );
+    expect(copies, hasLength(1));
+
+    await stores.forget('c1');
+    expect(identical(stores.of(scope), first), isFalse);
+  });
 }

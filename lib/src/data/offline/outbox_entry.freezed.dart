@@ -27,8 +27,9 @@ mixin _$OutboxEntry {
  Map<String, Object?> get values; OutboxState get state;/// The server's error code and message for a refused or conflicting
 /// write.
  String get errorCode; String get errorMessage;/// For a create, the draft reference the app showed until it is sent.
- String get draftRef; int get attempts;/// When [idempotencyKey] was first sent, null while it never was. tix
-/// forgets a key a day after it first sees it.
+ String get draftRef; int get attempts;/// When a send under [idempotencyKey] first may have reached the server
+/// (it timed out or its answer was unreadable), null while none did.
+/// tix forgets a key a day after it first sees it.
  DateTime? get firstSentAt;
 /// Create a copy of OutboxEntry
 /// with the given fields replaced by the non-null parameter values.
@@ -284,8 +285,9 @@ class _OutboxEntry implements OutboxEntry {
 /// For a create, the draft reference the app showed until it is sent.
 @override@JsonKey() final  String draftRef;
 @override@JsonKey() final  int attempts;
-/// When [idempotencyKey] was first sent, null while it never was. tix
-/// forgets a key a day after it first sees it.
+/// When a send under [idempotencyKey] first may have reached the server
+/// (it timed out or its answer was unreadable), null while none did.
+/// tix forgets a key a day after it first sees it.
 @override final  DateTime? firstSentAt;
 
 /// Create a copy of OutboxEntry
