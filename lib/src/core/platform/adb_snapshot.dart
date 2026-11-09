@@ -197,7 +197,7 @@ List<String> _contexts(AdbSnapshot s) {
   final active = s.contexts.where((c) => c.active).firstOrNull;
   return [
     '',
-    '== contexts ==',
+    '[contexts]',
     'Active: ${active == null ? 'none' : '${_where(active)} [${active.id}]'}',
     if (s.contexts.isEmpty) 'No saved contexts.',
     for (final c in s.contexts)
@@ -207,7 +207,7 @@ List<String> _contexts(AdbSnapshot s) {
 
 List<String> _connection(AdbSnapshot s) => [
   '',
-  '== connection ==',
+  '[connection]',
   if (s.headless)
     'Live updates run only while the app is open.'
   else if (s.liveReport == null)
@@ -220,7 +220,7 @@ List<String> _connection(AdbSnapshot s) => [
 
 List<String> _outbox(AdbSnapshot s) => [
   '',
-  '== outbox ==',
+  '[outbox]',
   if (s.outbox.isEmpty) 'Nothing waiting.',
   for (final o in s.outbox) _counts(o),
 ];
@@ -229,7 +229,7 @@ List<String> _engine(AdbSnapshot s) {
   final active = s.contexts.where((c) => c.active).firstOrNull;
   return [
     '',
-    '== engine ==',
+    '[engine]',
     if (active == null || active.database.isEmpty)
       'The active context is not a local instance.'
     else

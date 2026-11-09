@@ -33,7 +33,7 @@ object Fallback {
             return lines.joinToString("\n", postfix = "\n")
         }
         lines += ""
-        lines += "== contexts =="
+        lines += "[contexts]"
         lines += "Active: ${index.active ?: "none"}"
         for (c in index.contexts) {
             val mark = if (c.id == index.active) "*" else " "
