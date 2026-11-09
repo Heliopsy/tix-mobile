@@ -270,6 +270,8 @@ void main() {
   ) async {
     await pump(tester);
     expect(inSection('tenant', find.text('Whole tenant')), findsOneWidget);
+    await tester.ensureVisible(find.byKey(const Key('settings.tenant.manage')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('settings.tenant.manage')));
     await tester.pumpAndSettle();
     expect(find.text('route:/manage'), findsOneWidget);
@@ -286,7 +288,11 @@ void main() {
       ('tenant', 'settings.tenant.webhooks'),
       ('tenant', 'settings.tenant.retention'),
     ]) {
-      expect(inSection(section, find.byKey(Key(key))), findsOneWidget, reason: key);
+      expect(
+        inSection(section, find.byKey(Key(key))),
+        findsOneWidget,
+        reason: key,
+      );
     }
     expect(
       inSection('security', find.text('Synced to your account')),

@@ -10,7 +10,7 @@ void main() {
   // The saved connection learns its tenant from a background whoami, which
   // rebuilds the session once; the access check settles after that.
   Future<void> pump(WidgetTester tester, PeopleRig rig) async {
-    await rig.pump(tester, const SettingsScreen(), size: const Size(400, 2400));
+    await rig.pump(tester, const SettingsScreen(), size: const Size(400, 6000));
     await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();
   }
