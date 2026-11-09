@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.7.0](https://github.com/Heliopsy/tix-mobile/compare/v0.6.0...v0.7.0) (2026-11-09)
+
+
+### Features
+
+* purge trashed tasks, manage active sessions, and test webhooks ([1977009](https://github.com/Heliopsy/tix-mobile/commit/19770093025e1d1bf9a31c2ae92ffabb1dbae019))
+
+
+### Bug Fixes
+
+* **inbox:** keep summary tiles the same size whatever the count ([9527b9e](https://github.com/Heliopsy/tix-mobile/commit/9527b9ec707f65a145a7d9ea0efdf18e9d9e0991))
+* **local:** let the engine sleep while live updates poll ([37951a6](https://github.com/Heliopsy/tix-mobile/commit/37951a6bad807f44117ed9fd18e477f9fb4dcc50))
+* **maintenance:** read the kept trash page with stored, not peek ([fdd1fca](https://github.com/Heliopsy/tix-mobile/commit/fdd1fca6afe6e4fc4f08abab0495a7a198644e93))
+* **shell:** list About under More, and at the foot of the rail ([53d5b0b](https://github.com/Heliopsy/tix-mobile/commit/53d5b0b81d3d92a57faa4da57ad39e10325f2659))
+* **shell:** start the live status where the context name ends ([ec3a930](https://github.com/Heliopsy/tix-mobile/commit/ec3a930670e4eea80a9ac11eb353fea3e0a1bb3f))
+* show project icons and colours in the project switcher ([a722e24](https://github.com/Heliopsy/tix-mobile/commit/a722e246b1236759c5a537d8ab17bee0c3541e75))
+
 ## [0.6.0](https://github.com/Heliopsy/tix-mobile/compare/v0.5.0...v0.6.0) (2026-11-09)
 
 
