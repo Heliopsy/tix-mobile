@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.10.0](https://github.com/Heliopsy/tix-mobile/compare/v0.9.0...v0.10.0) (2026-11-09)
+
+
+### Features
+
+* an explicit select mode for the list, board and lanes ([d603db2](https://github.com/Heliopsy/tix-mobile/commit/d603db2dde5ad288a55863875ec983245f49a698))
+* offer the task:approve scope on new tokens ([21b24d1](https://github.com/Heliopsy/tix-mobile/commit/21b24d1aa1f5f9a435d4a657d6bf233caed0fef9))
+* quick settings tiles, notification actions and pinned shortcuts on Android ([7d21d2c](https://github.com/Heliopsy/tix-mobile/commit/7d21d2cd74f9c40ecb63cb55b50760cbbdf42c8b))
+* star projects and list them first ([0cbfec2](https://github.com/Heliopsy/tix-mobile/commit/0cbfec2312208f3d439e53e7904404f571285b79))
+
+
+### Bug Fixes
+
+* hand the outbox from the background engine to the app before it loads ([6367c18](https://github.com/Heliopsy/tix-mobile/commit/6367c1837024a89c812f78f13db682ed283fd2b1))
+* leave sign-out out of the context move, init the test binding ([c50c537](https://github.com/Heliopsy/tix-mobile/commit/c50c5379046a4e79b0e3c6c4d47ad76d53e201cc))
+* start a switched context fresh instead of refetching the old screen ([7e29a2a](https://github.com/Heliopsy/tix-mobile/commit/7e29a2adfe0459caa017ff6104f2ac29e7f8684d))
+* wait for pin support before opening a saved filter's menu, snooze in UTC ([b8bacd8](https://github.com/Heliopsy/tix-mobile/commit/b8bacd8e95fca2354b6b8a37a2d45eb6e64ab52f))
+* wait for the old shell to leave the tree before switching ([01249e9](https://github.com/Heliopsy/tix-mobile/commit/01249e99b3a1cb4342e6b242086f1f202e830304))
+* watch pin support for every saved filter, not just shared ones ([921c397](https://github.com/Heliopsy/tix-mobile/commit/921c397018cfb39fc00a303989aa2fb08a00368e))
+
+
+### Dependencies
+
+* pin tix at the merged project stars commit ([05be264](https://github.com/Heliopsy/tix-mobile/commit/05be26421a652ffb25214af0087f1f99c0857f5f))
+* pin tix at v0.53.0 ([cb66011](https://github.com/Heliopsy/tix-mobile/commit/cb66011003a7ca56588e3c0c6315c701d30ae917))
+
 ## [0.9.0](https://github.com/Heliopsy/tix-mobile/compare/v0.8.0...v0.9.0) (2026-11-09)
 
 
