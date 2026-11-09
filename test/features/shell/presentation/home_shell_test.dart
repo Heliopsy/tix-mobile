@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/features/shell/presentation/home_shell.dart';
 
 import '../../../helpers/app.dart';
@@ -19,7 +21,11 @@ void main() {
       ),
   ];
 
-  Future<List<int>> pump(WidgetTester tester, int n) async {
+  Future<List<int>> pump(
+    WidgetTester tester,
+    int n, {
+    bool about = false,
+  }) async {
     final picked = <int>[];
     var current = 0;
     await pumpScreen(
@@ -33,6 +39,7 @@ void main() {
               picked.add(i);
               current = i;
             }),
+            onAbout: about ? () => context.go(Routes.about) : null,
           ),
         ),
       ),
@@ -64,6 +71,67 @@ void main() {
     final bar = tester.widget<NavigationBar>(find.byType(NavigationBar));
     expect(bar.selectedIndex, 4);
   });
+
+  testWidgets('More ends with About, which opens the About screen', (
+    tester,
+  ) async {
+    final picked = await pump(tester, 6, about: true);
+    await tester.tap(find.byKey(const Key('nav.more')));
+    await tester.pumpAndSettle();
+    final about = find.byKey(const Key('nav.more.about'));
+    expect(
+      find.descendant(of: about, matching: find.text('About')),
+      findsOneWidget,
+    );
+    expect(
+      tester.getTopLeft(about).dy,
+      greaterThan(tester.getTopLeft(find.byKey(const Key('nav.more.d5'))).dy),
+    );
+    await tester.tap(about);
+    await tester.pumpAndSettle();
+    expect(find.text('route:/settings/about'), findsOneWidget);
+    expect(picked, isEmpty);
+  });
+
+  testWidgets('with About, More is there even when the rest fit', (
+    tester,
+  ) async {
+    await pump(tester, 5, about: true);
+    expect(find.byType(NavigationDestination), findsNWidgets(5));
+    await tester.tap(find.byKey(const Key('nav.more')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('nav.more.d4')), findsOneWidget);
+    expect(find.byKey(const Key('nav.more.about')), findsOneWidget);
+  });
+
+  testWidgets('three destinations and About: all three, then More', (
+    tester,
+  ) async {
+    await pump(tester, 3, about: true);
+    expect(find.byType(NavigationDestination), findsNWidgets(4));
+    expect(find.byKey(const Key('nav.more')), findsOneWidget);
+  });
+
+  for (final (name, extended) in [('icon', false), ('labelled', true)]) {
+    testWidgets("the rail's $name About button opens About", (tester) async {
+      await pumpScreen(
+        tester,
+        Scaffold(
+          body: Center(child: ShellAboutButton(extended: extended)),
+        ),
+        size: desktop,
+        overrides: fakeOverrides(FakeTix()),
+      );
+      if (extended) {
+        expect(find.text('About'), findsOneWidget);
+      } else {
+        expect(find.byTooltip('About'), findsOneWidget);
+      }
+      await tester.tap(find.byKey(const Key('shell.about')));
+      await tester.pumpAndSettle();
+      expect(find.text('route:/settings/about'), findsOneWidget);
+    });
+  }
 
   testWidgets('the shell lists Manage before Settings', (tester) async {
     final stores = signedInStores();

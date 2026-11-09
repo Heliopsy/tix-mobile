@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/app.dart';
 import 'package:tix_mobile/src/core/config/config.dart';
+import 'package:tix_mobile/src/core/platform/app_info.dart';
+import 'package:tix_mobile/src/features/about/presentation/about_screen.dart';
 import 'package:tix_mobile/src/features/inbox/presentation/inbox_screen.dart';
 import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
@@ -23,12 +26,16 @@ void main() {
     Size size = phone,
     MemoryKeyValueStore? settings,
     MemorySecretStore? secrets,
+    List<Override> extra = const [],
   }) async {
     await setSize(tester, size);
     await tester.pumpWidget(
       ProviderScope(
         retry: noRetry,
-        overrides: fakeOverrides(server, settings: settings, secrets: secrets),
+        overrides: [
+          ...fakeOverrides(server, settings: settings, secrets: secrets),
+          ...extra,
+        ],
         child: const App(),
       ),
     );
@@ -155,6 +162,74 @@ void main() {
     await tester.tap(find.text('Projects').last);
     await tester.pumpAndSettle();
     expect(find.text('Infrastructure'), findsOneWidget);
+  });
+
+  group('About is one tap from the shell', () {
+    final app = appInfoProvider.overrideWithValue(
+      const AsyncData(
+        AppInfo(
+          version: '0.6.0',
+          build: '1',
+          platform: 'Linux',
+          osVersion: 'test',
+        ),
+      ),
+    );
+
+    testWidgets('on a phone, last under More', (tester) async {
+      final stores = signedInStores();
+      await pumpApp(
+        tester,
+        settings: stores.settings,
+        secrets: stores.secrets,
+        extra: [app],
+      );
+      await tester.tap(find.byKey(const Key('nav.more')));
+      await tester.pumpAndSettle();
+      final about = find.byKey(const Key('nav.more.about'));
+      expect(
+        find.descendant(of: about, matching: find.text('About')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: about, matching: find.byIcon(Icons.info_outline)),
+        findsOneWidget,
+      );
+      expect(
+        tester.getTopLeft(about).dy,
+        greaterThan(
+          tester.getTopLeft(find.byKey(const Key('nav.more.settings'))).dy,
+        ),
+      );
+      await tester.tap(about);
+      await tester.pumpAndSettle();
+      expect(find.byType(AboutScreen), findsOneWidget);
+      expect(find.byKey(const Key('nav.more.about')), findsNothing);
+    });
+
+    for (final (name, size) in [
+      ('on a tablet, at the foot of the rail', const Size(800, 1000)),
+      ('on a desktop, at the foot of the rail', desktop),
+    ]) {
+      testWidgets(name, (tester) async {
+        final stores = signedInStores();
+        await pumpApp(
+          tester,
+          size: size,
+          settings: stores.settings,
+          secrets: stores.secrets,
+          extra: [app],
+        );
+        final about = find.descendant(
+          of: find.byType(NavigationRail),
+          matching: find.byKey(const Key('shell.about')),
+        );
+        expect(about, findsOneWidget);
+        await tester.tap(about);
+        await tester.pumpAndSettle();
+        expect(find.byType(AboutScreen), findsOneWidget);
+      });
+    }
   });
 
   testWidgets('the switcher sits above the bar and atop the rail', (
