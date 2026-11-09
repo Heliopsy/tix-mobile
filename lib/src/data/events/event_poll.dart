@@ -113,6 +113,10 @@ class TixEventPoller implements EventPoller {
   );
 }
 
+/// Whether [options] is a request to tix's event poll.
+bool isEventPoll(RequestOptions options) =>
+    options.path.endsWith('/events/poll');
+
 /// Gives the poll in flight its [CancelToken]; other requests on the same
 /// client are left alone.
 class _PollCanceller extends Interceptor {
@@ -120,7 +124,7 @@ class _PollCanceller extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    if (options.path.endsWith('/events/poll')) options.cancelToken ??= token;
+    if (isEventPoll(options)) options.cancelToken ??= token;
     handler.next(options);
   }
 }

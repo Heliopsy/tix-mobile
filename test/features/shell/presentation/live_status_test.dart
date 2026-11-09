@@ -168,9 +168,10 @@ void main() {
     expect(inSwitcher(find.text('Недостъпно')), findsOneWidget);
   });
 
-  test('every mode but closed has a state', () {
+  test('every mode but closed and paused has a state', () {
+    const silent = {LiveMode.closed, LiveMode.paused};
     for (final m in LiveMode.values) {
-      expect(liveStateOf(m) == null, m == LiveMode.closed, reason: '$m');
+      expect(liveStateOf(m) == null, silent.contains(m), reason: '$m');
     }
     expect(liveStateOf(null), isNull);
   });

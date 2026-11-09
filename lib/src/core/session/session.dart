@@ -168,6 +168,24 @@ class SessionController extends _$SessionController {
     }
   }
 
+  /// Marks the person as back for the active local instance: its engine
+  /// starts again if it rested, and its idle timer starts over. Nothing for
+  /// a remote instance.
+  Future<void> wakeLocal() async {
+    final session = state.value;
+    if (session == null ||
+        session.problem != null ||
+        session.instance.kind != InstanceKind.local) {
+      return;
+    }
+    try {
+      await ref.read(localEnginesProvider).ensure(session.instance);
+    } on TixException {
+      // Best effort: the next request starts it again and reports the error.
+      return;
+    }
+  }
+
   /// Starts a background `whoami` when the connection lacks its tenant or
   /// handle, or is a sign-in whose memberships may have changed.
   Session _refreshed(Session session) {
@@ -682,7 +700,13 @@ TixApi sessionApi(Ref ref) {
     api.transport.dio.interceptors.insert(
       0,
       LocalWakeInterceptor(
-        wake: () async => (await engines.wake(instance)).baseUrl,
+        wake: ({required background}) async {
+          final (h, held) = await engines.attend(
+            instance,
+            background: background,
+          );
+          return (h.baseUrl, held);
+        },
         done: () => engines.done(instance.id),
       ),
     );

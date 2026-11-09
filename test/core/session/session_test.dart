@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
+import 'package:tix_mobile/src/core/events/events.dart';
 import 'package:tix_mobile/src/core/platform/local_access.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
@@ -17,6 +18,8 @@ import 'package:tix_mobile/src/data/models/instance.dart';
 
 import '../../helpers/app.dart';
 import '../../helpers/container.dart';
+import '../../helpers/eventually.dart';
+import '../../helpers/fake_events.dart';
 import '../../helpers/fake_local_access.dart';
 import '../../helpers/fake_tix.dart';
 import '../../helpers/stores.dart';
@@ -511,6 +514,7 @@ void main() {
       FakeFilePicking? files,
       FakeLocalFileAccess? access,
       bool inPlace = false,
+      FakeEventSockets? sockets,
     }) async {
       final engine = InMemoryLocalTixEngine();
       final c = makeContainer(
@@ -521,6 +525,7 @@ void main() {
           engine: engine,
           files: files,
           access: access,
+          events: sockets?.connect ?? refusingEventSocket,
         ),
       );
       await c.read(sessionControllerProvider.future);
@@ -598,6 +603,64 @@ void main() {
         server.requestsTo('/api/v1/projects').single.uri.authority,
         Uri.parse(s.baseUrl).authority,
       );
+    });
+
+    test('a poll neither wakes a resting engine nor holds it', () async {
+      final (:c, :engine) = await localContainer();
+      final s = c.read(sessionControllerProvider).value!;
+      final engines = c.read(localEnginesProvider);
+      final poller = TixEventPoller(c.read(sessionApiProvider));
+      await poller.poll(sinceSeq: 0);
+      expect(server.polls, hasLength(1));
+      await engines.rest(s.instance.id);
+      await expectLater(
+        poller.poll(sinceSeq: 0),
+        throwsA(
+          isA<TixException>().having(
+            (e) => e.kind,
+            'kind',
+            TixErrorKind.engineUnavailable,
+          ),
+        ),
+      );
+      expect(engine.running, isEmpty);
+      expect(server.polls, hasLength(1));
+    });
+
+    test('coming back starts a resting engine', () async {
+      final (:c, :engine) = await localContainer();
+      final s = c.read(sessionControllerProvider).value!;
+      await c.read(localEnginesProvider).rest(s.instance.id);
+      expect(engine.running, isEmpty);
+      await c.read(sessionControllerProvider.notifier).wakeLocal();
+      expect(engine.running, hasLength(1));
+      expect(
+        c.read(localEnginesProvider).statuses[s.instance.id]?.state,
+        LocalEngineState.running,
+      );
+    });
+
+    test('live updates sleep with the engine and wake with it', () async {
+      final sockets = FakeEventSockets();
+      final (:c, engine: _) = await localContainer(sockets: sockets);
+      final s = c.read(sessionControllerProvider).value!;
+      final live = c.read(tixEventStreamProvider)!;
+      final sub = live.updates.listen((_) {});
+      addTearDown(sub.cancel);
+      await eventually(
+        () => sockets.sockets.isNotEmpty && sockets.last.sent.isNotEmpty,
+      );
+      final first = sockets.last..ack();
+      await eventually(() => live.status.mode == LiveMode.websocket);
+      await c.read(localEnginesProvider).rest(s.instance.id);
+      expect(live.status.mode, LiveMode.paused);
+      await eventually(() => first.closed);
+      expect(sockets.sockets, hasLength(1));
+      await c.read(sessionControllerProvider.notifier).wakeLocal();
+      expect(c.read(tixEventStreamProvider), same(live));
+      await eventually(() => sockets.sockets.length == 2);
+      expect(live.status.mode, LiveMode.connecting);
+      expect(server.polls, isEmpty);
     });
 
     test('an engine that will not wake fails the request', () async {

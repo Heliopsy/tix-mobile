@@ -25,7 +25,11 @@ const config = LiveConfig(
 /// One [LiveEvents] against a [FakeTix] and [FakeEventSockets], recording
 /// what it reports.
 class Rig {
-  Rig({Credential credential = const BearerCredential('tok'), int? refuse}) {
+  Rig({
+    Credential credential = const BearerCredential('tok'),
+    int? refuse,
+    void Function()? onRefresh,
+  }) {
     sockets.refuse = refuse;
     live = LiveEvents(
       baseUrl: 'https://tix.example',
@@ -33,6 +37,7 @@ class Rig {
       poller: TixEventPoller(server.factory('https://tix.example', credential)),
       connector: sockets.connect,
       config: config,
+      onRefresh: onRefresh,
       random: Random(1),
     );
     live.updates.listen(updates.add);
@@ -280,6 +285,85 @@ void main() {
       expect(r.server.polls[1].uri.queryParameters['since_seq'], '7');
       async.elapse(const Duration(seconds: 1));
       expect(r.seqs, [7, 8]);
+    });
+  });
+
+  group('asleep with a local engine', () {
+    test('sleeping cancels the poll and attempts nothing at all', () {
+      fakeAsync((async) {
+        final r = Rig()..breakSocket(async);
+        expect(r.server.polls, hasLength(1));
+        final opened = r.sockets.sockets.length;
+        r.live.sleep();
+        expect(r.mode, LiveMode.paused);
+        r.sockets.refuse = null;
+        r.server.addEvent(8, 'task.updated');
+        async.elapse(const Duration(hours: 1));
+        r.live.reconnectNow();
+        async.elapse(const Duration(minutes: 10));
+        expect(r.server.polls, hasLength(1));
+        expect(r.sockets.sockets, hasLength(opened));
+        expect(r.mode, LiveMode.paused);
+        expect(r.seqs, [7]);
+      });
+    });
+
+    test('a sleeping WebSocket is closed, not retried', () {
+      fakeAsync((async) {
+        final r = Rig();
+        async.flushMicrotasks();
+        final socket = r.sockets.last..ack();
+        async.flushMicrotasks();
+        expect(r.mode, LiveMode.websocket);
+        r.live.sleep();
+        async.flushMicrotasks();
+        expect(socket.closed, isTrue);
+        async.elapse(const Duration(hours: 1));
+        expect(r.sockets.sockets, hasLength(1));
+        expect(r.server.polls, isEmpty);
+      });
+    });
+
+    test('waking subscribes over the WebSocket from the cursor', () {
+      fakeAsync((async) {
+        final r = Rig()..breakSocket(async);
+        r.live.sleep();
+        r.sockets.refuse = null;
+        async.elapse(const Duration(minutes: 10));
+        final opened = r.sockets.sockets.length;
+        r.live.wake();
+        expect(r.mode, LiveMode.connecting);
+        async.flushMicrotasks();
+        expect(r.sockets.sockets, hasLength(opened + 1));
+        expect(r.sockets.last.sent.single['since_seq'], 7);
+        r.sockets.last
+          ..ack()
+          ..event(8, 'task.updated');
+        async.flushMicrotasks();
+        expect(r.mode, LiveMode.websocket);
+        expect(r.seqs, [7, 8]);
+        expect(r.server.polls, hasLength(1));
+        expect(r.gaps, 0);
+      });
+    });
+
+    test('a refresh tick says so before it reports the gap', () {
+      fakeAsync((async) {
+        final gapsAtTick = <int>[];
+        late final Rig r;
+        r = Rig(onRefresh: () => gapsAtTick.add(r.gaps));
+        r.server.pollSupported = false;
+        r.breakSocket(async);
+        expect(r.mode, LiveMode.refreshing);
+        expect(gapsAtTick, isEmpty);
+        async.elapse(const Duration(seconds: 45));
+        expect(gapsAtTick, [1]);
+        expect(r.gaps, 2);
+        r.live.sleep();
+        async.elapse(const Duration(minutes: 10));
+        expect(gapsAtTick, [1]);
+        expect(r.gaps, 2);
+      });
     });
   });
 

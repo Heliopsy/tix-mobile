@@ -137,7 +137,7 @@ final class SessionControllerProvider
   SessionController create() => SessionController();
 }
 
-String _$sessionControllerHash() => r'2274ed4acdb176167a0d7e1ce90ec6a4cf5c67a0';
+String _$sessionControllerHash() => r'2e0d7d1d42c6a0d4c77d0712fd6b4679d52780fa';
 
 /// The active session: null until someone connects.
 
@@ -266,7 +266,7 @@ final class SessionApiProvider
   }
 }
 
-String _$sessionApiHash() => r'3faedeaa65ed91ca6e28e72528b6575fde4a3838';
+String _$sessionApiHash() => r'3a78e160c1c61bcb720481da3e761644ddb21acf';
 
 /// The background work running per connection, stopped before a forgotten
 /// connection's files are deleted.

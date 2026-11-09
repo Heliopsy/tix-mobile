@@ -263,6 +263,92 @@ void main() {
       engines.dispose();
     });
 
+    testWidgets('polls neither hold the engine awake nor wake it', (
+      tester,
+    ) async {
+      final engine = InMemoryLocalTixEngine(existing: ['/a.db']);
+      final engines = LocalEngines(
+        engine,
+        idleAfter: const Duration(minutes: 1),
+      );
+      final a = local('a', '/a.db');
+      await engines.ensure(a);
+      for (var i = 0; i < 3; i++) {
+        final (_, held) = await engines.attend(a, background: true);
+        expect(held, isFalse);
+        await tester.pump(const Duration(seconds: 25));
+      }
+      await tester.pump();
+      expect(engine.running, isEmpty);
+      expect(engines.statuses['a']?.state, LocalEngineState.resting);
+      await expectLater(
+        engines.attend(a, background: true),
+        throwsA(
+          isA<TixException>().having(
+            (e) => e.kind,
+            'kind',
+            TixErrorKind.engineUnavailable,
+          ),
+        ),
+      );
+      expect(engine.running, isEmpty);
+      final (_, held) = await engines.attend(a);
+      expect(held, isTrue);
+      expect(engine.running, hasLength(1));
+      engines
+        ..done('a')
+        ..dispose();
+    });
+
+    testWidgets('reads in a quiet window are background until it closes', (
+      tester,
+    ) async {
+      final engine = InMemoryLocalTixEngine(existing: ['/a.db']);
+      final engines = LocalEngines(
+        engine,
+        idleAfter: const Duration(minutes: 1),
+      );
+      final a = local('a', '/a.db');
+      await engines.ensure(a);
+      await tester.pump(const Duration(seconds: 50));
+      engines.quiet('a', const Duration(seconds: 5));
+      final (_, quiet) = await engines.attend(a);
+      expect(quiet, isFalse);
+      await tester.pump(const Duration(seconds: 10));
+      await tester.pump();
+      expect(engine.running, isEmpty);
+      engines.quiet('a', const Duration(seconds: 5));
+      final (_, held) = await engines.attend(a);
+      expect(held, isTrue, reason: 'a stopped engine has no quiet window');
+      expect(engine.running, hasLength(1));
+      engines
+        ..done('a')
+        ..dispose();
+    });
+
+    testWidgets('halts and starts are reported, a halt before the stop', (
+      tester,
+    ) async {
+      final engine = InMemoryLocalTixEngine(existing: ['/a.db', '/b.db']);
+      final engines = LocalEngines(
+        engine,
+        idleAfter: const Duration(minutes: 1),
+      );
+      final seen = <String>[];
+      engines.halted.listen(
+        (id) => seen.add('halt $id ${engine.running.length}'),
+      );
+      engines.started.listen((id) => seen.add('start $id'));
+      final a = local('a', '/a.db');
+      await engines.ensure(a);
+      await tester.pump(const Duration(minutes: 1));
+      await tester.pump();
+      await engines.ensure(a);
+      await engines.ensure(local('b', '/b.db'));
+      expect(seen, ['start a', 'halt a 1', 'start a', 'halt a 1', 'start b']);
+      engines.dispose();
+    });
+
     testWidgets('the setting reaches the engines, ten minutes by default', (
       tester,
     ) async {

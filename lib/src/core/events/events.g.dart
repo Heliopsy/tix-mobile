@@ -279,6 +279,9 @@ String _$liveConfigHash() => r'855e2b51cb6141525a09de035f38b2af55e0f09b';
 /// Live updates of the active context, null while there is none or it
 /// cannot be reached: the WebSocket, or the HTTP fallback when it keeps
 /// failing. Rebuilt, with a fresh cursor, when the context changes.
+///
+/// For a local instance they sleep while its engine is stopped, so neither
+/// a poll nor a reconnect keeps it from resting, and wake when it starts.
 
 @ProviderFor(tixEventStream)
 final tixEventStreamProvider = TixEventStreamProvider._();
@@ -286,6 +289,9 @@ final tixEventStreamProvider = TixEventStreamProvider._();
 /// Live updates of the active context, null while there is none or it
 /// cannot be reached: the WebSocket, or the HTTP fallback when it keeps
 /// failing. Rebuilt, with a fresh cursor, when the context changes.
+///
+/// For a local instance they sleep while its engine is stopped, so neither
+/// a poll nor a reconnect keeps it from resting, and wake when it starts.
 
 final class TixEventStreamProvider
     extends $FunctionalProvider<LiveEvents?, LiveEvents?, LiveEvents?>
@@ -293,6 +299,9 @@ final class TixEventStreamProvider
   /// Live updates of the active context, null while there is none or it
   /// cannot be reached: the WebSocket, or the HTTP fallback when it keeps
   /// failing. Rebuilt, with a fresh cursor, when the context changes.
+  ///
+  /// For a local instance they sleep while its engine is stopped, so neither
+  /// a poll nor a reconnect keeps it from resting, and wake when it starts.
   TixEventStreamProvider._()
     : super(
         from: null,
@@ -326,7 +335,7 @@ final class TixEventStreamProvider
   }
 }
 
-String _$tixEventStreamHash() => r'fd766efd9b6c0b7095da7ee5814a381c2139636c';
+String _$tixEventStreamHash() => r'afba1b525814914f171c69190441762372567af1';
 
 /// Every update of the active context's live events.
 

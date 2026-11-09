@@ -13,7 +13,7 @@ LiveState? liveStateOf(LiveMode? mode) => switch (mode) {
   LiveMode.refreshing => LiveState.refreshing,
   LiveMode.offline => LiveState.offline,
   LiveMode.unavailable => LiveState.unavailable,
-  LiveMode.closed || null => null,
+  LiveMode.closed || LiveMode.paused || null => null,
 };
 
 /// How live updates reach the active context, beside the context switcher.

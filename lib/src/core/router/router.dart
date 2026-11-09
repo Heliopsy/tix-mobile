@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
+
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -88,7 +90,7 @@ String? redirectFor(
 }
 
 /// The app's router, which follows the session in and out of the connect
-/// screen.
+/// screen. Every navigation counts as activity for a local engine.
 @Riverpod(keepAlive: true)
 GoRouter router(Ref ref) {
   final session = ValueNotifier<AsyncValue<Session?>>(const AsyncLoading());
@@ -313,6 +315,9 @@ GoRouter router(Ref ref) {
         ],
       ),
     ],
+  );
+  router.routerDelegate.addListener(
+    () => unawaited(ref.read(sessionControllerProvider.notifier).wakeLocal()),
   );
   ref.onDispose(router.dispose);
   return router;

@@ -144,10 +144,13 @@ class LocalEngines {
   final _timers = <String, Timer>{};
   final _busy = <String, int>{};
   final _findings = <String, SyncFindings>{};
+  final _quiet = <String, Timer>{};
   var _lifecycle = Future<void>.value();
   final _moved = StreamController<String>.broadcast();
   final _renewed = StreamController<Instance>.broadcast();
   final _changes = StreamController<void>.broadcast();
+  final _halted = StreamController<String>.broadcast(sync: true);
+  final _started = StreamController<String>.broadcast(sync: true);
 
   /// Instances whose engine came back on another address after a rest or a
   /// suspend; whatever holds the old address must rebuild.
@@ -159,6 +162,13 @@ class LocalEngines {
 
   /// Fires whenever a status changes.
   Stream<void> get changes => _changes.stream;
+
+  /// Instances whose engine is about to stop, for whatever reason. Delivered
+  /// synchronously, before the engine goes away.
+  Stream<String> get halted => _halted.stream;
+
+  /// Instances whose engine has just started and serves its address.
+  Stream<String> get started => _started.stream;
 
   /// The instances with an engine running or starting.
   Iterable<String> get running => _handles.keys;
@@ -244,6 +254,7 @@ class LocalEngines {
         _moved.add(instance.id);
       }
       _changed();
+      if (!_started.isClosed) _started.add(instance.id);
       return h;
     } on Object {
       await access.close(started);
@@ -297,6 +308,38 @@ class LocalEngines {
 
   /// The engine serving [instance], started if needed, held awake until
   /// [done] says the request that needed it has finished.
+  ///
+  /// A [background] request, or any request while [quiet], is not activity:
+  /// it goes to the engine running or starting now without touching the idle
+  /// timer, and a background one fails with [TixErrorKind.engineUnavailable]
+  /// rather than start a stopped engine. Answers whether [done] must follow.
+  Future<(LocalHandle, bool)> attend(
+    Instance instance, {
+    bool background = false,
+  }) async {
+    if (background || _quiet.containsKey(instance.id)) {
+      final running = _handles[instance.id];
+      if (running != null) return (await running, false);
+      if (background) {
+        throw const TixException(
+          TixErrorKind.engineUnavailable,
+          message: 'the local engine is resting',
+        );
+      }
+    }
+    return (await wake(instance), true);
+  }
+
+  /// Makes requests to [instanceId]'s engine count as background work for
+  /// [window], unless it stops first: the reads a periodic refresh causes.
+  void quiet(String instanceId, Duration window) {
+    _quiet.remove(instanceId)?.cancel();
+    if (!_running.containsKey(instanceId)) return;
+    _quiet[instanceId] = Timer(window, () => _quiet.remove(instanceId));
+  }
+
+  /// The engine serving [instance], started if needed, held awake until
+  /// [done] says the request that needed it has finished.
   Future<LocalHandle> wake(Instance instance) async {
     final h = await ensure(instance);
     _busy[instance.id] = (_busy[instance.id] ?? 0) + 1;
@@ -338,6 +381,10 @@ class LocalEngines {
 
   Future<void> _halt(String instanceId) async {
     _timers.remove(instanceId)?.cancel();
+    _quiet.remove(instanceId)?.cancel();
+    if (_handles.containsKey(instanceId) && !_halted.isClosed) {
+      _halted.add(instanceId);
+    }
     _running.remove(instanceId);
     final handle = _handles.remove(instanceId);
     if (handle == null) return;
@@ -398,9 +445,11 @@ class LocalEngines {
 
   /// Releases the streams and timers.
   void dispose() {
-    for (final t in _timers.values) {
+    for (final t in [..._timers.values, ..._quiet.values]) {
       t.cancel();
     }
+    unawaited(_halted.close());
+    unawaited(_started.close());
     unawaited(_moved.close());
     unawaited(_renewed.close());
     unawaited(_changes.close());
