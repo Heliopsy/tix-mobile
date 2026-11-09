@@ -41,7 +41,6 @@ import 'package:tix_mobile/src/features/projects/presentation/projects_screen.da
 import 'package:tix_mobile/src/features/quick/presentation/quick_actions_host.dart';
 import 'package:tix_mobile/src/features/security/presentation/security_screen.dart';
 import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';
-import 'package:tix_mobile/src/features/settings/presentation/time_settings_screen.dart';
 import 'package:tix_mobile/src/features/shell/presentation/home_shell.dart';
 import 'package:tix_mobile/src/features/shell/presentation/splash_screen.dart';
 import 'package:tix_mobile/src/features/status/presentation/status_screen.dart';
@@ -259,10 +258,6 @@ GoRouter router(Ref ref) {
                         ),
                       ),
                     ],
-                  ),
-                  GoRoute(
-                    path: 'time',
-                    builder: (_, _) => const TimeSettingsScreen(),
                   ),
                   GoRoute(
                     path: 'about',

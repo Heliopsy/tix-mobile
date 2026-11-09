@@ -7,8 +7,7 @@ import 'package:tix_mobile/src/data/repositories/server_info_repository.dart';
 
 part 'server_info.g.dart';
 
-/// The installation's status and the caller's date display, for the active
-/// session.
+/// The installation's status, for the active session.
 @riverpod
 ServerInfoRepository serverInfoRepository(Ref ref) => ServerInfoRepository(
   ref.watch(sessionApiProvider),

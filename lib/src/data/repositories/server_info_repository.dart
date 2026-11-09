@@ -6,7 +6,7 @@ import 'package:tix_mobile/src/data/models/server_info.dart';
 
 export 'package:tix_mobile/src/data/models/server_info.dart';
 
-/// The installation's health and the caller's date and time display.
+/// The installation's health.
 class ServerInfoRepository {
   /// Reads through [_api], keeping copies in [_cache].
   ServerInfoRepository(this._api, this._cache);
@@ -24,12 +24,4 @@ class ServerInfoRepository {
     'status',
     (j) => StatusReport.fromJson(j! as Map<String, dynamic>),
   );
-
-  /// The caller's date format and timezone at every level (`time.settings`).
-  Future<TimeSettings> time() => _api.time.settings();
-
-  /// Sets the caller's own [format] and [timezone]; a null leaves that one
-  /// alone and an empty one inherits (`time.prefs.set`).
-  Future<TimeSettings> setTime({String? format, String? timezone}) => _api.time
-      .prefsSet(TimePrefsInput(timeFormat: format, timezone: timezone));
 }

@@ -242,7 +242,6 @@ Future<ProviderContainer> pumpScreen(
           GoRoute(path: 'account', builder: stub),
           GoRoute(path: 'calendar', builder: stub),
           GoRoute(path: 'tokens', builder: stub),
-          GoRoute(path: 'time', builder: stub),
         ],
       ),
       GoRoute(

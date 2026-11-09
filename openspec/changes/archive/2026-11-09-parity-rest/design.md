@@ -27,10 +27,9 @@ A chip applies the cached filter at once, then reads it with `filter.show` and a
 query, sort or view changed. A filter deleted elsewhere clears and drops out of the list. `/tasks?filter=<name>`
 opens one by name; tix prefers the reader's own over a shared one of the same name.
 
-## Date and time, status, bundles
+## Status, bundles
 
-Date and time is a settings screen over `time.settings` and `time.prefs.set`: the format as choices, the zone as an
-IANA name, each saying what is in force and which level it came from. Server status draws `status.read` as
+Server status draws `status.read` as
 sections, cached for a quick first draw. Bundles export the picked kinds through the share sheet or a save dialog
 and import after a preview, asking first when collisions replace. A snapshot import always dry-runs first and
 confirms; replace is the danger button. All three are Manage entries.

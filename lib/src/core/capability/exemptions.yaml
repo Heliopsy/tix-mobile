@@ -50,6 +50,8 @@ pending:
   # Wave 1, daily work: tasks, comments, fields, tags, dependencies, artifacts,
   # time, views, filters, inbox, search, stars, snooze, templates, bulk.
   wave1:
+    - time.prefs.set
+    - time.settings
   # Wave 2, team: projects, workflows, fields, users, members, invites, tokens, calendar, export.
   wave2:
   # Wave 3, admin: tenants, global admin, domains, webhooks, sync, retention, audit, second factor, SSH keys.
