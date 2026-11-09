@@ -4032,6 +4032,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scopeTaskReclaim => 'End a lease another worker holds.';
 
   @override
+  String get scopeTaskApprove =>
+      'Approve or reject work on a workflow edge that asks for it.';
+
+  @override
   String get scopeProjectRead => 'Read projects.';
 
   @override

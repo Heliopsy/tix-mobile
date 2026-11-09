@@ -6859,6 +6859,12 @@ abstract class AppLocalizations {
   /// **'End a lease another worker holds.'**
   String get scopeTaskReclaim;
 
+  /// No description provided for @scopeTaskApprove.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve or reject work on a workflow edge that asks for it.'**
+  String get scopeTaskApprove;
+
   /// No description provided for @scopeProjectRead.
   ///
   /// In en, this message translates to:

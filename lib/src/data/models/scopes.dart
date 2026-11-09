@@ -30,6 +30,9 @@ abstract final class Scopes {
   /// End the lease another worker holds.
   static const taskReclaim = 'task:reclaim';
 
+  /// Cross a workflow edge that asks for approval.
+  static const taskApprove = 'task:approve';
+
   /// Read projects.
   static const projectRead = 'project:read';
 
@@ -94,6 +97,7 @@ abstract final class Scopes {
       taskClaim,
       taskDelete,
       taskReclaim,
+      taskApprove,
     ],
     'projects': [projectRead, projectWrite],
     'workflows': [workflowRead, workflowWrite],

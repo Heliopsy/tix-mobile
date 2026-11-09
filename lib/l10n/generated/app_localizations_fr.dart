@@ -4061,6 +4061,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get scopeTaskReclaim => 'Mettre fin au bail d’un autre exécutant.';
 
   @override
+  String get scopeTaskApprove =>
+      'Approuver ou refuser le travail sur une transition de workflow qui le demande.';
+
+  @override
   String get scopeProjectRead => 'Lire les projets.';
 
   @override

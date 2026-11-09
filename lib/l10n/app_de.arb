@@ -1126,6 +1126,7 @@
   "scopeTaskClaim": "Aufgaben übernehmen, die Sperre verlängern und freigeben.",
   "scopeTaskDelete": "Aufgaben löschen und aus dem Papierkorb wiederherstellen.",
   "scopeTaskReclaim": "Die Sperre eines anderen Bearbeiters beenden.",
+  "scopeTaskApprove": "Arbeit an einem Workflow-Übergang, der es verlangt, freigeben oder ablehnen.",
   "scopeProjectRead": "Projekte lesen.",
   "scopeProjectWrite": "Projekte erstellen und ändern.",
   "scopeWorkflowRead": "Workflows lesen.",

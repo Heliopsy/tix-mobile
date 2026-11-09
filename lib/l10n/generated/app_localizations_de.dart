@@ -4066,6 +4066,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die Sperre eines anderen Bearbeiters beenden.';
 
   @override
+  String get scopeTaskApprove =>
+      'Arbeit an einem Workflow-Übergang, der es verlangt, freigeben oder ablehnen.';
+
+  @override
   String get scopeProjectRead => 'Projekte lesen.';
 
   @override
