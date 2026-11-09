@@ -74,6 +74,18 @@ void main() {
     Future<void> settle() =>
         Future<void>.delayed(const Duration(milliseconds: 200));
 
+    // Waits for [done] rather than for a fixed time, which failed on a
+    // loaded machine before the fake server had answered.
+    Future<void> eventually(bool Function() done) async {
+      final deadline = DateTime.now().add(const Duration(seconds: 5));
+      while (!done()) {
+        if (DateTime.now().isAfter(deadline)) {
+          fail('condition not met within 5 seconds');
+        }
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+      }
+    }
+
     ProviderSubscription<Object?> keep(ProviderListenable<Object?> p) {
       final sub = c.listen(p, (_, _) {});
       addTearDown(sub.close);
@@ -95,7 +107,9 @@ void main() {
         ..request('infra', 'F')
         ..request('infra', 'Fi')
         ..request('infra', 'Fix');
-      await settle();
+      await eventually(
+        () => c.read(quickPreviewerProvider).value?.line.title == 'Fix',
+      );
       expect(server.previewedLines, ['Fix']);
       expect(c.read(quickPreviewerProvider).value!.line.title, 'Fix');
     });
