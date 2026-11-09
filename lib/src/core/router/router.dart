@@ -69,14 +69,17 @@ export 'package:tix_mobile/src/core/router/routes.dart';
 part 'router.g.dart';
 
 /// Where [uri] should lead instead, given [session], or null to stay.
-/// Signing in, or starting signed in, lands on [home].
+/// Signing in, or starting signed in, lands on [home]. While [moving] to
+/// another context everything waits on the switching screen.
 String? redirectFor(
   AsyncValue<Session?> session,
   Uri uri, {
   String home = Routes.projects,
+  bool moving = false,
 }) {
   final path = uri.path;
   if (path == Routes.gallery && Routes.galleryEnabled) return null;
+  if (moving) return path == Routes.switching ? null : Routes.switching;
   if (session.isLoading && !session.hasValue) {
     return path == Routes.splash ? null : Routes.splash;
   }
@@ -84,10 +87,84 @@ String? redirectFor(
     return path == Routes.connect ? null : Routes.connect;
   }
   final adding = uri.queryParameters.keys.any(Routes.connectParams.contains);
-  if (path == Routes.splash || (path == Routes.connect && !adding)) {
+  if (path == Routes.splash ||
+      path == Routes.switching ||
+      (path == Routes.connect && !adding)) {
     return home;
   }
   return null;
+}
+
+/// Where a move to another context with no target lands, coming from
+/// [left]: the root of its tab, since everything below it names something
+/// of the old context, or [left] itself where nothing does. Null outside
+/// the tabs.
+String? landingFrom(Uri left) {
+  if (_contextFree.contains(left.path)) return left.path;
+  final root = '/${left.pathSegments.firstOrNull ?? ''}';
+  return _tabRoots.contains(root) ? root : null;
+}
+
+const Set<String> _tabRoots = {
+  Routes.projects,
+  Routes.templates,
+  Routes.tasks,
+  Routes.myWork,
+  Routes.inbox,
+  Routes.manage,
+  Routes.settings,
+};
+
+const Set<String> _contextFree = {Routes.instances, Routes.about};
+
+/// Takes the screens of the context being left down: the shell, with every
+/// tab's stack and the sheets on it, gives way to the switching screen
+/// until the new context lands. The hosts around the shell stay.
+class _ContextMover {
+  late final GoRouter router;
+  bool moving = false;
+  Uri? _left;
+
+  Future<void> leave() async {
+    _left ??= router.routerDelegate.currentConfiguration.uri;
+    moving = true;
+    router.routerDelegate.navigatorKey.currentState?.popUntil(
+      (r) => r.settings is Page,
+    );
+    router.go(Routes.switching);
+    for (var i = 0; i < 3 && !_switching; i++) {
+      await _nextFrame();
+    }
+    await _nextFrame();
+  }
+
+  void land(String? landing, String home) {
+    final left = _left;
+    _left = null;
+    moving = false;
+    router.go(landing ?? (left == null ? null : landingFrom(left)) ?? home);
+  }
+
+  bool get _switching =>
+      router.routerDelegate.currentConfiguration.uri.path == Routes.switching;
+
+  /// The end of the next frame, or a moment when no frame comes because
+  /// the app is in the background.
+  static Future<void> _nextFrame() {
+    final drawn = Completer<void>();
+    void done() {
+      if (!drawn.isCompleted) drawn.complete();
+    }
+
+    final fallback = Timer(const Duration(milliseconds: 300), done);
+    unawaited(
+      WidgetsBinding.instance.endOfFrame.then((_) {
+        fallback.cancel();
+        done();
+      }),
+    );
+    return drawn.future;
+  }
 }
 
 /// The app's router, which follows the session in and out of the connect
@@ -102,15 +179,18 @@ GoRouter router(Ref ref) {
       fireImmediately: true,
     )
     ..onDispose(session.dispose);
+  String home() => StartScreen.named(
+    SettingsRepository(ref.read(keyValueStoreProvider)).startScreen(),
+  ).route;
+  final mover = _ContextMover();
   final router = GoRouter(
     initialLocation: Routes.splash,
     refreshListenable: session,
     redirect: (_, state) => redirectFor(
       session.value,
       state.uri,
-      home: StartScreen.named(
-        SettingsRepository(ref.read(keyValueStoreProvider)).startScreen(),
-      ).route,
+      home: home(),
+      moving: mover.moving,
     ),
     routes: [
       GoRoute(path: Routes.splash, builder: (_, _) => const SplashScreen()),
@@ -131,185 +211,193 @@ GoRouter router(Ref ref) {
       ),
       if (Routes.galleryEnabled)
         GoRoute(path: Routes.gallery, builder: (_, _) => const GalleryScreen()),
-      StatefulShellRoute.indexedStack(
-        builder: (_, _, shell) => DeepLinkHost(
+      ShellRoute(
+        builder: (_, _, child) => DeepLinkHost(
           child: HomeWidgetsScope(
             child: InboxAlertsScope(
               child: QuickActionsHost(
                 child: TemplatesCommands(
                   child: SettingsCommands(
-                    child: OfflineSyncScope(
-                      child: HomeShell(
-                        shell: shell,
-                        inboxIcon: (icon) => InboxNavIcon(icon: icon),
-                      ),
-                    ),
+                    child: OfflineSyncScope(child: child),
                   ),
                 ),
               ),
             ),
           ),
         ),
-        branches: [
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: Routes.projects,
-                builder: (_, _) => const ProjectsScreen(),
+        routes: [
+          GoRoute(
+            path: Routes.switching,
+            pageBuilder: (_, _) =>
+                const NoTransitionPage(child: SplashScreen()),
+          ),
+          StatefulShellRoute.indexedStack(
+            builder: (_, _, shell) => HomeShell(
+              shell: shell,
+              inboxIcon: (icon) => InboxNavIcon(icon: icon),
+            ),
+            branches: [
+              StatefulShellBranch(
                 routes: [
                   GoRoute(
-                    path: ':key',
-                    builder: (_, state) => TaskListScreen(
-                      projectKey: state.pathParameters['key']!,
-                    ),
+                    path: Routes.projects,
+                    builder: (_, _) => const ProjectsScreen(),
                     routes: [
                       GoRoute(
-                        path: 'tasks/:ref',
-                        pageBuilder: _taskPage,
-                        redirect: (_, state) => _sentDraft(ref, state),
-                      ),
-                      GoRoute(
-                        path: 'settings',
-                        builder: (_, state) => ProjectSettingsScreen(
+                        path: ':key',
+                        builder: (_, state) => TaskListScreen(
                           projectKey: state.pathParameters['key']!,
                         ),
+                        routes: [
+                          GoRoute(
+                            path: 'tasks/:ref',
+                            pageBuilder: _taskPage,
+                            redirect: (_, state) => _sentDraft(ref, state),
+                          ),
+                          GoRoute(
+                            path: 'settings',
+                            builder: (_, state) => ProjectSettingsScreen(
+                              projectKey: state.pathParameters['key']!,
+                            ),
+                          ),
+                          GoRoute(
+                            path: 'fields',
+                            builder: (_, state) => ProjectFieldsScreen(
+                              projectKey: state.pathParameters['key']!,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  GoRoute(
+                    path: Routes.templates,
+                    builder: (_, _) => const TemplatesScreen(),
+                  ),
+                ],
+              ),
+              StatefulShellBranch(
+                routes: [
+                  GoRoute(
+                    path: Routes.tasks,
+                    builder: (_, state) => TasksScreen(
+                      filter: state.uri.queryParameters['filter'] ?? '',
+                    ),
+                  ),
+                ],
+              ),
+              StatefulShellBranch(
+                routes: [
+                  GoRoute(
+                    path: Routes.myWork,
+                    builder: (_, _) => const MyWorkScreen(),
+                  ),
+                ],
+              ),
+              StatefulShellBranch(
+                routes: [
+                  GoRoute(
+                    path: Routes.inbox,
+                    builder: (_, _) => const InboxScreen(),
+                  ),
+                ],
+              ),
+              StatefulShellBranch(
+                routes: [
+                  GoRoute(
+                    path: Routes.manage,
+                    builder: (_, _) => const ManageScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'workflows',
+                        builder: (_, _) => const WorkflowsScreen(),
+                        routes: [
+                          GoRoute(
+                            path: ':key',
+                            builder: (_, state) => WorkflowEditorScreen(
+                              workflowKey: state.pathParameters['key']!,
+                            ),
+                          ),
+                        ],
+                      ),
+                      GoRoute(
+                        path: 'status',
+                        builder: (_, _) => const StatusScreen(),
+                      ),
+                      GoRoute(
+                        path: 'bundles',
+                        builder: (_, _) => const BundlesScreen(),
+                      ),
+                      GoRoute(
+                        path: 'import',
+                        builder: (_, _) => const SnapshotImportScreen(),
                       ),
                       GoRoute(
                         path: 'fields',
-                        builder: (_, state) => ProjectFieldsScreen(
-                          projectKey: state.pathParameters['key']!,
-                        ),
+                        builder: (_, _) => const FieldProjectsScreen(),
+                        routes: [
+                          GoRoute(
+                            path: ':key',
+                            builder: (_, state) => ProjectFieldsScreen(
+                              projectKey: state.pathParameters['key']!,
+                            ),
+                          ),
+                        ],
                       ),
+                      ...manageRoutes,
+                      ...adminRoutes,
+                      ...upkeepRoutes,
                     ],
                   ),
                 ],
               ),
-              GoRoute(
-                path: Routes.templates,
-                builder: (_, _) => const TemplatesScreen(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: Routes.tasks,
-                builder: (_, state) => TasksScreen(
-                  filter: state.uri.queryParameters['filter'] ?? '',
-                ),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: Routes.myWork,
-                builder: (_, _) => const MyWorkScreen(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: Routes.inbox,
-                builder: (_, _) => const InboxScreen(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: Routes.manage,
-                builder: (_, _) => const ManageScreen(),
+              StatefulShellBranch(
                 routes: [
                   GoRoute(
-                    path: 'workflows',
-                    builder: (_, _) => const WorkflowsScreen(),
+                    path: Routes.settings,
+                    builder: (_, state) {
+                      final q = state.uri.queryParameters['q'] ?? '';
+                      return SettingsScreen(key: ValueKey(q), initialQuery: q);
+                    },
                     routes: [
                       GoRoute(
-                        path: ':key',
-                        builder: (_, state) => WorkflowEditorScreen(
-                          workflowKey: state.pathParameters['key']!,
-                        ),
+                        path: 'filters',
+                        builder: (_, _) => const SavedFiltersScreen(),
                       ),
-                    ],
-                  ),
-                  GoRoute(
-                    path: 'status',
-                    builder: (_, _) => const StatusScreen(),
-                  ),
-                  GoRoute(
-                    path: 'bundles',
-                    builder: (_, _) => const BundlesScreen(),
-                  ),
-                  GoRoute(
-                    path: 'import',
-                    builder: (_, _) => const SnapshotImportScreen(),
-                  ),
-                  GoRoute(
-                    path: 'fields',
-                    builder: (_, _) => const FieldProjectsScreen(),
-                    routes: [
                       GoRoute(
-                        path: ':key',
-                        builder: (_, state) => ProjectFieldsScreen(
-                          projectKey: state.pathParameters['key']!,
-                        ),
+                        path: 'instances',
+                        builder: (_, _) => const InstancesScreen(),
                       ),
-                    ],
-                  ),
-                  ...manageRoutes,
-                  ...adminRoutes,
-                  ...upkeepRoutes,
-                ],
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: Routes.settings,
-                builder: (_, state) {
-                  final q = state.uri.queryParameters['q'] ?? '';
-                  return SettingsScreen(key: ValueKey(q), initialQuery: q);
-                },
-                routes: [
-                  GoRoute(
-                    path: 'filters',
-                    builder: (_, _) => const SavedFiltersScreen(),
-                  ),
-                  GoRoute(
-                    path: 'instances',
-                    builder: (_, _) => const InstancesScreen(),
-                  ),
-                  GoRoute(
-                    path: 'notifications',
-                    builder: (_, _) => const NotificationSettingsScreen(),
-                    routes: [
                       GoRoute(
-                        path: 'channels/:id',
-                        builder: (_, state) => ChannelScreen(
-                          channelId: state.pathParameters['id']!,
-                        ),
+                        path: 'notifications',
+                        builder: (_, _) => const NotificationSettingsScreen(),
+                        routes: [
+                          GoRoute(
+                            path: 'channels/:id',
+                            builder: (_, state) => ChannelScreen(
+                              channelId: state.pathParameters['id']!,
+                            ),
+                          ),
+                        ],
+                      ),
+                      GoRoute(
+                        path: 'about',
+                        builder: (_, _) => const AboutScreen(),
+                      ),
+                      ...accountRoutes,
+                      GoRoute(
+                        path: 'security',
+                        builder: (_, _) => const SecurityScreen(),
+                      ),
+                      GoRoute(
+                        path: 'offline',
+                        builder: (_, _) => const OfflineScreen(),
+                      ),
+                      GoRoute(
+                        path: 'conflicts',
+                        builder: (_, _) => const ConflictsScreen(),
                       ),
                     ],
-                  ),
-                  GoRoute(
-                    path: 'about',
-                    builder: (_, _) => const AboutScreen(),
-                  ),
-                  ...accountRoutes,
-                  GoRoute(
-                    path: 'security',
-                    builder: (_, _) => const SecurityScreen(),
-                  ),
-                  GoRoute(
-                    path: 'offline',
-                    builder: (_, _) => const OfflineScreen(),
-                  ),
-                  GoRoute(
-                    path: 'conflicts',
-                    builder: (_, _) => const ConflictsScreen(),
                   ),
                 ],
               ),
@@ -318,6 +406,15 @@ GoRouter router(Ref ref) {
         ],
       ),
     ],
+  );
+  mover.router = router;
+  final moves = ref.read(contextMovesProvider)
+    ..leave = mover.leave
+    ..land = (landing) => mover.land(landing, home());
+  ref.onDispose(
+    () => moves
+      ..leave = null
+      ..land = null,
   );
   router.routerDelegate.addListener(
     () => unawaited(ref.read(sessionControllerProvider.notifier).wakeLocal()),

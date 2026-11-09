@@ -47,7 +47,7 @@ final class WidgetSyncProvider
   WidgetSync create() => WidgetSync();
 }
 
-String _$widgetSyncHash() => r'db0a2034b929e38a4edce69a41f2882e87222364';
+String _$widgetSyncHash() => r'8112b933990d3809dc4e55e0cfb9377bb5367ffa';
 
 /// Keeps the home screen widgets current while the signed-in app runs:
 /// after the session changes, events about tasks, the inbox or projects,

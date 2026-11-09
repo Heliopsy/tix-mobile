@@ -15,6 +15,9 @@ abstract final class Routes {
   /// Shown while the saved session loads.
   static const splash = '/';
 
+  /// Shown while the app moves to another context.
+  static const switching = '/switching';
+
   /// Add the first instance.
   static const connect = '/connect';
 

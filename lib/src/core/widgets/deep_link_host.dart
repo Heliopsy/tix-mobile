@@ -68,7 +68,9 @@ class _DeepLinkHostState extends ConsumerState<DeepLinkHost> {
       return;
     }
     final named = link.context;
-    if (named != null && !await _switchFor(named, router)) return;
+    if (named != null && !await _switchFor(named, router, link.route)) {
+      return;
+    }
     final route = link.route;
     if (link.quickAdd) {
       ref.read(quickAddDraftsProvider.notifier).open(project: link.project);
@@ -84,7 +86,11 @@ class _DeepLinkHostState extends ConsumerState<DeepLinkHost> {
     router.go(_home);
   }
 
-  Future<bool> _switchFor(String named, GoRouter router) async {
+  Future<bool> _switchFor(
+    String named,
+    GoRouter router,
+    String? landing,
+  ) async {
     final match = matchContext(
       named,
       savedContexts(ref.read(instancesRepositoryProvider)),
@@ -104,7 +110,9 @@ class _DeepLinkHostState extends ConsumerState<DeepLinkHost> {
     }
     if (target == null || !mounted) return false;
     try {
-      await ref.read(sessionControllerProvider.notifier).activate(target.ref);
+      await ref
+          .read(sessionControllerProvider.notifier)
+          .activate(target.ref, landing: landing);
       return true;
     } on Exception catch (e) {
       if (mounted) {

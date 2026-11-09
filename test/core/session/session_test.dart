@@ -316,6 +316,79 @@ void main() {
       expect(page.items.single.key, 'ops');
     });
 
+    test(
+      'a move to another tenant clears the old screens before the '
+      'session changes and lands after; the same tenant moves nothing',
+      () async {
+        server.tenants['acme'] = (name: 'Acme', host: '');
+        final stores = signInStores(server, tenants: ['default', 'acme']);
+        final c = makeContainer(
+          fakeOverrides(
+            server,
+            settings: stores.settings,
+            secrets: stores.secrets,
+          ),
+        );
+        await c.read(sessionControllerProvider.future);
+        final moves = <String>[];
+        String tenant() =>
+            c.read(sessionControllerProvider).value!.connection.tenantKey;
+        c.read(contextMovesProvider)
+          ..leave = () async {
+            moves.add('leave in ${tenant()}');
+          }
+          ..land = (to) {
+            moves.add('land on $to in ${tenant()}');
+          };
+        final notifier = c.read(sessionControllerProvider.notifier);
+        await notifier.activate(
+          const ContextRef(connectionId: 's1', tenantKey: 'default'),
+        );
+        c.invalidate(sessionControllerProvider);
+        await c.read(sessionControllerProvider.future);
+        expect(moves, isEmpty);
+        await notifier.activate(
+          const ContextRef(connectionId: 's1', tenantKey: 'acme'),
+          landing: '/projects/ops',
+        );
+        expect(moves, ['leave in default', 'land on /projects/ops in acme']);
+      },
+    );
+
+    test('a refused switch moves nothing', () async {
+      server
+        ..tenants['acme'] = (name: 'Acme', host: '')
+        ..switchNeedsCode.add('acme');
+      final stores = signInStores(server, tenants: ['default', 'acme']);
+      final c = makeContainer(
+        fakeOverrides(
+          server,
+          settings: stores.settings,
+          secrets: stores.secrets,
+        ),
+      );
+      await c.read(sessionControllerProvider.future);
+      var moved = 0;
+      c.read(contextMovesProvider)
+        ..leave = () async {
+          moved++;
+        }
+        ..land = (_) {
+          moved++;
+        };
+      expect(
+        await refusal(
+          c
+              .read(sessionControllerProvider.notifier)
+              .activate(
+                const ContextRef(connectionId: 's1', tenantKey: 'acme'),
+              ),
+        ),
+        TixErrorKind.codeRequired,
+      );
+      expect(moved, 0);
+    });
+
     test('a switch asking for a code throws until one is sent', () async {
       server
         ..tenants['acme'] = (name: 'Acme', host: '')
