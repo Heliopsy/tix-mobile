@@ -335,7 +335,7 @@ final class TixEventStreamProvider
   }
 }
 
-String _$tixEventStreamHash() => r'afba1b525814914f171c69190441762372567af1';
+String _$tixEventStreamHash() => r'da5c3967eac9f0f336e22b2317b54e098807e245';
 
 /// Every update of the active context's live events.
 
@@ -429,3 +429,50 @@ final class LiveStatusProvider
 }
 
 String _$liveStatusHash() => r'96c27d4b12cf6a847927a40dc04952d0480f25e4';
+
+/// Why live updates of the active context are in their mode, for the
+/// connection details. Null while there is no context.
+
+@ProviderFor(liveDiagnostics)
+final liveDiagnosticsProvider = LiveDiagnosticsProvider._();
+
+/// Why live updates of the active context are in their mode, for the
+/// connection details. Null while there is no context.
+
+final class LiveDiagnosticsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<LiveDiagnostics?>,
+          LiveDiagnostics?,
+          Stream<LiveDiagnostics?>
+        >
+    with $FutureModifier<LiveDiagnostics?>, $StreamProvider<LiveDiagnostics?> {
+  /// Why live updates of the active context are in their mode, for the
+  /// connection details. Null while there is no context.
+  LiveDiagnosticsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'liveDiagnosticsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$liveDiagnosticsHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<LiveDiagnostics?> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<LiveDiagnostics?> create(Ref ref) {
+    return liveDiagnostics(ref);
+  }
+}
+
+String _$liveDiagnosticsHash() => r'24e61d535a4c1f4559dca8268c2bbbbf2732f21a';

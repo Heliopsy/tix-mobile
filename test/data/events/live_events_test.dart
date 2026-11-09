@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
@@ -29,16 +31,22 @@ class Rig {
     Credential credential = const BearerCredential('tok'),
     int? refuse,
     void Function()? onRefresh,
+    LiveConfig config = config,
+    EventPoller? poller,
+    DateTime Function() now = DateTime.now,
   }) {
     sockets.refuse = refuse;
     live = LiveEvents(
       baseUrl: 'https://tix.example',
       headers: credential.headers,
-      poller: TixEventPoller(server.factory('https://tix.example', credential)),
+      poller:
+          poller ??
+          TixEventPoller(server.factory('https://tix.example', credential)),
       connector: sockets.connect,
       config: config,
       onRefresh: onRefresh,
       random: Random(1),
+      now: now,
     );
     live.updates.listen(updates.add);
     live.statuses.listen((s) => modes.add(s.mode));
@@ -58,6 +66,13 @@ class Rig {
   int get gaps => updates.whereType<EventsMissed>().length;
 
   LiveMode get mode => live.status.mode;
+
+  /// Opens the WebSocket and has it acknowledged.
+  void open(FakeAsync async) {
+    async.flushMicrotasks();
+    sockets.last.ack();
+    async.flushMicrotasks();
+  }
 
   /// Breaks the live socket after [lastSeq] and refuses every upgrade with
   /// 502, as a proxy that cannot carry WebSockets does, until polling starts.
@@ -413,4 +428,243 @@ void main() {
       expect(r.mode, LiveMode.polling);
     });
   });
+
+  group('diagnostics', () {
+    final start = DateTime.utc(2026, 11, 9, 10);
+
+    test('after falling back to polling', () {
+      fakeAsync((async) {
+        final r = Rig(now: async.getClock(start).now);
+        async.flushMicrotasks();
+        r.sockets.last
+          ..ack()
+          ..event(7, 'task.created');
+        async.flushMicrotasks();
+        expect(r.live.diagnostics.lastEventAt, start);
+        r.sockets.refuse = 502;
+        unawaited(r.sockets.last.drop());
+        async.elapse(const Duration(milliseconds: 1500));
+        final failing = r.live.diagnostics;
+        expect(failing.windowFailures, 2);
+        expect(failing.consecutiveFailures, 2);
+        expect(failing.failuresBeforeFallback, 3);
+        expect(failing.nextRetryAt, isNotNull);
+        expect(failing.nextRetryAt!.isAfter(async.getClock(start).now()), true);
+        async.elapse(const Duration(seconds: 1));
+        expect(r.live.diagnostics.consecutiveFailures, 3);
+        r.server.addEvent(8, 'task.updated');
+        async.elapse(const Duration(seconds: 1));
+        final d = r.live.diagnostics;
+        expect(d.mode, LiveMode.polling);
+        expect(d.transport, LiveTransport.poll);
+        expect(d.host, 'https://tix.example');
+        expect(d.windowFailures, 0);
+        expect(d.consecutiveFailures, 0);
+        expect(d.pollUnsupported, isFalse);
+        expect(d.lastContactAt, isNotNull);
+        expect(d.nextRetryAt, isNull);
+        expect(d.nextProbeAt, d.modeSince.add(const Duration(minutes: 2)));
+        expect(d.lastError?.kind, LiveErrorKind.upgradeRefused);
+        expect(d.lastError?.httpStatus, 502);
+        expect(d.lastError?.type, 'WebSocketException');
+        expect(d.lastError?.source, LiveErrorSource.websocket);
+        final errors = [
+          for (final h in d.history)
+            if (h.error != null) h.error!.kind,
+        ];
+        expect(errors, [
+          LiveErrorKind.closed,
+          LiveErrorKind.upgradeRefused,
+          LiveErrorKind.upgradeRefused,
+        ]);
+        expect(
+          [
+            for (final h in d.history)
+              if (h.error == null) h.mode,
+          ],
+          [LiveMode.websocket, LiveMode.connecting, LiveMode.polling],
+        );
+      });
+    });
+
+    test('a server without the poll endpoint says so', () {
+      fakeAsync((async) {
+        final r = Rig();
+        r.server.pollSupported = false;
+        r.breakSocket(async);
+        final d = r.live.diagnostics;
+        expect(d.pollUnsupported, isTrue);
+        expect(d.transport, LiveTransport.refresh);
+      });
+    });
+
+    test('a poll that times out is offline, with the next try', () {
+      fakeAsync((async) {
+        final poller = _ScriptedPoller()
+          ..failures.add(
+            const TixException(
+              TixErrorKind.timeout,
+              cause: DioExceptionType.receiveTimeout,
+            ),
+          );
+        final r = Rig(poller: poller, now: async.getClock(start).now)
+          ..breakSocket(async);
+        final fellBack = start.add(const Duration(seconds: 2));
+        final d = r.live.diagnostics;
+        expect(d.mode, LiveMode.offline);
+        expect(d.transport, LiveTransport.poll);
+        expect(d.lastError?.kind, LiveErrorKind.timeout);
+        expect(d.lastError?.source, LiveErrorSource.poll);
+        expect(d.lastError?.type, 'TixException (receiveTimeout)');
+        expect(d.lastError?.tixKind, TixErrorKind.timeout);
+        expect(d.lastError?.at, fellBack);
+        expect(d.consecutiveFailures, 4);
+        expect(d.nextRetryAt, fellBack.add(const Duration(seconds: 5)));
+        async.elapse(const Duration(seconds: 5));
+        expect(r.mode, LiveMode.polling);
+        expect(r.live.diagnostics.consecutiveFailures, 0);
+        expect(r.live.diagnostics.nextRetryAt, isNull);
+      });
+    });
+
+    test('a WebSocket that times out reads as offline', () {
+      fakeAsync((async) {
+        final r = Rig()..open(async);
+        r.sockets.error = TimeoutException(
+          'no answer',
+          const Duration(seconds: 30),
+        );
+        unawaited(r.sockets.last.drop());
+        async.elapse(const Duration(milliseconds: 1500));
+        expect(r.mode, LiveMode.offline);
+        final e = r.live.diagnostics.lastError!;
+        expect(e.kind, LiveErrorKind.timeout);
+        expect(e.type, 'TimeoutException');
+        expect(e.message, 'no answer');
+      });
+    });
+
+    test('a socket error keeps the OS error and code', () {
+      fakeAsync((async) {
+        final r = Rig()..open(async);
+        r.sockets.error = const SocketException(
+          'Failed host lookup',
+          osError: OSError('No address associated with hostname', 7),
+        );
+        unawaited(r.sockets.last.drop());
+        async.elapse(const Duration(milliseconds: 1500));
+        final e = r.live.diagnostics.lastError!;
+        expect(r.mode, LiveMode.offline);
+        expect(e.kind, LiveErrorKind.unreachable);
+        expect(e.type, 'SocketException');
+        expect(e.osErrorCode, 7);
+        expect(e.osErrorMessage, 'No address associated with hostname');
+      });
+    });
+
+    test('a WebSocket closed by a proxy keeps its code and reason', () {
+      fakeAsync((async) {
+        final r = Rig()..open(async);
+        unawaited(r.sockets.last.drop(code: 1001, reason: 'idle timeout'));
+        async.flushMicrotasks();
+        final e = r.live.diagnostics.lastError!;
+        expect(e.kind, LiveErrorKind.closed);
+        expect(e.closeCode, 1001);
+        expect(e.closeReason, 'idle timeout');
+      });
+    });
+
+    test('the history keeps the latest entries only', () {
+      fakeAsync((async) {
+        final r = Rig(
+          config: const LiveConfig(
+            socketBackoff: Backoff(max: Duration(seconds: 1), jitter: 0),
+            failuresBeforeFallback: 1000,
+            historySize: 5,
+          ),
+          now: async.getClock(start).now,
+        );
+        async.flushMicrotasks();
+        r.sockets.fail = true;
+        unawaited(r.sockets.last.drop());
+        async.elapse(const Duration(seconds: 30));
+        final history = r.live.diagnostics.history;
+        expect(history, hasLength(5));
+        expect(history.first.at.isAfter(start), isTrue);
+        expect(history.last.error?.kind, LiveErrorKind.unreachable);
+      });
+    });
+
+    test('nothing that looks like a credential is kept', () {
+      fakeAsync((async) {
+        const secret = 'tok-do-not-leak-7f3a';
+        final r = Rig(credential: const BearerCredential(secret))..open(async);
+        r.sockets.error = const WebSocketException(
+          'not upgraded: wss://tix.example/api/v1/events?access_token=$secret '
+          'Authorization: Bearer $secret',
+          502,
+        );
+        unawaited(r.sockets.last.drop());
+        async.elapse(const Duration(milliseconds: 1500));
+        final report = r.live.diagnostics.toReport(app: '1.0.0');
+        expect(report, isNot(contains(secret)));
+        expect(report, isNot(contains('access_token')));
+        expect(report, contains('wss://tix.example/api/v1/events'));
+        expect(report, contains('upgradeRefused'));
+        expect(report, contains('HTTP 502'));
+      });
+    });
+
+    test('reconnect now tries the WebSocket again after a refusal', () {
+      fakeAsync((async) {
+        final r = Rig(refuse: 403);
+        async.flushMicrotasks();
+        expect(r.mode, LiveMode.unavailable);
+        expect(r.live.diagnostics.lastError?.kind, LiveErrorKind.refused);
+        r.sockets.refuse = null;
+        r.live.retryNow();
+        expect(r.mode, LiveMode.connecting);
+        async.flushMicrotasks();
+        r.sockets.last.ack();
+        async.flushMicrotasks();
+        expect(r.mode, LiveMode.websocket);
+      });
+    });
+
+    test('reconnect now skips the wait before the next attempt', () {
+      fakeAsync((async) {
+        final r = Rig(
+          config: const LiveConfig(
+            socketBackoff: Backoff(first: Duration(minutes: 1), jitter: 0),
+          ),
+        )..open(async);
+        unawaited(r.sockets.last.drop());
+        async.flushMicrotasks();
+        expect(r.sockets.attempts, 1);
+        r.live.retryNow();
+        async.flushMicrotasks();
+        expect(r.sockets.attempts, 2);
+      });
+    });
+  });
+}
+
+/// A poller that fails with each of [failures] in turn, then answers
+/// empty pages.
+class _ScriptedPoller implements EventPoller {
+  final failures = <TixException>[];
+  var _seq = 0;
+
+  @override
+  Future<EventPollPage> poll({
+    required int sinceSeq,
+    List<String> types = const [],
+    Duration wait = Duration.zero,
+    int limit = 200,
+    CancelToken? cancel,
+  }) async {
+    if (failures.isNotEmpty) throw failures.removeAt(0);
+    _seq = max(_seq, sinceSeq);
+    return EventPollPage(events: const [], nextSeq: _seq);
+  }
 }

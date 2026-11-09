@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
     show ProviderListenableSelect;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/events/live_events.dart';
@@ -104,6 +105,7 @@ LiveEvents? tixEventStream(Ref ref) {
     poller: TixEventPoller(api),
     connector: ref.watch(eventSocketConnectorProvider),
     config: ref.watch(liveConfigProvider),
+    now: ref.watch(clockProvider),
     onRefresh: localId == null || engines == null
         ? null
         : () => engines.quiet(localId, localRefreshQuiet),
@@ -148,4 +150,17 @@ Stream<LiveStatus?> liveStatus(Ref ref) async* {
   }
   yield live.status;
   yield* live.statuses;
+}
+
+/// Why live updates of the active context are in their mode, for the
+/// connection details. Null while there is no context.
+@riverpod
+Stream<LiveDiagnostics?> liveDiagnostics(Ref ref) async* {
+  final live = ref.watch(tixEventStreamProvider);
+  if (live == null) {
+    yield null;
+    return;
+  }
+  yield live.diagnostics;
+  yield* live.diagnosticsChanges;
 }

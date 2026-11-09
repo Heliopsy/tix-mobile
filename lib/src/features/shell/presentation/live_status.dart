@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/events/events.dart';
+import 'package:tix_mobile/src/core/widgets/live_details.dart';
 
 /// The design system's state for [mode], null when there is nothing to say.
 LiveState? liveStateOf(LiveMode? mode) => switch (mode) {
@@ -17,6 +18,8 @@ LiveState? liveStateOf(LiveMode? mode) => switch (mode) {
 };
 
 /// How live updates reach the active context, beside the context switcher.
+/// Tapping it opens the connection details; the corner dot is too small to
+/// tap, so the switcher opens them on a long press instead.
 class LiveStatusIndicator extends ConsumerWidget {
   /// Draws the indicator; [compact] draws the dot alone, [leading] starts
   /// it at its target's leading edge.
@@ -40,6 +43,7 @@ class LiveStatusIndicator extends ConsumerWidget {
       state: state,
       compact: compact,
       leading: leading,
+      onTap: () => showLiveDetails(context),
       refreshSeconds: ref.watch(liveConfigProvider).refreshEvery.inSeconds,
     );
   }

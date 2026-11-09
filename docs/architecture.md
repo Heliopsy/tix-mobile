@@ -133,6 +133,16 @@ mode (`connecting`, `websocket`, `polling`, `refreshing`, `offline`, `unavailabl
 the `LiveIndicator` shows it: on a phone right after the context's name in the switcher bar, on the rail as a dot
 at the avatar's end corner.
 
+`LiveEvents.diagnostics` says why: the transport, when the mode started, the last contact and event, consecutive
+failures and those counting towards the fallback, whether the poll endpoint is missing, the next retry and
+background WebSocket try, and the last error as a `LiveError` (its class, the exception type, the HTTP status,
+the OS error, the WebSocket close code and reason). The last 20 mode changes and errors are kept, so a drop can be
+read after it recovered. Messages are redacted when recorded: the connection's header values, credential headers
+and parameters, query strings and long opaque strings never reach them. `liveDiagnosticsProvider` carries it to
+the connection details sheet (`core/widgets/live_details.dart`), opened by tapping the indicator in the phone bar,
+by a long press on the switcher, and from About. Its Reconnect now (`LiveEvents.retryNow`) tries the WebSocket at
+once, also after a refusal; Copy details puts a plain-text report on the clipboard.
+
 `TixEventPoller` calls the generated `api.event.poll` on a client of its own, whose Dio hands each poll a
 `CancelToken`, so pausing or switching context drops the request in flight. It keeps the cursor at `next_seq` even
 when no event came back (tix reads past events the filter or the credential leaves out), retries with a 10 s wait

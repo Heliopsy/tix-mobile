@@ -4,9 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
+import 'package:tix_mobile/src/core/events/events.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/app_info.dart';
 import 'package:tix_mobile/src/core/platform/attachments.dart';
+import 'package:tix_mobile/src/core/widgets/live_details.dart';
 import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
 import 'package:tix_mobile/src/features/about/application/about.dart';
 
@@ -31,6 +33,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
     final engine = ref.watch(engineVersionProvider);
     final server = ref.watch(serverVersionProvider);
     final address = ref.watch(serverAddressProvider);
+    final live = ref.watch(liveDiagnosticsProvider).value != null;
     final diagnostics = switch (app.value) {
       final a? => Diagnostics(
         app: a,
@@ -186,6 +189,15 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
                   subtitle: l10n.aboutIncludeServerHelp,
                   value: _withServer,
                   onChanged: (v) => setState(() => _withServer = v),
+                ),
+              if (live)
+                ListTile(
+                  key: const Key('about.connection'),
+                  leading: const Icon(Icons.sensors),
+                  title: Text(l10n.aboutConnectionDetails),
+                  subtitle: Text(l10n.aboutConnectionDetailsHelp),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => showLiveDetails(context),
                 ),
             ],
           ),

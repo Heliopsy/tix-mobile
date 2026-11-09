@@ -3329,6 +3329,218 @@ class AppLocalizationsFr extends AppLocalizations {
       'Cette connexion ne peut pas suivre les mises à jour en direct (il lui faut la portée event:subscribe). Tirez vers le bas pour actualiser.';
 
   @override
+  String get liveDetailsHint => 'Touchez pour voir les détails de connexion';
+
+  @override
+  String get liveDetailsLongPressHint =>
+      'Appui long pour les détails de connexion';
+
+  @override
+  String get liveDetailsShow => 'afficher les détails de connexion';
+
+  @override
+  String get liveDetailsTitle => 'Détails de connexion';
+
+  @override
+  String get liveDetailsNone =>
+      'Il n’y a pas de connexion en direct pour ce contexte.';
+
+  @override
+  String get liveDetailsPausedInfo =>
+      'Les mises à jour en direct sont en pause tant que le moteur de l’instance locale est arrêté. Elles reprennent avec lui.';
+
+  @override
+  String get liveDetailsModePaused => 'En pause';
+
+  @override
+  String get liveDetailsModeClosed => 'Fermé';
+
+  @override
+  String get liveDetailsServer => 'Serveur';
+
+  @override
+  String get liveDetailsMode => 'État';
+
+  @override
+  String get liveDetailsTransport => 'Transport';
+
+  @override
+  String get liveTransportWebsocket => 'WebSocket';
+
+  @override
+  String get liveTransportPoll => 'Interrogation longue en HTTP';
+
+  @override
+  String get liveTransportRefresh => 'Rechargement périodique';
+
+  @override
+  String get liveTransportNone => 'Aucun';
+
+  @override
+  String get liveSourceProbe => 'Essai WebSocket en arrière-plan';
+
+  @override
+  String get liveSourcePoll => 'Interrogation';
+
+  @override
+  String get liveDetailsSince => 'Depuis';
+
+  @override
+  String get liveDetailsLastContact => 'Dernier contact avec le serveur';
+
+  @override
+  String get liveDetailsLastEvent => 'Dernier événement';
+
+  @override
+  String get liveDetailsNever => 'Pas encore';
+
+  @override
+  String get liveDetailsFailuresInRow => 'Échecs consécutifs';
+
+  @override
+  String get liveDetailsWindowFailures => 'Échecs WebSocket';
+
+  @override
+  String liveDetailsWindowValue(int count, int max, int minutes) {
+    return '$count sur $max en $minutes min avant de passer à l’interrogation';
+  }
+
+  @override
+  String get liveDetailsPollEndpoint => 'Point d’interrogation';
+
+  @override
+  String get liveDetailsPollAvailable => 'Disponible';
+
+  @override
+  String get liveDetailsPollMissing => 'Absent sur ce serveur (404 ou 405)';
+
+  @override
+  String get liveDetailsNextRetry => 'Prochain essai';
+
+  @override
+  String get liveDetailsNextProbe => 'Prochain essai WebSocket';
+
+  @override
+  String get liveDetailsLastError => 'Dernière erreur';
+
+  @override
+  String get liveDetailsNoError =>
+      'Rien n’a échoué depuis le démarrage de l’application.';
+
+  @override
+  String get liveDetailsErrorWhat => 'Quoi';
+
+  @override
+  String get liveDetailsErrorAt => 'Quand';
+
+  @override
+  String get liveDetailsErrorSource => 'Pendant';
+
+  @override
+  String get liveDetailsErrorType => 'Exception';
+
+  @override
+  String get liveDetailsHttpStatus => 'Statut HTTP';
+
+  @override
+  String get liveDetailsOsError => 'Erreur système';
+
+  @override
+  String liveDetailsOsErrorValue(String message, String code) {
+    return '$message (code $code)';
+  }
+
+  @override
+  String get liveDetailsCloseCode => 'Code de fermeture';
+
+  @override
+  String get liveDetailsErrorMessage => 'Message';
+
+  @override
+  String get liveErrorUnreachable => 'Serveur injoignable';
+
+  @override
+  String get liveErrorTimeout => 'Délai dépassé';
+
+  @override
+  String get liveErrorTls => 'Échec de la connexion sécurisée';
+
+  @override
+  String get liveErrorUpgradeRefused => 'Passage en WebSocket refusé';
+
+  @override
+  String get liveErrorClosed => 'Connexion fermée';
+
+  @override
+  String get liveErrorRefused => 'Refusé par le serveur';
+
+  @override
+  String get liveErrorHttp => 'Erreur HTTP';
+
+  @override
+  String get liveErrorOther => 'Autre erreur';
+
+  @override
+  String get liveDetailsHints => 'Ce que cela peut signifier';
+
+  @override
+  String get liveHintIdleTimeout =>
+      'Un proxy ou un répartiteur de charge ferme peut-être les connexions inactives. Son délai de lecture doit dépasser 60 s pour /api/v1/events et /api/v1/events/poll.';
+
+  @override
+  String get liveHintNoUpgrade =>
+      'Le WebSocket échoue alors que le HTTP simple fonctionne : le proxy devant tix ne transmet peut-être pas le passage en WebSocket.';
+
+  @override
+  String get liveHintUnreachable =>
+      'Le téléphone n’a pas pu joindre l’hôte. Vérifiez le réseau, l’adresse et que le serveur fonctionne.';
+
+  @override
+  String get liveHintTls =>
+      'Le certificat du serveur n’a pas été accepté : il est peut-être expiré, autosigné ou émis pour un autre nom.';
+
+  @override
+  String get liveHintRefused =>
+      'Le serveur a refusé les mises à jour en direct à cette connexion. Un jeton doit avoir la portée event:subscribe.';
+
+  @override
+  String liveHintHttp(String status) {
+    return 'Le serveur ou un proxy a répondu HTTP $status. Ses journaux devraient dire pourquoi.';
+  }
+
+  @override
+  String get liveHintPollMissing =>
+      'Ce serveur est antérieur au point d’interrogation : l’écran est donc rechargé périodiquement.';
+
+  @override
+  String get liveDetailsHistory => 'Changements récents';
+
+  @override
+  String get liveDetailsHistoryEmpty => 'Rien pour l’instant.';
+
+  @override
+  String liveDetailsHistoryError(String kind, String source) {
+    return '$kind ($source)';
+  }
+
+  @override
+  String get liveDetailsReconnect => 'Reconnecter';
+
+  @override
+  String get liveDetailsCopy => 'Copier les détails';
+
+  @override
+  String get liveDetailsCopied =>
+      'Détails de connexion copiés. Les jetons et cookies sont exclus.';
+
+  @override
+  String get aboutConnectionDetails => 'Détails de connexion';
+
+  @override
+  String get aboutConnectionDetailsHelp =>
+      'Comment les mises à jour en direct arrivent dans ce contexte, et ce qui a échoué en dernier';
+
+  @override
   String get copyToClipboard => 'Copier';
 
   @override
