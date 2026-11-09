@@ -273,7 +273,7 @@ class _ConflictSection extends ConsumerWidget {
     );
     return TixSection(
       key: const Key('offline.conflicts'),
-      title: l10n.syncTitle,
+      title: l10n.syncConflictsTitle,
       subtitle: l10n.syncPolicyHelp,
       children: [
         Padding(

@@ -25,8 +25,8 @@ class ConflictsScreen extends ConsumerWidget {
     final running = ref.watch(outboxSyncProvider.select((s) => s.running));
     final center = ref.read(outboxSyncProvider.notifier);
     return TixPage(
-      title: l10n.syncTitle,
-      subtitle: l10n.syncSubtitle,
+      title: l10n.syncConflictsTitle,
+      subtitle: l10n.syncConflictsSubtitle,
       actions: [
         TixButton(
           key: const Key('sync.now'),
@@ -69,7 +69,7 @@ class _Body extends ConsumerWidget {
       return EmptyState(
         icon: Icons.cloud_done_outlined,
         title: l10n.syncEmptyTitle,
-        body: l10n.syncEmptyBody,
+        body: l10n.syncConflictsEmptyBody,
       );
     }
     final center = ref.read(outboxSyncProvider.notifier);
@@ -198,7 +198,7 @@ class ConflictCard extends ConsumerWidget {
           ),
           TixButton.quiet(
             key: Key('sync.edit.${record.id}'),
-            label: l10n.syncEdit,
+            label: l10n.syncEditChange,
             icon: Icons.edit_outlined,
             onPressed: () => unawaited(_edit(context, ref)),
           ),
@@ -527,7 +527,7 @@ class _EntryRow extends ConsumerWidget {
                     if (entry.op == OutboxOp.update)
                       TixButton.quiet(
                         key: Key('sync.editEntry.${entry.id}'),
-                        label: l10n.syncEdit,
+                        label: l10n.syncEditChange,
                         size: TixButtonSize.small,
                         onPressed: () => unawaited(_edit(context, ref)),
                       ),
@@ -672,7 +672,7 @@ class _ValuesSheetState extends State<_ValuesSheet> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return TixSheetBody(
-      title: l10n.syncEditTitle,
+      title: l10n.syncEditChangeTitle,
       actions: [
         TixButton.quiet(
           label: l10n.cancel,

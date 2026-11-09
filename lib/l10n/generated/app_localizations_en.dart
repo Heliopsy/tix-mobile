@@ -5205,10 +5205,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get webhookRedelivered => 'Queued for another attempt.';
 
   @override
-  String get syncTitle => 'Conflicts';
+  String get syncTitle => 'External sync';
 
   @override
-  String get syncSubtitle => 'Changes made offline and how they synced';
+  String get syncSubtitle =>
+      'Import work from Jira, OpenProject or a file. Runs happen on the server.';
 
   @override
   String get syncNew => 'New source';
@@ -5225,7 +5226,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get syncEmptyBody =>
-      'Changes you make while offline wait here until the server is back.';
+      'Add a source to import tasks from another tracker.';
 
   @override
   String get syncStatusOk => 'Last run ok';
@@ -5345,7 +5346,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String syncEditTitle(String name) {
-    return 'Edit before sending';
+    return 'Edit $name';
   }
 
   @override
@@ -6674,10 +6675,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncMarkFailed => 'Refused';
 
   @override
+  String get syncConflictsTitle => 'Conflicts';
+
+  @override
+  String get syncConflictsSubtitle =>
+      'Changes made offline and how they synced';
+
+  @override
   String get syncSendNow => 'Send now';
 
   @override
   String get syncEmptyTitle => 'Everything is synced';
+
+  @override
+  String get syncConflictsEmptyBody =>
+      'Changes you make while offline wait here until the server is back.';
 
   @override
   String syncConflicts(int count) {
@@ -6759,6 +6771,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get syncKeepTheirs => 'Keep theirs';
+
+  @override
+  String get syncEditChange => 'Edit';
+
+  @override
+  String get syncEditChangeTitle => 'Edit before sending';
 
   @override
   String get syncEditSend => 'Send';
