@@ -78,8 +78,8 @@ class ContextSwitcherButton extends ConsumerWidget {
       clipBehavior: Clip.none,
       children: [
         avatar,
-        const Positioned(
-          right: -2,
+        const PositionedDirectional(
+          end: -2,
           bottom: -2,
           child: LiveStatusIndicator(compact: true),
         ),
@@ -136,34 +136,65 @@ class ContextSwitcherButton extends ConsumerWidget {
                   if (rail) badged else avatar,
                   const SizedBox(width: 12),
                   Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          key: const Key('switcher.title'),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                        if (handle.isNotEmpty)
+                    child: _LabelWithStatus(
+                      status: !rail,
+                      label: Column(
+                        key: const Key('switcher.label'),
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
-                            '@$handle',
+                            title,
+                            key: const Key('switcher.title'),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodySmall,
+                            style: Theme.of(context).textTheme.titleSmall,
                           ),
-                      ],
+                          if (handle.isNotEmpty)
+                            Text(
+                              '@$handle',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                        ],
+                      ),
                     ),
                   ),
-                  if (!rail) const Flexible(child: LiveStatusIndicator()),
                   const Icon(Icons.unfold_more),
                 ],
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// The context's name and handle, followed on the same line by how live
+/// updates arrive when [status], so the indicator starts where the text
+/// ends instead of floating in the middle of the bar. The indicator never
+/// takes more than half the width; the name keeps the rest.
+class _LabelWithStatus extends StatelessWidget {
+  const _LabelWithStatus({required this.label, required this.status});
+
+  final Widget label;
+  final bool status;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!status) return label;
+    return LayoutBuilder(
+      builder: (context, box) => Row(
+        children: [
+          Flexible(child: label),
+          const SizedBox(width: TixSpace.s2),
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: box.maxWidth / 2),
+            child: const LiveStatusIndicator(leading: true),
+          ),
+        ],
       ),
     );
   }
