@@ -76,7 +76,7 @@ class IntegrationsRepository {
     final creating = id == null || id.isEmpty;
     final generated = creating && secret.isEmpty ? newSecret() : null;
     final sent = generated ?? secret;
-    final endpoint = await _api.webhook.put(
+    final issued = await _api.webhook.put(
       WebhookInput(
         id: creating ? null : id,
         url: url,
@@ -84,6 +84,14 @@ class IntegrationsRepository {
         active: active,
         secret: sent.isEmpty ? null : sent,
       ),
+    );
+    final endpoint = WebhookEndpoint(
+      id: issued.id,
+      tenantId: issued.tenantId,
+      url: issued.url,
+      eventTypes: issued.eventTypes,
+      active: issued.active,
+      createdAt: issued.createdAt,
     );
     return (endpoint: endpoint, generatedSecret: generated);
   }
