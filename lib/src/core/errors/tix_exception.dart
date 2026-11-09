@@ -30,6 +30,7 @@ enum TixErrorKind {
   localNotUsable,
   localAccessDenied,
   badInviteLink,
+  secretStorageUnavailable,
   unknown,
 }
 

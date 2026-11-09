@@ -6192,8 +6192,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get inviteCheck => 'Einladung prüfen';
 
   @override
-  String inviteJoin(String tenant) {
-    return '$tenant beitreten';
+  String inviteJoin(String tenant, String host) {
+    return '$tenant auf $host beitreten';
+  }
+
+  @override
+  String inviteJoinServer(String host) {
+    return '$host beitreten';
   }
 
   @override
@@ -6687,4 +6692,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String offlineSavedCopy(String time) {
     return 'Offline, gespeicherte Kopie vom $time';
   }
+
+  @override
+  String get errorSecretStorage =>
+      'Der sichere Speicher dieses Geräts ist gesperrt oder hat das Schreiben abgelehnt, daher wurde nichts geändert. Entsperren Sie ihn und versuchen Sie es erneut.';
+
+  @override
+  String get tokenUnsavedTitle => 'Token erneuert, aber nicht gespeichert';
+
+  @override
+  String get tokenUnsavedHeading => 'Kopieren Sie dieses Token jetzt';
+
+  @override
+  String get tokenUnsavedNote =>
+      'Der sichere Speicher dieses Geräts hat das neue Token abgelehnt. Es wird nur dieses eine Mal angezeigt, und das alte Token funktioniert in einer Minute nicht mehr. Die App nutzt das neue, bis sie geschlossen wird; verbinden Sie sich danach damit neu.';
+
+  @override
+  String get tokenUnsavedDone => 'Ich habe es kopiert';
 }

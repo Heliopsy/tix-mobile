@@ -3560,10 +3560,21 @@
   "inviteLinkHelp": "Paste the link from your invite email, or share it to tix from another app. The server is added for you.",
   "invitePaste": "Paste the invite link",
   "inviteCheck": "Check invite",
-  "inviteJoin": "Join {tenant}",
+  "inviteJoin": "Join {tenant} on {host}",
   "@inviteJoin": {
     "placeholders": {
       "tenant": {
+        "type": "String"
+      },
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteJoinServer": "Join {host}",
+  "@inviteJoinServer": {
+    "placeholders": {
+      "host": {
         "type": "String"
       }
     }
@@ -3825,5 +3836,10 @@
         "example": "A date and time"
       }
     }
-  }
+  },
+  "errorSecretStorage": "This device’s secure storage is locked or refused the write, so nothing was changed. Unlock it and try again.",
+  "tokenUnsavedTitle": "Token rotated but not saved",
+  "tokenUnsavedHeading": "Copy this token now",
+  "tokenUnsavedNote": "Secure storage on this device refused the new token. It is shown only this once, and the old token stops working in a minute. The app uses the new one until it closes; after that, reconnect with it.",
+  "tokenUnsavedDone": "I have copied it"
 }

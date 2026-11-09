@@ -9,6 +9,7 @@ import 'package:tix_mobile/src/features/tasks/application/task_detail.dart';
 import '../../../helpers/app.dart';
 import '../../../helpers/container.dart';
 import '../../../helpers/fake_events.dart';
+import '../../../helpers/fake_parity.dart';
 import '../../../helpers/fake_tix.dart';
 
 void main() {
@@ -53,6 +54,44 @@ void main() {
     await settle(400);
     final now = await c.read(taskDetailControllerProvider('infra-1').future);
     expect(now.title, 'Renamed elsewhere');
+  });
+
+  for (final type in [
+    'task.claimed',
+    'task.released',
+    'task.lease_expired',
+    'task.reclaimed',
+  ]) {
+    test('$type reads the claim length again', () async {
+      FakeParity.on(server);
+      final (c, s) = await live();
+      final task = c.listen(taskDetailControllerProvider('infra-1'), (_, _) {});
+      addTearDown(task.close);
+      await c.read(taskDetailControllerProvider('infra-1').future);
+      final sub = c.listen(taskLeaseProvider('infra-1'), (_, _) {});
+      addTearDown(sub.close);
+      await c.read(taskLeaseProvider('infra-1').future);
+      final before = server.requestsTo('/tasks/infra-1/lease').length;
+      s.event(1, type);
+      await settle(400);
+      await c.read(taskLeaseProvider('infra-1').future);
+      expect(server.requestsTo('/tasks/infra-1/lease'), hasLength(before + 1));
+    });
+  }
+
+  test("another task's claim leaves this one's length alone", () async {
+    FakeParity.on(server);
+    final (c, s) = await live();
+    final task = c.listen(taskDetailControllerProvider('infra-1'), (_, _) {});
+    addTearDown(task.close);
+    await c.read(taskDetailControllerProvider('infra-1').future);
+    final sub = c.listen(taskLeaseProvider('infra-1'), (_, _) {});
+    addTearDown(sub.close);
+    await c.read(taskLeaseProvider('infra-1').future);
+    final before = server.requestsTo('/tasks/infra-1/lease').length;
+    s.event(1, 'task.claimed', subjectId: 'id-infra-2');
+    await settle(400);
+    expect(server.requestsTo('/tasks/infra-1/lease'), hasLength(before));
   });
 
   test("another task's change leaves this one alone", () async {

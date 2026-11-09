@@ -6184,8 +6184,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get inviteCheck => 'Vérifier l’invitation';
 
   @override
-  String inviteJoin(String tenant) {
-    return 'Rejoindre $tenant';
+  String inviteJoin(String tenant, String host) {
+    return 'Rejoindre $tenant sur $host';
+  }
+
+  @override
+  String inviteJoinServer(String host) {
+    return 'Rejoindre $host';
   }
 
   @override
@@ -6679,4 +6684,21 @@ class AppLocalizationsFr extends AppLocalizations {
   String offlineSavedCopy(String time) {
     return 'Hors ligne, copie enregistrée du $time';
   }
+
+  @override
+  String get errorSecretStorage =>
+      'Le stockage sécurisé de cet appareil est verrouillé ou a refusé l’écriture, rien n’a donc été modifié. Déverrouillez-le et réessayez.';
+
+  @override
+  String get tokenUnsavedTitle => 'Jeton renouvelé mais non enregistré';
+
+  @override
+  String get tokenUnsavedHeading => 'Copiez ce jeton maintenant';
+
+  @override
+  String get tokenUnsavedNote =>
+      'Le stockage sécurisé de cet appareil a refusé le nouveau jeton. Il n’est affiché que cette fois, et l’ancien jeton cesse de fonctionner dans une minute. L’application utilise le nouveau jusqu’à sa fermeture ; ensuite, reconnectez-vous avec lui.';
+
+  @override
+  String get tokenUnsavedDone => 'Je l’ai copié';
 }

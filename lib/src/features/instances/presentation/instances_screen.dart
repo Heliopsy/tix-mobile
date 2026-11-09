@@ -146,8 +146,17 @@ class InstanceCard extends ConsumerWidget {
         );
         if (!ok || !context.mounted) return;
         try {
-          await session.rotateToken(c.id);
-          if (context.mounted) showTixToast(context, l10n.tokenRotated);
+          final unsaved = await session.rotateToken(c.id);
+          if (!context.mounted) return;
+          if (unsaved == null) {
+            showTixToast(context, l10n.tokenRotated);
+          } else {
+            await showTixSheet<void>(
+              context,
+              dismissible: false,
+              builder: (context) => UnsavedTokenSheet(token: unsaved),
+            );
+          }
         } on Object catch (e) {
           if (context.mounted) {
             showTixToast(context, errorMessage(l10n, e), tone: TixTone.danger);
@@ -351,3 +360,33 @@ String connectionSummary(AppLocalizations l10n, Connection c) => [
   if (c.kind == ConnectionKind.signIn && c.email.isNotEmpty) c.email,
   if (c.switchable) l10n.switchable else l10n.pinned,
 ].join(' · ');
+
+/// A rotated token secure storage would not take, shown once so the person
+/// can copy it before the old one stops. It lives only in this sheet.
+class UnsavedTokenSheet extends StatelessWidget {
+  /// Shows [token].
+  const UnsavedTokenSheet({required this.token, super.key});
+
+  /// The new token.
+  final String token;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return TixSheetBody(
+      title: l10n.tokenUnsavedTitle,
+      actions: [
+        TixButton.primary(
+          key: const Key('unsavedToken.done'),
+          label: l10n.tokenUnsavedDone,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ],
+      child: OneTimeSecret(
+        heading: l10n.tokenUnsavedHeading,
+        note: l10n.tokenUnsavedNote,
+        values: [token],
+      ),
+    );
+  }
+}

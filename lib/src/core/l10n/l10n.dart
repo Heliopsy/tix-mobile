@@ -70,6 +70,7 @@ String errorMessage(AppLocalizations l10n, Object error) {
     },
     TixErrorKind.localAccessDenied => l10n.localInstanceErrorAccess,
     TixErrorKind.badInviteLink => l10n.errorBadInviteLink,
+    TixErrorKind.secretStorageUnavailable => l10n.errorSecretStorage,
     TixErrorKind.unknown =>
       message.isEmpty ? l10n.errorUnknown : '${l10n.errorUnknown} $message',
   };

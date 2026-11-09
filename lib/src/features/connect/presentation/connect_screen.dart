@@ -634,13 +634,9 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  l10n.inviteJoin(
-                    preview.tenantName.isEmpty
-                        ? invite.link.baseUrl
-                        : preview.tenantName,
-                  ),
-                  style: Theme.of(context).textTheme.titleMedium,
+                InviteHeadline(
+                  tenant: preview.tenantName,
+                  host: Uri.parse(invite.link.baseUrl).authority,
                 ),
                 const SizedBox(height: 4),
                 Text(l10n.inviteAs(preview.email)),
@@ -1067,6 +1063,53 @@ class _ElsewhereTile extends StatelessWidget {
       title: Text(m.tenantName.isEmpty ? m.tenantKey : m.tenantName),
       subtitle: Text(l10n.servedAt(m.host)),
       trailing: TextButton(onPressed: onAdd, child: Text(l10n.addAsInstance)),
+    );
+  }
+}
+
+/// The invite preview's headline: "Join Acme on tix.example.com", with the
+/// host emphasised. The tenant's name comes from the server and could
+/// imitate another host, so only the [host] the password goes to is ever
+/// emphasised, wherever the language puts it in the sentence.
+class InviteHeadline extends StatelessWidget {
+  /// Names [tenant] on [host]; [host] alone when [tenant] is empty.
+  const InviteHeadline({required this.tenant, required this.host, super.key});
+
+  /// The tenant's name, as the server gives it.
+  final String tenant;
+
+  /// Where the invite link points: host and port.
+  final String host;
+
+  static const _tenantMark = '\u0000tenant\u0000';
+  static const _hostMark = '\u0000host\u0000';
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final style = Theme.of(context).textTheme.titleMedium;
+    final template = tenant.isEmpty
+        ? l10n.inviteJoinServer(_hostMark)
+        : l10n.inviteJoin(_tenantMark, _hostMark);
+    final spans = <InlineSpan>[];
+    for (final (i, part) in template.split(_hostMark).indexed) {
+      if (i > 0) {
+        spans.add(
+          TextSpan(
+            text: host,
+            style: const TextStyle(
+              fontWeight: FontWeight.w800,
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        );
+      }
+      spans.add(TextSpan(text: part.replaceAll(_tenantMark, tenant)));
+    }
+    return Text.rich(
+      TextSpan(children: spans),
+      key: const Key('connect.inviteHeadline'),
+      style: style,
     );
   }
 }

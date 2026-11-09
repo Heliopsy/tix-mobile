@@ -10336,8 +10336,14 @@ abstract class AppLocalizations {
   /// No description provided for @inviteJoin.
   ///
   /// In en, this message translates to:
-  /// **'Join {tenant}'**
-  String inviteJoin(String tenant);
+  /// **'Join {tenant} on {host}'**
+  String inviteJoin(String tenant, String host);
+
+  /// No description provided for @inviteJoinServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Join {host}'**
+  String inviteJoinServer(String host);
 
   /// No description provided for @inviteAs.
   ///
@@ -11184,6 +11190,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Offline, showing saved copy from {time}'**
   String offlineSavedCopy(String time);
+
+  /// No description provided for @errorSecretStorage.
+  ///
+  /// In en, this message translates to:
+  /// **'This device’s secure storage is locked or refused the write, so nothing was changed. Unlock it and try again.'**
+  String get errorSecretStorage;
+
+  /// No description provided for @tokenUnsavedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Token rotated but not saved'**
+  String get tokenUnsavedTitle;
+
+  /// No description provided for @tokenUnsavedHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy this token now'**
+  String get tokenUnsavedHeading;
+
+  /// No description provided for @tokenUnsavedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Secure storage on this device refused the new token. It is shown only this once, and the old token stops working in a minute. The app uses the new one until it closes; after that, reconnect with it.'**
+  String get tokenUnsavedNote;
+
+  /// No description provided for @tokenUnsavedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'I have copied it'**
+  String get tokenUnsavedDone;
 }
 
 class _AppLocalizationsDelegate
