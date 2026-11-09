@@ -10,6 +10,7 @@ import 'package:tix_mobile/src/features/tasks/application/tasks.dart';
 
 import '../../helpers/app.dart';
 import '../../helpers/container.dart';
+import '../../helpers/eventually.dart';
 import '../../helpers/fake_events.dart';
 import '../../helpers/fake_tix.dart';
 
@@ -17,13 +18,27 @@ void main() {
   late FakeTix server;
   late FakeEventSockets sockets;
 
-  Future<void> settle([int ms = 0]) =>
-      Future<void>.delayed(Duration(milliseconds: ms));
+  int projectReads() => server.requestsTo('/api/v1/projects').length;
+
+  // Only for asserting that nothing happens: longer than the 300 ms debounce.
+  // A slow machine can make it pass late, never fail early.
+  Future<void> pastDebounce() =>
+      Future<void>.delayed(const Duration(milliseconds: 400));
+
+  Future<void> subscribed() => eventually(
+    () =>
+        sockets.sockets.isNotEmpty &&
+        sockets.last.sent.any((m) => m['type'] == 'subscribe'),
+    reason: 'a subscription',
+  );
 
   Future<FakeSocket> live(ProviderContainer c) async {
-    await settle();
+    await subscribed();
     final s = sockets.last..ack();
-    await settle();
+    await eventually(
+      () => c.read(tixEventStreamProvider)?.status.mode == LiveMode.websocket,
+      reason: 'a live WebSocket',
+    );
     return s;
   }
 
@@ -52,7 +67,7 @@ void main() {
     final stream = c.read(tixEventStreamProvider)!;
     final sub = stream.updates.listen((_) {});
     addTearDown(sub.cancel);
-    await settle();
+    await subscribed();
     expect(sockets.last.url.toString(), 'wss://tix.example/api/v1/events');
     expect(sockets.last.headers['Authorization'], 'Bearer tok');
   });
@@ -63,17 +78,20 @@ void main() {
     addTearDown(sub.close);
     await c.read(projectsProvider.future);
     final s = await live(c);
-    expect(server.requestsTo('/api/v1/projects'), hasLength(1));
+    expect(projectReads(), 1);
     server.projects.add({'id': 'p3', 'key': 'ops', 'name': 'Ops'});
-    s.event(1, 'project.created');
-    await settle(50);
-    s.event(2, 'project.updated');
-    await settle(50);
-    s.event(3, 'task.created');
-    await settle(400);
-    final now = await c.read(projectsProvider.future);
-    expect(now.items.map((p) => p.key), contains('ops'));
-    expect(server.requestsTo('/api/v1/projects'), hasLength(2));
+    s
+      ..event(1, 'project.created')
+      ..event(2, 'project.updated')
+      ..event(3, 'task.created');
+    await eventually(
+      () =>
+          c.read(projectsProvider).value?.items.any((p) => p.key == 'ops') ??
+          false,
+      reason: 'the refreshed list',
+    );
+    await pastDebounce();
+    expect(projectReads(), 2);
   });
 
   test('an unrelated event refreshes nothing', () async {
@@ -83,8 +101,9 @@ void main() {
     await c.read(projectsProvider.future);
     final s = await live(c);
     s.event(1, 'comment.added');
-    await settle(400);
-    expect(server.requestsTo('/api/v1/projects'), hasLength(1));
+    await eventually(() => c.read(tixEventStreamProvider)?.cursor == 1);
+    await pastDebounce();
+    expect(projectReads(), 1);
   });
 
   test('a task page refreshes only for its own task', () async {
@@ -94,11 +113,14 @@ void main() {
     await c.read(taskDetailProvider('infra-1').future);
     final s = await live(c);
     s.event(1, 'comment.added', subjectId: 'id-infra-2');
-    await settle(400);
+    await eventually(() => c.read(tixEventStreamProvider)?.cursor == 1);
+    await pastDebounce();
     expect(server.requestsTo('/tasks/infra-1'), hasLength(1));
     s.event(2, 'comment.added');
-    await settle(400);
-    expect(server.requestsTo('/tasks/infra-1'), hasLength(2));
+    await eventually(
+      () => server.requestsTo('/tasks/infra-1').length == 2,
+      reason: 'a second read of the task',
+    );
   });
 
   test('a gap refreshes everything listening', () async {
@@ -108,11 +130,12 @@ void main() {
     await c.read(projectsProvider.future);
     final s = await live(c);
     await s.drop();
-    final next = await sockets.opened.first.timeout(const Duration(seconds: 3));
-    await settle();
-    next.ack();
-    await settle(400);
-    expect(server.requestsTo('/api/v1/projects'), hasLength(2));
+    await eventually(
+      () => sockets.sockets.length == 2 && sockets.last.sent.isNotEmpty,
+      reason: 'a second subscription',
+    );
+    sockets.last.ack();
+    await eventually(() => projectReads() == 2, reason: 'a second read');
   });
 
   test('cached data shows at once and the server answer follows', () async {
@@ -131,9 +154,12 @@ void main() {
     addTearDown(sub.close);
     final shown = await c.read(projectsProvider.future);
     expect(shown.items.map((p) => p.key), ['infra', 'web']);
-    await settle(50);
+    await eventually(
+      () => seen.isNotEmpty && seen.last.contains('ops'),
+      reason: 'the server answer',
+    );
     expect(seen.last, ['infra', 'web', 'ops']);
-    expect(server.requestsTo('/api/v1/projects'), hasLength(2));
+    expect(projectReads(), 2);
   });
 
   test('a refresh after the cached answer asks the server', () async {
@@ -143,7 +169,7 @@ void main() {
     final sub = c.listen(projectsProvider, (_, _) {});
     addTearDown(sub.close);
     await c.read(projectsProvider.future);
-    await settle(50);
+    await eventually(() => projectReads() == 2, reason: 'the server answer');
     server.override = FakeResponse(500, envelope('internal', 'boom'));
     c.invalidate(projectsProvider);
     await expectLater(c.read(projectsProvider.future), throwsA(anything));

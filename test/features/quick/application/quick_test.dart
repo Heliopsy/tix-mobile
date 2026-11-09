@@ -13,6 +13,7 @@ import 'package:tix_mobile/src/features/quick/application/quick.dart';
 
 import '../../../helpers/app.dart';
 import '../../../helpers/container.dart';
+import '../../../helpers/eventually.dart';
 import '../../../helpers/fake_tix.dart';
 import '../../../helpers/stores.dart';
 
@@ -73,18 +74,6 @@ void main() {
 
     Future<void> settle() =>
         Future<void>.delayed(const Duration(milliseconds: 200));
-
-    // Waits for [done] rather than for a fixed time, which failed on a
-    // loaded machine before the fake server had answered.
-    Future<void> eventually(bool Function() done) async {
-      final deadline = DateTime.now().add(const Duration(seconds: 5));
-      while (!done()) {
-        if (DateTime.now().isAfter(deadline)) {
-          fail('condition not met within 5 seconds');
-        }
-        await Future<void>.delayed(const Duration(milliseconds: 10));
-      }
-    }
 
     ProviderSubscription<Object?> keep(ProviderListenable<Object?> p) {
       final sub = c.listen(p, (_, _) {});
