@@ -178,4 +178,25 @@ void main() {
       });
     }
   }
+
+  testWidgets('the connection details open from About', (tester) async {
+    await pump(tester);
+    await tap(tester, 'about.connection');
+    expect(find.byKey(const Key('live.details')), findsOneWidget);
+    expect(find.text('https://tix.example'), findsOneWidget);
+  });
+
+  testWidgets('no connection details while signed out', (tester) async {
+    await pump(tester, signedIn: false);
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('about.licences')),
+      200,
+      scrollable: find
+          .byWidgetPredicate(
+            (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+          )
+          .first,
+    );
+    expect(find.byKey(const Key('about.connection')), findsNothing);
+  });
 }

@@ -25,6 +25,12 @@ class FakeSocket implements EventSocket {
   bool closed = false;
 
   @override
+  int? closeCode;
+
+  @override
+  String? closeReason;
+
+  @override
   Stream<Object?> get messages => _incoming.stream;
 
   @override
@@ -68,16 +74,27 @@ class FakeSocket implements EventSocket {
     },
   });
 
-  /// Drops the connection as a network failure would.
-  Future<void> drop() => _incoming.close();
+  /// Drops the connection as a network failure would, or closes it with
+  /// [code] and [reason] as a server or proxy would.
+  Future<void> drop({int? code, String? reason}) {
+    closeCode = code;
+    closeReason = reason;
+    return _incoming.close();
+  }
+
+  /// Fails the connection with [error], as a socket error would.
+  void fail(Object error) => _incoming.addError(error);
 }
 
 /// Hands out [FakeSocket]s and records them; [refuse] makes the next
-/// connection fail with that HTTP status, [fail] with a network error.
+/// connection fail with that HTTP status, [fail] with a network error and
+/// [error] with whatever it holds.
 class FakeEventSockets {
   final sockets = <FakeSocket>[];
   int? refuse;
   bool fail = false;
+  Exception? error;
+  int attempts = 0;
   final _opened = StreamController<FakeSocket>.broadcast();
 
   /// Each socket as it opens.
@@ -87,6 +104,9 @@ class FakeEventSockets {
   FakeSocket get last => sockets.last;
 
   Future<EventSocket> connect(Uri url, Map<String, String> headers) async {
+    attempts++;
+    final thrown = error;
+    if (thrown != null) throw thrown;
     final status = refuse;
     if (status != null) throw WebSocketException('not upgraded', status);
     if (fail) throw const SocketException('refused');

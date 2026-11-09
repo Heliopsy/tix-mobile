@@ -66,7 +66,10 @@ void main() {
   );
 
   Future<void> open(WidgetTester tester) async {
-    await tester.tap(find.byKey(const Key('switcher.open')));
+    final title = find.byKey(const Key('switcher.title'));
+    await tester.tap(
+      title.evaluate().isEmpty ? find.byKey(const Key('switcher.open')) : title,
+    );
     await tester.pumpAndSettle();
   }
 

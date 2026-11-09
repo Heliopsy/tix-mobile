@@ -84,6 +84,9 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   sign-in are added for you.
 - **Token rotation** for a token connection: one tap swaps its API token for a new one and keeps only the new value.
 - **A switcher on every screen** showing Instance › Tenant, recent ones first.
+- **Connection details** behind the live status: why updates are live, polling or offline, the last error with
+  what it may mean (a proxy timing out idle connections, one that drops WebSocket upgrades, a certificate), the
+  recent history, Reconnect now and a redacted report to copy.
 - **Local databases** on every platform: tix itself is built into the app and serves a `.db` file on this device,
   with no server anywhere. Android, iOS and macOS import a copy into the app and export it back through the share
   sheet or a save dialog. An advanced choice opens a database in place on every platform, for example in a folder

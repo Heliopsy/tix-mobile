@@ -1938,6 +1938,110 @@
   "liveStatusOfflineInfo": "The server cannot be reached. The app keeps trying and catches up when it is back.",
   "liveStatusUnavailable": "Not available",
   "liveStatusUnavailableInfo": "This connection may not follow live updates (it needs the event:subscribe scope). Pull down to refresh instead.",
+  "liveDetailsHint": "Tap for connection details",
+  "liveDetailsLongPressHint": "Long press for connection details",
+  "liveDetailsShow": "show connection details",
+  "liveDetailsTitle": "Connection details",
+  "liveDetailsNone": "There is no live connection for this context.",
+  "liveDetailsPausedInfo": "Live updates are paused while the local instance's engine is stopped. They start again with it.",
+  "liveDetailsModePaused": "Paused",
+  "liveDetailsModeClosed": "Closed",
+  "liveDetailsServer": "Server",
+  "liveDetailsMode": "State",
+  "liveDetailsTransport": "Carried over",
+  "liveTransportWebsocket": "WebSocket",
+  "liveTransportPoll": "Long polling over HTTP",
+  "liveTransportRefresh": "Reloading on a timer",
+  "liveTransportNone": "Nothing",
+  "liveSourceProbe": "Background WebSocket try",
+  "liveSourcePoll": "Poll",
+  "liveDetailsSince": "Since",
+  "liveDetailsLastContact": "Last reached the server",
+  "liveDetailsLastEvent": "Last event",
+  "liveDetailsNever": "Not yet",
+  "liveDetailsFailuresInRow": "Failures in a row",
+  "liveDetailsWindowFailures": "WebSocket failures",
+  "liveDetailsWindowValue": "{count} of {max} within {minutes} min before switching to polling",
+  "@liveDetailsWindowValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "liveDetailsPollEndpoint": "Poll endpoint",
+  "liveDetailsPollAvailable": "Available",
+  "liveDetailsPollMissing": "Missing on this server (404 or 405)",
+  "liveDetailsNextRetry": "Next try",
+  "liveDetailsNextProbe": "Next WebSocket try",
+  "liveDetailsLastError": "Last error",
+  "liveDetailsNoError": "Nothing has failed since the app started.",
+  "liveDetailsErrorWhat": "What",
+  "liveDetailsErrorAt": "When",
+  "liveDetailsErrorSource": "During",
+  "liveDetailsErrorType": "Exception",
+  "liveDetailsHttpStatus": "HTTP status",
+  "liveDetailsOsError": "System error",
+  "liveDetailsOsErrorValue": "{message} (code {code})",
+  "@liveDetailsOsErrorValue": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      },
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "liveDetailsCloseCode": "Close code",
+  "liveDetailsErrorMessage": "Message",
+  "liveErrorUnreachable": "Could not reach the server",
+  "liveErrorTimeout": "Timed out",
+  "liveErrorTls": "Secure connection failed",
+  "liveErrorUpgradeRefused": "WebSocket upgrade refused",
+  "liveErrorClosed": "Connection closed",
+  "liveErrorRefused": "Refused by the server",
+  "liveErrorHttp": "HTTP error",
+  "liveErrorOther": "Other error",
+  "liveDetailsHints": "What it may mean",
+  "liveHintIdleTimeout": "A proxy or load balancer may be closing idle connections. Its read timeout should be above 60 s for /api/v1/events and /api/v1/events/poll.",
+  "liveHintNoUpgrade": "The WebSocket fails while plain HTTP works, so the proxy in front of tix may not forward WebSocket upgrades.",
+  "liveHintUnreachable": "The phone could not reach the host. Check the network, the address, and that the server is running.",
+  "liveHintTls": "The server's certificate was not accepted: it may be expired, self-signed, or issued for another name.",
+  "liveHintRefused": "The server refused live updates to this connection. A token needs the event:subscribe scope.",
+  "liveHintHttp": "The server or a proxy answered HTTP {status}. Its logs should say why.",
+  "@liveHintHttp": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "liveHintPollMissing": "This server is older than the poll endpoint, so what is on screen is reloaded on a timer instead.",
+  "liveDetailsHistory": "Recent changes",
+  "liveDetailsHistoryEmpty": "Nothing yet.",
+  "liveDetailsHistoryError": "{kind} ({source})",
+  "@liveDetailsHistoryError": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      },
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "liveDetailsReconnect": "Reconnect now",
+  "liveDetailsCopy": "Copy details",
+  "liveDetailsCopied": "Connection details copied. Tokens and cookies are left out.",
+  "aboutConnectionDetails": "Connection details",
+  "aboutConnectionDetailsHelp": "How live updates reach this context, and what failed last",
   "copyToClipboard": "Copy",
   "copiedToClipboard": "Copied.",
   "secretShare": "Share",
@@ -3519,7 +3623,7 @@
   "settingsDeviceNotifSubtitle": "Whether this device alerts you, and for which kinds",
   "settingsProfileTitle": "Profile",
   "settingsDatesTitle": "Dates and times",
-  "settingsDatesHelp": "Kept with your account, so every device, browser and terminal shows dates this way. Inherit follows your tenant’s default, which follows the server’s.",
+  "settingsDatesHelp": "Kept with your account, so every device, browser and terminal shows dates this way. Inherit follows your tenant’s default, which follows the server's.",
   "settingsDateFormat": "Date format",
   "settingsDateFormatHelp": "How every timestamp in the app is written. tix reads dates you type the same way on the web.",
   "settingsTimeZone": "Time zone",

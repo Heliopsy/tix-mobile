@@ -10,9 +10,11 @@ import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/logging/log.dart';
 import 'package:tix_mobile/src/data/events/event_poll.dart';
 import 'package:tix_mobile/src/data/events/event_stream.dart';
+import 'package:tix_mobile/src/data/events/live_diagnostics.dart';
 
 export 'package:tix_mobile/src/data/events/event_poll.dart';
 export 'package:tix_mobile/src/data/events/event_stream.dart';
+export 'package:tix_mobile/src/data/events/live_diagnostics.dart';
 
 /// How live updates reach the app right now.
 enum LiveMode {
@@ -82,6 +84,7 @@ class LiveConfig {
     this.pollLimit = 200,
     this.pollBackoff = const Backoff(),
     this.refreshEvery = const Duration(seconds: 45),
+    this.historySize = 20,
   });
 
   /// WebSocket failures within [failureWindow] that switch to polling.
@@ -111,9 +114,10 @@ class LiveConfig {
 
   /// How often what is on screen is read again without a poll endpoint.
   final Duration refreshEvery;
-}
 
-enum _Transport { none, socket, poll, refresh }
+  /// How many mode changes and failures [LiveDiagnostics.history] keeps.
+  final int historySize;
+}
 
 /// Live updates for one connection: the WebSocket first, long polling when
 /// it keeps failing, periodic refresh on a server that cannot be polled,
@@ -135,9 +139,14 @@ class LiveEvents {
     this._types = const [],
     this.onRefresh,
     Random? random,
+    this._now = DateTime.now,
   }) : _random = random ?? Random() {
     _updates = StreamController<EventStreamUpdate>.broadcast(onListen: _start);
     _statuses = StreamController<LiveStatus>.broadcast(onListen: _start);
+    _diagnostics = StreamController<LiveDiagnostics>.broadcast(
+      onListen: _start,
+    );
+    _modeSince = _now();
   }
 
   /// The thresholds and timings in use.
@@ -152,18 +161,29 @@ class LiveEvents {
   final EventSocketConnector _connector;
   final List<String> _types;
   final Random _random;
+  final DateTime Function() _now;
   late final StreamController<EventStreamUpdate> _updates;
   late final StreamController<LiveStatus> _statuses;
+  late final StreamController<LiveDiagnostics> _diagnostics;
 
   var _started = false;
   var _asleep = false;
   var _awake = true;
   var _hadLive = false;
   var _pollUnsupported = false;
-  _Transport _transport = _Transport.none;
+  LiveTransport _transport = LiveTransport.none;
   LiveMode _mode = LiveMode.connecting;
   Object? _lastError;
   var _cursor = 0;
+
+  late DateTime _modeSince;
+  DateTime? _lastContactAt;
+  DateTime? _lastEventAt;
+  var _consecutiveFailures = 0;
+  LiveError? _lastErrorInfo;
+  DateTime? _nextRetryAt;
+  DateTime? _nextProbeAt;
+  final _history = <LiveLogEntry>[];
 
   TixEventStream? _socket;
   StreamSubscription<EventStreamUpdate>? _socketSub;
@@ -193,23 +213,63 @@ class LiveEvents {
   /// The highest `seq` seen, 0 before the first.
   int get cursor => _cursor;
 
+  /// Each change of [diagnostics].
+  Stream<LiveDiagnostics> get diagnosticsChanges => _diagnostics.stream;
+
+  /// Why live updates are in their mode, without a credential.
+  LiveDiagnostics get diagnostics => LiveDiagnostics(
+    mode: _mode,
+    transport: _transport,
+    host: hostOf(_baseUrl),
+    modeSince: _modeSince,
+    lastContactAt: _lastContactAt,
+    lastEventAt: _lastEventAt,
+    consecutiveFailures: _consecutiveFailures,
+    windowFailures: _failures.length,
+    failuresBeforeFallback: config.failuresBeforeFallback,
+    failureWindow: config.failureWindow,
+    pollUnsupported: _pollUnsupported,
+    lastError: _lastErrorInfo,
+    nextRetryAt: _nextRetryAt,
+    nextProbeAt: _nextProbeAt,
+    cursor: _cursor,
+    history: List.unmodifiable(_history),
+  );
+
+  /// Tries the WebSocket at once, whatever the mode, as when the person
+  /// asks to reconnect: also after a refusal, which is otherwise final.
+  /// Does nothing while asleep or closed.
+  void retryNow() {
+    if (!_started || _asleep || _mode == LiveMode.closed) return;
+    if (_transport != LiveTransport.none) {
+      reconnectNow();
+      return;
+    }
+    _awake = true;
+    _nextRetryAt = null;
+    _set(LiveMode.connecting);
+    if (_cursor == 0 && _hadLive) _gap();
+    _transport = LiveTransport.websocket;
+    _socket = _openStream(since: _cursor, probe: false);
+  }
+
   /// Retries whatever is waiting at once, such as when the app returns to
   /// the foreground or the network comes back. Ends a [pause].
   void reconnectNow() {
-    if (!_started || _transport == _Transport.none) return;
+    if (!_started || _transport == LiveTransport.none) return;
     final wasAsleep = !_awake;
     _awake = true;
     switch (_transport) {
-      case _Transport.socket:
+      case LiveTransport.websocket:
         _socket?.reconnectNow();
-      case _Transport.poll:
+      case LiveTransport.poll:
         if (wasAsleep || _pollTimer != null) _schedulePoll(Duration.zero);
         _probeNow();
-      case _Transport.refresh:
+      case LiveTransport.refresh:
         _gap();
         _scheduleRefresh();
         _probeNow();
-      case _Transport.none:
+      case LiveTransport.none:
         break;
     }
   }
@@ -247,7 +307,7 @@ class LiveEvents {
     _set(LiveMode.connecting);
     if (!_started) return;
     if (_cursor == 0 && _hadLive) _gap();
-    _transport = _Transport.socket;
+    _transport = LiveTransport.websocket;
     _socket = _openStream(since: _cursor, probe: false);
   }
 
@@ -258,13 +318,14 @@ class LiveEvents {
     await _stopAll();
     await _updates.close();
     await _statuses.close();
+    await _diagnostics.close();
   }
 
   void _start() {
     if (_started || _mode == LiveMode.closed) return;
     _started = true;
     if (_asleep) return;
-    _transport = _Transport.socket;
+    _transport = LiveTransport.websocket;
     _socket = _openStream(since: _cursor, probe: false);
   }
 
@@ -298,18 +359,19 @@ class LiveEvents {
         _deliver(event);
       case EventsMissed():
         _gap();
-      case EventStreamStatus(:final state, :final error):
+      case EventStreamStatus(:final state, :final error, :final retryIn):
         switch (state) {
           case EventStreamState.live:
             if (isProbe) _adoptProbe(since);
             _hadLive = true;
+            _succeeded();
             _set(LiveMode.websocket);
           case EventStreamState.retrying:
           case EventStreamState.unavailable when isProbe:
             if (isProbe) {
               _probeFailed(error);
             } else {
-              _socketFailed(error);
+              _socketFailed(error, retryIn);
             }
           case EventStreamState.unavailable:
             _refused(error);
@@ -320,26 +382,33 @@ class LiveEvents {
     }
   }
 
-  void _socketFailed(Object? error) {
-    _lastError = error;
+  void _socketFailed(Object? error, Duration? retryIn) {
+    _consecutiveFailures++;
+    _nextRetryAt = retryIn == null ? null : _now().add(retryIn);
+    _record(error, LiveErrorSource.websocket);
     late final Timer expiry;
-    expiry = Timer(config.failureWindow, () => _failures.remove(expiry));
+    expiry = Timer(config.failureWindow, () {
+      _failures.remove(expiry);
+      _changed();
+    });
     _failures.add(expiry);
     if (_failures.length >= config.failuresBeforeFallback) {
       unawaited(_fallBack());
       return;
     }
     _set(_isNetwork(error) ? LiveMode.offline : LiveMode.connecting);
+    _changed();
   }
 
   Future<void> _fallBack() async {
     log('live: the WebSocket failed ${_failures.length} times, falling back');
     _clearFailures();
     final socket = _closeSocket();
+    _nextRetryAt = null;
     if (_pollUnsupported) {
       _startRefreshing();
     } else {
-      _transport = _Transport.poll;
+      _transport = LiveTransport.poll;
       _pollFresh = true;
       _pollAttempt = 0;
       _set(LiveMode.polling);
@@ -352,7 +421,7 @@ class LiveEvents {
   void _schedulePoll(Duration wait) {
     _pollTimer?.cancel();
     _pollTimer = null;
-    if (_transport != _Transport.poll || !_awake || _pollCancel != null) {
+    if (_transport != LiveTransport.poll || !_awake || _pollCancel != null) {
       return;
     }
     _pollTimer = Timer(wait, () {
@@ -362,7 +431,7 @@ class LiveEvents {
   }
 
   Future<void> _poll() async {
-    if (_transport != _Transport.poll || !_awake || _pollCancel != null) {
+    if (_transport != LiveTransport.poll || !_awake || _pollCancel != null) {
       return;
     }
     final cancel = CancelToken();
@@ -383,6 +452,7 @@ class LiveEvents {
       if (cancel.isCancelled) return;
       _pollCancel = null;
       log('live: the server cannot be polled, refreshing on a timer');
+      _succeeded();
       _pollUnsupported = true;
       _startRefreshing();
     } on TixException catch (e) {
@@ -395,6 +465,7 @@ class LiveEvents {
   void _polled(EventPollPage page, int since) {
     final recovered = _pollAttempt > 0;
     _pollAttempt = 0;
+    _succeeded();
     if (_pollFresh && since == 0 && _hadLive) _gap();
     _pollFresh = false;
     _hadLive = true;
@@ -428,15 +499,19 @@ class LiveEvents {
       _schedulePoll(Duration.zero);
       return;
     }
-    _lastError = e;
     _pollAttempt++;
+    _consecutiveFailures++;
+    final wait = config.pollBackoff.delay(_pollAttempt, _random);
+    _nextRetryAt = _now().add(wait);
+    _record(e, LiveErrorSource.poll);
     _set(_isNetwork(e) ? LiveMode.offline : LiveMode.polling);
-    _schedulePoll(config.pollBackoff.delay(_pollAttempt, _random));
+    _changed();
+    _schedulePoll(wait);
   }
 
   void _startRefreshing() {
     _stopPolling();
-    _transport = _Transport.refresh;
+    _transport = LiveTransport.refresh;
     _cursor = 0;
     _set(LiveMode.refreshing);
     _gap();
@@ -446,7 +521,7 @@ class LiveEvents {
   void _scheduleRefresh() {
     _refreshTimer?.cancel();
     _refreshTimer = null;
-    if (_transport != _Transport.refresh || !_awake) return;
+    if (_transport != LiveTransport.refresh || !_awake) return;
     _refreshTimer = Timer.periodic(config.refreshEvery, (_) {
       onRefresh?.call();
       _gap();
@@ -462,23 +537,26 @@ class LiveEvents {
       max: config.probeEvery,
       jitter: config.probeJitter,
     ).delay(1, _random);
+    _nextProbeAt = _now().add(wait);
     _probeTimer = Timer(wait, _probeNow);
+    _changed();
   }
 
   void _probeNow() {
     _probeTimer?.cancel();
     _probeTimer = null;
+    _nextProbeAt = null;
     final fallen =
-        _transport == _Transport.poll || _transport == _Transport.refresh;
+        _transport == LiveTransport.poll || _transport == LiveTransport.refresh;
     if (!fallen || !_awake || _probe != null) return;
     _probe = _openStream(
-      since: _transport == _Transport.poll ? _cursor : 0,
+      since: _transport == LiveTransport.poll ? _cursor : 0,
       probe: true,
     );
   }
 
   void _probeFailed(Object? error) {
-    _lastError = error;
+    _record(error, LiveErrorSource.probe);
     unawaited(_dropProbe());
     _scheduleProbe();
   }
@@ -493,13 +571,20 @@ class LiveEvents {
     _socketSub = _probeSub;
     _probe = null;
     _probeSub = null;
-    _transport = _Transport.socket;
+    _transport = LiveTransport.websocket;
     _clearFailures();
     if (since == 0 && _hadLive) _gap();
   }
 
   void _refused(Object? error) {
-    _lastError = error;
+    _nextRetryAt = null;
+    _nextProbeAt = null;
+    _record(
+      error,
+      _transport == LiveTransport.poll
+          ? LiveErrorSource.poll
+          : LiveErrorSource.websocket,
+    );
     _set(LiveMode.unavailable);
     unawaited(_stopAll());
   }
@@ -511,7 +596,9 @@ class LiveEvents {
   void _deliver(TixEvent event) {
     if (event.seq <= _cursor || _updates.isClosed) return;
     _cursor = event.seq;
+    _lastEventAt = _now();
     _updates.add(EventReceived(event));
+    _changed();
   }
 
   void _gap() {
@@ -521,9 +608,56 @@ class LiveEvents {
   void _set(LiveMode mode) {
     final next = LiveStatus(mode, lastError: _lastError);
     if (next == status) return;
-    _mode = mode;
+    if (mode != _mode) {
+      _modeSince = _now();
+      _mode = mode;
+      _log(LiveLogEntry(at: _modeSince, mode: mode, transport: _transport));
+    }
     if (!_statuses.isClosed) _statuses.add(next);
+    _changed();
   }
+
+  void _record(Object? error, LiveErrorSource source) {
+    _lastError = error;
+    final info = LiveError.from(
+      error,
+      at: _now(),
+      source: source,
+      secrets: _secrets,
+    );
+    _lastErrorInfo = info;
+    _log(
+      LiveLogEntry(
+        at: info.at,
+        mode: _mode,
+        transport: _transport,
+        error: info,
+      ),
+    );
+    _changed();
+  }
+
+  void _succeeded() {
+    _lastContactAt = _now();
+    _consecutiveFailures = 0;
+    _nextRetryAt = null;
+  }
+
+  void _log(LiveLogEntry entry) {
+    _history.add(entry);
+    final over = _history.length - config.historySize;
+    if (over > 0) _history.removeRange(0, over);
+  }
+
+  void _changed() {
+    if (_diagnostics.hasListener && !_diagnostics.isClosed) {
+      _diagnostics.add(diagnostics);
+    }
+  }
+
+  Iterable<String> get _secrets => [
+    for (final v in _headers.values) ...[v, ...v.split(RegExp('[ =]')).skip(1)],
+  ];
 
   // A server that answers an empty poll at once, ignoring the wait, is
   // not asked again in a tight loop.
@@ -579,7 +713,7 @@ class LiveEvents {
   }
 
   Future<void> _stopAll() async {
-    _transport = _Transport.none;
+    _transport = LiveTransport.none;
     _stopPolling();
     _stopRefreshing();
     _clearFailures();

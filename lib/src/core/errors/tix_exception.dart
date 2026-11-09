@@ -68,6 +68,7 @@ class TixException implements Exception {
     this.status,
     this.requestId,
     this.details = const {},
+    this.cause,
   });
 
   /// Maps a [DioException] to the tix error it carries.
@@ -78,9 +79,13 @@ class TixException implements Exception {
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
       case DioExceptionType.transformTimeout:
-        return const TixException(TixErrorKind.timeout);
+        return TixException(TixErrorKind.timeout, cause: e.error ?? e.type);
       case DioExceptionType.connectionError:
-        return TixException(TixErrorKind.network, message: e.message ?? '');
+        return TixException(
+          TixErrorKind.network,
+          message: e.message ?? '',
+          cause: e.error,
+        );
       case DioExceptionType.badCertificate:
       case DioExceptionType.cancel:
       case DioExceptionType.unknown:
@@ -90,6 +95,7 @@ class TixException implements Exception {
         return TixException(
           TixErrorKind.network,
           message: e.message ?? e.error?.toString() ?? '',
+          cause: e.error ?? e.type,
         );
       case DioExceptionType.badResponse:
         return TixException.fromResponse(e.response);
@@ -146,6 +152,10 @@ class TixException implements Exception {
 
   /// The envelope's `details` object.
   final Map<String, Object?> details;
+
+  /// What the transport threw underneath, such as a `SocketException`, or
+  /// the Dio failure type when it threw nothing: for diagnostics only.
+  final Object? cause;
 
   @override
   String toString() =>

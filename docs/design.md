@@ -144,7 +144,7 @@ All in `lib/src/core/design/components/`. Each has a doc comment saying when to 
 | `AssigneeRef`, `TixAvatar` | `@handle` on a row; initials in a circle (accent, or `hued` from the handle) |
 | `RefText`, `DueMark`, `SnoozeMark` | The reference in mono; due dates; snoozes |
 | `TixBadge`, `TixCounter`, `Kbd` | A non-task state or role; a count; a key. `compactCount` writes a count for a fixed-width tile: in full below 1000, then the locale's compact form, three significant figures ("1.23K") |
-| `LiveIndicator` | Whether live updates arrive: a dot alone when live, a dot and a word in any other state, explained on hover or long press. `compact` is the dot alone, for a corner badge; `leading` starts it at its target's leading edge, for one that follows a line of text |
+| `LiveIndicator` | Whether live updates arrive: a dot alone when live, a dot and a word in any other state, explained on hover or long press. `compact` is the dot alone, for a corner badge; `leading` starts it at its target's leading edge, for one that follows a line of text; `onTap` makes the target a button that opens the connection details, and a compact dot only says a long press on its parent does |
 | `EmptyState` | Any list or screen with nothing in it. Carries the screen's create action |
 | `ErrorState` | A failure: the message, Retry, Sign in again when the session ended, and Back |
 | `SkeletonList`, `SkeletonBox` | Loading. Never a spinner for a list's first page |

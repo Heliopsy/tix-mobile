@@ -3310,6 +3310,217 @@ class AppLocalizationsBg extends AppLocalizations {
       'Тази връзка няма право да следи обновяванията на живо (нужен е обхватът event:subscribe). Дръпнете надолу, за да опресните.';
 
   @override
+  String get liveDetailsHint => 'Докоснете за подробности за връзката';
+
+  @override
+  String get liveDetailsLongPressHint => 'Задръжте за подробности за връзката';
+
+  @override
+  String get liveDetailsShow => 'показване на подробности за връзката';
+
+  @override
+  String get liveDetailsTitle => 'Подробности за връзката';
+
+  @override
+  String get liveDetailsNone => 'Няма връзка на живо за този контекст.';
+
+  @override
+  String get liveDetailsPausedInfo =>
+      'Обновяванията на живо са на пауза, докато двигателят на локалната инстанция е спрян. Тръгват отново заедно с него.';
+
+  @override
+  String get liveDetailsModePaused => 'На пауза';
+
+  @override
+  String get liveDetailsModeClosed => 'Затворено';
+
+  @override
+  String get liveDetailsServer => 'Сървър';
+
+  @override
+  String get liveDetailsMode => 'Състояние';
+
+  @override
+  String get liveDetailsTransport => 'Пренос';
+
+  @override
+  String get liveTransportWebsocket => 'WebSocket';
+
+  @override
+  String get liveTransportPoll => 'Дълго запитване по HTTP';
+
+  @override
+  String get liveTransportRefresh => 'Презареждане през интервал';
+
+  @override
+  String get liveTransportNone => 'Няма';
+
+  @override
+  String get liveSourceProbe => 'Опит за WebSocket във фонов режим';
+
+  @override
+  String get liveSourcePoll => 'Запитване';
+
+  @override
+  String get liveDetailsSince => 'От';
+
+  @override
+  String get liveDetailsLastContact => 'Последна връзка със сървъра';
+
+  @override
+  String get liveDetailsLastEvent => 'Последно събитие';
+
+  @override
+  String get liveDetailsNever => 'Още не';
+
+  @override
+  String get liveDetailsFailuresInRow => 'Поредни неуспехи';
+
+  @override
+  String get liveDetailsWindowFailures => 'Неуспехи на WebSocket';
+
+  @override
+  String liveDetailsWindowValue(int count, int max, int minutes) {
+    return '$count от $max за $minutes мин. преди преминаване към запитвания';
+  }
+
+  @override
+  String get liveDetailsPollEndpoint => 'Адрес за запитвания';
+
+  @override
+  String get liveDetailsPollAvailable => 'Наличен';
+
+  @override
+  String get liveDetailsPollMissing => 'Липсва на този сървър (404 или 405)';
+
+  @override
+  String get liveDetailsNextRetry => 'Следващ опит';
+
+  @override
+  String get liveDetailsNextProbe => 'Следващ опит за WebSocket';
+
+  @override
+  String get liveDetailsLastError => 'Последна грешка';
+
+  @override
+  String get liveDetailsNoError =>
+      'Нищо не се е проваляло от стартирането на приложението.';
+
+  @override
+  String get liveDetailsErrorWhat => 'Какво';
+
+  @override
+  String get liveDetailsErrorAt => 'Кога';
+
+  @override
+  String get liveDetailsErrorSource => 'При';
+
+  @override
+  String get liveDetailsErrorType => 'Изключение';
+
+  @override
+  String get liveDetailsHttpStatus => 'HTTP статус';
+
+  @override
+  String get liveDetailsOsError => 'Системна грешка';
+
+  @override
+  String liveDetailsOsErrorValue(String message, String code) {
+    return '$message (код $code)';
+  }
+
+  @override
+  String get liveDetailsCloseCode => 'Код на затваряне';
+
+  @override
+  String get liveDetailsErrorMessage => 'Съобщение';
+
+  @override
+  String get liveErrorUnreachable => 'Сървърът не е достъпен';
+
+  @override
+  String get liveErrorTimeout => 'Изтекло време';
+
+  @override
+  String get liveErrorTls => 'Неуспешна защитена връзка';
+
+  @override
+  String get liveErrorUpgradeRefused =>
+      'Преминаването към WebSocket е отказано';
+
+  @override
+  String get liveErrorClosed => 'Връзката е затворена';
+
+  @override
+  String get liveErrorRefused => 'Отказано от сървъра';
+
+  @override
+  String get liveErrorHttp => 'HTTP грешка';
+
+  @override
+  String get liveErrorOther => 'Друга грешка';
+
+  @override
+  String get liveDetailsHints => 'Какво може да означава';
+
+  @override
+  String get liveHintIdleTimeout =>
+      'Прокси или балансьор на натоварването може би затваря неактивните връзки. Времето му за четене трябва да е над 60 s за /api/v1/events и /api/v1/events/poll.';
+
+  @override
+  String get liveHintNoUpgrade =>
+      'WebSocket не успява, докато обикновеният HTTP работи, така че проксито пред tix може би не препраща преминаването към WebSocket.';
+
+  @override
+  String get liveHintUnreachable =>
+      'Телефонът не можа да достигне хоста. Проверете мрежата, адреса и дали сървърът работи.';
+
+  @override
+  String get liveHintTls =>
+      'Сертификатът на сървъра не беше приет: може да е изтекъл, самоподписан или издаден за друго име.';
+
+  @override
+  String get liveHintRefused =>
+      'Сървърът отказа обновявания на живо за тази връзка. Токенът трябва да има обхват event:subscribe.';
+
+  @override
+  String liveHintHttp(String status) {
+    return 'Сървърът или прокси отговори с HTTP $status. Журналите му би трябвало да кажат защо.';
+  }
+
+  @override
+  String get liveHintPollMissing =>
+      'Този сървър е по-стар от адреса за запитвания, затова екранът се презарежда през интервал.';
+
+  @override
+  String get liveDetailsHistory => 'Последни промени';
+
+  @override
+  String get liveDetailsHistoryEmpty => 'Още нищо.';
+
+  @override
+  String liveDetailsHistoryError(String kind, String source) {
+    return '$kind ($source)';
+  }
+
+  @override
+  String get liveDetailsReconnect => 'Свързване отново';
+
+  @override
+  String get liveDetailsCopy => 'Копиране на подробностите';
+
+  @override
+  String get liveDetailsCopied =>
+      'Подробностите за връзката са копирани. Токени и бисквитки не са включени.';
+
+  @override
+  String get aboutConnectionDetails => 'Подробности за връзката';
+
+  @override
+  String get aboutConnectionDetailsHelp =>
+      'Как обновяванията на живо достигат този контекст и какво се провали последно';
+
+  @override
   String get copyToClipboard => 'Копирай';
 
   @override

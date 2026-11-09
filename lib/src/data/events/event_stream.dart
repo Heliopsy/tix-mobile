@@ -21,6 +21,30 @@ abstract interface class EventSocket {
 
   /// Closes the connection.
   Future<void> close();
+
+  /// The close code the other end sent, null while open or when none came.
+  int? get closeCode;
+
+  /// The close reason the other end sent, null when none came.
+  String? get closeReason;
+}
+
+/// The WebSocket ended, with the close [code] and [reason] the other end
+/// sent; both null when the connection simply dropped.
+final class EventSocketClosed implements Exception {
+  /// Reports a closed socket.
+  const EventSocketClosed([this.code, this.reason]);
+
+  /// The close code, such as 1001 or 1006.
+  final int? code;
+
+  /// The close reason.
+  final String? reason;
+
+  @override
+  String toString() =>
+      'the WebSocket closed${code == null ? '' : ' with $code'}'
+      '${reason == null || reason!.isEmpty ? '' : ': $reason'}';
 }
 
 /// Opens a socket to [url] presenting [headers]. A refusal before the
@@ -52,6 +76,12 @@ class _IoSocket implements EventSocket {
 
   @override
   Future<void> close() => _ws.close();
+
+  @override
+  int? get closeCode => _ws.closeCode;
+
+  @override
+  String? get closeReason => _ws.closeReason;
 }
 
 /// How long to wait before each reconnection attempt.
@@ -266,6 +296,9 @@ class TixEventStream {
     } on IOException catch (e) {
       _scheduleRetry(e);
       return;
+    } on TimeoutException catch (e) {
+      _scheduleRetry(e);
+      return;
     }
     if (_state == EventStreamState.closed) {
       await socket.close();
@@ -275,7 +308,8 @@ class TixEventStream {
     _listening = socket.messages.listen(
       _onMessage,
       onError: _lost,
-      onDone: () => _lost(null),
+      onDone: () =>
+          _lost(EventSocketClosed(socket.closeCode, socket.closeReason)),
     );
     _subscribe(resume: true);
   }

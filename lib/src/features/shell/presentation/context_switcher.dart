@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -9,6 +11,7 @@ import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/widgets/confirm.dart';
+import 'package:tix_mobile/src/core/widgets/live_details.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
 import 'package:tix_mobile/src/features/shell/presentation/live_status.dart';
@@ -85,6 +88,7 @@ class ContextSwitcherButton extends ConsumerWidget {
         ),
       ],
     );
+    void details() => unawaited(showLiveDetails(context));
     if (rail && !extended) {
       return Tooltip(
         message: title,
@@ -92,6 +96,7 @@ class ContextSwitcherButton extends ConsumerWidget {
           key: const Key('switcher.open'),
           borderRadius: BorderRadius.circular(16),
           onTap: () => _open(context, ref),
+          onLongPress: details,
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: SizedBox(
@@ -118,12 +123,14 @@ class ContextSwitcherButton extends ConsumerWidget {
     return Semantics(
       button: true,
       label: l10n.switchContext,
+      onLongPressHint: l10n.liveDetailsShow,
       child: Material(
         color: rail ? Colors.transparent : context.tix.surface,
         shape: rail ? null : Border(top: BorderSide(color: context.tix.line)),
         child: InkWell(
           key: const Key('switcher.open'),
           onTap: () => _open(context, ref),
+          onLongPress: details,
           child: ConstrainedBox(
             constraints: BoxConstraints(
               minHeight: 56,

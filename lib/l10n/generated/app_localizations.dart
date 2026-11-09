@@ -5635,6 +5635,390 @@ abstract class AppLocalizations {
   /// **'This connection may not follow live updates (it needs the event:subscribe scope). Pull down to refresh instead.'**
   String get liveStatusUnavailableInfo;
 
+  /// No description provided for @liveDetailsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for connection details'**
+  String get liveDetailsHint;
+
+  /// No description provided for @liveDetailsLongPressHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Long press for connection details'**
+  String get liveDetailsLongPressHint;
+
+  /// No description provided for @liveDetailsShow.
+  ///
+  /// In en, this message translates to:
+  /// **'show connection details'**
+  String get liveDetailsShow;
+
+  /// No description provided for @liveDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection details'**
+  String get liveDetailsTitle;
+
+  /// No description provided for @liveDetailsNone.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no live connection for this context.'**
+  String get liveDetailsNone;
+
+  /// No description provided for @liveDetailsPausedInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Live updates are paused while the local instance\'s engine is stopped. They start again with it.'**
+  String get liveDetailsPausedInfo;
+
+  /// No description provided for @liveDetailsModePaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get liveDetailsModePaused;
+
+  /// No description provided for @liveDetailsModeClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get liveDetailsModeClosed;
+
+  /// No description provided for @liveDetailsServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Server'**
+  String get liveDetailsServer;
+
+  /// No description provided for @liveDetailsMode.
+  ///
+  /// In en, this message translates to:
+  /// **'State'**
+  String get liveDetailsMode;
+
+  /// No description provided for @liveDetailsTransport.
+  ///
+  /// In en, this message translates to:
+  /// **'Carried over'**
+  String get liveDetailsTransport;
+
+  /// No description provided for @liveTransportWebsocket.
+  ///
+  /// In en, this message translates to:
+  /// **'WebSocket'**
+  String get liveTransportWebsocket;
+
+  /// No description provided for @liveTransportPoll.
+  ///
+  /// In en, this message translates to:
+  /// **'Long polling over HTTP'**
+  String get liveTransportPoll;
+
+  /// No description provided for @liveTransportRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Reloading on a timer'**
+  String get liveTransportRefresh;
+
+  /// No description provided for @liveTransportNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing'**
+  String get liveTransportNone;
+
+  /// No description provided for @liveSourceProbe.
+  ///
+  /// In en, this message translates to:
+  /// **'Background WebSocket try'**
+  String get liveSourceProbe;
+
+  /// No description provided for @liveSourcePoll.
+  ///
+  /// In en, this message translates to:
+  /// **'Poll'**
+  String get liveSourcePoll;
+
+  /// No description provided for @liveDetailsSince.
+  ///
+  /// In en, this message translates to:
+  /// **'Since'**
+  String get liveDetailsSince;
+
+  /// No description provided for @liveDetailsLastContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Last reached the server'**
+  String get liveDetailsLastContact;
+
+  /// No description provided for @liveDetailsLastEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Last event'**
+  String get liveDetailsLastEvent;
+
+  /// No description provided for @liveDetailsNever.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet'**
+  String get liveDetailsNever;
+
+  /// No description provided for @liveDetailsFailuresInRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Failures in a row'**
+  String get liveDetailsFailuresInRow;
+
+  /// No description provided for @liveDetailsWindowFailures.
+  ///
+  /// In en, this message translates to:
+  /// **'WebSocket failures'**
+  String get liveDetailsWindowFailures;
+
+  /// No description provided for @liveDetailsWindowValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of {max} within {minutes} min before switching to polling'**
+  String liveDetailsWindowValue(int count, int max, int minutes);
+
+  /// No description provided for @liveDetailsPollEndpoint.
+  ///
+  /// In en, this message translates to:
+  /// **'Poll endpoint'**
+  String get liveDetailsPollEndpoint;
+
+  /// No description provided for @liveDetailsPollAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get liveDetailsPollAvailable;
+
+  /// No description provided for @liveDetailsPollMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Missing on this server (404 or 405)'**
+  String get liveDetailsPollMissing;
+
+  /// No description provided for @liveDetailsNextRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Next try'**
+  String get liveDetailsNextRetry;
+
+  /// No description provided for @liveDetailsNextProbe.
+  ///
+  /// In en, this message translates to:
+  /// **'Next WebSocket try'**
+  String get liveDetailsNextProbe;
+
+  /// No description provided for @liveDetailsLastError.
+  ///
+  /// In en, this message translates to:
+  /// **'Last error'**
+  String get liveDetailsLastError;
+
+  /// No description provided for @liveDetailsNoError.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing has failed since the app started.'**
+  String get liveDetailsNoError;
+
+  /// No description provided for @liveDetailsErrorWhat.
+  ///
+  /// In en, this message translates to:
+  /// **'What'**
+  String get liveDetailsErrorWhat;
+
+  /// No description provided for @liveDetailsErrorAt.
+  ///
+  /// In en, this message translates to:
+  /// **'When'**
+  String get liveDetailsErrorAt;
+
+  /// No description provided for @liveDetailsErrorSource.
+  ///
+  /// In en, this message translates to:
+  /// **'During'**
+  String get liveDetailsErrorSource;
+
+  /// No description provided for @liveDetailsErrorType.
+  ///
+  /// In en, this message translates to:
+  /// **'Exception'**
+  String get liveDetailsErrorType;
+
+  /// No description provided for @liveDetailsHttpStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'HTTP status'**
+  String get liveDetailsHttpStatus;
+
+  /// No description provided for @liveDetailsOsError.
+  ///
+  /// In en, this message translates to:
+  /// **'System error'**
+  String get liveDetailsOsError;
+
+  /// No description provided for @liveDetailsOsErrorValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{message} (code {code})'**
+  String liveDetailsOsErrorValue(String message, String code);
+
+  /// No description provided for @liveDetailsCloseCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Close code'**
+  String get liveDetailsCloseCode;
+
+  /// No description provided for @liveDetailsErrorMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get liveDetailsErrorMessage;
+
+  /// No description provided for @liveErrorUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not reach the server'**
+  String get liveErrorUnreachable;
+
+  /// No description provided for @liveErrorTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Timed out'**
+  String get liveErrorTimeout;
+
+  /// No description provided for @liveErrorTls.
+  ///
+  /// In en, this message translates to:
+  /// **'Secure connection failed'**
+  String get liveErrorTls;
+
+  /// No description provided for @liveErrorUpgradeRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'WebSocket upgrade refused'**
+  String get liveErrorUpgradeRefused;
+
+  /// No description provided for @liveErrorClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection closed'**
+  String get liveErrorClosed;
+
+  /// No description provided for @liveErrorRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'Refused by the server'**
+  String get liveErrorRefused;
+
+  /// No description provided for @liveErrorHttp.
+  ///
+  /// In en, this message translates to:
+  /// **'HTTP error'**
+  String get liveErrorHttp;
+
+  /// No description provided for @liveErrorOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other error'**
+  String get liveErrorOther;
+
+  /// No description provided for @liveDetailsHints.
+  ///
+  /// In en, this message translates to:
+  /// **'What it may mean'**
+  String get liveDetailsHints;
+
+  /// No description provided for @liveHintIdleTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'A proxy or load balancer may be closing idle connections. Its read timeout should be above 60 s for /api/v1/events and /api/v1/events/poll.'**
+  String get liveHintIdleTimeout;
+
+  /// No description provided for @liveHintNoUpgrade.
+  ///
+  /// In en, this message translates to:
+  /// **'The WebSocket fails while plain HTTP works, so the proxy in front of tix may not forward WebSocket upgrades.'**
+  String get liveHintNoUpgrade;
+
+  /// No description provided for @liveHintUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'The phone could not reach the host. Check the network, the address, and that the server is running.'**
+  String get liveHintUnreachable;
+
+  /// No description provided for @liveHintTls.
+  ///
+  /// In en, this message translates to:
+  /// **'The server\'s certificate was not accepted: it may be expired, self-signed, or issued for another name.'**
+  String get liveHintTls;
+
+  /// No description provided for @liveHintRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'The server refused live updates to this connection. A token needs the event:subscribe scope.'**
+  String get liveHintRefused;
+
+  /// No description provided for @liveHintHttp.
+  ///
+  /// In en, this message translates to:
+  /// **'The server or a proxy answered HTTP {status}. Its logs should say why.'**
+  String liveHintHttp(String status);
+
+  /// No description provided for @liveHintPollMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'This server is older than the poll endpoint, so what is on screen is reloaded on a timer instead.'**
+  String get liveHintPollMissing;
+
+  /// No description provided for @liveDetailsHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent changes'**
+  String get liveDetailsHistory;
+
+  /// No description provided for @liveDetailsHistoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing yet.'**
+  String get liveDetailsHistoryEmpty;
+
+  /// No description provided for @liveDetailsHistoryError.
+  ///
+  /// In en, this message translates to:
+  /// **'{kind} ({source})'**
+  String liveDetailsHistoryError(String kind, String source);
+
+  /// No description provided for @liveDetailsReconnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect now'**
+  String get liveDetailsReconnect;
+
+  /// No description provided for @liveDetailsCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy details'**
+  String get liveDetailsCopy;
+
+  /// No description provided for @liveDetailsCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection details copied. Tokens and cookies are left out.'**
+  String get liveDetailsCopied;
+
+  /// No description provided for @aboutConnectionDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection details'**
+  String get aboutConnectionDetails;
+
+  /// No description provided for @aboutConnectionDetailsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'How live updates reach this context, and what failed last'**
+  String get aboutConnectionDetailsHelp;
+
   /// No description provided for @copyToClipboard.
   ///
   /// In en, this message translates to:
@@ -10216,7 +10600,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsDatesHelp.
   ///
   /// In en, this message translates to:
-  /// **'Kept with your account, so every device, browser and terminal shows dates this way. Inherit follows your tenant’s default, which follows the server’s.'**
+  /// **'Kept with your account, so every device, browser and terminal shows dates this way. Inherit follows your tenant’s default, which follows the server\'s.'**
   String get settingsDatesHelp;
 
   /// No description provided for @settingsDateFormat.

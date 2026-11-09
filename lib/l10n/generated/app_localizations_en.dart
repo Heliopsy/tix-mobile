@@ -3308,6 +3308,215 @@ class AppLocalizationsEn extends AppLocalizations {
       'This connection may not follow live updates (it needs the event:subscribe scope). Pull down to refresh instead.';
 
   @override
+  String get liveDetailsHint => 'Tap for connection details';
+
+  @override
+  String get liveDetailsLongPressHint => 'Long press for connection details';
+
+  @override
+  String get liveDetailsShow => 'show connection details';
+
+  @override
+  String get liveDetailsTitle => 'Connection details';
+
+  @override
+  String get liveDetailsNone => 'There is no live connection for this context.';
+
+  @override
+  String get liveDetailsPausedInfo =>
+      'Live updates are paused while the local instance\'s engine is stopped. They start again with it.';
+
+  @override
+  String get liveDetailsModePaused => 'Paused';
+
+  @override
+  String get liveDetailsModeClosed => 'Closed';
+
+  @override
+  String get liveDetailsServer => 'Server';
+
+  @override
+  String get liveDetailsMode => 'State';
+
+  @override
+  String get liveDetailsTransport => 'Carried over';
+
+  @override
+  String get liveTransportWebsocket => 'WebSocket';
+
+  @override
+  String get liveTransportPoll => 'Long polling over HTTP';
+
+  @override
+  String get liveTransportRefresh => 'Reloading on a timer';
+
+  @override
+  String get liveTransportNone => 'Nothing';
+
+  @override
+  String get liveSourceProbe => 'Background WebSocket try';
+
+  @override
+  String get liveSourcePoll => 'Poll';
+
+  @override
+  String get liveDetailsSince => 'Since';
+
+  @override
+  String get liveDetailsLastContact => 'Last reached the server';
+
+  @override
+  String get liveDetailsLastEvent => 'Last event';
+
+  @override
+  String get liveDetailsNever => 'Not yet';
+
+  @override
+  String get liveDetailsFailuresInRow => 'Failures in a row';
+
+  @override
+  String get liveDetailsWindowFailures => 'WebSocket failures';
+
+  @override
+  String liveDetailsWindowValue(int count, int max, int minutes) {
+    return '$count of $max within $minutes min before switching to polling';
+  }
+
+  @override
+  String get liveDetailsPollEndpoint => 'Poll endpoint';
+
+  @override
+  String get liveDetailsPollAvailable => 'Available';
+
+  @override
+  String get liveDetailsPollMissing => 'Missing on this server (404 or 405)';
+
+  @override
+  String get liveDetailsNextRetry => 'Next try';
+
+  @override
+  String get liveDetailsNextProbe => 'Next WebSocket try';
+
+  @override
+  String get liveDetailsLastError => 'Last error';
+
+  @override
+  String get liveDetailsNoError => 'Nothing has failed since the app started.';
+
+  @override
+  String get liveDetailsErrorWhat => 'What';
+
+  @override
+  String get liveDetailsErrorAt => 'When';
+
+  @override
+  String get liveDetailsErrorSource => 'During';
+
+  @override
+  String get liveDetailsErrorType => 'Exception';
+
+  @override
+  String get liveDetailsHttpStatus => 'HTTP status';
+
+  @override
+  String get liveDetailsOsError => 'System error';
+
+  @override
+  String liveDetailsOsErrorValue(String message, String code) {
+    return '$message (code $code)';
+  }
+
+  @override
+  String get liveDetailsCloseCode => 'Close code';
+
+  @override
+  String get liveDetailsErrorMessage => 'Message';
+
+  @override
+  String get liveErrorUnreachable => 'Could not reach the server';
+
+  @override
+  String get liveErrorTimeout => 'Timed out';
+
+  @override
+  String get liveErrorTls => 'Secure connection failed';
+
+  @override
+  String get liveErrorUpgradeRefused => 'WebSocket upgrade refused';
+
+  @override
+  String get liveErrorClosed => 'Connection closed';
+
+  @override
+  String get liveErrorRefused => 'Refused by the server';
+
+  @override
+  String get liveErrorHttp => 'HTTP error';
+
+  @override
+  String get liveErrorOther => 'Other error';
+
+  @override
+  String get liveDetailsHints => 'What it may mean';
+
+  @override
+  String get liveHintIdleTimeout =>
+      'A proxy or load balancer may be closing idle connections. Its read timeout should be above 60 s for /api/v1/events and /api/v1/events/poll.';
+
+  @override
+  String get liveHintNoUpgrade =>
+      'The WebSocket fails while plain HTTP works, so the proxy in front of tix may not forward WebSocket upgrades.';
+
+  @override
+  String get liveHintUnreachable =>
+      'The phone could not reach the host. Check the network, the address, and that the server is running.';
+
+  @override
+  String get liveHintTls =>
+      'The server\'s certificate was not accepted: it may be expired, self-signed, or issued for another name.';
+
+  @override
+  String get liveHintRefused =>
+      'The server refused live updates to this connection. A token needs the event:subscribe scope.';
+
+  @override
+  String liveHintHttp(String status) {
+    return 'The server or a proxy answered HTTP $status. Its logs should say why.';
+  }
+
+  @override
+  String get liveHintPollMissing =>
+      'This server is older than the poll endpoint, so what is on screen is reloaded on a timer instead.';
+
+  @override
+  String get liveDetailsHistory => 'Recent changes';
+
+  @override
+  String get liveDetailsHistoryEmpty => 'Nothing yet.';
+
+  @override
+  String liveDetailsHistoryError(String kind, String source) {
+    return '$kind ($source)';
+  }
+
+  @override
+  String get liveDetailsReconnect => 'Reconnect now';
+
+  @override
+  String get liveDetailsCopy => 'Copy details';
+
+  @override
+  String get liveDetailsCopied =>
+      'Connection details copied. Tokens and cookies are left out.';
+
+  @override
+  String get aboutConnectionDetails => 'Connection details';
+
+  @override
+  String get aboutConnectionDetailsHelp =>
+      'How live updates reach this context, and what failed last';
+
+  @override
   String get copyToClipboard => 'Copy';
 
   @override
@@ -6062,7 +6271,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsDatesHelp =>
-      'Kept with your account, so every device, browser and terminal shows dates this way. Inherit follows your tenant’s default, which follows the server’s.';
+      'Kept with your account, so every device, browser and terminal shows dates this way. Inherit follows your tenant’s default, which follows the server\'s.';
 
   @override
   String get settingsDateFormat => 'Date format';

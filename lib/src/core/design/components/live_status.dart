@@ -33,7 +33,8 @@ enum LiveState {
 /// mode is never only a colour. [compact] draws the dot alone in every
 /// state, for a corner badge, and leaves the explanation to semantics.
 /// [leading] puts the dot at the start of its target instead of its
-/// middle, for an indicator that follows a line of text.
+/// middle, for an indicator that follows a line of text. With [onTap] the
+/// target is a button of its own, and says it opens the connection details.
 class LiveIndicator extends StatelessWidget {
   /// Draws [state]; [refreshSeconds] goes into the refreshing explanation.
   const LiveIndicator({
@@ -41,6 +42,7 @@ class LiveIndicator extends StatelessWidget {
     this.refreshSeconds = 45,
     this.compact = false,
     this.leading = false,
+    this.onTap,
     super.key,
   });
 
@@ -55,6 +57,10 @@ class LiveIndicator extends StatelessWidget {
 
   /// Whether the dot and word start at the target's leading edge.
   final bool leading;
+
+  /// Opens the connection details. A [compact] dot is too small a target:
+  /// it only says that a long press on what it sits in opens them.
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -94,10 +100,12 @@ class LiveIndicator extends StatelessWidget {
       ),
     );
     final semantics = '${l10n.liveStatusLabel(label)}. $info';
+    final tap = compact ? null : onTap;
     if (compact) {
       return Semantics(
         key: const Key('live.indicator'),
         label: semantics,
+        hint: onTap == null ? null : l10n.liveDetailsLongPressHint,
         child: ExcludeSemantics(child: dot),
       );
     }
@@ -106,45 +114,68 @@ class LiveIndicator extends StatelessWidget {
       message: info,
       excludeFromSemantics: true,
       child: Semantics(
+        container: tap != null,
+        button: tap == null ? null : true,
         label: semantics,
+        hint: tap == null ? null : l10n.liveDetailsHint,
+        onTap: tap,
         child: ExcludeSemantics(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              minWidth: TixSize.target,
-              minHeight: TixSize.target,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: leading
-                  ? MainAxisAlignment.start
-                  : MainAxisAlignment.center,
-              children: [
-                dot,
-                if (state != LiveState.live) ...[
-                  const SizedBox(width: TixSpace.s1),
-                  Flexible(
-                    child: Text(
-                      label,
-                      maxLines: 1,
-                      softWrap: false,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: TixText.xs,
-                        fontWeight: FontWeight.w600,
-                        color:
-                            state == LiveState.connecting ||
-                                state == LiveState.unavailable
-                            ? t.muted
-                            : colour,
+          child: _Target(
+            onTap: tap,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                minWidth: TixSize.target,
+                minHeight: TixSize.target,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: leading
+                    ? MainAxisAlignment.start
+                    : MainAxisAlignment.center,
+                children: [
+                  dot,
+                  if (state != LiveState.live) ...[
+                    const SizedBox(width: TixSpace.s1),
+                    Flexible(
+                      child: Text(
+                        label,
+                        maxLines: 1,
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: TixText.xs,
+                          fontWeight: FontWeight.w600,
+                          color:
+                              state == LiveState.connecting ||
+                                  state == LiveState.unavailable
+                              ? t.muted
+                              : colour,
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
+}
+
+class _Target extends StatelessWidget {
+  const _Target({required this.onTap, required this.child});
+
+  final VoidCallback? onTap;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => onTap == null
+      ? child
+      : InkWell(
+          borderRadius: BorderRadius.circular(TixRadius.md),
+          onTap: onTap,
+          child: child,
+        );
 }
