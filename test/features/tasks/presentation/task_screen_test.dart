@@ -485,6 +485,10 @@ void main() {
   group('the board', () {
     Future<void> board(WidgetTester tester, {Size size = desktop}) async {
       await pump(tester, const TaskListScreen(projectKey: 'infra'), size: size);
+      if (size == phone) {
+        await tester.tap(find.byKey(const Key('view.menu')));
+        await tester.pumpAndSettle();
+      }
       await tester.tap(find.byKey(const Key('view.board')));
       await tester.pumpAndSettle();
     }
