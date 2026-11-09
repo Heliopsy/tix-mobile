@@ -12,6 +12,9 @@ import 'package:tix_mobile/src/data/models/task.dart';
 /// project's colour across the top, the reference and priority, the title
 /// in up to three lines, then status, assignee, due and two tags.
 ///
+/// In select mode ([picked] non-null) a checkbox leads the card, the tick
+/// is muted and inert, and the dots are left off, as on [TaskRow].
+///
 /// Use it on boards and lanes; lists use [TaskRow].
 class TaskCard extends StatelessWidget {
   /// Draws [task] with [facts].
@@ -24,6 +27,8 @@ class TaskCard extends StatelessWidget {
     this.onToggleDone,
     this.onLongPress,
     this.onMore,
+    this.picked,
+    this.onPicked,
     this.showStatus = true,
     super.key,
   });
@@ -47,11 +52,18 @@ class TaskCard extends StatelessWidget {
   /// the column is the status.
   final VoidCallback? onToggleDone;
 
-  /// Opens the card's actions on a long press or a secondary click.
+  /// What a long press does; also a secondary click when [onMore] is null.
   final VoidCallback? onLongPress;
 
-  /// Opens the card's actions from the three dots; null leaves them off.
+  /// Opens the card's actions from the three dots and a secondary click;
+  /// null leaves them off.
   final VoidCallback? onMore;
+
+  /// Whether the card is picked for a bulk action; non-null is select mode.
+  final bool? picked;
+
+  /// Picks or unpicks the card.
+  final ValueChanged<bool>? onPicked;
 
   /// Whether the status pill is drawn; a board column already says it.
   final bool showStatus;
@@ -62,8 +74,10 @@ class TaskCard extends StatelessWidget {
     final stripe = t.projectColour(facts.projectColour);
     final due = task.dueAt;
     final done = isTaskDone(task, facts.statusCategory);
+    final picking = picked != null;
+    final more = picking ? null : onMore;
     return Material(
-      color: selected ? t.accentSoft : t.bg,
+      color: selected || (picked ?? false) ? t.accentSoft : t.bg,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(TixRadius.lg),
         side: BorderSide(color: selected ? t.accent : t.line),
@@ -72,7 +86,7 @@ class TaskCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         onLongPress: onLongPress,
-        onSecondaryTap: onLongPress,
+        onSecondaryTap: onMore ?? onLongPress,
         child: DecoratedBox(
           decoration: BoxDecoration(
             border: stripe == null
@@ -97,7 +111,33 @@ class TaskCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    if (onToggleDone != null)
+                    if (picked case final bool on)
+                      Transform.translate(
+                        offset: const Offset(-TixSpace.s2, 0),
+                        child: SizedBox(
+                          width: 32,
+                          height: 24,
+                          child: OverflowBox(
+                            maxWidth: 40,
+                            maxHeight: 40,
+                            child: TaskPick(
+                              key: ValueKey(('pick', task.ref)),
+                              picked: on,
+                              onChanged: onPicked,
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (picking && onToggleDone != null)
+                      SizedBox(
+                        width: TixSize.check + TixSpace.s2,
+                        height: 24,
+                        child: OverflowBox(
+                          maxHeight: 40,
+                          child: TaskCheck(done: done, inert: true),
+                        ),
+                      )
+                    else if (onToggleDone != null)
                       Transform.translate(
                         offset: const Offset(-TixSpace.s2, 0),
                         child: SizedBox(
@@ -126,7 +166,7 @@ class TaskCard extends StatelessWidget {
                     if (task.starred)
                       Icon(Icons.star_rounded, size: 16, color: t.accent),
                     PriorityMark(priority: task.priority),
-                    if (onMore != null)
+                    if (more != null)
                       SizedBox(
                         width: 28,
                         height: 24,
@@ -134,7 +174,7 @@ class TaskCard extends StatelessWidget {
                           maxWidth: 40,
                           maxHeight: 40,
                           child: IconButton(
-                            onPressed: onMore,
+                            onPressed: more,
                             tooltip: MaterialLocalizations.of(context)
                                 .moreButtonTooltip,
                             icon: Icon(

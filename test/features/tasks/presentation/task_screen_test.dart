@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
+import 'package:tix_mobile/src/data/models/task.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_list_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_screen.dart';
 
@@ -200,8 +202,6 @@ void main() {
     await pump(tester, const TasksScreen());
     await tester.longPress(row('Fix login'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('menu.select')));
-    await tester.pumpAndSettle();
     await tester.tap(row('Landing page'));
     await tester.pumpAndSettle();
     expect(find.text('2 selected'), findsOneWidget);
@@ -224,8 +224,6 @@ void main() {
   testWidgets('picked rows go to anyone in the tenant', (tester) async {
     await pump(tester, const TasksScreen(), size: desktop);
     await tester.longPress(row('Fix login'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('menu.select')));
     await tester.pumpAndSettle();
     await tester.tap(row('Landing page'));
     await tester.pumpAndSettle();
@@ -257,7 +255,12 @@ void main() {
 
   testWidgets('a row is given to someone from its menu', (tester) async {
     await pump(tester, const TasksScreen());
-    await tester.longPress(row('Landing page'));
+    await tester.tap(
+      find.descendant(
+        of: row('Landing page'),
+        matching: find.byKey(const Key('row.more')),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('menu.assign')));
     await tester.pumpAndSettle();
@@ -277,8 +280,6 @@ void main() {
     server.refuse['web-1'] = ('forbidden', 'not yours');
     await pump(tester, const TasksScreen(), size: desktop);
     await tester.longPress(row('Fix login'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('menu.select')));
     await tester.pumpAndSettle();
     await tester.tap(row('Landing page'));
     await tester.pumpAndSettle();
@@ -307,6 +308,178 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.pumpAndSettle();
     expect(find.text('route:/projects/infra/tasks/infra-2'), findsOneWidget);
+  });
+
+  group('select mode', () {
+    Finder bar() => find.byKey(const Key('bulk.bar'));
+
+    Finder pick(String title) =>
+        find.descendant(of: row(title), matching: find.byType(TaskPick));
+
+    Finder tick(String title) =>
+        find.descendant(of: row(title), matching: find.byType(TaskCheck));
+
+    Future<void> withKey(
+      WidgetTester tester,
+      LogicalKeyboardKey key,
+      Future<void> Function() action,
+    ) async {
+      await tester.sendKeyDownEvent(key);
+      await action();
+      await tester.sendKeyUpEvent(key);
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('is off by default: only the tick on each row', (tester) async {
+      await pump(tester, const TasksScreen());
+      expect(find.byType(TaskPick), findsNothing);
+      expect(find.byType(TaskCheck), findsNWidgets(3));
+      expect(bar(), findsNothing);
+    });
+
+    testWidgets('the Select button turns it on with nothing picked and it '
+        'stays until left from the bar', (tester) async {
+      await pump(tester, const TasksScreen());
+      await tester.tap(find.byKey(const Key('tasks.selectMode')));
+      await tester.pumpAndSettle();
+      expect(find.text('0 selected'), findsOneWidget);
+      expect(find.byType(TaskPick), findsNWidgets(3));
+      expect(find.byKey(const Key('tasks.quickAdd')), findsNothing);
+      await tester.tap(row('Fix login'));
+      await tester.pumpAndSettle();
+      expect(find.text('1 selected'), findsOneWidget);
+      expect(find.textContaining('route:'), findsNothing);
+      await tester.tap(row('Fix login'));
+      await tester.pumpAndSettle();
+      expect(find.text('0 selected'), findsOneWidget);
+      expect(find.byType(TaskPick), findsNWidgets(3));
+      await tester.tap(find.byKey(const Key('bulk.clear')));
+      await tester.pumpAndSettle();
+      expect(bar(), findsNothing);
+      expect(find.byType(TaskPick), findsNothing);
+    });
+
+    testWidgets('Escape leaves it after the Select button', (tester) async {
+      await pump(tester, const TixShortcuts(child: TasksScreen()));
+      await tester.tap(find.byKey(const Key('tasks.selectMode')));
+      await tester.pumpAndSettle();
+      expect(bar(), findsOneWidget);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(bar(), findsNothing);
+      expect(find.byType(TaskPick), findsNothing);
+    });
+
+    testWidgets('a long press picks the row, and unpicking the last row '
+        'leaves', (tester) async {
+      await pump(tester, const TasksScreen());
+      await tester.longPress(row('Fix login'));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('menu.open')), findsNothing);
+      expect(find.text('1 selected'), findsOneWidget);
+      expect(tester.widget<TaskPick>(pick('Fix login')).picked, isTrue);
+      expect(tester.widget<TaskPick>(pick('Rotate keys')).picked, isFalse);
+      await tester.tap(row('Fix login'));
+      await tester.pumpAndSettle();
+      expect(bar(), findsNothing);
+      expect(find.byType(TaskPick), findsNothing);
+    });
+
+    testWidgets('the menu stays on the dots', (tester) async {
+      await pump(tester, const TasksScreen());
+      await tester.tap(
+        find.descendant(
+          of: row('Fix login'),
+          matching: find.byKey(const Key('row.more')),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('menu.open')), findsOneWidget);
+      expect(bar(), findsNothing);
+    });
+
+    testWidgets('back leaves select mode before the screen', (tester) async {
+      await pump(tester, const TasksScreen());
+      await tester.longPress(row('Fix login'));
+      await tester.pumpAndSettle();
+      expect(bar(), findsOneWidget);
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(bar(), findsNothing);
+      expect(find.text('Fix login'), findsOneWidget);
+    });
+
+    testWidgets('Ctrl-click picks a row and Shift-click a range', (
+      tester,
+    ) async {
+      await pump(tester, const TasksScreen(), size: desktop);
+      await withKey(
+        tester,
+        LogicalKeyboardKey.controlLeft,
+        () => tester.tap(row('Fix login')),
+      );
+      expect(find.text('1 selected'), findsOneWidget);
+      expect(find.byType(TaskDetailView), findsNothing);
+      await withKey(
+        tester,
+        LogicalKeyboardKey.shiftLeft,
+        () => tester.tap(row('Rotate keys')),
+      );
+      expect(find.text('2 selected'), findsOneWidget);
+      expect(tester.widget<TaskPick>(pick('Landing page')).picked, isFalse);
+      await withKey(
+        tester,
+        LogicalKeyboardKey.shiftLeft,
+        () => tester.tap(row('Landing page')),
+      );
+      expect(find.text('3 selected'), findsOneWidget);
+    });
+
+    testWidgets('the tick is muted, read as nothing and only picks', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await pump(tester, const TasksScreen());
+      expect(find.bySemanticsLabel('Mark done'), findsWidgets);
+      await tester.tap(find.byKey(const Key('tasks.selectMode')));
+      await tester.pumpAndSettle();
+      expect(tester.widget<TaskCheck>(tick('Fix login')).inert, isTrue);
+      expect(find.bySemanticsLabel('Mark done'), findsNothing);
+      expect(find.bySemanticsLabel('Select'), findsWidgets);
+      await tester.tap(tick('Fix login'), warnIfMissed: false);
+      await tester.pumpAndSettle();
+      expect(find.text('1 selected'), findsOneWidget);
+      expect(server.requestsTo('/tasks/bulk'), isEmpty);
+      semantics.dispose();
+    });
+
+    testWidgets('x picks, Shift+Down extends, Escape leaves, e completes', (
+      tester,
+    ) async {
+      await pump(tester, const TixShortcuts(child: TasksScreen()));
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyJ);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyX);
+      await tester.pumpAndSettle();
+      expect(find.text('1 selected'), findsOneWidget);
+      await withKey(
+        tester,
+        LogicalKeyboardKey.shiftLeft,
+        () => tester.sendKeyEvent(LogicalKeyboardKey.arrowDown),
+      );
+      expect(find.text('2 selected'), findsOneWidget);
+      expect(tester.widget<TaskPick>(pick('Rotate keys')).picked, isTrue);
+      expect(tester.widget<TaskRow>(row('Rotate keys')).focused, isTrue);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(bar(), findsNothing);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyE);
+      await tester.pumpAndSettle();
+      expect(server.requestsTo('/tasks/bulk').single.body, {
+        'action': 'move',
+        'refs': ['infra-2'],
+        'to': 'done',
+      });
+    });
   });
 
   group('the board', () {
@@ -432,6 +605,74 @@ void main() {
       expect(find.textContaining('Default (default): infra'), findsOneWidget);
       expect(row('Fix login'), findsOneWidget);
     });
+
+    testWidgets('cards pick with Ctrl-click, then with a tap, and stop '
+        'dragging', (tester) async {
+      await board(tester);
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+      await tester.tap(find.byKey(const Key('card.infra-1')));
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+      await tester.pumpAndSettle();
+      expect(find.text('1 selected'), findsOneWidget);
+      expect(find.byType(TaskPick), findsNWidgets(3));
+      expect(find.byType(Draggable<Task>), findsNothing);
+      await tester.tap(find.byKey(const Key('card.infra-2')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('bulk.star')));
+      await tester.pumpAndSettle();
+      expect(server.requestsTo('/tasks/bulk').single.body, {
+        'action': 'star',
+        'refs': ['infra-1', 'infra-2'],
+      });
+    });
+
+    testWidgets('a long press on a phone picks the card it ends on', (
+      tester,
+    ) async {
+      await board(tester, size: phone);
+      await tester.longPress(find.byKey(const Key('card.infra-1')));
+      await tester.pumpAndSettle();
+      expect(find.text('1 selected'), findsOneWidget);
+      expect(
+        tester
+            .widget<TaskPick>(
+              find.descendant(
+                of: find.byKey(const Key('card.infra-1')),
+                matching: find.byType(TaskPick),
+              ),
+            )
+            .picked,
+        isTrue,
+      );
+      expect(server.requestsTo('/tasks/bulk'), isEmpty);
+    });
+  });
+
+  testWidgets('lanes pick cards with a long press and mute the ticks', (
+    tester,
+  ) async {
+    await pump(tester, const TasksScreen(), size: desktop);
+    await tester.tap(find.byKey(const Key('view.lanes')));
+    await tester.pumpAndSettle();
+    await tester.longPress(find.byKey(const Key('card.web-1')));
+    await tester.pumpAndSettle();
+    expect(find.text('1 selected'), findsOneWidget);
+    expect(find.byKey(const Key('menu.open')), findsNothing);
+    final tick = find.descendant(
+      of: find.byKey(const Key('card.infra-1')),
+      matching: find.byType(TaskCheck),
+    );
+    expect(tester.widget<TaskCheck>(tick).inert, isTrue);
+    await tester.tap(tick, warnIfMissed: false);
+    await tester.pumpAndSettle();
+    expect(find.text('2 selected'), findsOneWidget);
+    expect(server.requestsTo('/tasks/bulk'), isEmpty);
+    await tester.tap(find.byKey(const Key('card.web-1')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('card.infra-1')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('bulk.bar')), findsNothing);
+    expect(find.byType(TaskPick), findsNothing);
   });
 
   testWidgets('lanes draw a lane per project with ticks', (tester) async {

@@ -61,7 +61,7 @@ void main() {
     expect(
       tester.getSemantics(find.byType(TaskCheck)),
       isSemantics(
-        label: 'Complete',
+        label: 'Mark done',
         isChecked: false,
         hasCheckedState: true,
         isButton: true,
@@ -71,6 +71,62 @@ void main() {
     await tester.tap(find.byType(TaskCheck));
     expect(toggled, 1);
     semantics.dispose();
+  });
+
+  testWidgets('select mode draws a checkbox and a muted, inert tick', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    var toggled = 0;
+    final picks = <bool>[];
+    await pumpComponent(
+      tester,
+      TaskRow(
+        task: task,
+        onTap: () {},
+        picked: false,
+        onPicked: picks.add,
+        onToggleDone: () => toggled++,
+        onMore: () {},
+      ),
+    );
+    expect(find.byType(TaskPick), findsOneWidget);
+    expect(tester.widget<TaskCheck>(find.byType(TaskCheck)).inert, isTrue);
+    expect(find.byKey(const Key('row.more')), findsNothing);
+    expect(find.bySemanticsLabel('Mark done'), findsNothing);
+    expect(
+      tester.getSemantics(find.byType(Checkbox)),
+      isSemantics(
+        label: 'Select',
+        isChecked: false,
+        hasCheckedState: true,
+        hasTapAction: true,
+      ),
+    );
+    await tester.tap(find.byType(TaskCheck), warnIfMissed: false);
+    expect(toggled, 0);
+    await tester.tap(find.byType(Checkbox));
+    expect(picks, [true]);
+    semantics.dispose();
+  });
+
+  testWidgets('the dots open the menu, a long press does its own thing', (
+    tester,
+  ) async {
+    var menu = 0;
+    var pressed = 0;
+    await pumpComponent(
+      tester,
+      TaskRow(
+        task: task,
+        onTap: () {},
+        onLongPress: () => pressed++,
+        onMore: () => menu++,
+      ),
+    );
+    await tester.tap(find.byKey(const Key('row.more')));
+    await tester.longPress(find.text(task.title));
+    expect((menu, pressed), (1, 1));
   });
 
   testWidgets('a done task is ticked and has no due mark', (tester) async {

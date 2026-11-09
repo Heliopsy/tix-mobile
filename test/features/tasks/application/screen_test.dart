@@ -91,7 +91,7 @@ void main() {
     });
   });
 
-  test('selection toggles, adds and clears', () async {
+  test('selection toggles, adds and leaves', () async {
     final c = await signedInContainer(server);
     final p = taskSelectionProvider(const AllScope());
     final sub = c.listen(p, (_, _) {});
@@ -100,9 +100,52 @@ void main() {
       ..toggle('a')
       ..selectAll(['b', 'c'])
       ..toggle('a');
-    expect(c.read(p), {'b', 'c'});
-    c.read(p.notifier).clear();
-    expect(c.read(p), isEmpty);
+    expect(c.read(p).refs, {'b', 'c'});
+    expect(c.read(p).active, isTrue);
+    c.read(p.notifier).exit();
+    expect(c.read(p).refs, isEmpty);
+    expect(c.read(p).active, isFalse);
+  });
+
+  test('picking starts select mode and unpicking the last ends it', () async {
+    final c = await signedInContainer(server);
+    final p = taskSelectionProvider(const AllScope());
+    final sub = c.listen(p, (_, _) {});
+    addTearDown(sub.close);
+    c.read(p.notifier).toggle('a');
+    expect(c.read(p).active, isTrue);
+    c.read(p.notifier).toggle('a');
+    expect(c.read(p).active, isFalse);
+  });
+
+  test('the Select button keeps select mode on with nothing picked', () async {
+    final c = await signedInContainer(server);
+    final p = taskSelectionProvider(const AllScope());
+    final sub = c.listen(p, (_, _) {});
+    addTearDown(sub.close);
+    c.read(p.notifier).enter();
+    expect((c.read(p).active, c.read(p).refs), (true, <String>{}));
+    c.read(p.notifier)
+      ..toggle('a')
+      ..toggle('a');
+    expect((c.read(p).active, c.read(p).refs), (true, <String>{}));
+  });
+
+  test('a range runs from the anchor in either direction', () async {
+    final c = await signedInContainer(server);
+    final p = taskSelectionProvider(const AllScope());
+    final sub = c.listen(p, (_, _) {});
+    addTearDown(sub.close);
+    const order = ['a', 'b', 'c', 'd', 'e'];
+    c.read(p.notifier).selectRange(order, 'd');
+    expect(c.read(p).refs, {'d'});
+    c.read(p.notifier).selectRange(order, 'b');
+    expect(c.read(p).refs, {'b', 'c', 'd'});
+    c.read(p.notifier)
+      ..exit()
+      ..toggle('b')
+      ..selectRange(order, 'e');
+    expect(c.read(p).refs, {'b', 'c', 'd', 'e'});
   });
 
   test('groups arrange starred first, then moved, then natural', () {

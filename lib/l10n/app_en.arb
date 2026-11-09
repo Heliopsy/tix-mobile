@@ -230,6 +230,7 @@
   "unstar": "Unstar",
   "complete": "Complete",
   "reopen": "Reopen",
+  "markDone": "Mark done",
   "snooze": "Snooze",
   "assign": "Assign",
   "filterHint": "Filter, for example status:todo tag:ops",
@@ -771,6 +772,9 @@
       }
     }
   },
+  "bulkExit": "Exit select mode",
+  "bulkExtendDown": "Extend selection down",
+  "bulkExtendUp": "Extend selection up",
   "bulkMove": "Move",
   "bulkMoveTitle": "{count, plural, =1{Move 1 task to} other{Move {count} tasks to}}",
   "@bulkMoveTitle": {
@@ -793,6 +797,7 @@
   },
   "bulkSelect": "Select",
   "bulkSelectAll": "Select all",
+  "bulkSelectMode": "Select tasks",
   "bulkSelected": "{count} selected",
   "@bulkSelected": {
     "placeholders": {

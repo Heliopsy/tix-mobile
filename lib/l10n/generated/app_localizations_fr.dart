@@ -490,6 +490,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get reopen => 'Rouvrir';
 
   @override
+  String get markDone => 'Marquer comme terminée';
+
+  @override
   String get snooze => 'Reporter';
 
   @override
@@ -1270,6 +1273,15 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get bulkExit => 'Quitter la sélection';
+
+  @override
+  String get bulkExtendDown => 'Étendre la sélection vers le bas';
+
+  @override
+  String get bulkExtendUp => 'Étendre la sélection vers le haut';
+
+  @override
   String get bulkMove => 'Déplacer';
 
   @override
@@ -1293,6 +1305,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get bulkSelectAll => 'Tout sélectionner';
+
+  @override
+  String get bulkSelectMode => 'Sélectionner des tâches';
 
   @override
   String bulkSelected(int count) {

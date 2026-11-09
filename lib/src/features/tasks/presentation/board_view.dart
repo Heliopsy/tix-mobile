@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/clock/clock.dart';
@@ -15,6 +16,7 @@ import 'package:tix_mobile/src/data/models/workflow.dart';
 import 'package:tix_mobile/src/features/tasks/application/listing.dart';
 import 'package:tix_mobile/src/features/tasks/application/screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/group_menu.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/select_mode.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_actions.dart';
 
 /// How wide a column is on a wide window.
@@ -25,6 +27,7 @@ const boardStripWidth = 52.0;
 
 /// A workflow's states as columns of cards. A card is dragged to another
 /// column to move it; only the columns its own workflow reaches light up.
+/// In select mode a tap picks a card and nothing drags.
 class BoardView extends ConsumerStatefulWidget {
   /// Draws [paged] of the listing for [query] as [layout]'s columns.
   const BoardView({
@@ -89,6 +92,14 @@ class _BoardViewState extends ConsumerState<BoardView> {
       }
     }
     final actions = TaskQuickActions(context, ref, widget.query);
+    final scope = widget.query.scope;
+    final selection = ref.watch(taskSelectionProvider(scope));
+    final selector = ref.read(taskSelectionProvider(scope).notifier);
+    final order = [
+      for (final key in arranged.visible)
+        if (!(prefs[key]?.collapsed ?? false))
+          for (final t in byStatus[key] ?? const <Task>[]) t.ref,
+    ];
     final compact = context.isCompact;
     final width = MediaQuery.sizeOf(context).width;
     final columnWidth = compact ? width * 0.86 : boardColumnWidth;
@@ -122,7 +133,16 @@ class _BoardViewState extends ConsumerState<BoardView> {
           focused: task.ref == widget.focusedRef,
           compact: compact,
           dragging: _dragging,
-          onTap: () => widget.onOpen(task),
+          picked: selection.active ? selection.contains(task.ref) : null,
+          onTap: () => tapTask(
+            ref,
+            scope,
+            task.ref,
+            order: order,
+            open: () => widget.onOpen(task),
+          ),
+          onPick: () => longPressTask(ref, scope, task.ref),
+          onPicked: (_) => selector.toggle(task.ref),
           onMenu: () => showTaskMenu(
             context,
             actions,
@@ -432,7 +452,10 @@ class _BoardCard extends StatelessWidget {
     required this.focused,
     required this.compact,
     required this.dragging,
+    required this.picked,
     required this.onTap,
+    required this.onPick,
+    required this.onPicked,
     required this.onMenu,
   });
 
@@ -442,7 +465,10 @@ class _BoardCard extends StatelessWidget {
   final bool focused;
   final bool compact;
   final ValueNotifier<Task?> dragging;
+  final bool? picked;
   final VoidCallback onTap;
+  final VoidCallback onPick;
+  final ValueChanged<bool> onPicked;
   final VoidCallback onMenu;
 
   @override
@@ -454,9 +480,13 @@ class _BoardCard extends StatelessWidget {
       now: now,
       selected: focused,
       showStatus: false,
+      picked: picked,
+      onPicked: onPicked,
       onTap: onTap,
+      onLongPress: compact ? null : onPick,
       onMore: onMenu,
     );
+    if (picked != null) return card;
     final feedback = Material(
       color: Colors.transparent,
       child: SizedBox(
@@ -480,7 +510,10 @@ class _BoardCard extends StatelessWidget {
         childWhenDragging: ghost,
         onDragStarted: start,
         onDragEnd: (_) => end(),
-        onDraggableCanceled: (_, _) => end(),
+        onDraggableCanceled: (_, offset) {
+          end();
+          if (_stayed(context, offset)) onPick();
+        },
         child: card,
       );
     }
@@ -494,6 +527,14 @@ class _BoardCard extends StatelessWidget {
       child: card,
     );
   }
+}
+
+/// Whether a long press that started a drag was let go where the card is,
+/// which picks the card instead of moving it.
+bool _stayed(BuildContext context, Offset dropped) {
+  final box = context.findRenderObject();
+  if (box is! RenderBox || !box.attached) return false;
+  return (dropped - box.localToGlobal(Offset.zero)).distance < kTouchSlop;
 }
 
 /// Shown in place of the board when the projects disagree about their

@@ -126,21 +126,103 @@ List<TaskView> viewsFor(TaskScope scope) => switch (scope) {
   MineScope() => const [TaskView.list],
 };
 
-/// The tasks picked for a bulk action on one scope, by reference.
+/// Select mode on one scope: whether it is on, the tasks picked for a bulk
+/// action by reference, and where a Shift range starts.
+final class TaskSelectionState {
+  /// Select mode as given; the default is off with nothing picked.
+  const TaskSelectionState({
+    this.active = false,
+    this.refs = const {},
+    this.sticky = false,
+    this.anchor,
+  });
+
+  /// Whether select mode is on.
+  final bool active;
+
+  /// The picked tasks.
+  final Set<String> refs;
+
+  /// Entered with the Select button, so it stays on with nothing picked.
+  final bool sticky;
+
+  /// The task a Shift range is drawn from.
+  final String? anchor;
+
+  /// Whether [ref] is picked.
+  bool contains(String ref) => refs.contains(ref);
+
+  /// How many tasks are picked.
+  int get length => refs.length;
+
+  /// Whether nothing is picked.
+  bool get isEmpty => refs.isEmpty;
+
+  /// Whether something is picked.
+  bool get isNotEmpty => refs.isNotEmpty;
+}
+
+/// Select mode on one scope. It is explicit state: the Select button turns
+/// it on with nothing picked, and picking a task turns it on too.
 @riverpod
 class TaskSelection extends _$TaskSelection {
   @override
-  Set<String> build(TaskScope scope) => const {};
+  TaskSelectionState build(TaskScope scope) => const TaskSelectionState();
 
-  /// Picks [ref], or puts it back.
-  void toggle(String ref) =>
-      state = state.contains(ref) ? ({...state}..remove(ref)) : {...state, ref};
+  /// Turns select mode on with nothing picked; it stays until left.
+  void enter() => state = TaskSelectionState(
+    active: true,
+    refs: state.refs,
+    sticky: true,
+    anchor: state.anchor,
+  );
+
+  /// Turns select mode off and picks nothing.
+  void exit() => state = const TaskSelectionState();
+
+  /// Picks [ref], or puts it back. Putting back the last one leaves a mode
+  /// that picking started.
+  void toggle(String ref) {
+    final refs = state.contains(ref)
+        ? ({...state.refs}..remove(ref))
+        : {...state.refs, ref};
+    if (refs.isEmpty && !state.sticky) {
+      exit();
+      return;
+    }
+    state = TaskSelectionState(
+      active: true,
+      refs: refs,
+      sticky: state.sticky,
+      anchor: ref,
+    );
+  }
+
+  /// Picks every task in [order] from the anchor to [ref], both included;
+  /// with no anchor in [order], picks [ref] alone.
+  void selectRange(List<String> order, String ref) {
+    final to = order.indexOf(ref);
+    final from = state.anchor == null ? -1 : order.indexOf(state.anchor!);
+    if (to < 0 || from < 0) {
+      state = TaskSelectionState(
+        active: true,
+        refs: {...state.refs, ref},
+        sticky: state.sticky,
+        anchor: ref,
+      );
+      return;
+    }
+    final (lo, hi) = from <= to ? (from, to) : (to, from);
+    selectAll(order.sublist(lo, hi + 1));
+  }
 
   /// Picks every one of [refs].
-  void selectAll(Iterable<String> refs) => state = {...state, ...refs};
-
-  /// Picks nothing.
-  void clear() => state = const {};
+  void selectAll(Iterable<String> refs) => state = TaskSelectionState(
+    active: true,
+    refs: {...state.refs, ...refs},
+    sticky: state.sticky,
+    anchor: state.anchor,
+  );
 }
 
 /// The reader's arrangement of one view's groups, by group.

@@ -15,6 +15,7 @@ import 'package:tix_mobile/src/data/models/workflow.dart';
 import 'package:tix_mobile/src/features/tasks/application/listing.dart';
 import 'package:tix_mobile/src/features/tasks/application/screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/group_menu.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/select_mode.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_actions.dart';
 
 /// One line of a grouped list: a heading or a task.
@@ -192,7 +193,8 @@ List<ListEntry> buildListEntries(
 }
 
 /// The rows of one listing: paged, grouped when asked, with swipes, the
-/// tick and star, a menu on long press, and picking for bulk actions.
+/// tick and star, a menu on the dots or a secondary click, and select mode
+/// for bulk actions, entered with a long press.
 class TaskListView extends ConsumerWidget {
   /// Lists [entries] of the listing for [query].
   const TaskListView({
@@ -231,7 +233,12 @@ class TaskListView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final provider = taskListingProvider(query);
     final selection = ref.watch(taskSelectionProvider(query.scope));
-    final picking = selection.isNotEmpty;
+    final picking = selection.active;
+    final selector = ref.read(taskSelectionProvider(query.scope).notifier);
+    final order = [
+      for (final e in entries)
+        if (e is RowEntry) e.task.ref,
+    ];
     final taskContext = ref.watch(taskContextProvider).value;
     final now = ref.watch(clockProvider)();
     final actions = TaskQuickActions(context, ref, query);
@@ -283,22 +290,21 @@ class TaskListView extends ConsumerWidget {
           picked: picking ? selection.contains(task.ref) : null,
           selected: task.ref == selectedRef,
           focused: task.ref == focusedRef,
-          onTap: () => picking
-              ? ref
-                    .read(taskSelectionProvider(query.scope).notifier)
-                    .toggle(task.ref)
-              : onOpen(task),
-          onPicked: (_) => ref
-              .read(taskSelectionProvider(query.scope).notifier)
-              .toggle(task.ref),
+          onTap: () => tapTask(
+            ref,
+            query.scope,
+            task.ref,
+            order: order,
+            open: () => onOpen(task),
+          ),
+          onPicked: (_) => selector.toggle(task.ref),
+          onLongPress: () => longPressTask(ref, query.scope, task.ref),
           onMenu: () => showTaskMenu(
             context,
             actions,
             task,
             onOpen: () => onOpen(task),
-            onSelect: () => ref
-                .read(taskSelectionProvider(query.scope).notifier)
-                .toggle(task.ref),
+            onSelect: () => selector.toggle(task.ref),
           ),
           actions: actions,
           completeLabel: l10n.complete,
@@ -320,6 +326,7 @@ class _Row extends StatelessWidget {
     required this.focused,
     required this.onTap,
     required this.onPicked,
+    required this.onLongPress,
     required this.onMenu,
     required this.actions,
     required this.completeLabel,
@@ -336,6 +343,7 @@ class _Row extends StatelessWidget {
   final bool focused;
   final VoidCallback onTap;
   final ValueChanged<bool> onPicked;
+  final VoidCallback onLongPress;
   final VoidCallback onMenu;
   final TaskQuickActions actions;
   final String completeLabel;
@@ -352,7 +360,8 @@ class _Row extends StatelessWidget {
       picked: picked,
       onPicked: onPicked,
       onTap: onTap,
-      onLongPress: onMenu,
+      onLongPress: onLongPress,
+      onMore: onMenu,
       onToggleDone: () => actions.toggleDone(task),
       onToggleStar: () => actions.toggleStar(task),
     );
