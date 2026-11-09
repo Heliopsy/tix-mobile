@@ -61,6 +61,8 @@ void main() {
     final c = await pump(tester, local: true);
     final idle = find.byKey(const Key('settings.localIdle'));
     expect(tester.widget<SegmentedButton<int>>(idle).selected, {10});
+    await tester.ensureVisible(idle);
+    await tester.pumpAndSettle();
     await tester.tap(find.descendant(of: idle, matching: find.text('Never')));
     await tester.pumpAndSettle();
     expect(c.read(localIdleTimeoutProvider), isNull);
