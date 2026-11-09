@@ -5205,11 +5205,11 @@ class AppLocalizationsBg extends AppLocalizations {
   String get webhookRedelivered => 'Добавена е за нов опит.';
 
   @override
-  String get syncTitle => 'Конфликти';
+  String get syncTitle => 'Външна синхронизация';
 
   @override
   String get syncSubtitle =>
-      'Промени, направени офлайн, и как са синхронизирани';
+      'Внасяне от Jira, OpenProject или файл. Изпълнява се на сървъра.';
 
   @override
   String get syncNew => 'Нов източник';
@@ -5226,7 +5226,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get syncEmptyBody =>
-      'Промените, които правите офлайн, чакат тук, докато сървърът се върне.';
+      'Добавете източник, за да внасяте задачи от друга система.';
 
   @override
   String get syncStatusOk => 'Последно: успешно';
@@ -5346,7 +5346,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String syncEditTitle(String name) {
-    return 'Редактиране преди изпращане';
+    return 'Редактиране на $name';
   }
 
   @override
@@ -6681,10 +6681,21 @@ class AppLocalizationsBg extends AppLocalizations {
   String get syncMarkFailed => 'Отказано';
 
   @override
+  String get syncConflictsTitle => 'Конфликти';
+
+  @override
+  String get syncConflictsSubtitle =>
+      'Промени, направени офлайн, и как са синхронизирани';
+
+  @override
   String get syncSendNow => 'Изпрати сега';
 
   @override
   String get syncEmptyTitle => 'Всичко е синхронизирано';
+
+  @override
+  String get syncConflictsEmptyBody =>
+      'Промените, които правите офлайн, чакат тук, докато сървърът се върне.';
 
   @override
   String syncConflicts(int count) {
@@ -6766,6 +6777,12 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get syncKeepTheirs => 'Запази тяхното';
+
+  @override
+  String get syncEditChange => 'Редактирай';
+
+  @override
+  String get syncEditChangeTitle => 'Редактиране преди изпращане';
 
   @override
   String get syncEditSend => 'Изпрати';

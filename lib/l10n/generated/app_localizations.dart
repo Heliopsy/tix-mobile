@@ -8878,13 +8878,13 @@ abstract class AppLocalizations {
   /// No description provided for @syncTitle.
   ///
   /// In en, this message translates to:
-  /// **'Conflicts'**
+  /// **'External sync'**
   String get syncTitle;
 
   /// No description provided for @syncSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Changes made offline and how they synced'**
+  /// **'Import work from Jira, OpenProject or a file. Runs happen on the server.'**
   String get syncSubtitle;
 
   /// No description provided for @syncNew.
@@ -8914,7 +8914,7 @@ abstract class AppLocalizations {
   /// No description provided for @syncEmptyBody.
   ///
   /// In en, this message translates to:
-  /// **'Changes you make while offline wait here until the server is back.'**
+  /// **'Add a source to import tasks from another tracker.'**
   String get syncEmptyBody;
 
   /// No description provided for @syncStatusOk.
@@ -9106,7 +9106,7 @@ abstract class AppLocalizations {
   /// No description provided for @syncEditTitle.
   ///
   /// In en, this message translates to:
-  /// **'Edit before sending'**
+  /// **'Edit {name}'**
   String syncEditTitle(String name);
 
   /// No description provided for @syncFormIntro.
@@ -11263,6 +11263,18 @@ abstract class AppLocalizations {
   /// **'Refused'**
   String get syncMarkFailed;
 
+  /// No description provided for @syncConflictsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Conflicts'**
+  String get syncConflictsTitle;
+
+  /// No description provided for @syncConflictsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes made offline and how they synced'**
+  String get syncConflictsSubtitle;
+
   /// No description provided for @syncSendNow.
   ///
   /// In en, this message translates to:
@@ -11274,6 +11286,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Everything is synced'**
   String get syncEmptyTitle;
+
+  /// No description provided for @syncConflictsEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes you make while offline wait here until the server is back.'**
+  String get syncConflictsEmptyBody;
 
   /// No description provided for @syncConflicts.
   ///
@@ -11400,6 +11418,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Keep theirs'**
   String get syncKeepTheirs;
+
+  /// No description provided for @syncEditChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get syncEditChange;
+
+  /// No description provided for @syncEditChangeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit before sending'**
+  String get syncEditChangeTitle;
 
   /// No description provided for @syncEditSend.
   ///

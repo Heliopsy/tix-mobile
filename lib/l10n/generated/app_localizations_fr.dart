@@ -5239,11 +5239,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get webhookRedelivered => 'Remis en file pour une nouvelle tentative.';
 
   @override
-  String get syncTitle => 'Conflits';
+  String get syncTitle => 'Synchronisation externe';
 
   @override
   String get syncSubtitle =>
-      'Modifications faites hors ligne et leur synchronisation';
+      'Importez le travail depuis Jira, OpenProject ou un fichier. Les exécutions ont lieu sur le serveur.';
 
   @override
   String get syncNew => 'Nouvelle source';
@@ -5260,7 +5260,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get syncEmptyBody =>
-      'Les modifications faites hors ligne attendent ici le retour du serveur.';
+      'Ajoutez une source pour importer des tâches d’un autre outil de suivi.';
 
   @override
   String get syncStatusOk => 'Dernière exécution réussie';
@@ -5381,7 +5381,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String syncEditTitle(String name) {
-    return 'Modifier avant l\'envoi';
+    return 'Modifier $name';
   }
 
   @override
@@ -6726,10 +6726,21 @@ class AppLocalizationsFr extends AppLocalizations {
   String get syncMarkFailed => 'Refusé';
 
   @override
+  String get syncConflictsTitle => 'Conflits';
+
+  @override
+  String get syncConflictsSubtitle =>
+      'Modifications faites hors ligne et leur synchronisation';
+
+  @override
   String get syncSendNow => 'Envoyer maintenant';
 
   @override
   String get syncEmptyTitle => 'Tout est synchronisé';
+
+  @override
+  String get syncConflictsEmptyBody =>
+      'Les modifications faites hors ligne attendent ici le retour du serveur.';
 
   @override
   String syncConflicts(int count) {
@@ -6811,6 +6822,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get syncKeepTheirs => 'Garder la leur';
+
+  @override
+  String get syncEditChange => 'Modifier';
+
+  @override
+  String get syncEditChangeTitle => 'Modifier avant l\'envoi';
 
   @override
   String get syncEditSend => 'Envoyer';

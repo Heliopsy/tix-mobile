@@ -5248,11 +5248,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get webhookRedelivered => 'Für einen weiteren Versuch eingereiht.';
 
   @override
-  String get syncTitle => 'Konflikte';
+  String get syncTitle => 'Externe Synchronisierung';
 
   @override
   String get syncSubtitle =>
-      'Offline gemachte Änderungen und wie sie synchronisiert wurden';
+      'Arbeit aus Jira, OpenProject oder einer Datei importieren. Die Läufe finden auf dem Server statt.';
 
   @override
   String get syncNew => 'Neue Quelle';
@@ -5269,7 +5269,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get syncEmptyBody =>
-      'Änderungen, die du offline machst, warten hier, bis der Server wieder erreichbar ist.';
+      'Fügen Sie eine Quelle hinzu, um Aufgaben aus einem anderen Tracker zu importieren.';
 
   @override
   String get syncStatusOk => 'Letzter Lauf erfolgreich';
@@ -5390,7 +5390,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String syncEditTitle(String name) {
-    return 'Vor dem Senden bearbeiten';
+    return '$name bearbeiten';
   }
 
   @override
@@ -6734,10 +6734,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get syncMarkFailed => 'Abgelehnt';
 
   @override
+  String get syncConflictsTitle => 'Konflikte';
+
+  @override
+  String get syncConflictsSubtitle =>
+      'Offline gemachte Änderungen und wie sie synchronisiert wurden';
+
+  @override
   String get syncSendNow => 'Jetzt senden';
 
   @override
   String get syncEmptyTitle => 'Alles ist synchronisiert';
+
+  @override
+  String get syncConflictsEmptyBody =>
+      'Änderungen, die du offline machst, warten hier, bis der Server wieder erreichbar ist.';
 
   @override
   String syncConflicts(int count) {
@@ -6819,6 +6830,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get syncKeepTheirs => 'Ihres behalten';
+
+  @override
+  String get syncEditChange => 'Bearbeiten';
+
+  @override
+  String get syncEditChangeTitle => 'Vor dem Senden bearbeiten';
 
   @override
   String get syncEditSend => 'Senden';

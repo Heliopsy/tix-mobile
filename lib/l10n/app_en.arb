@@ -3849,11 +3849,11 @@
   "syncMarkCheck": "Check",
   "syncMarkConflict": "Conflict",
   "syncMarkFailed": "Refused",
-  "syncTitle": "Conflicts",
-  "syncSubtitle": "Changes made offline and how they synced",
+  "syncConflictsTitle": "Conflicts",
+  "syncConflictsSubtitle": "Changes made offline and how they synced",
   "syncSendNow": "Send now",
   "syncEmptyTitle": "Everything is synced",
-  "syncEmptyBody": "Changes you make while offline wait here until the server is back.",
+  "syncConflictsEmptyBody": "Changes you make while offline wait here until the server is back.",
   "syncConflicts": "{count, plural, =1{1 conflict} other{{count} conflicts}}",
   "@syncConflicts": {
     "placeholders": {
@@ -3889,8 +3889,8 @@
   "syncTheirs": "Theirs",
   "syncKeepMine": "Keep mine",
   "syncKeepTheirs": "Keep theirs",
-  "syncEdit": "Edit",
-  "syncEditTitle": "Edit before sending",
+  "syncEditChange": "Edit",
+  "syncEditChangeTitle": "Edit before sending",
   "syncEditSend": "Send",
   "syncTheirsWas": "On the server: {value}",
   "@syncTheirsWas": {
