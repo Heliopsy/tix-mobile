@@ -147,3 +147,14 @@ setting, opening its screen or Settings filtered to it.
 
 - **WHEN** a person runs "Settings: Touch feedback" from the palette
 - **THEN** Settings opens filtered to touch feedback
+
+### Requirement: Account and tenant screens are reached from their group
+
+Your account SHALL link to the profile, security (second factor, SSH keys, sessions), the caller's API tokens with
+`token:admin`, and the calendar feed with `task:read`. This tenant SHALL link to the tenant's settings and retention
+with `tenant:admin`, webhooks with `webhook:admin`, sync with `sync:admin`, and the Manage hub.
+
+#### Scenario: A member
+
+- **WHEN** a member opens Settings
+- **THEN** the calendar feed and security are linked, and neither API tokens nor tenant links are shown
