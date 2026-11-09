@@ -148,6 +148,7 @@ class TaskSelection extends _$TaskSelection {
 class ViewArrangement extends _$ViewArrangement {
   @override
   Future<Map<String, GroupPref>> build(String view) async {
+    ref.watch(arrangementResetsProvider);
     final prefs = await ref.watch(viewPrefsRepositoryProvider).groups(view);
     return {for (final p in prefs) p.group: p};
   }

@@ -75,6 +75,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   late final _search = TextEditingController(text: widget.initialQuery);
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) unawaited(ref.read(readerTimeProvider.notifier).refresh());
+    });
+  }
+
+  @override
   void dispose() {
     _search.dispose();
     super.dispose();
@@ -84,7 +92,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final session = ref.watch(sessionControllerProvider).value;
-    final time = session == null ? null : ref.watch(readerTimeProvider);
+    final time = session == null
+        ? null
+        : ref.watch(readerTimeProvider).settings;
     final query = _search.text;
     final visible = [
       for (final item in currentSettings(ref, l10n))

@@ -10141,11 +10141,23 @@ abstract class AppLocalizations {
   /// **'This credential is not a person, so it reads your tenant’s defaults and cannot keep its own.'**
   String get settingsDatesNotPersonal;
 
-  /// No description provided for @settingsDatesUnavailable.
+  /// No description provided for @settingsDatesLoading.
   ///
   /// In en, this message translates to:
-  /// **'This server keeps no date preferences, or has not answered yet, so dates follow this device.'**
-  String get settingsDatesUnavailable;
+  /// **'Reading your date settings from the server…'**
+  String get settingsDatesLoading;
+
+  /// No description provided for @settingsDatesUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This version of tix keeps no date preferences, so dates follow this device. A newer tix server adds them.'**
+  String get settingsDatesUnsupported;
+
+  /// No description provided for @settingsDatesFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The server did not answer, so dates follow this device for now.'**
+  String get settingsDatesFailed;
 
   /// No description provided for @settingsDatesSaved.
   ///

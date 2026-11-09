@@ -168,6 +168,11 @@ class ArrangementSettings extends _$ArrangementSettings {
   /// [arrangedViews], on the server.
   Future<void> reset() async {
     final repo = ref.read(viewPrefsRepositoryProvider);
-    await Future.wait([for (final v in arrangedViews) repo.reset(v)]);
+    final resets = ref.read(arrangementResetsProvider.notifier);
+    try {
+      await Future.wait([for (final v in arrangedViews) repo.reset(v)]);
+    } finally {
+      resets.bump();
+    }
   }
 }

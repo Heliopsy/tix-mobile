@@ -751,6 +751,18 @@ ViewPrefsRepository viewPrefsRepository(Ref ref) => ViewPrefsRepository(
   ref.watch(responseCacheProvider),
 );
 
+/// Counts resets of the reader's view arrangements made away from the views,
+/// such as from Settings. Views watch it, so an open board or My work reads
+/// its arrangement again without either feature importing the other.
+@Riverpod(keepAlive: true)
+class ArrangementResets extends _$ArrangementResets {
+  @override
+  int build() => 0;
+
+  /// Says the arrangements changed on the server.
+  void bump() => state++;
+}
+
 /// The inbox, personal channels and the summary for the active session.
 @riverpod
 InboxRepository inboxRepository(Ref ref) => InboxRepository(

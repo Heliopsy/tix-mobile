@@ -275,7 +275,7 @@ final class ViewArrangementProvider
   }
 }
 
-String _$viewArrangementHash() => r'ac0439334adb6948ed6c3abbe0b41a8c73d80002';
+String _$viewArrangementHash() => r'43d1d8fb882a520cb985d48b2670eeead0c624af';
 
 /// The reader's arrangement of one view's groups, by group.
 

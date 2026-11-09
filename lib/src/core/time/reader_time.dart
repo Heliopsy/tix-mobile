@@ -4,8 +4,10 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart'
     show ProviderListenableSelect;
+import 'package:meta/meta.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
+import 'package:tix_mobile/src/core/events/events.dart';
 import 'package:tix_mobile/src/core/session/api.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
@@ -20,9 +22,50 @@ part 'reader_time.g.dart';
 
 typedef _Target = ({String context, String baseUrl, Credential credential});
 
+/// Where reading the reader's date settings from the server stands.
+enum ReaderTimeLookup {
+  /// Asked, not answered yet.
+  loading,
+
+  /// Answered, or nothing to ask without a context.
+  done,
+
+  /// The server has no `/me/time`: a tix too old to keep date preferences.
+  unsupported,
+
+  /// The request failed, such as offline or a server error.
+  failed,
+}
+
+/// The active context's date settings and how the last read went.
+@immutable
+class ReaderTimeState {
+  /// Holds [settings], read as [lookup] says.
+  const ReaderTimeState({this.settings, this.lookup = ReaderTimeLookup.done});
+
+  /// What is in force: the server's answer or what was remembered. Null
+  /// leaves the device's formats in force.
+  final TimeSettings? settings;
+
+  /// How the last read from the server went.
+  final ReaderTimeLookup lookup;
+
+  @override
+  bool operator ==(Object other) =>
+      other is ReaderTimeState &&
+      other.settings == settings &&
+      other.lookup == lookup;
+
+  @override
+  int get hashCode => Object.hash(settings, lookup);
+}
+
 /// The active context's date settings: what was remembered for it at once,
-/// then the server's answer. Null without a context, and from a server
-/// that keeps none, which leaves the device's formats in force.
+/// then the server's answer, read again when the app comes back to the
+/// foreground and whenever [ReaderTime.refresh] is called. tix sends no
+/// event when a preference changes, so nothing on the live stream triggers
+/// a read. No settings without a context, and from a server that keeps
+/// none, which leaves the device's formats in force.
 ///
 /// A connection that reaches one tenant is keyed by the connection alone,
 /// as the response cache is, so `whoami` naming the tenant later does not
@@ -31,9 +74,10 @@ typedef _Target = ({String context, String baseUrl, Credential credential});
 class ReaderTime extends _$ReaderTime {
   TimePrefsRepository? _repo;
   String _context = '';
+  Future<void>? _reading;
 
   @override
-  TimeSettings? build() {
+  ReaderTimeState build() {
     final target = ref.watch(
       sessionControllerProvider.select<_Target?>((s) {
         final session = s.value;
@@ -48,7 +92,7 @@ class ReaderTime extends _$ReaderTime {
     );
     if (target == null) {
       _repo = null;
-      return null;
+      return const ReaderTimeState();
     }
     final repo = TimePrefsRepository(
       ref.watch(tixApiFactoryProvider)(target.baseUrl, target.credential),
@@ -56,13 +100,37 @@ class ReaderTime extends _$ReaderTime {
     );
     _repo = repo;
     _context = target.context;
-    unawaited(refresh());
-    return repo.remembered(target.context);
+    _reading = null;
+    ref.listen(appResumedProvider, (_, _) => unawaited(refresh()));
+    unawaited(_read());
+    return ReaderTimeState(
+      settings: repo.remembered(target.context),
+      lookup: ReaderTimeLookup.loading,
+    );
   }
 
-  /// Reads the settings again from the server; offline, what is shown
-  /// stands.
-  Future<void> refresh() async {
+  /// Reads the settings again from the server, or waits for the read
+  /// already under way; offline, what is shown stands.
+  Future<void> refresh() {
+    if (_repo == null) return Future.value();
+    final reading = _reading;
+    if (reading != null) return reading;
+    state = ReaderTimeState(
+      settings: state.settings,
+      lookup: ReaderTimeLookup.loading,
+    );
+    return _read();
+  }
+
+  Future<void> _read() {
+    final reading = _fetch();
+    _reading = reading;
+    return reading.whenComplete(() {
+      if (identical(_reading, reading)) _reading = null;
+    });
+  }
+
+  Future<void> _fetch() async {
     final repo = _repo;
     if (repo == null) return;
     final context = _context;
@@ -70,11 +138,23 @@ class ReaderTime extends _$ReaderTime {
     try {
       fresh = await repo.settings();
     } on TixException {
+      _settle(context, ReaderTimeLookup.failed);
       return;
     }
-    if (fresh == null || !ref.mounted || context != _context) return;
+    if (fresh == null) {
+      _settle(context, ReaderTimeLookup.unsupported);
+      return;
+    }
+    if (!ref.mounted || context != _context) return;
     await repo.remember(context, fresh);
-    if (ref.mounted && context == _context) state = fresh;
+    if (ref.mounted && context == _context) {
+      state = ReaderTimeState(settings: fresh);
+    }
+  }
+
+  void _settle(String context, ReaderTimeLookup lookup) {
+    if (!ref.mounted || context != _context) return;
+    state = ReaderTimeState(settings: state.settings, lookup: lookup);
   }
 
   /// Changes the reader's own [format] and [timezone] on the server: null
@@ -85,7 +165,9 @@ class ReaderTime extends _$ReaderTime {
     final context = _context;
     final saved = await repo.set(format: format, timezone: timezone);
     await repo.remember(context, saved);
-    if (ref.mounted && context == _context) state = saved;
+    if (ref.mounted && context == _context) {
+      state = ReaderTimeState(settings: saved);
+    }
   }
 }
 
@@ -95,7 +177,7 @@ class ReaderTime extends _$ReaderTime {
 /// empty.
 @Riverpod(keepAlive: true)
 TixTimeStyle readerTimeStyle(Ref ref) {
-  final effective = ref.watch(readerTimeProvider)?.effective;
+  final effective = ref.watch(readerTimeProvider).settings?.effective;
   if (effective == null) return TixTimeStyle.device;
   return TixTimeStyle.named(effective.timeFormat, effective.timezone);
 }

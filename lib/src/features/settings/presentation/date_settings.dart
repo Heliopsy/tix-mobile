@@ -68,8 +68,9 @@ class DateFormatSetting extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final settings = ref.watch(readerTimeProvider);
-    if (settings == null) return const _Unavailable();
+    final time = ref.watch(readerTimeProvider);
+    final settings = time.settings;
+    if (settings == null) return _Unavailable(time.lookup);
     final effective = settings.effective;
     final zone = effective?.timezone ?? '';
     final inherited = _inherited(settings);
@@ -123,7 +124,7 @@ class TimeZoneSetting extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final settings = ref.watch(readerTimeProvider);
+    final settings = ref.watch(readerTimeProvider).settings;
     if (settings == null) return const SizedBox.shrink();
     final held = settings.user?.timezone ?? '';
     final inUse = l10n.settingsInUse(
@@ -195,27 +196,55 @@ Future<void> _save(
   }
 }
 
+/// Why there are no date settings to show: still asking, a tix that keeps
+/// none, or a request that failed and can be tried again.
 class _Unavailable extends ConsumerWidget {
-  const _Unavailable();
+  const _Unavailable(this.lookup);
+
+  final ReaderTimeLookup lookup;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Padding(
-    padding: const EdgeInsets.all(TixSpace.s3),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TixNotice(context.l10n.settingsDatesUnavailable),
-        const SizedBox(height: TixSpace.s2),
-        TixButton(
-          key: const Key('settings.datesRetry'),
-          label: context.l10n.retry,
-          icon: Icons.refresh,
-          size: TixButtonSize.small,
-          onPressed: () => ref.read(readerTimeProvider.notifier).refresh(),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    return Padding(
+      padding: const EdgeInsets.all(TixSpace.s3),
+      child: switch (lookup) {
+        ReaderTimeLookup.loading => Row(
+          key: const Key('settings.datesLoading'),
+          children: [
+            const SizedBox.square(
+              dimension: TixSpace.s4,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+            const SizedBox(width: TixSpace.s3),
+            Expanded(child: Text(l10n.settingsDatesLoading)),
+          ],
         ),
-      ],
-    ),
-  );
+        ReaderTimeLookup.unsupported || ReaderTimeLookup.done => TixNotice(
+          l10n.settingsDatesUnsupported,
+          key: const Key('settings.datesUnsupported'),
+        ),
+        ReaderTimeLookup.failed => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TixNotice(
+              l10n.settingsDatesFailed,
+              key: const Key('settings.datesFailed'),
+              tone: TixNoticeTone.warn,
+            ),
+            const SizedBox(height: TixSpace.s2),
+            TixButton(
+              key: const Key('settings.datesRetry'),
+              label: l10n.retry,
+              icon: Icons.refresh,
+              size: TixButtonSize.small,
+              onPressed: () => ref.read(readerTimeProvider.notifier).refresh(),
+            ),
+          ],
+        ),
+      },
+    );
+  }
 }
 
 class _Row extends StatelessWidget {

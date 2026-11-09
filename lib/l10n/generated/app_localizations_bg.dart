@@ -6027,8 +6027,16 @@ class AppLocalizationsBg extends AppLocalizations {
       'Тези идентификационни данни не са на човек, затова ползват настройките на наемателя и не могат да имат свои.';
 
   @override
-  String get settingsDatesUnavailable =>
-      'Този сървър не пази предпочитания за дати или още не е отговорил, затова датите следват устройството.';
+  String get settingsDatesLoading =>
+      'Настройките ви за дати се четат от сървъра…';
+
+  @override
+  String get settingsDatesUnsupported =>
+      'Тази версия на tix не пази предпочитания за дати, затова датите следват това устройство. По-нов сървър на tix ги добавя.';
+
+  @override
+  String get settingsDatesFailed =>
+      'Сървърът не отговори, затова засега датите следват това устройство.';
 
   @override
   String get settingsDatesSaved => 'Запазено в профила ви';

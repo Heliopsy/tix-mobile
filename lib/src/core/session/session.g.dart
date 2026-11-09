@@ -633,6 +633,72 @@ final class ViewPrefsRepositoryProvider
 String _$viewPrefsRepositoryHash() =>
     r'457916fcc7421ccd7812933e9cd6d4e73596cbcd';
 
+/// Counts resets of the reader's view arrangements made away from the views,
+/// such as from Settings. Views watch it, so an open board or My work reads
+/// its arrangement again without either feature importing the other.
+
+@ProviderFor(ArrangementResets)
+final arrangementResetsProvider = ArrangementResetsProvider._();
+
+/// Counts resets of the reader's view arrangements made away from the views,
+/// such as from Settings. Views watch it, so an open board or My work reads
+/// its arrangement again without either feature importing the other.
+final class ArrangementResetsProvider
+    extends $NotifierProvider<ArrangementResets, int> {
+  /// Counts resets of the reader's view arrangements made away from the views,
+  /// such as from Settings. Views watch it, so an open board or My work reads
+  /// its arrangement again without either feature importing the other.
+  ArrangementResetsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'arrangementResetsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$arrangementResetsHash();
+
+  @$internal
+  @override
+  ArrangementResets create() => ArrangementResets();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(int value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<int>(value),
+    );
+  }
+}
+
+String _$arrangementResetsHash() => r'ecb976ccdb1aa1e85769b03cd41bfdd663b6ca8f';
+
+/// Counts resets of the reader's view arrangements made away from the views,
+/// such as from Settings. Views watch it, so an open board or My work reads
+/// its arrangement again without either feature importing the other.
+
+abstract class _$ArrangementResets extends $Notifier<int> {
+  int build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<int, int>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<int, int>,
+              int,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
 /// The inbox, personal channels and the summary for the active session.
 
 @ProviderFor(inboxRepository)

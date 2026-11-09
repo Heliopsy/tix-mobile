@@ -74,7 +74,7 @@ final class TaskDetailControllerProvider
 }
 
 String _$taskDetailControllerHash() =>
-    r'51af306f336f6c0b040779a62ddea2fa150dc6d6';
+    r'82d38a5b9e3b6165e167f0baec3864a539b24ce8';
 
 /// One task, as the task screen edits it.
 ///
@@ -1021,13 +1021,15 @@ final class ActorDirectoryProvider
 String _$actorDirectoryHash() => r'83f116ad890fca585b9c3c9d11d12eacb906ff0d';
 
 /// The lease a claim on [taskRef] that names no length would get now, and
-/// the levels that decide it.
+/// the levels that decide it. Read again whenever the task's claim begins
+/// or ends.
 
 @ProviderFor(taskLease)
 final taskLeaseProvider = TaskLeaseFamily._();
 
 /// The lease a claim on [taskRef] that names no length would get now, and
-/// the levels that decide it.
+/// the levels that decide it. Read again whenever the task's claim begins
+/// or ends.
 
 final class TaskLeaseProvider
     extends
@@ -1038,7 +1040,8 @@ final class TaskLeaseProvider
         >
     with $FutureModifier<LeaseGrant>, $FutureProvider<LeaseGrant> {
   /// The lease a claim on [taskRef] that names no length would get now, and
-  /// the levels that decide it.
+  /// the levels that decide it. Read again whenever the task's claim begins
+  /// or ends.
   TaskLeaseProvider._({
     required TaskLeaseFamily super.from,
     required String super.argument,
@@ -1082,10 +1085,11 @@ final class TaskLeaseProvider
   }
 }
 
-String _$taskLeaseHash() => r'2ad9455d017507df073d96d549b44072c101239f';
+String _$taskLeaseHash() => r'91a8775a7c5a299d765977e1bb6a94f853136846';
 
 /// The lease a claim on [taskRef] that names no length would get now, and
-/// the levels that decide it.
+/// the levels that decide it. Read again whenever the task's claim begins
+/// or ends.
 
 final class TaskLeaseFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<LeaseGrant>, String> {
@@ -1099,7 +1103,8 @@ final class TaskLeaseFamily extends $Family
       );
 
   /// The lease a claim on [taskRef] that names no length would get now, and
-  /// the levels that decide it.
+  /// the levels that decide it. Read again whenever the task's claim begins
+  /// or ends.
 
   TaskLeaseProvider call(String taskRef) =>
       TaskLeaseProvider._(argument: taskRef, from: this);
