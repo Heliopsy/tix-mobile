@@ -21,12 +21,12 @@ The webhooks screen SHALL list the tenant's endpoints with their address, event 
 
 ### Requirement: A generated secret is shown once
 
-When a new endpoint is saved with the secret left blank, the app SHALL generate a random secret, send it, and show it once with a way to copy it. The secret SHALL NOT be written to the response cache, the log or a route. Saving an existing endpoint with the field blank SHALL keep its stored secret.
+When a new endpoint is saved with the secret left blank, the app SHALL send no secret and SHALL show the `secret` tix returns in `IssuedWebhook` once, with a way to copy it and a warning that it cannot be read back. The secret SHALL NOT be written to the response cache, the log, provider state or a route. Saving an existing endpoint with the field blank SHALL keep its stored secret.
 
 #### Scenario: New endpoint without a secret
 
 - **WHEN** a person saves a new endpoint with an empty secret
-- **THEN** the app shows the secret it sent, once, and it is in no cache entry or log line
+- **THEN** the request carries no secret, the app shows the secret tix returned, once, and it is in no cache entry or log line
 
 #### Scenario: Editing keeps the secret
 
@@ -41,3 +41,17 @@ The screen SHALL list deliveries newest first, a keyset page at a time, with sta
 
 - **WHEN** a person picks the Failed filter
 - **THEN** the list asks for `status=failed` and shows only failed deliveries
+
+### Requirement: An endpoint can be sent a test event
+
+Each active endpoint SHALL offer Send test, which sends `webhook.ping` and shows the delivery tix answers: its status, the HTTP status the endpoint returned if any, the attempts and the last error. The delivery log SHALL then be read again.
+
+#### Scenario: Test delivered
+
+- **WHEN** a person sends a test to an active endpoint that answers 200
+- **THEN** the app sends `POST /webhooks/{id}/ping` and shows Delivered with HTTP 200
+
+#### Scenario: Inactive endpoint
+
+- **WHEN** a person opens the actions of an inactive endpoint
+- **THEN** Send test is not offered
