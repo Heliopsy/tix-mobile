@@ -192,6 +192,9 @@ _Actor _$ActorFromJson(Map<String, dynamic> json) => _Actor(
   tenantId: json['tenant_id'] as String? ?? '',
   tenantKey: json['tenant_key'] as String? ?? '',
   tenantName: json['tenant_name'] as String? ?? '',
+  theme: json['theme'] == null
+      ? null
+      : Theme.fromJson(json['theme'] as Map<String, dynamic>),
   tokenId: json['token_id'] as String? ?? '',
 );
 
@@ -210,6 +213,7 @@ Map<String, dynamic> _$ActorToJson(_Actor instance) => <String, dynamic>{
   'tenant_id': instance.tenantId,
   'tenant_key': instance.tenantKey,
   'tenant_name': instance.tenantName,
+  'theme': ?instance.theme?.toJson(),
   'token_id': instance.tokenId,
 };
 
@@ -1310,6 +1314,7 @@ const _$EventTypeEnumMap = {
   EventType.fieldUpdated: 'field.updated',
   EventType.webhookDelivered: 'webhook.delivered',
   EventType.importCompleted: 'import.completed',
+  EventType.webhookPing: 'webhook.ping',
   EventType.viewArranged: 'view.arranged',
   EventType.filterSaved: 'filter.saved',
   EventType.filterUpdated: 'filter.updated',
@@ -2132,6 +2137,38 @@ Map<String, dynamic> _$IssuedTokenToJson(_IssuedToken instance) =>
       'token': instance.token,
     };
 
+_IssuedWebhook _$IssuedWebhookFromJson(Map<String, dynamic> json) =>
+    _IssuedWebhook(
+      active: json['active'] as bool? ?? false,
+      createdAt: _$JsonConverterFromJson<String, DateTime>(
+        json['created_at'],
+        const TixDateTime().fromJson,
+      ),
+      eventTypes:
+          (json['event_types'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const <String>[],
+      id: json['id'] as String? ?? '',
+      secret: json['secret'] as String? ?? '',
+      tenantId: json['tenant_id'] as String? ?? '',
+      url: json['url'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$IssuedWebhookToJson(_IssuedWebhook instance) =>
+    <String, dynamic>{
+      'active': instance.active,
+      'created_at': ?_$JsonConverterToJson<String, DateTime>(
+        instance.createdAt,
+        const TixDateTime().toJson,
+      ),
+      'event_types': instance.eventTypes,
+      'id': instance.id,
+      'secret': instance.secret,
+      'tenant_id': instance.tenantId,
+      'url': instance.url,
+    };
+
 _LeaseGrant _$LeaseGrantFromJson(Map<String, dynamic> json) => _LeaseGrant(
   clamped: json['clamped'] as bool? ?? false,
   max: json['max'] as String? ?? '',
@@ -2305,6 +2342,8 @@ _ProjectDeletion _$ProjectDeletionFromJson(Map<String, dynamic> json) =>
               .toList() ??
           const <StatusMove>[],
       tasks: (json['tasks'] as num?)?.toInt() ?? 0,
+      trashed: (json['trashed'] as num?)?.toInt() ?? 0,
+      wouldDelete: (json['would_delete'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$ProjectDeletionToJson(_ProjectDeletion instance) =>
@@ -2316,6 +2355,8 @@ Map<String, dynamic> _$ProjectDeletionToJson(_ProjectDeletion instance) =>
       'project': instance.project,
       'statuses': instance.statuses.map((e) => e.toJson()).toList(),
       'tasks': instance.tasks,
+      'trashed': instance.trashed,
+      'would_delete': instance.wouldDelete,
     };
 
 _ProjectIconFile _$ProjectIconFileFromJson(Map<String, dynamic> json) =>
@@ -2342,6 +2383,7 @@ _PruneResult _$PruneResultFromJson(Map<String, dynamic> json) => _PruneResult(
   auditEntries: (json['audit_entries'] as num?)?.toInt() ?? 0,
   dryRun: json['dry_run'] as bool? ?? false,
   events: (json['events'] as num?)?.toInt() ?? 0,
+  idempotencyKeys: (json['idempotency_keys'] as num?)?.toInt() ?? 0,
   retainedForSubscribers:
       (json['retained_for_subscribers'] as num?)?.toInt() ?? 0,
   webhookDeliveries: (json['webhook_deliveries'] as num?)?.toInt() ?? 0,
@@ -2352,6 +2394,7 @@ Map<String, dynamic> _$PruneResultToJson(_PruneResult instance) =>
       'audit_entries': instance.auditEntries,
       'dry_run': instance.dryRun,
       'events': instance.events,
+      'idempotency_keys': instance.idempotencyKeys,
       'retained_for_subscribers': instance.retainedForSubscribers,
       'webhook_deliveries': instance.webhookDeliveries,
     };
@@ -2738,6 +2781,39 @@ Map<String, dynamic> _$AuthSessionToJson(_AuthSession instance) =>
       ),
       'tenant_id': instance.tenantId,
       'token': instance.token,
+    };
+
+_SessionInfo _$SessionInfoFromJson(Map<String, dynamic> json) => _SessionInfo(
+  createdAt: _$JsonConverterFromJson<String, DateTime>(
+    json['created_at'],
+    const TixDateTime().fromJson,
+  ),
+  current: json['current'] as bool? ?? false,
+  expiresAt: _$JsonConverterFromJson<String, DateTime>(
+    json['expires_at'],
+    const TixDateTime().fromJson,
+  ),
+  id: json['id'] as String? ?? '',
+  method: json['method'] as String? ?? '',
+  secondFactor: json['second_factor'] as bool? ?? false,
+  userAgent: json['user_agent'] as String? ?? '',
+);
+
+Map<String, dynamic> _$SessionInfoToJson(_SessionInfo instance) =>
+    <String, dynamic>{
+      'created_at': ?_$JsonConverterToJson<String, DateTime>(
+        instance.createdAt,
+        const TixDateTime().toJson,
+      ),
+      'current': instance.current,
+      'expires_at': ?_$JsonConverterToJson<String, DateTime>(
+        instance.expiresAt,
+        const TixDateTime().toJson,
+      ),
+      'id': instance.id,
+      'method': instance.method,
+      'second_factor': instance.secondFactor,
+      'user_agent': instance.userAgent,
     };
 
 _SnoozeInput _$SnoozeInputFromJson(Map<String, dynamic> json) => _SnoozeInput(
@@ -3422,6 +3498,7 @@ _Task _$TaskFromJson(Map<String, dynamic> json) => _Task(
     const TixDateTime().fromJson,
   ),
   version: (json['version'] as num?)?.toInt() ?? 0,
+  webUrl: json['web_url'] as String? ?? '',
 );
 
 Map<String, dynamic> _$TaskToJson(_Task instance) => <String, dynamic>{
@@ -3492,6 +3569,7 @@ Map<String, dynamic> _$TaskToJson(_Task instance) => <String, dynamic>{
     const TixDateTime().toJson,
   ),
   'version': instance.version,
+  'web_url': instance.webUrl,
 };
 
 _TaskExportInput _$TaskExportInputFromJson(Map<String, dynamic> json) =>
@@ -3865,6 +3943,7 @@ _TenantUser _$TenantUserFromJson(Map<String, dynamic> json) => _TenantUser(
   email: json['email'] as String? ?? '',
   globalAdmin: json['global_admin'] as bool? ?? false,
   id: json['id'] as String? ?? '',
+  removed: json['removed'] as bool? ?? false,
   requirePasswordChange: json['require_password_change'] as bool? ?? false,
   role: $enumDecodeNullable(
     _$RoleEnumMap,
@@ -3894,6 +3973,7 @@ Map<String, dynamic> _$TenantUserToJson(_TenantUser instance) =>
       'email': instance.email,
       'global_admin': instance.globalAdmin,
       'id': instance.id,
+      'removed': instance.removed,
       'require_password_change': instance.requirePasswordChange,
       'role': ?_$RoleEnumMap[instance.role],
       'sso_provider': instance.ssoProvider,
@@ -3904,6 +3984,24 @@ Map<String, dynamic> _$TenantUserToJson(_TenantUser instance) =>
         const TixDateTime().toJson,
       ),
     };
+
+_Theme _$ThemeFromJson(Map<String, dynamic> json) => _Theme(
+  accent: json['accent'] as String? ?? '',
+  accentDark: json['accent_dark'] as String? ?? '',
+  accentSoft: json['accent_soft'] as String? ?? '',
+  accentSoftDark: json['accent_soft_dark'] as String? ?? '',
+  builtIn: json['built_in'] as bool? ?? false,
+  name: json['name'] as String? ?? '',
+);
+
+Map<String, dynamic> _$ThemeToJson(_Theme instance) => <String, dynamic>{
+  'accent': instance.accent,
+  'accent_dark': instance.accentDark,
+  'accent_soft': instance.accentSoft,
+  'accent_soft_dark': instance.accentSoftDark,
+  'built_in': instance.builtIn,
+  'name': instance.name,
+};
 
 _TimePrefs _$TimePrefsFromJson(Map<String, dynamic> json) => _TimePrefs(
   timeFormat: json['time_format'] as String? ?? '',
@@ -4199,6 +4297,7 @@ _User _$UserFromJson(Map<String, dynamic> json) => _User(
   email: json['email'] as String? ?? '',
   globalAdmin: json['global_admin'] as bool? ?? false,
   id: json['id'] as String? ?? '',
+  removed: json['removed'] as bool? ?? false,
   requirePasswordChange: json['require_password_change'] as bool? ?? false,
   ssoProvider: json['sso_provider'] as String? ?? '',
   ssoSubject: json['sso_subject'] as String? ?? '',
@@ -4222,6 +4321,7 @@ Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
   'email': instance.email,
   'global_admin': instance.globalAdmin,
   'id': instance.id,
+  'removed': instance.removed,
   'require_password_change': instance.requirePasswordChange,
   'sso_provider': instance.ssoProvider,
   'sso_subject': instance.ssoSubject,

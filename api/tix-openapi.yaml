@@ -138,6 +138,139 @@ paths:
         - account
       x-tix-openspec:
         - http-api
+  /api/v1/account/sessions:
+    get:
+      description: |-
+        ListSessions lists the caller's own unexpired sessions in this tenant, browser and terminal sign-ins, newest first and keyset paginated. Each names when it began and expires, how it signed in and the user agent it signed in with, and marks the one the caller presented; never its token. A token needs account:read, which "*" does not carry.
+
+        Command line: `tix account sessions`.
+      operationId: session.list
+      parameters:
+        - description: 'Limit is the most items one page holds: default 50, at most
+            500.'
+          in: query
+          name: limit
+          schema:
+            type: integer
+        - description: Cursor is the next_cursor of the previous page, to read the
+            page after it. Leave it out for the first page.
+          in: query
+          name: cursor
+          schema:
+            type: string
+        - description: Sort names the field the listing is ordered by. Each listing
+            has its own default and refuses a field it cannot sort by.
+          in: query
+          name: sort
+          schema:
+            type: string
+        - description: Direction is asc or desc, default asc.
+          in: query
+          name: direction
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/SessionInfo'
+                    type:
+                      - array
+                      - "null"
+                  next_cursor:
+                    type: string
+                type: object
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/SessionInfo'
+              x-tix-stream: one item per line, no envelope and no cursor
+          description: OK
+        "400":
+          $ref: '#/components/responses/Error400'
+        "401":
+          $ref: '#/components/responses/Error401'
+        "403":
+          $ref: '#/components/responses/Error403'
+        "404":
+          $ref: '#/components/responses/Error404'
+        "409":
+          $ref: '#/components/responses/Error409'
+        "422":
+          $ref: '#/components/responses/Error422'
+        "500":
+          $ref: '#/components/responses/Error500'
+        "502":
+          $ref: '#/components/responses/Error502'
+        "504":
+          $ref: '#/components/responses/Error504'
+      security:
+        - bearer: []
+        - session: []
+      summary: ListSessions lists the caller's own unexpired sessions in this tenant,
+        browser and terminal sign-ins, newest first and keyset paginated
+      tags:
+        - session
+  /api/v1/account/sessions/{id}:
+    delete:
+      description: |-
+        RevokeSession ends one of the caller's own sessions by identifier, so it stops signing anybody in. Another person's session is not found. A token needs account:read, which "*" does not carry.
+
+        Command line: `tix account sessions revoke`.
+      operationId: session.revoke
+      parameters:
+        - description: Session ID, from the session listing. It identifies a session
+            and cannot sign anybody in.
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: '#/components/responses/Error400'
+        "401":
+          $ref: '#/components/responses/Error401'
+        "403":
+          $ref: '#/components/responses/Error403'
+        "404":
+          $ref: '#/components/responses/Error404'
+        "409":
+          $ref: '#/components/responses/Error409'
+        "422":
+          $ref: '#/components/responses/Error422'
+        "500":
+          $ref: '#/components/responses/Error500'
+        "502":
+          $ref: '#/components/responses/Error502'
+        "504":
+          $ref: '#/components/responses/Error504'
+      security:
+        - bearer: []
+        - session: []
+      summary: RevokeSession ends one of the caller's own sessions by identifier,
+        so it stops signing anybody in
+      tags:
+        - session
   /api/v1/accounts/{email}/log:
     get:
       description: |-
@@ -677,6 +810,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: session.logout
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "204":
           description: No Content
@@ -817,6 +962,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: session.switch
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -871,6 +1028,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: totp.remove
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "204":
           description: No Content
@@ -945,6 +1114,18 @@ paths:
 
         Command line: `tix user totp enrol`.
       operationId: totp.enrol
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "201":
           content:
@@ -992,6 +1173,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: totp.confirm
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -1046,6 +1239,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: totp.codes
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "200":
           content:
@@ -1092,6 +1297,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: totp.verify
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -1139,6 +1356,18 @@ paths:
 
         Command line: `tix bundle export`.
       operationId: bundle.export
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -1208,6 +1437,17 @@ paths:
           name: project_ref
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/vnd.tix.bundle+json:
@@ -1259,6 +1499,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: calendar.revoke
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "204":
           description: No Content
@@ -1344,6 +1596,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: calendar.filter
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -1400,6 +1664,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: calendar.create
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -1504,6 +1780,18 @@ paths:
 
         Command line: `tix calendar rotate`.
       operationId: calendar.rotate
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "200":
           content:
@@ -1559,6 +1847,17 @@ paths:
           name: id
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       responses:
         "204":
@@ -1661,6 +1960,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: inbox.channel.add
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -1723,6 +2034,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "204":
           description: No Content
@@ -1768,6 +2090,17 @@ paths:
           name: id
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -1923,6 +2256,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "200":
           content:
@@ -1971,6 +2315,18 @@ paths:
 
         Command line: `tix claim next`.
       operationId: claim.next
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -2022,6 +2378,18 @@ paths:
 
         Command line: `tix claim sweep`.
       operationId: claim.sweep
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -2080,6 +2448,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "204":
           description: No Content
@@ -2121,6 +2500,17 @@ paths:
           name: id
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -2229,6 +2619,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "204":
           description: No Content
@@ -2319,6 +2720,18 @@ paths:
 
         Command line: `tix domain add`.
       operationId: domain.add
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -2377,6 +2790,17 @@ paths:
           name: hostname
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       responses:
         "204":
@@ -2465,6 +2889,17 @@ paths:
           name: hostname
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -2633,6 +3068,18 @@ paths:
 
         Command line: `tix export`.
       operationId: snapshot.export
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -2742,6 +3189,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: filter.save
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -2798,6 +3257,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: filter.order
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -2872,6 +3343,17 @@ paths:
           name: filter
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       responses:
         "204":
@@ -2974,6 +3456,17 @@ paths:
           name: filter
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -3083,6 +3576,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: global_admin.grant
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -3144,6 +3649,17 @@ paths:
           name: email
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       responses:
         "204":
@@ -3238,6 +3754,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: housekeeping.put
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -3294,6 +3822,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: housekeeping.run
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -3361,6 +3901,17 @@ paths:
           name: dry_run
           schema:
             type: boolean
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/x-ndjson:
@@ -3593,6 +4144,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: inbox.prefs.set
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -3648,6 +4211,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: inbox.read_all
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "200":
           content:
@@ -3704,6 +4279,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "200":
           content:
@@ -3754,6 +4340,17 @@ paths:
           name: id
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       responses:
         "200":
@@ -3857,6 +4454,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: invite.create
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -3922,6 +4531,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "204":
           description: No Content
@@ -3968,6 +4588,17 @@ paths:
           name: id
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -4070,6 +4701,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: time.prefs.set
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -4174,6 +4817,18 @@ paths:
 
         Command line: `tix member add`.
       operationId: member.add
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -4231,6 +4886,17 @@ paths:
           name: actorID
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       responses:
         "204":
@@ -4403,6 +5069,18 @@ paths:
 
         Command line: `tix project create`.
       operationId: project.create
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -4484,6 +5162,17 @@ paths:
           name: delete_tasks
           schema:
             type: boolean
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "200":
           content:
@@ -4586,6 +5275,17 @@ paths:
           name: ref
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -4774,6 +5474,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -4838,6 +5549,17 @@ paths:
           name: key
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       responses:
         "204":
@@ -4939,6 +5661,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -5014,6 +5747,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -5082,6 +5826,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: retention.prune
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -5178,6 +5934,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: retention.put
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -5234,6 +6002,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: task.wake
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -5347,6 +6127,18 @@ paths:
 
         Command line: `tix user key add`.
       operationId: sshkey.enrol
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -5409,6 +6201,17 @@ paths:
           name: id
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       responses:
         "204":
@@ -5570,6 +6373,18 @@ paths:
 
         Command line: `tix sync run`.
       operationId: sync.run
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -5682,6 +6497,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: sync.source.put
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -5741,6 +6568,17 @@ paths:
           name: id
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       responses:
         "204":
@@ -6156,6 +6994,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: task.create
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -6210,6 +7060,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: task.bulk
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -6282,6 +7144,17 @@ paths:
           name: cascade
           schema:
             type: boolean
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "204":
           description: No Content
@@ -6379,6 +7252,17 @@ paths:
           name: ref
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -6500,6 +7384,17 @@ paths:
           name: ref
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -6710,6 +7605,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -6769,6 +7675,17 @@ paths:
           name: ref
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -6831,6 +7748,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -6892,6 +7820,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -6945,6 +7884,17 @@ paths:
           name: ref
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -7065,6 +8015,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -7125,6 +8086,17 @@ paths:
           name: ref
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -7248,6 +8220,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -7308,6 +8291,17 @@ paths:
           name: dep
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       responses:
         "204":
@@ -7410,6 +8404,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "200":
           content:
@@ -7465,6 +8470,17 @@ paths:
           name: ref
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -7531,6 +8547,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "200":
           content:
@@ -7581,6 +8608,17 @@ paths:
           name: ref
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -7645,6 +8683,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "204":
           description: No Content
@@ -7691,6 +8740,17 @@ paths:
           name: ref
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       responses:
         "204":
@@ -7799,6 +8859,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -7860,6 +8931,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "204":
           description: No Content
@@ -7904,6 +8986,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -7946,6 +9039,62 @@ paths:
             - task:transition
       summary: TransitionTask moves a task to another status along a transition its
         workflow allows
+      tags:
+        - task
+  /api/v1/tasks/{ref}/trash:
+    delete:
+      description: |-
+        PurgeTask permanently deletes a task already in the trash, with its trashed subtasks, the way the trash rule does when it expires them. A live task is refused with precondition_failed and reason not_trashed, and a tenant whose trash is off refuses it with reason trash_off.
+
+        Command line: `tix task purge`.
+      operationId: task.purge
+      parameters:
+        - description: 'Task reference: the project key and number, such as INFRA-42,
+            with the key not case sensitive, or the task''s ID.'
+          in: path
+          name: ref
+          required: true
+          schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: '#/components/responses/Error400'
+        "401":
+          $ref: '#/components/responses/Error401'
+        "403":
+          $ref: '#/components/responses/Error403'
+        "404":
+          $ref: '#/components/responses/Error404'
+        "409":
+          $ref: '#/components/responses/Error409'
+        "422":
+          $ref: '#/components/responses/Error422'
+        "500":
+          $ref: '#/components/responses/Error500'
+        "502":
+          $ref: '#/components/responses/Error502'
+        "504":
+          $ref: '#/components/responses/Error504'
+      security:
+        - bearer:
+            - task:delete
+        - session:
+            - task:delete
+      summary: PurgeTask permanently deletes a task already in the trash, with its
+        trashed subtasks, the way the trash rule does when it expires them
       tags:
         - task
   /api/v1/tasks/{ref}/tree:
@@ -8118,6 +9267,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: template.save
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -8179,6 +9340,17 @@ paths:
           name: ref
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       responses:
         "204":
@@ -8271,6 +9443,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -8330,6 +9513,17 @@ paths:
           name: ref
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -8467,6 +9661,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: tenant.create
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -8529,6 +9735,17 @@ paths:
           name: ref
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       responses:
         "204":
@@ -8623,6 +9840,17 @@ paths:
           name: ref
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -8752,6 +9980,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -8800,7 +10039,7 @@ paths:
   /api/v1/tenants/{ref}/users:
     get:
       description: |-
-        ListTenantUsers lists the users of any tenant, with each one's role there, keyset paginated. Only a global admin may call it; for anybody else it is forbidden whatever the tenant.
+        ListTenantUsers lists the users of any tenant, with each one's role there, keyset paginated. People removed from the tenant are left out unless include_removed asks for them, marked removed and with no role. Only a global admin may call it; for anybody else it is forbidden whatever the tenant.
 
         Command line: `tix tenant user ls`.
       operationId: tenant.user.list
@@ -8838,6 +10077,12 @@ paths:
               - asc
               - desc
             type: string
+        - description: IncludeRemoved is true to list people removed from the tenant
+            too, each marked removed.
+          in: query
+          name: include_removed
+          schema:
+            type: boolean
       responses:
         "200":
           content:
@@ -8900,6 +10145,17 @@ paths:
           name: ref
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -8970,6 +10226,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "204":
           description: No Content
@@ -9021,6 +10288,17 @@ paths:
           name: id
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -9133,6 +10411,18 @@ paths:
 
         Command line: `tix token create`.
       operationId: token.create
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -9191,6 +10481,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "204":
           description: No Content
@@ -9235,6 +10536,17 @@ paths:
           name: id
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -9331,7 +10643,7 @@ paths:
   /api/v1/users:
     get:
       description: |-
-        ListUsers lists the users of this tenant, keyset paginated, with the cursor for the next page.
+        ListUsers lists the users of this tenant, keyset paginated, with the cursor for the next page. People removed from the tenant, whose actor stays for history, are left out unless include_removed asks for them, each then marked removed.
 
         Command line: `tix user ls`.
       operationId: user.list
@@ -9362,6 +10674,12 @@ paths:
               - asc
               - desc
             type: string
+        - description: IncludeRemoved is true to list people removed from the tenant
+            too, each marked removed.
+          in: query
+          name: include_removed
+          schema:
+            type: boolean
       responses:
         "200":
           content:
@@ -9417,6 +10735,18 @@ paths:
 
         Specified in [`http-api`](openspec/specs/http-api/spec.md).
       operationId: user.create
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -9476,6 +10806,17 @@ paths:
           name: id
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       responses:
         "204":
@@ -9566,6 +10907,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -9626,6 +10978,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "204":
           description: No Content
@@ -9679,6 +11042,17 @@ paths:
           in: query
           name: group
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       responses:
         "204":
@@ -9801,6 +11175,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -9865,6 +11250,17 @@ paths:
           name: view
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -9980,10 +11376,22 @@ paths:
         - webhook
     put:
       description: |-
-        PutWebhook registers an https delivery endpoint, or updates one by identifier. A registration with no secret gets a generated one, returned only in this response.
+        PutWebhook registers an https delivery endpoint, or updates one by identifier. A registration with no secret gets a generated one, returned as secret in this response and never again; a supplied or kept secret is not returned.
 
         Command line: `tix webhook put`.
       operationId: webhook.put
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -9995,8 +11403,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WebhookEndpoint'
-          description: WebhookEndpoint is a registered delivery target.
+                $ref: '#/components/schemas/IssuedWebhook'
+          description: 'IssuedWebhook is an endpoint as PutWebhook answers it: the
+            only answer that can carry a signing secret, and only one tix generated
+            for that call.'
         "400":
           $ref: '#/components/responses/Error400'
         "401":
@@ -10136,6 +11546,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "204":
           description: No Content
@@ -10184,6 +11605,17 @@ paths:
           required: true
           schema:
             type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       responses:
         "204":
           description: No Content
@@ -10211,6 +11643,69 @@ paths:
         - session:
             - webhook:admin
       summary: DeleteWebhook removes a delivery endpoint and its pending deliveries
+      tags:
+        - webhook
+  /api/v1/webhooks/{id}/ping:
+    post:
+      description: |-
+        PingWebhook sends one active endpoint a signed webhook.ping test event, whatever its event type filter; no other endpoint receives it. It answers the queued delivery, already attempted when this process drains inline, which the delivery log lists and redeliver repeats like any other.
+
+        Command line: `tix webhook ping`.
+      operationId: webhook.ping
+      parameters:
+        - description: Webhook endpoint ID.
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookDelivery'
+          description: WebhookDelivery tracks one event's delivery to one endpoint.
+        "400":
+          $ref: '#/components/responses/Error400'
+        "401":
+          $ref: '#/components/responses/Error401'
+        "403":
+          $ref: '#/components/responses/Error403'
+        "404":
+          $ref: '#/components/responses/Error404'
+        "409":
+          $ref: '#/components/responses/Error409'
+        "413":
+          $ref: '#/components/responses/Error413'
+        "415":
+          $ref: '#/components/responses/Error415'
+        "422":
+          $ref: '#/components/responses/Error422'
+        "500":
+          $ref: '#/components/responses/Error500'
+        "502":
+          $ref: '#/components/responses/Error502'
+        "504":
+          $ref: '#/components/responses/Error504'
+      security:
+        - bearer:
+            - webhook:admin
+        - session:
+            - webhook:admin
+      summary: PingWebhook sends one active endpoint a signed webhook.ping test event,
+        whatever its event type filter; no other endpoint receives it
       tags:
         - webhook
   /api/v1/whoami:
@@ -10315,6 +11810,18 @@ paths:
 
         Command line: `tix workflow put`.
       operationId: workflow.put
+      parameters:
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
       requestBody:
         content:
           application/json:
@@ -10374,6 +11881,17 @@ paths:
           name: key
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       responses:
         "204":
@@ -10462,6 +11980,17 @@ paths:
           name: key
           required: true
           schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
             type: string
       requestBody:
         content:
@@ -10611,7 +12140,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
-      description: 'Conflict: `conflict`, `lease_expired`.'
+      description: 'Conflict: `conflict`, `lease_expired`. A write whose `Idempotency-Key`
+        belongs to a request still running carries `Retry-After`.'
     Error413:
       content:
         application/json:
@@ -10631,7 +12161,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
-      description: 'Unprocessable Entity: `precondition_failed`.'
+      description: 'Unprocessable Entity: `precondition_failed`, or `invalid` when
+        an `Idempotency-Key` is reused with a different request.'
     Error500:
       content:
         application/json:
@@ -10856,6 +12387,10 @@ components:
           type: string
         tenant_name:
           type: string
+        theme:
+          $ref: '#/components/schemas/Theme'
+          description: Theme is the palette the actor's tenant resolves to, as the
+            browser renders it, on the answer to WhoAmI.
         token_id:
           description: TokenID is the API token the request authenticated with, if
             any.
@@ -12045,6 +13580,7 @@ components:
         - field.updated
         - webhook.delivered
         - import.completed
+        - webhook.ping
         - view.arranged
         - filter.saved
         - filter.updated
@@ -12952,6 +14488,41 @@ components:
             the token is issued and cannot be read again.
           type: string
       type: object
+    IssuedWebhook:
+      description: 'IssuedWebhook is an endpoint as PutWebhook answers it: the only
+        answer that can carry a signing secret, and only one tix generated for that
+        call.'
+      properties:
+        active:
+          description: Active turns deliveries on. An inactive endpoint receives nothing.
+          type: boolean
+        created_at:
+          description: CreatedAt is when the endpoint was registered, RFC 3339.
+          format: date-time
+          type: string
+        event_types:
+          description: EventTypes are the event types delivered, exact or with a trailing
+            "*" such as "task.*". Empty delivers every event.
+          items:
+            type: string
+          type:
+            - array
+            - "null"
+        id:
+          description: ID is the endpoint's unique identifier.
+          type: string
+        secret:
+          description: SigningSecret is the secret tix generated for an endpoint saved
+            without one, returned this once. Absent when the caller supplied or kept
+            one.
+          type: string
+        tenant_id:
+          description: TenantID is the tenant that owns the endpoint.
+          type: string
+        url:
+          description: URL is where deliveries are POSTed.
+          type: string
+      type: object
     Kind:
       description: Kind classifies an error so every transport can map it consistently.
       enum:
@@ -13139,7 +14710,9 @@ components:
             project.
           type: boolean
         deleted:
-          description: Deleted counts the project's soft deleted tasks, in the trash.
+          description: Deleted counts the tasks the deletion removed permanently,
+            trashed ones included. It is zero for a move and for a plan, which deletes
+            nothing.
           type: integer
         dry_run:
           description: 'DryRun marks a plan: what the deletion would do, nothing written.'
@@ -13158,6 +14731,13 @@ components:
           type: array
         tasks:
           description: Tasks counts the project's live tasks.
+          type: integer
+        trashed:
+          description: Trashed counts the project's soft deleted tasks, in the trash.
+          type: integer
+        would_delete:
+          description: WouldDelete counts the tasks a planned deletion would remove
+            permanently, trashed ones included. Only a plan sets it.
           type: integer
       type: object
     ProjectIconFile:
@@ -13198,6 +14778,10 @@ components:
           type: boolean
         events:
           description: Events counts the events removed.
+          format: int64
+          type: integer
+        idempotency_keys:
+          description: IdempotencyKeys counts the expired idempotency keys removed.
           format: int64
           type: integer
         retained_for_subscribers:
@@ -13714,6 +15298,35 @@ components:
           type: string
         token:
           description: Token is the session secret, presented as the session cookie.
+          type: string
+      type: object
+    SessionInfo:
+      description: SessionInfo describes one of the caller's sessions without its
+        secret.
+      properties:
+        created_at:
+          description: CreatedAt is when the sign-in happened.
+          format: date-time
+          type: string
+        current:
+          description: Current marks the session the caller presented with this request.
+          type: boolean
+        expires_at:
+          description: ExpiresAt is when the session stops working.
+          format: date-time
+          type: string
+        id:
+          description: ID identifies the session for revoking it. It is not a credential.
+          type: string
+        method:
+          description: 'Method is how it signed in: password, ssh-key or switch.'
+          type: string
+        second_factor:
+          description: SecondFactor reports that the sign-in passed a second factor.
+          type: boolean
+        user_agent:
+          description: UserAgent is the user agent the sign-in request sent, truncated,
+            or empty for a session that predates recording it.
           type: string
       type: object
     SnoozeInput:
@@ -14606,6 +16219,12 @@ components:
           description: Version increases by one on every change. Pass it back on an
             update to have a stale write refused with a conflict.
           type: integer
+        web_url:
+          description: WebURL is the address of the task's screen in the browser interface,
+            set when the server is configured with the address it is reached at (server.public_url).
+            Only a read sets it, so it is absent from audit snapshots, events and
+            exports.
+          type: string
       type: object
     TaskExportInput:
       description: TaskExportInput selects a project's tasks and the shape of the
@@ -15052,6 +16671,11 @@ components:
         id:
           description: ID is the user's actor identifier.
           type: string
+        removed:
+          description: 'Removed reports that the person was removed from this tenant:
+            their actor stays so history still names them, but they hold no membership.
+            A listing returns such a person only when asked to include them.'
+          type: boolean
         require_password_change:
           description: RequirePasswordChange reports whether the next password sign-in
             must choose a new password before a session is minted.
@@ -15077,6 +16701,46 @@ components:
         updated_at:
           description: UpdatedAt is when the user was last changed, RFC 3339.
           format: date-time
+          type: string
+      type: object
+    Theme:
+      description: Theme is the accent a tenant presents itself with, on every surface.
+        Two colours rather than a role per element. The web interface already has
+        light, dark and dim for everything structural, and a terminal cannot honour
+        a browser's palette anyway; what a tenant actually wants to choose is the
+        accent, and one accent plus the tint behind it is enough to carry a brand
+        through a header, a selected row and a reference. Colours that mean something
+        rather than brand something are not in here. State category and priority keep
+        their own, because a tenant that themes itself red should not lose the red
+        that means blocked.
+      properties:
+        accent:
+          description: 'Accent is the brand colour, as #rrggbb.'
+          type: string
+        accent_dark:
+          description: 'AccentDark is the accent for the dark and dim schemes, as
+            #rrggbb. The dark pair exists because an accent picked to read on white
+            is usually too dark to read on near-black, and the browser defaults to
+            the dark scheme: a theme with only a light accent renders as a barely
+            visible smear on the scheme most people actually see. Empty falls back
+            to the light pair, so a configured theme that names only an accent still
+            applies everywhere rather than being ignored on half the schemes.'
+          type: string
+        accent_soft:
+          description: 'AccentSoft is the tint it sits on, as #rrggbb.'
+          type: string
+        accent_soft_dark:
+          description: 'AccentSoftDark is the tint it sits on in those schemes, as
+            #rrggbb.'
+          type: string
+        built_in:
+          description: BuiltIn reports whether this theme ships with tix rather than
+            coming from configuration. Listing says which, so an operator can tell
+            what they can redefine.
+          type: boolean
+        name:
+          description: 'Name is the theme''s name, or the #rrggbb a custom accent
+            was named as.'
           type: string
       type: object
     TimePrefs:
@@ -15546,6 +17210,11 @@ components:
         id:
           description: ID is the user's actor identifier.
           type: string
+        removed:
+          description: 'Removed reports that the person was removed from this tenant:
+            their actor stays so history still names them, but they hold no membership.
+            A listing returns such a person only when asked to include them.'
+          type: boolean
         require_password_change:
           description: RequirePasswordChange reports whether the next password sign-in
             must choose a new password before a session is minted.

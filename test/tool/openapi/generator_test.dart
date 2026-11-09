@@ -13,6 +13,7 @@ paths:
       operationId: thing.update
       parameters:
         - {in: path, name: ref, required: true, schema: {type: string}}
+        - {in: header, name: Idempotency-Key, schema: {type: string}}
       requestBody:
         required: true
         content:
@@ -96,6 +97,11 @@ void main() {
     );
     expect(models, contains("if (name case final p?) 'name': p.value,"));
     expect(models, isNot(contains('extension NoteBody')));
+  });
+
+  test('a header parameter is a named argument sent as that header', () {
+    expect(client, contains('String? idempotencyKey,'));
+    expect(client, contains("headers: {'Idempotency-Key': idempotencyKey}"));
   });
 
   test('the client sends toBody only for a class with a Patch', () {
