@@ -82,8 +82,8 @@ class MyWorkScreen extends StatelessWidget {
 }
 
 /// The task screen over one scope: the filter bar, the drawing it picks,
-/// the bulk bar while tasks are picked, and on wide windows the open task
-/// beside it.
+/// the bulk bar in select mode, and on wide windows the open task beside
+/// it. Back leaves select mode before it leaves the screen.
 class TaskScreenView extends ConsumerStatefulWidget {
   /// The screen over [scope], with [selectedRef] open beside it.
   const TaskScreenView({required this.scope, this.selectedRef, super.key});
@@ -149,6 +149,26 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
       if (t.ref == _focused) return t;
     }
     return null;
+  }
+
+  void _pickFocused(TaskSelection selector) {
+    if (_focusedTask(_order) == null) _step(_order, 1);
+    final focused = _focusedTask(_order);
+    if (focused != null) selector.toggle(focused.ref);
+  }
+
+  void _extend(TaskSelection selector, int by) {
+    final from = _focusedTask(_order);
+    _step(_order, by);
+    final to = _focusedTask(_order);
+    selector.selectAll([?from?.ref, ?to?.ref]);
+  }
+
+  void _markFocusedDone(TaskQuickActions actions) {
+    if (!(ModalRoute.isCurrentOf(context) ?? true)) return;
+    final focused = _focusedTask(_order);
+    if (focused == null || actions.isDone(focused)) return;
+    unawaited(actions.toggleDone(focused));
   }
 
   @override
@@ -229,7 +249,7 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
         TaskFilterPanel(scope: scope, focusNode: _filterFocus),
         if (layout is BoardRefused) BoardRefusedNotice(layout: layout),
         Expanded(child: content),
-        if (selection.isNotEmpty) BulkBar(query: query),
+        if (selection.active) BulkBar(query: query),
       ],
     );
 
@@ -279,6 +299,8 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
     }
 
     _order = order;
+    final actions = TaskQuickActions(context, ref, query);
+    final detailBeside = context.isTwoPane && selectedRef != null;
     return CommandScope(
       commands: [
         if (projectKey != null)
@@ -331,11 +353,46 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
           group: l10n.commandsTasks,
           icon: Icons.check_box_outlined,
           shortcut: const SingleActivator(LogicalKeyboardKey.keyX),
-          run: () {
-            final focused = _focusedTask(_order);
-            if (focused != null) selector.toggle(focused.ref);
-          },
+          run: () => _pickFocused(selector),
         ),
+        TixCommand(
+          id: 'tasks.selectMode',
+          label: l10n.bulkSelectMode,
+          group: l10n.commandsTasks,
+          icon: Icons.checklist,
+          run: selector.enter,
+        ),
+        TixCommand(
+          id: 'tasks.extendDown',
+          label: l10n.bulkExtendDown,
+          group: l10n.commandsTasks,
+          icon: Icons.keyboard_double_arrow_down,
+          shortcut: const SingleActivator(
+            LogicalKeyboardKey.arrowDown,
+            shift: true,
+          ),
+          run: () => _extend(selector, 1),
+        ),
+        TixCommand(
+          id: 'tasks.extendUp',
+          label: l10n.bulkExtendUp,
+          group: l10n.commandsTasks,
+          icon: Icons.keyboard_double_arrow_up,
+          shortcut: const SingleActivator(
+            LogicalKeyboardKey.arrowUp,
+            shift: true,
+          ),
+          run: () => _extend(selector, -1),
+        ),
+        if (!detailBeside)
+          TixCommand(
+            id: 'tasks.done',
+            label: l10n.markDone,
+            group: l10n.commandsTasks,
+            icon: Icons.check_circle_outline,
+            shortcut: const SingleActivator(LogicalKeyboardKey.keyE),
+            run: () => _markFocusedDone(actions),
+          ),
         TixCommand(
           id: 'tasks.selectAll',
           label: l10n.bulkSelectAll,
@@ -349,11 +406,11 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
         ),
         TixCommand(
           id: 'tasks.clearSelection',
-          label: l10n.bulkClear,
+          label: l10n.bulkExit,
           group: l10n.commandsTasks,
           icon: Icons.close,
           shortcut: const SingleActivator(LogicalKeyboardKey.escape),
-          run: selector.clear,
+          run: selector.exit,
         ),
         TixCommand(
           id: 'tasks.filter',
@@ -373,27 +430,42 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
             run: screen.cycleView,
           ),
       ],
-      child: TixPage(
-        title: _title(l10n, scope, taskContext),
-        titleWidget: projectKey == null
-            ? null
-            : _ProjectTitle(projectKey: projectKey),
-        subtitle: paged == null
-            ? null
-            : l10n.boardCount(paged.items.length, paged.hasMore ? '+' : ''),
-        primaryAction: projectKey == null || selection.isNotEmpty
-            ? null
-            : TixAction(
-                key: const Key('tasks.quickAdd'),
-                label: l10n.newTask,
-                icon: Icons.add,
-                onPressed: add,
-              ),
-        body: Column(
-          children: [
-            const SavedCopyMark(),
-            Expanded(child: framed),
+      child: PopScope(
+        canPop: !selection.active,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) selector.exit();
+        },
+        child: TixPage(
+          title: _title(l10n, scope, taskContext),
+          titleWidget: projectKey == null
+              ? null
+              : _ProjectTitle(projectKey: projectKey),
+          subtitle: paged == null
+              ? null
+              : l10n.boardCount(paged.items.length, paged.hasMore ? '+' : ''),
+          actions: [
+            TixIconButton(
+              key: const Key('tasks.selectMode'),
+              icon: Icons.checklist,
+              tooltip: selection.active ? l10n.bulkExit : l10n.bulkSelectMode,
+              selected: selection.active,
+              onPressed: selection.active ? selector.exit : selector.enter,
+            ),
           ],
+          primaryAction: projectKey == null || selection.active
+              ? null
+              : TixAction(
+                  key: const Key('tasks.quickAdd'),
+                  label: l10n.newTask,
+                  icon: Icons.add,
+                  onPressed: add,
+                ),
+          body: Column(
+            children: [
+              const SavedCopyMark(),
+              Expanded(child: framed),
+            ],
+          ),
         ),
       ),
     );

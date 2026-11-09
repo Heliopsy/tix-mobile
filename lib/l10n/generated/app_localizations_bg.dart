@@ -491,6 +491,9 @@ class AppLocalizationsBg extends AppLocalizations {
   String get reopen => 'Отвори отново';
 
   @override
+  String get markDone => 'Отбележи като готова';
+
+  @override
   String get snooze => 'Отложи';
 
   @override
@@ -1268,6 +1271,15 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
+  String get bulkExit => 'Изход от избирането';
+
+  @override
+  String get bulkExtendDown => 'Разшири избора надолу';
+
+  @override
+  String get bulkExtendUp => 'Разшири избора нагоре';
+
+  @override
   String get bulkMove => 'Премести';
 
   @override
@@ -1291,6 +1303,9 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get bulkSelectAll => 'Избери всички';
+
+  @override
+  String get bulkSelectMode => 'Избери задачи';
 
   @override
   String bulkSelected(int count) {

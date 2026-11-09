@@ -113,8 +113,9 @@ class _TextSheetState extends State<_TextSheet> {
   );
 }
 
-/// The bar under a list while tasks are picked: how many, and the actions
-/// that apply to all of them as one request with one Undo.
+/// The bar under a list in select mode: how many are picked, announced as
+/// it changes, the actions that apply to all of them as one request with
+/// one Undo, and the way out of select mode.
 class BulkBar extends ConsumerWidget {
   /// Acts on the picked tasks of the listing for [query].
   const BulkBar({required this.query, super.key});
@@ -133,7 +134,9 @@ class BulkBar extends ConsumerWidget {
       icon: icon,
       tooltip: label,
       color: c == BulkChoice.delete ? t.danger : null,
-      onPressed: () => runBulkChoice(context, ref, query, c),
+      onPressed: selection.isEmpty
+          ? null
+          : () => runBulkChoice(context, ref, query, c),
     );
     final primary = [
       button(BulkChoice.move, Icons.arrow_forward, l10n.bulkMove),
@@ -167,19 +170,22 @@ class BulkBar extends ConsumerWidget {
               TixIconButton(
                 key: const Key('bulk.clear'),
                 icon: Icons.close,
-                tooltip: l10n.bulkClear,
+                tooltip: l10n.bulkExit,
                 onPressed: () => ref
                     .read(taskSelectionProvider(query.scope).notifier)
-                    .clear(),
+                    .exit(),
               ),
               Expanded(
-                child: Text(
-                  l10n.bulkSelected(selection.length),
-                  key: const Key('bulk.count'),
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: t.accent,
-                    fontWeight: FontWeight.w600,
+                child: Semantics(
+                  liveRegion: true,
+                  child: Text(
+                    l10n.bulkSelected(selection.length),
+                    key: const Key('bulk.count'),
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: t.accent,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
@@ -188,6 +194,7 @@ class BulkBar extends ConsumerWidget {
                 PopupMenuButton<BulkChoice>(
                   key: const Key('bulk.more'),
                   tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+                  enabled: selection.isNotEmpty,
                   onSelected: (c) => runBulkChoice(context, ref, query, c),
                   itemBuilder: (_) => [
                     for (final (c, label) in [
@@ -220,7 +227,7 @@ Future<void> runBulkChoice(
   BulkChoice choice,
 ) async {
   final l10n = context.l10n;
-  final refs = ref.read(taskSelectionProvider(query.scope)).toList();
+  final refs = ref.read(taskSelectionProvider(query.scope)).refs.toList();
   if (refs.isEmpty) return;
   final loaded = {
     for (final t
@@ -371,7 +378,7 @@ Future<void> runBulk(
     }
     return;
   }
-  ref.read(taskSelectionProvider(query.scope).notifier).clear();
+  ref.read(taskSelectionProvider(query.scope).notifier).exit();
   if (!context.mounted) return;
   final refused = run.result.refusals;
   final applied = run.result.applied;

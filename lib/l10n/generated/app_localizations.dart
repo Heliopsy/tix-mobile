@@ -937,6 +937,12 @@ abstract class AppLocalizations {
   /// **'Reopen'**
   String get reopen;
 
+  /// No description provided for @markDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark done'**
+  String get markDone;
+
   /// No description provided for @snooze.
   ///
   /// In en, this message translates to:
@@ -2209,6 +2215,24 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 task changed} other{{count} tasks changed}}'**
   String bulkDone(int count);
 
+  /// No description provided for @bulkExit.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit select mode'**
+  String get bulkExit;
+
+  /// No description provided for @bulkExtendDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Extend selection down'**
+  String get bulkExtendDown;
+
+  /// No description provided for @bulkExtendUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Extend selection up'**
+  String get bulkExtendUp;
+
   /// No description provided for @bulkMove.
   ///
   /// In en, this message translates to:
@@ -2238,6 +2262,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select all'**
   String get bulkSelectAll;
+
+  /// No description provided for @bulkSelectMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Select tasks'**
+  String get bulkSelectMode;
 
   /// No description provided for @bulkSelected.
   ///

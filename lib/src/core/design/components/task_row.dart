@@ -57,6 +57,10 @@ bool isTaskDone(Task task, [StatusCategory? category]) =>
 /// the markings sit under the title and tags are left out; on a wide one
 /// they line up in columns.
 ///
+/// In select mode ([picked] non-null) a square checkbox leads the row and
+/// the tick is drawn muted, without a tap target or semantics, so it still
+/// shows whether the task is done but cannot be mistaken for the picker.
+///
 /// Wrap it in `TixSwipeActions` for touch shortcuts.
 class TaskRow extends StatelessWidget {
   /// Draws [task] with [facts].
@@ -70,6 +74,7 @@ class TaskRow extends StatelessWidget {
     this.onStatusTap,
     this.onPriorityTap,
     this.onLongPress,
+    this.onMore,
     this.picked,
     this.onPicked,
     this.focused = false,
@@ -101,11 +106,15 @@ class TaskRow extends StatelessWidget {
   /// Opens the priority menu.
   final VoidCallback? onPriorityTap;
 
-  /// Opens the row's actions: a long press, or a secondary click.
+  /// What a long press does; also a secondary click when [onMore] is null.
   final VoidCallback? onLongPress;
 
-  /// Whether the row is picked for a bulk action; non-null draws a checkbox
-  /// in place of the tick.
+  /// Opens the row's actions from the trailing dots and a secondary click;
+  /// null leaves the dots off. The dots are left off in select mode.
+  final VoidCallback? onMore;
+
+  /// Whether the row is picked for a bulk action; non-null is select mode,
+  /// which draws a checkbox and mutes the tick.
   final bool? picked;
 
   /// Picks or unpicks the row.
@@ -147,7 +156,7 @@ class TaskRow extends StatelessWidget {
           child: InkWell(
             onTap: onTap,
             onLongPress: onLongPress,
-            onSecondaryTap: onLongPress,
+            onSecondaryTap: onMore ?? onLongPress,
             child: Container(
               decoration: BoxDecoration(
                 border: Border(
@@ -176,17 +185,14 @@ class TaskRow extends StatelessWidget {
                     ? CrossAxisAlignment.center
                     : CrossAxisAlignment.start,
                 children: [
-                  if (picked case final bool on)
-                    SizedBox.square(
-                      dimension: 40,
-                      child: Checkbox(
-                        value: on,
-                        onChanged: onPicked == null
-                            ? null
-                            : (v) => onPicked!(v ?? false),
-                      ),
-                    )
-                  else
+                  if (picked case final bool on) ...[
+                    TaskPick(
+                      key: ValueKey(('pick', task.ref)),
+                      picked: on,
+                      onChanged: onPicked,
+                    ),
+                    TaskCheck(done: done, inert: true),
+                  ] else
                     TaskCheck(done: done, onChanged: onToggleDone),
                   if (task.starred || onToggleStar != null)
                     _Star(starred: task.starred, onTap: onToggleStar),
@@ -214,7 +220,10 @@ class TaskRow extends StatelessWidget {
                             ),
                     ),
                   ),
-                  const SizedBox(width: TixSpace.s2),
+                  if (onMore != null && picked == null)
+                    _More(onTap: onMore!)
+                  else
+                    const SizedBox(width: TixSpace.s2),
                 ],
               ),
             ),
@@ -408,6 +417,47 @@ class _Tappable extends StatelessWidget {
   }
 }
 
+class _More extends StatelessWidget {
+  const _More({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+    key: const Key('row.more'),
+    onPressed: onTap,
+    tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+    icon: Icon(Icons.more_horiz, size: 20, color: context.tix.muted),
+    style: IconButton.styleFrom(
+      minimumSize: const Size.square(32),
+      tapTargetSize: MaterialTapTargetSize.padded,
+    ),
+  );
+}
+
+/// The square checkbox that picks a row or card in select mode, read as
+/// "Select" so it is never confused with the tick.
+class TaskPick extends StatelessWidget {
+  /// A checkbox that is ticked when [picked].
+  const TaskPick({required this.picked, this.onChanged, super.key});
+
+  /// Whether the task is picked.
+  final bool picked;
+
+  /// Picks or unpicks it.
+  final ValueChanged<bool>? onChanged;
+
+  @override
+  Widget build(BuildContext context) => SizedBox.square(
+    dimension: 40,
+    child: Checkbox(
+      value: picked,
+      semanticLabel: context.l10n.bulkSelect,
+      onChanged: onChanged == null ? null : (v) => onChanged!(v ?? false),
+    ),
+  );
+}
+
 class _Star extends StatelessWidget {
   const _Star({required this.starred, required this.onTap});
 
@@ -445,15 +495,25 @@ class _Star extends StatelessWidget {
 /// The completion circle: empty, or filled in the ok colour with a tick
 /// that pops in. Null [onChanged] draws an open task as a dashed
 /// placeholder, tix's mark for a row that cannot be ticked from here.
+/// [inert] draws it small and muted with no tap target and no semantics,
+/// as select mode does.
 class TaskCheck extends StatelessWidget {
   /// A circle that is ticked when [done].
-  const TaskCheck({required this.done, this.onChanged, super.key});
+  const TaskCheck({
+    required this.done,
+    this.onChanged,
+    this.inert = false,
+    super.key,
+  });
 
   /// Whether the task is done.
   final bool done;
 
   /// Toggles it.
   final VoidCallback? onChanged;
+
+  /// Whether it only shows the state, as in select mode.
+  final bool inert;
 
   @override
   Widget build(BuildContext context) {
@@ -481,6 +541,20 @@ class TaskCheck extends StatelessWidget {
             )
           : null,
     );
+    if (inert) {
+      return ExcludeSemantics(
+        child: IgnorePointer(
+          child: Opacity(
+            opacity: 0.45,
+            child: SizedBox(
+              width: TixSize.check + TixSpace.s2,
+              height: 40,
+              child: Center(child: circle),
+            ),
+          ),
+        ),
+      );
+    }
     final hit = SizedBox.square(
       dimension: 40,
       child: Center(
@@ -503,7 +577,7 @@ class TaskCheck extends StatelessWidget {
     return Semantics(
       container: true,
       checked: done,
-      label: done ? l10n.reopen : l10n.complete,
+      label: done ? l10n.reopen : l10n.markDone,
       button: onChanged != null,
       onTap: onChanged == null ? null : toggle,
       excludeSemantics: true,

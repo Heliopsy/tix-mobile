@@ -123,15 +123,18 @@ abstract class _$TaskScreen extends $Notifier<TaskScreenState> {
   }
 }
 
-/// The tasks picked for a bulk action on one scope, by reference.
+/// Select mode on one scope. It is explicit state: the Select button turns
+/// it on with nothing picked, and picking a task turns it on too.
 
 @ProviderFor(TaskSelection)
 final taskSelectionProvider = TaskSelectionFamily._();
 
-/// The tasks picked for a bulk action on one scope, by reference.
+/// Select mode on one scope. It is explicit state: the Select button turns
+/// it on with nothing picked, and picking a task turns it on too.
 final class TaskSelectionProvider
-    extends $NotifierProvider<TaskSelection, Set<String>> {
-  /// The tasks picked for a bulk action on one scope, by reference.
+    extends $NotifierProvider<TaskSelection, TaskSelectionState> {
+  /// Select mode on one scope. It is explicit state: the Select button turns
+  /// it on with nothing picked, and picking a task turns it on too.
   TaskSelectionProvider._({
     required TaskSelectionFamily super.from,
     required TaskScope super.argument,
@@ -158,10 +161,10 @@ final class TaskSelectionProvider
   TaskSelection create() => TaskSelection();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Set<String> value) {
+  Override overrideWithValue(TaskSelectionState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<Set<String>>(value),
+      providerOverride: $SyncValueProvider<TaskSelectionState>(value),
     );
   }
 
@@ -176,17 +179,18 @@ final class TaskSelectionProvider
   }
 }
 
-String _$taskSelectionHash() => r'0855f322d907e21cffb7fcb390dfb3caed0acd5b';
+String _$taskSelectionHash() => r'ab4c2e794ba9be366d71b713bdc5bc3066804dc7';
 
-/// The tasks picked for a bulk action on one scope, by reference.
+/// Select mode on one scope. It is explicit state: the Select button turns
+/// it on with nothing picked, and picking a task turns it on too.
 
 final class TaskSelectionFamily extends $Family
     with
         $ClassFamilyOverride<
           TaskSelection,
-          Set<String>,
-          Set<String>,
-          Set<String>,
+          TaskSelectionState,
+          TaskSelectionState,
+          TaskSelectionState,
           TaskScope
         > {
   TaskSelectionFamily._()
@@ -198,7 +202,8 @@ final class TaskSelectionFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// The tasks picked for a bulk action on one scope, by reference.
+  /// Select mode on one scope. It is explicit state: the Select button turns
+  /// it on with nothing picked, and picking a task turns it on too.
 
   TaskSelectionProvider call(TaskScope scope) =>
       TaskSelectionProvider._(argument: scope, from: this);
@@ -207,22 +212,23 @@ final class TaskSelectionFamily extends $Family
   String toString() => r'taskSelectionProvider';
 }
 
-/// The tasks picked for a bulk action on one scope, by reference.
+/// Select mode on one scope. It is explicit state: the Select button turns
+/// it on with nothing picked, and picking a task turns it on too.
 
-abstract class _$TaskSelection extends $Notifier<Set<String>> {
+abstract class _$TaskSelection extends $Notifier<TaskSelectionState> {
   late final _$args = ref.$arg as TaskScope;
   TaskScope get scope => _$args;
 
-  Set<String> build(TaskScope scope);
+  TaskSelectionState build(TaskScope scope);
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<Set<String>, Set<String>>;
+    final ref = this.ref as $Ref<TaskSelectionState, TaskSelectionState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<Set<String>, Set<String>>,
-              Set<String>,
+              AnyNotifier<TaskSelectionState, TaskSelectionState>,
+              TaskSelectionState,
               Object?,
               Object?
             >;

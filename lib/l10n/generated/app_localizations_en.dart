@@ -488,6 +488,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reopen => 'Reopen';
 
   @override
+  String get markDone => 'Mark done';
+
+  @override
   String get snooze => 'Snooze';
 
   @override
@@ -1264,6 +1267,15 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get bulkExit => 'Exit select mode';
+
+  @override
+  String get bulkExtendDown => 'Extend selection down';
+
+  @override
+  String get bulkExtendUp => 'Extend selection up';
+
+  @override
   String get bulkMove => 'Move';
 
   @override
@@ -1287,6 +1299,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bulkSelectAll => 'Select all';
+
+  @override
+  String get bulkSelectMode => 'Select tasks';
 
   @override
   String bulkSelected(int count) {

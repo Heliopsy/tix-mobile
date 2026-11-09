@@ -130,9 +130,10 @@ All in `lib/src/core/design/components/`. Each has a doc comment saying when to 
 | `TixPage`, `TixPageHeader` | Every screen. Title, a subtitle line, secondary tools and the one primary create action. On a phone an app bar and an extended floating button; wider, tix's page head with the button on the right |
 | `TixButton` (`primary`, `secondary`, `quiet`, `danger`; `regular`, `small`) | Every labelled action. One primary per screen. `busy` shows a spinner and blocks presses |
 | `TixIconButton` | Icon-only tools; the tooltip is the label |
-| `TaskRow` | A task in any list: tick, star, title, status, priority, tags, assignee, project, due, snooze, reference, project stripe |
-| `TaskCard` | A task on a board or in lanes |
-| `TaskCheck` | The completion circle, on its own |
+| `TaskRow` | A task in any list: tick, star, title, status, priority, tags, assignee, project, due, snooze, reference, project stripe, and the "more" button with `onMore`. With `picked` set it is in select mode: a `TaskPick` leads and the tick is inert |
+| `TaskCard` | A task on a board or in lanes, with the same select mode as `TaskRow` |
+| `TaskCheck` | The completion circle, on its own; `inert` draws it muted, untappable and out of the semantics tree, as select mode does |
+| `TaskPick` | The square checkbox that picks a row or card in select mode, read as "Select" |
 | `InboxRow` | An inbox item: who did what, the task, the excerpt or the move, when; unread dot |
 | `UpdatedMark`, `FreshHighlight` | A list refreshed itself from a live event; a row that just arrived |
 | `ChangedElsewhereBanner` | What the person is editing changed elsewhere: keep editing or reload, never a silent reload |

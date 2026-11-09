@@ -14,11 +14,12 @@ import 'package:tix_mobile/src/features/tasks/application/listing.dart';
 import 'package:tix_mobile/src/features/tasks/application/screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/board_view.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/group_menu.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/select_mode.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_actions.dart';
 
 /// One lane per project, the way the web draws Lanes: each lane the
 /// project's cards, each card ticked, its status a badge, its menu on the
-/// dots.
+/// dots. A long press picks a card and turns select mode on.
 class LanesView extends ConsumerWidget {
   /// Draws [paged] of the listing for [query] as lanes.
   const LanesView({
@@ -59,6 +60,16 @@ class LanesView extends ConsumerWidget {
     final arranged = arrangeGroups(natural, prefs);
     final actions = TaskQuickActions(context, ref, query);
     final now = ref.watch(clockProvider)();
+    final selection = ref.watch(taskSelectionProvider(query.scope));
+    final selector = ref.read(taskSelectionProvider(query.scope).notifier);
+    bool shown(Task task) => showFinished || !actions.isDone(task);
+    final order = [
+      for (final key in arranged.visible)
+        if (byKey[key] case final Project p
+            when !(prefs[key]?.collapsed ?? false))
+          for (final task in paged.items)
+            if (task.projectId == p.id && shown(task)) task.ref,
+    ];
     final compact = context.isCompact;
     final width = compact
         ? MediaQuery.sizeOf(context).width * 0.86
@@ -67,9 +78,7 @@ class LanesView extends ConsumerWidget {
       final pref = prefs[project.key] ?? GroupPref(group: project.key);
       final tasks = [
         for (final task in paged.items)
-          if (task.projectId == project.id &&
-              (showFinished || !actions.isDone(task)))
-            task,
+          if (task.projectId == project.id && shown(task)) task,
       ];
       final name = project.name.isEmpty ? project.key : project.name;
       final stripe = t.projectColour(project.color);
@@ -194,14 +203,20 @@ class LanesView extends ConsumerWidget {
                                   ),
                                   now: now,
                                   selected: task.ref == focusedRef,
-                                  onTap: () => onOpen(task),
-                                  onToggleDone: () => actions.toggleDone(task),
-                                  onLongPress: () => showTaskMenu(
-                                    context,
-                                    actions,
-                                    task,
-                                    onOpen: () => onOpen(task),
+                                  picked: selection.active
+                                      ? selection.contains(task.ref)
+                                      : null,
+                                  onPicked: (_) => selector.toggle(task.ref),
+                                  onTap: () => tapTask(
+                                    ref,
+                                    query.scope,
+                                    task.ref,
+                                    order: order,
+                                    open: () => onOpen(task),
                                   ),
+                                  onToggleDone: () => actions.toggleDone(task),
+                                  onLongPress: () =>
+                                      longPressTask(ref, query.scope, task.ref),
                                   onMore: () => showTaskMenu(
                                     context,
                                     actions,
