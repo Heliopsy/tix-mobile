@@ -142,7 +142,7 @@ All in `lib/src/core/design/components/`. Each has a doc comment saying when to 
 | `ProjectChip`, `ProjectMark` | A project in its colour on a row; its square mark in a list |
 | `AssigneeRef`, `TixAvatar` | `@handle` on a row; initials in a circle (accent, or `hued` from the handle) |
 | `RefText`, `DueMark`, `SnoozeMark` | The reference in mono; due dates; snoozes |
-| `TixBadge`, `TixCounter`, `Kbd` | A non-task state or role; a count; a key. `compactCount` writes a count for a fixed-width tile: in full below 1000, then the locale's compact form ("1.2K") |
+| `TixBadge`, `TixCounter`, `Kbd` | A non-task state or role; a count; a key. `compactCount` writes a count for a fixed-width tile: in full below 1000, then the locale's compact form, three significant figures ("1.23K") |
 | `LiveIndicator` | Whether live updates arrive: a dot alone when live, a dot and a word in any other state, explained on hover or long press. `compact` is the dot alone, for a corner badge; `leading` starts it at its target's leading edge, for one that follows a line of text |
 | `EmptyState` | Any list or screen with nothing in it. Carries the screen's create action |
 | `ErrorState` | A failure: the message, Retry, Sign in again when the session ended, and Back |

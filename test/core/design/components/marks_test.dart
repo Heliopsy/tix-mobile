@@ -112,8 +112,9 @@ void main() {
 
     test('abbreviates from a thousand, in the locale', () {
       expect(compactCount(1000, 'en'), '1K');
-      expect(compactCount(1234, 'en'), '1.2K');
-      expect(compactCount(12345, 'en'), '12K');
+      expect(compactCount(1234, 'en'), '1.23K');
+      expect(compactCount(12345, 'en'), '12.3K');
+      expect(compactCount(123456, 'en'), '123K');
       expect(compactCount(1234, 'fr'), isNot(contains('.')));
       for (final locale in ['en', 'fr', 'de', 'bg']) {
         expect(

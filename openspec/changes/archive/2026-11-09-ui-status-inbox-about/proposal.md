@@ -16,7 +16,7 @@ Three things people noticed on a phone:
   at the start of its target. The rail's corner badge sits at the avatar's end corner, so it flips with the
   writing direction.
 - Summary tiles take their width from the row and their number box is one line tall. Counts use tabular figures,
-  read in full below 1000 and in the locale's compact form from there ("1.2K"), and scale down instead of
+  read in full below 1000 and in the locale's compact form from there ("1.23K"), and scale down instead of
   wrapping. Tiles in a row share a height, and four share a row only while each keeps room at the current text
   scale.
 - More ends with About on a phone, and the rail ends with an About button on anything wider.

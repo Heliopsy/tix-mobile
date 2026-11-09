@@ -16,7 +16,7 @@ figures, read in full below 1000 and in the locale's compact form from there, an
 #### Scenario: A large count
 
 - **WHEN** 1234 tasks are open and the language is English
-- **THEN** the tile reads 1.2K and a screen reader hears 1,234
+- **THEN** the tile reads 1.23K and a screen reader hears 1,234
 
 #### Scenario: Large text
 
