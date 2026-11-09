@@ -123,11 +123,11 @@ At most one engine SHALL run. Making a remote context active SHALL stop it, maki
 
 ### Requirement: An idle engine stops and comes back on demand
 
-An engine that has served no request for the idle timeout SHALL stop, while the app is in the foreground too. The timeout SHALL default to 10 minutes and be a setting, with a choice that never stops. The next request SHALL start the engine again before it is sent, on the same address when that is free, without the person doing anything.
+An engine that has served no request but live updates for the idle timeout SHALL stop, while the app is in the foreground too. The timeout SHALL default to 10 minutes and be a setting, with a choice that never stops. The next request SHALL start the engine again before it is sent, on the same address when that is free, without the person doing anything.
 
 #### Scenario: Idle and back
 
-- **WHEN** a local context has made no request for 10 minutes
+- **WHEN** a local context has made no request but live updates for 10 minutes
 - **THEN** the engine is stopped, and the next request starts it on the same address and succeeds
 
 #### Scenario: Never
@@ -202,3 +202,17 @@ An engine of a database used in place SHALL stop whenever the app is hidden or p
 
 - **WHEN** an in-place instance's engine runs on Linux and the app is hidden
 - **THEN** the engine is stopped and no `-wal` file is left beside the database
+
+### Requirement: Live updates are not activity
+
+Event polls and the reads a periodic live refresh triggers SHALL NOT restart a local engine's idle timer or hold it awake, and a poll SHALL NOT start an engine that is not running. Navigation, the app returning to the foreground and every other request SHALL count as activity and start a resting engine.
+
+#### Scenario: Polling engine idles
+
+- **WHEN** live updates of a local context are polling and the person does nothing for the idle timeout
+- **THEN** the engine stops
+
+#### Scenario: Back to the app
+
+- **WHEN** the engine rested and the app returns to the foreground or the person navigates
+- **THEN** the engine starts again
