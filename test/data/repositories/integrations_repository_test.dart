@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import 'dart:math';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/logging/log.dart';
@@ -26,7 +24,6 @@ void main() {
     repo = IntegrationsRepository(
       server.factory('https://tix.example', const BearerCredential('tok')),
       ResponseCache(store, const CacheScope('c1', '')),
-      random: Random(7),
     );
     logged = [];
     final sink = logSink;
@@ -37,22 +34,22 @@ void main() {
   String cached() => store.entries.values.expand((m) => m.values).join('\n');
 
   test(
-    'a new endpoint with no secret gets one generated, shown once',
+    'a new endpoint with no secret hands back the one tix generated',
     () async {
       final saved = await repo.saveWebhook(
         url: 'https://hooks.example/tix',
         eventTypes: const ['task.*'],
         active: true,
       );
-      final secret = saved.generatedSecret!;
-      expect(secret, matches(RegExp(r'^[0-9a-f]{64}$')));
-      expect(fake.secrets[saved.endpoint.id], secret);
       expect(server.requests.last.body, {
         'url': 'https://hooks.example/tix',
         'event_types': ['task.*'],
         'active': true,
-        'secret': secret,
       });
+      final secret = saved.generatedSecret!;
+      expect(secret, startsWith('whsec-generated-'));
+      expect(fake.secrets[saved.endpoint.id], secret);
+      expect(saved.endpoint.toString(), isNot(contains(secret)));
     },
   );
 
@@ -149,6 +146,23 @@ void main() {
     expect(q['direction'], ['desc']);
     await repo.redeliver('d2');
     expect(fake.redelivered, ['d2']);
+  });
+
+  test('a test event answers the delivery tix queued', () async {
+    final saved = await repo.saveWebhook(
+      url: 'https://a.example',
+      eventTypes: const [],
+      active: true,
+    );
+    final delivery = await repo.ping(saved.endpoint.id);
+    expect(server.requests.last.method, 'POST');
+    expect(
+      server.requests.last.uri.path,
+      endsWith('/webhooks/${saved.endpoint.id}/ping'),
+    );
+    expect(delivery.status, DeliveryStatus.delivered);
+    expect(delivery.lastStatusCode, 200);
+    expect(fake.pinged, [saved.endpoint.id]);
   });
 
   test('delete removes an endpoint', () async {

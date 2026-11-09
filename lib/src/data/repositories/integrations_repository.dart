@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import 'dart:math';
-
 import 'package:tix_mobile/src/core/config/config.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/cache/response_cache.dart';
@@ -10,7 +8,7 @@ import 'package:tix_mobile/src/data/models/page.dart';
 
 export 'package:tix_mobile/src/data/models/integrations.dart';
 
-/// An endpoint just saved, with the signing secret the app generated for it
+/// An endpoint just saved, with the signing secret tix generated for it
 /// when the person left the field blank. The secret is shown once and kept
 /// nowhere.
 typedef SavedWebhook = ({WebhookEndpoint endpoint, String? generatedSecret});
@@ -22,12 +20,10 @@ typedef SavedWebhook = ({WebhookEndpoint endpoint, String? generatedSecret});
 /// documents, and deliveries change too fast to be worth it.
 class IntegrationsRepository {
   /// Reads and writes through [_api], keeping copies in [_cache].
-  IntegrationsRepository(this._api, this._cache, {Random? random})
-    : _random = random ?? Random.secure();
+  IntegrationsRepository(this._api, this._cache);
 
   final TixApi _api;
   final ResponseCache _cache;
-  final Random _random;
 
   static const _webhooksKey = 'webhooks';
 
@@ -54,18 +50,11 @@ class IntegrationsRepository {
   Future<List<WebhookEndpoint>?> cachedWebhooks() =>
       _cache.peek(_webhooksKey, _endpoints);
 
-  /// A new signing secret: 32 random bytes in hex.
-  String newSecret() => [
-    for (var i = 0; i < 32; i++)
-      _random.nextInt(256).toRadixString(16).padLeft(2, '0'),
-  ].join();
-
   /// Registers an endpoint, or updates [id] (`webhook.put`).
   ///
-  /// tix's API generates a secret for a new endpoint saved without one but
-  /// never returns it, so for a new endpoint with a blank [secret] the app
-  /// makes one itself and hands it back to be shown once. A blank secret on
-  /// an update keeps the stored one.
+  /// A blank [secret] is not sent: tix generates one for a new endpoint and
+  /// returns it this once, and keeps the stored one on an update. The
+  /// returned secret goes back to the caller to show, and nowhere else.
   Future<SavedWebhook> saveWebhook({
     required String url,
     required List<String> eventTypes,
@@ -74,15 +63,13 @@ class IntegrationsRepository {
     String secret = '',
   }) async {
     final creating = id == null || id.isEmpty;
-    final generated = creating && secret.isEmpty ? newSecret() : null;
-    final sent = generated ?? secret;
     final issued = await _api.webhook.put(
       WebhookInput(
         id: creating ? null : id,
         url: url,
         eventTypes: eventTypes,
         active: active,
-        secret: sent.isEmpty ? null : sent,
+        secret: secret.isEmpty ? null : secret,
       ),
     );
     final endpoint = WebhookEndpoint(
@@ -93,8 +80,17 @@ class IntegrationsRepository {
       active: issued.active,
       createdAt: issued.createdAt,
     );
-    return (endpoint: endpoint, generatedSecret: generated);
+    final generated = issued.secret;
+    return (
+      endpoint: endpoint,
+      generatedSecret: generated.isEmpty ? null : generated,
+    );
   }
+
+  /// Sends endpoint [id] a signed test event and answers the delivery tix
+  /// queued for it, already attempted when the server drains inline
+  /// (`webhook.ping`).
+  Future<WebhookDelivery> ping(String id) => _api.webhook.ping(id);
 
   /// Removes endpoint [id] and its pending deliveries (`webhook.delete`).
   Future<void> deleteWebhook(String id) => _api.webhook.delete(id);

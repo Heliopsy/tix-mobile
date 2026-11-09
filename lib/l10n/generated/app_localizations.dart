@@ -7513,6 +7513,114 @@ abstract class AppLocalizations {
   /// **'SSH key revoked.'**
   String get sshKeyRevokedToast;
 
+  /// No description provided for @sessionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Active sessions'**
+  String get sessionsTitle;
+
+  /// No description provided for @sessionsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Your browser and terminal sign-ins to this tenant that have not expired. Revoke any you do not recognise. API tokens are managed under Tokens.'**
+  String get sessionsInfo;
+
+  /// No description provided for @sessionsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No active sessions.'**
+  String get sessionsEmpty;
+
+  /// No description provided for @sessionsNotReadable.
+  ///
+  /// In en, this message translates to:
+  /// **'This token cannot list your sessions: it needs the account:read scope, which \"*\" does not include. Sign in with your password, or use a token minted with account:read.'**
+  String get sessionsNotReadable;
+
+  /// No description provided for @sessionsShowMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Show more'**
+  String get sessionsShowMore;
+
+  /// No description provided for @sessionCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'This session'**
+  String get sessionCurrent;
+
+  /// No description provided for @sessionUnknownAgent.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown device'**
+  String get sessionUnknownAgent;
+
+  /// No description provided for @sessionMethodPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get sessionMethodPassword;
+
+  /// No description provided for @sessionMethodSshKey.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH key'**
+  String get sessionMethodSshKey;
+
+  /// No description provided for @sessionMethodSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Tenant switch'**
+  String get sessionMethodSwitch;
+
+  /// No description provided for @sessionSecondFactor.
+  ///
+  /// In en, this message translates to:
+  /// **'with second factor'**
+  String get sessionSecondFactor;
+
+  /// No description provided for @sessionSignedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in {when}'**
+  String sessionSignedIn(String when);
+
+  /// No description provided for @sessionExpires.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires {when}'**
+  String sessionExpires(String when);
+
+  /// No description provided for @sessionRevoke.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke'**
+  String get sessionRevoke;
+
+  /// No description provided for @sessionRevokeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke this session?'**
+  String get sessionRevokeTitle;
+
+  /// No description provided for @sessionRevokeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{agent} is signed out at once and has to sign in again.'**
+  String sessionRevokeBody(String agent);
+
+  /// No description provided for @sessionRevokeCurrentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the session this app is signed in with. Revoking it signs you out here, and you will have to sign in again.'**
+  String get sessionRevokeCurrentBody;
+
+  /// No description provided for @sessionRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'Session revoked.'**
+  String get sessionRevoked;
+
   /// No description provided for @sshKeyPublicKey.
   ///
   /// In en, this message translates to:
@@ -8734,7 +8842,7 @@ abstract class AppLocalizations {
   /// No description provided for @webhookSecretNewHelp.
   ///
   /// In en, this message translates to:
-  /// **'Leave it empty and the app generates one and shows it once.'**
+  /// **'Leave it empty and tix generates one, shown here once.'**
   String get webhookSecretNewHelp;
 
   /// No description provided for @webhookSecretKeepHelp.
@@ -8874,6 +8982,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Queued for another attempt.'**
   String get webhookRedelivered;
+
+  /// No description provided for @webhookPing.
+  ///
+  /// In en, this message translates to:
+  /// **'Send test'**
+  String get webhookPing;
+
+  /// No description provided for @webhookPingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Test event'**
+  String get webhookPingTitle;
+
+  /// No description provided for @webhookPingSent.
+  ///
+  /// In en, this message translates to:
+  /// **'tix sent a signed webhook.ping event to {url}.'**
+  String webhookPingSent(String url);
+
+  /// No description provided for @webhookPingPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Not attempted yet. The delivery log shows the result once tix tries it.'**
+  String get webhookPingPending;
 
   /// No description provided for @syncTitle.
   ///
@@ -9532,7 +9664,7 @@ abstract class AppLocalizations {
   /// No description provided for @trashExplain.
   ///
   /// In en, this message translates to:
-  /// **'Restore puts a task back where it was. tix deletes trashed tasks for good only through the housekeeping trash rule.'**
+  /// **'Restore puts a task back where it was. Delete for good removes it and its trashed subtasks permanently, as the housekeeping trash rule does when it expires them.'**
   String get trashExplain;
 
   /// No description provided for @trashEmpty.
@@ -9564,6 +9696,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'deleted {when}'**
   String trashDeletedAt(String when);
+
+  /// No description provided for @trashPurge.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete for good'**
+  String get trashPurge;
+
+  /// No description provided for @trashPurgeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete for good?'**
+  String get trashPurgeTitle;
+
+  /// No description provided for @trashPurgeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref} “{title}” and its trashed subtasks are deleted permanently. This cannot be undone.'**
+  String trashPurgeBody(String ref, String title);
+
+  /// No description provided for @trashPurged.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted {ref} for good.'**
+  String trashPurged(String ref);
 
   /// No description provided for @auditTitle.
   ///

@@ -129,4 +129,14 @@ class Trash extends _$Trash {
     }
     return restored;
   }
+
+  /// Deletes [task] for good and reads the trash again; the housekeeping
+  /// counts reload too.
+  Future<void> purge(Task task) async {
+    await ref.read(maintenanceRepositoryProvider).purge(task.ref);
+    if (!ref.mounted) return;
+    ref
+      ..invalidateSelf()
+      ..invalidate(housekeepingProvider);
+  }
 }

@@ -51,4 +51,25 @@ void main() {
     expect(c.read(trashProvider).value!.items, isEmpty);
     expect(server.task('infra-9'), isNotNull);
   });
+
+  test('purging deletes for good and reads the trash again', () async {
+    server
+      ..trash['infra-9'] = taskJson('infra-9', title: 'Gone')
+      ..trash['infra-10'] = taskJson('infra-10', title: 'Also gone');
+    final c = await signedInContainer(server);
+    final sub = c.listen(trashProvider, (_, _) {});
+    addTearDown(sub.close);
+    final paged = await c.read(trashProvider.future);
+    final listed = server.requests.where(
+      (r) => r.uri.queryParameters['trashed'] == 'true',
+    );
+    expect(listed, hasLength(1));
+    await c.read(trashProvider.notifier).purge(paged.items.first);
+    final after = await c.read(trashProvider.future);
+    expect(fake.purged, ['infra-9']);
+    expect(after.items.map((t) => t.ref), ['infra-10']);
+    await pumpEventQueue();
+    expect(listed, hasLength(2));
+    expect(server.task('infra-9'), isNull);
+  });
 }

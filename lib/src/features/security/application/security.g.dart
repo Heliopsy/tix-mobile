@@ -129,3 +129,58 @@ abstract class _$SshKeys extends $AsyncNotifier<List<SSHKey>> {
     return element.handleCreate(ref, build);
   }
 }
+
+/// The signed-in person's own sessions in this tenant, newest first, a page
+/// at a time.
+
+@ProviderFor(ActiveSessions)
+final activeSessionsProvider = ActiveSessionsProvider._();
+
+/// The signed-in person's own sessions in this tenant, newest first, a page
+/// at a time.
+final class ActiveSessionsProvider
+    extends $AsyncNotifierProvider<ActiveSessions, Paged<SessionInfo>> {
+  /// The signed-in person's own sessions in this tenant, newest first, a page
+  /// at a time.
+  ActiveSessionsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'activeSessionsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$activeSessionsHash();
+
+  @$internal
+  @override
+  ActiveSessions create() => ActiveSessions();
+}
+
+String _$activeSessionsHash() => r'4dfa0548eda7b29716885ac9f8d18def26238361';
+
+/// The signed-in person's own sessions in this tenant, newest first, a page
+/// at a time.
+
+abstract class _$ActiveSessions extends $AsyncNotifier<Paged<SessionInfo>> {
+  FutureOr<Paged<SessionInfo>> build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref =
+        this.ref as $Ref<AsyncValue<Paged<SessionInfo>>, Paged<SessionInfo>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<Paged<SessionInfo>>, Paged<SessionInfo>>,
+              AsyncValue<Paged<SessionInfo>>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}

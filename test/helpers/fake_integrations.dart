@@ -27,6 +27,20 @@ class FakeIntegrations {
   /// Deliveries queued again, by id.
   final redelivered = <String>[];
 
+  /// Endpoints sent a test event, by id.
+  final pinged = <String>[];
+
+  /// What the endpoint answers a test event with: the delivery status, the
+  /// HTTP status and the error.
+  ({String status, int code, String error}) pingAnswer = (
+    status: 'delivered',
+    code: 200,
+    error: '',
+  );
+
+  /// Trashed tasks deleted for good, by ref.
+  final purged = <String>[];
+
   /// Sync sources.
   final sources = <Map<String, Object?>>[];
 
@@ -110,9 +124,13 @@ class FakeIntegrations {
         if (!url.startsWith('https://')) {
           return _invalid('webhook url "$url" must use https');
         }
-        final id = (body['id'] as String?) ?? 'wh${++_ids}';
+        final given = body['id'] as String?;
+        final id = given ?? 'wh${++_ids}';
         final secret = body['secret'] as String?;
-        if (secret != null) secrets[id] = secret;
+        final generated = given == null && secret == null
+            ? 'whsec-generated-${_ids.toString().padLeft(4, '0')}'
+            : null;
+        if (secret ?? generated case final kept?) secrets[id] = kept;
         final endpoint = {
           'id': id,
           'url': url,
@@ -123,7 +141,43 @@ class FakeIntegrations {
         webhooks
           ..removeWhere((e) => e['id'] == id)
           ..add(endpoint);
-        return FakeResponse(200, endpoint);
+        return FakeResponse(200, {...endpoint, 'secret': ?generated});
+      case ('POST', ['webhooks', final id, 'ping']):
+        final endpoint = webhooks.where((e) => e['id'] == id).firstOrNull;
+        if (endpoint == null) {
+          return FakeResponse(404, envelope('not_found', 'webhook "$id"'));
+        }
+        if (endpoint['active'] != true) {
+          return FakeResponse(
+            412,
+            envelope('precondition_failed', 'webhook "$id" is inactive'),
+          );
+        }
+        pinged.add(id);
+        final delivery = {
+          ...deliveryJson(
+            'ping${pinged.length}',
+            endpoint: id,
+            status: pingAnswer.status,
+            code: pingAnswer.code,
+            error: pingAnswer.error,
+            attempts: pingAnswer.status == 'pending' ? 0 : 1,
+          ),
+          'event_seq': 99,
+        };
+        deliveries.insert(0, delivery);
+        return FakeResponse(200, delivery);
+      case ('DELETE', ['tasks', final ref, 'trash']):
+        if (server.trash.remove(ref) == null) {
+          return server.task(ref) == null
+              ? FakeResponse(404, envelope('not_found', 'task "$ref"'))
+              : FakeResponse(
+                  412,
+                  envelope('precondition_failed', 'task "$ref" is not trashed'),
+                );
+        }
+        purged.add(ref);
+        return const FakeResponse(204);
       case ('DELETE', ['webhooks', final id]):
         if (!webhooks.any((e) => e['id'] == id)) {
           return FakeResponse(404, envelope('not_found', 'webhook "$id"'));

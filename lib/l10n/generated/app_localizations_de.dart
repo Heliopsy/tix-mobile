@@ -4465,6 +4465,69 @@ class AppLocalizationsDe extends AppLocalizations {
   String get sshKeyRevokedToast => 'SSH-Schlüssel widerrufen.';
 
   @override
+  String get sessionsTitle => 'Aktive Sitzungen';
+
+  @override
+  String get sessionsInfo =>
+      'Ihre Anmeldungen per Browser und Terminal bei diesem Mandanten, die noch nicht abgelaufen sind. Widerrufen Sie jede, die Sie nicht kennen. API-Token verwalten Sie unter Token.';
+
+  @override
+  String get sessionsEmpty => 'Keine aktiven Sitzungen.';
+
+  @override
+  String get sessionsNotReadable =>
+      'Dieses Token kann Ihre Sitzungen nicht auflisten: Es braucht den Bereich account:read, den „*“ nicht einschließt. Melden Sie sich mit Ihrem Passwort an oder verwenden Sie ein Token, das mit account:read erstellt wurde.';
+
+  @override
+  String get sessionsShowMore => 'Mehr anzeigen';
+
+  @override
+  String get sessionCurrent => 'Diese Sitzung';
+
+  @override
+  String get sessionUnknownAgent => 'Unbekanntes Gerät';
+
+  @override
+  String get sessionMethodPassword => 'Passwort';
+
+  @override
+  String get sessionMethodSshKey => 'SSH-Schlüssel';
+
+  @override
+  String get sessionMethodSwitch => 'Mandantenwechsel';
+
+  @override
+  String get sessionSecondFactor => 'mit zweitem Faktor';
+
+  @override
+  String sessionSignedIn(String when) {
+    return 'Angemeldet $when';
+  }
+
+  @override
+  String sessionExpires(String when) {
+    return 'Läuft ab $when';
+  }
+
+  @override
+  String get sessionRevoke => 'Widerrufen';
+
+  @override
+  String get sessionRevokeTitle => 'Diese Sitzung widerrufen?';
+
+  @override
+  String sessionRevokeBody(String agent) {
+    return '$agent wird sofort abgemeldet und muss sich neu anmelden.';
+  }
+
+  @override
+  String get sessionRevokeCurrentBody =>
+      'Mit dieser Sitzung ist die App angemeldet. Wenn Sie sie widerrufen, werden Sie hier abgemeldet und müssen sich neu anmelden.';
+
+  @override
+  String get sessionRevoked => 'Sitzung widerrufen.';
+
+  @override
   String get sshKeyPublicKey => 'Öffentlicher Schlüssel';
 
   @override
@@ -5156,7 +5219,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get webhookSecretNewHelp =>
-      'Leer lassen, dann erzeugt die App eines und zeigt es einmal an.';
+      'Leer lassen, dann erzeugt tix eines und es wird hier einmal angezeigt.';
 
   @override
   String get webhookSecretKeepHelp =>
@@ -5246,6 +5309,21 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get webhookRedelivered => 'Für einen weiteren Versuch eingereiht.';
+
+  @override
+  String get webhookPing => 'Test senden';
+
+  @override
+  String get webhookPingTitle => 'Testereignis';
+
+  @override
+  String webhookPingSent(String url) {
+    return 'tix hat ein signiertes webhook.ping-Ereignis an $url gesendet.';
+  }
+
+  @override
+  String get webhookPingPending =>
+      'Noch nicht versucht. Das Zustellprotokoll zeigt das Ergebnis, sobald tix es versucht hat.';
 
   @override
   String get syncTitle => 'Externe Synchronisierung';
@@ -5651,7 +5729,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get trashExplain =>
-      'Wiederherstellen legt eine Aufgabe dorthin zurück, wo sie war. tix löscht Aufgaben im Papierkorb nur über die Papierkorbregel des Aufräumens endgültig.';
+      'Wiederherstellen legt eine Aufgabe dorthin zurück, wo sie war. Endgültig löschen entfernt sie samt ihren Unteraufgaben im Papierkorb dauerhaft, wie es die Papierkorbregel des Aufräumens bei Ablauf tut.';
 
   @override
   String get trashEmpty => 'Der Papierkorb ist leer.';
@@ -5671,6 +5749,22 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String trashDeletedAt(String when) {
     return 'gelöscht $when';
+  }
+
+  @override
+  String get trashPurge => 'Endgültig löschen';
+
+  @override
+  String get trashPurgeTitle => 'Endgültig löschen?';
+
+  @override
+  String trashPurgeBody(String ref, String title) {
+    return '$ref „$title“ und seine Unteraufgaben im Papierkorb werden endgültig gelöscht. Das lässt sich nicht rückgängig machen.';
+  }
+
+  @override
+  String trashPurged(String ref) {
+    return '$ref endgültig gelöscht.';
   }
 
   @override

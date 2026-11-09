@@ -151,6 +151,29 @@ class FakeAdmin {
     },
   ];
 
+  /// The caller's own sessions in this tenant, newest first; the first is
+  /// the one presented.
+  final accountSessions = <Map<String, Object?>>[
+    {
+      'id': 'sess-here',
+      'current': true,
+      'method': 'password',
+      'second_factor': true,
+      'user_agent': 'tix-mobile/0.6 (Android 15)',
+      'created_at': '2026-11-08T09:00:00Z',
+      'expires_at': '2026-12-08T09:00:00Z',
+    },
+    {
+      'id': 'sess-laptop',
+      'current': false,
+      'method': 'ssh-key',
+      'second_factor': false,
+      'user_agent': 'tix-cli/1.4 (linux)',
+      'created_at': '2026-11-01T09:00:00Z',
+      'expires_at': '2026-12-01T09:00:00Z',
+    },
+  ];
+
   /// Ids of users whose second factor was cleared.
   final cleared = <String>[];
 
@@ -407,6 +430,17 @@ class FakeAdmin {
         };
         sshKeys.add(k);
         return _ok(k);
+      case ('GET', ['account', 'sessions']):
+        return _ok(
+          _pageOf(accountSessions, options.uri.queryParameters['cursor']),
+        );
+      case ('DELETE', ['account', 'sessions', final id]):
+        final before = accountSessions.length;
+        accountSessions.removeWhere((x) => x['id'] == id);
+        if (accountSessions.length == before) {
+          return FakeResponse(404, envelope('not_found', 'session "$id"'));
+        }
+        return const FakeResponse(204);
       case ('DELETE', ['ssh-keys', final id]):
         for (final k in sshKeys) {
           if (k['id'] == id) k['revoked_at'] = '2026-11-01T12:00:00Z';

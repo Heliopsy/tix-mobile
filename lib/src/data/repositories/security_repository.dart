@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'package:tix_mobile/src/core/config/config.dart';
 import 'package:tix_mobile/src/data/api/gen/models.gen.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
+import 'package:tix_mobile/src/data/models/page.dart';
 
 export 'package:tix_mobile/src/data/models/security.dart';
 
-/// The signed-in person's own second factor and SSH keys.
+/// The signed-in person's own second factor, SSH keys and sessions.
 ///
 /// Nothing here is cached: an enrolment carries the authenticator secret
 /// and a confirmation the recovery codes, both shown once.
@@ -44,4 +46,12 @@ class SecurityRepository {
 
   /// Stops the key [id] authenticating (`sshkey.revoke`).
   Future<void> revokeSshKey(String id) => _api.sshkey.revoke(id);
+
+  /// One page of the caller's own sessions in this tenant, newest first
+  /// (`session.list`).
+  Future<Page<SessionInfo>> sessions({String? cursor}) =>
+      _api.session.list(cursor: cursor, limit: pageSize);
+
+  /// Ends the caller's session [id] (`session.revoke`).
+  Future<void> revokeSession(String id) => _api.session.revoke(id);
 }

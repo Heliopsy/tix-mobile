@@ -39,6 +39,27 @@ void main() {
     expect(fake.webhooks, isEmpty);
   });
 
+  test('a test event reloads the delivery log', () async {
+    fake.webhooks.add({
+      'id': 'wh1',
+      'url': 'https://a.example',
+      'event_types': <String>[],
+      'active': true,
+    });
+    final c = await signedInContainer(server);
+    final log = webhookDeliveriesProvider();
+    final sub = c.listen(log, (_, _) {});
+    addTearDown(sub.close);
+    final endpoints = c.listen(webhookEndpointsProvider, (_, _) {});
+    addTearDown(endpoints.close);
+    expect((await c.read(log.future)).items, isEmpty);
+    final delivery = await c
+        .read(webhookEndpointsProvider.notifier)
+        .ping('wh1');
+    expect(delivery.status, DeliveryStatus.delivered);
+    expect((await c.read(log.future)).items.map((d) => d.id), ['ping1']);
+  });
+
   test('deliveries page, filter and redeliver', () async {
     server.pageSize = 2;
     fake.deliveries.addAll([

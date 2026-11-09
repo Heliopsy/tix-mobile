@@ -8,13 +8,15 @@ import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/attachments.dart';
+import 'package:tix_mobile/src/core/session/access.dart';
 import 'package:tix_mobile/src/core/session/admin.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/form_sheet.dart';
+import 'package:tix_mobile/src/data/models/scopes.dart';
 import 'package:tix_mobile/src/features/security/application/security.dart';
 
-/// The signed-in person's own security: their second factor and the SSH
-/// keys that reach the terminal interface.
+/// The signed-in person's own security: their second factor, the SSH keys
+/// that reach the terminal interface and their active sessions.
 class SecurityScreen extends ConsumerWidget {
   /// Creates the screen.
   const SecurityScreen({super.key});
@@ -35,12 +37,17 @@ class SecurityScreen extends ConsumerWidget {
         onRefresh: () async {
           ref
             ..invalidate(secondFactorProvider)
-            ..invalidate(sshKeysProvider);
+            ..invalidate(sshKeysProvider)
+            ..invalidate(activeSessionsProvider);
           await ref.read(secondFactorProvider.future);
         },
         child: ListView(
           padding: const EdgeInsets.only(bottom: TixSpace.s7 * 2),
-          children: const [_SecondFactorSection(), _SshKeySection()],
+          children: const [
+            _SecondFactorSection(),
+            _SshKeySection(),
+            _SessionsSection(),
+          ],
         ),
       ),
     );
@@ -544,5 +551,174 @@ class _SshKeyFormState extends ConsumerState<_SshKeyForm> {
         ),
       ],
     );
+  }
+}
+
+class _SessionsSection extends ConsumerWidget {
+  const _SessionsSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final access = ref.watch(currentAccessProvider);
+    final notReadable = Padding(
+      padding: const EdgeInsets.all(TixSpace.s4),
+      child: Text(
+        l10n.sessionsNotReadable,
+        key: const Key('sessions.notReadable'),
+      ),
+    );
+    Widget body() {
+      if (!access.hasValue && !access.hasError) {
+        return const SkeletonList(rows: 2, inline: true);
+      }
+      if (access.value case final a? when !a.can(Scopes.accountRead)) {
+        return notReadable;
+      }
+      return ref
+          .watch(activeSessionsProvider)
+          .when(
+            loading: () => const SkeletonList(rows: 2, inline: true),
+            error: (e, _) =>
+                e is TixException && e.kind == TixErrorKind.forbidden
+                ? notReadable
+                : ErrorState(
+                    error: e,
+                    compact: true,
+                    onRetry: () => ref.invalidate(activeSessionsProvider),
+                  ),
+            data: (paged) => paged.items.isEmpty
+                ? Padding(
+                    padding: const EdgeInsets.all(TixSpace.s4),
+                    child: Text(
+                      l10n.sessionsEmpty,
+                      key: const Key('sessions.empty'),
+                    ),
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (final s in paged.items) _SessionRow(session: s),
+                      if (paged.hasMore)
+                        Padding(
+                          padding: const EdgeInsets.all(TixSpace.s2),
+                          child: TixButton.quiet(
+                            key: const Key('sessions.more'),
+                            label: l10n.sessionsShowMore,
+                            busy: paged.loadingMore,
+                            onPressed: () => ref
+                                .read(activeSessionsProvider.notifier)
+                                .loadMore(),
+                          ),
+                        ),
+                    ],
+                  ),
+          );
+    }
+
+    return TixSection(
+      title: l10n.sessionsTitle,
+      info: l10n.sessionsInfo,
+      children: [body()],
+    );
+  }
+}
+
+class _SessionRow extends ConsumerWidget {
+  const _SessionRow({required this.session});
+
+  final SessionInfo session;
+
+  String _method(BuildContext context) {
+    final l10n = context.l10n;
+    return switch (session.method) {
+      'password' => l10n.sessionMethodPassword,
+      'ssh-key' => l10n.sessionMethodSshKey,
+      'switch' => l10n.sessionMethodSwitch,
+      final other => other,
+    };
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final created = session.createdAt;
+    final expires = session.expiresAt;
+    final method = _method(context);
+    return ListTile(
+      key: Key('session.${session.id}'),
+      leading: Icon(
+        Icons.devices_outlined,
+        color: session.current ? context.tix.accent : context.tix.muted,
+      ),
+      title: Wrap(
+        spacing: TixSpace.s2,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Text(
+            session.userAgent.isEmpty
+                ? l10n.sessionUnknownAgent
+                : session.userAgent,
+          ),
+          if (session.current)
+            TixBadge(
+              l10n.sessionCurrent,
+              tone: TixTone.accent,
+              key: Key('session.${session.id}.current'),
+            ),
+        ],
+      ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            [
+              if (method.isNotEmpty) method,
+              if (session.secondFactor) l10n.sessionSecondFactor,
+            ].join(' · '),
+          ),
+          Text(
+            [
+              if (created != null)
+                l10n.sessionSignedIn(_when(context, created)),
+              if (expires != null) l10n.sessionExpires(_when(context, expires)),
+            ].join(' · '),
+          ),
+        ],
+      ),
+      isThreeLine: true,
+      trailing: TixButton.danger(
+        key: Key('session.revoke.${session.id}'),
+        label: l10n.sessionRevoke,
+        size: TixButtonSize.small,
+        onPressed: () => _revoke(context, ref),
+      ),
+    );
+  }
+
+  Future<void> _revoke(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
+    final ok = await confirmDestructive(
+      context,
+      title: l10n.sessionRevokeTitle,
+      body: session.current
+          ? l10n.sessionRevokeCurrentBody
+          : l10n.sessionRevokeBody(
+              session.userAgent.isEmpty
+                  ? l10n.sessionUnknownAgent
+                  : session.userAgent,
+            ),
+      action: l10n.sessionRevoke,
+    );
+    if (!ok || !context.mounted) return;
+    final notifier = ref.read(activeSessionsProvider.notifier);
+    try {
+      await notifier.revoke(session);
+      if (context.mounted) showTixToast(context, l10n.sessionRevoked);
+    } on TixException catch (e) {
+      if (context.mounted) {
+        showTixToast(context, errorMessage(l10n, e), tone: TixTone.danger);
+      }
+    }
   }
 }

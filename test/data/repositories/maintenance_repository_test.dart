@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/cache/response_cache.dart';
 import 'package:tix_mobile/src/data/repositories/maintenance_repository.dart';
@@ -64,5 +65,36 @@ void main() {
     final restored = await repo.restore('infra-7');
     expect(restored.ref, 'infra-7');
     expect(server.trash.containsKey('infra-7'), isFalse);
+  });
+
+  test(
+    'purging deletes a trashed task and drops it from the kept page',
+    () async {
+      server
+        ..trash['infra-7'] = taskJson('infra-7', title: 'Old')
+        ..trash['infra-8'] = taskJson('infra-8', title: 'Older');
+      await repo.trash();
+      await repo.purge('infra-7');
+      final sent = server.requests.last;
+      expect(sent.method, 'DELETE');
+      expect(sent.uri.path, endsWith('/tasks/infra-7/trash'));
+      expect(fake.purged, ['infra-7']);
+      expect(server.trash.keys, ['infra-8']);
+      expect((await repo.cachedTrash())!.items.map((t) => t.ref), ['infra-8']);
+    },
+  );
+
+  test('purging a live task is refused and keeps the server reason', () async {
+    await expectLater(
+      repo.purge('infra-1'),
+      throwsA(
+        isA<TixException>().having(
+          (e) => e.kind,
+          'kind',
+          TixErrorKind.preconditionFailed,
+        ),
+      ),
+    );
+    expect(fake.purged, isEmpty);
   });
 }
