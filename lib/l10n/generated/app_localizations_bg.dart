@@ -6566,4 +6566,72 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get tokenRotated => 'Токенът е сменен. Старият спира след минута.';
+
+  @override
+  String get offlineTitle => 'Офлайн';
+
+  @override
+  String get offlineSubtitle => 'Какво остава достъпно без връзка';
+
+  @override
+  String get offlineLocal =>
+      'Тази инстанция е база данни на това устройство, затова винаги е достъпна. Офлайн режимът е само за отдалечени инстанции.';
+
+  @override
+  String get offlineAvailableTitle => 'Достъпно офлайн';
+
+  @override
+  String get offlineAvailableSubtitle =>
+      'Пази се на това устройство за активната инстанция и организация, с коментарите и подзадачите на всяка задача.';
+
+  @override
+  String get offlineStorageTitle => 'Място';
+
+  @override
+  String get offlineStorageSubtitle =>
+      'Запазени копия за този контекст, включително промени, чакащи изпращане.';
+
+  @override
+  String get offlineStorageCounting => 'Пресмятане…';
+
+  @override
+  String get offlineStorageUnknown => 'Неизвестен размер';
+
+  @override
+  String get offlineClear => 'Изчисти запазените копия';
+
+  @override
+  String get offlineClearTitle => 'Да се изчистят ли запазените копия?';
+
+  @override
+  String get offlineClearBody =>
+      'Екраните отново се зареждат от сървъра и нищо не е достъпно офлайн до следващата синхронизация. Промените, чакащи изпращане, се запазват.';
+
+  @override
+  String get offlineSyncTitle => 'Синхронизация';
+
+  @override
+  String get offlineSyncSubtitle =>
+      'Тече при отваряне на този контекст и на всеки 30 минути. На телефон изчаква Wi-Fi и достатъчно батерия; „Синхронизирай“ винаги тече.';
+
+  @override
+  String get offlineSyncNow => 'Синхронизирай';
+
+  @override
+  String get offlineNeverSynced => 'Още не е синхронизирано';
+
+  @override
+  String offlineStorageUsed(String size) {
+    return 'Заети $size';
+  }
+
+  @override
+  String offlineLastSynced(String time) {
+    return 'Последна синхронизация $time';
+  }
+
+  @override
+  String offlineSavedCopy(String time) {
+    return 'Офлайн, показва се копие от $time';
+  }
 }

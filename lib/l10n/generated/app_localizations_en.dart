@@ -6560,4 +6560,72 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tokenRotated => 'Token rotated. The old one stops in a minute.';
+
+  @override
+  String get offlineTitle => 'Offline';
+
+  @override
+  String get offlineSubtitle => 'What stays available without a connection';
+
+  @override
+  String get offlineLocal =>
+      'This instance is a database on this device, so it is always available. Offline mode applies to remote instances only.';
+
+  @override
+  String get offlineAvailableTitle => 'Available offline';
+
+  @override
+  String get offlineAvailableSubtitle =>
+      'Kept on this device for the active instance and tenant, with each task\'s comments and subtasks.';
+
+  @override
+  String get offlineStorageTitle => 'Storage';
+
+  @override
+  String get offlineStorageSubtitle =>
+      'Saved copies of this context, changes waiting to be sent included.';
+
+  @override
+  String get offlineStorageCounting => 'Counting…';
+
+  @override
+  String get offlineStorageUnknown => 'Size unknown';
+
+  @override
+  String get offlineClear => 'Clear saved copies';
+
+  @override
+  String get offlineClearTitle => 'Clear saved copies?';
+
+  @override
+  String get offlineClearBody =>
+      'Screens load from the server again, and nothing is available offline until the next sync. Changes waiting to be sent are kept.';
+
+  @override
+  String get offlineSyncTitle => 'Sync';
+
+  @override
+  String get offlineSyncSubtitle =>
+      'Runs when this context opens and every 30 minutes. On a phone it waits for Wi-Fi and enough battery; Sync now always runs.';
+
+  @override
+  String get offlineSyncNow => 'Sync now';
+
+  @override
+  String get offlineNeverSynced => 'Not synced yet';
+
+  @override
+  String offlineStorageUsed(String size) {
+    return '$size used';
+  }
+
+  @override
+  String offlineLastSynced(String time) {
+    return 'Last synced $time';
+  }
+
+  @override
+  String offlineSavedCopy(String time) {
+    return 'Offline, showing saved copy from $time';
+  }
 }

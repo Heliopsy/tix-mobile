@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
     show ProviderListenableSelect;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/logging/log.dart';
@@ -658,24 +659,34 @@ TixApi sessionApi(Ref ref) {
   return api;
 }
 
-/// The response cache of the active context. Reads are best effort, so a
-/// cache that cannot be opened behaves as an empty one.
+/// The cache scope of the active context, null with no session.
 ///
 /// A connection reaches one tenant unless it is a switchable sign-in, so
 /// only that kind names its tenant in the scope. The rest leave it empty,
 /// which keeps the scope stable while a background `whoami` fills in the
 /// tenant's key.
+@Riverpod(keepAlive: true)
+CacheScope? activeCacheScope(Ref ref) => ref.watch(
+  sessionControllerProvider.select((s) {
+    final c = s.value?.connection;
+    if (c == null) return null;
+    return CacheScope(c.id, c.switchable ? c.tenantKey : '');
+  }),
+);
+
+/// The response cache of the active context. Reads are best effort, so a
+/// cache that cannot be opened behaves as an empty one.
 @riverpod
 ResponseCache responseCache(Ref ref) {
-  final scope = ref.watch(
-    sessionControllerProvider.select((s) {
-      final c = s.value?.connection;
-      if (c == null) return null;
-      return CacheScope(c.id, c.switchable ? c.tenantKey : '');
-    }),
-  );
+  final scope = ref.watch(activeCacheScopeProvider);
   if (scope == null) throw StateError('no active session');
-  return ResponseCache(ref.watch(cacheStoreProvider), scope);
+  final cache = ResponseCache(
+    ref.watch(cacheStoreProvider),
+    scope,
+    now: ref.watch(clockProvider),
+  );
+  ref.onDispose(cache.dispose);
+  return cache;
 }
 
 /// Projects and tasks for the active session.

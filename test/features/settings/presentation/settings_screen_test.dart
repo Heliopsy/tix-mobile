@@ -170,6 +170,19 @@ void main() {
     expect(find.text('route:/settings/instances'), findsOneWidget);
   });
 
+  testWidgets('offline opens the Offline screen', (tester) async {
+    await pump(tester);
+    await tester.dragUntilVisible(
+      find.byKey(const Key('settings.offline.open')),
+      find.byType(ListView).first,
+      const Offset(0, -200),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('settings.offline.open')));
+    await tester.pumpAndSettle();
+    expect(find.text('route:/settings/offline'), findsOneWidget);
+  });
+
   testWidgets('add an instance goes to connect', (tester) async {
     await pump(tester);
     await tester.tap(find.byKey(const Key('settings.add')));

@@ -155,6 +155,24 @@ A repository wraps a read in `ResponseCache.remember` and offers a `cached…` t
 `cachedFirst`, which returns the cached value at once and sets the server's when it arrives. Each key is served
 from the cache once per context, so a pull to refresh always asks the server and shows its error.
 
+### Offline
+
+`remember` takes the entry's decoder too. When a read cannot reach the server (`network`, `timeout`, `upstream`)
+and an entry exists, it answers with the entry instead, whatever `peek` already served, and
+`savedCopySinceProvider` tells the task screen to say "Offline, showing saved copy from …". A 403, 404 or 500 is
+still the caller's: the server answered.
+
+`OfflineSync` (`core/offline/sync.dart`) fills the cache for what the person keeps offline (Settings, Offline: the
+chosen projects, My work and Starred, per context). `Prefetcher` (`data/offline`) reads through the repositories,
+so it writes the keys the screens read; the task screen's request comes from `TaskListRepository.requestFor`,
+shared with `TaskListing`, and `listAll` stores every page as the first page with no cursor. It runs for remote
+instances on activation, every 30 minutes and when the network returns, never on mobile data, battery saver or a
+low battery on a phone; Sync now always runs. Steps in `syncStepsProvider` (the outbox replay) run first.
+`networkStateProvider` and `onlineProvider` (`core/offline/connectivity.dart`) wrap connectivity_plus.
+
+Keys under `sync/` are reserved for work waiting to be sent: `CacheStore.clearScope` keeps them, `sizeOf` counts
+them, and only removing the connection deletes them.
+
 ## Optimistic updates
 
 The design system's `runOptimistic` (`core/design/components/toast.dart`) shows the change, the error toast and the

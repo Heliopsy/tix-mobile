@@ -268,35 +268,81 @@ final class SessionApiProvider
 
 String _$sessionApiHash() => r'3faedeaa65ed91ca6e28e72528b6575fde4a3838';
 
-/// The response cache of the active context. Reads are best effort, so a
-/// cache that cannot be opened behaves as an empty one.
+/// The cache scope of the active context, null with no session.
 ///
 /// A connection reaches one tenant unless it is a switchable sign-in, so
 /// only that kind names its tenant in the scope. The rest leave it empty,
 /// which keeps the scope stable while a background `whoami` fills in the
 /// tenant's key.
+
+@ProviderFor(activeCacheScope)
+final activeCacheScopeProvider = ActiveCacheScopeProvider._();
+
+/// The cache scope of the active context, null with no session.
+///
+/// A connection reaches one tenant unless it is a switchable sign-in, so
+/// only that kind names its tenant in the scope. The rest leave it empty,
+/// which keeps the scope stable while a background `whoami` fills in the
+/// tenant's key.
+
+final class ActiveCacheScopeProvider
+    extends $FunctionalProvider<CacheScope?, CacheScope?, CacheScope?>
+    with $Provider<CacheScope?> {
+  /// The cache scope of the active context, null with no session.
+  ///
+  /// A connection reaches one tenant unless it is a switchable sign-in, so
+  /// only that kind names its tenant in the scope. The rest leave it empty,
+  /// which keeps the scope stable while a background `whoami` fills in the
+  /// tenant's key.
+  ActiveCacheScopeProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'activeCacheScopeProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$activeCacheScopeHash();
+
+  @$internal
+  @override
+  $ProviderElement<CacheScope?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  CacheScope? create(Ref ref) {
+    return activeCacheScope(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(CacheScope? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<CacheScope?>(value),
+    );
+  }
+}
+
+String _$activeCacheScopeHash() => r'c470c85327aa8ff9df5c2559b4d3ee31df840cf8';
+
+/// The response cache of the active context. Reads are best effort, so a
+/// cache that cannot be opened behaves as an empty one.
 
 @ProviderFor(responseCache)
 final responseCacheProvider = ResponseCacheProvider._();
 
 /// The response cache of the active context. Reads are best effort, so a
 /// cache that cannot be opened behaves as an empty one.
-///
-/// A connection reaches one tenant unless it is a switchable sign-in, so
-/// only that kind names its tenant in the scope. The rest leave it empty,
-/// which keeps the scope stable while a background `whoami` fills in the
-/// tenant's key.
 
 final class ResponseCacheProvider
     extends $FunctionalProvider<ResponseCache, ResponseCache, ResponseCache>
     with $Provider<ResponseCache> {
   /// The response cache of the active context. Reads are best effort, so a
   /// cache that cannot be opened behaves as an empty one.
-  ///
-  /// A connection reaches one tenant unless it is a switchable sign-in, so
-  /// only that kind names its tenant in the scope. The rest leave it empty,
-  /// which keeps the scope stable while a background `whoami` fills in the
-  /// tenant's key.
   ResponseCacheProvider._()
     : super(
         from: null,
@@ -330,7 +376,7 @@ final class ResponseCacheProvider
   }
 }
 
-String _$responseCacheHash() => r'8d9babb91c30510d7d9a8353fb0baf15978ce81b';
+String _$responseCacheHash() => r'c5f322dab90f541372a7ee09d6d4661419f3131c';
 
 /// Projects and tasks for the active session.
 

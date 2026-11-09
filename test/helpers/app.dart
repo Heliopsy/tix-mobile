@@ -13,6 +13,8 @@ import 'package:tix_mobile/src/core/design/theme.dart';
 import 'package:tix_mobile/src/core/events/events.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/notifications/local_notifier.dart';
+import 'package:tix_mobile/src/core/offline/connectivity.dart';
+import 'package:tix_mobile/src/core/offline/sync.dart';
 import 'package:tix_mobile/src/core/platform/files.dart';
 import 'package:tix_mobile/src/core/platform/local_access.dart';
 import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
@@ -123,6 +125,8 @@ List<Override> fakeOverrides(
   EventSocketConnector events = refusingEventSocket,
   FakeNotes? notes,
   FakeWidgetBridge? widgets,
+  NetworkState network = NetworkState.unmetered,
+  bool autoSync = false,
 }) => [
   keyValueStoreProvider.overrideWithValue(settings ?? MemoryKeyValueStore()),
   secretStoreProvider.overrideWithValue(secrets ?? MemorySecretStore()),
@@ -147,6 +151,8 @@ List<Override> fakeOverrides(
   widgetBridgeProvider.overrideWithValue(
     widgets ?? FakeWidgetBridge(supported: false),
   ),
+  networkStateProvider.overrideWithValue(AsyncData(network)),
+  autoSyncProvider.overrideWithValue(autoSync),
 ];
 
 /// The time every test runs at.
@@ -244,6 +250,7 @@ Future<ProviderContainer> pumpScreen(
           GoRoute(path: 'account', builder: stub),
           GoRoute(path: 'calendar', builder: stub),
           GoRoute(path: 'tokens', builder: stub),
+          GoRoute(path: 'offline', builder: stub),
         ],
       ),
       GoRoute(

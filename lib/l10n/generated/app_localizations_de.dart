@@ -6619,4 +6619,72 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tokenRotated => 'Token erneuert. Das alte endet in einer Minute.';
+
+  @override
+  String get offlineTitle => 'Offline';
+
+  @override
+  String get offlineSubtitle => 'Was ohne Verbindung verfügbar bleibt';
+
+  @override
+  String get offlineLocal =>
+      'Diese Instanz ist eine Datenbank auf diesem Gerät und daher immer verfügbar. Der Offlinemodus gilt nur für entfernte Instanzen.';
+
+  @override
+  String get offlineAvailableTitle => 'Offline verfügbar';
+
+  @override
+  String get offlineAvailableSubtitle =>
+      'Auf diesem Gerät für die aktive Instanz und den aktiven Mandanten gespeichert, mit den Kommentaren und Unteraufgaben jeder Aufgabe.';
+
+  @override
+  String get offlineStorageTitle => 'Speicher';
+
+  @override
+  String get offlineStorageSubtitle =>
+      'Gespeicherte Kopien dieses Kontexts, einschließlich Änderungen, die noch gesendet werden.';
+
+  @override
+  String get offlineStorageCounting => 'Wird berechnet…';
+
+  @override
+  String get offlineStorageUnknown => 'Größe unbekannt';
+
+  @override
+  String get offlineClear => 'Kopien löschen';
+
+  @override
+  String get offlineClearTitle => 'Gespeicherte Kopien löschen?';
+
+  @override
+  String get offlineClearBody =>
+      'Ansichten laden wieder vom Server, und bis zur nächsten Synchronisierung ist nichts offline verfügbar. Noch nicht gesendete Änderungen bleiben erhalten.';
+
+  @override
+  String get offlineSyncTitle => 'Synchronisierung';
+
+  @override
+  String get offlineSyncSubtitle =>
+      'Läuft beim Öffnen dieses Kontexts und alle 30 Minuten. Auf einem Telefon wartet sie auf WLAN und genug Akku; „Jetzt synchronisieren“ läuft immer.';
+
+  @override
+  String get offlineSyncNow => 'Jetzt synchronisieren';
+
+  @override
+  String get offlineNeverSynced => 'Noch nicht synchronisiert';
+
+  @override
+  String offlineStorageUsed(String size) {
+    return '$size belegt';
+  }
+
+  @override
+  String offlineLastSynced(String time) {
+    return 'Zuletzt synchronisiert $time';
+  }
+
+  @override
+  String offlineSavedCopy(String time) {
+    return 'Offline, gespeicherte Kopie vom $time';
+  }
 }

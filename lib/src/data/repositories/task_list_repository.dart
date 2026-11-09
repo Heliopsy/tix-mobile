@@ -12,6 +12,8 @@ import 'package:tix_mobile/src/data/models/page.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/models/workflow.dart';
 import 'package:tix_mobile/src/data/query/filter_expression.dart';
+import 'package:tix_mobile/src/data/query/task_index.dart';
+import 'package:tix_mobile/src/data/query/task_query.dart';
 
 /// One listing request: the filter's parameters and the order.
 typedef ListingRequest = ({
@@ -30,6 +32,23 @@ class TaskListRepository {
 
   final TixApi _api;
   final ResponseCache _cache;
+
+  /// The request the task screen sends for [query], read at [now] against
+  /// [context]: one place, so a prefetch keeps exactly what a screen reads.
+  static ListingRequest requestFor(
+    TaskQuery query,
+    TaskIndex context,
+    DateTime now,
+  ) => (
+    params: paramsFor(query, context, now),
+    sort: query.scope is MineScope && query.sort.isEmpty
+        ? 'due_at'
+        : query.sort.isEmpty
+        ? null
+        : query.sort,
+    direction: query.descending ? 'desc' : null,
+    limit: query.limit,
+  );
 
   static String _key(ListingRequest l) {
     final keys = l.params.keys.toList()..sort();
@@ -55,7 +74,28 @@ class TaskListRepository {
       _key(listing),
       fresh,
       (p) => p.toJson((e) => e.toJson()),
+      decode: _tasks,
     );
+  }
+
+  /// Every page of [listing], at most [max] tasks, kept under the first
+  /// page's key as one page with no cursor, so a screen opened offline
+  /// draws all of it.
+  Future<Page<Task>> listAll(ListingRequest listing, {int max = 5000}) async {
+    final all = <Task>[];
+    String? cursor;
+    do {
+      final page = await _send(listing, cursor);
+      all.addAll(page.items);
+      cursor = page.nextCursor;
+    } while (cursor != null && all.length < max);
+    final merged = Page(items: all);
+    await _cache.keep(
+      _key(listing),
+      merged,
+      (p) => p.toJson((e) => e.toJson()),
+    );
+    return merged;
   }
 
   /// The first page of [listing] as last read, null when never read.
@@ -151,16 +191,17 @@ class TaskListRepository {
     'workflows',
     _api.workflow.list(),
     (p) => p.toJson((e) => e.toJson()),
+    decode: _workflows,
   )).items;
 
   /// The workflows as last read, null when never read.
-  Future<List<Workflow>?> cachedWorkflows() async => (await _cache.peek(
-    'workflows',
-    (json) => Page.fromJson(
-      json! as Map<String, dynamic>,
-      (e) => Workflow.fromJson(e! as Map<String, dynamic>),
-    ),
-  ))?.items;
+  Future<List<Workflow>?> cachedWorkflows() async =>
+      (await _cache.peek('workflows', _workflows))?.items;
+
+  static Page<Workflow> _workflows(Object? json) => Page.fromJson(
+    json! as Map<String, dynamic>,
+    (e) => Workflow.fromJson(e! as Map<String, dynamic>),
+  );
 
   /// Who the caller is.
   Future<Actor> me() => _api.identity.whoami();

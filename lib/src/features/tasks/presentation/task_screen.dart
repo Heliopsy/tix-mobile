@@ -14,6 +14,7 @@ import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
+import 'package:tix_mobile/src/core/widgets/saved_copy_mark.dart';
 import 'package:tix_mobile/src/data/models/group_pref.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
@@ -387,7 +388,12 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
                 icon: Icons.add,
                 onPressed: add,
               ),
-        body: framed,
+        body: Column(
+          children: [
+            const SavedCopyMark(),
+            Expanded(child: framed),
+          ],
+        ),
       ),
     );
   }

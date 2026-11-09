@@ -99,4 +99,10 @@ class _Broken implements CacheStore {
 
   @override
   Future<void> clearConnection(String connectionId) async {}
+
+  @override
+  Future<int> sizeOf(CacheScope scope) async => 0;
+
+  @override
+  Future<void> clearScope(CacheScope scope) async {}
 }

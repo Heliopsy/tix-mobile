@@ -13,7 +13,7 @@ import 'package:tix_mobile/src/data/models/workflow.dart';
 import 'package:tix_mobile/src/data/query/filter_expression.dart';
 import 'package:tix_mobile/src/features/tasks/application/listing.dart';
 
-export 'package:tix_mobile/src/features/tasks/application/task_query.dart';
+export 'package:tix_mobile/src/data/query/task_query.dart';
 
 part 'screen.g.dart';
 

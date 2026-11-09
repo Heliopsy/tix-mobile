@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:meta/meta.dart';
@@ -36,8 +37,20 @@ abstract interface class CacheStore {
   /// Replaces the text under [key] in [scope].
   Future<void> write(CacheScope scope, String key, String value);
 
-  /// Forgets everything cached for [connectionId], in every tenant.
+  /// Forgets everything cached for [connectionId], in every tenant,
+  /// [syncPrefix] included.
   Future<void> clearConnection(String connectionId);
+
+  /// How many bytes [scope] takes, entries under [syncPrefix] included.
+  Future<int> sizeOf(CacheScope scope);
+
+  /// Forgets what was cached for [scope], except entries under
+  /// [syncPrefix]: those are changes not yet sent, never a copy.
+  Future<void> clearScope(CacheScope scope);
+
+  /// Keys under this prefix hold work waiting to be sent (the outbox,
+  /// conflicts, drafts), so [clearScope] keeps them.
+  static const syncPrefix = 'sync/';
 }
 
 /// A [CacheStore] in memory, for tests.
@@ -58,6 +71,15 @@ class MemoryCacheStore implements CacheStore {
   @override
   Future<void> clearConnection(String connectionId) async =>
       entries.removeWhere((k, _) => k.startsWith('$connectionId/'));
+
+  @override
+  Future<int> sizeOf(CacheScope scope) async => (entries[_scope(scope)] ?? {})
+      .values
+      .fold<int>(0, (sum, v) => sum + utf8.encode(v).length);
+
+  @override
+  Future<void> clearScope(CacheScope scope) async => entries[_scope(scope)]
+      ?.removeWhere((k, _) => !k.startsWith(CacheStore.syncPrefix));
 }
 
 /// A [CacheStore] of one file per entry under a directory: no database and
@@ -114,5 +136,37 @@ class FileCacheStore implements CacheStore {
       '${base.path}${Platform.pathSeparator}${_seg(connectionId)}',
     );
     if (dir.existsSync()) await dir.delete(recursive: true);
+  }
+
+  Future<Directory> _dir(CacheScope scope) async {
+    final sep = Platform.pathSeparator;
+    final base = await _base();
+    return Directory(
+      '${base.path}$sep${_seg(scope.connectionId)}$sep'
+      '${_seg(scope.tenantKey)}',
+    );
+  }
+
+  @override
+  Future<int> sizeOf(CacheScope scope) async {
+    final dir = await _dir(scope);
+    if (!dir.existsSync()) return 0;
+    var total = 0;
+    await for (final e in dir.list(recursive: true)) {
+      if (e is File) total += await e.length();
+    }
+    return total;
+  }
+
+  @override
+  Future<void> clearScope(CacheScope scope) async {
+    final dir = await _dir(scope);
+    if (!dir.existsSync()) return;
+    final keep = _seg(CacheStore.syncPrefix);
+    await for (final e in dir.list()) {
+      final name = e.path.split(Platform.pathSeparator).last;
+      if (name.startsWith(keep)) continue;
+      await e.delete(recursive: true);
+    }
   }
 }

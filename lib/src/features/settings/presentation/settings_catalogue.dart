@@ -41,6 +41,9 @@ enum SettingsSection {
   /// What home screen widgets show.
   widgets(SettingsScope.device),
 
+  /// What the active context keeps on this device for offline use.
+  offline(SettingsScope.device),
+
   /// The app itself.
   about(SettingsScope.device),
 
@@ -124,6 +127,7 @@ String settingsSectionTitle(AppLocalizations l10n, SettingsSection section) =>
       SettingsSection.servers => l10n.instancesTitle,
       SettingsSection.localEngine => l10n.localInstanceIdleTitle,
       SettingsSection.widgets => l10n.settingsWidgets,
+      SettingsSection.offline => l10n.offlineTitle,
       SettingsSection.about => l10n.aboutTitle,
       SettingsSection.profile => l10n.settingsProfileTitle,
       SettingsSection.security => l10n.securityTitle,
@@ -239,6 +243,15 @@ List<SettingsItem> settingsCatalogue(
       label: l10n.settingsWidgetLockCounts,
       icon: Icons.widgets_outlined,
       keywords: l10n.settingsWidgets,
+    ),
+  if (signedIn)
+    SettingsItem(
+      id: 'offline.open',
+      section: SettingsSection.offline,
+      label: l10n.offlineTitle,
+      icon: Icons.cloud_off_outlined,
+      keywords: '${l10n.offlineAvailableTitle} ${l10n.offlineSyncTitle}',
+      route: Routes.offline,
     ),
   SettingsItem(
     id: 'about.app',

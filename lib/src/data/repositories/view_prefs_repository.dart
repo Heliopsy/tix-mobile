@@ -27,17 +27,17 @@ class ViewPrefsRepository {
     'view/$view',
     _api.view.groups(view),
     (p) => p.toJson((e) => e.toJson()),
+    decode: _groups,
   )).items;
 
   /// The arrangement of [view] as last read, null when never read.
   Future<List<GroupPref>?> cachedGroups(String view) async =>
-      (await _cache.peek(
-        'view/$view',
-        (json) => Page.fromJson(
-          json! as Map<String, dynamic>,
-          (e) => GroupPref.fromJson(e! as Map<String, dynamic>),
-        ),
-      ))?.items;
+      (await _cache.peek('view/$view', _groups))?.items;
+
+  static Page<GroupPref> _groups(Object? json) => Page.fromJson(
+    json! as Map<String, dynamic>,
+    (e) => GroupPref.fromJson(e! as Map<String, dynamic>),
+  );
 
   /// Changes one group of [view]; a null leaves that setting as it is.
   Future<GroupPref> setGroup(
@@ -64,16 +64,17 @@ class ViewPrefsRepository {
     'filters',
     _api.filter.list(),
     (p) => p.toJson((e) => e.toJson()),
+    decode: _filters,
   )).items;
 
   /// The filters as last read, null when never read.
-  Future<List<SavedFilter>?> cachedFilters() async => (await _cache.peek(
-    'filters',
-    (json) => Page.fromJson(
-      json! as Map<String, dynamic>,
-      (e) => SavedFilter.fromJson(e! as Map<String, dynamic>),
-    ),
-  ))?.items;
+  Future<List<SavedFilter>?> cachedFilters() async =>
+      (await _cache.peek('filters', _filters))?.items;
+
+  static Page<SavedFilter> _filters(Object? json) => Page.fromJson(
+    json! as Map<String, dynamic>,
+    (e) => SavedFilter.fromJson(e! as Map<String, dynamic>),
+  );
 
   /// The filter [nameOrId] the reader can see, their own winning over a
   /// shared one of the same name (`filter.show`).

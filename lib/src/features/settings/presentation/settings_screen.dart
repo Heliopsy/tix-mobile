@@ -273,6 +273,7 @@ class _Entry extends StatelessWidget {
       'servers.instances' => const _InstancesEntry(),
       'localEngine.idle' => const LocalIdleEntry(),
       'widgets.lockCounts' => const _WidgetLockCountsEntry(),
+      'offline.open' => _LinkEntry(item: item, subtitle: l10n.offlineSubtitle),
       'about.app' => _LinkEntry(
         item: item,
         subtitle: l10n.aboutTagline,

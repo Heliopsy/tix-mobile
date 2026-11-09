@@ -37,6 +37,7 @@ class InboxRepository {
       _key(unread),
       fresh,
       (p) => p.toJson((e) => e.toJson()),
+      decode: _items,
     );
   }
 
@@ -49,11 +50,13 @@ class InboxRepository {
     'inbox/count',
     _api.inbox.count().then((c) => c.unread),
     (n) => n,
+    decode: _count,
   );
 
   /// The unread count as last read, null when never read.
-  Future<int?> cachedUnreadCount() =>
-      _cache.peek('inbox/count', (json) => json! as int);
+  Future<int?> cachedUnreadCount() => _cache.peek('inbox/count', _count);
+
+  static int _count(Object? json) => json! as int;
 
   /// Marks [id] read.
   Future<InboxItem> markRead(String id) => _api.inbox.read(id);
