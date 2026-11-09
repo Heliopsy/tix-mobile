@@ -78,7 +78,10 @@ class InboxNavIcon extends ConsumerWidget {
       backgroundColor: t.accent,
       textColor: t.onAccent,
       isLabelVisible: unread > 0,
-      label: Text(unread > 99 ? '99+' : '$unread'),
+      label: Text(
+        unread > 99 ? '99+' : '$unread',
+        style: const TextStyle(fontFeatures: [FontFeature.tabularFigures()]),
+      ),
       child: icon,
     );
   }
