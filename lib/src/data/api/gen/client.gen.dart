@@ -3339,6 +3339,7 @@ class TenantOps {
     String? sort,
     String? direction,
     bool? includeRemoved,
+    bool? withoutTotp,
   }) async {
     return Page.fromJson(
       await _t.json(
@@ -3350,6 +3351,7 @@ class TenantOps {
           'sort': sort,
           'direction': direction,
           'include_removed': includeRemoved,
+          'without_totp': withoutTotp,
         },
       ),
       (e) => TenantUser.fromJson(e! as Map<String, dynamic>),
@@ -3366,6 +3368,7 @@ class TenantOps {
     String? sort,
     String? direction,
     bool? includeRemoved,
+    bool? withoutTotp,
   }) => _t
       .ndjson(
         'GET',
@@ -3375,6 +3378,7 @@ class TenantOps {
           'sort': sort,
           'direction': direction,
           'include_removed': includeRemoved,
+          'without_totp': withoutTotp,
         },
       )
       .map((e) => TenantUser.fromJson(e! as Map<String, dynamic>));
@@ -3665,6 +3669,7 @@ class UserOps {
     String? sort,
     String? direction,
     bool? includeRemoved,
+    bool? withoutTotp,
   }) async {
     return Page.fromJson(
       await _t.json(
@@ -3676,6 +3681,7 @@ class UserOps {
           'sort': sort,
           'direction': direction,
           'include_removed': includeRemoved,
+          'without_totp': withoutTotp,
         },
       ),
       (e) => User.fromJson(e! as Map<String, dynamic>),
@@ -3691,6 +3697,7 @@ class UserOps {
     String? sort,
     String? direction,
     bool? includeRemoved,
+    bool? withoutTotp,
   }) => _t
       .ndjson(
         'GET',
@@ -3700,6 +3707,7 @@ class UserOps {
           'sort': sort,
           'direction': direction,
           'include_removed': includeRemoved,
+          'without_totp': withoutTotp,
         },
       )
       .map((e) => User.fromJson(e! as Map<String, dynamic>));
@@ -4019,4 +4027,44 @@ class WorkflowOps {
       ),
     );
   }
+
+  /// ApplyWorkflowTemplate creates a workflow from a built-in template, under the
+  /// template's key or the one the input names.
+  ///
+  /// `POST /api/v1/workflow-templates/{key}/apply` (`workflow.template.apply`), scope `workflow:write`.
+  Future<Workflow> templateApply(
+    String key,
+    ApplyWorkflowTemplateInput body, {
+    String? idempotencyKey,
+  }) async {
+    return Workflow.fromJson(
+      await _t.json(
+        'POST',
+        '/api/v1/workflow-templates/${_t.segment(key)}/apply',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
+    );
+  }
+
+  /// ListWorkflowTemplates lists the built-in workflow templates: each one's key,
+  /// name, one-line purpose, a summary of its states, its definition and the
+  /// custom fields a project created from it gets.
+  ///
+  /// `GET /api/v1/workflow-templates` (`workflow.template.list`), scope `workflow:read`.
+  Future<Page<WorkflowTemplate>> templateList() async {
+    return Page.fromJson(
+      await _t.json('GET', '/api/v1/workflow-templates'),
+      (e) => WorkflowTemplate.fromJson(e! as Map<String, dynamic>),
+    );
+  }
+
+  /// ListWorkflowTemplates lists the built-in workflow templates: each one's key,
+  /// name, one-line purpose, a summary of its states, its definition and the
+  /// custom fields a project created from it gets.
+  ///
+  /// `GET /api/v1/workflow-templates` (`workflow.template.list`) as NDJSON, one item per line, scope `workflow:read`.
+  Stream<WorkflowTemplate> templateListStream() => _t
+      .ndjson('GET', '/api/v1/workflow-templates')
+      .map((e) => WorkflowTemplate.fromJson(e! as Map<String, dynamic>));
 }

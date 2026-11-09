@@ -4584,8 +4584,8 @@ paths:
                 $ref: '#/components/schemas/IssuedInvite'
           description: IssuedInvite carries an invite together with its freshly minted
             secret. Path is the browser route that accepts it; URL is that route made
-            absolute by a surface that knows the address it was reached at, and is
-            empty otherwise.
+            absolute, under server.public_url (or the tenant's own domain) or the
+            address a request arrived at, and is empty when neither is known.
         "400":
           $ref: '#/components/responses/Error400'
         "401":
@@ -4718,8 +4718,8 @@ paths:
                 $ref: '#/components/schemas/IssuedInvite'
           description: IssuedInvite carries an invite together with its freshly minted
             secret. Path is the browser route that accepts it; URL is that route made
-            absolute by a surface that knows the address it was reached at, and is
-            empty otherwise.
+            absolute, under server.public_url (or the tenant's own domain) or the
+            address a request arrived at, and is empty when neither is known.
         "400":
           $ref: '#/components/responses/Error400'
         "401":
@@ -10500,6 +10500,12 @@ paths:
           name: include_removed
           schema:
             type: boolean
+        - description: WithoutTOTP is true to list only people who hold no confirmed
+            second factor.
+          in: query
+          name: without_totp
+          schema:
+            type: boolean
       responses:
         "200":
           content:
@@ -11111,6 +11117,12 @@ paths:
             too, each marked removed.
           in: query
           name: include_removed
+          schema:
+            type: boolean
+        - description: WithoutTOTP is true to list only people who hold no confirmed
+            second factor.
+          in: query
+          name: without_totp
           schema:
             type: boolean
       responses:
@@ -12224,6 +12236,139 @@ paths:
         - identity
       x-tix-openspec:
         - http-api
+  /api/v1/workflow-templates:
+    get:
+      description: |-
+        ListWorkflowTemplates lists the built-in workflow templates: each one's key, name, one-line purpose, a summary of its states, its definition and the custom fields a project created from it gets.
+
+        Command line: `tix workflow template ls`.
+      operationId: workflow.template.list
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/WorkflowTemplate'
+                    type:
+                      - array
+                      - "null"
+                  next_cursor:
+                    type: string
+                  page:
+                    type: integer
+                  total:
+                    type:
+                      - "null"
+                      - integer
+                  total_capped:
+                    type: boolean
+                type: object
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/WorkflowTemplate'
+              x-tix-stream: one item per line, no envelope and no cursor
+          description: OK
+        "400":
+          $ref: '#/components/responses/Error400'
+        "401":
+          $ref: '#/components/responses/Error401'
+        "403":
+          $ref: '#/components/responses/Error403'
+        "404":
+          $ref: '#/components/responses/Error404'
+        "409":
+          $ref: '#/components/responses/Error409'
+        "422":
+          $ref: '#/components/responses/Error422'
+        "500":
+          $ref: '#/components/responses/Error500'
+        "502":
+          $ref: '#/components/responses/Error502'
+        "504":
+          $ref: '#/components/responses/Error504'
+      security:
+        - bearer:
+            - workflow:read
+        - session:
+            - workflow:read
+      summary: 'ListWorkflowTemplates lists the built-in workflow templates: each
+        one''s key, name, one-line purpose, a summary of its states, its definition
+        and the custom fields a project created from it gets'
+      tags:
+        - workflow
+  /api/v1/workflow-templates/{key}/apply:
+    post:
+      description: |-
+        ApplyWorkflowTemplate creates a workflow from a built-in template, under the template's key or the one the input names. A key already taken is a conflict unless the input says to skip, rename or replace.
+
+        Command line: `tix workflow template apply`.
+      operationId: workflow.template.apply
+      parameters:
+        - description: Custom field key, as the project defines it.
+          in: path
+          name: key
+          required: true
+          schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplyWorkflowTemplateInput'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workflow'
+          description: Workflow is a named state machine owned by a tenant and assigned
+            to projects.
+        "400":
+          $ref: '#/components/responses/Error400'
+        "401":
+          $ref: '#/components/responses/Error401'
+        "403":
+          $ref: '#/components/responses/Error403'
+        "404":
+          $ref: '#/components/responses/Error404'
+        "409":
+          $ref: '#/components/responses/Error409'
+        "413":
+          $ref: '#/components/responses/Error413'
+        "415":
+          $ref: '#/components/responses/Error415'
+        "422":
+          $ref: '#/components/responses/Error422'
+        "500":
+          $ref: '#/components/responses/Error500'
+        "502":
+          $ref: '#/components/responses/Error502'
+        "504":
+          $ref: '#/components/responses/Error504'
+      security:
+        - bearer:
+            - workflow:write
+        - session:
+            - workflow:write
+      summary: ApplyWorkflowTemplate creates a workflow from a built-in template,
+        under the template's key or the one the input names
+      tags:
+        - workflow
   /api/v1/workflows:
     get:
       description: |-
@@ -12859,6 +13004,18 @@ components:
           items:
             $ref: '#/components/schemas/Scope'
           type: array
+        second_factor_due:
+          description: SecondFactorDue is when the tenant's second factor policy starts
+            refusing this person, on the answer to WhoAmI, set while they hold no
+            factor under it.
+          format: date-time
+          type:
+            - "null"
+            - string
+        second_factor_enrollment_required:
+          description: SecondFactorEnrollmentRequired is true, on the answer to WhoAmI,
+            while the policy refuses this person everything but enrolment.
+          type: boolean
         tenant_id:
           description: TenantID is the tenant the actor acts in.
           type: string
@@ -12926,6 +13083,19 @@ components:
         role:
           $ref: '#/components/schemas/Role'
           description: Role is the role granted in the tenant; empty means "viewer".
+      type: object
+    ApplyWorkflowTemplateInput:
+      description: ApplyWorkflowTemplateInput creates a workflow from a built-in template.
+      properties:
+        as:
+          description: As is the key the workflow is created under; empty uses the
+            template's own key.
+          type: string
+        on_collision:
+          $ref: '#/components/schemas/CollisionPolicy'
+          description: 'OnCollision decides what happens when the key is taken: skip
+            keeps the existing workflow, rename picks the next free key, replace redefines
+            the existing one. Empty refuses with a conflict.'
       type: object
     Artifact:
       description: Artifact is structured output attached to a task by a worker.
@@ -13374,6 +13544,14 @@ components:
             Omitted takes the configured default; a value above the maximum is refused.
           type: string
       type: object
+    CollisionPolicy:
+      description: CollisionPolicy decides what an import does when a component's
+        key is taken.
+      enum:
+        - skip
+        - rename
+        - replace
+      type: string
     Comment:
       description: Comment is a message on a task.
       properties:
@@ -13618,6 +13796,13 @@ components:
           description: WorkflowKey names the workflow the project's tasks follow;
             empty uses the builtin workflow.
           type: string
+        workflow_template:
+          description: 'WorkflowTemplate names a built-in workflow template instead
+            of a workflow: the project runs on the workflow the template creates under
+            its own key, reused when the tenant already holds it, and gets the template''s
+            custom fields. At most one of WorkflowKey and WorkflowTemplate may be
+            set.'
+          type: string
       type: object
     CreateTaskRequest:
       description: CreateTaskRequest is the body of a create. Parse reads Title as
@@ -13821,6 +14006,20 @@ components:
             a duration such as "24h". It can lower the deployment's ceiling but never
             raise it; zero or absent inherits the deployment's.
           type: string
+        mfa_grace:
+          description: MFAGrace is how long after the policy turned required an unenrolled
+            person may still work, as a duration such as "7d". Zero gates at once.
+          type: string
+        mfa_policy:
+          description: MFAPolicy is a tenant's second factor policy.
+          type: string
+        mfa_required_at:
+          description: MFARequiredAt is when the policy last turned required, RFC
+            3339. Absent while it is off.
+          format: date-time
+          type:
+            - "null"
+            - string
         name:
           description: Name is the tenant's display name.
           type: string
@@ -14843,8 +15042,8 @@ components:
     IssuedInvite:
       description: IssuedInvite carries an invite together with its freshly minted
         secret. Path is the browser route that accepts it; URL is that route made
-        absolute by a surface that knows the address it was reached at, and is empty
-        otherwise.
+        absolute, under server.public_url (or the tenant's own domain) or the address
+        a request arrived at, and is empty when neither is known.
       properties:
         accepted_at:
           description: AcceptedAt is when the link was used, RFC 3339; absent while
@@ -14905,8 +15104,7 @@ components:
             by the call that minted it.
           type: string
         url:
-          description: URL is Path made absolute, empty when the surface does not
-            know its own address.
+          description: URL is Path made absolute, empty when no web address is known.
           type: string
         user_id:
           description: UserID is the invited account, created when the invite was
@@ -15098,6 +15296,15 @@ components:
           items:
             type: string
           type: array
+        second_factor_due:
+          description: 'SecondFactorDue is set on a session minted for a person who
+            holds no factor under the tenant''s second factor policy: when the policy
+            starts refusing them, RFC 3339. A time already past means the session
+            can do nothing but enrol.'
+          format: date-time
+          type:
+            - "null"
+            - string
         session:
           $ref: '#/components/schemas/Session'
           description: Session is the new session, set when sign-in is complete.
@@ -15712,6 +15919,7 @@ components:
         - task:claim
         - task:delete
         - task:reclaim
+        - task:approve
         - project:read
         - project:write
         - workflow:read
@@ -16456,6 +16664,9 @@ components:
             Without one enrolment is refused outright rather than falling back to
             plaintext.
           type: boolean
+        policy:
+          description: MFAPolicy is a tenant's second factor policy.
+          type: string
         require_cli:
           description: RequireCLI is true when the tenant requires a second factor
             for command line sign-in.
@@ -16491,11 +16702,25 @@ components:
         enrolled:
           description: Enrolled is true when the caller holds a confirmed second factor.
           type: boolean
+        enrollment_due:
+          description: EnrollmentDue is when the policy starts refusing the caller,
+            RFC 3339, set while it is required and the caller holds no factor.
+          format: date-time
+          type:
+            - "null"
+            - string
+        enrollment_required:
+          description: EnrollmentRequired is true while the policy refuses the caller
+            everything but enrolment, because they hold no factor.
+          type: boolean
         pending:
           description: Pending is an enrolment that was begun and never confirmed.
             It grants nothing; it is reported so a user who abandoned enrolment is
             told why their authenticator entry does not work.
           type: boolean
+        policy:
+          description: MFAPolicy is a tenant's second factor policy.
+          type: string
         recovery_codes_left:
           description: RecoveryCodesLeft is how many unused recovery codes the caller
             holds.
@@ -17091,6 +17316,20 @@ components:
             a duration such as "24h". It can lower the deployment's ceiling but never
             raise it; zero or absent inherits the deployment's.
           type: string
+        mfa_grace:
+          description: MFAGrace is how long after the policy turned required an unenrolled
+            person may still work, as a duration such as "7d". Zero gates at once.
+          type: string
+        mfa_policy:
+          description: MFAPolicy is a tenant's second factor policy.
+          type: string
+        mfa_required_at:
+          description: MFARequiredAt is when the policy last turned required, RFC
+            3339. Absent while it is off.
+          format: date-time
+          type:
+            - "null"
+            - string
         name:
           description: Name is the tenant's display name.
           type: string
@@ -17582,6 +17821,18 @@ components:
           type:
             - "null"
             - string
+        mfa_grace:
+          description: MFAGrace is how long after the policy turned required people
+            without a factor may still work, a duration such as "7d"; zero gates at
+            once and omitted leaves it.
+          type:
+            - "null"
+            - string
+        mfa_policy:
+          description: MFAPolicy is a tenant's second factor policy.
+          type:
+            - "null"
+            - string
         name:
           description: Name renames the tenant; it must not be blank, and omitted
             leaves it.
@@ -18013,25 +18264,56 @@ components:
           description: Name is the workflow's display name.
           type: string
       type: object
+    WorkflowTemplate:
+      description: WorkflowTemplate is a ready-made workflow shipped with tix, with
+        the custom fields a project using it usually wants.
+      properties:
+        definition:
+          $ref: '#/components/schemas/WorkflowDefinition'
+          description: Definition is the workflow the template creates.
+        fields:
+          description: Fields are the custom fields a project created from the template
+            gets. Fields belong to projects, not workflows, so applying the template
+            on its own creates only the workflow.
+          items:
+            $ref: '#/components/schemas/FieldDefInput'
+          type: array
+        key:
+          description: Key identifies the template and is the key of the workflow
+            it creates unless another is chosen.
+          type: string
+        name:
+          description: Name is the template's display name.
+          type: string
+        purpose:
+          description: Purpose says in one line what the workflow is for, and is shown
+            first wherever templates are listed.
+          type: string
+        states:
+          description: States is a one-line summary of the states, in order, the final
+            ones joined by a slash.
+          type: string
+      type: object
   securitySchemes:
     bearer:
       description: 'An API token, `Authorization: Bearer TOKEN`. Each operation lists
         the scope it needs; an empty list needs an authenticated actor and nothing
         more. The scopes are `task:read`, `task:write`, `task:transition`, `task:claim`,
-        `task:delete`, `task:reclaim`, `project:read`, `project:write`, `workflow:read`,
-        `workflow:write`, `comment:write`, `artifact:write`, `event:subscribe`, `user:admin`,
-        `totp:admin`, `token:admin`, `webhook:admin`, `tenant:admin`, `sync:admin`,
-        `audit:read`, `export`, `import`, `global:admin`, `account:read`.'
+        `task:delete`, `task:reclaim`, `task:approve`, `project:read`, `project:write`,
+        `workflow:read`, `workflow:write`, `comment:write`, `artifact:write`, `event:subscribe`,
+        `user:admin`, `totp:admin`, `token:admin`, `webhook:admin`, `tenant:admin`,
+        `sync:admin`, `audit:read`, `export`, `import`, `global:admin`, `account:read`.'
       scheme: bearer
       type: http
     session:
       description: The browser session cookie `POST /api/v1/auth/login` sets. Each
         operation lists the scope it needs; an empty list needs an authenticated actor
         and nothing more. The scopes are `task:read`, `task:write`, `task:transition`,
-        `task:claim`, `task:delete`, `task:reclaim`, `project:read`, `project:write`,
-        `workflow:read`, `workflow:write`, `comment:write`, `artifact:write`, `event:subscribe`,
-        `user:admin`, `totp:admin`, `token:admin`, `webhook:admin`, `tenant:admin`,
-        `sync:admin`, `audit:read`, `export`, `import`, `global:admin`, `account:read`.
+        `task:claim`, `task:delete`, `task:reclaim`, `task:approve`, `project:read`,
+        `project:write`, `workflow:read`, `workflow:write`, `comment:write`, `artifact:write`,
+        `event:subscribe`, `user:admin`, `totp:admin`, `token:admin`, `webhook:admin`,
+        `tenant:admin`, `sync:admin`, `audit:read`, `export`, `import`, `global:admin`,
+        `account:read`.
       in: cookie
       name: tix_session
       type: apiKey

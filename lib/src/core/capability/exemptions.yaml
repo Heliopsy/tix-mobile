@@ -51,6 +51,8 @@ pending:
   # time, views, filters, inbox, search, stars, snooze, templates, bulk.
   wave1: []
   # Wave 2, team: projects, workflows, fields, users, members, invites, tokens, calendar, export.
-  wave2: []
+  wave2:
+    - workflow.template.list
+    - workflow.template.apply
   # Wave 3, admin: tenants, global admin, domains, webhooks, sync, retention, audit, second factor, SSH keys.
   wave3: []

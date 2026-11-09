@@ -189,6 +189,12 @@ _Actor _$ActorFromJson(Map<String, dynamic> json) => _Actor(
   scopes:
       (json['scopes'] as List<dynamic>?)?.map((e) => e as String).toList() ??
       const <String>[],
+  secondFactorDue: _$JsonConverterFromJson<String, DateTime>(
+    json['second_factor_due'],
+    const TixDateTime().fromJson,
+  ),
+  secondFactorEnrollmentRequired:
+      json['second_factor_enrollment_required'] as bool? ?? false,
   tenantId: json['tenant_id'] as String? ?? '',
   tenantKey: json['tenant_key'] as String? ?? '',
   tenantName: json['tenant_name'] as String? ?? '',
@@ -210,6 +216,11 @@ Map<String, dynamic> _$ActorToJson(_Actor instance) => <String, dynamic>{
   'project_id': instance.projectId,
   'role': ?_$RoleEnumMap[instance.role],
   'scopes': instance.scopes,
+  'second_factor_due': ?_$JsonConverterToJson<String, DateTime>(
+    instance.secondFactorDue,
+    const TixDateTime().toJson,
+  ),
+  'second_factor_enrollment_required': instance.secondFactorEnrollmentRequired,
   'tenant_id': instance.tenantId,
   'tenant_key': instance.tenantKey,
   'tenant_name': instance.tenantName,
@@ -273,6 +284,30 @@ Map<String, dynamic> _$AddTenantMemberInputToJson(
   'email': ?instance.email,
   'handle': ?instance.handle,
   'role': ?_$RoleEnumMap[instance.role],
+};
+
+_ApplyWorkflowTemplateInput _$ApplyWorkflowTemplateInputFromJson(
+  Map<String, dynamic> json,
+) => _ApplyWorkflowTemplateInput(
+  as: json['as'] as String?,
+  onCollision: $enumDecodeNullable(
+    _$CollisionPolicyEnumMap,
+    json['on_collision'],
+    unknownValue: JsonKey.nullForUndefinedEnumValue,
+  ),
+);
+
+Map<String, dynamic> _$ApplyWorkflowTemplateInputToJson(
+  _ApplyWorkflowTemplateInput instance,
+) => <String, dynamic>{
+  'as': ?instance.as,
+  'on_collision': ?_$CollisionPolicyEnumMap[instance.onCollision],
+};
+
+const _$CollisionPolicyEnumMap = {
+  CollisionPolicy.skip: 'skip',
+  CollisionPolicy.rename: 'rename',
+  CollisionPolicy.replace: 'replace',
 };
 
 _Artifact _$ArtifactFromJson(Map<String, dynamic> json) => _Artifact(
@@ -917,6 +952,7 @@ _CreateProjectInput _$CreateProjectInputFromJson(Map<String, dynamic> json) =>
       key: json['key'] as String?,
       name: json['name'] as String?,
       workflowKey: json['workflow_key'] as String?,
+      workflowTemplate: json['workflow_template'] as String?,
     );
 
 Map<String, dynamic> _$CreateProjectInputToJson(_CreateProjectInput instance) =>
@@ -929,6 +965,7 @@ Map<String, dynamic> _$CreateProjectInputToJson(_CreateProjectInput instance) =>
       'key': ?instance.key,
       'name': ?instance.name,
       'workflow_key': ?instance.workflowKey,
+      'workflow_template': ?instance.workflowTemplate,
     };
 
 _CreateTaskRequest _$CreateTaskRequestFromJson(Map<String, dynamic> json) =>
@@ -1083,6 +1120,12 @@ _CreatedTenant _$CreatedTenantFromJson(Map<String, dynamic> json) =>
       key: json['key'] as String? ?? '',
       leaseDefault: json['lease_default'] as String? ?? '',
       leaseMax: json['lease_max'] as String? ?? '',
+      mfaGrace: json['mfa_grace'] as String? ?? '',
+      mfaPolicy: json['mfa_policy'] as String? ?? '',
+      mfaRequiredAt: _$JsonConverterFromJson<String, DateTime>(
+        json['mfa_required_at'],
+        const TixDateTime().fromJson,
+      ),
       name: json['name'] as String? ?? '',
       requireTotpCli: json['require_totp_cli'] as bool? ?? false,
       requireTotpSsh: json['require_totp_ssh'] as bool? ?? false,
@@ -1115,6 +1158,12 @@ Map<String, dynamic> _$CreatedTenantToJson(_CreatedTenant instance) =>
       'key': instance.key,
       'lease_default': instance.leaseDefault,
       'lease_max': instance.leaseMax,
+      'mfa_grace': instance.mfaGrace,
+      'mfa_policy': instance.mfaPolicy,
+      'mfa_required_at': ?_$JsonConverterToJson<String, DateTime>(
+        instance.mfaRequiredAt,
+        const TixDateTime().toJson,
+      ),
       'name': instance.name,
       'require_totp_cli': instance.requireTotpCli,
       'require_totp_ssh': instance.requireTotpSsh,
@@ -2237,6 +2286,10 @@ _LoginResult _$LoginResultFromJson(Map<String, dynamic> json) => _LoginResult(
           ?.map((e) => e as String)
           .toList() ??
       const <String>[],
+  secondFactorDue: _$JsonConverterFromJson<String, DateTime>(
+    json['second_factor_due'],
+    const TixDateTime().fromJson,
+  ),
   session: json['session'] == null
       ? null
       : AuthSession.fromJson(json['session'] as Map<String, dynamic>),
@@ -2246,6 +2299,10 @@ Map<String, dynamic> _$LoginResultToJson(_LoginResult instance) =>
     <String, dynamic>{
       'challenge': ?instance.challenge?.toJson(),
       'recovery_codes': instance.recoveryCodes,
+      'second_factor_due': ?_$JsonConverterToJson<String, DateTime>(
+        instance.secondFactorDue,
+        const TixDateTime().toJson,
+      ),
       'session': ?instance.session?.toJson(),
     };
 
@@ -3357,6 +3414,7 @@ _TOTPReport _$TOTPReportFromJson(Map<String, dynamic> json) => _TOTPReport(
   enrolledAdmins: (json['enrolled_admins'] as num?)?.toInt() ?? 0,
   enrolments: (json['enrolments'] as num?)?.toInt() ?? 0,
   keyConfigured: json['key_configured'] as bool? ?? false,
+  policy: json['policy'] as String? ?? '',
   requireCli: json['require_cli'] as bool? ?? false,
   requireSsh: json['require_ssh'] as bool? ?? false,
   requireWeb: json['require_web'] as bool? ?? false,
@@ -3370,6 +3428,7 @@ Map<String, dynamic> _$TOTPReportToJson(_TOTPReport instance) =>
       'enrolled_admins': instance.enrolledAdmins,
       'enrolments': instance.enrolments,
       'key_configured': instance.keyConfigured,
+      'policy': instance.policy,
       'require_cli': instance.requireCli,
       'require_ssh': instance.requireSsh,
       'require_web': instance.requireWeb,
@@ -3383,7 +3442,13 @@ _TOTPStatus _$TOTPStatusFromJson(Map<String, dynamic> json) => _TOTPStatus(
     const TixDateTime().fromJson,
   ),
   enrolled: json['enrolled'] as bool? ?? false,
+  enrollmentDue: _$JsonConverterFromJson<String, DateTime>(
+    json['enrollment_due'],
+    const TixDateTime().fromJson,
+  ),
+  enrollmentRequired: json['enrollment_required'] as bool? ?? false,
   pending: json['pending'] as bool? ?? false,
+  policy: json['policy'] as String? ?? '',
   recoveryCodesLeft: (json['recovery_codes_left'] as num?)?.toInt() ?? 0,
   requiredCli: json['required_cli'] as bool? ?? false,
   requiredSsh: json['required_ssh'] as bool? ?? false,
@@ -3402,7 +3467,13 @@ Map<String, dynamic> _$TOTPStatusToJson(_TOTPStatus instance) =>
         const TixDateTime().toJson,
       ),
       'enrolled': instance.enrolled,
+      'enrollment_due': ?_$JsonConverterToJson<String, DateTime>(
+        instance.enrollmentDue,
+        const TixDateTime().toJson,
+      ),
+      'enrollment_required': instance.enrollmentRequired,
       'pending': instance.pending,
+      'policy': instance.policy,
       'recovery_codes_left': instance.recoveryCodesLeft,
       'required_cli': instance.requiredCli,
       'required_ssh': instance.requiredSsh,
@@ -3889,6 +3960,12 @@ _Tenant _$TenantFromJson(Map<String, dynamic> json) => _Tenant(
   key: json['key'] as String? ?? '',
   leaseDefault: json['lease_default'] as String? ?? '',
   leaseMax: json['lease_max'] as String? ?? '',
+  mfaGrace: json['mfa_grace'] as String? ?? '',
+  mfaPolicy: json['mfa_policy'] as String? ?? '',
+  mfaRequiredAt: _$JsonConverterFromJson<String, DateTime>(
+    json['mfa_required_at'],
+    const TixDateTime().fromJson,
+  ),
   name: json['name'] as String? ?? '',
   requireTotpCli: json['require_totp_cli'] as bool? ?? false,
   requireTotpSsh: json['require_totp_ssh'] as bool? ?? false,
@@ -3916,6 +3993,12 @@ Map<String, dynamic> _$TenantToJson(_Tenant instance) => <String, dynamic>{
   'key': instance.key,
   'lease_default': instance.leaseDefault,
   'lease_max': instance.leaseMax,
+  'mfa_grace': instance.mfaGrace,
+  'mfa_policy': instance.mfaPolicy,
+  'mfa_required_at': ?_$JsonConverterToJson<String, DateTime>(
+    instance.mfaRequiredAt,
+    const TixDateTime().toJson,
+  ),
   'name': instance.name,
   'require_totp_cli': instance.requireTotpCli,
   'require_totp_ssh': instance.requireTotpSsh,
@@ -4099,6 +4182,7 @@ const _$ScopeEnumMap = {
   Scope.taskClaim: 'task:claim',
   Scope.taskDelete: 'task:delete',
   Scope.taskReclaim: 'task:reclaim',
+  Scope.taskApprove: 'task:approve',
   Scope.projectRead: 'project:read',
   Scope.projectWrite: 'project:write',
   Scope.workflowRead: 'workflow:read',
@@ -4240,6 +4324,8 @@ _UpdateTenantInput _$UpdateTenantInputFromJson(Map<String, dynamic> json) =>
     _UpdateTenantInput(
       leaseDefault: json['lease_default'] as String?,
       leaseMax: json['lease_max'] as String?,
+      mfaGrace: json['mfa_grace'] as String?,
+      mfaPolicy: json['mfa_policy'] as String?,
       name: json['name'] as String?,
       requireTotpCli: json['require_totp_cli'] as bool?,
       requireTotpSsh: json['require_totp_ssh'] as bool?,
@@ -4254,6 +4340,8 @@ Map<String, dynamic> _$UpdateTenantInputToJson(_UpdateTenantInput instance) =>
     <String, dynamic>{
       'lease_default': ?instance.leaseDefault,
       'lease_max': ?instance.leaseMax,
+      'mfa_grace': ?instance.mfaGrace,
+      'mfa_policy': ?instance.mfaPolicy,
       'name': ?instance.name,
       'require_totp_cli': ?instance.requireTotpCli,
       'require_totp_ssh': ?instance.requireTotpSsh,
@@ -4578,4 +4666,32 @@ Map<String, dynamic> _$WorkflowInputToJson(_WorkflowInput instance) =>
       'key': ?instance.key,
       'migrate': ?instance.migrate,
       'name': ?instance.name,
+    };
+
+_WorkflowTemplate _$WorkflowTemplateFromJson(Map<String, dynamic> json) =>
+    _WorkflowTemplate(
+      definition: json['definition'] == null
+          ? null
+          : WorkflowDefinition.fromJson(
+              json['definition'] as Map<String, dynamic>,
+            ),
+      fields:
+          (json['fields'] as List<dynamic>?)
+              ?.map((e) => FieldDefInput.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <FieldDefInput>[],
+      key: json['key'] as String? ?? '',
+      name: json['name'] as String? ?? '',
+      purpose: json['purpose'] as String? ?? '',
+      states: json['states'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$WorkflowTemplateToJson(_WorkflowTemplate instance) =>
+    <String, dynamic>{
+      'definition': ?instance.definition?.toJson(),
+      'fields': instance.fields.map((e) => e.toJson()).toList(),
+      'key': instance.key,
+      'name': instance.name,
+      'purpose': instance.purpose,
+      'states': instance.states,
     };
