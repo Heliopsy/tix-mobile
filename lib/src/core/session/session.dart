@@ -11,6 +11,7 @@ import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/logging/log.dart';
+import 'package:tix_mobile/src/core/offline/outbox_owner.dart';
 import 'package:tix_mobile/src/core/platform/files.dart';
 import 'package:tix_mobile/src/core/session/api.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
@@ -761,8 +762,14 @@ SyncStore syncStore(Ref ref) {
 /// Every context's [SyncStore], kept for the life of the app so a context
 /// left and come back to finds the same one.
 @Riverpod(keepAlive: true)
-SyncStores syncStores(Ref ref) =>
-    SyncStores(ref.watch(cacheStoreProvider), now: ref.watch(clockProvider));
+SyncStores syncStores(Ref ref) {
+  final ownership = ref.watch(outboxOwnershipProvider);
+  return SyncStores(
+    ref.watch(cacheStoreProvider),
+    now: ref.watch(clockProvider),
+    owned: ownership.isOwned ? null : ownership.owned,
+  );
+}
 
 /// Whether the active context's server is known to be out of reach, so
 /// writes go straight to the outbox instead of waiting for a timeout. The

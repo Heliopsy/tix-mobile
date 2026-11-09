@@ -84,11 +84,13 @@ SyncSnapshot pruneSnapshot(SyncSnapshot s, DateTime now) {
 /// copy in memory stays the truth until the next write succeeds.
 class SyncStore {
   /// Keeps the state of [scope] in [_store]; [now] stamps a state set
-  /// aside.
-  SyncStore(this._store, this.scope, {DateTime Function()? now})
+  /// aside. Nothing is read before [_owned] completes: another engine of
+  /// this app may hold the state until then.
+  SyncStore(this._store, this.scope, {DateTime Function()? now, this._owned})
     : _clock = now ?? DateTime.now;
 
   final CacheStore _store;
+  final Future<void>? _owned;
   final DateTime Function() _clock;
 
   /// The context.
@@ -145,6 +147,7 @@ class SyncStore {
   }
 
   Future<void> _read() async {
+    await _owned;
     final String? text;
     try {
       text = await _store.read(scope, key);
@@ -218,16 +221,19 @@ class SyncStore {
 /// Two stores of one context would each hold their own copy, and the last
 /// to write would undo the other's changes.
 class SyncStores {
-  /// Stores in [_store], stamping set-aside states with [now].
-  SyncStores(this._store, {DateTime Function()? now}) : _clock = now;
+  /// Stores in [_store], stamping set-aside states with [now]. None reads
+  /// its state before [_owned] completes.
+  SyncStores(this._store, {DateTime Function()? now, this._owned})
+    : _clock = now;
 
   final CacheStore _store;
   final DateTime Function()? _clock;
+  final Future<void>? _owned;
   final _byScope = <CacheScope, SyncStore>{};
 
   /// The store of [scope], made and loaded the first time it is asked for.
   SyncStore of(CacheScope scope) => _byScope.putIfAbsent(scope, () {
-    final store = SyncStore(_store, scope, now: _clock);
+    final store = SyncStore(_store, scope, now: _clock, owned: _owned);
     unawaited(store.load());
     return store;
   });

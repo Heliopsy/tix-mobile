@@ -523,7 +523,7 @@ final class SyncStoresProvider
   }
 }
 
-String _$syncStoresHash() => r'ccf3b66cad1c375f261cf9f59d2d7ab77b9dfe82';
+String _$syncStoresHash() => r'f049444dcb5ab911859c3efd305b887b98afa50b';
 
 /// Whether the active context's server is known to be out of reach, so
 /// writes go straight to the outbox instead of waiting for a timeout. The
