@@ -18,11 +18,19 @@ LiveState? liveStateOf(LiveMode? mode) => switch (mode) {
 
 /// How live updates reach the active context, beside the context switcher.
 class LiveStatusIndicator extends ConsumerWidget {
-  /// Draws the indicator; [compact] draws the dot alone.
-  const LiveStatusIndicator({this.compact = false, super.key});
+  /// Draws the indicator; [compact] draws the dot alone, [leading] starts
+  /// it at its target's leading edge.
+  const LiveStatusIndicator({
+    this.compact = false,
+    this.leading = false,
+    super.key,
+  });
 
   /// Whether to draw the dot alone.
   final bool compact;
+
+  /// Whether the dot starts at the leading edge, after a line of text.
+  final bool leading;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,6 +39,7 @@ class LiveStatusIndicator extends ConsumerWidget {
     return LiveIndicator(
       state: state,
       compact: compact,
+      leading: leading,
       refreshSeconds: ref.watch(liveConfigProvider).refreshEvery.inSeconds,
     );
   }

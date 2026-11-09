@@ -32,12 +32,15 @@ enum LiveState {
 /// Live is the dot alone; every other state adds its word, so a degraded
 /// mode is never only a colour. [compact] draws the dot alone in every
 /// state, for a corner badge, and leaves the explanation to semantics.
+/// [leading] puts the dot at the start of its target instead of its
+/// middle, for an indicator that follows a line of text.
 class LiveIndicator extends StatelessWidget {
   /// Draws [state]; [refreshSeconds] goes into the refreshing explanation.
   const LiveIndicator({
     required this.state,
     this.refreshSeconds = 45,
     this.compact = false,
+    this.leading = false,
     super.key,
   });
 
@@ -49,6 +52,9 @@ class LiveIndicator extends StatelessWidget {
 
   /// Whether to draw the dot alone, with no tooltip or target.
   final bool compact;
+
+  /// Whether the dot and word start at the target's leading edge.
+  final bool leading;
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +115,9 @@ class LiveIndicator extends StatelessWidget {
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: leading
+                  ? MainAxisAlignment.start
+                  : MainAxisAlignment.center,
               children: [
                 dot,
                 if (state != LiveState.live) ...[
