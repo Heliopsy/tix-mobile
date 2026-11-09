@@ -1704,7 +1704,8 @@
   "inviteLinkHelp": "Fügen Sie den Link aus Ihrer Einladungs-E-Mail ein oder teilen Sie ihn aus einer anderen App mit tix. Der Server wird für Sie hinzugefügt.",
   "invitePaste": "Einladungslink einfügen",
   "inviteCheck": "Einladung prüfen",
-  "inviteJoin": "{tenant} beitreten",
+  "inviteJoin": "{tenant} auf {host} beitreten",
+  "inviteJoinServer": "{host} beitreten",
   "inviteAs": "als {email}",
   "inviteExpires": "Der Link gilt bis {when}.",
   "inviteExistingAccount": "Diese Adresse hat bereits ein tix-Konto. Geben Sie dessen Passwort ein, um anzunehmen; am Konto ändert sich nichts.",
@@ -1845,5 +1846,10 @@
   "offlineNeverSynced": "Noch nicht synchronisiert",
   "offlineStorageUsed": "{size} belegt",
   "offlineLastSynced": "Zuletzt synchronisiert {time}",
-  "offlineSavedCopy": "Offline, gespeicherte Kopie vom {time}"
+  "offlineSavedCopy": "Offline, gespeicherte Kopie vom {time}",
+  "errorSecretStorage": "Der sichere Speicher dieses Geräts ist gesperrt oder hat das Schreiben abgelehnt, daher wurde nichts geändert. Entsperren Sie ihn und versuchen Sie es erneut.",
+  "tokenUnsavedTitle": "Token erneuert, aber nicht gespeichert",
+  "tokenUnsavedHeading": "Kopieren Sie dieses Token jetzt",
+  "tokenUnsavedNote": "Der sichere Speicher dieses Geräts hat das neue Token abgelehnt. Es wird nur dieses eine Mal angezeigt, und das alte Token funktioniert in einer Minute nicht mehr. Die App nutzt das neue, bis sie geschlossen wird; verbinden Sie sich danach damit neu.",
+  "tokenUnsavedDone": "Ich habe es kopiert"
 }

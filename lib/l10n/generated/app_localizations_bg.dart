@@ -6145,8 +6145,13 @@ class AppLocalizationsBg extends AppLocalizations {
   String get inviteCheck => 'Провери поканата';
 
   @override
-  String inviteJoin(String tenant) {
-    return 'Присъединяване към $tenant';
+  String inviteJoin(String tenant, String host) {
+    return 'Присъединяване към $tenant на $host';
+  }
+
+  @override
+  String inviteJoinServer(String host) {
+    return 'Присъединяване към $host';
   }
 
   @override
@@ -6634,4 +6639,21 @@ class AppLocalizationsBg extends AppLocalizations {
   String offlineSavedCopy(String time) {
     return 'Офлайн, показва се копие от $time';
   }
+
+  @override
+  String get errorSecretStorage =>
+      'Защитеното хранилище на устройството е заключено или отказа записа, затова нищо не е променено. Отключете го и опитайте отново.';
+
+  @override
+  String get tokenUnsavedTitle => 'Токенът е сменен, но не е запазен';
+
+  @override
+  String get tokenUnsavedHeading => 'Копирайте този токен сега';
+
+  @override
+  String get tokenUnsavedNote =>
+      'Защитеното хранилище на устройството отказа новия токен. Показва се само този път, а старият токен спира да работи след минута. Приложението ползва новия, докато не бъде затворено; след това се свържете отново с него.';
+
+  @override
+  String get tokenUnsavedDone => 'Копирах го';
 }

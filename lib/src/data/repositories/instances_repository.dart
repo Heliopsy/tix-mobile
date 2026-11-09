@@ -169,6 +169,15 @@ class InstancesRepository {
   Future<void> writeSecret(Connection connection, String secret) =>
       _secrets.write(_secretKey(connection), secret);
 
+  /// Throws when secure storage would refuse to replace the secret of
+  /// [connection] now, such as a locked keyring, by writing and removing a
+  /// throwaway value next to it.
+  Future<void> checkSecretsWritable(Connection connection) async {
+    final key = 'probe.${connection.id}';
+    await _secrets.write(key, 'probe');
+    await _secrets.delete(key);
+  }
+
   /// Saves [connection] on [instance] with [secret], replacing a connection
   /// of the same kind, handle, email and tenant there, and returns what was
   /// saved. The instance is added or updated too.

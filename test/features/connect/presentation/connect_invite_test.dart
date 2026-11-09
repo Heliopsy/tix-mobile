@@ -75,7 +75,7 @@ void main() {
         size: size,
       );
       expect(find.byKey(const Key('connect.url')), findsNothing);
-      expect(find.text('Join Default'), findsOneWidget);
+      expect(find.text('Join Default on tix.example'), findsOneWidget);
       expect(find.text('as lee@example.com'), findsOneWidget);
       expect(
         tester
@@ -147,12 +147,39 @@ void main() {
     });
   });
 
+  testWidgets('the headline emphasises the real host, not the tenant', (
+    tester,
+  ) async {
+    server.tenants['default'] = (name: 'Acme on bank.example', host: '');
+    await pump(tester, const ConnectScreen(invite: link));
+    final headline = find.byKey(const Key('connect.inviteHeadline'));
+    expect(
+      tester.widget<Text>(headline).textSpan!.toPlainText(),
+      'Join Acme on bank.example on tix.example',
+    );
+    final emphasised = <String>[];
+    tester.widget<Text>(headline).textSpan!.visitChildren((span) {
+      if (span is TextSpan && span.style?.fontWeight == FontWeight.w800) {
+        emphasised.add(span.text ?? '');
+      }
+      return true;
+    });
+    expect(emphasised, ['tix.example']);
+  });
+
+  testWidgets('a tenant without a name joins the host', (tester) async {
+    server.tenants['default'] = (name: '', host: '');
+    parity.invites['tix_inv_abc'] = FakeInvite(email: 'lee@example.com');
+    await pump(tester, const ConnectScreen(invite: link));
+    expect(find.text('Join tix.example'), findsOneWidget);
+  });
+
   testWidgets('a shared invite link opens the invite, other text waits', (
     tester,
   ) async {
     pending = {'text': 'Join us: $link', 'subject': ''};
     final c = await pump(tester, const ConnectScreen());
-    expect(find.text('Join Default'), findsOneWidget);
+    expect(find.text('Join Default on tix.example'), findsOneWidget);
     expect(c.read(quickAddDraftsProvider), isNull);
     pending = {'text': 'Buy milk', 'subject': ''};
     await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger

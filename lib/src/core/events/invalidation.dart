@@ -12,6 +12,15 @@ abstract final class EventTopics {
   /// created or deleted.
   static const tasks = {'task.*'};
 
+  /// A task's claim began or ended, which changes the lease a new claim
+  /// would get.
+  static const claims = {
+    'task.claimed',
+    'task.released',
+    'task.lease_expired',
+    'task.reclaimed',
+  };
+
   /// Anything shown on a task's page: the task and what hangs off it.
   static const taskDetail = {
     'task.*',

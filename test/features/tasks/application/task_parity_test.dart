@@ -82,6 +82,23 @@ void main() {
     ]);
   });
 
+  test('a reclaim reads the claim length again', () async {
+    final c = await signedInContainer(server);
+    keep(c, taskDetailControllerProvider('infra-1'));
+    await c.read(taskDetailControllerProvider('infra-1').future);
+    await c.read(keep(c, taskLeaseProvider('infra-1')).future);
+    final before = server.requestsTo('/tasks/infra-1/lease').length;
+    server.failures['POST /api/v1/tasks/infra-1/claim/reclaim'] = FakeResponse(
+      200,
+      server.task('infra-1'),
+    );
+    await c
+        .read(taskDetailControllerProvider('infra-1').notifier)
+        .reclaim(reason: 'worker died');
+    await c.read(taskLeaseProvider('infra-1').future);
+    expect(server.requestsTo('/tasks/infra-1/lease'), hasLength(before + 1));
+  });
+
   group('saved filters', () {
     const scope = AllScope();
 

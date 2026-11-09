@@ -188,6 +188,7 @@ class TaskDetailController extends _$TaskDetailController {
   /// given, as an administrator does for a worker that died.
   Future<void> reclaim({String reason = ''}) => _serial(() async {
     accept(await _repo.reclaim(taskRef, reason: reason));
+    ref.invalidate(taskLeaseProvider(taskRef));
   });
 
   /// Copies the task as [request] says and returns the copy.
@@ -404,10 +405,18 @@ Future<List<Actor>> actorDirectory(Ref ref) =>
     ref.watch(taskDetailRepositoryProvider).actors();
 
 /// The lease a claim on [taskRef] that names no length would get now, and
-/// the levels that decide it.
+/// the levels that decide it. Read again whenever the task's claim begins
+/// or ends.
 @riverpod
-Future<LeaseGrant> taskLease(Ref ref, String taskRef) =>
-    ref.watch(taskDetailRepositoryProvider).lease(taskRef);
+Future<LeaseGrant> taskLease(Ref ref, String taskRef) {
+  final task = ref.read(taskDetailControllerProvider(taskRef)).value;
+  refreshOn(
+    ref,
+    EventTopics.claims,
+    where: (e) => e.subjectId == taskRef || (task != null && _about(e, task)),
+  );
+  return ref.watch(taskDetailRepositoryProvider).lease(taskRef);
+}
 
 /// The tags on [taskRef] as the server has them now, so a picker never
 /// offers one somebody else has just added.

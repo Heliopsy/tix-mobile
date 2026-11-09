@@ -6137,8 +6137,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get inviteCheck => 'Check invite';
 
   @override
-  String inviteJoin(String tenant) {
-    return 'Join $tenant';
+  String inviteJoin(String tenant, String host) {
+    return 'Join $tenant on $host';
+  }
+
+  @override
+  String inviteJoinServer(String host) {
+    return 'Join $host';
   }
 
   @override
@@ -6628,4 +6633,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String offlineSavedCopy(String time) {
     return 'Offline, showing saved copy from $time';
   }
+
+  @override
+  String get errorSecretStorage =>
+      'This device’s secure storage is locked or refused the write, so nothing was changed. Unlock it and try again.';
+
+  @override
+  String get tokenUnsavedTitle => 'Token rotated but not saved';
+
+  @override
+  String get tokenUnsavedHeading => 'Copy this token now';
+
+  @override
+  String get tokenUnsavedNote =>
+      'Secure storage on this device refused the new token. It is shown only this once, and the old token stops working in a minute. The app uses the new one until it closes; after that, reconnect with it.';
+
+  @override
+  String get tokenUnsavedDone => 'I have copied it';
 }

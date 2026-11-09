@@ -90,6 +90,15 @@ class Session {
     credential: credential,
     problem: problem,
   );
+
+  /// This session presenting [credential] in place of its own.
+  Session withCredential(Credential credential) => Session(
+    instance: instance,
+    connection: connection,
+    baseUrl: baseUrl,
+    credential: credential,
+    problem: problem,
+  );
 }
 
 /// The active session: null until someone connects.
@@ -368,9 +377,14 @@ class SessionController extends _$SessionController {
   }
 
   /// Swaps the API token of the remote connection [connectionId] for a
-  /// rotated one and keeps only the new value. Throws when the server
-  /// refuses; the old token then stays.
-  Future<void> rotateToken(String connectionId) async {
+  /// rotated one and keeps only the new value. Throws when secure storage
+  /// refuses a write or the server refuses; the old token then stays.
+  ///
+  /// Returns null once the new token is stored. If storing fails after the
+  /// server rotated, returns the new token instead, the only copy there is:
+  /// the caller shows it once and never logs it. The active session uses it
+  /// until the app closes.
+  Future<String?> rotateToken(String connectionId) async {
     final repo = ref.read(instancesRepositoryProvider);
     final connection = repo.connection(connectionId);
     final instance = repo.instance(connection?.instanceId ?? '');
@@ -378,20 +392,32 @@ class SessionController extends _$SessionController {
         instance == null ||
         connection.kind != ConnectionKind.token ||
         instance.kind != InstanceKind.remote) {
-      return;
+      return null;
     }
     final secret = await repo.secret(connection);
     if (secret == null || secret.isEmpty) {
       throw const TixException(TixErrorKind.tokenRequired);
     }
+    await repo.checkSecretsWritable(connection);
     final issued = await ref
         .read(authRepositoryProvider)
         .rotateToken(instance.baseUrl, BearerCredential(secret));
-    await repo.writeSecret(connection, issued.token);
-    if (state.value?.connection.id == connectionId) {
+    final active = state.value;
+    try {
+      await repo.writeSecret(connection, issued.token);
+    } on Exception {
+      if (active != null && active.connection.id == connectionId) {
+        state = AsyncData(
+          active.withCredential(BearerCredential(issued.token)),
+        );
+      }
+      return issued.token;
+    }
+    if (active?.connection.id == connectionId) {
       ref.invalidateSelf();
       await future;
     }
+    return null;
   }
 
   /// Forgets the active connection, falling back to another saved context

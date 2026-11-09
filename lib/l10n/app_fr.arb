@@ -1704,7 +1704,8 @@
   "inviteLinkHelp": "Collez le lien de votre e-mail d’invitation, ou partagez-le vers tix depuis une autre application. Le serveur est ajouté pour vous.",
   "invitePaste": "Coller le lien d’invitation",
   "inviteCheck": "Vérifier l’invitation",
-  "inviteJoin": "Rejoindre {tenant}",
+  "inviteJoin": "Rejoindre {tenant} sur {host}",
+  "inviteJoinServer": "Rejoindre {host}",
   "inviteAs": "en tant que {email}",
   "inviteExpires": "Le lien fonctionne jusqu’au {when}.",
   "inviteExistingAccount": "Cette adresse a déjà un compte tix. Saisissez son mot de passe pour accepter ; le compte n’est pas modifié.",
@@ -1845,5 +1846,10 @@
   "offlineNeverSynced": "Pas encore synchronisé",
   "offlineStorageUsed": "{size} utilisés",
   "offlineLastSynced": "Dernière synchronisation {time}",
-  "offlineSavedCopy": "Hors ligne, copie enregistrée du {time}"
+  "offlineSavedCopy": "Hors ligne, copie enregistrée du {time}",
+  "errorSecretStorage": "Le stockage sécurisé de cet appareil est verrouillé ou a refusé l’écriture, rien n’a donc été modifié. Déverrouillez-le et réessayez.",
+  "tokenUnsavedTitle": "Jeton renouvelé mais non enregistré",
+  "tokenUnsavedHeading": "Copiez ce jeton maintenant",
+  "tokenUnsavedNote": "Le stockage sécurisé de cet appareil a refusé le nouveau jeton. Il n’est affiché que cette fois, et l’ancien jeton cesse de fonctionner dans une minute. L’application utilise le nouveau jusqu’à sa fermeture ; ensuite, reconnectez-vous avec lui.",
+  "tokenUnsavedDone": "Je l’ai copié"
 }
