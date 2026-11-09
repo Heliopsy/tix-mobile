@@ -22,11 +22,18 @@ The first (this one) is offline reading:
   now. A local instance is on the device, so the screen says so and offers nothing else.
 - Connectivity and battery providers both pull requests share.
 
-The follow-up adds the outbox: changes made offline are queued under the reserved `sync/` keys, replayed in order
-before each prefetch, and conflicts are shown for the person to resolve.
+The second adds the outbox:
+
+- A change made offline, or one that fails because the server cannot be reached, is queued per context with the
+  version and task the person saw and an Idempotency-Key, shown at once with an "Unsynced" mark.
+- Tasks created offline get a draft reference (`infra-draft1`); work queued on a draft is rewritten to the real
+  reference once it is created.
+- The queue replays when the network returns, in order per task. A stale update is merged three ways; conflicts
+  follow a per-context policy (Ask, Keep mine, Keep theirs) and every one is recorded, reviewable and reversible on
+  a Conflicts screen.
 
 ## Impact
 
-- Capabilities: `offline-cache` and `app-settings` change.
+- Capabilities: `offline-cache` and `app-settings` change; `offline-sync` is new.
 - New dependencies: `connectivity_plus` (whether there is a network and whether it is metered) and `battery_plus`
   (battery saver and level on phones). Both support Android, iOS, macOS, Linux and Windows.

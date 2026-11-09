@@ -22,9 +22,14 @@
 - [x] 3.3 Strings in English, Bulgarian, French and German
 - [x] 3.4 Tests
 
-## 4. Outbox and conflicts (follow-up)
+## 4. Outbox and conflicts
 
-- [ ] 4.1 Queue changes made offline under `sync/`
-- [ ] 4.2 Replay the queue in order as a sync step before the prefetch
-- [ ] 4.3 Show conflicts and let the person resolve them
-- [ ] 4.4 Archive this change
+- [x] 4.1 Queue changes made offline under `sync/`, with base version, base task and Idempotency-Key
+- [x] 4.2 Drafts for offline creates, rewritten to the real reference after replay; links redirect
+- [x] 4.3 Replay in order per task, in parallel across tasks, as a sync step and on reconnect
+- [x] 4.4 Three-way merge on 409, the conflict policy, deleted tasks, refused moves and refusals
+- [x] 4.5 "Needs check" for creates while the server has not shown it honours Idempotency-Key
+- [x] 4.6 Sync marks and banner (design system, gallery, golden), shell badge, Conflicts screen with history
+- [x] 4.7 Policy per context and Discard all unsynced changes in the Offline settings
+- [x] 4.8 Strings in English, Bulgarian, French and German; tests
+- [x] 4.9 Archive this change
