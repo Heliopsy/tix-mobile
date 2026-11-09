@@ -20,12 +20,13 @@ against whichever context is active. What does reset the branches is the shell l
 disposed, and the next visit builds fresh branch navigators at their initial locations.
 
 So `leave` pops the pageless routes on the root navigator (sheets and dialogs opened from the hosts), goes to
-`/switching`, and waits for a frame to be drawn there. The `StatefulShellRoute`'s page is replaced in that frame,
-which disposes the shell, its branch navigators and every sheet on them. Only then does the session change, so no
+`/switching`, and waits frame by frame until the shell's key has no context left. The navigator keeps a replaced
+page mounted until the page above it has finished being pushed, so one frame is not enough; the shell, its branch
+navigators and every sheet on them are gone once the key is empty. Only then does the session change, so no
 screen of the old context is still listening when the repositories rebuild against the new one, and none fetches
 its old id there.
 
-Waiting for the frame matters: Riverpod rebuilds listened providers on its own schedule, before the widget tree
+Waiting matters: Riverpod rebuilds listened providers on its own schedule, before the widget tree
 drops them, so a reset that only followed the new session would still let the old task screen ask once. When the
 app is in the background no frame comes; the wait gives up after a short timeout.
 
