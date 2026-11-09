@@ -2,8 +2,8 @@
 
 ## 1. API
 
-- [x] 1.1 Pin `tix.lock` to #293's merge commit on tix `main`, sync `api/tix-openapi.yaml`, regenerate the client, move the
-      engine notices
+- [x] 1.1 Pin `tix.lock` to #293's merge commit on tix `main`, sync `api/tix-openapi.yaml`, regenerate the
+      client, move the engine notices
 - [x] 1.2 Bind `project.starred`, `project.star` and `project.unstar` in the capability registry
 
 ## 2. Data
