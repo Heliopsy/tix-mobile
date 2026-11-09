@@ -54,6 +54,104 @@ final class SyncStateProvider
 
 String _$syncStateHash() => r'48318ef968728216e918fa24e8224a0a0e6bf03a';
 
+/// Where an unreadable sync state of the active context was set aside, or
+/// an empty string when it could not be; null when it was read.
+
+@ProviderFor(syncSetAside)
+final syncSetAsideProvider = SyncSetAsideProvider._();
+
+/// Where an unreadable sync state of the active context was set aside, or
+/// an empty string when it could not be; null when it was read.
+
+final class SyncSetAsideProvider
+    extends $FunctionalProvider<String?, String?, String?>
+    with $Provider<String?> {
+  /// Where an unreadable sync state of the active context was set aside, or
+  /// an empty string when it could not be; null when it was read.
+  SyncSetAsideProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'syncSetAsideProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$syncSetAsideHash();
+
+  @$internal
+  @override
+  $ProviderElement<String?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  String? create(Ref ref) {
+    return syncSetAside(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String?>(value),
+    );
+  }
+}
+
+String _$syncSetAsideHash() => r'a59f3725a806c91227b14a07384b04677154dd93';
+
+/// The lock that keeps replays of one context from overlapping, shared by
+/// every replayer [OutboxSync] builds.
+
+@ProviderFor(replayLocks)
+final replayLocksProvider = ReplayLocksProvider._();
+
+/// The lock that keeps replays of one context from overlapping, shared by
+/// every replayer [OutboxSync] builds.
+
+final class ReplayLocksProvider
+    extends $FunctionalProvider<ReplayLocks, ReplayLocks, ReplayLocks>
+    with $Provider<ReplayLocks> {
+  /// The lock that keeps replays of one context from overlapping, shared by
+  /// every replayer [OutboxSync] builds.
+  ReplayLocksProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'replayLocksProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$replayLocksHash();
+
+  @$internal
+  @override
+  $ProviderElement<ReplayLocks> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ReplayLocks create(Ref ref) {
+    return replayLocks(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ReplayLocks value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ReplayLocks>(value),
+    );
+  }
+}
+
+String _$replayLocksHash() => r'090164cbd5514c8a41e554c5c32fcc9fc52053b4';
+
 /// The writes waiting for the task [ref], for its unsynced mark and banner.
 
 @ProviderFor(pendingWrites)
@@ -284,7 +382,7 @@ final class ConflictPolicySettingProvider
 }
 
 String _$conflictPolicySettingHash() =>
-    r'769a295b2c5dbd67c5c22374af03003308fcd62d';
+    r'08199823f2b2833d4d1823b792b2ce3a6867376c';
 
 /// How conflicts found during replay are settled in the active context:
 /// asking by default.
@@ -355,7 +453,7 @@ final class OutboxSyncProvider
   }
 }
 
-String _$outboxSyncHash() => r'01424b2fda3e76337e1804357983fe25afcf3d9b';
+String _$outboxSyncHash() => r'9aa8ec31ba5786dbb1a39bba85075ca70dfac306';
 
 /// Sends the active context's outbox: when the network comes back, when
 /// the event stream goes live again, when a write is queued while the

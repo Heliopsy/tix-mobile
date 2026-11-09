@@ -224,6 +224,23 @@ void main() {
     expect(stores.settings.values['sync.policy.c1.'], 'keepTheirs');
   });
 
+  testWidgets('an unreadable outbox is set aside and said so', (tester) async {
+    await cache.write(scope, SyncStore.key, '{"entries": [');
+    final c = await pump(tester, phone);
+    await tester.dragUntilVisible(
+      find.byKey(const Key('offline.unreadable')),
+      find.byType(ListView),
+      const Offset(0, -200),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      inSection('offline.unreadable', find.textContaining('could not be read')),
+      findsOneWidget,
+    );
+    final aside = c.read(syncStoreProvider).setAside!;
+    expect(await cache.read(scope, aside), '{"entries": [');
+  });
+
   testWidgets('discard all asks first, then empties the outbox', (
     tester,
   ) async {

@@ -11,6 +11,10 @@ import 'package:tix_mobile/src/core/offline/sync.dart';
 import 'package:tix_mobile/src/core/session/api.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
+import 'package:tix_mobile/src/core/storage/stores.dart';
+import 'package:tix_mobile/src/data/cache/cache_store.dart';
+import 'package:tix_mobile/src/data/models/connection.dart';
+import 'package:tix_mobile/src/data/offline/connection_jobs.dart';
 import 'package:tix_mobile/src/data/offline/outbox.dart';
 import 'package:tix_mobile/src/data/offline/sender.dart';
 
@@ -32,6 +36,21 @@ Stream<SyncSnapshot> syncState(Ref ref) async* {
   yield await store.load();
   yield* store.changes;
 }
+
+/// Where an unreadable sync state of the active context was set aside, or
+/// an empty string when it could not be; null when it was read.
+@riverpod
+String? syncSetAside(Ref ref) {
+  if (ref.watch(syncStateProvider).value == null) return null;
+  final store = ref.watch(syncStoreProvider);
+  if (!store.unreadable) return null;
+  return store.setAside ?? '';
+}
+
+/// The lock that keeps replays of one context from overlapping, shared by
+/// every replayer [OutboxSync] builds.
+@Riverpod(keepAlive: true)
+ReplayLocks replayLocks(Ref ref) => ReplayLocks();
 
 /// The writes waiting for the task [ref], for its unsynced mark and banner.
 @riverpod
@@ -65,20 +84,24 @@ List<ConflictRecord> openConflicts(Ref ref) => [
 /// asking by default.
 @Riverpod(keepAlive: true)
 class ConflictPolicySetting extends _$ConflictPolicySetting {
+  static String _keyOf(CacheScope scope) =>
+      'sync.policy.${scope.connectionId}.${scope.tenantKey}';
+
+  /// The policy kept for [scope] in [settings].
+  static ConflictPolicy storedFor(KeyValueStore settings, CacheScope scope) =>
+      ConflictPolicy.values.asNameMap()[settings.read(_keyOf(scope))] ??
+      ConflictPolicy.ask;
+
   String? get _key {
     final scope = ref.read(activeCacheScopeProvider);
-    if (scope == null) return null;
-    return 'sync.policy.${scope.connectionId}.${scope.tenantKey}';
+    return scope == null ? null : _keyOf(scope);
   }
 
   @override
   ConflictPolicy build() {
-    ref.watch(activeCacheScopeProvider);
-    final key = _key;
-    final stored = key == null
-        ? null
-        : ref.read(keyValueStoreProvider).read(key);
-    return ConflictPolicy.values.asNameMap()[stored] ?? ConflictPolicy.ask;
+    final scope = ref.watch(activeCacheScopeProvider);
+    if (scope == null) return ConflictPolicy.ask;
+    return storedFor(ref.read(keyValueStoreProvider), scope);
   }
 
   /// Settles conflicts found from now on by [policy].
@@ -114,6 +137,7 @@ class ReplayStatus {
 @Riverpod(keepAlive: true)
 class OutboxSync extends _$OutboxSync {
   OutboxReplayer? _replayer;
+  CacheScope? _scope;
   Timer? _soon;
   bool _auto = false;
   bool _registered = false;
@@ -121,16 +145,20 @@ class OutboxSync extends _$OutboxSync {
   @override
   ReplayStatus build() {
     _replayer = null;
+    _scope = null;
     final session = ref.watch(sessionControllerProvider).value;
     if (session == null || session.problem != null) return const ReplayStatus();
     final store = ref.watch(syncStoreProvider);
+    final settings = ref.read(keyValueStoreProvider);
     _auto = ref.watch(autoSyncProvider);
+    _scope = store.scope;
     _replayer = OutboxReplayer(
       store,
       ApiOutboxSender(
         ref.watch(tixApiFactoryProvider)(session.baseUrl, session.credential),
       ),
-      policy: () => ref.read(conflictPolicySettingProvider),
+      policy: () => ConflictPolicySetting.storedFor(settings, store.scope),
+      locks: ref.read(replayLocksProvider),
       clock: ref.read(clockProvider),
     );
     scheduleMicrotask(() {
@@ -183,23 +211,64 @@ class OutboxSync extends _$OutboxSync {
     if (waiting) unawaited(replayNow());
   }
 
-  /// Sends every waiting write now and answers with what happened.
+  /// Sends every waiting write now and answers with what happened. A
+  /// replay stopped because its connection is being forgotten answers null.
   Future<ReplayReport?> replayNow() async {
     final replayer = _replayer;
-    if (replayer == null) return null;
+    final scope = _scope;
+    if (replayer == null || scope == null) return null;
+    final jobs = ref.read(connectionJobsProvider);
     state = ReplayStatus(running: true, last: state.last);
     try {
-      final report = await replayer.replay();
+      final report = await jobs.run(
+        scope.connectionId,
+        (job) => replayer.replay(job: job),
+      );
       if (!ref.mounted) return report;
       state = ReplayStatus(last: report);
       if (report.sent > 0 || report.conflicts > 0) {
         ref.read(tixEventStreamProvider)?.reportGap();
       }
       return report;
+    } on JobCancelled {
+      if (ref.mounted) state = ReplayStatus(last: state.last);
+      return null;
     } on Object catch (e) {
       if (ref.mounted) state = ReplayStatus(last: state.last, error: e);
       return null;
     }
+  }
+
+  /// How many writes wait to be sent for the connection [connectionId], in
+  /// every tenant it reaches, for a warning before it is forgotten.
+  Future<int> unsentForConnection(String connectionId) async {
+    final c = ref.read(instancesRepositoryProvider).connection(connectionId);
+    return c == null ? 0 : await _unsent([c]);
+  }
+
+  /// How many writes wait to be sent for every connection of the instance
+  /// [instanceId].
+  Future<int> unsentForInstance(String instanceId) =>
+      _unsent(ref.read(instancesRepositoryProvider).connectionsOf(instanceId));
+
+  Future<int> _unsent(List<Connection> connections) async {
+    final cache = ref.read(cacheStoreProvider);
+    final active = ref.read(activeCacheScopeProvider);
+    var total = 0;
+    for (final c in connections) {
+      final scopes = {
+        CacheScope(c.id, ''),
+        CacheScope(c.id, c.tenantKey),
+        for (final m in c.memberships) CacheScope(c.id, m.tenantKey),
+      };
+      for (final scope in scopes) {
+        final snap = scope == active
+            ? await ref.read(syncStoreProvider).load()
+            : await SyncStore.peek(cache, scope);
+        total += snap?.entries.length ?? 0;
+      }
+    }
+    return total;
   }
 
   Outbox get _outbox => ref.read(outboxProvider);

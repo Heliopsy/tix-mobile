@@ -27,7 +27,9 @@ mixin _$OutboxEntry {
  Map<String, Object?> get values; OutboxState get state;/// The server's error code and message for a refused or conflicting
 /// write.
  String get errorCode; String get errorMessage;/// For a create, the draft reference the app showed until it is sent.
- String get draftRef; int get attempts;
+ String get draftRef; int get attempts;/// When [idempotencyKey] was first sent, null while it never was. tix
+/// forgets a key a day after it first sees it.
+ DateTime? get firstSentAt;
 /// Create a copy of OutboxEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -41,20 +43,20 @@ $OutboxEntryCopyWith<OutboxEntry> get copyWith => _$OutboxEntryCopyWithImpl<Outb
 @override
 bool operator ==(Object other) {
   final _this = this as OutboxEntry;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is OutboxEntry&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.seq, _this.seq) || other.seq == _this.seq)&&(identical(other.op, _this.op) || other.op == _this.op)&&(identical(other.target, _this.target) || other.target == _this.target)&&(identical(other.idempotencyKey, _this.idempotencyKey) || other.idempotencyKey == _this.idempotencyKey)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.baseVersion, _this.baseVersion) || other.baseVersion == _this.baseVersion)&&const DeepCollectionEquality().equals(other.base, _this.base)&&const DeepCollectionEquality().equals(other.values, _this.values)&&(identical(other.state, _this.state) || other.state == _this.state)&&(identical(other.errorCode, _this.errorCode) || other.errorCode == _this.errorCode)&&(identical(other.errorMessage, _this.errorMessage) || other.errorMessage == _this.errorMessage)&&(identical(other.draftRef, _this.draftRef) || other.draftRef == _this.draftRef)&&(identical(other.attempts, _this.attempts) || other.attempts == _this.attempts));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OutboxEntry&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.seq, _this.seq) || other.seq == _this.seq)&&(identical(other.op, _this.op) || other.op == _this.op)&&(identical(other.target, _this.target) || other.target == _this.target)&&(identical(other.idempotencyKey, _this.idempotencyKey) || other.idempotencyKey == _this.idempotencyKey)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.baseVersion, _this.baseVersion) || other.baseVersion == _this.baseVersion)&&const DeepCollectionEquality().equals(other.base, _this.base)&&const DeepCollectionEquality().equals(other.values, _this.values)&&(identical(other.state, _this.state) || other.state == _this.state)&&(identical(other.errorCode, _this.errorCode) || other.errorCode == _this.errorCode)&&(identical(other.errorMessage, _this.errorMessage) || other.errorMessage == _this.errorMessage)&&(identical(other.draftRef, _this.draftRef) || other.draftRef == _this.draftRef)&&(identical(other.attempts, _this.attempts) || other.attempts == _this.attempts)&&(identical(other.firstSentAt, _this.firstSentAt) || other.firstSentAt == _this.firstSentAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as OutboxEntry;
-  return Object.hash(runtimeType,_this.id,_this.seq,_this.op,_this.target,_this.idempotencyKey,_this.createdAt,_this.baseVersion,const DeepCollectionEquality().hash(_this.base),const DeepCollectionEquality().hash(_this.values),_this.state,_this.errorCode,_this.errorMessage,_this.draftRef,_this.attempts);
+  return Object.hash(runtimeType,_this.id,_this.seq,_this.op,_this.target,_this.idempotencyKey,_this.createdAt,_this.baseVersion,const DeepCollectionEquality().hash(_this.base),const DeepCollectionEquality().hash(_this.values),_this.state,_this.errorCode,_this.errorMessage,_this.draftRef,_this.attempts,_this.firstSentAt);
 }
 
 @override
 String toString() {
   final _this = this as OutboxEntry;
-  return 'OutboxEntry(id: ${_this.id}, seq: ${_this.seq}, op: ${_this.op}, target: ${_this.target}, idempotencyKey: ${_this.idempotencyKey}, createdAt: ${_this.createdAt}, baseVersion: ${_this.baseVersion}, base: ${_this.base}, values: ${_this.values}, state: ${_this.state}, errorCode: ${_this.errorCode}, errorMessage: ${_this.errorMessage}, draftRef: ${_this.draftRef}, attempts: ${_this.attempts})';
+  return 'OutboxEntry(id: ${_this.id}, seq: ${_this.seq}, op: ${_this.op}, target: ${_this.target}, idempotencyKey: ${_this.idempotencyKey}, createdAt: ${_this.createdAt}, baseVersion: ${_this.baseVersion}, base: ${_this.base}, values: ${_this.values}, state: ${_this.state}, errorCode: ${_this.errorCode}, errorMessage: ${_this.errorMessage}, draftRef: ${_this.draftRef}, attempts: ${_this.attempts}, firstSentAt: ${_this.firstSentAt})';
 }
 
 
@@ -65,7 +67,7 @@ abstract mixin class $OutboxEntryCopyWith<$Res>  {
   factory $OutboxEntryCopyWith(OutboxEntry value, $Res Function(OutboxEntry) _then) = _$OutboxEntryCopyWithImpl;
 @useResult
 $Res call({
- String id, int seq, OutboxOp op, String target, String idempotencyKey, DateTime createdAt, int? baseVersion, Map<String, Object?> base, Map<String, Object?> values, OutboxState state, String errorCode, String errorMessage, String draftRef, int attempts
+ String id, int seq, OutboxOp op, String target, String idempotencyKey, DateTime createdAt, int? baseVersion, Map<String, Object?> base, Map<String, Object?> values, OutboxState state, String errorCode, String errorMessage, String draftRef, int attempts, DateTime? firstSentAt
 });
 
 
@@ -82,7 +84,7 @@ class _$OutboxEntryCopyWithImpl<$Res>
 
 /// Create a copy of OutboxEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? seq = null,Object? op = null,Object? target = null,Object? idempotencyKey = null,Object? createdAt = null,Object? baseVersion = freezed,Object? base = null,Object? values = null,Object? state = null,Object? errorCode = null,Object? errorMessage = null,Object? draftRef = null,Object? attempts = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? seq = null,Object? op = null,Object? target = null,Object? idempotencyKey = null,Object? createdAt = null,Object? baseVersion = freezed,Object? base = null,Object? values = null,Object? state = null,Object? errorCode = null,Object? errorMessage = null,Object? draftRef = null,Object? attempts = null,Object? firstSentAt = freezed,}) {
   return _then(OutboxEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,seq: null == seq ? _self.seq : seq // ignore: cast_nullable_to_non_nullable
@@ -98,7 +100,8 @@ as OutboxState,errorCode: null == errorCode ? _self.errorCode : errorCode // ign
 as String,errorMessage: null == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String,draftRef: null == draftRef ? _self.draftRef : draftRef // ignore: cast_nullable_to_non_nullable
 as String,attempts: null == attempts ? _self.attempts : attempts // ignore: cast_nullable_to_non_nullable
-as int,
+as int,firstSentAt: freezed == firstSentAt ? _self.firstSentAt : firstSentAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -183,10 +186,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  int seq,  OutboxOp op,  String target,  String idempotencyKey,  DateTime createdAt,  int? baseVersion,  Map<String, Object?> base,  Map<String, Object?> values,  OutboxState state,  String errorCode,  String errorMessage,  String draftRef,  int attempts)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  int seq,  OutboxOp op,  String target,  String idempotencyKey,  DateTime createdAt,  int? baseVersion,  Map<String, Object?> base,  Map<String, Object?> values,  OutboxState state,  String errorCode,  String errorMessage,  String draftRef,  int attempts,  DateTime? firstSentAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _OutboxEntry() when $default != null:
-return $default(_that.id,_that.seq,_that.op,_that.target,_that.idempotencyKey,_that.createdAt,_that.baseVersion,_that.base,_that.values,_that.state,_that.errorCode,_that.errorMessage,_that.draftRef,_that.attempts);case _:
+return $default(_that.id,_that.seq,_that.op,_that.target,_that.idempotencyKey,_that.createdAt,_that.baseVersion,_that.base,_that.values,_that.state,_that.errorCode,_that.errorMessage,_that.draftRef,_that.attempts,_that.firstSentAt);case _:
   return orElse();
 
 }
@@ -204,10 +207,10 @@ return $default(_that.id,_that.seq,_that.op,_that.target,_that.idempotencyKey,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  int seq,  OutboxOp op,  String target,  String idempotencyKey,  DateTime createdAt,  int? baseVersion,  Map<String, Object?> base,  Map<String, Object?> values,  OutboxState state,  String errorCode,  String errorMessage,  String draftRef,  int attempts)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  int seq,  OutboxOp op,  String target,  String idempotencyKey,  DateTime createdAt,  int? baseVersion,  Map<String, Object?> base,  Map<String, Object?> values,  OutboxState state,  String errorCode,  String errorMessage,  String draftRef,  int attempts,  DateTime? firstSentAt)  $default,) {final _that = this;
 switch (_that) {
 case _OutboxEntry():
-return $default(_that.id,_that.seq,_that.op,_that.target,_that.idempotencyKey,_that.createdAt,_that.baseVersion,_that.base,_that.values,_that.state,_that.errorCode,_that.errorMessage,_that.draftRef,_that.attempts);case _:
+return $default(_that.id,_that.seq,_that.op,_that.target,_that.idempotencyKey,_that.createdAt,_that.baseVersion,_that.base,_that.values,_that.state,_that.errorCode,_that.errorMessage,_that.draftRef,_that.attempts,_that.firstSentAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -224,10 +227,10 @@ return $default(_that.id,_that.seq,_that.op,_that.target,_that.idempotencyKey,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  int seq,  OutboxOp op,  String target,  String idempotencyKey,  DateTime createdAt,  int? baseVersion,  Map<String, Object?> base,  Map<String, Object?> values,  OutboxState state,  String errorCode,  String errorMessage,  String draftRef,  int attempts)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  int seq,  OutboxOp op,  String target,  String idempotencyKey,  DateTime createdAt,  int? baseVersion,  Map<String, Object?> base,  Map<String, Object?> values,  OutboxState state,  String errorCode,  String errorMessage,  String draftRef,  int attempts,  DateTime? firstSentAt)?  $default,) {final _that = this;
 switch (_that) {
 case _OutboxEntry() when $default != null:
-return $default(_that.id,_that.seq,_that.op,_that.target,_that.idempotencyKey,_that.createdAt,_that.baseVersion,_that.base,_that.values,_that.state,_that.errorCode,_that.errorMessage,_that.draftRef,_that.attempts);case _:
+return $default(_that.id,_that.seq,_that.op,_that.target,_that.idempotencyKey,_that.createdAt,_that.baseVersion,_that.base,_that.values,_that.state,_that.errorCode,_that.errorMessage,_that.draftRef,_that.attempts,_that.firstSentAt);case _:
   return null;
 
 }
@@ -239,7 +242,7 @@ return $default(_that.id,_that.seq,_that.op,_that.target,_that.idempotencyKey,_t
 @JsonSerializable()
 
 class _OutboxEntry implements OutboxEntry {
-  const _OutboxEntry({required this.id, required this.seq, required this.op, required this.target, required this.idempotencyKey, required this.createdAt, this.baseVersion,  Map<String, Object?> base = const <String, Object?>{},  Map<String, Object?> values = const <String, Object?>{}, this.state = OutboxState.pending, this.errorCode = '', this.errorMessage = '', this.draftRef = '', this.attempts = 0}): _base = base,_values = values;
+  const _OutboxEntry({required this.id, required this.seq, required this.op, required this.target, required this.idempotencyKey, required this.createdAt, this.baseVersion,  Map<String, Object?> base = const <String, Object?>{},  Map<String, Object?> values = const <String, Object?>{}, this.state = OutboxState.pending, this.errorCode = '', this.errorMessage = '', this.draftRef = '', this.attempts = 0, this.firstSentAt}): _base = base,_values = values;
   factory _OutboxEntry.fromJson(Map<String, dynamic> json) => _$OutboxEntryFromJson(json);
 
 /// A client id, unique on this device.
@@ -281,6 +284,9 @@ class _OutboxEntry implements OutboxEntry {
 /// For a create, the draft reference the app showed until it is sent.
 @override@JsonKey() final  String draftRef;
 @override@JsonKey() final  int attempts;
+/// When [idempotencyKey] was first sent, null while it never was. tix
+/// forgets a key a day after it first sees it.
+@override final  DateTime? firstSentAt;
 
 /// Create a copy of OutboxEntry
 /// with the given fields replaced by the non-null parameter values.
@@ -295,18 +301,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _OutboxEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.seq, seq) || other.seq == seq)&&(identical(other.op, op) || other.op == op)&&(identical(other.target, target) || other.target == target)&&(identical(other.idempotencyKey, idempotencyKey) || other.idempotencyKey == idempotencyKey)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.baseVersion, baseVersion) || other.baseVersion == baseVersion)&&const DeepCollectionEquality().equals(other.base, _base)&&const DeepCollectionEquality().equals(other.values, _values)&&(identical(other.state, state) || other.state == state)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.draftRef, draftRef) || other.draftRef == draftRef)&&(identical(other.attempts, attempts) || other.attempts == attempts));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _OutboxEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.seq, seq) || other.seq == seq)&&(identical(other.op, op) || other.op == op)&&(identical(other.target, target) || other.target == target)&&(identical(other.idempotencyKey, idempotencyKey) || other.idempotencyKey == idempotencyKey)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.baseVersion, baseVersion) || other.baseVersion == baseVersion)&&const DeepCollectionEquality().equals(other.base, _base)&&const DeepCollectionEquality().equals(other.values, _values)&&(identical(other.state, state) || other.state == state)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.draftRef, draftRef) || other.draftRef == draftRef)&&(identical(other.attempts, attempts) || other.attempts == attempts)&&(identical(other.firstSentAt, firstSentAt) || other.firstSentAt == firstSentAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,seq,op,target,idempotencyKey,createdAt,baseVersion,const DeepCollectionEquality().hash(_base),const DeepCollectionEquality().hash(_values),state,errorCode,errorMessage,draftRef,attempts);
+    return Object.hash(runtimeType,id,seq,op,target,idempotencyKey,createdAt,baseVersion,const DeepCollectionEquality().hash(_base),const DeepCollectionEquality().hash(_values),state,errorCode,errorMessage,draftRef,attempts,firstSentAt);
 }
 
 @override
 String toString() {
-    return 'OutboxEntry(id: $id, seq: $seq, op: $op, target: $target, idempotencyKey: $idempotencyKey, createdAt: $createdAt, baseVersion: $baseVersion, base: $base, values: $values, state: $state, errorCode: $errorCode, errorMessage: $errorMessage, draftRef: $draftRef, attempts: $attempts)';
+    return 'OutboxEntry(id: $id, seq: $seq, op: $op, target: $target, idempotencyKey: $idempotencyKey, createdAt: $createdAt, baseVersion: $baseVersion, base: $base, values: $values, state: $state, errorCode: $errorCode, errorMessage: $errorMessage, draftRef: $draftRef, attempts: $attempts, firstSentAt: $firstSentAt)';
 }
 
 
@@ -317,7 +323,7 @@ abstract mixin class _$OutboxEntryCopyWith<$Res> implements $OutboxEntryCopyWith
   factory _$OutboxEntryCopyWith(_OutboxEntry value, $Res Function(_OutboxEntry) _then) = __$OutboxEntryCopyWithImpl;
 @override @useResult
 $Res call({
- String id, int seq, OutboxOp op, String target, String idempotencyKey, DateTime createdAt, int? baseVersion, Map<String, Object?> base, Map<String, Object?> values, OutboxState state, String errorCode, String errorMessage, String draftRef, int attempts
+ String id, int seq, OutboxOp op, String target, String idempotencyKey, DateTime createdAt, int? baseVersion, Map<String, Object?> base, Map<String, Object?> values, OutboxState state, String errorCode, String errorMessage, String draftRef, int attempts, DateTime? firstSentAt
 });
 
 
@@ -334,7 +340,7 @@ class __$OutboxEntryCopyWithImpl<$Res>
 
 /// Create a copy of OutboxEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? seq = null,Object? op = null,Object? target = null,Object? idempotencyKey = null,Object? createdAt = null,Object? baseVersion = freezed,Object? base = null,Object? values = null,Object? state = null,Object? errorCode = null,Object? errorMessage = null,Object? draftRef = null,Object? attempts = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? seq = null,Object? op = null,Object? target = null,Object? idempotencyKey = null,Object? createdAt = null,Object? baseVersion = freezed,Object? base = null,Object? values = null,Object? state = null,Object? errorCode = null,Object? errorMessage = null,Object? draftRef = null,Object? attempts = null,Object? firstSentAt = freezed,}) {
   return _then(_OutboxEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,seq: null == seq ? _self.seq : seq // ignore: cast_nullable_to_non_nullable
@@ -350,7 +356,8 @@ as OutboxState,errorCode: null == errorCode ? _self.errorCode : errorCode // ign
 as String,errorMessage: null == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String,draftRef: null == draftRef ? _self.draftRef : draftRef // ignore: cast_nullable_to_non_nullable
 as String,attempts: null == attempts ? _self.attempts : attempts // ignore: cast_nullable_to_non_nullable
-as int,
+as int,firstSentAt: freezed == firstSentAt ? _self.firstSentAt : firstSentAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

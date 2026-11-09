@@ -137,3 +137,56 @@ Settings SHALL offer to discard every unsynced change of the context, as a red b
 
 - **WHEN** the person confirms Discard all unsynced changes
 - **THEN** the outbox is empty, drafts disappear and open conflicts are closed as discarded
+
+### Requirement: One replay at a time per context
+
+Replays of one context SHALL never overlap, however many times the session changes: a replay asked for while
+another runs SHALL wait for it to end. Each replay SHALL settle conflicts by the policy of its own context, read
+once when it starts.
+
+#### Scenario: Session changes during a replay
+
+- **WHEN** the session changes while a replay is sending and a new replay starts
+- **THEN** the new one waits, and no write is sent twice
+
+### Requirement: Day-old idempotency keys are not trusted
+
+tix forgets an `Idempotency-Key` a day after it first sees it. A create first sent 23 hours ago or more and still
+waiting SHALL be marked "needs check" and looked up as on a server without key support; when no match is found it
+SHALL be sent with a new key.
+
+#### Scenario: Create retried the next day
+
+- **WHEN** a create's answer was lost and the app retries it 23 hours later
+- **THEN** the task it made is found and adopted, and the create is not sent again
+
+### Requirement: An unreadable outbox is kept
+
+When the stored outbox of a context cannot be read, the app SHALL move it aside under `sync/` with a timestamp,
+SHALL not write over it, and SHALL say so in the offline settings.
+
+#### Scenario: Outbox written by a broken build
+
+- **WHEN** the stored outbox no longer decodes
+- **THEN** it is kept aside untouched, a new outbox starts, and the offline settings say changes could not be read
+
+### Requirement: Sync history stays bounded
+
+Settled conflicts SHALL be kept for 30 days and at most the newest 100, and sent drafts SHALL keep their real
+reference for the newest 200 and for any a waiting write still names.
+
+#### Scenario: Months of offline work
+
+- **WHEN** a replay ends with settled conflicts older than 30 days
+- **THEN** they are dropped from the history and open conflicts stay
+
+### Requirement: Forgetting a connection warns about unsent writes
+
+Signing out, removing a connection or removing an instance SHALL say how many changes made offline are still
+unsent and will be lost before it asks for confirmation, and SHALL stop a replay under way before it deletes the
+outbox.
+
+#### Scenario: Sign out with writes waiting
+
+- **WHEN** a person signs out with two changes not yet sent
+- **THEN** the confirmation says two changes made offline will be lost

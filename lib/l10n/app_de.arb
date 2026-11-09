@@ -1936,5 +1936,7 @@
   "syncOpenConflicts": "Konflikte und nicht synchronisierte Änderungen",
   "syncDiscardAll": "Alle nicht synchronisierten Änderungen verwerfen",
   "syncDiscardAllTitle": "Alle nicht synchronisierten Änderungen verwerfen?",
-  "syncDiscardAllBody": "{count, plural, =1{1 offline gemachte Änderung wird verworfen und nie gesendet. Entwürfe verschwinden.} other{{count} offline gemachte Änderungen werden verworfen und nie gesendet. Entwürfe verschwinden.}}"
+  "syncDiscardAllBody": "{count, plural, =1{1 offline gemachte Änderung wird verworfen und nie gesendet. Entwürfe verschwinden.} other{{count} offline gemachte Änderungen werden verworfen und nie gesendet. Entwürfe verschwinden.}}",
+  "syncUnsentLost": "{count, plural, =1{1 offline gemachte Änderung wurde noch nicht gesendet und geht verloren.} other{{count} offline gemachte Änderungen wurden noch nicht gesendet und gehen verloren.}}",
+  "syncStateUnreadable": "Die auf diesem Gerät wartenden Änderungen konnten nicht gelesen werden. Sie bleiben unverändert erhalten und werden nicht gesendet."
 }

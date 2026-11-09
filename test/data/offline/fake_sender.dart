@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
+
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/offline/merge.dart';
@@ -52,6 +54,12 @@ class FakeSender implements OutboxSender {
   /// How many times the client asked whether keys are honoured.
   int probes = 0;
 
+  /// Forgets every `Idempotency-Key` seen, as tix does a day later.
+  void forgetKeys() => _keys.clear();
+
+  /// Holds every send until completed, when set.
+  Completer<void>? hold;
+
   @override
   Future<bool> detectIdempotency() async {
     if (down) throw const TixException(TixErrorKind.network);
@@ -87,6 +95,8 @@ class FakeSender implements OutboxSender {
     int? version,
   }) async {
     if (down) throw const TixException(TixErrorKind.network);
+    final held = hold;
+    if (held != null) await held.future;
     calls.add((
       op: op,
       target: target,

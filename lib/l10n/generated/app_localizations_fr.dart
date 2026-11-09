@@ -7045,4 +7045,20 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String syncUnsentLost(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count modifications hors ligne n\'ont pas encore été envoyées et seront perdues.',
+      one: '1 modification hors ligne n\'a pas encore été envoyée et sera perdue.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncStateUnreadable =>
+      'Les modifications en attente sur cet appareil n\'ont pas pu être lues. Elles sont conservées telles quelles et ne sont pas envoyées.';
 }

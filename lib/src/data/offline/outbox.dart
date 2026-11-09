@@ -95,7 +95,9 @@ class Outbox {
     final key = _uuid();
     final parent = request['parent_ref']?.toString() ?? '';
     var lost = false;
+    DateTime? tried;
     if (!_offline() && !isDraftRef(parent)) {
+      tried = _clock();
       try {
         return await online(key);
       } on TixException catch (e) {
@@ -116,6 +118,7 @@ class Outbox {
         values: request,
         idempotencyKey: key,
         createdAt: _clock(),
+        firstSentAt: tried,
         state: lost ? OutboxState.needsCheck : OutboxState.pending,
       );
       return s.copyWith(

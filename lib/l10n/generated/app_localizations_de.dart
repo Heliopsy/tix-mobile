@@ -7054,4 +7054,20 @@ class AppLocalizationsDe extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String syncUnsentLost(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count offline gemachte Änderungen wurden noch nicht gesendet und gehen verloren.',
+      one: '1 offline gemachte Änderung wurde noch nicht gesendet und geht verloren.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncStateUnreadable =>
+      'Die auf diesem Gerät wartenden Änderungen konnten nicht gelesen werden. Sie bleiben unverändert erhalten und werden nicht gesendet.';
 }

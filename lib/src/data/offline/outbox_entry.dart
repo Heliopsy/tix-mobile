@@ -114,6 +114,10 @@ abstract class OutboxEntry with _$OutboxEntry {
     /// For a create, the draft reference the app showed until it is sent.
     @Default('') String draftRef,
     @Default(0) int attempts,
+
+    /// When [idempotencyKey] was first sent, null while it never was. tix
+    /// forgets a key a day after it first sees it.
+    DateTime? firstSentAt,
   }) = _OutboxEntry;
 
   /// Reads a stored entry.

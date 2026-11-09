@@ -11,6 +11,8 @@ import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
+import 'package:tix_mobile/src/data/cache/cache_store.dart';
+import 'package:tix_mobile/src/data/offline/sync_store.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
 import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';
 
@@ -32,6 +34,7 @@ void main() {
     String query = '',
     bool local = false,
     FakeWidgetBridge? widgets,
+    CacheStore? cache,
   }) async {
     server = tix ?? FakeTix();
     final s = signedInStores();
@@ -57,6 +60,7 @@ void main() {
         secrets: s.secrets,
         local: local,
         widgets: widgets,
+        cache: cache,
       ),
     );
     // The date settings are read in the background; let that request land
@@ -215,6 +219,43 @@ void main() {
     expect(stores.secrets.values.containsKey('token.c1'), isFalse);
     expect(c.read(sessionControllerProvider).value!.connection.id, 'c2');
     expect(find.textContaining('1 instance · Home'), findsOneWidget);
+  });
+
+  testWidgets('sign out warns about changes not sent yet', (tester) async {
+    final cache = MemoryCacheStore();
+    final at = DateTime.utc(2026, 11, 9);
+    await SyncStore(cache, const CacheScope('c1', '')).update(
+      (s) => s.copyWith(
+        entries: [
+          for (var i = 0; i < 2; i++)
+            OutboxEntry(
+              id: 'e$i',
+              seq: i + 1,
+              op: OutboxOp.comment,
+              target: 'infra-1',
+              idempotencyKey: 'k$i',
+              createdAt: at,
+            ),
+        ],
+      ),
+    );
+    await pump(tester, cache: cache);
+    await tester.ensureVisible(find.byKey(const Key('settings.signOut')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('settings.signOut')));
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(
+        of: find.byType(AlertDialog),
+        matching: find.textContaining(
+          '2 changes made offline have not been sent yet and will be lost.',
+        ),
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(stores.secrets.values.containsKey('token.c1'), isTrue);
   });
 
   testWidgets('about opens the About screen', (tester) async {

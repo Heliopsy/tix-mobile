@@ -8,6 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/core/offline/connectivity.dart';
 import 'package:tix_mobile/src/core/offline/outbox.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/storage/providers.dart';
+import 'package:tix_mobile/src/data/cache/cache_store.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/repositories/task_detail_repository.dart';
 
@@ -218,6 +220,39 @@ void main() {
         isEmpty,
         reason: 'no request names the draft',
       );
+    }),
+  );
+
+  test(
+    'signing out counts the unsent writes, stops the replay under way and '
+    'leaves no sync state behind',
+    () => inFakeTime(() {
+      final c = start();
+      final repo = c.read(taskDetailRepositoryProvider);
+      final base = Task.fromJson(server.task('infra-1')!);
+      goOffline();
+      run(repo.update('infra-1', TaskPatch.title('One'), base: base));
+      run(repo.update('infra-1', TaskPatch.title('Two'), base: base));
+      final outbox = c.read(outboxSyncProvider.notifier);
+      expect(run(outbox.unsentForConnection('c1')), 2);
+      expect(run(outbox.unsentForConnection('nobody')), 0);
+
+      run(
+        c.read(syncStoreProvider).update((s) => s.copyWith(idempotency: false)),
+      );
+      server.gate = Completer<void>();
+      reconnect();
+      expect(patches(), hasLength(1), reason: 'the first write is held');
+      final signOut = c.read(sessionControllerProvider.notifier).signOut();
+      clock.elapse(const Duration(milliseconds: 100));
+      server.gate!.complete();
+      server.gate = null;
+      run(signOut);
+      clock.elapse(replayRetry * 2);
+
+      expect(patches(), hasLength(1), reason: 'the second write never went');
+      final cache = c.read(cacheStoreProvider) as MemoryCacheStore;
+      expect(cache.entries.keys.where((k) => k.startsWith('c1/')), isEmpty);
     }),
   );
 }
