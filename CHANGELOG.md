@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.9.0](https://github.com/Heliopsy/tix-mobile/compare/v0.8.0...v0.9.0) (2026-11-09)
+
+
+### Features
+
+* control the app over adb with dumpsys, tix:// links and shell-only commands ([384abca](https://github.com/Heliopsy/tix-mobile/commit/384abca0c0bbcd8b865360df91515f6af60bb894))
+
+
+### Bug Fixes
+
+* **adb:** keep section headings clear of the credential redaction ([7c2e9db](https://github.com/Heliopsy/tix-mobile/commit/7c2e9dbadc53598a19d581959122281c0f0aa10f))
+
+
+### Dependencies
+
+* refresh the router's generated hash ([ea2b08a](https://github.com/Heliopsy/tix-mobile/commit/ea2b08a176e99d6efc515de5155b82344914d272))
+
 ## [0.8.0](https://github.com/Heliopsy/tix-mobile/compare/v0.7.0...v0.8.0) (2026-11-09)
 
 

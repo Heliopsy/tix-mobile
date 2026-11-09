@@ -1,7 +1,7 @@
 name: tix_mobile
 description: "Mobile and desktop client for tix"
 publish_to: 'none'
-version: 0.8.0+9
+version: 0.9.0+10
 
 environment:
   sdk: ^3.13.7
