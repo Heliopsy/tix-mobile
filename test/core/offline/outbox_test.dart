@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +11,7 @@ import 'package:tix_mobile/src/core/offline/outbox.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/data/cache/cache_store.dart';
+import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/repositories/task_detail_repository.dart';
 
@@ -47,10 +49,22 @@ void main() {
     return value as T;
   }
 
-  ProviderContainer start() {
+  ProviderContainer start({bool twoContexts = false}) {
     server = FakeTix();
     network = StreamController<NetworkState>.broadcast();
     final stores = signedInStores();
+    if (twoContexts) {
+      stores.settings.values['contexts'] = jsonEncode([
+        {
+          'id': 'c1',
+          'name': 'Work',
+          'base_url': 'https://tix.example',
+          'handle': 'ana',
+        },
+        {'id': 'c2', 'name': 'Home', 'base_url': 'https://home.example'},
+      ]);
+      stores.secrets.values['token.c2'] = 'tok';
+    }
     final c = ProviderContainer(
       overrides: fakeOverrides(
         server,
@@ -253,6 +267,46 @@ void main() {
       expect(patches(), hasLength(1), reason: 'the second write never went');
       final cache = c.read(cacheStoreProvider) as MemoryCacheStore;
       expect(cache.entries.keys.where((k) => k.startsWith('c1/')), isEmpty);
+    }),
+  );
+
+  test(
+    'leaving a context and coming back during a replay sends each write '
+    'once and keeps a write queued meanwhile',
+    () => inFakeTime(() {
+      final c = start(twoContexts: true);
+      final repo = c.read(taskDetailRepositoryProvider);
+      final base = Task.fromJson(server.task('infra-1')!);
+      goOffline();
+      run(repo.update('infra-1', TaskPatch.title('One'), base: base));
+      final first = c.read(syncStoreProvider);
+      run(first.update((s) => s.copyWith(idempotency: false)));
+
+      final held = Completer<void>();
+      server.routes.add((o, path, caller) async {
+        if (o.method == 'PATCH' && !held.isCompleted) await held.future;
+        return null;
+      });
+      reconnect();
+      expect(patches(), hasLength(1), reason: 'the replay is under way');
+
+      final session = c.read(sessionControllerProvider.notifier);
+      run(session.activate(const ContextRef(connectionId: 'c2')));
+      run(session.activate(const ContextRef(connectionId: 'c1')));
+      final back = c.read(syncStoreProvider);
+      expect(identical(back, first), isTrue);
+      run(
+        c
+            .read(taskDetailRepositoryProvider)
+            .update('infra-1', TaskPatch.title('Two'), base: base),
+      );
+
+      held.complete();
+      clock.elapse(replayRetry * 2);
+
+      expect(patches(), hasLength(2), reason: 'One once, then Two');
+      expect(server.task('infra-1')!['title'], 'Two');
+      expect(back.now.entries, isEmpty);
     }),
   );
 }

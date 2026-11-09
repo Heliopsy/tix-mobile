@@ -498,6 +498,7 @@ class SessionController extends _$SessionController {
   /// Drops what was cached for [connectionId]: a forgotten connection
   /// leaves no copy of its server's data behind.
   Future<void> _forgetCache(String connectionId) async {
+    await ref.read(syncStoresProvider).forget(connectionId);
     try {
       await ref.read(cacheStoreProvider).clearConnection(connectionId);
     } on Exception catch (e, s) {
@@ -730,15 +731,14 @@ ResponseCache responseCache(Ref ref) {
 SyncStore syncStore(Ref ref) {
   final scope = ref.watch(activeCacheScopeProvider);
   if (scope == null) throw StateError('no active session');
-  final store = SyncStore(
-    ref.watch(cacheStoreProvider),
-    scope,
-    now: ref.watch(clockProvider),
-  );
-  unawaited(store.load());
-  ref.onDispose(store.close);
-  return store;
+  return ref.watch(syncStoresProvider).of(scope);
 }
+
+/// Every context's [SyncStore], kept for the life of the app so a context
+/// left and come back to finds the same one.
+@Riverpod(keepAlive: true)
+SyncStores syncStores(Ref ref) =>
+    SyncStores(ref.watch(cacheStoreProvider), now: ref.watch(clockProvider));
 
 /// Whether the active context's server is known to be out of reach, so
 /// writes go straight to the outbox instead of waiting for a timeout. The

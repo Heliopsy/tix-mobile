@@ -4,6 +4,7 @@ import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/offline/merge.dart';
 import 'package:tix_mobile/src/data/offline/replayer.dart';
+import 'package:tix_mobile/src/data/offline/sender.dart';
 import 'package:tix_mobile/src/data/offline/sync_store.dart';
 
 export 'package:tix_mobile/src/data/offline/replayer.dart';
@@ -66,11 +67,14 @@ class Outbox {
   }) async {
     await store.load();
     final key = _uuid();
+    DateTime? tried;
     if (!queues(target)) {
+      final at = _clock();
       try {
         return await online(key);
       } on TixException catch (e) {
         if (!isUnreachable(e)) rethrow;
+        if (mayHaveArrived(e)) tried = at;
       }
     }
     final entry = await enqueue(
@@ -79,6 +83,7 @@ class Outbox {
       base: base,
       values: values,
       key: key,
+      firstSentAt: tried,
     );
     return local(entry);
   }
@@ -97,12 +102,15 @@ class Outbox {
     var lost = false;
     DateTime? tried;
     if (!_offline() && !isDraftRef(parent)) {
-      tried = _clock();
+      final at = _clock();
       try {
         return await online(key);
       } on TixException catch (e) {
         if (!isUnreachable(e)) rethrow;
-        lost = _now.idempotency != true;
+        if (mayHaveArrived(e)) {
+          tried = at;
+          lost = _now.idempotency != true;
+        }
       }
     }
     final project = request['project_ref']?.toString() ?? '';
@@ -130,13 +138,15 @@ class Outbox {
     return draftTask(entry);
   }
 
-  /// Adds a write to the outbox.
+  /// Adds a write to the outbox; [firstSentAt] when an attempt to send it
+  /// may already have reached the server.
   Future<OutboxEntry> enqueue(
     OutboxOp op,
     String target, {
     Task? base,
     Map<String, Object?> values = const {},
     String? key,
+    DateTime? firstSentAt,
   }) async {
     late OutboxEntry entry;
     await store.update((s) {
@@ -150,6 +160,7 @@ class Outbox {
         values: values,
         idempotencyKey: key ?? _uuid(),
         createdAt: _clock(),
+        firstSentAt: firstSentAt,
       );
       return s.copyWith(entries: [...s.entries, entry], nextSeq: s.nextSeq + 1);
     });

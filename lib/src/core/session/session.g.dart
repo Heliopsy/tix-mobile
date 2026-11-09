@@ -137,7 +137,7 @@ final class SessionControllerProvider
   SessionController create() => SessionController();
 }
 
-String _$sessionControllerHash() => r'c36867e55c34d8ea58be5ba8d7d231f593f9071e';
+String _$sessionControllerHash() => r'2274ed4acdb176167a0d7e1ce90ec6a4cf5c67a0';
 
 /// The active session: null until someone connects.
 
@@ -474,7 +474,56 @@ final class SyncStoreProvider
   }
 }
 
-String _$syncStoreHash() => r'002130fd1986ecca3e363c2f3e5faabcf28af2e6';
+String _$syncStoreHash() => r'8d90f69a46e05686f21357c848c4cdcbd368877f';
+
+/// Every context's [SyncStore], kept for the life of the app so a context
+/// left and come back to finds the same one.
+
+@ProviderFor(syncStores)
+final syncStoresProvider = SyncStoresProvider._();
+
+/// Every context's [SyncStore], kept for the life of the app so a context
+/// left and come back to finds the same one.
+
+final class SyncStoresProvider
+    extends $FunctionalProvider<SyncStores, SyncStores, SyncStores>
+    with $Provider<SyncStores> {
+  /// Every context's [SyncStore], kept for the life of the app so a context
+  /// left and come back to finds the same one.
+  SyncStoresProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'syncStoresProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$syncStoresHash();
+
+  @$internal
+  @override
+  $ProviderElement<SyncStores> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SyncStores create(Ref ref) {
+    return syncStores(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SyncStores value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SyncStores>(value),
+    );
+  }
+}
+
+String _$syncStoresHash() => r'ccf3b66cad1c375f261cf9f59d2d7ab77b9dfe82';
 
 /// Whether the active context's server is known to be out of reach, so
 /// writes go straight to the outbox instead of waiting for a timeout. The

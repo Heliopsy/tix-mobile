@@ -211,3 +211,36 @@ class SyncStore {
   /// Stops reporting changes.
   Future<void> close() => _changes.close();
 }
+
+/// One [SyncStore] per context for the life of the app, so every writer of
+/// a context (the outbox, each replay, the conflicts screen) shares one
+/// snapshot and one ordered write path, however often the session changes.
+/// Two stores of one context would each hold their own copy, and the last
+/// to write would undo the other's changes.
+class SyncStores {
+  /// Stores in [_store], stamping set-aside states with [now].
+  SyncStores(this._store, {DateTime Function()? now}) : _clock = now;
+
+  final CacheStore _store;
+  final DateTime Function()? _clock;
+  final _byScope = <CacheScope, SyncStore>{};
+
+  /// The store of [scope], made and loaded the first time it is asked for.
+  SyncStore of(CacheScope scope) => _byScope.putIfAbsent(scope, () {
+    final store = SyncStore(_store, scope, now: _clock);
+    unawaited(store.load());
+    return store;
+  });
+
+  /// Drops and closes the stores of [connectionId], which is forgotten.
+  Future<void> forget(String connectionId) async {
+    final gone = [
+      for (final MapEntry(:key, :value) in _byScope.entries)
+        if (key.connectionId == connectionId) value,
+    ];
+    _byScope.removeWhere((k, _) => k.connectionId == connectionId);
+    for (final s in gone) {
+      await s.close();
+    }
+  }
+}
