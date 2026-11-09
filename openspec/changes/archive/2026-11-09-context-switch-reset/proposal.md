@@ -16,7 +16,6 @@ workflow, user or channel it last showed.
 - A switch with a target (a `tix://` link naming a context, ADB `open`, a home screen widget tap) lands on that
   target in the new context, with the other tabs at their roots.
 - Activating the active context again, or the session reloading with the same context, moves nothing.
-- Forgetting the active connection or instance clears its screens the same way.
 
 ## Capabilities
 

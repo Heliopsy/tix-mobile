@@ -3,7 +3,6 @@
 ## 1. Session
 
 - [x] 1.1 `ContextMoves` hooks and `activate(..., landing:)`; a move to another context leaves, activates, lands
-- [x] 1.2 Forgetting the active connection or instance moves the same way
 
 ## 2. Router
 
