@@ -219,6 +219,19 @@ abstract class Actor with _$Actor {
     /// authority comes from Role alone.
     @JsonKey(name: 'scopes') @Default(<String>[]) List<String> scopes,
 
+    /// SecondFactorDue is when the tenant's second factor policy starts refusing
+    /// this person, on the answer to WhoAmI, set while they hold no factor under
+    /// it.
+    @JsonKey(name: 'second_factor_due')
+    @TixDateTime()
+    DateTime? secondFactorDue,
+
+    /// SecondFactorEnrollmentRequired is true, on the answer to WhoAmI, while the
+    /// policy refuses this person everything but enrolment.
+    @JsonKey(name: 'second_factor_enrollment_required')
+    @Default(false)
+    bool secondFactorEnrollmentRequired,
+
     /// TenantID is the tenant the actor acts in.
     @JsonKey(name: 'tenant_id') @Default('') String tenantId,
 
@@ -317,6 +330,30 @@ abstract class AddTenantMemberInput with _$AddTenantMemberInput {
   /// Reads a [AddTenantMemberInput] from its JSON object.
   factory AddTenantMemberInput.fromJson(Map<String, dynamic> json) =>
       _$AddTenantMemberInputFromJson(json);
+}
+
+/// ApplyWorkflowTemplateInput creates a workflow from a built-in template.
+@freezed
+abstract class ApplyWorkflowTemplateInput with _$ApplyWorkflowTemplateInput {
+  /// Creates a [ApplyWorkflowTemplateInput].
+  const factory ApplyWorkflowTemplateInput({
+    /// As is the key the workflow is created under; empty uses the template's own
+    /// key.
+    @JsonKey(name: 'as') String? as,
+
+    /// OnCollision decides what happens when the key is taken: skip keeps the
+    /// existing workflow, rename picks the next free key, replace redefines the
+    /// existing one. Empty refuses with a conflict.
+    @JsonKey(
+      name: 'on_collision',
+      unknownEnumValue: JsonKey.nullForUndefinedEnumValue,
+    )
+    CollisionPolicy? onCollision,
+  }) = _ApplyWorkflowTemplateInput;
+
+  /// Reads a [ApplyWorkflowTemplateInput] from its JSON object.
+  factory ApplyWorkflowTemplateInput.fromJson(Map<String, dynamic> json) =>
+      _$ApplyWorkflowTemplateInputFromJson(json);
 }
 
 /// Artifact is structured output attached to a task by a worker.
@@ -886,6 +923,21 @@ abstract class ClaimNextInput with _$ClaimNextInput {
       _$ClaimNextInputFromJson(json);
 }
 
+/// CollisionPolicy decides what an import does when a component's key is taken.
+enum CollisionPolicy {
+  @JsonValue('skip')
+  skip('skip'),
+  @JsonValue('rename')
+  rename('rename'),
+  @JsonValue('replace')
+  replace('replace');
+
+  const CollisionPolicy(this.value);
+
+  /// The value on the wire.
+  final String value;
+}
+
 /// Comment is a message on a task.
 @freezed
 abstract class Comment with _$Comment {
@@ -1207,6 +1259,12 @@ abstract class CreateProjectInput with _$CreateProjectInput {
     /// WorkflowKey names the workflow the project's tasks follow; empty uses the
     /// builtin workflow.
     @JsonKey(name: 'workflow_key') String? workflowKey,
+
+    /// WorkflowTemplate names a built-in workflow template instead of a workflow:
+    /// the project runs on the workflow the template creates under its own key,
+    /// reused when the tenant already holds it, and gets the template's custom
+    /// fields. At most one of WorkflowKey and WorkflowTemplate may be set.
+    @JsonKey(name: 'workflow_template') String? workflowTemplate,
   }) = _CreateProjectInput;
 
   /// Reads a [CreateProjectInput] from its JSON object.
@@ -1426,6 +1484,17 @@ abstract class CreatedTenant with _$CreatedTenant {
     /// as "24h". It can lower the deployment's ceiling but never raise it; zero or
     /// absent inherits the deployment's.
     @JsonKey(name: 'lease_max') @Default('') String leaseMax,
+
+    /// MFAGrace is how long after the policy turned required an unenrolled person
+    /// may still work, as a duration such as "7d". Zero gates at once.
+    @JsonKey(name: 'mfa_grace') @Default('') String mfaGrace,
+
+    /// MFAPolicy is a tenant's second factor policy.
+    @JsonKey(name: 'mfa_policy') @Default('') String mfaPolicy,
+
+    /// MFARequiredAt is when the policy last turned required, RFC 3339. Absent
+    /// while it is off.
+    @JsonKey(name: 'mfa_required_at') @TixDateTime() DateTime? mfaRequiredAt,
 
     /// Name is the tenant's display name.
     @JsonKey(name: 'name') @Default('') String name,
@@ -2660,8 +2729,9 @@ abstract class IssuedInboxChannel with _$IssuedInboxChannel {
 }
 
 /// IssuedInvite carries an invite together with its freshly minted secret. Path
-/// is the browser route that accepts it; URL is that route made absolute by a
-/// surface that knows the address it was reached at, and is empty otherwise.
+/// is the browser route that accepts it; URL is that route made absolute, under
+/// server.public_url (or the tenant's own domain) or the address a request
+/// arrived at, and is empty when neither is known.
 @freezed
 abstract class IssuedInvite with _$IssuedInvite {
   /// Creates a [IssuedInvite].
@@ -2713,8 +2783,7 @@ abstract class IssuedInvite with _$IssuedInvite {
     /// minted it.
     @JsonKey(name: 'token') @Default('') String token,
 
-    /// URL is Path made absolute, empty when the surface does not know its own
-    /// address.
+    /// URL is Path made absolute, empty when no web address is known.
     @JsonKey(name: 'url') @Default('') String url,
 
     /// UserID is the invited account, created when the invite was issued.
@@ -2953,6 +3022,14 @@ abstract class LoginResult with _$LoginResult {
     @JsonKey(name: 'recovery_codes')
     @Default(<String>[])
     List<String> recoveryCodes,
+
+    /// SecondFactorDue is set on a session minted for a person who holds no factor
+    /// under the tenant's second factor policy: when the policy starts refusing
+    /// them, RFC 3339. A time already past means the session can do nothing but
+    /// enrol.
+    @JsonKey(name: 'second_factor_due')
+    @TixDateTime()
+    DateTime? secondFactorDue,
 
     /// Session is the new session, set when sign-in is complete.
     @JsonKey(name: 'session') AuthSession? session,
@@ -3674,6 +3751,8 @@ enum Scope {
   taskDelete('task:delete'),
   @JsonValue('task:reclaim')
   taskReclaim('task:reclaim'),
+  @JsonValue('task:approve')
+  taskApprove('task:approve'),
   @JsonValue('project:read')
   projectRead('project:read'),
   @JsonValue('project:write')
@@ -4601,6 +4680,9 @@ abstract class TOTPReport with _$TOTPReport {
     /// enrolment is refused outright rather than falling back to plaintext.
     @JsonKey(name: 'key_configured') @Default(false) bool keyConfigured,
 
+    /// MFAPolicy is a tenant's second factor policy.
+    @JsonKey(name: 'policy') @Default('') String policy,
+
     /// RequireCLI is true when the tenant requires a second factor for command line
     /// sign-in.
     @JsonKey(name: 'require_cli') @Default(false) bool requireCli,
@@ -4636,10 +4718,23 @@ abstract class TOTPStatus with _$TOTPStatus {
     /// Enrolled is true when the caller holds a confirmed second factor.
     @JsonKey(name: 'enrolled') @Default(false) bool enrolled,
 
+    /// EnrollmentDue is when the policy starts refusing the caller, RFC 3339, set
+    /// while it is required and the caller holds no factor.
+    @JsonKey(name: 'enrollment_due') @TixDateTime() DateTime? enrollmentDue,
+
+    /// EnrollmentRequired is true while the policy refuses the caller everything
+    /// but enrolment, because they hold no factor.
+    @JsonKey(name: 'enrollment_required')
+    @Default(false)
+    bool enrollmentRequired,
+
     /// Pending is an enrolment that was begun and never confirmed. It grants
     /// nothing; it is reported so a user who abandoned enrolment is told why their
     /// authenticator entry does not work.
     @JsonKey(name: 'pending') @Default(false) bool pending,
+
+    /// MFAPolicy is a tenant's second factor policy.
+    @JsonKey(name: 'policy') @Default('') String policy,
 
     /// RecoveryCodesLeft is how many unused recovery codes the caller holds.
     @JsonKey(name: 'recovery_codes_left') @Default(0) int recoveryCodesLeft,
@@ -5248,6 +5343,17 @@ abstract class Tenant with _$Tenant {
     /// absent inherits the deployment's.
     @JsonKey(name: 'lease_max') @Default('') String leaseMax,
 
+    /// MFAGrace is how long after the policy turned required an unenrolled person
+    /// may still work, as a duration such as "7d". Zero gates at once.
+    @JsonKey(name: 'mfa_grace') @Default('') String mfaGrace,
+
+    /// MFAPolicy is a tenant's second factor policy.
+    @JsonKey(name: 'mfa_policy') @Default('') String mfaPolicy,
+
+    /// MFARequiredAt is when the policy last turned required, RFC 3339. Absent
+    /// while it is off.
+    @JsonKey(name: 'mfa_required_at') @TixDateTime() DateTime? mfaRequiredAt,
+
     /// Name is the tenant's display name.
     @JsonKey(name: 'name') @Default('') String name,
 
@@ -5761,6 +5867,14 @@ abstract class UpdateTenantInput with _$UpdateTenantInput {
     /// omitted leaves it alone.
     @JsonKey(name: 'lease_max') String? leaseMax,
 
+    /// MFAGrace is how long after the policy turned required people without a
+    /// factor may still work, a duration such as "7d"; zero gates at once and
+    /// omitted leaves it.
+    @JsonKey(name: 'mfa_grace') String? mfaGrace,
+
+    /// MFAPolicy is a tenant's second factor policy.
+    @JsonKey(name: 'mfa_policy') String? mfaPolicy,
+
     /// Name renames the tenant; it must not be blank, and omitted leaves it.
     @JsonKey(name: 'name') String? name,
 
@@ -6222,4 +6336,41 @@ abstract class WorkflowInput with _$WorkflowInput {
   /// Reads a [WorkflowInput] from its JSON object.
   factory WorkflowInput.fromJson(Map<String, dynamic> json) =>
       _$WorkflowInputFromJson(json);
+}
+
+/// WorkflowTemplate is a ready-made workflow shipped with tix, with the custom
+/// fields a project using it usually wants.
+@freezed
+abstract class WorkflowTemplate with _$WorkflowTemplate {
+  /// Creates a [WorkflowTemplate].
+  const factory WorkflowTemplate({
+    /// Definition is the workflow the template creates.
+    @JsonKey(name: 'definition') WorkflowDefinition? definition,
+
+    /// Fields are the custom fields a project created from the template gets.
+    /// Fields belong to projects, not workflows, so applying the template on its
+    /// own creates only the workflow.
+    @JsonKey(name: 'fields')
+    @Default(<FieldDefInput>[])
+    List<FieldDefInput> fields,
+
+    /// Key identifies the template and is the key of the workflow it creates unless
+    /// another is chosen.
+    @JsonKey(name: 'key') @Default('') String key,
+
+    /// Name is the template's display name.
+    @JsonKey(name: 'name') @Default('') String name,
+
+    /// Purpose says in one line what the workflow is for, and is shown first
+    /// wherever templates are listed.
+    @JsonKey(name: 'purpose') @Default('') String purpose,
+
+    /// States is a one-line summary of the states, in order, the final ones joined
+    /// by a slash.
+    @JsonKey(name: 'states') @Default('') String states,
+  }) = _WorkflowTemplate;
+
+  /// Reads a [WorkflowTemplate] from its JSON object.
+  factory WorkflowTemplate.fromJson(Map<String, dynamic> json) =>
+      _$WorkflowTemplateFromJson(json);
 }

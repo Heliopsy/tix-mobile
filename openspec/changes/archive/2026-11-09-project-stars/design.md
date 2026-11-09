@@ -2,7 +2,7 @@
 
 ## The contract
 
-From heliopsy/tix#293 (`feat/project-stars`, pinned at 83e131ca):
+From heliopsy/tix#293, merged to tix `main` as 2bc64b15:
 
 - `PUT` and `DELETE /api/v1/projects/{ref}/star` (`project.star`, `project.unstar`), 204, scope `project:read`,
   with `Idempotency-Key`. Starring a starred project writes nothing.
@@ -16,10 +16,10 @@ From heliopsy/tix#293 (`feat/project-stars`, pinned at 83e131ca):
 ## Pinning an unreleased tix
 
 `tix.lock` has always pinned tix by commit, never by release (it was at `v0.50.0-73`), and the API description
-and the engine move together with it. The pin goes to the head of the server branch so the client is generated,
-not hand-bound, and the parity check binds the real operation ids. It must move to the merge commit on tix's
-`main` before this merges; the server branch only adds the three operations and the field, so nothing else in
-the app changes with it.
+and the engine move together with it. The pin goes to #293's merge commit on tix's `main`
+(`v0.52.1-35-g2bc64b15`), so the client is generated, not hand-bound, and the parity check binds the real
+operation ids. That commit also brings `workflow.template.list` and `workflow.template.apply`, which are listed
+as pending in wave 2, and additive fields for the tenant second factor policy that the app does not use yet.
 
 ## Where the stars live
 
