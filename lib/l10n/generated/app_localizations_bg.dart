@@ -4035,6 +4035,10 @@ class AppLocalizationsBg extends AppLocalizations {
   String get scopeTaskReclaim => 'Прекратява наем, държан от друг изпълнител.';
 
   @override
+  String get scopeTaskApprove =>
+      'Одобрява или отхвърля работа по преход в работния процес, който го изисква.';
+
+  @override
   String get scopeProjectRead => 'Чете проекти.';
 
   @override

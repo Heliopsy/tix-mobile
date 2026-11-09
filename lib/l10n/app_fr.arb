@@ -1126,6 +1126,7 @@
   "scopeTaskClaim": "Prendre des tâches, renouveler et libérer le bail.",
   "scopeTaskDelete": "Supprimer des tâches et les restaurer depuis la corbeille.",
   "scopeTaskReclaim": "Mettre fin au bail d’un autre exécutant.",
+  "scopeTaskApprove": "Approuver ou refuser le travail sur une transition de workflow qui le demande.",
   "scopeProjectRead": "Lire les projets.",
   "scopeProjectWrite": "Créer et modifier des projets.",
   "scopeWorkflowRead": "Lire les workflows.",

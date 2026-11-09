@@ -232,6 +232,7 @@ String scopeNote(AppLocalizations l10n, String scope) => switch (scope) {
   Scopes.taskClaim => l10n.scopeTaskClaim,
   Scopes.taskDelete => l10n.scopeTaskDelete,
   Scopes.taskReclaim => l10n.scopeTaskReclaim,
+  Scopes.taskApprove => l10n.scopeTaskApprove,
   Scopes.projectRead => l10n.scopeProjectRead,
   Scopes.projectWrite => l10n.scopeProjectWrite,
   Scopes.workflowRead => l10n.scopeWorkflowRead,

@@ -2388,6 +2388,7 @@
   "scopeTaskClaim": "Claim tasks, renew the lease and release it.",
   "scopeTaskDelete": "Delete tasks and restore them from the trash.",
   "scopeTaskReclaim": "End a lease another worker holds.",
+  "scopeTaskApprove": "Approve or reject work on a workflow edge that asks for it.",
   "scopeProjectRead": "Read projects.",
   "scopeProjectWrite": "Create and change projects.",
   "scopeWorkflowRead": "Read workflows.",
