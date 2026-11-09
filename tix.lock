@@ -5,5 +5,5 @@
 # stamped into it. hook/build.dart, `just engine-*` and the CI cache keys all
 # read this file; bump the engine here and nowhere else, then run
 # `just engine-notices` and commit what it changes.
-commit = 2bc64b1543b8f1410eb60077a29a38538193daf5
-version = v0.52.1-35-g2bc64b15
+commit = c0093edae33560df1b1e204cc96261e5f5414a49
+version = v0.53.0
