@@ -127,6 +127,10 @@ attestation are the way to check a download.
   request opened by `GITHUB_TOKEN` gets its checks held for approval. Approve only the runs whose head is the
   current commit (approving a stale run replays it with the workflow file it was created against), then enqueue
   it. Setting up the App ends this.
+- **A build on `main` shows as cancelled with no steps.** No hosted runner picked the job up, which happens
+  to macOS arm64 when GitHub is short of capacity. The `CI retry` workflow reruns a failed CI run once when
+  every failure is of that kind or a failed tool download; a failing test, lint or build is never retried, and
+  merge-queue runs are left to the queue. If the rerun fails the same way, rerun it by hand later.
 - **The release pull request predates a workflow fix.** release-please does not rebase its branch when the release
   content has not changed. Close it and let the next push to `main` open a fresh one.
 
