@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tix_mobile/src/core/paging/paged.dart';
 import 'package:tix_mobile/src/core/session/admin.dart';
+import 'package:tix_mobile/src/core/session/session.dart';
 
 part 'security.g.dart';
 
@@ -60,5 +62,47 @@ class SshKeys extends _$SshKeys {
   Future<void> revoke(String id) async {
     await ref.read(securityRepositoryProvider).revokeSshKey(id);
     if (ref.mounted) ref.invalidateSelf();
+  }
+}
+
+/// The signed-in person's own sessions in this tenant, newest first, a page
+/// at a time.
+@riverpod
+class ActiveSessions extends _$ActiveSessions {
+  @override
+  Future<Paged<SessionInfo>> build() async {
+    final page = await ref.watch(securityRepositoryProvider).sessions();
+    return Paged(items: page.items, cursor: page.nextCursor);
+  }
+
+  /// Fetches the next page, if there is one and none is in flight.
+  Future<void> loadMore() => loadNextPage(
+    current: state.value,
+    fetch: (cursor) =>
+        ref.read(securityRepositoryProvider).sessions(cursor: cursor),
+    emit: (next) => state = AsyncData(next),
+    idOf: (s) => s.id,
+  );
+
+  /// Ends [session]. Ending the one this connection presented signs the
+  /// connection out, since its credential no longer works.
+  Future<void> revoke(SessionInfo session) async {
+    final controller = ref.read(sessionControllerProvider.notifier);
+    await ref.read(securityRepositoryProvider).revokeSession(session.id);
+    if (session.current) {
+      await controller.signOut();
+      return;
+    }
+    if (!ref.mounted) return;
+    final current = state.value;
+    if (current == null) return;
+    state = AsyncData(
+      current.copyWith(
+        items: [
+          for (final s in current.items)
+            if (s.id != session.id) s,
+        ],
+      ),
+    );
   }
 }

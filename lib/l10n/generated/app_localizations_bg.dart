@@ -4428,6 +4428,69 @@ class AppLocalizationsBg extends AppLocalizations {
   String get sshKeyRevokedToast => 'SSH ключът е отменен.';
 
   @override
+  String get sessionsTitle => 'Активни сесии';
+
+  @override
+  String get sessionsInfo =>
+      'Вашите влизания от браузър и терминал в този тенант, които не са изтекли. Отменете всяко, което не разпознавате. API токените се управляват в Токени.';
+
+  @override
+  String get sessionsEmpty => 'Няма активни сесии.';
+
+  @override
+  String get sessionsNotReadable =>
+      'Този токен не може да покаже сесиите ви: нужен му е обхватът account:read, който „*“ не включва. Влезте с паролата си или използвайте токен, създаден с account:read.';
+
+  @override
+  String get sessionsShowMore => 'Покажи още';
+
+  @override
+  String get sessionCurrent => 'Тази сесия';
+
+  @override
+  String get sessionUnknownAgent => 'Неизвестно устройство';
+
+  @override
+  String get sessionMethodPassword => 'Парола';
+
+  @override
+  String get sessionMethodSshKey => 'SSH ключ';
+
+  @override
+  String get sessionMethodSwitch => 'Смяна на тенант';
+
+  @override
+  String get sessionSecondFactor => 'с втори фактор';
+
+  @override
+  String sessionSignedIn(String when) {
+    return 'Влизане $when';
+  }
+
+  @override
+  String sessionExpires(String when) {
+    return 'Изтича $when';
+  }
+
+  @override
+  String get sessionRevoke => 'Отмени';
+
+  @override
+  String get sessionRevokeTitle => 'Да се отмени ли тази сесия?';
+
+  @override
+  String sessionRevokeBody(String agent) {
+    return '$agent излиза веднага и трябва да влезе отново.';
+  }
+
+  @override
+  String get sessionRevokeCurrentBody =>
+      'С тази сесия е влязло приложението. Ако я отмените, излизате оттук и ще трябва да влезете отново.';
+
+  @override
+  String get sessionRevoked => 'Сесията е отменена.';
+
+  @override
   String get sshKeyPublicKey => 'Публичен ключ';
 
   @override
@@ -5114,7 +5177,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get webhookSecretNewHelp =>
-      'Оставете празно и приложението ще създаде тайна и ще я покаже веднъж.';
+      'Оставете празно и tix ще създаде тайна, която ще се покаже тук веднъж.';
 
   @override
   String get webhookSecretKeepHelp =>
@@ -5203,6 +5266,21 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get webhookRedelivered => 'Добавена е за нов опит.';
+
+  @override
+  String get webhookPing => 'Изпрати тест';
+
+  @override
+  String get webhookPingTitle => 'Тестово събитие';
+
+  @override
+  String webhookPingSent(String url) {
+    return 'tix изпрати подписано събитие webhook.ping до $url.';
+  }
+
+  @override
+  String get webhookPingPending =>
+      'Още не е опитано. Дневникът на доставките ще покаже резултата, щом tix опита.';
 
   @override
   String get syncTitle => 'Външна синхронизация';
@@ -5604,7 +5682,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get trashExplain =>
-      'Възстановяването връща задачата на мястото ѝ. tix изтрива окончателно задачите от кошчето само чрез правилото за кошчето в поддръжката.';
+      'Възстановяването връща задачата на мястото ѝ. „Изтрий завинаги“ я премахва окончателно заедно с подзадачите ѝ в кошчето, както прави правилото за кошчето в поддръжката, когато им изтече срокът.';
 
   @override
   String get trashEmpty => 'Кошчето е празно.';
@@ -5624,6 +5702,22 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String trashDeletedAt(String when) {
     return 'изтрита $when';
+  }
+
+  @override
+  String get trashPurge => 'Изтрий завинаги';
+
+  @override
+  String get trashPurgeTitle => 'Да се изтрие ли завинаги?';
+
+  @override
+  String trashPurgeBody(String ref, String title) {
+    return '$ref „$title“ и подзадачите ѝ в кошчето се изтриват завинаги. Това не може да бъде отменено.';
+  }
+
+  @override
+  String trashPurged(String ref) {
+    return '$ref е изтрита завинаги.';
   }
 
   @override

@@ -28,8 +28,9 @@ void main() {
     WidgetTester tester, {
     Size size = phone,
     bool settle = true,
+    bool signIn = false,
   }) {
-    final stores = signedInStores();
+    final stores = signIn ? signInStores(server) : signedInStores();
     return pumpScreen(
       tester,
       const SecurityScreen(),
@@ -46,6 +47,13 @@ void main() {
     );
   }
 
+  Future<void> reveal(WidgetTester tester, Finder target) =>
+      tester.scrollUntilVisible(
+        target,
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+
   Finder inSection(String title, Finder matching) => find.descendant(
     of: find.widgetWithText(TixSection, title),
     matching: matching,
@@ -56,7 +64,7 @@ void main() {
       testWidgets('loading, then both sections', (tester) async {
         server.gate = Completer<void>();
         await pump(tester, size: size, settle: false);
-        expect(find.byType(SkeletonList), findsNWidgets(2));
+        expect(find.byType(SkeletonList), findsNWidgets(3));
         server.gate!.complete();
         await tester.pumpAndSettle();
         expect(find.byType(SkeletonList), findsNothing);
@@ -65,6 +73,36 @@ void main() {
           findsOneWidget,
         );
         expect(inSection('SSH keys', find.text('laptop')), findsOneWidget);
+      });
+
+      testWidgets('a password sign-in lists its sessions, this one marked', (
+        tester,
+      ) async {
+        await pump(tester, size: size, signIn: true);
+        await reveal(tester, find.byKey(const Key('session.sess-laptop')));
+        expect(
+          inSection('Active sessions', find.text('tix-cli/1.4 (linux)')),
+          findsOneWidget,
+        );
+        expect(
+          find.byKey(const Key('session.sess-here.current')),
+          findsOneWidget,
+        );
+        expect(
+          find.byKey(const Key('session.sess-laptop.current')),
+          findsNothing,
+        );
+      });
+
+      testWidgets('a token without account:read is told why', (tester) async {
+        await pump(tester, size: size);
+        final notReadable = find.byKey(const Key('sessions.notReadable'));
+        await reveal(tester, notReadable);
+        expect(notReadable, findsOneWidget);
+        expect(
+          server.requests.where((r) => r.uri.path.endsWith('/sessions')),
+          isEmpty,
+        );
       });
 
       testWidgets('no keys says so', (tester) async {
@@ -76,7 +114,7 @@ void main() {
       testWidgets('a failure explains itself in each section', (tester) async {
         server.override = FakeResponse(500, envelope('internal', 'x'));
         await pump(tester, size: size);
-        expect(find.byType(ErrorState), findsNWidgets(2));
+        expect(find.byType(ErrorState), findsNWidgets(3));
         expect(find.byKey(const Key('totp.setup')), findsNothing);
       });
     });
@@ -212,6 +250,66 @@ void main() {
         matching: find.text('Revoked'),
       ),
       findsOneWidget,
+    );
+  });
+
+  testWidgets('a 403 on the sessions shows the explanation, not an error', (
+    tester,
+  ) async {
+    server
+      ..identity = {
+        'scopes': ['*', 'account:read'],
+      }
+      ..failures['GET /api/v1/account/sessions'] = FakeResponse(
+        403,
+        envelope('forbidden', 'needs account:read'),
+      );
+    await pump(tester);
+    expect(
+      server.requests.where((r) => r.uri.path.endsWith('/account/sessions')),
+      isNotEmpty,
+    );
+    final notReadable = find.byKey(const Key('sessions.notReadable'));
+    await reveal(tester, notReadable);
+    expect(notReadable, findsOneWidget);
+    expect(inSection('Active sessions', find.byType(ErrorState)), findsNothing);
+  });
+
+  testWidgets('revoking a session asks first and drops it', (tester) async {
+    await pump(tester, size: desktop, signIn: true);
+    final revoke = find.byKey(const Key('session.revoke.sess-laptop'));
+    await reveal(tester, revoke);
+    await tester.tap(revoke);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(admin.accountSessions, hasLength(2));
+    await tester.tap(revoke);
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('tix-cli/1.4 (linux) is signed out'),
+      findsOneWidget,
+    );
+    await tester.tap(find.byKey(const Key('confirm.ok')));
+    await tester.pumpAndSettle();
+    expect(admin.accountSessions.map((s) => s['id']), ['sess-here']);
+    expect(find.byKey(const Key('session.sess-laptop')), findsNothing);
+    expect(find.text('Session revoked.'), findsOneWidget);
+  });
+
+  testWidgets('revoking this session warns that it signs out', (tester) async {
+    await pump(tester, size: desktop, signIn: true);
+    final revoke = find.byKey(const Key('session.revoke.sess-here'));
+    await reveal(tester, revoke);
+    await tester.tap(revoke);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('signs you out here'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('confirm.ok')));
+    await tester.pumpAndSettle();
+    expect(admin.accountSessions.map((s) => s['id']), ['sess-laptop']);
+    expect(
+      server.requests.where((r) => r.uri.path.endsWith('/auth/logout')),
+      isNotEmpty,
     );
   });
 }

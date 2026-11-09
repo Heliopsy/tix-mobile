@@ -72,6 +72,7 @@ const bindings = <String, Binding>{
   'task.copy': Binding(feature: 'tasks', action: 'copy', wave: 1),
   'task.delete': Binding(feature: 'tasks', action: 'delete', wave: 1),
   'task.restore': Binding(feature: 'tasks', action: 'undo-delete', wave: 1),
+  'task.purge': Binding(feature: 'maintenance', action: 'purge', wave: 1),
   'task.tree': Binding(feature: 'tasks', action: 'subtasks', wave: 1),
   'task.audit': Binding(feature: 'tasks', action: 'history', wave: 1),
   'tag.add': Binding(feature: 'tasks', action: 'add-tag', wave: 1),
@@ -323,6 +324,12 @@ const bindings = <String, Binding>{
     action: 'remove-second-factor',
     wave: 3,
   ),
+  'session.list': Binding(feature: 'security', action: 'sessions', wave: 2),
+  'session.revoke': Binding(
+    feature: 'security',
+    action: 'revoke-session',
+    wave: 2,
+  ),
   'sshkey.list': Binding(feature: 'security', action: 'ssh-keys', wave: 3),
   'sshkey.enrol': Binding(feature: 'security', action: 'add-ssh-key', wave: 3),
   'sshkey.revoke': Binding(
@@ -355,6 +362,11 @@ const bindings = <String, Binding>{
   'webhook.redeliver': Binding(
     feature: 'integrations',
     action: 'redeliver',
+    wave: 3,
+  ),
+  'webhook.ping': Binding(
+    feature: 'integrations',
+    action: 'send-test',
     wave: 3,
   ),
   'sync.source.list': Binding(

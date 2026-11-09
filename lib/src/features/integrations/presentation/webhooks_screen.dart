@@ -5,16 +5,18 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/session/access.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/core/widgets/paged_list_view.dart';
 import 'package:tix_mobile/src/data/models/integrations.dart';
+import 'package:tix_mobile/src/data/models/scopes.dart';
 import 'package:tix_mobile/src/features/integrations/application/webhooks.dart';
 
-/// The tenant's webhook endpoints and their delivery log: register, edit
-/// and remove endpoints, filter the log and redeliver. Two panes on a wide
-/// window.
+/// The tenant's webhook endpoints and their delivery log: register, edit,
+/// test and remove endpoints, filter the log and redeliver. Two panes on a
+/// wide window.
 class WebhooksScreen extends ConsumerStatefulWidget {
   /// Creates the screen.
   const WebhooksScreen({super.key});
@@ -65,8 +67,30 @@ class _WebhooksScreenState extends ConsumerState<WebhooksScreen> {
     }
   }
 
-  Future<void> _rowActions(WebhookEndpoint endpoint) async {
+  Future<void> _ping(WebhookEndpoint endpoint) async {
     final l10n = context.l10n;
+    try {
+      final delivery = await ref
+          .read(webhookEndpointsProvider.notifier)
+          .ping(endpoint.id);
+      if (!mounted) return;
+      await showTixSheet<void>(
+        context,
+        builder: (_) => PingResult(url: endpoint.url, delivery: delivery),
+      );
+    } on TixException catch (e) {
+      if (mounted) {
+        showTixToast(context, errorMessage(l10n, e), tone: TixTone.danger);
+      }
+    }
+  }
+
+  Future<void> _rowActions(
+    WebhookEndpoint endpoint, {
+    required bool admin,
+  }) async {
+    final l10n = context.l10n;
+    final canTest = admin && endpoint.active;
     final choice = await showActionSheet<String>(
       context,
       title: endpoint.url,
@@ -76,6 +100,13 @@ class _WebhooksScreenState extends ConsumerState<WebhooksScreen> {
           label: l10n.webhookEdit,
           icon: Icons.edit_outlined,
         ),
+        if (canTest)
+          TixSheetAction(
+            key: const Key('webhook.ping'),
+            value: 'ping',
+            label: l10n.webhookPing,
+            icon: Icons.send_outlined,
+          ),
         TixSheetAction(
           value: 'deliveries',
           label: l10n.webhookShowDeliveries,
@@ -93,6 +124,8 @@ class _WebhooksScreenState extends ConsumerState<WebhooksScreen> {
     switch (choice) {
       case 'edit':
         await _edit(endpoint);
+      case 'ping':
+        await _ping(endpoint);
       case 'deliveries':
         setState(() => _endpoint = endpoint.id);
       case 'delete':
@@ -104,6 +137,9 @@ class _WebhooksScreenState extends ConsumerState<WebhooksScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final endpoints = ref.watch(webhookEndpointsProvider);
+    final admin =
+        ref.watch(currentAccessProvider).value?.can(Scopes.webhookAdmin) ??
+        false;
     final newEndpoint = TixAction(
       key: const Key('webhooks.new'),
       label: l10n.webhookNew,
@@ -118,7 +154,7 @@ class _WebhooksScreenState extends ConsumerState<WebhooksScreen> {
       endpoints: items,
       selected: _endpoint,
       action: newEndpoint,
-      onTap: _rowActions,
+      onTap: (e) => _rowActions(e, admin: admin),
     );
     Widget filters(List<WebhookEndpoint> items) => _DeliveryFilters(
       status: _status,
@@ -326,6 +362,78 @@ class _DeliveryLog extends ConsumerWidget {
   }
 }
 
+(String, TixTone) _statusOf(AppLocalizations l10n, DeliveryStatus? status) =>
+    switch (status) {
+      DeliveryStatus.delivered => (l10n.webhookStatusDelivered, TixTone.ok),
+      DeliveryStatus.failed => (l10n.webhookStatusFailed, TixTone.danger),
+      DeliveryStatus.pending => (l10n.webhookStatusPending, TixTone.warn),
+      null => (l10n.webhookStatusUnknown, TixTone.neutral),
+    };
+
+/// What a test event to [url] came to: the delivery tix answered, with its
+/// status, the endpoint's HTTP status, the attempts and the last error.
+class PingResult extends StatelessWidget {
+  /// Shows [delivery], the test sent to [url].
+  const PingResult({required this.url, required this.delivery, super.key});
+
+  /// The endpoint's address.
+  final String url;
+
+  /// The delivery tix queued for the test.
+  final WebhookDelivery delivery;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final t = context.tix;
+    final d = delivery;
+    final (label, tone) = _statusOf(l10n, d.status);
+    return TixSheetBody(
+      title: l10n.webhookPingTitle,
+      actions: [
+        TixButton.primary(
+          key: const Key('ping.done'),
+          label: l10n.close,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ],
+      child: Column(
+        key: const Key('ping.result'),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l10n.webhookPingSent(url)),
+          const SizedBox(height: TixSpace.s3),
+          Wrap(
+            spacing: TixSpace.s2,
+            runSpacing: TixSpace.s1,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              TixBadge(label, tone: tone, key: const Key('ping.status')),
+              if (d.lastStatusCode != 0)
+                Text(l10n.webhookHttpStatus(d.lastStatusCode)),
+              Text(
+                l10n.webhookAttempts(d.attempts),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+          ),
+          if (d.status == DeliveryStatus.pending) ...[
+            const SizedBox(height: TixSpace.s2),
+            Text(l10n.webhookPingPending),
+          ],
+          if (d.lastError.isNotEmpty) ...[
+            const SizedBox(height: TixSpace.s2),
+            Text(
+              d.lastError,
+              style: tixMono(context, size: TixText.xs, color: t.danger),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 /// One delivery: its status, the event, the attempts and the last answer,
 /// with Redeliver.
 class DeliveryRow extends StatelessWidget {
@@ -348,12 +456,7 @@ class DeliveryRow extends StatelessWidget {
     final t = context.tix;
     final d = delivery;
     String when(DateTime at) => context.times.stamp(at);
-    final (label, tone) = switch (d.status) {
-      DeliveryStatus.delivered => (l10n.webhookStatusDelivered, TixTone.ok),
-      DeliveryStatus.failed => (l10n.webhookStatusFailed, TixTone.danger),
-      DeliveryStatus.pending => (l10n.webhookStatusPending, TixTone.warn),
-      null => (l10n.webhookStatusUnknown, TixTone.neutral),
-    };
+    final (label, tone) = _statusOf(l10n, d.status);
     final created = d.createdAt;
     final next = d.nextAttemptAt;
     return Container(

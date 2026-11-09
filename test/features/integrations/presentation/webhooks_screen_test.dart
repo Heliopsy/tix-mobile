@@ -107,6 +107,8 @@ void main() {
         );
         await tester.tap(find.byKey(const Key('webhook.save')));
         await tester.pumpAndSettle();
+        final put = server.requests.lastWhere((r) => r.method == 'PUT');
+        expect(put.body.containsKey('secret'), isFalse);
         final secret = fake.secrets.values.single;
         expect(
           find.descendant(
@@ -198,5 +200,61 @@ void main() {
       server.requests.last.uri.queryParameters.containsKey('endpoint_id'),
       isFalse,
     );
+  });
+
+  testWidgets('send test shows what the endpoint answered', (tester) async {
+    seed();
+    await pump(tester, size: desktop);
+    await tester.tap(find.text('https://hooks.example/tix'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('webhook.ping')));
+    await tester.pumpAndSettle();
+    expect(fake.pinged, ['wh1']);
+    final result = find.byKey(const Key('ping.result'));
+    expect(
+      find.descendant(of: result, matching: find.text('Delivered')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: result, matching: find.text('HTTP 200')),
+      findsOneWidget,
+    );
+    await tester.tap(find.byKey(const Key('ping.done')));
+    await tester.pumpAndSettle();
+    expect(result, findsNothing);
+    expect(find.byKey(const Key('delivery.ping1')), findsOneWidget);
+  });
+
+  testWidgets('a failed test shows the error', (tester) async {
+    seed();
+    fake.pingAnswer = (status: 'failed', code: 503, error: 'upstream down');
+    await pump(tester);
+    await tester.tap(find.text('https://hooks.example/tix'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('webhook.ping')));
+    await tester.pumpAndSettle();
+    final result = find.byKey(const Key('ping.result'));
+    expect(
+      find.descendant(of: result, matching: find.text('Failed')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: result, matching: find.text('HTTP 503')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: result, matching: find.text('upstream down')),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('an inactive endpoint offers no test', (tester) async {
+    seed();
+    fake.webhooks.single['active'] = false;
+    await pump(tester);
+    await tester.tap(find.text('https://hooks.example/tix'));
+    await tester.pumpAndSettle();
+    expect(find.text('Edit endpoint'), findsOneWidget);
+    expect(find.byKey(const Key('webhook.ping')), findsNothing);
   });
 }

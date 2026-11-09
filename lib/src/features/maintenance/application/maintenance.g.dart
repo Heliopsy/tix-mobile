@@ -138,7 +138,7 @@ final class TrashProvider extends $AsyncNotifierProvider<Trash, Paged<Task>> {
   Trash create() => Trash();
 }
 
-String _$trashHash() => r'5bd3e2f8366c2c3d8326209c8476c6fe02722784';
+String _$trashHash() => r'0f54464ead49cd530caf3ca5b28413d00910e7d5';
 
 /// The tasks in the trash, a page at a time.
 

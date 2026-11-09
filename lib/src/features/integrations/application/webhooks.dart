@@ -29,7 +29,8 @@ class WebhookEndpoints extends _$WebhookEndpoints {
   }
 
   /// Registers or updates an endpoint and reloads the list. The answer
-  /// carries the secret the app generated, if it did, to show once.
+  /// carries the secret tix generated, if it did, to show once; it never
+  /// enters this provider's state.
   Future<SavedWebhook> save({
     required String url,
     required List<String> eventTypes,
@@ -55,6 +56,14 @@ class WebhookEndpoints extends _$WebhookEndpoints {
     ]);
     ref.invalidateSelf();
     return saved;
+  }
+
+  /// Sends endpoint [id] a test event and answers its delivery; the
+  /// delivery log reloads to show it.
+  Future<WebhookDelivery> ping(String id) async {
+    final delivery = await ref.read(integrationsRepositoryProvider).ping(id);
+    if (ref.mounted) ref.invalidate(webhookDeliveriesProvider);
+    return delivery;
   }
 
   /// Removes endpoint [id].

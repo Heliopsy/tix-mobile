@@ -2596,6 +2596,45 @@
     }
   },
   "sshKeyRevokedToast": "SSH key revoked.",
+  "sessionsTitle": "Active sessions",
+  "sessionsInfo": "Your browser and terminal sign-ins to this tenant that have not expired. Revoke any you do not recognise. API tokens are managed under Tokens.",
+  "sessionsEmpty": "No active sessions.",
+  "sessionsNotReadable": "This token cannot list your sessions: it needs the account:read scope, which \"*\" does not include. Sign in with your password, or use a token minted with account:read.",
+  "sessionsShowMore": "Show more",
+  "sessionCurrent": "This session",
+  "sessionUnknownAgent": "Unknown device",
+  "sessionMethodPassword": "Password",
+  "sessionMethodSshKey": "SSH key",
+  "sessionMethodSwitch": "Tenant switch",
+  "sessionSecondFactor": "with second factor",
+  "sessionSignedIn": "Signed in {when}",
+  "@sessionSignedIn": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionExpires": "Expires {when}",
+  "@sessionExpires": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionRevoke": "Revoke",
+  "sessionRevokeTitle": "Revoke this session?",
+  "sessionRevokeBody": "{agent} is signed out at once and has to sign in again.",
+  "@sessionRevokeBody": {
+    "placeholders": {
+      "agent": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionRevokeCurrentBody": "This is the session this app is signed in with. Revoking it signs you out here, and you will have to sign in again.",
+  "sessionRevoked": "Session revoked.",
   "sshKeyPublicKey": "Public key",
   "sshKeyPublicKeyHelp": "The line from your .pub file, as ssh-keygen writes it.",
   "sshKeyLabel": "Label (optional)",
@@ -2907,7 +2946,7 @@
   "webhookEvents": "Event types",
   "webhookEventsHelp": "Separated by commas; a type may end in *. Empty sends every event.",
   "webhookSecret": "Signing secret",
-  "webhookSecretNewHelp": "Leave it empty and the app generates one and shows it once.",
+  "webhookSecretNewHelp": "Leave it empty and tix generates one, shown here once.",
   "webhookSecretKeepHelp": "Leave it empty to keep the current secret.",
   "webhookSave": "Save endpoint",
   "webhookSaved": "Endpoint saved.",
@@ -2966,6 +3005,17 @@
   },
   "webhookRedeliver": "Redeliver",
   "webhookRedelivered": "Queued for another attempt.",
+  "webhookPing": "Send test",
+  "webhookPingTitle": "Test event",
+  "webhookPingSent": "tix sent a signed webhook.ping event to {url}.",
+  "@webhookPingSent": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "webhookPingPending": "Not attempted yet. The delivery log shows the result once tix tries it.",
   "syncTitle": "External sync",
   "syncSubtitle": "Import work from Jira, OpenProject or a file. Runs happen on the server.",
   "syncNew": "New source",
@@ -3234,7 +3284,7 @@
   },
   "trashTitle": "Trash",
   "trashSubtitle": "Deleted tasks, until housekeeping empties them.",
-  "trashExplain": "Restore puts a task back where it was. tix deletes trashed tasks for good only through the housekeeping trash rule.",
+  "trashExplain": "Restore puts a task back where it was. Delete for good removes it and its trashed subtasks permanently, as the housekeeping trash rule does when it expires them.",
   "trashEmpty": "The trash is empty.",
   "trashEmptyBody": "Deleted tasks wait here and can be restored.",
   "trashRestore": "Restore",
@@ -3250,6 +3300,27 @@
   "@trashDeletedAt": {
     "placeholders": {
       "when": {
+        "type": "String"
+      }
+    }
+  },
+  "trashPurge": "Delete for good",
+  "trashPurgeTitle": "Delete for good?",
+  "trashPurgeBody": "{ref} “{title}” and its trashed subtasks are deleted permanently. This cannot be undone.",
+  "@trashPurgeBody": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "trashPurged": "Deleted {ref} for good.",
+  "@trashPurged": {
+    "placeholders": {
+      "ref": {
         "type": "String"
       }
     }

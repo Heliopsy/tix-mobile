@@ -41,7 +41,7 @@ final class WebhookEndpointsProvider
   WebhookEndpoints create() => WebhookEndpoints();
 }
 
-String _$webhookEndpointsHash() => r'fbd1a0826a94f5da331cf495a6a3febf12057aa7';
+String _$webhookEndpointsHash() => r'19440ed84a43d434bdc40035dd9ab0c7ece59858';
 
 /// The tenant's webhook endpoints: the cached list at once, then the
 /// server's.

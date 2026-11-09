@@ -4427,6 +4427,69 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sshKeyRevokedToast => 'SSH key revoked.';
 
   @override
+  String get sessionsTitle => 'Active sessions';
+
+  @override
+  String get sessionsInfo =>
+      'Your browser and terminal sign-ins to this tenant that have not expired. Revoke any you do not recognise. API tokens are managed under Tokens.';
+
+  @override
+  String get sessionsEmpty => 'No active sessions.';
+
+  @override
+  String get sessionsNotReadable =>
+      'This token cannot list your sessions: it needs the account:read scope, which \"*\" does not include. Sign in with your password, or use a token minted with account:read.';
+
+  @override
+  String get sessionsShowMore => 'Show more';
+
+  @override
+  String get sessionCurrent => 'This session';
+
+  @override
+  String get sessionUnknownAgent => 'Unknown device';
+
+  @override
+  String get sessionMethodPassword => 'Password';
+
+  @override
+  String get sessionMethodSshKey => 'SSH key';
+
+  @override
+  String get sessionMethodSwitch => 'Tenant switch';
+
+  @override
+  String get sessionSecondFactor => 'with second factor';
+
+  @override
+  String sessionSignedIn(String when) {
+    return 'Signed in $when';
+  }
+
+  @override
+  String sessionExpires(String when) {
+    return 'Expires $when';
+  }
+
+  @override
+  String get sessionRevoke => 'Revoke';
+
+  @override
+  String get sessionRevokeTitle => 'Revoke this session?';
+
+  @override
+  String sessionRevokeBody(String agent) {
+    return '$agent is signed out at once and has to sign in again.';
+  }
+
+  @override
+  String get sessionRevokeCurrentBody =>
+      'This is the session this app is signed in with. Revoking it signs you out here, and you will have to sign in again.';
+
+  @override
+  String get sessionRevoked => 'Session revoked.';
+
+  @override
   String get sshKeyPublicKey => 'Public key';
 
   @override
@@ -5114,7 +5177,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get webhookSecretNewHelp =>
-      'Leave it empty and the app generates one and shows it once.';
+      'Leave it empty and tix generates one, shown here once.';
 
   @override
   String get webhookSecretKeepHelp =>
@@ -5203,6 +5266,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get webhookRedelivered => 'Queued for another attempt.';
+
+  @override
+  String get webhookPing => 'Send test';
+
+  @override
+  String get webhookPingTitle => 'Test event';
+
+  @override
+  String webhookPingSent(String url) {
+    return 'tix sent a signed webhook.ping event to $url.';
+  }
+
+  @override
+  String get webhookPingPending =>
+      'Not attempted yet. The delivery log shows the result once tix tries it.';
 
   @override
   String get syncTitle => 'External sync';
@@ -5599,7 +5677,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get trashExplain =>
-      'Restore puts a task back where it was. tix deletes trashed tasks for good only through the housekeeping trash rule.';
+      'Restore puts a task back where it was. Delete for good removes it and its trashed subtasks permanently, as the housekeeping trash rule does when it expires them.';
 
   @override
   String get trashEmpty => 'The trash is empty.';
@@ -5618,6 +5696,22 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String trashDeletedAt(String when) {
     return 'deleted $when';
+  }
+
+  @override
+  String get trashPurge => 'Delete for good';
+
+  @override
+  String get trashPurgeTitle => 'Delete for good?';
+
+  @override
+  String trashPurgeBody(String ref, String title) {
+    return '$ref “$title” and its trashed subtasks are deleted permanently. This cannot be undone.';
+  }
+
+  @override
+  String trashPurged(String ref) {
+    return 'Deleted $ref for good.';
   }
 
   @override

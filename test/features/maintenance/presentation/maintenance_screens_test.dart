@@ -199,4 +199,55 @@ void main() {
     expect(find.text('Binned'), findsNothing);
     expect(find.text('Restored infra-5.'), findsOneWidget);
   });
+
+  testWidgets('delete for good asks first, then removes the task', (
+    tester,
+  ) async {
+    server.trash['infra-5'] = taskJson('infra-5', title: 'Binned');
+    await pump(tester, const TrashScreen());
+    final purge = find.byKey(const Key('trash.infra-5.purge'));
+    await tester.tap(purge);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(fake.purged, isEmpty);
+    expect(server.requests.where((r) => r.method == 'DELETE'), isEmpty);
+    expect(find.text('Binned'), findsOneWidget);
+    await tester.tap(purge);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('confirm.ok')));
+    await tester.pumpAndSettle();
+    expect(fake.purged, ['infra-5']);
+    expect(find.text('Binned'), findsNothing);
+    expect(find.text('Deleted infra-5 for good.'), findsOneWidget);
+  });
+
+  testWidgets('a refused purge says why and keeps the task', (tester) async {
+    server
+      ..trash['infra-5'] = taskJson('infra-5', title: 'Binned')
+      ..failures['DELETE /api/v1/tasks/infra-5/trash'] = FakeResponse(
+        412,
+        envelope('precondition_failed', 'the trash is off'),
+      );
+    await pump(tester, const TrashScreen());
+    await tester.tap(find.byKey(const Key('trash.infra-5.purge')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('confirm.ok')));
+    await tester.pumpAndSettle();
+    expect(find.text('Binned'), findsOneWidget);
+    expect(find.byType(SnackBar), findsOneWidget);
+  });
+
+  testWidgets('without task:delete there is no delete for good', (
+    tester,
+  ) async {
+    server
+      ..identity = {
+        'scopes': ['task:read'],
+      }
+      ..trash['infra-5'] = taskJson('infra-5', title: 'Binned');
+    await pump(tester, const TrashScreen());
+    expect(find.byKey(const Key('trash.infra-5.restore')), findsOneWidget);
+    expect(find.byKey(const Key('trash.infra-5.purge')), findsNothing);
+  });
 }

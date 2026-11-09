@@ -4459,6 +4459,69 @@ class AppLocalizationsFr extends AppLocalizations {
   String get sshKeyRevokedToast => 'Clé SSH révoquée.';
 
   @override
+  String get sessionsTitle => 'Sessions actives';
+
+  @override
+  String get sessionsInfo =>
+      'Vos connexions par navigateur et terminal à ce tenant qui n’ont pas expiré. Révoquez celles que vous ne reconnaissez pas. Les jetons d’API se gèrent dans Jetons.';
+
+  @override
+  String get sessionsEmpty => 'Aucune session active.';
+
+  @override
+  String get sessionsNotReadable =>
+      'Ce jeton ne peut pas lister vos sessions : il lui faut la portée account:read, que « * » n’inclut pas. Connectez-vous avec votre mot de passe, ou utilisez un jeton créé avec account:read.';
+
+  @override
+  String get sessionsShowMore => 'Afficher plus';
+
+  @override
+  String get sessionCurrent => 'Cette session';
+
+  @override
+  String get sessionUnknownAgent => 'Appareil inconnu';
+
+  @override
+  String get sessionMethodPassword => 'Mot de passe';
+
+  @override
+  String get sessionMethodSshKey => 'Clé SSH';
+
+  @override
+  String get sessionMethodSwitch => 'Changement de tenant';
+
+  @override
+  String get sessionSecondFactor => 'avec second facteur';
+
+  @override
+  String sessionSignedIn(String when) {
+    return 'Connexion $when';
+  }
+
+  @override
+  String sessionExpires(String when) {
+    return 'Expire $when';
+  }
+
+  @override
+  String get sessionRevoke => 'Révoquer';
+
+  @override
+  String get sessionRevokeTitle => 'Révoquer cette session ?';
+
+  @override
+  String sessionRevokeBody(String agent) {
+    return '$agent est déconnecté immédiatement et devra se reconnecter.';
+  }
+
+  @override
+  String get sessionRevokeCurrentBody =>
+      'C’est la session avec laquelle cette application est connectée. La révoquer vous déconnecte ici, et vous devrez vous reconnecter.';
+
+  @override
+  String get sessionRevoked => 'Session révoquée.';
+
+  @override
   String get sshKeyPublicKey => 'Clé publique';
 
   @override
@@ -5147,7 +5210,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get webhookSecretNewHelp =>
-      'Laissez vide et l’application en génère un, affiché une seule fois.';
+      'Laissez vide et tix en génère un, affiché ici une seule fois.';
 
   @override
   String get webhookSecretKeepHelp =>
@@ -5237,6 +5300,21 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get webhookRedelivered => 'Remis en file pour une nouvelle tentative.';
+
+  @override
+  String get webhookPing => 'Envoyer un test';
+
+  @override
+  String get webhookPingTitle => 'Événement de test';
+
+  @override
+  String webhookPingSent(String url) {
+    return 'tix a envoyé un événement webhook.ping signé à $url.';
+  }
+
+  @override
+  String get webhookPingPending =>
+      'Pas encore tenté. Le journal des livraisons affichera le résultat dès que tix aura essayé.';
 
   @override
   String get syncTitle => 'Synchronisation externe';
@@ -5642,7 +5720,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get trashExplain =>
-      'Restaurer remet une tâche là où elle était. tix ne supprime définitivement les tâches de la corbeille que par la règle de corbeille de l’entretien.';
+      'Restaurer remet une tâche là où elle était. Supprimer définitivement l’efface avec ses sous-tâches dans la corbeille, comme le fait la règle de corbeille de l’entretien quand elles expirent.';
 
   @override
   String get trashEmpty => 'La corbeille est vide.';
@@ -5662,6 +5740,22 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String trashDeletedAt(String when) {
     return 'supprimée $when';
+  }
+
+  @override
+  String get trashPurge => 'Supprimer définitivement';
+
+  @override
+  String get trashPurgeTitle => 'Supprimer définitivement ?';
+
+  @override
+  String trashPurgeBody(String ref, String title) {
+    return '$ref « $title » et ses sous-tâches dans la corbeille sont supprimées définitivement. C’est irréversible.';
+  }
+
+  @override
+  String trashPurged(String ref) {
+    return '$ref supprimée définitivement.';
   }
 
   @override
