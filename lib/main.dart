@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tix_mobile/src/app.dart';
 import 'package:tix_mobile/src/core/config/config.dart';
 import 'package:tix_mobile/src/core/licences/binding.dart';
+import 'package:tix_mobile/src/core/offline/outbox_owner.dart';
 import 'package:tix_mobile/src/core/platform/adb_bridge.dart';
 import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
@@ -27,6 +28,11 @@ Future<void> main() async {
   final prefs = await SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions(),
   );
+  // A headless engine that ran a notification action may still hold an
+  // outbox; this engine reads none until Android says it is gone.
+  final outboxes = Platform.isAndroid
+      ? OutboxOwnership.pending()
+      : OutboxOwnership.owned();
   final container = ProviderContainer(
     retry: noRetry,
     overrides: [
@@ -35,11 +41,14 @@ Future<void> main() async {
         platformWidgetBridge(background: widgetBackgroundCallback),
       ),
       adbAppearanceProvider.overrideWith(LiveAppearance.new),
+      outboxOwnershipProvider.overrideWithValue(outboxes),
     ],
   );
   if (Platform.isAndroid) {
     unawaited(container.read(adbBridgeProvider).listen());
-    unawaited(container.read(noteActionBridgeProvider).listen());
+    unawaited(
+      container.read(noteActionBridgeProvider).listen(owned: outboxes.take),
+    );
   }
   runApp(UncontrolledProviderScope(container: container, child: const App()));
 }

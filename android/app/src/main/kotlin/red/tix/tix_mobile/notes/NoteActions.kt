@@ -147,6 +147,13 @@ class NoteActionReceiver : BroadcastReceiver() {
  * Where a notification action meets Dart: the app's engine while it is up,
  * else a headless one at `noteActionHeadlessMain`, as [red.tix.tix_mobile.adb.AdbHub]
  * does for the shell. Everything here runs on the main thread.
+ *
+ * Only one engine may hold the outbox at a time: each keeps its own copy in
+ * memory and would write over the other's. So no headless engine starts
+ * while the app's engine is attached, even before its Dart listens, and
+ * when the app's engine says `ready` while a headless one lives, that one
+ * finishes the actions it is running, is destroyed at once, and the app's
+ * engine is told `headlessGone`. Its Dart reads no outbox until then.
  */
 object NoteActionHub {
     const val TAG = "tix-notes"
@@ -157,14 +164,21 @@ object NoteActionHub {
     // A receiver that went async has about ten seconds in all.
     private const val BUDGET_MS = 8_500L
 
+    // How long the app's engine waits for a headless action to finish
+    // before the headless engine is destroyed anyway.
+    private const val DRAIN_MS = 15_000L
+
     private val main = Handler(Looper.getMainLooper())
     private var ui: MethodChannel? = null
     private var uiReady = false
     private var headless: FlutterEngine? = null
     private var headlessChannel: MethodChannel? = null
     private var headlessReady = false
+    private var headlessRunning = 0
+    private var draining = false
     private val waiting = mutableListOf<(MethodChannel?) -> Unit>()
     private val idle = Runnable { stopHeadless() }
+    private val drainLimit = Runnable { handOver() }
 
     /** The app's engine opened [channel]; it says `ready` once Dart listens. */
     fun attachUi(channel: MethodChannel) {
@@ -173,7 +187,9 @@ object NoteActionHub {
         channel.setMethodCallHandler { call, result ->
             if (call.method == "ready") {
                 uiReady = true
-                result.success(null)
+                val busy = headless != null
+                result.success(busy)
+                if (busy) drain()
                 flush()
             } else {
                 result.notImplemented()
@@ -204,27 +220,43 @@ object NoteActionHub {
         var sent = false
         main.postDelayed({ finish(sent) }, BUDGET_MS)
         withEngine(context) { channel ->
+            // Out of time before an engine was ready: the fallback already
+            // said so, so it must not run late as well.
+            if (finished) return@withEngine
             if (channel == null) {
                 finish(false)
                 return@withEngine
             }
             sent = true
-            if (channel === headlessChannel) keepHeadless()
+            val onHeadless = channel === headlessChannel
+            if (onHeadless) {
+                keepHeadless()
+                headlessRunning++
+            }
+            var replied = false
+            fun reply(answered: Boolean) {
+                if (replied) return
+                replied = true
+                if (onHeadless) headlessFinished()
+                finish(answered)
+            }
             channel.invokeMethod("run", args, object : MethodChannel.Result {
-                override fun success(result: Any?) = finish(true)
+                override fun success(result: Any?) = reply(true)
 
                 override fun error(errorCode: String, errorMessage: String?, errorDetails: Any?) {
                     Log.w(TAG, "action failed in Dart: $errorCode")
-                    finish(false)
+                    reply(false)
                 }
 
-                override fun notImplemented() = finish(false)
+                override fun notImplemented() = reply(false)
             })
         }
     }
 
+    // The app's engine is attached: new actions wait for it, never for a
+    // headless engine.
     private fun ready(): MethodChannel? = when {
-        uiReady -> ui
+        ui != null -> if (uiReady) ui else null
         headlessReady -> headlessChannel
         else -> null
     }
@@ -243,10 +275,35 @@ object NoteActionHub {
             return
         }
         waiting.add(then)
+        if (ui != null) return
         if (!startHeadless(context)) {
             waiting.remove(then)
             then(null)
         }
+    }
+
+    private fun headlessFinished() {
+        if (headlessRunning > 0) headlessRunning--
+        if (draining && headlessRunning == 0) handOver()
+    }
+
+    private fun drain() {
+        draining = true
+        main.removeCallbacks(idle)
+        if (headlessRunning == 0) {
+            handOver()
+        } else {
+            main.postDelayed(drainLimit, DRAIN_MS)
+        }
+    }
+
+    // Destroys the headless engine and tells the app's engine the outbox
+    // is its own now.
+    private fun handOver() {
+        main.removeCallbacks(drainLimit)
+        draining = false
+        stopHeadless()
+        ui?.invokeMethod("headlessGone", null)
     }
 
     private fun startHeadless(context: Context): Boolean {
@@ -262,7 +319,7 @@ object NoteActionHub {
             channel.setMethodCallHandler { call, result ->
                 if (call.method == "ready") {
                     headlessReady = true
-                    result.success(null)
+                    result.success(false)
                     flush()
                 } else {
                     result.notImplemented()
@@ -286,10 +343,12 @@ object NoteActionHub {
     }
 
     private fun stopHeadless() {
+        main.removeCallbacks(idle)
         headlessChannel?.setMethodCallHandler(null)
         headless?.destroy()
         headless = null
         headlessChannel = null
         headlessReady = false
+        headlessRunning = 0
     }
 }

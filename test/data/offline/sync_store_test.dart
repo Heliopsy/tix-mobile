@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -106,5 +107,44 @@ void main() {
 
     await stores.forget('c1');
     expect(identical(stores.of(scope), first), isFalse);
+  });
+
+  group('ownership', () {
+    test('nothing is read until the store is owned, so what another engine '
+        'wrote last is what loads', () async {
+      final cache = MemoryCacheStore();
+      final owned = Completer<void>();
+      final stores = SyncStores(cache, now: () => at, owned: owned.future);
+      final store = stores.of(scope);
+      final loading = store.load();
+      var loaded = false;
+      unawaited(loading.then((_) => loaded = true));
+      await pumpEventQueue();
+      expect(loaded, isFalse);
+
+      final other = SyncStore(cache, scope, now: () => at);
+      await addOne(other);
+      owned.complete();
+
+      expect((await loading).entries.single.id, 'e1');
+      await store.update((s) => s.copyWith(nextSeq: 5));
+      final kept = await SyncStore.peek(cache, scope);
+      expect(kept!.entries.single.id, 'e1');
+      expect(kept.nextSeq, 5);
+    });
+
+    test('a write waits for ownership too', () async {
+      final cache = MemoryCacheStore();
+      final owned = Completer<void>();
+      final store = SyncStore(cache, scope, now: () => at, owned: owned.future);
+      var written = false;
+      unawaited(addOne(store).then((_) => written = true));
+      await pumpEventQueue();
+      expect(written, isFalse);
+      expect(await cache.read(scope, SyncStore.key), isNull);
+      owned.complete();
+      await pumpEventQueue();
+      expect(written, isTrue);
+    });
   });
 }

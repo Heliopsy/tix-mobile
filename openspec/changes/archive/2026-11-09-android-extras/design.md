@@ -34,6 +34,15 @@ there is one copy per context.
 Building the actions natively also gives what the plugin does not: `setAuthenticationRequired` on Android 12 and
 later, the reply semantic action, and a mutable `PendingIntent` only for the reply, whose intent is explicit.
 
+### One engine owns the outbox
+
+Preferring the app's engine is not enough: a headless engine stays up for 30 seconds after an action, and the app
+can open inside that window. So `NoteActionHub` never starts a headless engine while the app's engine is attached,
+even before its Dart listens. When the app's engine says `ready` while a headless one lives, the hub answers that it
+is busy, lets the actions in flight finish (15 s at most), destroys the headless engine at once and sends
+`headlessGone`. Until then the app's `SyncStores` read nothing (`OutboxOwnership`, with a 30 s safety timeout).
+`AdbHub`'s headless engine only reads (`dump` peeks at the outbox) and changes no outbox, so it needs no hand-over.
+
 ### Through the outbox, keyed
 
 The runner (`features/inbox/application/note_actions.dart`) opens the notification's context the way widgets do,
