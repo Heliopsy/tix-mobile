@@ -50,3 +50,19 @@ On first start after upgrading, every server saved by 0.1 SHALL become a token c
 
 - **WHEN** 0.1 saved `Work` and `Home` at two addresses with `Work` active, and the new version starts
 - **THEN** two remote instances exist, `Work` is the active context, and both tokens still work without asking
+
+### Requirement: A token connection rotates its token
+
+A remote token connection SHALL offer to rotate its API token with `token.rotate`, after a confirmation, giving the
+old token a one minute grace. The new value SHALL replace the old one in secure storage only; a refusal SHALL keep
+the old token and say why. Sign-ins and local databases SHALL NOT offer it.
+
+#### Scenario: Rotate
+
+- **WHEN** a person rotates the token of a connection and confirms
+- **THEN** the app stores the new token and keeps working with it
+
+#### Scenario: Refused
+
+- **WHEN** the server refuses the rotation
+- **THEN** the old token stays and the reason is shown

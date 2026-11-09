@@ -75,3 +75,13 @@ from `GET /api/v1/stats?project=KEY`. A count that cannot be read SHALL be left 
 
 - **WHEN** a project has three tasks in todo or in progress and two done
 - **THEN** its row shows 3
+
+### Requirement: Archived projects can be listed
+
+The projects list SHALL offer a filter that includes archived projects, sent as `include_archived`, and SHALL mark
+each archived project with a badge. It SHALL be off by default.
+
+#### Scenario: Show archived
+
+- **WHEN** a person turns on the archived filter
+- **THEN** archived projects appear with an archived badge

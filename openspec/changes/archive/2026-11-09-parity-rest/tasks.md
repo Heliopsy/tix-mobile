@@ -28,4 +28,4 @@
 
 - [x] 4.1 Repository, provider and widget tests at 400 and 1280
 - [x] 4.2 Real server check
-- [ ] 4.3 `just parity` reports nothing pending once the remaining wave 2 and 3 pull requests land
+- [x] 4.3 Nothing left pending that this change can bind; the 46 still pending (wave 3) are bound by the open admin and integrations pull requests
