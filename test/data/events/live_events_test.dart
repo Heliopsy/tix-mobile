@@ -308,7 +308,7 @@ void main() {
       });
     });
 
-    test('a sleeping WebSocket is closed, not retried', () {
+    test('a sleeping WebSocket is let go, not retried', () {
       fakeAsync((async) {
         final r = Rig();
         async.flushMicrotasks();
@@ -316,9 +316,11 @@ void main() {
         async.flushMicrotasks();
         expect(r.mode, LiveMode.websocket);
         r.live.sleep();
-        async.flushMicrotasks();
-        expect(socket.closed, isTrue);
+        socket.event(8, 'task.updated');
+        unawaited(socket.drop());
         async.elapse(const Duration(hours: 1));
+        expect(r.seqs, isEmpty);
+        expect(r.mode, LiveMode.paused);
         expect(r.sockets.sockets, hasLength(1));
         expect(r.server.polls, isEmpty);
       });
