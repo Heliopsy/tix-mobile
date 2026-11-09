@@ -16,7 +16,7 @@ void main() {
     status: 'doing',
     priority: 2,
     tags: const ['a', 'b', 'c', 'd', 'e'],
-    dueAt: DateTime(2026, 10, 2),
+    dueAt: fixedNow.subtract(const Duration(days: 30)),
   );
   const facts = TaskFacts(
     projectKey: 'ops',
@@ -32,7 +32,7 @@ void main() {
   ) async {
     await pumpComponent(
       tester,
-      TaskRow(task: task, facts: facts, onTap: () {}),
+      TaskRow(task: task, facts: facts, now: fixedNow, onTap: () {}),
       size: desktop,
     );
     for (final text in ['doing', 'high', '@raj', 'ops', 'overdue', 'ops-7']) {
@@ -45,7 +45,7 @@ void main() {
   testWidgets('a narrow row leaves the tags off', (tester) async {
     await pumpComponent(
       tester,
-      TaskRow(task: task, facts: facts, onTap: () {}),
+      TaskRow(task: task, facts: facts, now: fixedNow, onTap: () {}),
     );
     expect(inRow(find.byType(TagChip)), findsNothing);
     expect(inRow(find.text('doing')), findsOneWidget);
@@ -78,6 +78,7 @@ void main() {
       tester,
       TaskRow(
         task: task.copyWith(status: 'done'),
+        now: fixedNow,
         onTap: () {},
         onToggleDone: () {},
       ),
@@ -102,8 +103,8 @@ void main() {
           tester,
           ListView(
             children: [
-              TaskRow(task: task, facts: facts, onTap: () {}),
-              TaskCard(task: task, facts: facts, onTap: () {}),
+              TaskRow(task: task, facts: facts, now: fixedNow, onTap: () {}),
+              TaskCard(task: task, facts: facts, now: fixedNow, onTap: () {}),
             ],
           ),
           size: size,
