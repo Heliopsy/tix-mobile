@@ -13,6 +13,7 @@
 - [x] 2.2 `Prefetcher`: listings, tasks, comments, subtasks, projects, fields, workflows, tags and actors
 - [x] 2.3 `networkStateProvider`, `onlineProvider`, `deviceProbeProvider` with connectivity_plus and battery_plus
 - [x] 2.4 `OfflineSync` with `syncStepsProvider`, automatic runs and Sync now
+- [x] 2.5 Forgetting a connection cancels its prefetch, and the cache refuses writes for it afterwards
 
 ## 3. Settings
 

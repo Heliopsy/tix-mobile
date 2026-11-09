@@ -13,6 +13,7 @@ import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/data/cache/response_cache.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
+import 'package:tix_mobile/src/data/offline/connection_jobs.dart';
 import 'package:tix_mobile/src/data/offline/offline_prefs.dart';
 import 'package:tix_mobile/src/data/offline/prefetch.dart';
 import 'package:tix_mobile/src/data/repositories/task_detail_repository.dart';
@@ -161,6 +162,18 @@ class OfflineSync extends _$OfflineSync {
   Future<void> _sync() async {
     final scope = ref.read(activeCacheScopeProvider);
     if (scope == null || !_remote) return;
+    try {
+      await ref
+          .read(connectionJobsProvider)
+          .run(scope.connectionId, (job) => _syncAs(scope, job));
+    } on JobCancelled {
+      if (ref.mounted) {
+        state = OfflineSyncState(lastSyncedAt: state.lastSyncedAt);
+      }
+    }
+  }
+
+  Future<void> _syncAs(CacheScope scope, ConnectionJob job) async {
     final prefs = ref.read(offlinePrefsRepositoryProvider);
     state = OfflineSyncState(lastSyncedAt: state.lastSyncedAt, running: true);
     final session = ref.read(sessionControllerProvider).value!;
@@ -175,6 +188,7 @@ class OfflineSync extends _$OfflineSync {
     );
     try {
       for (final step in ref.read(syncStepsProvider)) {
+        job.check();
         await step();
       }
       await Prefetcher(
@@ -182,10 +196,14 @@ class OfflineSync extends _$OfflineSync {
         lists: TaskListRepository(api, cache),
         detail: TaskDetailRepository(api, cache),
         now: ref.read(clockProvider),
+        job: job,
       ).run(prefs.choice(scope));
+      job.check();
       final at = ref.read(clockProvider)();
       await prefs.setSyncedAt(scope, at);
       if (ref.mounted) state = OfflineSyncState(lastSyncedAt: at);
+    } on JobCancelled {
+      rethrow;
     } on Object catch (e) {
       if (ref.mounted) {
         state = OfflineSyncState(lastSyncedAt: state.lastSyncedAt, error: e);

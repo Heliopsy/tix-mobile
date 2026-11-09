@@ -24,6 +24,7 @@ import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
 import 'package:tix_mobile/src/data/models/membership.dart';
+import 'package:tix_mobile/src/data/offline/connection_jobs.dart';
 import 'package:tix_mobile/src/data/repositories/auth_repository.dart';
 import 'package:tix_mobile/src/data/repositories/identity_repository.dart';
 import 'package:tix_mobile/src/data/repositories/inbox_repository.dart';
@@ -406,6 +407,7 @@ class SessionController extends _$SessionController {
     final repo = ref.read(instancesRepositoryProvider);
     final connection = repo.connection(id);
     if (connection == null) return;
+    await ref.read(connectionJobsProvider).stop(id);
     await _endSession(connection);
     await _forgetCache(id);
     final instanceId = connection.instanceId;
@@ -421,6 +423,7 @@ class SessionController extends _$SessionController {
   Future<void> removeInstance(String id) async {
     final repo = ref.read(instancesRepositoryProvider);
     for (final c in repo.connectionsOf(id)) {
+      await ref.read(connectionJobsProvider).stop(c.id);
       await _endSession(c);
       await _forgetCache(c.id);
     }
@@ -658,6 +661,11 @@ TixApi sessionApi(Ref ref) {
   }
   return api;
 }
+
+/// The background work running per connection, stopped before a forgotten
+/// connection's files are deleted.
+@Riverpod(keepAlive: true)
+ConnectionJobs connectionJobs(Ref ref) => ConnectionJobs();
 
 /// The cache scope of the active context, null with no session.
 ///

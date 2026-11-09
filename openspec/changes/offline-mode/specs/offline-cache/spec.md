@@ -20,6 +20,16 @@ waiting to be sent included.
 
 ## ADDED Requirements
 
+### Requirement: Forgetting a connection stops its background work
+
+Before a connection's cache is deleted, a sync running for it SHALL be stopped, and the cache SHALL refuse every
+later write for that connection, so nothing is written back under a removed connection.
+
+#### Scenario: Signed out during a sync
+
+- **WHEN** a person signs out while a prefetch for that connection is running
+- **THEN** the prefetch stops, and nothing is left cached under the removed connection
+
 ### Requirement: Reads fall back to the saved copy when the server is unreachable
 
 When a read fails because the server cannot be reached (no network, a timeout, or a 502, 503 or 504) and a copy is

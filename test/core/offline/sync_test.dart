@@ -303,6 +303,36 @@ void main() {
     expect(cache.entries['c1/']!.keys, ['sync/outbox/1']);
   });
 
+  test('signing out mid-sync stops the prefetch and leaves no copy', () async {
+    stores.settings.values[projectInfra] = jsonEncode(['infra']);
+    final c = await container();
+    final held = Completer<void>();
+    final reached = Completer<void>();
+    server.routes.add((o, path, caller) async {
+      if (path == '/api/v1/tasks' && !held.isCompleted) {
+        if (!reached.isCompleted) reached.complete();
+        await held.future;
+      }
+      return null;
+    });
+    final sync = c.read(offlineSyncProvider.notifier).syncNow();
+    await reached.future;
+    final signOut = c.read(sessionControllerProvider.notifier).signOut();
+    await pumpEventQueue();
+    held.complete();
+    await Future.wait([sync, signOut]);
+    final listed = listings();
+    await pumpEventQueue();
+    expect(cache.entries.keys.where((k) => k.startsWith('c1/')), isEmpty);
+    expect(listings(), listed);
+    expect(
+      server.requestsTo('/api/v1/tasks/infra-3/comments'),
+      isEmpty,
+      reason: 'the prefetch stopped before reading each task',
+    );
+    expect(c.read(offlineSyncProvider).error, isNull);
+  });
+
   test('online follows the network for a remote instance', () async {
     final c = await container(network: NetworkState.offline);
     expect(c.read(onlineProvider), isFalse);

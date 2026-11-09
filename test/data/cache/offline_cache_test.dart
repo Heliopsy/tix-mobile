@@ -24,6 +24,12 @@ void main() {
     await store.clearScope(const CacheScope('none', ''));
     await store.clearConnection('c/1');
     expect(await store.read(work, 'sync/outbox/1'), isNull);
+    await expectLater(
+      store.write(work, 'tasks/infra', 'late'),
+      throwsA(isA<ConnectionForgotten>()),
+    );
+    expect(await store.read(work, 'tasks/infra'), isNull);
+    expect(await store.sizeOf(work), 0);
   }
 
   test('MemoryCacheStore sizes and clears a scope, keeping sync/', () async {
