@@ -34,8 +34,10 @@ void main() {
     );
     security = SecurityRepository(api);
     logged = [];
-    logListener = logged.add;
-    addTearDown(() => logListener = null);
+    final previous = logSink;
+    logSink = (message, error, _) =>
+        logged.add(error == null ? message : '$message $error');
+    addTearDown(() => logSink = previous);
   });
 
   RequestOptions last() => server.requests.last;

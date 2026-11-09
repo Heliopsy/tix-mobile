@@ -89,6 +89,8 @@ void main() {
       200,
       scrollable: find.byType(Scrollable).first,
     );
+    await tester.ensureVisible(find.byKey(const Key('settings.security')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('settings.security')));
     await tester.pumpAndSettle();
     expect(find.byType(SecurityScreen), findsOneWidget);

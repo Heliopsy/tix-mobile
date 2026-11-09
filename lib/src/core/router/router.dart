@@ -307,10 +307,7 @@ final adminRoutes = <RouteBase>[
   GoRoute(path: 'tenant', builder: (_, _) => const TenantSettingsScreen()),
   GoRoute(path: 'domains', builder: (_, _) => const DomainsScreen()),
   GoRoute(path: 'server', builder: (_, _) => const ServerScreen()),
-  GoRoute(
-    path: 'global-admins',
-    builder: (_, _) => const GlobalAdminsScreen(),
-  ),
+  GoRoute(path: 'global-admins', builder: (_, _) => const GlobalAdminsScreen()),
   GoRoute(
     path: 'accounts/:email/log',
     builder: (_, state) =>
