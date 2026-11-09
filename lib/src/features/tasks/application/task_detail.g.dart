@@ -74,7 +74,7 @@ final class TaskDetailControllerProvider
 }
 
 String _$taskDetailControllerHash() =>
-    r'45adc8d8ed4b84570420a60a84dd57af903e5df4';
+    r'51af306f336f6c0b040779a62ddea2fa150dc6d6';
 
 /// One task, as the task screen edits it.
 ///
@@ -1019,6 +1019,183 @@ final class ActorDirectoryProvider
 }
 
 String _$actorDirectoryHash() => r'83f116ad890fca585b9c3c9d11d12eacb906ff0d';
+
+/// The lease a claim on [taskRef] that names no length would get now, and
+/// the levels that decide it.
+
+@ProviderFor(taskLease)
+final taskLeaseProvider = TaskLeaseFamily._();
+
+/// The lease a claim on [taskRef] that names no length would get now, and
+/// the levels that decide it.
+
+final class TaskLeaseProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<LeaseGrant>,
+          LeaseGrant,
+          FutureOr<LeaseGrant>
+        >
+    with $FutureModifier<LeaseGrant>, $FutureProvider<LeaseGrant> {
+  /// The lease a claim on [taskRef] that names no length would get now, and
+  /// the levels that decide it.
+  TaskLeaseProvider._({
+    required TaskLeaseFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'taskLeaseProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$taskLeaseHash();
+
+  @override
+  String toString() {
+    return r'taskLeaseProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<LeaseGrant> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<LeaseGrant> create(Ref ref) {
+    final argument = this.argument as String;
+    return taskLease(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TaskLeaseProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$taskLeaseHash() => r'2ad9455d017507df073d96d549b44072c101239f';
+
+/// The lease a claim on [taskRef] that names no length would get now, and
+/// the levels that decide it.
+
+final class TaskLeaseFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<LeaseGrant>, String> {
+  TaskLeaseFamily._()
+    : super(
+        retry: null,
+        name: r'taskLeaseProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// The lease a claim on [taskRef] that names no length would get now, and
+  /// the levels that decide it.
+
+  TaskLeaseProvider call(String taskRef) =>
+      TaskLeaseProvider._(argument: taskRef, from: this);
+
+  @override
+  String toString() => r'taskLeaseProvider';
+}
+
+/// The tags on [taskRef] as the server has them now, so a picker never
+/// offers one somebody else has just added.
+
+@ProviderFor(taskTags)
+final taskTagsProvider = TaskTagsFamily._();
+
+/// The tags on [taskRef] as the server has them now, so a picker never
+/// offers one somebody else has just added.
+
+final class TaskTagsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<String>>,
+          List<String>,
+          FutureOr<List<String>>
+        >
+    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
+  /// The tags on [taskRef] as the server has them now, so a picker never
+  /// offers one somebody else has just added.
+  TaskTagsProvider._({
+    required TaskTagsFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'taskTagsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$taskTagsHash();
+
+  @override
+  String toString() {
+    return r'taskTagsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<String>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<String>> create(Ref ref) {
+    final argument = this.argument as String;
+    return taskTags(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TaskTagsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$taskTagsHash() => r'7c78743d036a776b94fe67c3cb3346c6f44bca94';
+
+/// The tags on [taskRef] as the server has them now, so a picker never
+/// offers one somebody else has just added.
+
+final class TaskTagsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<String>>, String> {
+  TaskTagsFamily._()
+    : super(
+        retry: null,
+        name: r'taskTagsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// The tags on [taskRef] as the server has them now, so a picker never
+  /// offers one somebody else has just added.
+
+  TaskTagsProvider call(String taskRef) =>
+      TaskTagsProvider._(argument: taskRef, from: this);
+
+  @override
+  String toString() => r'taskTagsProvider';
+}
 
 /// Every tag in the tenant.
 
