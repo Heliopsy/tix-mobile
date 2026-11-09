@@ -404,8 +404,8 @@ class SessionController extends _$SessionController {
       return;
     }
     final moves = ref.read(contextMovesProvider);
-    await moves.leave?.call();
     try {
+      await moves.leave?.call();
       await _activate(target);
     } finally {
       moves.land?.call(landing);
