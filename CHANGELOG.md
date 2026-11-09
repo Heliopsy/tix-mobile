@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/Heliopsy/tix-mobile/compare/v0.7.0...v0.8.0) (2026-11-09)
+
+
+### Features
+
+* show why live updates are offline, with connection details you can copy ([3186546](https://github.com/Heliopsy/tix-mobile/commit/3186546c11d254f66d89a8f33ca7e96f1c1a0d8b))
+
 ## [0.7.0](https://github.com/Heliopsy/tix-mobile/compare/v0.6.0...v0.7.0) (2026-11-09)
 
 
