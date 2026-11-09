@@ -544,6 +544,10 @@ class _Generator {
             !(stream && p['name'] == 'cursor'))
           p,
     ];
+    final headers = [
+      for (final p in params)
+        if (p['in'] == 'header' && !stream) p,
+    ];
     final prefixes =
         (op.raw['x-tix-query-prefixes'] as List?)?.cast<String>() ?? const [];
 
@@ -566,6 +570,9 @@ class _Generator {
     }
     for (final prefix in prefixes) {
       named.add('Map<String, String>? ${_prefixParam(prefix)}');
+    }
+    for (final p in headers) {
+      named.add('String? ${_identifier(p['name']! as String)}');
     }
 
     final ret = file ? 'Future<Uint8List>' : _returnType(op, stream: stream);
@@ -612,7 +619,16 @@ class _Generator {
         ? ', body: body, contentType: ${_str(body.raw!)}'
         : ', body: body${body.required ? '' : '?'}.'
               '${clearable.containsKey(body.schema) ? 'toBody' : 'toJson'}()';
-    final call = "$m, '$pathExpr'$q$b";
+    String headerEntry(Map<String, Object?> p) {
+      final name = p['name']! as String;
+      return '${_str(name)}: ${_identifier(name)}';
+    }
+
+    final headerEntries = [for (final p in headers) headerEntry(p)];
+    final h = headerEntries.isEmpty
+        ? ''
+        : ', headers: {${headerEntries.join(', ')}}';
+    final call = "$m, '$pathExpr'$q$b$h";
 
     if (stream) {
       final item = _pageItem(op);

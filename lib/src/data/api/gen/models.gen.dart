@@ -226,6 +226,10 @@ abstract class Actor with _$Actor {
     @JsonKey(name: 'tenant_key') @Default('') String tenantKey,
     @JsonKey(name: 'tenant_name') @Default('') String tenantName,
 
+    /// Theme is the palette the actor's tenant resolves to, as the browser renders
+    /// it, on the answer to WhoAmI.
+    @JsonKey(name: 'theme') Theme? theme,
+
     /// TokenID is the API token the request authenticated with, if any.
     @JsonKey(name: 'token_id') @Default('') String tokenId,
   }) = _Actor;
@@ -1735,6 +1739,8 @@ enum EventType {
   webhookDelivered('webhook.delivered'),
   @JsonValue('import.completed')
   importCompleted('import.completed'),
+  @JsonValue('webhook.ping')
+  webhookPing('webhook.ping'),
   @JsonValue('view.arranged')
   viewArranged('view.arranged'),
   @JsonValue('filter.saved')
@@ -2770,6 +2776,41 @@ abstract class IssuedToken with _$IssuedToken {
       _$IssuedTokenFromJson(json);
 }
 
+/// IssuedWebhook is an endpoint as PutWebhook answers it: the only answer that
+/// can carry a signing secret, and only one tix generated for that call.
+@freezed
+abstract class IssuedWebhook with _$IssuedWebhook {
+  /// Creates a [IssuedWebhook].
+  const factory IssuedWebhook({
+    /// Active turns deliveries on. An inactive endpoint receives nothing.
+    @JsonKey(name: 'active') @Default(false) bool active,
+
+    /// CreatedAt is when the endpoint was registered, RFC 3339.
+    @JsonKey(name: 'created_at') @TixDateTime() DateTime? createdAt,
+
+    /// EventTypes are the event types delivered, exact or with a trailing "*" such
+    /// as "task.*". Empty delivers every event.
+    @JsonKey(name: 'event_types') @Default(<String>[]) List<String> eventTypes,
+
+    /// ID is the endpoint's unique identifier.
+    @JsonKey(name: 'id') @Default('') String id,
+
+    /// SigningSecret is the secret tix generated for an endpoint saved without one,
+    /// returned this once. Absent when the caller supplied or kept one.
+    @JsonKey(name: 'secret') @Default('') String secret,
+
+    /// TenantID is the tenant that owns the endpoint.
+    @JsonKey(name: 'tenant_id') @Default('') String tenantId,
+
+    /// URL is where deliveries are POSTed.
+    @JsonKey(name: 'url') @Default('') String url,
+  }) = _IssuedWebhook;
+
+  /// Reads a [IssuedWebhook] from its JSON object.
+  factory IssuedWebhook.fromJson(Map<String, dynamic> json) =>
+      _$IssuedWebhookFromJson(json);
+}
+
 /// Kind classifies an error so every transport can map it consistently.
 enum Kind {
   @JsonValue('invalid')
@@ -3018,7 +3059,8 @@ abstract class ProjectDeletion with _$ProjectDeletion {
     /// DeleteTasks reports that the tasks go permanently with the project.
     @JsonKey(name: 'delete_tasks') @Default(false) bool deleteTasks,
 
-    /// Deleted counts the project's soft deleted tasks, in the trash.
+    /// Deleted counts the tasks the deletion removed permanently, trashed ones
+    /// included. It is zero for a move and for a plan, which deletes nothing.
     @JsonKey(name: 'deleted') @Default(0) int deleted,
 
     /// DryRun marks a plan: what the deletion would do, nothing written.
@@ -3037,6 +3079,13 @@ abstract class ProjectDeletion with _$ProjectDeletion {
 
     /// Tasks counts the project's live tasks.
     @JsonKey(name: 'tasks') @Default(0) int tasks,
+
+    /// Trashed counts the project's soft deleted tasks, in the trash.
+    @JsonKey(name: 'trashed') @Default(0) int trashed,
+
+    /// WouldDelete counts the tasks a planned deletion would remove permanently,
+    /// trashed ones included. Only a plan sets it.
+    @JsonKey(name: 'would_delete') @Default(0) int wouldDelete,
   }) = _ProjectDeletion;
 
   /// Reads a [ProjectDeletion] from its JSON object.
@@ -3093,6 +3142,9 @@ abstract class PruneResult with _$PruneResult {
 
     /// Events counts the events removed.
     @JsonKey(name: 'events') @Default(0) int events,
+
+    /// IdempotencyKeys counts the expired idempotency keys removed.
+    @JsonKey(name: 'idempotency_keys') @Default(0) int idempotencyKeys,
 
     /// RetainedForSubscribers counts events past their window kept because a
     /// subscriber has not consumed them yet.
@@ -3712,6 +3764,39 @@ abstract class AuthSession with _$AuthSession {
   /// Reads a [AuthSession] from its JSON object.
   factory AuthSession.fromJson(Map<String, dynamic> json) =>
       _$AuthSessionFromJson(json);
+}
+
+/// SessionInfo describes one of the caller's sessions without its secret.
+@freezed
+abstract class SessionInfo with _$SessionInfo {
+  /// Creates a [SessionInfo].
+  const factory SessionInfo({
+    /// CreatedAt is when the sign-in happened.
+    @JsonKey(name: 'created_at') @TixDateTime() DateTime? createdAt,
+
+    /// Current marks the session the caller presented with this request.
+    @JsonKey(name: 'current') @Default(false) bool current,
+
+    /// ExpiresAt is when the session stops working.
+    @JsonKey(name: 'expires_at') @TixDateTime() DateTime? expiresAt,
+
+    /// ID identifies the session for revoking it. It is not a credential.
+    @JsonKey(name: 'id') @Default('') String id,
+
+    /// Method is how it signed in: password, ssh-key or switch.
+    @JsonKey(name: 'method') @Default('') String method,
+
+    /// SecondFactor reports that the sign-in passed a second factor.
+    @JsonKey(name: 'second_factor') @Default(false) bool secondFactor,
+
+    /// UserAgent is the user agent the sign-in request sent, truncated, or empty
+    /// for a session that predates recording it.
+    @JsonKey(name: 'user_agent') @Default('') String userAgent,
+  }) = _SessionInfo;
+
+  /// Reads a [SessionInfo] from its JSON object.
+  factory SessionInfo.fromJson(Map<String, dynamic> json) =>
+      _$SessionInfoFromJson(json);
 }
 
 /// SnoozeInput says until when a task sleeps.
@@ -4741,6 +4826,12 @@ abstract class Task with _$Task {
     /// Version increases by one on every change. Pass it back on an update to have
     /// a stale write refused with a conflict.
     @JsonKey(name: 'version') @Default(0) int version,
+
+    /// WebURL is the address of the task's screen in the browser interface, set
+    /// when the server is configured with the address it is reached at
+    /// (server.public_url). Only a read sets it, so it is absent from audit
+    /// snapshots, events and exports.
+    @JsonKey(name: 'web_url') @Default('') String webUrl,
   }) = _Task;
 
   /// Reads a [Task] from its JSON object.
@@ -5221,6 +5312,11 @@ abstract class TenantUser with _$TenantUser {
     /// ID is the user's actor identifier.
     @JsonKey(name: 'id') @Default('') String id,
 
+    /// Removed reports that the person was removed from this tenant: their actor
+    /// stays so history still names them, but they hold no membership. A listing
+    /// returns such a person only when asked to include them.
+    @JsonKey(name: 'removed') @Default(false) bool removed,
+
     /// RequirePasswordChange reports whether the next password sign-in must choose
     /// a new password before a session is minted.
     @JsonKey(name: 'require_password_change')
@@ -5253,6 +5349,50 @@ abstract class TenantUser with _$TenantUser {
   /// Reads a [TenantUser] from its JSON object.
   factory TenantUser.fromJson(Map<String, dynamic> json) =>
       _$TenantUserFromJson(json);
+}
+
+/// Theme is the accent a tenant presents itself with, on every surface. Two
+/// colours rather than a role per element. The web interface already has light,
+/// dark and dim for everything structural, and a terminal cannot honour a
+/// browser's palette anyway; what a tenant actually wants to choose is the
+/// accent, and one accent plus the tint behind it is enough to carry a brand
+/// through a header, a selected row and a reference. Colours that mean
+/// something rather than brand something are not in here. State category and
+/// priority keep their own, because a tenant that themes itself red should not
+/// lose the red that means blocked.
+@freezed
+abstract class Theme with _$Theme {
+  /// Creates a [Theme].
+  const factory Theme({
+    /// Accent is the brand colour, as #rrggbb.
+    @JsonKey(name: 'accent') @Default('') String accent,
+
+    /// AccentDark is the accent for the dark and dim schemes, as #rrggbb. The dark
+    /// pair exists because an accent picked to read on white is usually too dark to
+    /// read on near-black, and the browser defaults to the dark scheme: a theme
+    /// with only a light accent renders as a barely visible smear on the scheme
+    /// most people actually see. Empty falls back to the light pair, so a
+    /// configured theme that names only an accent still applies everywhere rather
+    /// than being ignored on half the schemes.
+    @JsonKey(name: 'accent_dark') @Default('') String accentDark,
+
+    /// AccentSoft is the tint it sits on, as #rrggbb.
+    @JsonKey(name: 'accent_soft') @Default('') String accentSoft,
+
+    /// AccentSoftDark is the tint it sits on in those schemes, as #rrggbb.
+    @JsonKey(name: 'accent_soft_dark') @Default('') String accentSoftDark,
+
+    /// BuiltIn reports whether this theme ships with tix rather than coming from
+    /// configuration. Listing says which, so an operator can tell what they can
+    /// redefine.
+    @JsonKey(name: 'built_in') @Default(false) bool builtIn,
+
+    /// Name is the theme's name, or the #rrggbb a custom accent was named as.
+    @JsonKey(name: 'name') @Default('') String name,
+  }) = _Theme;
+
+  /// Reads a [Theme] from its JSON object.
+  factory Theme.fromJson(Map<String, dynamic> json) => _$ThemeFromJson(json);
 }
 
 /// TimePrefs is how instants are shown to a person at one level: a named format
@@ -5715,6 +5855,11 @@ abstract class User with _$User {
 
     /// ID is the user's actor identifier.
     @JsonKey(name: 'id') @Default('') String id,
+
+    /// Removed reports that the person was removed from this tenant: their actor
+    /// stays so history still names them, but they hold no membership. A listing
+    /// returns such a person only when asked to include them.
+    @JsonKey(name: 'removed') @Default(false) bool removed,
 
     /// RequirePasswordChange reports whether the next password sign-in must choose
     /// a new password before a session is minted.

@@ -336,12 +336,17 @@ class ArtifactOps {
   /// log, to a task.
   ///
   /// `PUT /api/v1/tasks/{ref}/artifacts` (`artifact.put`), scope `artifact:write`.
-  Future<Artifact> put(String ref, ArtifactInput body) async {
+  Future<Artifact> put(
+    String ref,
+    ArtifactInput body, {
+    String? idempotencyKey,
+  }) async {
     return Artifact.fromJson(
       await _t.json(
         'PUT',
         '/api/v1/tasks/${_t.segment(ref)}/artifacts',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -450,11 +455,15 @@ class BundleOps {
   /// ExportBundle writes the selected components as it walks them.
   ///
   /// `POST /api/v1/bundles/export` (`bundle.export`), scope `workflow:read`.
-  Future<String> export({BundleExportInput? body}) async {
+  Future<String> export({
+    BundleExportInput? body,
+    String? idempotencyKey,
+  }) async {
     return _t.text(
       'POST',
       '/api/v1/bundles/export',
       body: body?.toJson(),
+      headers: {'Idempotency-Key': idempotencyKey},
       accept: 'application/vnd.tix.bundle+json',
     );
   }
@@ -467,6 +476,7 @@ class BundleOps {
     String? onCollision,
     bool? preview,
     String? projectRef,
+    String? idempotencyKey,
   }) async {
     return BundleResult.fromJson(
       await _t.json(
@@ -479,6 +489,7 @@ class BundleOps {
         },
         body: body,
         contentType: 'application/vnd.tix.bundle+json',
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -494,18 +505,34 @@ class CalendarOps {
   /// CreateCalendarFeed issues the caller a feed.
   ///
   /// `POST /api/v1/calendar` (`calendar.create`), scope `task:read`.
-  Future<IssuedCalendarFeed> create({CalendarFeedInput? body}) async {
+  Future<IssuedCalendarFeed> create({
+    CalendarFeedInput? body,
+    String? idempotencyKey,
+  }) async {
     return IssuedCalendarFeed.fromJson(
-      await _t.json('POST', '/api/v1/calendar', body: body?.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/calendar',
+        body: body?.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
   /// SetCalendarFeedFilter changes the caller's feed filter, keeping its URL.
   ///
   /// `PATCH /api/v1/calendar` (`calendar.filter`), scope `task:read`.
-  Future<CalendarFeed> filter(CalendarFeedInput body) async {
+  Future<CalendarFeed> filter(
+    CalendarFeedInput body, {
+    String? idempotencyKey,
+  }) async {
     return CalendarFeed.fromJson(
-      await _t.json('PATCH', '/api/v1/calendar', body: body.toJson()),
+      await _t.json(
+        'PATCH',
+        '/api/v1/calendar',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -524,16 +551,24 @@ class CalendarOps {
   /// from then on.
   ///
   /// `DELETE /api/v1/calendar` (`calendar.revoke`), scope `task:read`.
-  Future<void> revoke() async {
-    await _t.empty('DELETE', '/api/v1/calendar');
+  Future<void> revoke({String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/calendar',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// RotateCalendarFeed replaces the caller's feed secret, keeping the filter.
   ///
   /// `POST /api/v1/calendar/rotate` (`calendar.rotate`), scope `task:read`.
-  Future<IssuedCalendarFeed> rotate() async {
+  Future<IssuedCalendarFeed> rotate({String? idempotencyKey}) async {
     return IssuedCalendarFeed.fromJson(
-      await _t.json('POST', '/api/v1/calendar/rotate'),
+      await _t.json(
+        'POST',
+        '/api/v1/calendar/rotate',
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -556,9 +591,14 @@ class ClaimOps {
   /// filter and returns it with its lease token.
   ///
   /// `POST /api/v1/claims/next` (`claim.next`), scope `task:claim`.
-  Future<Claim> next({ClaimNextInput? body}) async {
+  Future<Claim> next({ClaimNextInput? body, String? idempotencyKey}) async {
     return Claim.fromJson(
-      await _t.json('POST', '/api/v1/claims/next', body: body?.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/claims/next',
+        body: body?.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -566,12 +606,17 @@ class ClaimOps {
   /// administrator whose worker has died.
   ///
   /// `POST /api/v1/tasks/{ref}/claim/reclaim` (`claim.reclaim`), scope `task:reclaim`.
-  Future<Task> reclaim(String ref, {ForceReclaimInput? body}) async {
+  Future<Task> reclaim(
+    String ref, {
+    ForceReclaimInput? body,
+    String? idempotencyKey,
+  }) async {
     return Task.fromJson(
       await _t.json(
         'POST',
         '/api/v1/tasks/${_t.segment(ref)}/claim/reclaim',
         body: body?.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -579,11 +624,16 @@ class ClaimOps {
   /// ReleaseLease gives up the lease held under the caller's token.
   ///
   /// `POST /api/v1/tasks/{ref}/claim/release` (`claim.release`), scope `task:claim`.
-  Future<void> release(String ref, ReleaseRequest body) async {
+  Future<void> release(
+    String ref,
+    ReleaseRequest body, {
+    String? idempotencyKey,
+  }) async {
     await _t.empty(
       'POST',
       '/api/v1/tasks/${_t.segment(ref)}/claim/release',
       body: body.toJson(),
+      headers: {'Idempotency-Key': idempotencyKey},
     );
   }
 
@@ -591,12 +641,17 @@ class ClaimOps {
   /// the ttl given or the task's default lease.
   ///
   /// `POST /api/v1/tasks/{ref}/claim/renew` (`claim.renew`), scope `task:claim`.
-  Future<Claim> renew(String ref, RenewRequest body) async {
+  Future<Claim> renew(
+    String ref,
+    RenewRequest body, {
+    String? idempotencyKey,
+  }) async {
     return Claim.fromJson(
       await _t.json(
         'POST',
         '/api/v1/tasks/${_t.segment(ref)}/claim/renew',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -605,9 +660,17 @@ class ClaimOps {
   /// cleared.
   ///
   /// `POST /api/v1/claims/sweep` (`claim.sweep`), scope `task:write`.
-  Future<SweepResult> sweep({SweepRequest? body}) async {
+  Future<SweepResult> sweep({
+    SweepRequest? body,
+    String? idempotencyKey,
+  }) async {
     return SweepResult.fromJson(
-      await _t.json('POST', '/api/v1/claims/sweep', body: body?.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/claims/sweep',
+        body: body?.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -615,12 +678,17 @@ class ClaimOps {
   /// and returns the lease token to renew and release it with.
   ///
   /// `POST /api/v1/tasks/{ref}/claim` (`claim.task`), scope `task:claim`.
-  Future<Claim> task(String ref, {ClaimInput? body}) async {
+  Future<Claim> task(
+    String ref, {
+    ClaimInput? body,
+    String? idempotencyKey,
+  }) async {
     return Claim.fromJson(
       await _t.json(
         'POST',
         '/api/v1/tasks/${_t.segment(ref)}/claim',
         body: body?.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -637,12 +705,17 @@ class CommentOps {
   /// mentions, the assignee and anyone who starred the task.
   ///
   /// `POST /api/v1/tasks/{ref}/comments` (`comment.add`), scope `comment:write`.
-  Future<Comment> add(String ref, CommentRequest body) async {
+  Future<Comment> add(
+    String ref,
+    CommentRequest body, {
+    String? idempotencyKey,
+  }) async {
     return Comment.fromJson(
       await _t.json(
         'POST',
         '/api/v1/tasks/${_t.segment(ref)}/comments',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -650,19 +723,28 @@ class CommentOps {
   /// DeleteComment soft deletes a comment, so it no longer lists.
   ///
   /// `DELETE /api/v1/comments/{id}` (`comment.delete`), scope `comment:write`.
-  Future<void> delete(String id) async {
-    await _t.empty('DELETE', '/api/v1/comments/${_t.segment(id)}');
+  Future<void> delete(String id, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/comments/${_t.segment(id)}',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// EditComment replaces a comment's body and marks it edited.
   ///
   /// `PATCH /api/v1/comments/{id}` (`comment.edit`), scope `comment:write`.
-  Future<Comment> edit(String id, CommentRequest body) async {
+  Future<Comment> edit(
+    String id,
+    CommentRequest body, {
+    String? idempotencyKey,
+  }) async {
     return Comment.fromJson(
       await _t.json(
         'PATCH',
         '/api/v1/comments/${_t.segment(id)}',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -695,8 +777,12 @@ class ConnectionOps {
   /// EndConnection closes one live connection of the caller's tenant.
   ///
   /// `DELETE /api/v1/connections/{id}` (`connection.end`), scope `tenant:admin`.
-  Future<void> end(String id) async {
-    await _t.empty('DELETE', '/api/v1/connections/${_t.segment(id)}');
+  Future<void> end(String id, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/connections/${_t.segment(id)}',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// ListConnections returns the connections of the caller's tenant that this
@@ -718,11 +804,16 @@ class DependencyOps {
   /// AddDependency records that a task waits for another task.
   ///
   /// `POST /api/v1/tasks/{ref}/deps` (`dependency.add`), scope `task:write`.
-  Future<void> add(String ref, DependencyRequest body) async {
+  Future<void> add(
+    String ref,
+    DependencyRequest body, {
+    String? idempotencyKey,
+  }) async {
     await _t.empty(
       'POST',
       '/api/v1/tasks/${_t.segment(ref)}/deps',
       body: body.toJson(),
+      headers: {'Idempotency-Key': idempotencyKey},
     );
   }
 
@@ -748,10 +839,11 @@ class DependencyOps {
   /// RemoveDependency removes the edge saying a task waits for another.
   ///
   /// `DELETE /api/v1/tasks/{ref}/deps/{dep}` (`dependency.remove`), scope `task:write`.
-  Future<void> remove(String ref, String dep) async {
+  Future<void> remove(String ref, String dep, {String? idempotencyKey}) async {
     await _t.empty(
       'DELETE',
       '/api/v1/tasks/${_t.segment(ref)}/deps/${_t.segment(dep)}',
+      headers: {'Idempotency-Key': idempotencyKey},
     );
   }
 }
@@ -767,9 +859,14 @@ class DomainOps {
   /// resolve to it.
   ///
   /// `POST /api/v1/domains` (`domain.add`), scope `tenant:admin`.
-  Future<Domain> add(AddDomainInput body) async {
+  Future<Domain> add(AddDomainInput body, {String? idempotencyKey}) async {
     return Domain.fromJson(
-      await _t.json('POST', '/api/v1/domains', body: body.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/domains',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -793,8 +890,12 @@ class DomainOps {
   /// RemoveDomain detaches a hostname from the current tenant.
   ///
   /// `DELETE /api/v1/domains/{hostname}` (`domain.remove`), scope `tenant:admin`.
-  Future<void> remove(String hostname) async {
-    await _t.empty('DELETE', '/api/v1/domains/${_t.segment(hostname)}');
+  Future<void> remove(String hostname, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/domains/${_t.segment(hostname)}',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// ResolveDomain returns the tenant a hostname is mapped to.
@@ -809,12 +910,17 @@ class DomainOps {
   /// UpdateDomain changes a tenant domain, whichever tenant it belongs to.
   ///
   /// `PATCH /api/v1/domains/{hostname}` (`domain.update`), scope `global:admin`.
-  Future<Domain> update(String hostname, UpdateDomainInput body) async {
+  Future<Domain> update(
+    String hostname,
+    UpdateDomainInput body, {
+    String? idempotencyKey,
+  }) async {
     return Domain.fromJson(
       await _t.json(
         'PATCH',
         '/api/v1/domains/${_t.segment(hostname)}',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -873,10 +979,11 @@ class FieldOps {
   /// DeleteFieldDef removes a custom field definition from a project.
   ///
   /// `DELETE /api/v1/projects/{ref}/fields/{key}` (`field.delete`), scope `project:write`.
-  Future<void> delete(String ref, String key) async {
+  Future<void> delete(String ref, String key, {String? idempotencyKey}) async {
     await _t.empty(
       'DELETE',
       '/api/v1/projects/${_t.segment(ref)}/fields/${_t.segment(key)}',
+      headers: {'Idempotency-Key': idempotencyKey},
     );
   }
 
@@ -901,12 +1008,17 @@ class FieldOps {
   /// keyed by its field key.
   ///
   /// `PUT /api/v1/projects/{ref}/fields` (`field.put`), scope `project:write`.
-  Future<FieldDef> put(String ref, FieldDefInput body) async {
+  Future<FieldDef> put(
+    String ref,
+    FieldDefInput body, {
+    String? idempotencyKey,
+  }) async {
     return FieldDef.fromJson(
       await _t.json(
         'PUT',
         '/api/v1/projects/${_t.segment(ref)}/fields',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -923,8 +1035,12 @@ class FilterOps {
   /// may do.
   ///
   /// `DELETE /api/v1/filters/{filter}` (`filter.delete`), scope `task:read`.
-  Future<void> delete(String filter) async {
-    await _t.empty('DELETE', '/api/v1/filters/${_t.segment(filter)}');
+  Future<void> delete(String filter, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/filters/${_t.segment(filter)}',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// ListSavedFilters returns the caller's own filters in their order, then the
@@ -949,9 +1065,17 @@ class FilterOps {
   /// OrderSavedFilters puts the caller's named filters first, in that order.
   ///
   /// `PUT /api/v1/filters/order` (`filter.order`), scope `task:read`.
-  Future<Page<SavedFilter>> order(SavedFilterOrderInput body) async {
+  Future<Page<SavedFilter>> order(
+    SavedFilterOrderInput body, {
+    String? idempotencyKey,
+  }) async {
     return Page.fromJson(
-      await _t.json('PUT', '/api/v1/filters/order', body: body.toJson()),
+      await _t.json(
+        'PUT',
+        '/api/v1/filters/order',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
       (e) => SavedFilter.fromJson(e! as Map<String, dynamic>),
     );
   }
@@ -959,9 +1083,17 @@ class FilterOps {
   /// CreateSavedFilter saves a new filter for the caller.
   ///
   /// `POST /api/v1/filters` (`filter.save`), scope `task:read`.
-  Future<SavedFilter> save(SavedFilterInput body) async {
+  Future<SavedFilter> save(
+    SavedFilterInput body, {
+    String? idempotencyKey,
+  }) async {
     return SavedFilter.fromJson(
-      await _t.json('POST', '/api/v1/filters', body: body.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/filters',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -978,12 +1110,17 @@ class FilterOps {
   /// UpdateSavedFilter renames, edits or shares a filter.
   ///
   /// `PATCH /api/v1/filters/{filter}` (`filter.update`), scope `task:read`.
-  Future<SavedFilter> update(String filter, SavedFilterUpdate body) async {
+  Future<SavedFilter> update(
+    String filter,
+    SavedFilterUpdate body, {
+    String? idempotencyKey,
+  }) async {
     return SavedFilter.fromJson(
       await _t.json(
         'PATCH',
         '/api/v1/filters/${_t.segment(filter)}',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -1000,9 +1137,14 @@ class GlobalAdminOps {
   /// administers every tenant.
   ///
   /// `POST /api/v1/global-admins` (`global_admin.grant`), scope `global:admin`.
-  Future<User> grant(GlobalAdminInput body) async {
+  Future<User> grant(GlobalAdminInput body, {String? idempotencyKey}) async {
     return User.fromJson(
-      await _t.json('POST', '/api/v1/global-admins', body: body.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/global-admins',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -1026,8 +1168,12 @@ class GlobalAdminOps {
   /// RevokeGlobalAdmin takes global admin away from the user with this email.
   ///
   /// `DELETE /api/v1/global-admins/{email}` (`global_admin.revoke`), scope `global:admin`.
-  Future<void> revoke(String email) async {
-    await _t.empty('DELETE', '/api/v1/global-admins/${_t.segment(email)}');
+  Future<void> revoke(String email, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/global-admins/${_t.segment(email)}',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 }
 
@@ -1051,18 +1197,34 @@ class HousekeepingOps {
   /// PutHousekeeping changes the tenant default or one project's override.
   ///
   /// `PUT /api/v1/housekeeping` (`housekeeping.put`), scope `tenant:admin`.
-  Future<HousekeepingView> put(HousekeepingInput body) async {
+  Future<HousekeepingView> put(
+    HousekeepingInput body, {
+    String? idempotencyKey,
+  }) async {
     return HousekeepingView.fromJson(
-      await _t.json('PUT', '/api/v1/housekeeping', body: body.toJson()),
+      await _t.json(
+        'PUT',
+        '/api/v1/housekeeping',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
   /// RunHousekeeping applies the policy once, in bounded batches, or previews it.
   ///
   /// `POST /api/v1/housekeeping/run` (`housekeeping.run`), scope `tenant:admin`.
-  Future<HousekeepingResult> run({HousekeepingRunInput? body}) async {
+  Future<HousekeepingResult> run({
+    HousekeepingRunInput? body,
+    String? idempotencyKey,
+  }) async {
     return HousekeepingResult.fromJson(
-      await _t.json('POST', '/api/v1/housekeeping/run', body: body?.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/housekeeping/run',
+        body: body?.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 }
@@ -1093,9 +1255,17 @@ class InboxOps {
   /// CreateInboxChannel adds a channel and returns its secret, once.
   ///
   /// `POST /api/v1/channels` (`inbox.channel.add`), scope `task:read`.
-  Future<IssuedInboxChannel> channelAdd(InboxChannelInput body) async {
+  Future<IssuedInboxChannel> channelAdd(
+    InboxChannelInput body, {
+    String? idempotencyKey,
+  }) async {
     return IssuedInboxChannel.fromJson(
-      await _t.json('POST', '/api/v1/channels', body: body.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/channels',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -1143,12 +1313,17 @@ class InboxOps {
   /// UpdateInboxChannel changes one of the caller's channels.
   ///
   /// `PATCH /api/v1/channels/{id}` (`inbox.channel.edit`), scope `task:read`.
-  Future<InboxChannel> channelEdit(String id, InboxChannelUpdate body) async {
+  Future<InboxChannel> channelEdit(
+    String id,
+    InboxChannelUpdate body, {
+    String? idempotencyKey,
+  }) async {
     return InboxChannel.fromJson(
       await _t.json(
         'PATCH',
         '/api/v1/channels/${_t.segment(id)}',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -1174,27 +1349,39 @@ class InboxOps {
   /// deliveries, made on the next drain.
   ///
   /// `POST /api/v1/channel-deliveries/{id}/redeliver` (`inbox.channel.redeliver`), scope `task:read`.
-  Future<void> channelRedeliver(String id) async {
+  Future<void> channelRedeliver(String id, {String? idempotencyKey}) async {
     await _t.empty(
       'POST',
       '/api/v1/channel-deliveries/${_t.segment(id)}/redeliver',
+      headers: {'Idempotency-Key': idempotencyKey},
     );
   }
 
   /// DeleteInboxChannel removes one of the caller's channels and its deliveries.
   ///
   /// `DELETE /api/v1/channels/{id}` (`inbox.channel.rm`), scope `task:read`.
-  Future<void> channelRm(String id) async {
-    await _t.empty('DELETE', '/api/v1/channels/${_t.segment(id)}');
+  Future<void> channelRm(String id, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/channels/${_t.segment(id)}',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// TestInboxChannel queues a test message to one of the caller's channels and
   /// returns the delivery, attempted when this process drains inline.
   ///
   /// `POST /api/v1/channels/{id}/test` (`inbox.channel.test`), scope `task:read`.
-  Future<ChannelDelivery> channelTest(String id) async {
+  Future<ChannelDelivery> channelTest(
+    String id, {
+    String? idempotencyKey,
+  }) async {
     return ChannelDelivery.fromJson(
-      await _t.json('POST', '/api/v1/channels/${_t.segment(id)}/test'),
+      await _t.json(
+        'POST',
+        '/api/v1/channels/${_t.segment(id)}/test',
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -1264,36 +1451,56 @@ class InboxOps {
   /// PutInboxPrefs replaces the kinds the caller muted.
   ///
   /// `PUT /api/v1/inbox/prefs` (`inbox.prefs.set`), scope `task:read`.
-  Future<InboxPrefs> prefsSet(InboxPrefsInput body) async {
+  Future<InboxPrefs> prefsSet(
+    InboxPrefsInput body, {
+    String? idempotencyKey,
+  }) async {
     return InboxPrefs.fromJson(
-      await _t.json('PUT', '/api/v1/inbox/prefs', body: body.toJson()),
+      await _t.json(
+        'PUT',
+        '/api/v1/inbox/prefs',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
   /// ReadInboxItem marks one of the caller's items read and returns it.
   ///
   /// `PUT /api/v1/inbox/{id}/read` (`inbox.read`), scope `task:read`.
-  Future<InboxItem> read(String id) async {
+  Future<InboxItem> read(String id, {String? idempotencyKey}) async {
     return InboxItem.fromJson(
-      await _t.json('PUT', '/api/v1/inbox/${_t.segment(id)}/read'),
+      await _t.json(
+        'PUT',
+        '/api/v1/inbox/${_t.segment(id)}/read',
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
   /// ReadAllInbox marks every one of the caller's items read.
   ///
   /// `POST /api/v1/inbox/read-all` (`inbox.read_all`), scope `task:read`.
-  Future<InboxReadAll> readAll() async {
+  Future<InboxReadAll> readAll({String? idempotencyKey}) async {
     return InboxReadAll.fromJson(
-      await _t.json('POST', '/api/v1/inbox/read-all'),
+      await _t.json(
+        'POST',
+        '/api/v1/inbox/read-all',
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
   /// UnreadInboxItem marks one of the caller's items unread.
   ///
   /// `DELETE /api/v1/inbox/{id}/read` (`inbox.unread`), scope `task:read`.
-  Future<InboxItem> unread(String id) async {
+  Future<InboxItem> unread(String id, {String? idempotencyKey}) async {
     return InboxItem.fromJson(
-      await _t.json('DELETE', '/api/v1/inbox/${_t.segment(id)}/read'),
+      await _t.json(
+        'DELETE',
+        '/api/v1/inbox/${_t.segment(id)}/read',
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 }
@@ -1324,9 +1531,17 @@ class InviteOps {
   /// single-use link, once.
   ///
   /// `POST /api/v1/invites` (`invite.create`), scope `user:admin`.
-  Future<IssuedInvite> create(CreateInviteInput body) async {
+  Future<IssuedInvite> create(
+    CreateInviteInput body, {
+    String? idempotencyKey,
+  }) async {
     return IssuedInvite.fromJson(
-      await _t.json('POST', '/api/v1/invites', body: body.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/invites',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -1363,12 +1578,17 @@ class InviteOps {
   /// carrying a fresh expiry, and returns it once.
   ///
   /// `POST /api/v1/invites/{id}/reissue` (`invite.reissue`), scope `user:admin`.
-  Future<IssuedInvite> reissue(String id, {ReissueInviteInput? body}) async {
+  Future<IssuedInvite> reissue(
+    String id, {
+    ReissueInviteInput? body,
+    String? idempotencyKey,
+  }) async {
     return IssuedInvite.fromJson(
       await _t.json(
         'POST',
         '/api/v1/invites/${_t.segment(id)}/reissue',
         body: body?.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -1376,8 +1596,12 @@ class InviteOps {
   /// RevokeInvite stops a pending invite's link at once.
   ///
   /// `DELETE /api/v1/invites/{id}` (`invite.revoke`), scope `user:admin`.
-  Future<void> revoke(String id) async {
-    await _t.empty('DELETE', '/api/v1/invites/${_t.segment(id)}');
+  Future<void> revoke(String id, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/invites/${_t.segment(id)}',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 }
 
@@ -1392,9 +1616,17 @@ class MemberOps {
   /// current tenant.
   ///
   /// `POST /api/v1/members` (`member.add`), scope `tenant:admin`.
-  Future<TenantMembership> add(AddMemberRequest body) async {
+  Future<TenantMembership> add(
+    AddMemberRequest body, {
+    String? idempotencyKey,
+  }) async {
     return TenantMembership.fromJson(
-      await _t.json('POST', '/api/v1/members', body: body.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/members',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -1418,8 +1650,12 @@ class MemberOps {
   /// RemoveMember revokes an actor's membership of the current tenant.
   ///
   /// `DELETE /api/v1/members/{actorID}` (`member.remove`), scope `tenant:admin`.
-  Future<void> remove(String actorId) async {
-    await _t.empty('DELETE', '/api/v1/members/${_t.segment(actorId)}');
+  Future<void> remove(String actorId, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/members/${_t.segment(actorId)}',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 }
 
@@ -1434,9 +1670,17 @@ class ProjectOps {
   /// the builtin one.
   ///
   /// `POST /api/v1/projects` (`project.create`), scope `project:write`.
-  Future<Project> create(CreateProjectInput body) async {
+  Future<Project> create(
+    CreateProjectInput body, {
+    String? idempotencyKey,
+  }) async {
     return Project.fromJson(
-      await _t.json('POST', '/api/v1/projects', body: body.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/projects',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -1449,6 +1693,7 @@ class ProjectOps {
     bool? archive,
     String? moveTasksTo,
     bool? deleteTasks,
+    String? idempotencyKey,
   }) async {
     final json = await _t.jsonOrNull(
       'DELETE',
@@ -1458,6 +1703,7 @@ class ProjectOps {
         'move_tasks_to': moveTasksTo,
         'delete_tasks': deleteTasks,
       },
+      headers: {'Idempotency-Key': idempotencyKey},
     );
     return json == null ? null : ProjectDeletion.fromJson(json);
   }
@@ -1552,12 +1798,17 @@ class ProjectOps {
   /// workflow or lease bounds; fields left out are unchanged.
   ///
   /// `PATCH /api/v1/projects/{ref}` (`project.update`), scope `project:write`.
-  Future<Project> update(String ref, UpdateProjectInput body) async {
+  Future<Project> update(
+    String ref,
+    UpdateProjectInput body, {
+    String? idempotencyKey,
+  }) async {
     return Project.fromJson(
       await _t.json(
         'PATCH',
         '/api/v1/projects/${_t.segment(ref)}',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -1581,9 +1832,14 @@ class RetentionOps {
   /// retention policy allows.
   ///
   /// `POST /api/v1/prune` (`retention.prune`), scope `tenant:admin`.
-  Future<PruneResult> prune({PruneInput? body}) async {
+  Future<PruneResult> prune({PruneInput? body, String? idempotencyKey}) async {
     return PruneResult.fromJson(
-      await _t.json('POST', '/api/v1/prune', body: body?.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/prune',
+        body: body?.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -1591,9 +1847,17 @@ class RetentionOps {
   /// now in force.
   ///
   /// `PUT /api/v1/retention` (`retention.put`), scope `tenant:admin`.
-  Future<RetentionPolicy> put(RetentionPolicy body) async {
+  Future<RetentionPolicy> put(
+    RetentionPolicy body, {
+    String? idempotencyKey,
+  }) async {
     return RetentionPolicy.fromJson(
-      await _t.json('PUT', '/api/v1/retention', body: body.toJson()),
+      await _t.json(
+        'PUT',
+        '/api/v1/retention',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 }
@@ -1627,6 +1891,47 @@ class SessionOps {
 
   final TixTransport _t;
 
+  /// ListSessions lists the caller's own unexpired sessions in this tenant,
+  /// browser and terminal sign-ins, newest first and keyset paginated.
+  ///
+  /// `GET /api/v1/account/sessions` (`session.list`).
+  Future<Page<SessionInfo>> list({
+    int? limit,
+    String? cursor,
+    String? sort,
+    String? direction,
+  }) async {
+    return Page.fromJson(
+      await _t.json(
+        'GET',
+        '/api/v1/account/sessions',
+        query: {
+          'limit': limit,
+          'cursor': cursor,
+          'sort': sort,
+          'direction': direction,
+        },
+      ),
+      (e) => SessionInfo.fromJson(e! as Map<String, dynamic>),
+    );
+  }
+
+  /// ListSessions lists the caller's own unexpired sessions in this tenant,
+  /// browser and terminal sign-ins, newest first and keyset paginated.
+  ///
+  /// `GET /api/v1/account/sessions` (`session.list`) as NDJSON, one item per line.
+  Stream<SessionInfo> listStream({
+    int? limit,
+    String? sort,
+    String? direction,
+  }) => _t
+      .ndjson(
+        'GET',
+        '/api/v1/account/sessions',
+        query: {'limit': limit, 'sort': sort, 'direction': direction},
+      )
+      .map((e) => SessionInfo.fromJson(e! as Map<String, dynamic>));
+
   /// Login is one step of an interactive sign-in.
   ///
   /// `POST /api/v1/auth/login` (`session.login`).
@@ -1639,8 +1944,24 @@ class SessionOps {
   /// Logout ends the session the caller presented.
   ///
   /// `POST /api/v1/auth/logout` (`session.logout`).
-  Future<void> logout() async {
-    await _t.empty('POST', '/api/v1/auth/logout');
+  Future<void> logout({String? idempotencyKey}) async {
+    await _t.empty(
+      'POST',
+      '/api/v1/auth/logout',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
+  }
+
+  /// RevokeSession ends one of the caller's own sessions by identifier, so it
+  /// stops signing anybody in.
+  ///
+  /// `DELETE /api/v1/account/sessions/{id}` (`session.revoke`).
+  Future<void> revoke(String id, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/account/sessions/${_t.segment(id)}',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// SSHLoginChallenge issues a short-lived nonce for an SSH key sign-in, bound
@@ -1667,9 +1988,17 @@ class SessionOps {
   /// member of, served on the same host.
   ///
   /// `POST /api/v1/auth/switch` (`session.switch`).
-  Future<LoginResult> switchTenant(SwitchTenantInput body) async {
+  Future<LoginResult> switchTenant(
+    SwitchTenantInput body, {
+    String? idempotencyKey,
+  }) async {
     return LoginResult.fromJson(
-      await _t.json('POST', '/api/v1/auth/switch', body: body.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/auth/switch',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 }
@@ -1685,11 +2014,12 @@ class SnapshotOps {
   /// walking the data as it writes.
   ///
   /// `POST /api/v1/export` (`snapshot.export`), scope `export`.
-  Future<String> export({ExportInput? body}) async {
+  Future<String> export({ExportInput? body, String? idempotencyKey}) async {
     return _t.text(
       'POST',
       '/api/v1/export',
       body: body?.toJson(),
+      headers: {'Idempotency-Key': idempotencyKey},
       accept: 'application/x-ndjson',
     );
   }
@@ -1698,7 +2028,12 @@ class SnapshotOps {
   /// replaces, the tenant's data.
   ///
   /// `POST /api/v1/import` (`snapshot.import`), scope `import`.
-  Future<ImportResult> import(String body, {String? mode, bool? dryRun}) async {
+  Future<ImportResult> import(
+    String body, {
+    String? mode,
+    bool? dryRun,
+    String? idempotencyKey,
+  }) async {
     return ImportResult.fromJson(
       await _t.json(
         'POST',
@@ -1706,6 +2041,7 @@ class SnapshotOps {
         query: {'mode': mode, 'dry_run': dryRun},
         body: body,
         contentType: 'application/x-ndjson',
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -1722,9 +2058,14 @@ class SshkeyOps {
   /// key can reach the terminal interface over SSH.
   ///
   /// `POST /api/v1/ssh-keys` (`sshkey.enrol`), scope `token:admin`.
-  Future<SSHKey> enrol(EnrolSSHKeyInput body) async {
+  Future<SSHKey> enrol(EnrolSSHKeyInput body, {String? idempotencyKey}) async {
     return SSHKey.fromJson(
-      await _t.json('POST', '/api/v1/ssh-keys', body: body.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/ssh-keys',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -1750,8 +2091,12 @@ class SshkeyOps {
   /// RevokeSSHKey stops a key authenticating.
   ///
   /// `DELETE /api/v1/ssh-keys/{id}` (`sshkey.revoke`), scope `token:admin`.
-  Future<void> revoke(String id) async {
-    await _t.empty('DELETE', '/api/v1/ssh-keys/${_t.segment(id)}');
+  Future<void> revoke(String id, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/ssh-keys/${_t.segment(id)}',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 }
 
@@ -1815,17 +2160,26 @@ class SyncOps {
   /// what changed and skipping the rest.
   ///
   /// `POST /api/v1/sync/run` (`sync.run`), scope `sync:admin`.
-  Future<SyncResult> run(RunSyncInput body) async {
+  Future<SyncResult> run(RunSyncInput body, {String? idempotencyKey}) async {
     return SyncResult.fromJson(
-      await _t.json('POST', '/api/v1/sync/run', body: body.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/sync/run',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
   /// DeleteSyncSource removes an import source and its cursor.
   ///
   /// `DELETE /api/v1/sync/sources/{id}` (`sync.source.delete`), scope `sync:admin`.
-  Future<void> sourceDelete(String id) async {
-    await _t.empty('DELETE', '/api/v1/sync/sources/${_t.segment(id)}');
+  Future<void> sourceDelete(String id, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/sync/sources/${_t.segment(id)}',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// ListSyncSources lists this tenant's external import sources, each with where
@@ -1853,9 +2207,17 @@ class SyncOps {
   /// place.
   ///
   /// `PUT /api/v1/sync/sources` (`sync.source.put`), scope `sync:admin`.
-  Future<SyncSource> sourcePut(SyncSourceInput body) async {
+  Future<SyncSource> sourcePut(
+    SyncSourceInput body, {
+    String? idempotencyKey,
+  }) async {
     return SyncSource.fromJson(
-      await _t.json('PUT', '/api/v1/sync/sources', body: body.toJson()),
+      await _t.json(
+        'PUT',
+        '/api/v1/sync/sources',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 }
@@ -1870,11 +2232,16 @@ class TagOps {
   /// AddTag puts a tag on a task, creating the tag in the tenant when it is new.
   ///
   /// `POST /api/v1/tasks/{ref}/tags` (`tag.add`), scope `task:write`.
-  Future<void> add(String ref, TagRequest body) async {
+  Future<void> add(
+    String ref,
+    TagRequest body, {
+    String? idempotencyKey,
+  }) async {
     await _t.empty(
       'POST',
       '/api/v1/tasks/${_t.segment(ref)}/tags',
       body: body.toJson(),
+      headers: {'Idempotency-Key': idempotencyKey},
     );
   }
 
@@ -1898,10 +2265,11 @@ class TagOps {
   /// RemoveTag takes a tag off a task.
   ///
   /// `DELETE /api/v1/tasks/{ref}/tags/{name}` (`tag.remove`), scope `task:write`.
-  Future<void> remove(String ref, String name) async {
+  Future<void> remove(String ref, String name, {String? idempotencyKey}) async {
     await _t.empty(
       'DELETE',
       '/api/v1/tasks/${_t.segment(ref)}/tags/${_t.segment(name)}',
+      headers: {'Idempotency-Key': idempotencyKey},
     );
   }
 }
@@ -1994,21 +2362,31 @@ class TaskOps {
   /// reports an outcome per task rather than failing on the first refusal.
   ///
   /// `POST /api/v1/tasks/bulk` (`task.bulk`).
-  Future<BulkResult> bulk(BulkTaskInput body) async {
+  Future<BulkResult> bulk(BulkTaskInput body, {String? idempotencyKey}) async {
     return BulkResult.fromJson(
-      await _t.json('POST', '/api/v1/tasks/bulk', body: body.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/tasks/bulk',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
   /// CheckTaskItem ticks or clears one checklist item of a task's description.
   ///
   /// `POST /api/v1/tasks/{ref}/checklist` (`task.check`), scope `task:write`.
-  Future<Task> check(String ref, CheckItemInput body) async {
+  Future<Task> check(
+    String ref,
+    CheckItemInput body, {
+    String? idempotencyKey,
+  }) async {
     return Task.fromJson(
       await _t.json(
         'POST',
         '/api/v1/tasks/${_t.segment(ref)}/checklist',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -2017,12 +2395,17 @@ class TaskOps {
   /// returns the copy.
   ///
   /// `POST /api/v1/tasks/{ref}/copy` (`task.copy`), scope `task:write`.
-  Future<Task> copy(String ref, {CopyTaskInput? body}) async {
+  Future<Task> copy(
+    String ref, {
+    CopyTaskInput? body,
+    String? idempotencyKey,
+  }) async {
     return Task.fromJson(
       await _t.json(
         'POST',
         '/api/v1/tasks/${_t.segment(ref)}/copy',
         body: body?.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -2030,9 +2413,14 @@ class TaskOps {
   /// CreateTask creates a task in a project and returns it.
   ///
   /// `POST /api/v1/tasks` (`task.create`), scope `task:write`.
-  Future<Task> create(CreateTaskRequest body) async {
+  Future<Task> create(CreateTaskRequest body, {String? idempotencyKey}) async {
     return Task.fromJson(
-      await _t.json('POST', '/api/v1/tasks', body: body.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/tasks',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -2040,11 +2428,17 @@ class TaskOps {
   /// set or the tenant keeps no trash.
   ///
   /// `DELETE /api/v1/tasks/{ref}` (`task.delete`), scope `task:delete`.
-  Future<void> delete(String ref, {bool? hard, bool? cascade}) async {
+  Future<void> delete(
+    String ref, {
+    bool? hard,
+    bool? cascade,
+    String? idempotencyKey,
+  }) async {
     await _t.empty(
       'DELETE',
       '/api/v1/tasks/${_t.segment(ref)}',
       query: {'hard': hard, 'cascade': cascade},
+      headers: {'Idempotency-Key': idempotencyKey},
     );
   }
 
@@ -2052,11 +2446,16 @@ class TaskOps {
   /// table, as it walks them.
   ///
   /// `POST /api/v1/projects/{ref}/tasks/export` (`task.export`), scope `export`.
-  Future<List<Object?>> export(String ref, {TaskExportInput? body}) async {
+  Future<List<Object?>> export(
+    String ref, {
+    TaskExportInput? body,
+    String? idempotencyKey,
+  }) async {
     return _t.jsonList(
       'POST',
       '/api/v1/projects/${_t.segment(ref)}/tasks/export',
       body: body?.toJson(),
+      headers: {'Idempotency-Key': idempotencyKey},
     );
   }
 
@@ -2064,11 +2463,16 @@ class TaskOps {
   /// table, as it walks them.
   ///
   /// `POST /api/v1/projects/{ref}/tasks/export` (`task.export`) as the bytes of the format the request asks for, scope `export`.
-  Future<Uint8List> exportFile(String ref, {TaskExportInput? body}) async {
+  Future<Uint8List> exportFile(
+    String ref, {
+    TaskExportInput? body,
+    String? idempotencyKey,
+  }) async {
     return _t.bytes(
       'POST',
       '/api/v1/projects/${_t.segment(ref)}/tasks/export',
       body: body?.toJson(),
+      headers: {'Idempotency-Key': idempotencyKey},
     );
   }
 
@@ -2077,12 +2481,17 @@ class TaskOps {
   /// quick-add lines.
   ///
   /// `POST /api/v1/projects/{ref}/tasks/import` (`task.import`), scope `import`.
-  Future<TaskImportResult> import(String ref, TaskImportInput body) async {
+  Future<TaskImportResult> import(
+    String ref,
+    TaskImportInput body, {
+    String? idempotencyKey,
+  }) async {
     return TaskImportResult.fromJson(
       await _t.json(
         'POST',
         '/api/v1/projects/${_t.segment(ref)}/tasks/import',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -2359,12 +2768,28 @@ class TaskOps {
     );
   }
 
+  /// PurgeTask permanently deletes a task already in the trash, with its trashed
+  /// subtasks, the way the trash rule does when it expires them.
+  ///
+  /// `DELETE /api/v1/tasks/{ref}/trash` (`task.purge`), scope `task:delete`.
+  Future<void> purge(String ref, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/tasks/${_t.segment(ref)}/trash',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
+  }
+
   /// RestoreTask brings a task back out of the trash and returns it.
   ///
   /// `POST /api/v1/tasks/{ref}/restore` (`task.restore`), scope `task:delete`.
-  Future<Task> restore(String ref) async {
+  Future<Task> restore(String ref, {String? idempotencyKey}) async {
     return Task.fromJson(
-      await _t.json('POST', '/api/v1/tasks/${_t.segment(ref)}/restore'),
+      await _t.json(
+        'POST',
+        '/api/v1/tasks/${_t.segment(ref)}/restore',
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -2372,12 +2797,17 @@ class TaskOps {
   /// transition per hop, each with its own audit entry and event.
   ///
   /// `POST /api/v1/tasks/{ref}/route` (`task.route`), scope `task:transition`.
-  Future<RouteResult> route(String ref, RouteInput body) async {
+  Future<RouteResult> route(
+    String ref,
+    RouteInput body, {
+    String? idempotencyKey,
+  }) async {
     return RouteResult.fromJson(
       await _t.json(
         'POST',
         '/api/v1/tasks/${_t.segment(ref)}/route',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -2395,12 +2825,17 @@ class TaskOps {
   /// future time.
   ///
   /// `PUT /api/v1/tasks/{ref}/snooze` (`task.snooze`), scope `task:write`.
-  Future<Task> snooze(String ref, SnoozeInput body) async {
+  Future<Task> snooze(
+    String ref,
+    SnoozeInput body, {
+    String? idempotencyKey,
+  }) async {
     return Task.fromJson(
       await _t.json(
         'PUT',
         '/api/v1/tasks/${_t.segment(ref)}/snooze',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -2408,8 +2843,12 @@ class TaskOps {
   /// StarTask stars a task for the caller alone.
   ///
   /// `PUT /api/v1/tasks/{ref}/star` (`task.star`), scope `task:read`.
-  Future<void> star(String ref) async {
-    await _t.empty('PUT', '/api/v1/tasks/${_t.segment(ref)}/star');
+  Future<void> star(String ref, {String? idempotencyKey}) async {
+    await _t.empty(
+      'PUT',
+      '/api/v1/tasks/${_t.segment(ref)}/star',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// The tags of one task.
@@ -2433,12 +2872,17 @@ class TaskOps {
   /// workflow allows.
   ///
   /// `POST /api/v1/tasks/{ref}/transition` (`task.transition`), scope `task:transition`.
-  Future<Task> transition(String ref, TransitionInput body) async {
+  Future<Task> transition(
+    String ref,
+    TransitionInput body, {
+    String? idempotencyKey,
+  }) async {
     return Task.fromJson(
       await _t.json(
         'POST',
         '/api/v1/tasks/${_t.segment(ref)}/transition',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -2473,29 +2917,42 @@ class TaskOps {
   /// UnsnoozeTask clears a task's snooze and returns the task.
   ///
   /// `DELETE /api/v1/tasks/{ref}/snooze` (`task.unsnooze`), scope `task:write`.
-  Future<Task> unsnooze(String ref) async {
+  Future<Task> unsnooze(String ref, {String? idempotencyKey}) async {
     return Task.fromJson(
-      await _t.json('DELETE', '/api/v1/tasks/${_t.segment(ref)}/snooze'),
+      await _t.json(
+        'DELETE',
+        '/api/v1/tasks/${_t.segment(ref)}/snooze',
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
   /// UnstarTask clears the caller's own star on a task.
   ///
   /// `DELETE /api/v1/tasks/{ref}/star` (`task.unstar`), scope `task:read`.
-  Future<void> unstar(String ref) async {
-    await _t.empty('DELETE', '/api/v1/tasks/${_t.segment(ref)}/star');
+  Future<void> unstar(String ref, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/tasks/${_t.segment(ref)}/star',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// UpdateTask changes only the task attributes the input supplies and returns
   /// the task.
   ///
   /// `PATCH /api/v1/tasks/{ref}` (`task.update`), scope `task:write`.
-  Future<Task> update(String ref, UpdateTaskInput body) async {
+  Future<Task> update(
+    String ref,
+    UpdateTaskInput body, {
+    String? idempotencyKey,
+  }) async {
     return Task.fromJson(
       await _t.json(
         'PATCH',
         '/api/v1/tasks/${_t.segment(ref)}',
         body: body.toBody(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -2504,9 +2961,14 @@ class TaskOps {
   /// a task.woke event for each, and reports how many it cleared.
   ///
   /// `POST /api/v1/snoozes/wake` (`task.wake`), scope `task:write`.
-  Future<WakeResult> wake({SweepRequest? body}) async {
+  Future<WakeResult> wake({SweepRequest? body, String? idempotencyKey}) async {
     return WakeResult.fromJson(
-      await _t.json('POST', '/api/v1/snoozes/wake', body: body?.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/snoozes/wake',
+        body: body?.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 }
@@ -2521,8 +2983,12 @@ class TemplateOps {
   /// DeleteTemplate removes a template; tasks made from it stay.
   ///
   /// `DELETE /api/v1/templates/{ref}` (`template.delete`), scope `task:write`.
-  Future<void> delete(String ref) async {
-    await _t.empty('DELETE', '/api/v1/templates/${_t.segment(ref)}');
+  Future<void> delete(String ref, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/templates/${_t.segment(ref)}',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// ListTemplates lists the templates the caller can read, by name.
@@ -2575,9 +3041,17 @@ class TemplateOps {
   /// SaveTemplate keeps a task, and its subtasks when asked, as a template.
   ///
   /// `POST /api/v1/templates` (`template.save`), scope `task:write`.
-  Future<TaskTemplate> save(SaveTemplateInput body) async {
+  Future<TaskTemplate> save(
+    SaveTemplateInput body, {
+    String? idempotencyKey,
+  }) async {
     return TaskTemplate.fromJson(
-      await _t.json('POST', '/api/v1/templates', body: body.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/templates',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -2593,12 +3067,17 @@ class TemplateOps {
   /// UpdateTemplate renames, rescopes or edits a template.
   ///
   /// `PATCH /api/v1/templates/{ref}` (`template.update`), scope `task:write`.
-  Future<TaskTemplate> update(String ref, UpdateTemplateInput body) async {
+  Future<TaskTemplate> update(
+    String ref,
+    UpdateTemplateInput body, {
+    String? idempotencyKey,
+  }) async {
     return TaskTemplate.fromJson(
       await _t.json(
         'PATCH',
         '/api/v1/templates/${_t.segment(ref)}',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -2606,12 +3085,17 @@ class TemplateOps {
   /// UseTemplate creates a task, with the template's subtasks, and returns it.
   ///
   /// `POST /api/v1/templates/{ref}/use` (`template.use`), scope `task:write`.
-  Future<Task> use(String ref, {UseTemplateInput? body}) async {
+  Future<Task> use(
+    String ref, {
+    UseTemplateInput? body,
+    String? idempotencyKey,
+  }) async {
     return Task.fromJson(
       await _t.json(
         'POST',
         '/api/v1/templates/${_t.segment(ref)}/use',
         body: body?.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -2628,9 +3112,17 @@ class TenantOps {
   /// builtin workflow, and makes the admins it names admins of the new tenant.
   ///
   /// `POST /api/v1/tenants` (`tenant.create`), scope `global:admin`.
-  Future<CreatedTenant> create(CreateTenantInput body) async {
+  Future<CreatedTenant> create(
+    CreateTenantInput body, {
+    String? idempotencyKey,
+  }) async {
     return CreatedTenant.fromJson(
-      await _t.json('POST', '/api/v1/tenants', body: body.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/tenants',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -2638,8 +3130,12 @@ class TenantOps {
   /// tenant, so its data stops being reachable and its domains stop resolving.
   ///
   /// `DELETE /api/v1/tenants/{ref}` (`tenant.delete`), scope `tenant:admin`.
-  Future<void> delete(String ref) async {
-    await _t.empty('DELETE', '/api/v1/tenants/${_t.segment(ref)}');
+  Future<void> delete(String ref, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/tenants/${_t.segment(ref)}',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// ListTenantDomains lists the hostnames mapped to any tenant, each with
@@ -2705,12 +3201,17 @@ class TenantOps {
   /// the person.
   ///
   /// `POST /api/v1/tenants/{ref}/members` (`tenant.member.add`), scope `global:admin`.
-  Future<User> memberAdd(String ref, AddTenantMemberInput body) async {
+  Future<User> memberAdd(
+    String ref,
+    AddTenantMemberInput body, {
+    String? idempotencyKey,
+  }) async {
     return User.fromJson(
       await _t.json(
         'POST',
         '/api/v1/tenants/${_t.segment(ref)}/members',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -2729,12 +3230,17 @@ class TenantOps {
   /// its name, theme, lease bounds, second-factor requirements and trash setting.
   ///
   /// `PATCH /api/v1/tenants/{ref}` (`tenant.update`), scope `tenant:admin`.
-  Future<Tenant> update(String ref, UpdateTenantInput body) async {
+  Future<Tenant> update(
+    String ref,
+    UpdateTenantInput body, {
+    String? idempotencyKey,
+  }) async {
     return Tenant.fromJson(
       await _t.json(
         'PATCH',
         '/api/v1/tenants/${_t.segment(ref)}',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -2743,12 +3249,17 @@ class TenantOps {
   /// as CreateUser does in the caller's own.
   ///
   /// `POST /api/v1/tenants/{ref}/users` (`tenant.user.create`), scope `global:admin`.
-  Future<User> userCreate(String ref, CreateUserInput body) async {
+  Future<User> userCreate(
+    String ref,
+    CreateUserInput body, {
+    String? idempotencyKey,
+  }) async {
     return User.fromJson(
       await _t.json(
         'POST',
         '/api/v1/tenants/${_t.segment(ref)}/users',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -2757,10 +3268,15 @@ class TenantOps {
   /// there, as DeleteUser does.
   ///
   /// `DELETE /api/v1/tenants/{ref}/users/{id}` (`tenant.user.delete`), scope `global:admin`.
-  Future<void> userDelete(String ref, String id) async {
+  Future<void> userDelete(
+    String ref,
+    String id, {
+    String? idempotencyKey,
+  }) async {
     await _t.empty(
       'DELETE',
       '/api/v1/tenants/${_t.segment(ref)}/users/${_t.segment(id)}',
+      headers: {'Idempotency-Key': idempotencyKey},
     );
   }
 
@@ -2774,6 +3290,7 @@ class TenantOps {
     String? cursor,
     String? sort,
     String? direction,
+    bool? includeRemoved,
   }) async {
     return Page.fromJson(
       await _t.json(
@@ -2784,6 +3301,7 @@ class TenantOps {
           'cursor': cursor,
           'sort': sort,
           'direction': direction,
+          'include_removed': includeRemoved,
         },
       ),
       (e) => TenantUser.fromJson(e! as Map<String, dynamic>),
@@ -2799,11 +3317,17 @@ class TenantOps {
     int? limit,
     String? sort,
     String? direction,
+    bool? includeRemoved,
   }) => _t
       .ndjson(
         'GET',
         '/api/v1/tenants/${_t.segment(ref)}/users',
-        query: {'limit': limit, 'sort': sort, 'direction': direction},
+        query: {
+          'limit': limit,
+          'sort': sort,
+          'direction': direction,
+          'include_removed': includeRemoved,
+        },
       )
       .map((e) => TenantUser.fromJson(e! as Map<String, dynamic>));
 
@@ -2811,12 +3335,18 @@ class TenantOps {
   /// or disabled state, as UpdateUser does.
   ///
   /// `PATCH /api/v1/tenants/{ref}/users/{id}` (`tenant.user.update`), scope `global:admin`.
-  Future<User> userUpdate(String ref, String id, UpdateUserInput body) async {
+  Future<User> userUpdate(
+    String ref,
+    String id,
+    UpdateUserInput body, {
+    String? idempotencyKey,
+  }) async {
     return User.fromJson(
       await _t.json(
         'PATCH',
         '/api/v1/tenants/${_t.segment(ref)}/users/${_t.segment(id)}',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -2833,9 +3363,17 @@ class TimeOps {
   /// them to every browser and terminal.
   ///
   /// `PATCH /api/v1/me/time` (`time.prefs.set`).
-  Future<TimeSettings> prefsSet(TimePrefsInput body) async {
+  Future<TimeSettings> prefsSet(
+    TimePrefsInput body, {
+    String? idempotencyKey,
+  }) async {
     return TimeSettings.fromJson(
-      await _t.json('PATCH', '/api/v1/me/time', body: body.toJson()),
+      await _t.json(
+        'PATCH',
+        '/api/v1/me/time',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -2859,9 +3397,17 @@ class TokenOps {
   /// one project, and returns its secret value exactly once.
   ///
   /// `POST /api/v1/tokens` (`token.create`), scope `token:admin`.
-  Future<IssuedToken> create(CreateTokenInput body) async {
+  Future<IssuedToken> create(
+    CreateTokenInput body, {
+    String? idempotencyKey,
+  }) async {
     return IssuedToken.fromJson(
-      await _t.json('POST', '/api/v1/tokens', body: body.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/tokens',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -2885,8 +3431,12 @@ class TokenOps {
   /// RevokeToken revokes an API token of this tenant.
   ///
   /// `DELETE /api/v1/tokens/{id}` (`token.revoke`), scope `token:admin`.
-  Future<void> revoke(String id) async {
-    await _t.empty('DELETE', '/api/v1/tokens/${_t.segment(id)}');
+  Future<void> revoke(String id, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/tokens/${_t.segment(id)}',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// RotateToken replaces a live API token, addressed by identifier or name, with
@@ -2894,12 +3444,17 @@ class TokenOps {
   /// from now, and returns its value once.
   ///
   /// `POST /api/v1/tokens/{id}/rotate` (`token.rotate`).
-  Future<IssuedToken> rotate(String id, {RotateTokenInput? body}) async {
+  Future<IssuedToken> rotate(
+    String id, {
+    RotateTokenInput? body,
+    String? idempotencyKey,
+  }) async {
     return IssuedToken.fromJson(
       await _t.json(
         'POST',
         '/api/v1/tokens/${_t.segment(id)}/rotate',
         body: body?.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -2915,17 +3470,25 @@ class TotpOps {
   /// ClearUserTOTP returns another user to an unenrolled state.
   ///
   /// `DELETE /api/v1/users/{id}/totp` (`totp.clear`), scope `totp:admin`.
-  Future<void> clear(String id) async {
-    await _t.empty('DELETE', '/api/v1/users/${_t.segment(id)}/totp');
+  Future<void> clear(String id, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/users/${_t.segment(id)}/totp',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// RegenerateRecoveryCodes replaces the caller's codes, spent or not, and
   /// returns the new set once.
   ///
   /// `POST /api/v1/auth/totp/recovery-codes` (`totp.codes`).
-  Future<TOTPRecoveryCodes> codes() async {
+  Future<TOTPRecoveryCodes> codes({String? idempotencyKey}) async {
     return TOTPRecoveryCodes.fromJson(
-      await _t.json('POST', '/api/v1/auth/totp/recovery-codes'),
+      await _t.json(
+        'POST',
+        '/api/v1/auth/totp/recovery-codes',
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -2933,9 +3496,17 @@ class TotpOps {
   /// are returned exactly once and cannot be asked for again.
   ///
   /// `POST /api/v1/auth/totp/confirm` (`totp.confirm`).
-  Future<TOTPRecoveryCodes> confirm(TOTPCodeRequest body) async {
+  Future<TOTPRecoveryCodes> confirm(
+    TOTPCodeRequest body, {
+    String? idempotencyKey,
+  }) async {
     return TOTPRecoveryCodes.fromJson(
-      await _t.json('POST', '/api/v1/auth/totp/confirm', body: body.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/auth/totp/confirm',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -2943,15 +3514,25 @@ class TotpOps {
   /// forms an authenticator takes.
   ///
   /// `POST /api/v1/auth/totp` (`totp.enrol`).
-  Future<TOTPEnrolment> enrol() async {
-    return TOTPEnrolment.fromJson(await _t.json('POST', '/api/v1/auth/totp'));
+  Future<TOTPEnrolment> enrol({String? idempotencyKey}) async {
+    return TOTPEnrolment.fromJson(
+      await _t.json(
+        'POST',
+        '/api/v1/auth/totp',
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
+    );
   }
 
   /// RemoveTOTP drops the caller's own enrolment and every code beside it.
   ///
   /// `DELETE /api/v1/auth/totp` (`totp.remove`).
-  Future<void> remove() async {
-    await _t.empty('DELETE', '/api/v1/auth/totp');
+  Future<void> remove({String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/auth/totp',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// TOTPStatus reports the caller's own enrolment and what their tenant requires
@@ -2966,8 +3547,13 @@ class TotpOps {
   /// minting nothing.
   ///
   /// `POST /api/v1/auth/totp/verify` (`totp.verify`).
-  Future<void> verify(TOTPCodeRequest body) async {
-    await _t.empty('POST', '/api/v1/auth/totp/verify', body: body.toJson());
+  Future<void> verify(TOTPCodeRequest body, {String? idempotencyKey}) async {
+    await _t.empty(
+      'POST',
+      '/api/v1/auth/totp/verify',
+      body: body.toJson(),
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 }
 
@@ -2998,9 +3584,14 @@ class UserOps {
   /// the given role.
   ///
   /// `POST /api/v1/users` (`user.create`), scope `user:admin`.
-  Future<User> create(CreateUserInput body) async {
+  Future<User> create(CreateUserInput body, {String? idempotencyKey}) async {
     return User.fromJson(
-      await _t.json('POST', '/api/v1/users', body: body.toJson()),
+      await _t.json(
+        'POST',
+        '/api/v1/users',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -3008,8 +3599,12 @@ class UserOps {
   /// stops its actor acting.
   ///
   /// `DELETE /api/v1/users/{id}` (`user.delete`), scope `user:admin`.
-  Future<void> delete(String id) async {
-    await _t.empty('DELETE', '/api/v1/users/${_t.segment(id)}');
+  Future<void> delete(String id, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/users/${_t.segment(id)}',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// ListUsers lists the users of this tenant, keyset paginated, with the cursor
@@ -3021,6 +3616,7 @@ class UserOps {
     String? cursor,
     String? sort,
     String? direction,
+    bool? includeRemoved,
   }) async {
     return Page.fromJson(
       await _t.json(
@@ -3031,6 +3627,7 @@ class UserOps {
           'cursor': cursor,
           'sort': sort,
           'direction': direction,
+          'include_removed': includeRemoved,
         },
       ),
       (e) => User.fromJson(e! as Map<String, dynamic>),
@@ -3041,11 +3638,21 @@ class UserOps {
   /// for the next page.
   ///
   /// `GET /api/v1/users` (`user.list`) as NDJSON, one item per line, scope `user:admin`.
-  Stream<User> listStream({int? limit, String? sort, String? direction}) => _t
+  Stream<User> listStream({
+    int? limit,
+    String? sort,
+    String? direction,
+    bool? includeRemoved,
+  }) => _t
       .ndjson(
         'GET',
         '/api/v1/users',
-        query: {'limit': limit, 'sort': sort, 'direction': direction},
+        query: {
+          'limit': limit,
+          'sort': sort,
+          'direction': direction,
+          'include_removed': includeRemoved,
+        },
       )
       .map((e) => User.fromJson(e! as Map<String, dynamic>));
 
@@ -3062,12 +3669,17 @@ class UserOps {
   /// fields left out are unchanged.
   ///
   /// `PATCH /api/v1/users/{id}` (`user.update`), scope `user:admin`.
-  Future<User> update(String id, UpdateUserInput body) async {
+  Future<User> update(
+    String id,
+    UpdateUserInput body, {
+    String? idempotencyKey,
+  }) async {
     return User.fromJson(
       await _t.json(
         'PATCH',
         '/api/v1/users/${_t.segment(id)}',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -3086,13 +3698,15 @@ class ViewOps {
   Future<GroupPref> groupSet(
     String view,
     String group,
-    GroupPrefInput body,
-  ) async {
+    GroupPrefInput body, {
+    String? idempotencyKey,
+  }) async {
     return GroupPref.fromJson(
       await _t.json(
         'PATCH',
         '/api/v1/views/${_t.segment(view)}/groups/${_t.segment(group)}',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }
@@ -3117,12 +3731,17 @@ class ViewOps {
   /// OrderGroups puts the named groups first, in the order given.
   ///
   /// `PUT /api/v1/views/{view}/order` (`view.order`), scope `task:read`.
-  Future<Page<GroupPref>> order(String view, GroupOrderInput body) async {
+  Future<Page<GroupPref>> order(
+    String view,
+    GroupOrderInput body, {
+    String? idempotencyKey,
+  }) async {
     return Page.fromJson(
       await _t.json(
         'PUT',
         '/api/v1/views/${_t.segment(view)}/order',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
       (e) => GroupPref.fromJson(e! as Map<String, dynamic>),
     );
@@ -3132,11 +3751,16 @@ class ViewOps {
   /// group of the view when group is empty.
   ///
   /// `DELETE /api/v1/views/{view}/groups` (`view.reset`), scope `task:read`.
-  Future<void> reset(String view, {String? group}) async {
+  Future<void> reset(
+    String view, {
+    String? group,
+    String? idempotencyKey,
+  }) async {
     await _t.empty(
       'DELETE',
       '/api/v1/views/${_t.segment(view)}/groups',
       query: {'group': group},
+      headers: {'Idempotency-Key': idempotencyKey},
     );
   }
 }
@@ -3151,8 +3775,12 @@ class WebhookOps {
   /// DeleteWebhook removes a delivery endpoint and its pending deliveries.
   ///
   /// `DELETE /api/v1/webhooks/{id}` (`webhook.delete`), scope `webhook:admin`.
-  Future<void> delete(String id) async {
-    await _t.empty('DELETE', '/api/v1/webhooks/${_t.segment(id)}');
+  Future<void> delete(String id, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/webhooks/${_t.segment(id)}',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// ListDeliveries lists the webhook delivery log, one keyset-paginated page at
@@ -3225,13 +3853,32 @@ class WebhookOps {
       .ndjson('GET', '/api/v1/webhooks')
       .map((e) => WebhookEndpoint.fromJson(e! as Map<String, dynamic>));
 
+  /// PingWebhook sends one active endpoint a signed webhook.ping test event,
+  /// whatever its event type filter; no other endpoint receives it.
+  ///
+  /// `POST /api/v1/webhooks/{id}/ping` (`webhook.ping`), scope `webhook:admin`.
+  Future<WebhookDelivery> ping(String id, {String? idempotencyKey}) async {
+    return WebhookDelivery.fromJson(
+      await _t.json(
+        'POST',
+        '/api/v1/webhooks/${_t.segment(id)}/ping',
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
+    );
+  }
+
   /// PutWebhook registers an https delivery endpoint, or updates one by
   /// identifier.
   ///
   /// `PUT /api/v1/webhooks` (`webhook.put`), scope `webhook:admin`.
-  Future<WebhookEndpoint> put(WebhookInput body) async {
-    return WebhookEndpoint.fromJson(
-      await _t.json('PUT', '/api/v1/webhooks', body: body.toJson()),
+  Future<IssuedWebhook> put(WebhookInput body, {String? idempotencyKey}) async {
+    return IssuedWebhook.fromJson(
+      await _t.json(
+        'PUT',
+        '/api/v1/webhooks',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
@@ -3239,10 +3886,11 @@ class WebhookOps {
   /// same endpoint with the same event.
   ///
   /// `POST /api/v1/webhooks/deliveries/{id}/redeliver` (`webhook.redeliver`), scope `webhook:admin`.
-  Future<void> redeliver(String id) async {
+  Future<void> redeliver(String id, {String? idempotencyKey}) async {
     await _t.empty(
       'POST',
       '/api/v1/webhooks/deliveries/${_t.segment(id)}/redeliver',
+      headers: {'Idempotency-Key': idempotencyKey},
     );
   }
 }
@@ -3257,8 +3905,12 @@ class WorkflowOps {
   /// DeleteWorkflow deletes a workflow by key or identifier.
   ///
   /// `DELETE /api/v1/workflows/{key}` (`workflow.delete`), scope `workflow:write`.
-  Future<void> delete(String key) async {
-    await _t.empty('DELETE', '/api/v1/workflows/${_t.segment(key)}');
+  Future<void> delete(String key, {String? idempotencyKey}) async {
+    await _t.empty(
+      'DELETE',
+      '/api/v1/workflows/${_t.segment(key)}',
+      headers: {'Idempotency-Key': idempotencyKey},
+    );
   }
 
   /// GetWorkflow returns a workflow by key or identifier.
@@ -3291,21 +3943,31 @@ class WorkflowOps {
   /// and allowed transitions.
   ///
   /// `PUT /api/v1/workflows` (`workflow.put`), scope `workflow:write`.
-  Future<Workflow> put(WorkflowInput body) async {
+  Future<Workflow> put(WorkflowInput body, {String? idempotencyKey}) async {
     return Workflow.fromJson(
-      await _t.json('PUT', '/api/v1/workflows', body: body.toJson()),
+      await _t.json(
+        'PUT',
+        '/api/v1/workflows',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 
   /// Create or replace the workflow the path names.
   ///
   /// `PUT /api/v1/workflows/{key}` (`workflow.put_by_key`), scope `workflow:write`.
-  Future<Workflow> putByKey(String key, WorkflowInput body) async {
+  Future<Workflow> putByKey(
+    String key,
+    WorkflowInput body, {
+    String? idempotencyKey,
+  }) async {
     return Workflow.fromJson(
       await _t.json(
         'PUT',
         '/api/v1/workflows/${_t.segment(key)}',
         body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
       ),
     );
   }

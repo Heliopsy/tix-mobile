@@ -27,6 +27,7 @@ class TixTransport {
     Map<String, Object?>? query,
     Object? body,
     String? contentType,
+    Map<String, String?>? headers,
   }) async {
     final response = await _send(
       method,
@@ -34,6 +35,7 @@ class TixTransport {
       query: query,
       body: body,
       contentType: contentType,
+      headers: headers,
     );
     final data = response.data;
     if (data is! Map<String, dynamic>) {
@@ -49,6 +51,7 @@ class TixTransport {
     Map<String, Object?>? query,
     Object? body,
     String? contentType,
+    Map<String, String?>? headers,
   }) async {
     final response = await _send(
       method,
@@ -56,6 +59,7 @@ class TixTransport {
       query: query,
       body: body,
       contentType: contentType,
+      headers: headers,
     );
     final data = response.data;
     if (response.statusCode == 204 || data == null || data == '') return null;
@@ -72,6 +76,7 @@ class TixTransport {
     Map<String, Object?>? query,
     Object? body,
     String? contentType,
+    Map<String, String?>? headers,
   }) async {
     final response = await _send(
       method,
@@ -79,6 +84,7 @@ class TixTransport {
       query: query,
       body: body,
       contentType: contentType,
+      headers: headers,
     );
     final data = response.data;
     if (data is! List<Object?>) {
@@ -93,7 +99,8 @@ class TixTransport {
     String path, {
     Map<String, Object?>? query,
     Object? body,
-  }) => _send(method, path, query: query, body: body);
+    Map<String, String?>? headers,
+  }) => _send(method, path, query: query, body: body, headers: headers);
 
   /// A request answered with text in [accept], or sending a raw [body] of
   /// [contentType].
@@ -104,6 +111,7 @@ class TixTransport {
     Object? body,
     String? contentType,
     String accept = 'text/plain',
+    Map<String, String?>? headers,
   }) async {
     final response = await _send(
       method,
@@ -112,6 +120,7 @@ class TixTransport {
       body: body,
       contentType: contentType,
       accept: accept,
+      headers: headers,
       // Bytes, not plain: Dio decodes any +json body even when asked for
       // text, and a bundle is NDJSON served as application/vnd.tix.bundle+json.
       type: ResponseType.bytes,
@@ -126,12 +135,14 @@ class TixTransport {
     String path, {
     Map<String, Object?>? query,
     Object? body,
+    Map<String, String?>? headers,
   }) async {
     final response = await _send(
       method,
       path,
       query: query,
       body: body,
+      headers: headers,
       accept: '*/*',
       type: ResponseType.bytes,
     );
@@ -179,6 +190,7 @@ class TixTransport {
     String? contentType,
     String? accept,
     ResponseType? type,
+    Map<String, String?>? headers,
   }) async {
     try {
       return await dio.request<Object?>(
@@ -189,7 +201,11 @@ class TixTransport {
           method: method,
           contentType: contentType,
           responseType: type,
-          headers: {'Accept': ?accept},
+          headers: {
+            'Accept': ?accept,
+            for (final MapEntry(:key, :value) in (headers ?? const {}).entries)
+              key: ?value,
+          },
         ),
       );
     } on DioException catch (e) {

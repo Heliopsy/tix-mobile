@@ -1304,7 +1304,9 @@ mixin _$Actor {
 /// authority comes from Role alone.
 @JsonKey(name: 'scopes') List<String> get scopes;/// TenantID is the tenant the actor acts in.
 @JsonKey(name: 'tenant_id') String get tenantId;/// TenantKey and TenantName name the actor's tenant, on the answer to WhoAmI.
-@JsonKey(name: 'tenant_key') String get tenantKey;@JsonKey(name: 'tenant_name') String get tenantName;/// TokenID is the API token the request authenticated with, if any.
+@JsonKey(name: 'tenant_key') String get tenantKey;@JsonKey(name: 'tenant_name') String get tenantName;/// Theme is the palette the actor's tenant resolves to, as the browser renders
+/// it, on the answer to WhoAmI.
+@JsonKey(name: 'theme') Theme? get theme;/// TokenID is the API token the request authenticated with, if any.
 @JsonKey(name: 'token_id') String get tokenId;
 /// Create a copy of Actor
 /// with the given fields replaced by the non-null parameter values.
@@ -1319,20 +1321,20 @@ $ActorCopyWith<Actor> get copyWith => _$ActorCopyWithImpl<Actor>(this as Actor, 
 @override
 bool operator ==(Object other) {
   final _this = this as Actor;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Actor&&(identical(other.accountId, _this.accountId) || other.accountId == _this.accountId)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.globalAdmin, _this.globalAdmin) || other.globalAdmin == _this.globalAdmin)&&(identical(other.handle, _this.handle) || other.handle == _this.handle)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.kind, _this.kind) || other.kind == _this.kind)&&const DeepCollectionEquality().equals(other.memberships, _this.memberships)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.role, _this.role) || other.role == _this.role)&&const DeepCollectionEquality().equals(other.scopes, _this.scopes)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.tenantKey, _this.tenantKey) || other.tenantKey == _this.tenantKey)&&(identical(other.tenantName, _this.tenantName) || other.tenantName == _this.tenantName)&&(identical(other.tokenId, _this.tokenId) || other.tokenId == _this.tokenId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Actor&&(identical(other.accountId, _this.accountId) || other.accountId == _this.accountId)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.globalAdmin, _this.globalAdmin) || other.globalAdmin == _this.globalAdmin)&&(identical(other.handle, _this.handle) || other.handle == _this.handle)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.kind, _this.kind) || other.kind == _this.kind)&&const DeepCollectionEquality().equals(other.memberships, _this.memberships)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.role, _this.role) || other.role == _this.role)&&const DeepCollectionEquality().equals(other.scopes, _this.scopes)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.tenantKey, _this.tenantKey) || other.tenantKey == _this.tenantKey)&&(identical(other.tenantName, _this.tenantName) || other.tenantName == _this.tenantName)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.tokenId, _this.tokenId) || other.tokenId == _this.tokenId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Actor;
-  return Object.hash(runtimeType,_this.accountId,_this.displayName,_this.email,_this.globalAdmin,_this.handle,_this.id,_this.kind,const DeepCollectionEquality().hash(_this.memberships),_this.projectId,_this.role,const DeepCollectionEquality().hash(_this.scopes),_this.tenantId,_this.tenantKey,_this.tenantName,_this.tokenId);
+  return Object.hash(runtimeType,_this.accountId,_this.displayName,_this.email,_this.globalAdmin,_this.handle,_this.id,_this.kind,const DeepCollectionEquality().hash(_this.memberships),_this.projectId,_this.role,const DeepCollectionEquality().hash(_this.scopes),_this.tenantId,_this.tenantKey,_this.tenantName,_this.theme,_this.tokenId);
 }
 
 @override
 String toString() {
   final _this = this as Actor;
-  return 'Actor(accountId: ${_this.accountId}, displayName: ${_this.displayName}, email: ${_this.email}, globalAdmin: ${_this.globalAdmin}, handle: ${_this.handle}, id: ${_this.id}, kind: ${_this.kind}, memberships: ${_this.memberships}, projectId: ${_this.projectId}, role: ${_this.role}, scopes: ${_this.scopes}, tenantId: ${_this.tenantId}, tenantKey: ${_this.tenantKey}, tenantName: ${_this.tenantName}, tokenId: ${_this.tokenId})';
+  return 'Actor(accountId: ${_this.accountId}, displayName: ${_this.displayName}, email: ${_this.email}, globalAdmin: ${_this.globalAdmin}, handle: ${_this.handle}, id: ${_this.id}, kind: ${_this.kind}, memberships: ${_this.memberships}, projectId: ${_this.projectId}, role: ${_this.role}, scopes: ${_this.scopes}, tenantId: ${_this.tenantId}, tenantKey: ${_this.tenantKey}, tenantName: ${_this.tenantName}, theme: ${_this.theme}, tokenId: ${_this.tokenId})';
 }
 
 
@@ -1343,11 +1345,11 @@ abstract mixin class $ActorCopyWith<$Res>  {
   factory $ActorCopyWith(Actor value, $Res Function(Actor) _then) = _$ActorCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'account_id') String accountId,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'handle') String handle,@JsonKey(name: 'id') String id,@JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) ActorKind? kind,@JsonKey(name: 'memberships') List<AccountMembership> memberships,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'scopes') List<String> scopes,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'tenant_key') String tenantKey,@JsonKey(name: 'tenant_name') String tenantName,@JsonKey(name: 'token_id') String tokenId
+@JsonKey(name: 'account_id') String accountId,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'handle') String handle,@JsonKey(name: 'id') String id,@JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) ActorKind? kind,@JsonKey(name: 'memberships') List<AccountMembership> memberships,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'scopes') List<String> scopes,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'tenant_key') String tenantKey,@JsonKey(name: 'tenant_name') String tenantName,@JsonKey(name: 'theme') Theme? theme,@JsonKey(name: 'token_id') String tokenId
 });
 
 
-
+$ThemeCopyWith<$Res>? get theme;
 
 }
 /// @nodoc
@@ -1360,7 +1362,7 @@ class _$ActorCopyWithImpl<$Res>
 
 /// Create a copy of Actor
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? accountId = null,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? handle = null,Object? id = null,Object? kind = freezed,Object? memberships = null,Object? projectId = null,Object? role = freezed,Object? scopes = null,Object? tenantId = null,Object? tenantKey = null,Object? tenantName = null,Object? tokenId = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? accountId = null,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? handle = null,Object? id = null,Object? kind = freezed,Object? memberships = null,Object? projectId = null,Object? role = freezed,Object? scopes = null,Object? tenantId = null,Object? tenantKey = null,Object? tenantName = null,Object? theme = freezed,Object? tokenId = null,}) {
   return _then(Actor(
 accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
@@ -1376,11 +1378,24 @@ as Role?,scopes: null == scopes ? _self.scopes : scopes // ignore: cast_nullable
 as List<String>,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
 as String,tenantKey: null == tenantKey ? _self.tenantKey : tenantKey // ignore: cast_nullable_to_non_nullable
 as String,tenantName: null == tenantName ? _self.tenantName : tenantName // ignore: cast_nullable_to_non_nullable
-as String,tokenId: null == tokenId ? _self.tokenId : tokenId // ignore: cast_nullable_to_non_nullable
+as String,theme: freezed == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
+as Theme?,tokenId: null == tokenId ? _self.tokenId : tokenId // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
+/// Create a copy of Actor
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ThemeCopyWith<$Res>? get theme {
+    if (_self.theme == null) {
+    return null;
+  }
 
+  return $ThemeCopyWith<$Res>(_self.theme!, (value) {
+    return _then(_self.copyWith(theme: value));
+  });
+}
 }
 
 
@@ -1462,10 +1477,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'token_id')  String tokenId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'theme')  Theme? theme, @JsonKey(name: 'token_id')  String tokenId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Actor() when $default != null:
-return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.tenantId,_that.tenantKey,_that.tenantName,_that.tokenId);case _:
+return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.tenantId,_that.tenantKey,_that.tenantName,_that.theme,_that.tokenId);case _:
   return orElse();
 
 }
@@ -1483,10 +1498,10 @@ return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'token_id')  String tokenId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'theme')  Theme? theme, @JsonKey(name: 'token_id')  String tokenId)  $default,) {final _that = this;
 switch (_that) {
 case _Actor():
-return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.tenantId,_that.tenantKey,_that.tenantName,_that.tokenId);case _:
+return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.tenantId,_that.tenantKey,_that.tenantName,_that.theme,_that.tokenId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1503,10 +1518,10 @@ return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'token_id')  String tokenId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'theme')  Theme? theme, @JsonKey(name: 'token_id')  String tokenId)?  $default,) {final _that = this;
 switch (_that) {
 case _Actor() when $default != null:
-return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.tenantId,_that.tenantKey,_that.tenantName,_that.tokenId);case _:
+return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.tenantId,_that.tenantKey,_that.tenantName,_that.theme,_that.tokenId);case _:
   return null;
 
 }
@@ -1518,7 +1533,7 @@ return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,
 @JsonSerializable()
 
 class _Actor implements Actor {
-  const _Actor({@JsonKey(name: 'account_id') this.accountId = '', @JsonKey(name: 'display_name') this.displayName = '', @JsonKey(name: 'email') this.email = '', @JsonKey(name: 'global_admin') this.globalAdmin = false, @JsonKey(name: 'handle') this.handle = '', @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships = const <AccountMembership>[], @JsonKey(name: 'project_id') this.projectId = '', @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.role, @JsonKey(name: 'scopes')  List<String> scopes = const <String>[], @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'tenant_key') this.tenantKey = '', @JsonKey(name: 'tenant_name') this.tenantName = '', @JsonKey(name: 'token_id') this.tokenId = ''}): _memberships = memberships,_scopes = scopes;
+  const _Actor({@JsonKey(name: 'account_id') this.accountId = '', @JsonKey(name: 'display_name') this.displayName = '', @JsonKey(name: 'email') this.email = '', @JsonKey(name: 'global_admin') this.globalAdmin = false, @JsonKey(name: 'handle') this.handle = '', @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships = const <AccountMembership>[], @JsonKey(name: 'project_id') this.projectId = '', @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.role, @JsonKey(name: 'scopes')  List<String> scopes = const <String>[], @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'tenant_key') this.tenantKey = '', @JsonKey(name: 'tenant_name') this.tenantName = '', @JsonKey(name: 'theme') this.theme, @JsonKey(name: 'token_id') this.tokenId = ''}): _memberships = memberships,_scopes = scopes;
   factory _Actor.fromJson(Map<String, dynamic> json) => _$ActorFromJson(json);
 
 /// AccountID is the account behind a user actor, on the answer to WhoAmI.
@@ -1569,6 +1584,9 @@ class _Actor implements Actor {
 /// TenantKey and TenantName name the actor's tenant, on the answer to WhoAmI.
 @override@JsonKey(name: 'tenant_key') final  String tenantKey;
 @override@JsonKey(name: 'tenant_name') final  String tenantName;
+/// Theme is the palette the actor's tenant resolves to, as the browser renders
+/// it, on the answer to WhoAmI.
+@override@JsonKey(name: 'theme') final  Theme? theme;
 /// TokenID is the API token the request authenticated with, if any.
 @override@JsonKey(name: 'token_id') final  String tokenId;
 
@@ -1585,18 +1603,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Actor&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.email, email) || other.email == email)&&(identical(other.globalAdmin, globalAdmin) || other.globalAdmin == globalAdmin)&&(identical(other.handle, handle) || other.handle == handle)&&(identical(other.id, id) || other.id == id)&&(identical(other.kind, kind) || other.kind == kind)&&const DeepCollectionEquality().equals(other.memberships, _memberships)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.role, role) || other.role == role)&&const DeepCollectionEquality().equals(other.scopes, _scopes)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.tenantKey, tenantKey) || other.tenantKey == tenantKey)&&(identical(other.tenantName, tenantName) || other.tenantName == tenantName)&&(identical(other.tokenId, tokenId) || other.tokenId == tokenId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Actor&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.email, email) || other.email == email)&&(identical(other.globalAdmin, globalAdmin) || other.globalAdmin == globalAdmin)&&(identical(other.handle, handle) || other.handle == handle)&&(identical(other.id, id) || other.id == id)&&(identical(other.kind, kind) || other.kind == kind)&&const DeepCollectionEquality().equals(other.memberships, _memberships)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.role, role) || other.role == role)&&const DeepCollectionEquality().equals(other.scopes, _scopes)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.tenantKey, tenantKey) || other.tenantKey == tenantKey)&&(identical(other.tenantName, tenantName) || other.tenantName == tenantName)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.tokenId, tokenId) || other.tokenId == tokenId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,accountId,displayName,email,globalAdmin,handle,id,kind,const DeepCollectionEquality().hash(_memberships),projectId,role,const DeepCollectionEquality().hash(_scopes),tenantId,tenantKey,tenantName,tokenId);
+    return Object.hash(runtimeType,accountId,displayName,email,globalAdmin,handle,id,kind,const DeepCollectionEquality().hash(_memberships),projectId,role,const DeepCollectionEquality().hash(_scopes),tenantId,tenantKey,tenantName,theme,tokenId);
 }
 
 @override
 String toString() {
-    return 'Actor(accountId: $accountId, displayName: $displayName, email: $email, globalAdmin: $globalAdmin, handle: $handle, id: $id, kind: $kind, memberships: $memberships, projectId: $projectId, role: $role, scopes: $scopes, tenantId: $tenantId, tenantKey: $tenantKey, tenantName: $tenantName, tokenId: $tokenId)';
+    return 'Actor(accountId: $accountId, displayName: $displayName, email: $email, globalAdmin: $globalAdmin, handle: $handle, id: $id, kind: $kind, memberships: $memberships, projectId: $projectId, role: $role, scopes: $scopes, tenantId: $tenantId, tenantKey: $tenantKey, tenantName: $tenantName, theme: $theme, tokenId: $tokenId)';
 }
 
 
@@ -1607,11 +1625,11 @@ abstract mixin class _$ActorCopyWith<$Res> implements $ActorCopyWith<$Res> {
   factory _$ActorCopyWith(_Actor value, $Res Function(_Actor) _then) = __$ActorCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'account_id') String accountId,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'handle') String handle,@JsonKey(name: 'id') String id,@JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) ActorKind? kind,@JsonKey(name: 'memberships') List<AccountMembership> memberships,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'scopes') List<String> scopes,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'tenant_key') String tenantKey,@JsonKey(name: 'tenant_name') String tenantName,@JsonKey(name: 'token_id') String tokenId
+@JsonKey(name: 'account_id') String accountId,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'handle') String handle,@JsonKey(name: 'id') String id,@JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) ActorKind? kind,@JsonKey(name: 'memberships') List<AccountMembership> memberships,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'scopes') List<String> scopes,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'tenant_key') String tenantKey,@JsonKey(name: 'tenant_name') String tenantName,@JsonKey(name: 'theme') Theme? theme,@JsonKey(name: 'token_id') String tokenId
 });
 
 
-
+@override $ThemeCopyWith<$Res>? get theme;
 
 }
 /// @nodoc
@@ -1624,7 +1642,7 @@ class __$ActorCopyWithImpl<$Res>
 
 /// Create a copy of Actor
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? accountId = null,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? handle = null,Object? id = null,Object? kind = freezed,Object? memberships = null,Object? projectId = null,Object? role = freezed,Object? scopes = null,Object? tenantId = null,Object? tenantKey = null,Object? tenantName = null,Object? tokenId = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? accountId = null,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? handle = null,Object? id = null,Object? kind = freezed,Object? memberships = null,Object? projectId = null,Object? role = freezed,Object? scopes = null,Object? tenantId = null,Object? tenantKey = null,Object? tenantName = null,Object? theme = freezed,Object? tokenId = null,}) {
   return _then(_Actor(
 accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
@@ -1640,12 +1658,25 @@ as Role?,scopes: null == scopes ? _self._scopes : scopes // ignore: cast_nullabl
 as List<String>,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
 as String,tenantKey: null == tenantKey ? _self.tenantKey : tenantKey // ignore: cast_nullable_to_non_nullable
 as String,tenantName: null == tenantName ? _self.tenantName : tenantName // ignore: cast_nullable_to_non_nullable
-as String,tokenId: null == tokenId ? _self.tokenId : tokenId // ignore: cast_nullable_to_non_nullable
+as String,theme: freezed == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
+as Theme?,tokenId: null == tokenId ? _self.tokenId : tokenId // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
 
+/// Create a copy of Actor
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ThemeCopyWith<$Res>? get theme {
+    if (_self.theme == null) {
+    return null;
+  }
 
+  return $ThemeCopyWith<$Res>(_self.theme!, (value) {
+    return _then(_self.copyWith(theme: value));
+  });
+}
 }
 
 
@@ -24563,6 +24594,320 @@ as String,
 
 
 /// @nodoc
+mixin _$IssuedWebhook {
+
+/// Active turns deliveries on. An inactive endpoint receives nothing.
+@JsonKey(name: 'active') bool get active;/// CreatedAt is when the endpoint was registered, RFC 3339.
+@JsonKey(name: 'created_at')@TixDateTime() DateTime? get createdAt;/// EventTypes are the event types delivered, exact or with a trailing "*" such
+/// as "task.*". Empty delivers every event.
+@JsonKey(name: 'event_types') List<String> get eventTypes;/// ID is the endpoint's unique identifier.
+@JsonKey(name: 'id') String get id;/// SigningSecret is the secret tix generated for an endpoint saved without one,
+/// returned this once. Absent when the caller supplied or kept one.
+@JsonKey(name: 'secret') String get secret;/// TenantID is the tenant that owns the endpoint.
+@JsonKey(name: 'tenant_id') String get tenantId;/// URL is where deliveries are POSTed.
+@JsonKey(name: 'url') String get url;
+/// Create a copy of IssuedWebhook
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$IssuedWebhookCopyWith<IssuedWebhook> get copyWith => _$IssuedWebhookCopyWithImpl<IssuedWebhook>(this as IssuedWebhook, _$identity);
+
+  /// Serializes this IssuedWebhook to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as IssuedWebhook;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is IssuedWebhook&&(identical(other.active, _this.active) || other.active == _this.active)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&const DeepCollectionEquality().equals(other.eventTypes, _this.eventTypes)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.secret, _this.secret) || other.secret == _this.secret)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.url, _this.url) || other.url == _this.url));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as IssuedWebhook;
+  return Object.hash(runtimeType,_this.active,_this.createdAt,const DeepCollectionEquality().hash(_this.eventTypes),_this.id,_this.secret,_this.tenantId,_this.url);
+}
+
+@override
+String toString() {
+  final _this = this as IssuedWebhook;
+  return 'IssuedWebhook(active: ${_this.active}, createdAt: ${_this.createdAt}, eventTypes: ${_this.eventTypes}, id: ${_this.id}, secret: ${_this.secret}, tenantId: ${_this.tenantId}, url: ${_this.url})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $IssuedWebhookCopyWith<$Res>  {
+  factory $IssuedWebhookCopyWith(IssuedWebhook value, $Res Function(IssuedWebhook) _then) = _$IssuedWebhookCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'active') bool active,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'event_types') List<String> eventTypes,@JsonKey(name: 'id') String id,@JsonKey(name: 'secret') String secret,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'url') String url
+});
+
+
+
+
+}
+/// @nodoc
+class _$IssuedWebhookCopyWithImpl<$Res>
+    implements $IssuedWebhookCopyWith<$Res> {
+  _$IssuedWebhookCopyWithImpl(this._self, this._then);
+
+  final IssuedWebhook _self;
+  final $Res Function(IssuedWebhook) _then;
+
+/// Create a copy of IssuedWebhook
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? active = null,Object? createdAt = freezed,Object? eventTypes = null,Object? id = null,Object? secret = null,Object? tenantId = null,Object? url = null,}) {
+  return _then(IssuedWebhook(
+active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+as bool,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,eventTypes: null == eventTypes ? _self.eventTypes : eventTypes // ignore: cast_nullable_to_non_nullable
+as List<String>,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,secret: null == secret ? _self.secret : secret // ignore: cast_nullable_to_non_nullable
+as String,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [IssuedWebhook].
+extension IssuedWebhookPatterns on IssuedWebhook {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _IssuedWebhook value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _IssuedWebhook() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _IssuedWebhook value)  $default,){
+final _that = this;
+switch (_that) {
+case _IssuedWebhook():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _IssuedWebhook value)?  $default,){
+final _that = this;
+switch (_that) {
+case _IssuedWebhook() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'active')  bool active, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'event_types')  List<String> eventTypes, @JsonKey(name: 'id')  String id, @JsonKey(name: 'secret')  String secret, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'url')  String url)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _IssuedWebhook() when $default != null:
+return $default(_that.active,_that.createdAt,_that.eventTypes,_that.id,_that.secret,_that.tenantId,_that.url);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'active')  bool active, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'event_types')  List<String> eventTypes, @JsonKey(name: 'id')  String id, @JsonKey(name: 'secret')  String secret, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'url')  String url)  $default,) {final _that = this;
+switch (_that) {
+case _IssuedWebhook():
+return $default(_that.active,_that.createdAt,_that.eventTypes,_that.id,_that.secret,_that.tenantId,_that.url);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'active')  bool active, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'event_types')  List<String> eventTypes, @JsonKey(name: 'id')  String id, @JsonKey(name: 'secret')  String secret, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'url')  String url)?  $default,) {final _that = this;
+switch (_that) {
+case _IssuedWebhook() when $default != null:
+return $default(_that.active,_that.createdAt,_that.eventTypes,_that.id,_that.secret,_that.tenantId,_that.url);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _IssuedWebhook implements IssuedWebhook {
+  const _IssuedWebhook({@JsonKey(name: 'active') this.active = false, @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'event_types')  List<String> eventTypes = const <String>[], @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'secret') this.secret = '', @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'url') this.url = ''}): _eventTypes = eventTypes;
+  factory _IssuedWebhook.fromJson(Map<String, dynamic> json) => _$IssuedWebhookFromJson(json);
+
+/// Active turns deliveries on. An inactive endpoint receives nothing.
+@override@JsonKey(name: 'active') final  bool active;
+/// CreatedAt is when the endpoint was registered, RFC 3339.
+@override@JsonKey(name: 'created_at')@TixDateTime() final  DateTime? createdAt;
+/// EventTypes are the event types delivered, exact or with a trailing "*" such
+/// as "task.*". Empty delivers every event.
+ final  List<String> _eventTypes;
+/// EventTypes are the event types delivered, exact or with a trailing "*" such
+/// as "task.*". Empty delivers every event.
+@override@JsonKey(name: 'event_types') List<String> get eventTypes {
+  if (_eventTypes is EqualUnmodifiableListView) return _eventTypes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_eventTypes);
+}
+
+/// ID is the endpoint's unique identifier.
+@override@JsonKey(name: 'id') final  String id;
+/// SigningSecret is the secret tix generated for an endpoint saved without one,
+/// returned this once. Absent when the caller supplied or kept one.
+@override@JsonKey(name: 'secret') final  String secret;
+/// TenantID is the tenant that owns the endpoint.
+@override@JsonKey(name: 'tenant_id') final  String tenantId;
+/// URL is where deliveries are POSTed.
+@override@JsonKey(name: 'url') final  String url;
+
+/// Create a copy of IssuedWebhook
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$IssuedWebhookCopyWith<_IssuedWebhook> get copyWith => __$IssuedWebhookCopyWithImpl<_IssuedWebhook>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$IssuedWebhookToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _IssuedWebhook&&(identical(other.active, active) || other.active == active)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other.eventTypes, _eventTypes)&&(identical(other.id, id) || other.id == id)&&(identical(other.secret, secret) || other.secret == secret)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.url, url) || other.url == url));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,active,createdAt,const DeepCollectionEquality().hash(_eventTypes),id,secret,tenantId,url);
+}
+
+@override
+String toString() {
+    return 'IssuedWebhook(active: $active, createdAt: $createdAt, eventTypes: $eventTypes, id: $id, secret: $secret, tenantId: $tenantId, url: $url)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$IssuedWebhookCopyWith<$Res> implements $IssuedWebhookCopyWith<$Res> {
+  factory _$IssuedWebhookCopyWith(_IssuedWebhook value, $Res Function(_IssuedWebhook) _then) = __$IssuedWebhookCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'active') bool active,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'event_types') List<String> eventTypes,@JsonKey(name: 'id') String id,@JsonKey(name: 'secret') String secret,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'url') String url
+});
+
+
+
+
+}
+/// @nodoc
+class __$IssuedWebhookCopyWithImpl<$Res>
+    implements _$IssuedWebhookCopyWith<$Res> {
+  __$IssuedWebhookCopyWithImpl(this._self, this._then);
+
+  final _IssuedWebhook _self;
+  final $Res Function(_IssuedWebhook) _then;
+
+/// Create a copy of IssuedWebhook
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? active = null,Object? createdAt = freezed,Object? eventTypes = null,Object? id = null,Object? secret = null,Object? tenantId = null,Object? url = null,}) {
+  return _then(_IssuedWebhook(
+active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+as bool,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,eventTypes: null == eventTypes ? _self._eventTypes : eventTypes // ignore: cast_nullable_to_non_nullable
+as List<String>,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,secret: null == secret ? _self.secret : secret // ignore: cast_nullable_to_non_nullable
+as String,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$LeaseGrant {
 
 /// Clamped reports that the requested or inherited length was cut down to Max.
@@ -26150,13 +26495,17 @@ as String,
 mixin _$ProjectDeletion {
 
 /// DeleteTasks reports that the tasks go permanently with the project.
-@JsonKey(name: 'delete_tasks') bool get deleteTasks;/// Deleted counts the project's soft deleted tasks, in the trash.
+@JsonKey(name: 'delete_tasks') bool get deleteTasks;/// Deleted counts the tasks the deletion removed permanently, trashed ones
+/// included. It is zero for a move and for a plan, which deletes nothing.
 @JsonKey(name: 'deleted') int get deleted;/// DryRun marks a plan: what the deletion would do, nothing written.
 @JsonKey(name: 'dry_run') bool get dryRun;/// MoveTo is the target's key when the tasks move.
 @JsonKey(name: 'move_to') String get moveTo;/// Project is the key of the project being deleted.
 @JsonKey(name: 'project') String get project;/// Statuses is the mapping a move applies, one entry per source status.
 @JsonKey(name: 'statuses') List<StatusMove> get statuses;/// Tasks counts the project's live tasks.
-@JsonKey(name: 'tasks') int get tasks;
+@JsonKey(name: 'tasks') int get tasks;/// Trashed counts the project's soft deleted tasks, in the trash.
+@JsonKey(name: 'trashed') int get trashed;/// WouldDelete counts the tasks a planned deletion would remove permanently,
+/// trashed ones included. Only a plan sets it.
+@JsonKey(name: 'would_delete') int get wouldDelete;
 /// Create a copy of ProjectDeletion
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26170,20 +26519,20 @@ $ProjectDeletionCopyWith<ProjectDeletion> get copyWith => _$ProjectDeletionCopyW
 @override
 bool operator ==(Object other) {
   final _this = this as ProjectDeletion;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProjectDeletion&&(identical(other.deleteTasks, _this.deleteTasks) || other.deleteTasks == _this.deleteTasks)&&(identical(other.deleted, _this.deleted) || other.deleted == _this.deleted)&&(identical(other.dryRun, _this.dryRun) || other.dryRun == _this.dryRun)&&(identical(other.moveTo, _this.moveTo) || other.moveTo == _this.moveTo)&&(identical(other.project, _this.project) || other.project == _this.project)&&const DeepCollectionEquality().equals(other.statuses, _this.statuses)&&(identical(other.tasks, _this.tasks) || other.tasks == _this.tasks));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProjectDeletion&&(identical(other.deleteTasks, _this.deleteTasks) || other.deleteTasks == _this.deleteTasks)&&(identical(other.deleted, _this.deleted) || other.deleted == _this.deleted)&&(identical(other.dryRun, _this.dryRun) || other.dryRun == _this.dryRun)&&(identical(other.moveTo, _this.moveTo) || other.moveTo == _this.moveTo)&&(identical(other.project, _this.project) || other.project == _this.project)&&const DeepCollectionEquality().equals(other.statuses, _this.statuses)&&(identical(other.tasks, _this.tasks) || other.tasks == _this.tasks)&&(identical(other.trashed, _this.trashed) || other.trashed == _this.trashed)&&(identical(other.wouldDelete, _this.wouldDelete) || other.wouldDelete == _this.wouldDelete));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as ProjectDeletion;
-  return Object.hash(runtimeType,_this.deleteTasks,_this.deleted,_this.dryRun,_this.moveTo,_this.project,const DeepCollectionEquality().hash(_this.statuses),_this.tasks);
+  return Object.hash(runtimeType,_this.deleteTasks,_this.deleted,_this.dryRun,_this.moveTo,_this.project,const DeepCollectionEquality().hash(_this.statuses),_this.tasks,_this.trashed,_this.wouldDelete);
 }
 
 @override
 String toString() {
   final _this = this as ProjectDeletion;
-  return 'ProjectDeletion(deleteTasks: ${_this.deleteTasks}, deleted: ${_this.deleted}, dryRun: ${_this.dryRun}, moveTo: ${_this.moveTo}, project: ${_this.project}, statuses: ${_this.statuses}, tasks: ${_this.tasks})';
+  return 'ProjectDeletion(deleteTasks: ${_this.deleteTasks}, deleted: ${_this.deleted}, dryRun: ${_this.dryRun}, moveTo: ${_this.moveTo}, project: ${_this.project}, statuses: ${_this.statuses}, tasks: ${_this.tasks}, trashed: ${_this.trashed}, wouldDelete: ${_this.wouldDelete})';
 }
 
 
@@ -26194,7 +26543,7 @@ abstract mixin class $ProjectDeletionCopyWith<$Res>  {
   factory $ProjectDeletionCopyWith(ProjectDeletion value, $Res Function(ProjectDeletion) _then) = _$ProjectDeletionCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'delete_tasks') bool deleteTasks,@JsonKey(name: 'deleted') int deleted,@JsonKey(name: 'dry_run') bool dryRun,@JsonKey(name: 'move_to') String moveTo,@JsonKey(name: 'project') String project,@JsonKey(name: 'statuses') List<StatusMove> statuses,@JsonKey(name: 'tasks') int tasks
+@JsonKey(name: 'delete_tasks') bool deleteTasks,@JsonKey(name: 'deleted') int deleted,@JsonKey(name: 'dry_run') bool dryRun,@JsonKey(name: 'move_to') String moveTo,@JsonKey(name: 'project') String project,@JsonKey(name: 'statuses') List<StatusMove> statuses,@JsonKey(name: 'tasks') int tasks,@JsonKey(name: 'trashed') int trashed,@JsonKey(name: 'would_delete') int wouldDelete
 });
 
 
@@ -26211,7 +26560,7 @@ class _$ProjectDeletionCopyWithImpl<$Res>
 
 /// Create a copy of ProjectDeletion
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? deleteTasks = null,Object? deleted = null,Object? dryRun = null,Object? moveTo = null,Object? project = null,Object? statuses = null,Object? tasks = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? deleteTasks = null,Object? deleted = null,Object? dryRun = null,Object? moveTo = null,Object? project = null,Object? statuses = null,Object? tasks = null,Object? trashed = null,Object? wouldDelete = null,}) {
   return _then(ProjectDeletion(
 deleteTasks: null == deleteTasks ? _self.deleteTasks : deleteTasks // ignore: cast_nullable_to_non_nullable
 as bool,deleted: null == deleted ? _self.deleted : deleted // ignore: cast_nullable_to_non_nullable
@@ -26220,6 +26569,8 @@ as bool,moveTo: null == moveTo ? _self.moveTo : moveTo // ignore: cast_nullable_
 as String,project: null == project ? _self.project : project // ignore: cast_nullable_to_non_nullable
 as String,statuses: null == statuses ? _self.statuses : statuses // ignore: cast_nullable_to_non_nullable
 as List<StatusMove>,tasks: null == tasks ? _self.tasks : tasks // ignore: cast_nullable_to_non_nullable
+as int,trashed: null == trashed ? _self.trashed : trashed // ignore: cast_nullable_to_non_nullable
+as int,wouldDelete: null == wouldDelete ? _self.wouldDelete : wouldDelete // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -26305,10 +26656,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'delete_tasks')  bool deleteTasks, @JsonKey(name: 'deleted')  int deleted, @JsonKey(name: 'dry_run')  bool dryRun, @JsonKey(name: 'move_to')  String moveTo, @JsonKey(name: 'project')  String project, @JsonKey(name: 'statuses')  List<StatusMove> statuses, @JsonKey(name: 'tasks')  int tasks)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'delete_tasks')  bool deleteTasks, @JsonKey(name: 'deleted')  int deleted, @JsonKey(name: 'dry_run')  bool dryRun, @JsonKey(name: 'move_to')  String moveTo, @JsonKey(name: 'project')  String project, @JsonKey(name: 'statuses')  List<StatusMove> statuses, @JsonKey(name: 'tasks')  int tasks, @JsonKey(name: 'trashed')  int trashed, @JsonKey(name: 'would_delete')  int wouldDelete)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProjectDeletion() when $default != null:
-return $default(_that.deleteTasks,_that.deleted,_that.dryRun,_that.moveTo,_that.project,_that.statuses,_that.tasks);case _:
+return $default(_that.deleteTasks,_that.deleted,_that.dryRun,_that.moveTo,_that.project,_that.statuses,_that.tasks,_that.trashed,_that.wouldDelete);case _:
   return orElse();
 
 }
@@ -26326,10 +26677,10 @@ return $default(_that.deleteTasks,_that.deleted,_that.dryRun,_that.moveTo,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'delete_tasks')  bool deleteTasks, @JsonKey(name: 'deleted')  int deleted, @JsonKey(name: 'dry_run')  bool dryRun, @JsonKey(name: 'move_to')  String moveTo, @JsonKey(name: 'project')  String project, @JsonKey(name: 'statuses')  List<StatusMove> statuses, @JsonKey(name: 'tasks')  int tasks)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'delete_tasks')  bool deleteTasks, @JsonKey(name: 'deleted')  int deleted, @JsonKey(name: 'dry_run')  bool dryRun, @JsonKey(name: 'move_to')  String moveTo, @JsonKey(name: 'project')  String project, @JsonKey(name: 'statuses')  List<StatusMove> statuses, @JsonKey(name: 'tasks')  int tasks, @JsonKey(name: 'trashed')  int trashed, @JsonKey(name: 'would_delete')  int wouldDelete)  $default,) {final _that = this;
 switch (_that) {
 case _ProjectDeletion():
-return $default(_that.deleteTasks,_that.deleted,_that.dryRun,_that.moveTo,_that.project,_that.statuses,_that.tasks);case _:
+return $default(_that.deleteTasks,_that.deleted,_that.dryRun,_that.moveTo,_that.project,_that.statuses,_that.tasks,_that.trashed,_that.wouldDelete);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -26346,10 +26697,10 @@ return $default(_that.deleteTasks,_that.deleted,_that.dryRun,_that.moveTo,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'delete_tasks')  bool deleteTasks, @JsonKey(name: 'deleted')  int deleted, @JsonKey(name: 'dry_run')  bool dryRun, @JsonKey(name: 'move_to')  String moveTo, @JsonKey(name: 'project')  String project, @JsonKey(name: 'statuses')  List<StatusMove> statuses, @JsonKey(name: 'tasks')  int tasks)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'delete_tasks')  bool deleteTasks, @JsonKey(name: 'deleted')  int deleted, @JsonKey(name: 'dry_run')  bool dryRun, @JsonKey(name: 'move_to')  String moveTo, @JsonKey(name: 'project')  String project, @JsonKey(name: 'statuses')  List<StatusMove> statuses, @JsonKey(name: 'tasks')  int tasks, @JsonKey(name: 'trashed')  int trashed, @JsonKey(name: 'would_delete')  int wouldDelete)?  $default,) {final _that = this;
 switch (_that) {
 case _ProjectDeletion() when $default != null:
-return $default(_that.deleteTasks,_that.deleted,_that.dryRun,_that.moveTo,_that.project,_that.statuses,_that.tasks);case _:
+return $default(_that.deleteTasks,_that.deleted,_that.dryRun,_that.moveTo,_that.project,_that.statuses,_that.tasks,_that.trashed,_that.wouldDelete);case _:
   return null;
 
 }
@@ -26361,12 +26712,13 @@ return $default(_that.deleteTasks,_that.deleted,_that.dryRun,_that.moveTo,_that.
 @JsonSerializable()
 
 class _ProjectDeletion implements ProjectDeletion {
-  const _ProjectDeletion({@JsonKey(name: 'delete_tasks') this.deleteTasks = false, @JsonKey(name: 'deleted') this.deleted = 0, @JsonKey(name: 'dry_run') this.dryRun = false, @JsonKey(name: 'move_to') this.moveTo = '', @JsonKey(name: 'project') this.project = '', @JsonKey(name: 'statuses')  List<StatusMove> statuses = const <StatusMove>[], @JsonKey(name: 'tasks') this.tasks = 0}): _statuses = statuses;
+  const _ProjectDeletion({@JsonKey(name: 'delete_tasks') this.deleteTasks = false, @JsonKey(name: 'deleted') this.deleted = 0, @JsonKey(name: 'dry_run') this.dryRun = false, @JsonKey(name: 'move_to') this.moveTo = '', @JsonKey(name: 'project') this.project = '', @JsonKey(name: 'statuses')  List<StatusMove> statuses = const <StatusMove>[], @JsonKey(name: 'tasks') this.tasks = 0, @JsonKey(name: 'trashed') this.trashed = 0, @JsonKey(name: 'would_delete') this.wouldDelete = 0}): _statuses = statuses;
   factory _ProjectDeletion.fromJson(Map<String, dynamic> json) => _$ProjectDeletionFromJson(json);
 
 /// DeleteTasks reports that the tasks go permanently with the project.
 @override@JsonKey(name: 'delete_tasks') final  bool deleteTasks;
-/// Deleted counts the project's soft deleted tasks, in the trash.
+/// Deleted counts the tasks the deletion removed permanently, trashed ones
+/// included. It is zero for a move and for a plan, which deletes nothing.
 @override@JsonKey(name: 'deleted') final  int deleted;
 /// DryRun marks a plan: what the deletion would do, nothing written.
 @override@JsonKey(name: 'dry_run') final  bool dryRun;
@@ -26385,6 +26737,11 @@ class _ProjectDeletion implements ProjectDeletion {
 
 /// Tasks counts the project's live tasks.
 @override@JsonKey(name: 'tasks') final  int tasks;
+/// Trashed counts the project's soft deleted tasks, in the trash.
+@override@JsonKey(name: 'trashed') final  int trashed;
+/// WouldDelete counts the tasks a planned deletion would remove permanently,
+/// trashed ones included. Only a plan sets it.
+@override@JsonKey(name: 'would_delete') final  int wouldDelete;
 
 /// Create a copy of ProjectDeletion
 /// with the given fields replaced by the non-null parameter values.
@@ -26399,18 +26756,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProjectDeletion&&(identical(other.deleteTasks, deleteTasks) || other.deleteTasks == deleteTasks)&&(identical(other.deleted, deleted) || other.deleted == deleted)&&(identical(other.dryRun, dryRun) || other.dryRun == dryRun)&&(identical(other.moveTo, moveTo) || other.moveTo == moveTo)&&(identical(other.project, project) || other.project == project)&&const DeepCollectionEquality().equals(other.statuses, _statuses)&&(identical(other.tasks, tasks) || other.tasks == tasks));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProjectDeletion&&(identical(other.deleteTasks, deleteTasks) || other.deleteTasks == deleteTasks)&&(identical(other.deleted, deleted) || other.deleted == deleted)&&(identical(other.dryRun, dryRun) || other.dryRun == dryRun)&&(identical(other.moveTo, moveTo) || other.moveTo == moveTo)&&(identical(other.project, project) || other.project == project)&&const DeepCollectionEquality().equals(other.statuses, _statuses)&&(identical(other.tasks, tasks) || other.tasks == tasks)&&(identical(other.trashed, trashed) || other.trashed == trashed)&&(identical(other.wouldDelete, wouldDelete) || other.wouldDelete == wouldDelete));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,deleteTasks,deleted,dryRun,moveTo,project,const DeepCollectionEquality().hash(_statuses),tasks);
+    return Object.hash(runtimeType,deleteTasks,deleted,dryRun,moveTo,project,const DeepCollectionEquality().hash(_statuses),tasks,trashed,wouldDelete);
 }
 
 @override
 String toString() {
-    return 'ProjectDeletion(deleteTasks: $deleteTasks, deleted: $deleted, dryRun: $dryRun, moveTo: $moveTo, project: $project, statuses: $statuses, tasks: $tasks)';
+    return 'ProjectDeletion(deleteTasks: $deleteTasks, deleted: $deleted, dryRun: $dryRun, moveTo: $moveTo, project: $project, statuses: $statuses, tasks: $tasks, trashed: $trashed, wouldDelete: $wouldDelete)';
 }
 
 
@@ -26421,7 +26778,7 @@ abstract mixin class _$ProjectDeletionCopyWith<$Res> implements $ProjectDeletion
   factory _$ProjectDeletionCopyWith(_ProjectDeletion value, $Res Function(_ProjectDeletion) _then) = __$ProjectDeletionCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'delete_tasks') bool deleteTasks,@JsonKey(name: 'deleted') int deleted,@JsonKey(name: 'dry_run') bool dryRun,@JsonKey(name: 'move_to') String moveTo,@JsonKey(name: 'project') String project,@JsonKey(name: 'statuses') List<StatusMove> statuses,@JsonKey(name: 'tasks') int tasks
+@JsonKey(name: 'delete_tasks') bool deleteTasks,@JsonKey(name: 'deleted') int deleted,@JsonKey(name: 'dry_run') bool dryRun,@JsonKey(name: 'move_to') String moveTo,@JsonKey(name: 'project') String project,@JsonKey(name: 'statuses') List<StatusMove> statuses,@JsonKey(name: 'tasks') int tasks,@JsonKey(name: 'trashed') int trashed,@JsonKey(name: 'would_delete') int wouldDelete
 });
 
 
@@ -26438,7 +26795,7 @@ class __$ProjectDeletionCopyWithImpl<$Res>
 
 /// Create a copy of ProjectDeletion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? deleteTasks = null,Object? deleted = null,Object? dryRun = null,Object? moveTo = null,Object? project = null,Object? statuses = null,Object? tasks = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? deleteTasks = null,Object? deleted = null,Object? dryRun = null,Object? moveTo = null,Object? project = null,Object? statuses = null,Object? tasks = null,Object? trashed = null,Object? wouldDelete = null,}) {
   return _then(_ProjectDeletion(
 deleteTasks: null == deleteTasks ? _self.deleteTasks : deleteTasks // ignore: cast_nullable_to_non_nullable
 as bool,deleted: null == deleted ? _self.deleted : deleted // ignore: cast_nullable_to_non_nullable
@@ -26447,6 +26804,8 @@ as bool,moveTo: null == moveTo ? _self.moveTo : moveTo // ignore: cast_nullable_
 as String,project: null == project ? _self.project : project // ignore: cast_nullable_to_non_nullable
 as String,statuses: null == statuses ? _self._statuses : statuses // ignore: cast_nullable_to_non_nullable
 as List<StatusMove>,tasks: null == tasks ? _self.tasks : tasks // ignore: cast_nullable_to_non_nullable
+as int,trashed: null == trashed ? _self.trashed : trashed // ignore: cast_nullable_to_non_nullable
+as int,wouldDelete: null == wouldDelete ? _self.wouldDelete : wouldDelete // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -27017,7 +27376,8 @@ mixin _$PruneResult {
 /// AuditEntries counts the audit entries removed.
 @JsonKey(name: 'audit_entries') int get auditEntries;/// DryRun is true when nothing was removed.
 @JsonKey(name: 'dry_run') bool get dryRun;/// Events counts the events removed.
-@JsonKey(name: 'events') int get events;/// RetainedForSubscribers counts events past their window kept because a
+@JsonKey(name: 'events') int get events;/// IdempotencyKeys counts the expired idempotency keys removed.
+@JsonKey(name: 'idempotency_keys') int get idempotencyKeys;/// RetainedForSubscribers counts events past their window kept because a
 /// subscriber has not consumed them yet.
 @JsonKey(name: 'retained_for_subscribers') int get retainedForSubscribers;/// WebhookDeliveries counts the webhook delivery records removed.
 @JsonKey(name: 'webhook_deliveries') int get webhookDeliveries;
@@ -27034,20 +27394,20 @@ $PruneResultCopyWith<PruneResult> get copyWith => _$PruneResultCopyWithImpl<Prun
 @override
 bool operator ==(Object other) {
   final _this = this as PruneResult;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PruneResult&&(identical(other.auditEntries, _this.auditEntries) || other.auditEntries == _this.auditEntries)&&(identical(other.dryRun, _this.dryRun) || other.dryRun == _this.dryRun)&&(identical(other.events, _this.events) || other.events == _this.events)&&(identical(other.retainedForSubscribers, _this.retainedForSubscribers) || other.retainedForSubscribers == _this.retainedForSubscribers)&&(identical(other.webhookDeliveries, _this.webhookDeliveries) || other.webhookDeliveries == _this.webhookDeliveries));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PruneResult&&(identical(other.auditEntries, _this.auditEntries) || other.auditEntries == _this.auditEntries)&&(identical(other.dryRun, _this.dryRun) || other.dryRun == _this.dryRun)&&(identical(other.events, _this.events) || other.events == _this.events)&&(identical(other.idempotencyKeys, _this.idempotencyKeys) || other.idempotencyKeys == _this.idempotencyKeys)&&(identical(other.retainedForSubscribers, _this.retainedForSubscribers) || other.retainedForSubscribers == _this.retainedForSubscribers)&&(identical(other.webhookDeliveries, _this.webhookDeliveries) || other.webhookDeliveries == _this.webhookDeliveries));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as PruneResult;
-  return Object.hash(runtimeType,_this.auditEntries,_this.dryRun,_this.events,_this.retainedForSubscribers,_this.webhookDeliveries);
+  return Object.hash(runtimeType,_this.auditEntries,_this.dryRun,_this.events,_this.idempotencyKeys,_this.retainedForSubscribers,_this.webhookDeliveries);
 }
 
 @override
 String toString() {
   final _this = this as PruneResult;
-  return 'PruneResult(auditEntries: ${_this.auditEntries}, dryRun: ${_this.dryRun}, events: ${_this.events}, retainedForSubscribers: ${_this.retainedForSubscribers}, webhookDeliveries: ${_this.webhookDeliveries})';
+  return 'PruneResult(auditEntries: ${_this.auditEntries}, dryRun: ${_this.dryRun}, events: ${_this.events}, idempotencyKeys: ${_this.idempotencyKeys}, retainedForSubscribers: ${_this.retainedForSubscribers}, webhookDeliveries: ${_this.webhookDeliveries})';
 }
 
 
@@ -27058,7 +27418,7 @@ abstract mixin class $PruneResultCopyWith<$Res>  {
   factory $PruneResultCopyWith(PruneResult value, $Res Function(PruneResult) _then) = _$PruneResultCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'audit_entries') int auditEntries,@JsonKey(name: 'dry_run') bool dryRun,@JsonKey(name: 'events') int events,@JsonKey(name: 'retained_for_subscribers') int retainedForSubscribers,@JsonKey(name: 'webhook_deliveries') int webhookDeliveries
+@JsonKey(name: 'audit_entries') int auditEntries,@JsonKey(name: 'dry_run') bool dryRun,@JsonKey(name: 'events') int events,@JsonKey(name: 'idempotency_keys') int idempotencyKeys,@JsonKey(name: 'retained_for_subscribers') int retainedForSubscribers,@JsonKey(name: 'webhook_deliveries') int webhookDeliveries
 });
 
 
@@ -27075,11 +27435,12 @@ class _$PruneResultCopyWithImpl<$Res>
 
 /// Create a copy of PruneResult
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? auditEntries = null,Object? dryRun = null,Object? events = null,Object? retainedForSubscribers = null,Object? webhookDeliveries = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? auditEntries = null,Object? dryRun = null,Object? events = null,Object? idempotencyKeys = null,Object? retainedForSubscribers = null,Object? webhookDeliveries = null,}) {
   return _then(PruneResult(
 auditEntries: null == auditEntries ? _self.auditEntries : auditEntries // ignore: cast_nullable_to_non_nullable
 as int,dryRun: null == dryRun ? _self.dryRun : dryRun // ignore: cast_nullable_to_non_nullable
 as bool,events: null == events ? _self.events : events // ignore: cast_nullable_to_non_nullable
+as int,idempotencyKeys: null == idempotencyKeys ? _self.idempotencyKeys : idempotencyKeys // ignore: cast_nullable_to_non_nullable
 as int,retainedForSubscribers: null == retainedForSubscribers ? _self.retainedForSubscribers : retainedForSubscribers // ignore: cast_nullable_to_non_nullable
 as int,webhookDeliveries: null == webhookDeliveries ? _self.webhookDeliveries : webhookDeliveries // ignore: cast_nullable_to_non_nullable
 as int,
@@ -27167,10 +27528,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'audit_entries')  int auditEntries, @JsonKey(name: 'dry_run')  bool dryRun, @JsonKey(name: 'events')  int events, @JsonKey(name: 'retained_for_subscribers')  int retainedForSubscribers, @JsonKey(name: 'webhook_deliveries')  int webhookDeliveries)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'audit_entries')  int auditEntries, @JsonKey(name: 'dry_run')  bool dryRun, @JsonKey(name: 'events')  int events, @JsonKey(name: 'idempotency_keys')  int idempotencyKeys, @JsonKey(name: 'retained_for_subscribers')  int retainedForSubscribers, @JsonKey(name: 'webhook_deliveries')  int webhookDeliveries)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PruneResult() when $default != null:
-return $default(_that.auditEntries,_that.dryRun,_that.events,_that.retainedForSubscribers,_that.webhookDeliveries);case _:
+return $default(_that.auditEntries,_that.dryRun,_that.events,_that.idempotencyKeys,_that.retainedForSubscribers,_that.webhookDeliveries);case _:
   return orElse();
 
 }
@@ -27188,10 +27549,10 @@ return $default(_that.auditEntries,_that.dryRun,_that.events,_that.retainedForSu
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'audit_entries')  int auditEntries, @JsonKey(name: 'dry_run')  bool dryRun, @JsonKey(name: 'events')  int events, @JsonKey(name: 'retained_for_subscribers')  int retainedForSubscribers, @JsonKey(name: 'webhook_deliveries')  int webhookDeliveries)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'audit_entries')  int auditEntries, @JsonKey(name: 'dry_run')  bool dryRun, @JsonKey(name: 'events')  int events, @JsonKey(name: 'idempotency_keys')  int idempotencyKeys, @JsonKey(name: 'retained_for_subscribers')  int retainedForSubscribers, @JsonKey(name: 'webhook_deliveries')  int webhookDeliveries)  $default,) {final _that = this;
 switch (_that) {
 case _PruneResult():
-return $default(_that.auditEntries,_that.dryRun,_that.events,_that.retainedForSubscribers,_that.webhookDeliveries);case _:
+return $default(_that.auditEntries,_that.dryRun,_that.events,_that.idempotencyKeys,_that.retainedForSubscribers,_that.webhookDeliveries);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -27208,10 +27569,10 @@ return $default(_that.auditEntries,_that.dryRun,_that.events,_that.retainedForSu
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'audit_entries')  int auditEntries, @JsonKey(name: 'dry_run')  bool dryRun, @JsonKey(name: 'events')  int events, @JsonKey(name: 'retained_for_subscribers')  int retainedForSubscribers, @JsonKey(name: 'webhook_deliveries')  int webhookDeliveries)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'audit_entries')  int auditEntries, @JsonKey(name: 'dry_run')  bool dryRun, @JsonKey(name: 'events')  int events, @JsonKey(name: 'idempotency_keys')  int idempotencyKeys, @JsonKey(name: 'retained_for_subscribers')  int retainedForSubscribers, @JsonKey(name: 'webhook_deliveries')  int webhookDeliveries)?  $default,) {final _that = this;
 switch (_that) {
 case _PruneResult() when $default != null:
-return $default(_that.auditEntries,_that.dryRun,_that.events,_that.retainedForSubscribers,_that.webhookDeliveries);case _:
+return $default(_that.auditEntries,_that.dryRun,_that.events,_that.idempotencyKeys,_that.retainedForSubscribers,_that.webhookDeliveries);case _:
   return null;
 
 }
@@ -27223,7 +27584,7 @@ return $default(_that.auditEntries,_that.dryRun,_that.events,_that.retainedForSu
 @JsonSerializable()
 
 class _PruneResult implements PruneResult {
-  const _PruneResult({@JsonKey(name: 'audit_entries') this.auditEntries = 0, @JsonKey(name: 'dry_run') this.dryRun = false, @JsonKey(name: 'events') this.events = 0, @JsonKey(name: 'retained_for_subscribers') this.retainedForSubscribers = 0, @JsonKey(name: 'webhook_deliveries') this.webhookDeliveries = 0});
+  const _PruneResult({@JsonKey(name: 'audit_entries') this.auditEntries = 0, @JsonKey(name: 'dry_run') this.dryRun = false, @JsonKey(name: 'events') this.events = 0, @JsonKey(name: 'idempotency_keys') this.idempotencyKeys = 0, @JsonKey(name: 'retained_for_subscribers') this.retainedForSubscribers = 0, @JsonKey(name: 'webhook_deliveries') this.webhookDeliveries = 0});
   factory _PruneResult.fromJson(Map<String, dynamic> json) => _$PruneResultFromJson(json);
 
 /// AuditEntries counts the audit entries removed.
@@ -27232,6 +27593,8 @@ class _PruneResult implements PruneResult {
 @override@JsonKey(name: 'dry_run') final  bool dryRun;
 /// Events counts the events removed.
 @override@JsonKey(name: 'events') final  int events;
+/// IdempotencyKeys counts the expired idempotency keys removed.
+@override@JsonKey(name: 'idempotency_keys') final  int idempotencyKeys;
 /// RetainedForSubscribers counts events past their window kept because a
 /// subscriber has not consumed them yet.
 @override@JsonKey(name: 'retained_for_subscribers') final  int retainedForSubscribers;
@@ -27251,18 +27614,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PruneResult&&(identical(other.auditEntries, auditEntries) || other.auditEntries == auditEntries)&&(identical(other.dryRun, dryRun) || other.dryRun == dryRun)&&(identical(other.events, events) || other.events == events)&&(identical(other.retainedForSubscribers, retainedForSubscribers) || other.retainedForSubscribers == retainedForSubscribers)&&(identical(other.webhookDeliveries, webhookDeliveries) || other.webhookDeliveries == webhookDeliveries));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PruneResult&&(identical(other.auditEntries, auditEntries) || other.auditEntries == auditEntries)&&(identical(other.dryRun, dryRun) || other.dryRun == dryRun)&&(identical(other.events, events) || other.events == events)&&(identical(other.idempotencyKeys, idempotencyKeys) || other.idempotencyKeys == idempotencyKeys)&&(identical(other.retainedForSubscribers, retainedForSubscribers) || other.retainedForSubscribers == retainedForSubscribers)&&(identical(other.webhookDeliveries, webhookDeliveries) || other.webhookDeliveries == webhookDeliveries));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,auditEntries,dryRun,events,retainedForSubscribers,webhookDeliveries);
+    return Object.hash(runtimeType,auditEntries,dryRun,events,idempotencyKeys,retainedForSubscribers,webhookDeliveries);
 }
 
 @override
 String toString() {
-    return 'PruneResult(auditEntries: $auditEntries, dryRun: $dryRun, events: $events, retainedForSubscribers: $retainedForSubscribers, webhookDeliveries: $webhookDeliveries)';
+    return 'PruneResult(auditEntries: $auditEntries, dryRun: $dryRun, events: $events, idempotencyKeys: $idempotencyKeys, retainedForSubscribers: $retainedForSubscribers, webhookDeliveries: $webhookDeliveries)';
 }
 
 
@@ -27273,7 +27636,7 @@ abstract mixin class _$PruneResultCopyWith<$Res> implements $PruneResultCopyWith
   factory _$PruneResultCopyWith(_PruneResult value, $Res Function(_PruneResult) _then) = __$PruneResultCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'audit_entries') int auditEntries,@JsonKey(name: 'dry_run') bool dryRun,@JsonKey(name: 'events') int events,@JsonKey(name: 'retained_for_subscribers') int retainedForSubscribers,@JsonKey(name: 'webhook_deliveries') int webhookDeliveries
+@JsonKey(name: 'audit_entries') int auditEntries,@JsonKey(name: 'dry_run') bool dryRun,@JsonKey(name: 'events') int events,@JsonKey(name: 'idempotency_keys') int idempotencyKeys,@JsonKey(name: 'retained_for_subscribers') int retainedForSubscribers,@JsonKey(name: 'webhook_deliveries') int webhookDeliveries
 });
 
 
@@ -27290,11 +27653,12 @@ class __$PruneResultCopyWithImpl<$Res>
 
 /// Create a copy of PruneResult
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? auditEntries = null,Object? dryRun = null,Object? events = null,Object? retainedForSubscribers = null,Object? webhookDeliveries = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? auditEntries = null,Object? dryRun = null,Object? events = null,Object? idempotencyKeys = null,Object? retainedForSubscribers = null,Object? webhookDeliveries = null,}) {
   return _then(_PruneResult(
 auditEntries: null == auditEntries ? _self.auditEntries : auditEntries // ignore: cast_nullable_to_non_nullable
 as int,dryRun: null == dryRun ? _self.dryRun : dryRun // ignore: cast_nullable_to_non_nullable
 as bool,events: null == events ? _self.events : events // ignore: cast_nullable_to_non_nullable
+as int,idempotencyKeys: null == idempotencyKeys ? _self.idempotencyKeys : idempotencyKeys // ignore: cast_nullable_to_non_nullable
 as int,retainedForSubscribers: null == retainedForSubscribers ? _self.retainedForSubscribers : retainedForSubscribers // ignore: cast_nullable_to_non_nullable
 as int,webhookDeliveries: null == webhookDeliveries ? _self.webhookDeliveries : webhookDeliveries // ignore: cast_nullable_to_non_nullable
 as int,
@@ -32987,6 +33351,310 @@ actorId: null == actorId ? _self.actorId : actorId // ignore: cast_nullable_to_n
 as String,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
 as String,token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$SessionInfo {
+
+/// CreatedAt is when the sign-in happened.
+@JsonKey(name: 'created_at')@TixDateTime() DateTime? get createdAt;/// Current marks the session the caller presented with this request.
+@JsonKey(name: 'current') bool get current;/// ExpiresAt is when the session stops working.
+@JsonKey(name: 'expires_at')@TixDateTime() DateTime? get expiresAt;/// ID identifies the session for revoking it. It is not a credential.
+@JsonKey(name: 'id') String get id;/// Method is how it signed in: password, ssh-key or switch.
+@JsonKey(name: 'method') String get method;/// SecondFactor reports that the sign-in passed a second factor.
+@JsonKey(name: 'second_factor') bool get secondFactor;/// UserAgent is the user agent the sign-in request sent, truncated, or empty
+/// for a session that predates recording it.
+@JsonKey(name: 'user_agent') String get userAgent;
+/// Create a copy of SessionInfo
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SessionInfoCopyWith<SessionInfo> get copyWith => _$SessionInfoCopyWithImpl<SessionInfo>(this as SessionInfo, _$identity);
+
+  /// Serializes this SessionInfo to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as SessionInfo;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SessionInfo&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.current, _this.current) || other.current == _this.current)&&(identical(other.expiresAt, _this.expiresAt) || other.expiresAt == _this.expiresAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.method, _this.method) || other.method == _this.method)&&(identical(other.secondFactor, _this.secondFactor) || other.secondFactor == _this.secondFactor)&&(identical(other.userAgent, _this.userAgent) || other.userAgent == _this.userAgent));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as SessionInfo;
+  return Object.hash(runtimeType,_this.createdAt,_this.current,_this.expiresAt,_this.id,_this.method,_this.secondFactor,_this.userAgent);
+}
+
+@override
+String toString() {
+  final _this = this as SessionInfo;
+  return 'SessionInfo(createdAt: ${_this.createdAt}, current: ${_this.current}, expiresAt: ${_this.expiresAt}, id: ${_this.id}, method: ${_this.method}, secondFactor: ${_this.secondFactor}, userAgent: ${_this.userAgent})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SessionInfoCopyWith<$Res>  {
+  factory $SessionInfoCopyWith(SessionInfo value, $Res Function(SessionInfo) _then) = _$SessionInfoCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'current') bool current,@JsonKey(name: 'expires_at')@TixDateTime() DateTime? expiresAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'method') String method,@JsonKey(name: 'second_factor') bool secondFactor,@JsonKey(name: 'user_agent') String userAgent
+});
+
+
+
+
+}
+/// @nodoc
+class _$SessionInfoCopyWithImpl<$Res>
+    implements $SessionInfoCopyWith<$Res> {
+  _$SessionInfoCopyWithImpl(this._self, this._then);
+
+  final SessionInfo _self;
+  final $Res Function(SessionInfo) _then;
+
+/// Create a copy of SessionInfo
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? createdAt = freezed,Object? current = null,Object? expiresAt = freezed,Object? id = null,Object? method = null,Object? secondFactor = null,Object? userAgent = null,}) {
+  return _then(SessionInfo(
+createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,current: null == current ? _self.current : current // ignore: cast_nullable_to_non_nullable
+as bool,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,method: null == method ? _self.method : method // ignore: cast_nullable_to_non_nullable
+as String,secondFactor: null == secondFactor ? _self.secondFactor : secondFactor // ignore: cast_nullable_to_non_nullable
+as bool,userAgent: null == userAgent ? _self.userAgent : userAgent // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [SessionInfo].
+extension SessionInfoPatterns on SessionInfo {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SessionInfo value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _SessionInfo() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SessionInfo value)  $default,){
+final _that = this;
+switch (_that) {
+case _SessionInfo():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SessionInfo value)?  $default,){
+final _that = this;
+switch (_that) {
+case _SessionInfo() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'current')  bool current, @JsonKey(name: 'expires_at')@TixDateTime()  DateTime? expiresAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'method')  String method, @JsonKey(name: 'second_factor')  bool secondFactor, @JsonKey(name: 'user_agent')  String userAgent)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _SessionInfo() when $default != null:
+return $default(_that.createdAt,_that.current,_that.expiresAt,_that.id,_that.method,_that.secondFactor,_that.userAgent);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'current')  bool current, @JsonKey(name: 'expires_at')@TixDateTime()  DateTime? expiresAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'method')  String method, @JsonKey(name: 'second_factor')  bool secondFactor, @JsonKey(name: 'user_agent')  String userAgent)  $default,) {final _that = this;
+switch (_that) {
+case _SessionInfo():
+return $default(_that.createdAt,_that.current,_that.expiresAt,_that.id,_that.method,_that.secondFactor,_that.userAgent);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'current')  bool current, @JsonKey(name: 'expires_at')@TixDateTime()  DateTime? expiresAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'method')  String method, @JsonKey(name: 'second_factor')  bool secondFactor, @JsonKey(name: 'user_agent')  String userAgent)?  $default,) {final _that = this;
+switch (_that) {
+case _SessionInfo() when $default != null:
+return $default(_that.createdAt,_that.current,_that.expiresAt,_that.id,_that.method,_that.secondFactor,_that.userAgent);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _SessionInfo implements SessionInfo {
+  const _SessionInfo({@JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'current') this.current = false, @JsonKey(name: 'expires_at')@TixDateTime() this.expiresAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'method') this.method = '', @JsonKey(name: 'second_factor') this.secondFactor = false, @JsonKey(name: 'user_agent') this.userAgent = ''});
+  factory _SessionInfo.fromJson(Map<String, dynamic> json) => _$SessionInfoFromJson(json);
+
+/// CreatedAt is when the sign-in happened.
+@override@JsonKey(name: 'created_at')@TixDateTime() final  DateTime? createdAt;
+/// Current marks the session the caller presented with this request.
+@override@JsonKey(name: 'current') final  bool current;
+/// ExpiresAt is when the session stops working.
+@override@JsonKey(name: 'expires_at')@TixDateTime() final  DateTime? expiresAt;
+/// ID identifies the session for revoking it. It is not a credential.
+@override@JsonKey(name: 'id') final  String id;
+/// Method is how it signed in: password, ssh-key or switch.
+@override@JsonKey(name: 'method') final  String method;
+/// SecondFactor reports that the sign-in passed a second factor.
+@override@JsonKey(name: 'second_factor') final  bool secondFactor;
+/// UserAgent is the user agent the sign-in request sent, truncated, or empty
+/// for a session that predates recording it.
+@override@JsonKey(name: 'user_agent') final  String userAgent;
+
+/// Create a copy of SessionInfo
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SessionInfoCopyWith<_SessionInfo> get copyWith => __$SessionInfoCopyWithImpl<_SessionInfo>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$SessionInfoToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionInfo&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.current, current) || other.current == current)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.id, id) || other.id == id)&&(identical(other.method, method) || other.method == method)&&(identical(other.secondFactor, secondFactor) || other.secondFactor == secondFactor)&&(identical(other.userAgent, userAgent) || other.userAgent == userAgent));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,createdAt,current,expiresAt,id,method,secondFactor,userAgent);
+}
+
+@override
+String toString() {
+    return 'SessionInfo(createdAt: $createdAt, current: $current, expiresAt: $expiresAt, id: $id, method: $method, secondFactor: $secondFactor, userAgent: $userAgent)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$SessionInfoCopyWith<$Res> implements $SessionInfoCopyWith<$Res> {
+  factory _$SessionInfoCopyWith(_SessionInfo value, $Res Function(_SessionInfo) _then) = __$SessionInfoCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'current') bool current,@JsonKey(name: 'expires_at')@TixDateTime() DateTime? expiresAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'method') String method,@JsonKey(name: 'second_factor') bool secondFactor,@JsonKey(name: 'user_agent') String userAgent
+});
+
+
+
+
+}
+/// @nodoc
+class __$SessionInfoCopyWithImpl<$Res>
+    implements _$SessionInfoCopyWith<$Res> {
+  __$SessionInfoCopyWithImpl(this._self, this._then);
+
+  final _SessionInfo _self;
+  final $Res Function(_SessionInfo) _then;
+
+/// Create a copy of SessionInfo
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? createdAt = freezed,Object? current = null,Object? expiresAt = freezed,Object? id = null,Object? method = null,Object? secondFactor = null,Object? userAgent = null,}) {
+  return _then(_SessionInfo(
+createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,current: null == current ? _self.current : current // ignore: cast_nullable_to_non_nullable
+as bool,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,method: null == method ? _self.method : method // ignore: cast_nullable_to_non_nullable
+as String,secondFactor: null == secondFactor ? _self.secondFactor : secondFactor // ignore: cast_nullable_to_non_nullable
+as bool,userAgent: null == userAgent ? _self.userAgent : userAgent // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -41638,7 +42306,11 @@ mixin _$Task {
 @JsonKey(name: 'title') String get title;/// UpdatedAt is when the task was last changed, RFC 3339.
 @JsonKey(name: 'updated_at')@TixDateTime() DateTime? get updatedAt;/// Version increases by one on every change. Pass it back on an update to have
 /// a stale write refused with a conflict.
-@JsonKey(name: 'version') int get version;
+@JsonKey(name: 'version') int get version;/// WebURL is the address of the task's screen in the browser interface, set
+/// when the server is configured with the address it is reached at
+/// (server.public_url). Only a read sets it, so it is absent from audit
+/// snapshots, events and exports.
+@JsonKey(name: 'web_url') String get webUrl;
 /// Create a copy of Task
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -41652,20 +42324,20 @@ $TaskCopyWith<Task> get copyWith => _$TaskCopyWithImpl<Task>(this as Task, _$ide
 @override
 bool operator ==(Object other) {
   final _this = this as Task;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Task&&(identical(other.assigneeActorId, _this.assigneeActorId) || other.assigneeActorId == _this.assigneeActorId)&&(identical(other.blocked, _this.blocked) || other.blocked == _this.blocked)&&(identical(other.body, _this.body) || other.body == _this.body)&&(identical(other.checklist, _this.checklist) || other.checklist == _this.checklist)&&(identical(other.claimCount, _this.claimCount) || other.claimCount == _this.claimCount)&&(identical(other.claimedAt, _this.claimedAt) || other.claimedAt == _this.claimedAt)&&(identical(other.claimedByActorId, _this.claimedByActorId) || other.claimedByActorId == _this.claimedByActorId)&&(identical(other.completedAt, _this.completedAt) || other.completedAt == _this.completedAt)&&(identical(other.copiedFromId, _this.copiedFromId) || other.copiedFromId == _this.copiedFromId)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.creatorActorId, _this.creatorActorId) || other.creatorActorId == _this.creatorActorId)&&const DeepCollectionEquality().equals(other.customFields, _this.customFields)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&const DeepCollectionEquality().equals(other.dependsOn, _this.dependsOn)&&(identical(other.dueAt, _this.dueAt) || other.dueAt == _this.dueAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.lease, _this.lease) || other.lease == _this.lease)&&(identical(other.leaseExpiredAt, _this.leaseExpiredAt) || other.leaseExpiredAt == _this.leaseExpiredAt)&&(identical(other.leaseExpiredByActorId, _this.leaseExpiredByActorId) || other.leaseExpiredByActorId == _this.leaseExpiredByActorId)&&(identical(other.leaseExpiresAt, _this.leaseExpiresAt) || other.leaseExpiresAt == _this.leaseExpiresAt)&&(identical(other.parentId, _this.parentId) || other.parentId == _this.parentId)&&(identical(other.priority, _this.priority) || other.priority == _this.priority)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.recurrence, _this.recurrence) || other.recurrence == _this.recurrence)&&(identical(other.recurrenceNextId, _this.recurrenceNextId) || other.recurrenceNextId == _this.recurrenceNextId)&&(identical(other.ref, _this.ref) || other.ref == _this.ref)&&(identical(other.seq, _this.seq) || other.seq == _this.seq)&&(identical(other.snoozedByActorId, _this.snoozedByActorId) || other.snoozedByActorId == _this.snoozedByActorId)&&(identical(other.snoozedUntil, _this.snoozedUntil) || other.snoozedUntil == _this.snoozedUntil)&&(identical(other.starred, _this.starred) || other.starred == _this.starred)&&(identical(other.startedAt, _this.startedAt) || other.startedAt == _this.startedAt)&&(identical(other.status, _this.status) || other.status == _this.status)&&const DeepCollectionEquality().equals(other.tags, _this.tags)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.version, _this.version) || other.version == _this.version));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Task&&(identical(other.assigneeActorId, _this.assigneeActorId) || other.assigneeActorId == _this.assigneeActorId)&&(identical(other.blocked, _this.blocked) || other.blocked == _this.blocked)&&(identical(other.body, _this.body) || other.body == _this.body)&&(identical(other.checklist, _this.checklist) || other.checklist == _this.checklist)&&(identical(other.claimCount, _this.claimCount) || other.claimCount == _this.claimCount)&&(identical(other.claimedAt, _this.claimedAt) || other.claimedAt == _this.claimedAt)&&(identical(other.claimedByActorId, _this.claimedByActorId) || other.claimedByActorId == _this.claimedByActorId)&&(identical(other.completedAt, _this.completedAt) || other.completedAt == _this.completedAt)&&(identical(other.copiedFromId, _this.copiedFromId) || other.copiedFromId == _this.copiedFromId)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.creatorActorId, _this.creatorActorId) || other.creatorActorId == _this.creatorActorId)&&const DeepCollectionEquality().equals(other.customFields, _this.customFields)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&const DeepCollectionEquality().equals(other.dependsOn, _this.dependsOn)&&(identical(other.dueAt, _this.dueAt) || other.dueAt == _this.dueAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.lease, _this.lease) || other.lease == _this.lease)&&(identical(other.leaseExpiredAt, _this.leaseExpiredAt) || other.leaseExpiredAt == _this.leaseExpiredAt)&&(identical(other.leaseExpiredByActorId, _this.leaseExpiredByActorId) || other.leaseExpiredByActorId == _this.leaseExpiredByActorId)&&(identical(other.leaseExpiresAt, _this.leaseExpiresAt) || other.leaseExpiresAt == _this.leaseExpiresAt)&&(identical(other.parentId, _this.parentId) || other.parentId == _this.parentId)&&(identical(other.priority, _this.priority) || other.priority == _this.priority)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.recurrence, _this.recurrence) || other.recurrence == _this.recurrence)&&(identical(other.recurrenceNextId, _this.recurrenceNextId) || other.recurrenceNextId == _this.recurrenceNextId)&&(identical(other.ref, _this.ref) || other.ref == _this.ref)&&(identical(other.seq, _this.seq) || other.seq == _this.seq)&&(identical(other.snoozedByActorId, _this.snoozedByActorId) || other.snoozedByActorId == _this.snoozedByActorId)&&(identical(other.snoozedUntil, _this.snoozedUntil) || other.snoozedUntil == _this.snoozedUntil)&&(identical(other.starred, _this.starred) || other.starred == _this.starred)&&(identical(other.startedAt, _this.startedAt) || other.startedAt == _this.startedAt)&&(identical(other.status, _this.status) || other.status == _this.status)&&const DeepCollectionEquality().equals(other.tags, _this.tags)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.version, _this.version) || other.version == _this.version)&&(identical(other.webUrl, _this.webUrl) || other.webUrl == _this.webUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Task;
-  return Object.hashAll([runtimeType,_this.assigneeActorId,_this.blocked,_this.body,_this.checklist,_this.claimCount,_this.claimedAt,_this.claimedByActorId,_this.completedAt,_this.copiedFromId,_this.createdAt,_this.creatorActorId,const DeepCollectionEquality().hash(_this.customFields),_this.deletedAt,const DeepCollectionEquality().hash(_this.dependsOn),_this.dueAt,_this.id,_this.lease,_this.leaseExpiredAt,_this.leaseExpiredByActorId,_this.leaseExpiresAt,_this.parentId,_this.priority,_this.projectId,_this.recurrence,_this.recurrenceNextId,_this.ref,_this.seq,_this.snoozedByActorId,_this.snoozedUntil,_this.starred,_this.startedAt,_this.status,const DeepCollectionEquality().hash(_this.tags),_this.tenantId,_this.title,_this.updatedAt,_this.version]);
+  return Object.hashAll([runtimeType,_this.assigneeActorId,_this.blocked,_this.body,_this.checklist,_this.claimCount,_this.claimedAt,_this.claimedByActorId,_this.completedAt,_this.copiedFromId,_this.createdAt,_this.creatorActorId,const DeepCollectionEquality().hash(_this.customFields),_this.deletedAt,const DeepCollectionEquality().hash(_this.dependsOn),_this.dueAt,_this.id,_this.lease,_this.leaseExpiredAt,_this.leaseExpiredByActorId,_this.leaseExpiresAt,_this.parentId,_this.priority,_this.projectId,_this.recurrence,_this.recurrenceNextId,_this.ref,_this.seq,_this.snoozedByActorId,_this.snoozedUntil,_this.starred,_this.startedAt,_this.status,const DeepCollectionEquality().hash(_this.tags),_this.tenantId,_this.title,_this.updatedAt,_this.version,_this.webUrl]);
 }
 
 @override
 String toString() {
   final _this = this as Task;
-  return 'Task(assigneeActorId: ${_this.assigneeActorId}, blocked: ${_this.blocked}, body: ${_this.body}, checklist: ${_this.checklist}, claimCount: ${_this.claimCount}, claimedAt: ${_this.claimedAt}, claimedByActorId: ${_this.claimedByActorId}, completedAt: ${_this.completedAt}, copiedFromId: ${_this.copiedFromId}, createdAt: ${_this.createdAt}, creatorActorId: ${_this.creatorActorId}, customFields: ${_this.customFields}, deletedAt: ${_this.deletedAt}, dependsOn: ${_this.dependsOn}, dueAt: ${_this.dueAt}, id: ${_this.id}, lease: ${_this.lease}, leaseExpiredAt: ${_this.leaseExpiredAt}, leaseExpiredByActorId: ${_this.leaseExpiredByActorId}, leaseExpiresAt: ${_this.leaseExpiresAt}, parentId: ${_this.parentId}, priority: ${_this.priority}, projectId: ${_this.projectId}, recurrence: ${_this.recurrence}, recurrenceNextId: ${_this.recurrenceNextId}, ref: ${_this.ref}, seq: ${_this.seq}, snoozedByActorId: ${_this.snoozedByActorId}, snoozedUntil: ${_this.snoozedUntil}, starred: ${_this.starred}, startedAt: ${_this.startedAt}, status: ${_this.status}, tags: ${_this.tags}, tenantId: ${_this.tenantId}, title: ${_this.title}, updatedAt: ${_this.updatedAt}, version: ${_this.version})';
+  return 'Task(assigneeActorId: ${_this.assigneeActorId}, blocked: ${_this.blocked}, body: ${_this.body}, checklist: ${_this.checklist}, claimCount: ${_this.claimCount}, claimedAt: ${_this.claimedAt}, claimedByActorId: ${_this.claimedByActorId}, completedAt: ${_this.completedAt}, copiedFromId: ${_this.copiedFromId}, createdAt: ${_this.createdAt}, creatorActorId: ${_this.creatorActorId}, customFields: ${_this.customFields}, deletedAt: ${_this.deletedAt}, dependsOn: ${_this.dependsOn}, dueAt: ${_this.dueAt}, id: ${_this.id}, lease: ${_this.lease}, leaseExpiredAt: ${_this.leaseExpiredAt}, leaseExpiredByActorId: ${_this.leaseExpiredByActorId}, leaseExpiresAt: ${_this.leaseExpiresAt}, parentId: ${_this.parentId}, priority: ${_this.priority}, projectId: ${_this.projectId}, recurrence: ${_this.recurrence}, recurrenceNextId: ${_this.recurrenceNextId}, ref: ${_this.ref}, seq: ${_this.seq}, snoozedByActorId: ${_this.snoozedByActorId}, snoozedUntil: ${_this.snoozedUntil}, starred: ${_this.starred}, startedAt: ${_this.startedAt}, status: ${_this.status}, tags: ${_this.tags}, tenantId: ${_this.tenantId}, title: ${_this.title}, updatedAt: ${_this.updatedAt}, version: ${_this.version}, webUrl: ${_this.webUrl})';
 }
 
 
@@ -41676,7 +42348,7 @@ abstract mixin class $TaskCopyWith<$Res>  {
   factory $TaskCopyWith(Task value, $Res Function(Task) _then) = _$TaskCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'assignee_actor_id') String assigneeActorId,@JsonKey(name: 'blocked') bool blocked,@JsonKey(name: 'body') String body,@JsonKey(name: 'checklist') Checklist? checklist,@JsonKey(name: 'claim_count') int claimCount,@JsonKey(name: 'claimed_at')@TixDateTime() DateTime? claimedAt,@JsonKey(name: 'claimed_by_actor_id') String claimedByActorId,@JsonKey(name: 'completed_at')@TixDateTime() DateTime? completedAt,@JsonKey(name: 'copied_from_id') String copiedFromId,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'creator_actor_id') String creatorActorId,@JsonKey(name: 'custom_fields') Map<String, Object?> customFields,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'depends_on') List<String> dependsOn,@JsonKey(name: 'due_at')@TixDateTime() DateTime? dueAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'lease') String lease,@JsonKey(name: 'lease_expired_at')@TixDateTime() DateTime? leaseExpiredAt,@JsonKey(name: 'lease_expired_by_actor_id') String leaseExpiredByActorId,@JsonKey(name: 'lease_expires_at')@TixDateTime() DateTime? leaseExpiresAt,@JsonKey(name: 'parent_id') String parentId,@JsonKey(name: 'priority') int priority,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'recurrence') String recurrence,@JsonKey(name: 'recurrence_next_id') String recurrenceNextId,@JsonKey(name: 'ref') String ref,@JsonKey(name: 'seq') int seq,@JsonKey(name: 'snoozed_by_actor_id') String snoozedByActorId,@JsonKey(name: 'snoozed_until')@TixDateTime() DateTime? snoozedUntil,@JsonKey(name: 'starred') bool starred,@JsonKey(name: 'started_at')@TixDateTime() DateTime? startedAt,@JsonKey(name: 'status') String status,@JsonKey(name: 'tags') List<String> tags,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'title') String title,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt,@JsonKey(name: 'version') int version
+@JsonKey(name: 'assignee_actor_id') String assigneeActorId,@JsonKey(name: 'blocked') bool blocked,@JsonKey(name: 'body') String body,@JsonKey(name: 'checklist') Checklist? checklist,@JsonKey(name: 'claim_count') int claimCount,@JsonKey(name: 'claimed_at')@TixDateTime() DateTime? claimedAt,@JsonKey(name: 'claimed_by_actor_id') String claimedByActorId,@JsonKey(name: 'completed_at')@TixDateTime() DateTime? completedAt,@JsonKey(name: 'copied_from_id') String copiedFromId,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'creator_actor_id') String creatorActorId,@JsonKey(name: 'custom_fields') Map<String, Object?> customFields,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'depends_on') List<String> dependsOn,@JsonKey(name: 'due_at')@TixDateTime() DateTime? dueAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'lease') String lease,@JsonKey(name: 'lease_expired_at')@TixDateTime() DateTime? leaseExpiredAt,@JsonKey(name: 'lease_expired_by_actor_id') String leaseExpiredByActorId,@JsonKey(name: 'lease_expires_at')@TixDateTime() DateTime? leaseExpiresAt,@JsonKey(name: 'parent_id') String parentId,@JsonKey(name: 'priority') int priority,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'recurrence') String recurrence,@JsonKey(name: 'recurrence_next_id') String recurrenceNextId,@JsonKey(name: 'ref') String ref,@JsonKey(name: 'seq') int seq,@JsonKey(name: 'snoozed_by_actor_id') String snoozedByActorId,@JsonKey(name: 'snoozed_until')@TixDateTime() DateTime? snoozedUntil,@JsonKey(name: 'starred') bool starred,@JsonKey(name: 'started_at')@TixDateTime() DateTime? startedAt,@JsonKey(name: 'status') String status,@JsonKey(name: 'tags') List<String> tags,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'title') String title,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt,@JsonKey(name: 'version') int version,@JsonKey(name: 'web_url') String webUrl
 });
 
 
@@ -41693,7 +42365,7 @@ class _$TaskCopyWithImpl<$Res>
 
 /// Create a copy of Task
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? assigneeActorId = null,Object? blocked = null,Object? body = null,Object? checklist = freezed,Object? claimCount = null,Object? claimedAt = freezed,Object? claimedByActorId = null,Object? completedAt = freezed,Object? copiedFromId = null,Object? createdAt = freezed,Object? creatorActorId = null,Object? customFields = null,Object? deletedAt = freezed,Object? dependsOn = null,Object? dueAt = freezed,Object? id = null,Object? lease = null,Object? leaseExpiredAt = freezed,Object? leaseExpiredByActorId = null,Object? leaseExpiresAt = freezed,Object? parentId = null,Object? priority = null,Object? projectId = null,Object? recurrence = null,Object? recurrenceNextId = null,Object? ref = null,Object? seq = null,Object? snoozedByActorId = null,Object? snoozedUntil = freezed,Object? starred = null,Object? startedAt = freezed,Object? status = null,Object? tags = null,Object? tenantId = null,Object? title = null,Object? updatedAt = freezed,Object? version = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? assigneeActorId = null,Object? blocked = null,Object? body = null,Object? checklist = freezed,Object? claimCount = null,Object? claimedAt = freezed,Object? claimedByActorId = null,Object? completedAt = freezed,Object? copiedFromId = null,Object? createdAt = freezed,Object? creatorActorId = null,Object? customFields = null,Object? deletedAt = freezed,Object? dependsOn = null,Object? dueAt = freezed,Object? id = null,Object? lease = null,Object? leaseExpiredAt = freezed,Object? leaseExpiredByActorId = null,Object? leaseExpiresAt = freezed,Object? parentId = null,Object? priority = null,Object? projectId = null,Object? recurrence = null,Object? recurrenceNextId = null,Object? ref = null,Object? seq = null,Object? snoozedByActorId = null,Object? snoozedUntil = freezed,Object? starred = null,Object? startedAt = freezed,Object? status = null,Object? tags = null,Object? tenantId = null,Object? title = null,Object? updatedAt = freezed,Object? version = null,Object? webUrl = null,}) {
   return _then(Task(
 assigneeActorId: null == assigneeActorId ? _self.assigneeActorId : assigneeActorId // ignore: cast_nullable_to_non_nullable
 as String,blocked: null == blocked ? _self.blocked : blocked // ignore: cast_nullable_to_non_nullable
@@ -41732,7 +42404,8 @@ as List<String>,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
-as int,
+as int,webUrl: null == webUrl ? _self.webUrl : webUrl // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 /// Create a copy of Task
@@ -41829,10 +42502,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'assignee_actor_id')  String assigneeActorId, @JsonKey(name: 'blocked')  bool blocked, @JsonKey(name: 'body')  String body, @JsonKey(name: 'checklist')  Checklist? checklist, @JsonKey(name: 'claim_count')  int claimCount, @JsonKey(name: 'claimed_at')@TixDateTime()  DateTime? claimedAt, @JsonKey(name: 'claimed_by_actor_id')  String claimedByActorId, @JsonKey(name: 'completed_at')@TixDateTime()  DateTime? completedAt, @JsonKey(name: 'copied_from_id')  String copiedFromId, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'creator_actor_id')  String creatorActorId, @JsonKey(name: 'custom_fields')  Map<String, Object?> customFields, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'depends_on')  List<String> dependsOn, @JsonKey(name: 'due_at')@TixDateTime()  DateTime? dueAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'lease')  String lease, @JsonKey(name: 'lease_expired_at')@TixDateTime()  DateTime? leaseExpiredAt, @JsonKey(name: 'lease_expired_by_actor_id')  String leaseExpiredByActorId, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'parent_id')  String parentId, @JsonKey(name: 'priority')  int priority, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'recurrence')  String recurrence, @JsonKey(name: 'recurrence_next_id')  String recurrenceNextId, @JsonKey(name: 'ref')  String ref, @JsonKey(name: 'seq')  int seq, @JsonKey(name: 'snoozed_by_actor_id')  String snoozedByActorId, @JsonKey(name: 'snoozed_until')@TixDateTime()  DateTime? snoozedUntil, @JsonKey(name: 'starred')  bool starred, @JsonKey(name: 'started_at')@TixDateTime()  DateTime? startedAt, @JsonKey(name: 'status')  String status, @JsonKey(name: 'tags')  List<String> tags, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'title')  String title, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'version')  int version)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'assignee_actor_id')  String assigneeActorId, @JsonKey(name: 'blocked')  bool blocked, @JsonKey(name: 'body')  String body, @JsonKey(name: 'checklist')  Checklist? checklist, @JsonKey(name: 'claim_count')  int claimCount, @JsonKey(name: 'claimed_at')@TixDateTime()  DateTime? claimedAt, @JsonKey(name: 'claimed_by_actor_id')  String claimedByActorId, @JsonKey(name: 'completed_at')@TixDateTime()  DateTime? completedAt, @JsonKey(name: 'copied_from_id')  String copiedFromId, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'creator_actor_id')  String creatorActorId, @JsonKey(name: 'custom_fields')  Map<String, Object?> customFields, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'depends_on')  List<String> dependsOn, @JsonKey(name: 'due_at')@TixDateTime()  DateTime? dueAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'lease')  String lease, @JsonKey(name: 'lease_expired_at')@TixDateTime()  DateTime? leaseExpiredAt, @JsonKey(name: 'lease_expired_by_actor_id')  String leaseExpiredByActorId, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'parent_id')  String parentId, @JsonKey(name: 'priority')  int priority, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'recurrence')  String recurrence, @JsonKey(name: 'recurrence_next_id')  String recurrenceNextId, @JsonKey(name: 'ref')  String ref, @JsonKey(name: 'seq')  int seq, @JsonKey(name: 'snoozed_by_actor_id')  String snoozedByActorId, @JsonKey(name: 'snoozed_until')@TixDateTime()  DateTime? snoozedUntil, @JsonKey(name: 'starred')  bool starred, @JsonKey(name: 'started_at')@TixDateTime()  DateTime? startedAt, @JsonKey(name: 'status')  String status, @JsonKey(name: 'tags')  List<String> tags, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'title')  String title, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'version')  int version, @JsonKey(name: 'web_url')  String webUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Task() when $default != null:
-return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_that.claimCount,_that.claimedAt,_that.claimedByActorId,_that.completedAt,_that.copiedFromId,_that.createdAt,_that.creatorActorId,_that.customFields,_that.deletedAt,_that.dependsOn,_that.dueAt,_that.id,_that.lease,_that.leaseExpiredAt,_that.leaseExpiredByActorId,_that.leaseExpiresAt,_that.parentId,_that.priority,_that.projectId,_that.recurrence,_that.recurrenceNextId,_that.ref,_that.seq,_that.snoozedByActorId,_that.snoozedUntil,_that.starred,_that.startedAt,_that.status,_that.tags,_that.tenantId,_that.title,_that.updatedAt,_that.version);case _:
+return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_that.claimCount,_that.claimedAt,_that.claimedByActorId,_that.completedAt,_that.copiedFromId,_that.createdAt,_that.creatorActorId,_that.customFields,_that.deletedAt,_that.dependsOn,_that.dueAt,_that.id,_that.lease,_that.leaseExpiredAt,_that.leaseExpiredByActorId,_that.leaseExpiresAt,_that.parentId,_that.priority,_that.projectId,_that.recurrence,_that.recurrenceNextId,_that.ref,_that.seq,_that.snoozedByActorId,_that.snoozedUntil,_that.starred,_that.startedAt,_that.status,_that.tags,_that.tenantId,_that.title,_that.updatedAt,_that.version,_that.webUrl);case _:
   return orElse();
 
 }
@@ -41850,10 +42523,10 @@ return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'assignee_actor_id')  String assigneeActorId, @JsonKey(name: 'blocked')  bool blocked, @JsonKey(name: 'body')  String body, @JsonKey(name: 'checklist')  Checklist? checklist, @JsonKey(name: 'claim_count')  int claimCount, @JsonKey(name: 'claimed_at')@TixDateTime()  DateTime? claimedAt, @JsonKey(name: 'claimed_by_actor_id')  String claimedByActorId, @JsonKey(name: 'completed_at')@TixDateTime()  DateTime? completedAt, @JsonKey(name: 'copied_from_id')  String copiedFromId, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'creator_actor_id')  String creatorActorId, @JsonKey(name: 'custom_fields')  Map<String, Object?> customFields, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'depends_on')  List<String> dependsOn, @JsonKey(name: 'due_at')@TixDateTime()  DateTime? dueAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'lease')  String lease, @JsonKey(name: 'lease_expired_at')@TixDateTime()  DateTime? leaseExpiredAt, @JsonKey(name: 'lease_expired_by_actor_id')  String leaseExpiredByActorId, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'parent_id')  String parentId, @JsonKey(name: 'priority')  int priority, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'recurrence')  String recurrence, @JsonKey(name: 'recurrence_next_id')  String recurrenceNextId, @JsonKey(name: 'ref')  String ref, @JsonKey(name: 'seq')  int seq, @JsonKey(name: 'snoozed_by_actor_id')  String snoozedByActorId, @JsonKey(name: 'snoozed_until')@TixDateTime()  DateTime? snoozedUntil, @JsonKey(name: 'starred')  bool starred, @JsonKey(name: 'started_at')@TixDateTime()  DateTime? startedAt, @JsonKey(name: 'status')  String status, @JsonKey(name: 'tags')  List<String> tags, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'title')  String title, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'version')  int version)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'assignee_actor_id')  String assigneeActorId, @JsonKey(name: 'blocked')  bool blocked, @JsonKey(name: 'body')  String body, @JsonKey(name: 'checklist')  Checklist? checklist, @JsonKey(name: 'claim_count')  int claimCount, @JsonKey(name: 'claimed_at')@TixDateTime()  DateTime? claimedAt, @JsonKey(name: 'claimed_by_actor_id')  String claimedByActorId, @JsonKey(name: 'completed_at')@TixDateTime()  DateTime? completedAt, @JsonKey(name: 'copied_from_id')  String copiedFromId, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'creator_actor_id')  String creatorActorId, @JsonKey(name: 'custom_fields')  Map<String, Object?> customFields, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'depends_on')  List<String> dependsOn, @JsonKey(name: 'due_at')@TixDateTime()  DateTime? dueAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'lease')  String lease, @JsonKey(name: 'lease_expired_at')@TixDateTime()  DateTime? leaseExpiredAt, @JsonKey(name: 'lease_expired_by_actor_id')  String leaseExpiredByActorId, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'parent_id')  String parentId, @JsonKey(name: 'priority')  int priority, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'recurrence')  String recurrence, @JsonKey(name: 'recurrence_next_id')  String recurrenceNextId, @JsonKey(name: 'ref')  String ref, @JsonKey(name: 'seq')  int seq, @JsonKey(name: 'snoozed_by_actor_id')  String snoozedByActorId, @JsonKey(name: 'snoozed_until')@TixDateTime()  DateTime? snoozedUntil, @JsonKey(name: 'starred')  bool starred, @JsonKey(name: 'started_at')@TixDateTime()  DateTime? startedAt, @JsonKey(name: 'status')  String status, @JsonKey(name: 'tags')  List<String> tags, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'title')  String title, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'version')  int version, @JsonKey(name: 'web_url')  String webUrl)  $default,) {final _that = this;
 switch (_that) {
 case _Task():
-return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_that.claimCount,_that.claimedAt,_that.claimedByActorId,_that.completedAt,_that.copiedFromId,_that.createdAt,_that.creatorActorId,_that.customFields,_that.deletedAt,_that.dependsOn,_that.dueAt,_that.id,_that.lease,_that.leaseExpiredAt,_that.leaseExpiredByActorId,_that.leaseExpiresAt,_that.parentId,_that.priority,_that.projectId,_that.recurrence,_that.recurrenceNextId,_that.ref,_that.seq,_that.snoozedByActorId,_that.snoozedUntil,_that.starred,_that.startedAt,_that.status,_that.tags,_that.tenantId,_that.title,_that.updatedAt,_that.version);case _:
+return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_that.claimCount,_that.claimedAt,_that.claimedByActorId,_that.completedAt,_that.copiedFromId,_that.createdAt,_that.creatorActorId,_that.customFields,_that.deletedAt,_that.dependsOn,_that.dueAt,_that.id,_that.lease,_that.leaseExpiredAt,_that.leaseExpiredByActorId,_that.leaseExpiresAt,_that.parentId,_that.priority,_that.projectId,_that.recurrence,_that.recurrenceNextId,_that.ref,_that.seq,_that.snoozedByActorId,_that.snoozedUntil,_that.starred,_that.startedAt,_that.status,_that.tags,_that.tenantId,_that.title,_that.updatedAt,_that.version,_that.webUrl);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -41870,10 +42543,10 @@ return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'assignee_actor_id')  String assigneeActorId, @JsonKey(name: 'blocked')  bool blocked, @JsonKey(name: 'body')  String body, @JsonKey(name: 'checklist')  Checklist? checklist, @JsonKey(name: 'claim_count')  int claimCount, @JsonKey(name: 'claimed_at')@TixDateTime()  DateTime? claimedAt, @JsonKey(name: 'claimed_by_actor_id')  String claimedByActorId, @JsonKey(name: 'completed_at')@TixDateTime()  DateTime? completedAt, @JsonKey(name: 'copied_from_id')  String copiedFromId, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'creator_actor_id')  String creatorActorId, @JsonKey(name: 'custom_fields')  Map<String, Object?> customFields, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'depends_on')  List<String> dependsOn, @JsonKey(name: 'due_at')@TixDateTime()  DateTime? dueAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'lease')  String lease, @JsonKey(name: 'lease_expired_at')@TixDateTime()  DateTime? leaseExpiredAt, @JsonKey(name: 'lease_expired_by_actor_id')  String leaseExpiredByActorId, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'parent_id')  String parentId, @JsonKey(name: 'priority')  int priority, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'recurrence')  String recurrence, @JsonKey(name: 'recurrence_next_id')  String recurrenceNextId, @JsonKey(name: 'ref')  String ref, @JsonKey(name: 'seq')  int seq, @JsonKey(name: 'snoozed_by_actor_id')  String snoozedByActorId, @JsonKey(name: 'snoozed_until')@TixDateTime()  DateTime? snoozedUntil, @JsonKey(name: 'starred')  bool starred, @JsonKey(name: 'started_at')@TixDateTime()  DateTime? startedAt, @JsonKey(name: 'status')  String status, @JsonKey(name: 'tags')  List<String> tags, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'title')  String title, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'version')  int version)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'assignee_actor_id')  String assigneeActorId, @JsonKey(name: 'blocked')  bool blocked, @JsonKey(name: 'body')  String body, @JsonKey(name: 'checklist')  Checklist? checklist, @JsonKey(name: 'claim_count')  int claimCount, @JsonKey(name: 'claimed_at')@TixDateTime()  DateTime? claimedAt, @JsonKey(name: 'claimed_by_actor_id')  String claimedByActorId, @JsonKey(name: 'completed_at')@TixDateTime()  DateTime? completedAt, @JsonKey(name: 'copied_from_id')  String copiedFromId, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'creator_actor_id')  String creatorActorId, @JsonKey(name: 'custom_fields')  Map<String, Object?> customFields, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'depends_on')  List<String> dependsOn, @JsonKey(name: 'due_at')@TixDateTime()  DateTime? dueAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'lease')  String lease, @JsonKey(name: 'lease_expired_at')@TixDateTime()  DateTime? leaseExpiredAt, @JsonKey(name: 'lease_expired_by_actor_id')  String leaseExpiredByActorId, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'parent_id')  String parentId, @JsonKey(name: 'priority')  int priority, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'recurrence')  String recurrence, @JsonKey(name: 'recurrence_next_id')  String recurrenceNextId, @JsonKey(name: 'ref')  String ref, @JsonKey(name: 'seq')  int seq, @JsonKey(name: 'snoozed_by_actor_id')  String snoozedByActorId, @JsonKey(name: 'snoozed_until')@TixDateTime()  DateTime? snoozedUntil, @JsonKey(name: 'starred')  bool starred, @JsonKey(name: 'started_at')@TixDateTime()  DateTime? startedAt, @JsonKey(name: 'status')  String status, @JsonKey(name: 'tags')  List<String> tags, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'title')  String title, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'version')  int version, @JsonKey(name: 'web_url')  String webUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _Task() when $default != null:
-return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_that.claimCount,_that.claimedAt,_that.claimedByActorId,_that.completedAt,_that.copiedFromId,_that.createdAt,_that.creatorActorId,_that.customFields,_that.deletedAt,_that.dependsOn,_that.dueAt,_that.id,_that.lease,_that.leaseExpiredAt,_that.leaseExpiredByActorId,_that.leaseExpiresAt,_that.parentId,_that.priority,_that.projectId,_that.recurrence,_that.recurrenceNextId,_that.ref,_that.seq,_that.snoozedByActorId,_that.snoozedUntil,_that.starred,_that.startedAt,_that.status,_that.tags,_that.tenantId,_that.title,_that.updatedAt,_that.version);case _:
+return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_that.claimCount,_that.claimedAt,_that.claimedByActorId,_that.completedAt,_that.copiedFromId,_that.createdAt,_that.creatorActorId,_that.customFields,_that.deletedAt,_that.dependsOn,_that.dueAt,_that.id,_that.lease,_that.leaseExpiredAt,_that.leaseExpiredByActorId,_that.leaseExpiresAt,_that.parentId,_that.priority,_that.projectId,_that.recurrence,_that.recurrenceNextId,_that.ref,_that.seq,_that.snoozedByActorId,_that.snoozedUntil,_that.starred,_that.startedAt,_that.status,_that.tags,_that.tenantId,_that.title,_that.updatedAt,_that.version,_that.webUrl);case _:
   return null;
 
 }
@@ -41885,7 +42558,7 @@ return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_
 @JsonSerializable()
 
 class _Task implements Task {
-  const _Task({@JsonKey(name: 'assignee_actor_id') this.assigneeActorId = '', @JsonKey(name: 'blocked') this.blocked = false, @JsonKey(name: 'body') this.body = '', @JsonKey(name: 'checklist') this.checklist, @JsonKey(name: 'claim_count') this.claimCount = 0, @JsonKey(name: 'claimed_at')@TixDateTime() this.claimedAt, @JsonKey(name: 'claimed_by_actor_id') this.claimedByActorId = '', @JsonKey(name: 'completed_at')@TixDateTime() this.completedAt, @JsonKey(name: 'copied_from_id') this.copiedFromId = '', @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'creator_actor_id') this.creatorActorId = '', @JsonKey(name: 'custom_fields')  Map<String, Object?> customFields = const <String, Object?>{}, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'depends_on')  List<String> dependsOn = const <String>[], @JsonKey(name: 'due_at')@TixDateTime() this.dueAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'lease') this.lease = '', @JsonKey(name: 'lease_expired_at')@TixDateTime() this.leaseExpiredAt, @JsonKey(name: 'lease_expired_by_actor_id') this.leaseExpiredByActorId = '', @JsonKey(name: 'lease_expires_at')@TixDateTime() this.leaseExpiresAt, @JsonKey(name: 'parent_id') this.parentId = '', @JsonKey(name: 'priority') this.priority = 0, @JsonKey(name: 'project_id') this.projectId = '', @JsonKey(name: 'recurrence') this.recurrence = '', @JsonKey(name: 'recurrence_next_id') this.recurrenceNextId = '', @JsonKey(name: 'ref') this.ref = '', @JsonKey(name: 'seq') this.seq = 0, @JsonKey(name: 'snoozed_by_actor_id') this.snoozedByActorId = '', @JsonKey(name: 'snoozed_until')@TixDateTime() this.snoozedUntil, @JsonKey(name: 'starred') this.starred = false, @JsonKey(name: 'started_at')@TixDateTime() this.startedAt, @JsonKey(name: 'status') this.status = '', @JsonKey(name: 'tags')  List<String> tags = const <String>[], @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'title') this.title = '', @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt, @JsonKey(name: 'version') this.version = 0}): _customFields = customFields,_dependsOn = dependsOn,_tags = tags;
+  const _Task({@JsonKey(name: 'assignee_actor_id') this.assigneeActorId = '', @JsonKey(name: 'blocked') this.blocked = false, @JsonKey(name: 'body') this.body = '', @JsonKey(name: 'checklist') this.checklist, @JsonKey(name: 'claim_count') this.claimCount = 0, @JsonKey(name: 'claimed_at')@TixDateTime() this.claimedAt, @JsonKey(name: 'claimed_by_actor_id') this.claimedByActorId = '', @JsonKey(name: 'completed_at')@TixDateTime() this.completedAt, @JsonKey(name: 'copied_from_id') this.copiedFromId = '', @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'creator_actor_id') this.creatorActorId = '', @JsonKey(name: 'custom_fields')  Map<String, Object?> customFields = const <String, Object?>{}, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'depends_on')  List<String> dependsOn = const <String>[], @JsonKey(name: 'due_at')@TixDateTime() this.dueAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'lease') this.lease = '', @JsonKey(name: 'lease_expired_at')@TixDateTime() this.leaseExpiredAt, @JsonKey(name: 'lease_expired_by_actor_id') this.leaseExpiredByActorId = '', @JsonKey(name: 'lease_expires_at')@TixDateTime() this.leaseExpiresAt, @JsonKey(name: 'parent_id') this.parentId = '', @JsonKey(name: 'priority') this.priority = 0, @JsonKey(name: 'project_id') this.projectId = '', @JsonKey(name: 'recurrence') this.recurrence = '', @JsonKey(name: 'recurrence_next_id') this.recurrenceNextId = '', @JsonKey(name: 'ref') this.ref = '', @JsonKey(name: 'seq') this.seq = 0, @JsonKey(name: 'snoozed_by_actor_id') this.snoozedByActorId = '', @JsonKey(name: 'snoozed_until')@TixDateTime() this.snoozedUntil, @JsonKey(name: 'starred') this.starred = false, @JsonKey(name: 'started_at')@TixDateTime() this.startedAt, @JsonKey(name: 'status') this.status = '', @JsonKey(name: 'tags')  List<String> tags = const <String>[], @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'title') this.title = '', @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt, @JsonKey(name: 'version') this.version = 0, @JsonKey(name: 'web_url') this.webUrl = ''}): _customFields = customFields,_dependsOn = dependsOn,_tags = tags;
   factory _Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
 
 /// AssigneeActorID is the actor the task is assigned to. Empty when unassigned.
@@ -42006,6 +42679,11 @@ class _Task implements Task {
 /// Version increases by one on every change. Pass it back on an update to have
 /// a stale write refused with a conflict.
 @override@JsonKey(name: 'version') final  int version;
+/// WebURL is the address of the task's screen in the browser interface, set
+/// when the server is configured with the address it is reached at
+/// (server.public_url). Only a read sets it, so it is absent from audit
+/// snapshots, events and exports.
+@override@JsonKey(name: 'web_url') final  String webUrl;
 
 /// Create a copy of Task
 /// with the given fields replaced by the non-null parameter values.
@@ -42020,18 +42698,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Task&&(identical(other.assigneeActorId, assigneeActorId) || other.assigneeActorId == assigneeActorId)&&(identical(other.blocked, blocked) || other.blocked == blocked)&&(identical(other.body, body) || other.body == body)&&(identical(other.checklist, checklist) || other.checklist == checklist)&&(identical(other.claimCount, claimCount) || other.claimCount == claimCount)&&(identical(other.claimedAt, claimedAt) || other.claimedAt == claimedAt)&&(identical(other.claimedByActorId, claimedByActorId) || other.claimedByActorId == claimedByActorId)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.copiedFromId, copiedFromId) || other.copiedFromId == copiedFromId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.creatorActorId, creatorActorId) || other.creatorActorId == creatorActorId)&&const DeepCollectionEquality().equals(other.customFields, _customFields)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&const DeepCollectionEquality().equals(other.dependsOn, _dependsOn)&&(identical(other.dueAt, dueAt) || other.dueAt == dueAt)&&(identical(other.id, id) || other.id == id)&&(identical(other.lease, lease) || other.lease == lease)&&(identical(other.leaseExpiredAt, leaseExpiredAt) || other.leaseExpiredAt == leaseExpiredAt)&&(identical(other.leaseExpiredByActorId, leaseExpiredByActorId) || other.leaseExpiredByActorId == leaseExpiredByActorId)&&(identical(other.leaseExpiresAt, leaseExpiresAt) || other.leaseExpiresAt == leaseExpiresAt)&&(identical(other.parentId, parentId) || other.parentId == parentId)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.recurrence, recurrence) || other.recurrence == recurrence)&&(identical(other.recurrenceNextId, recurrenceNextId) || other.recurrenceNextId == recurrenceNextId)&&(identical(other.ref, ref) || other.ref == ref)&&(identical(other.seq, seq) || other.seq == seq)&&(identical(other.snoozedByActorId, snoozedByActorId) || other.snoozedByActorId == snoozedByActorId)&&(identical(other.snoozedUntil, snoozedUntil) || other.snoozedUntil == snoozedUntil)&&(identical(other.starred, starred) || other.starred == starred)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.tags, _tags)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.title, title) || other.title == title)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.version, version) || other.version == version));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Task&&(identical(other.assigneeActorId, assigneeActorId) || other.assigneeActorId == assigneeActorId)&&(identical(other.blocked, blocked) || other.blocked == blocked)&&(identical(other.body, body) || other.body == body)&&(identical(other.checklist, checklist) || other.checklist == checklist)&&(identical(other.claimCount, claimCount) || other.claimCount == claimCount)&&(identical(other.claimedAt, claimedAt) || other.claimedAt == claimedAt)&&(identical(other.claimedByActorId, claimedByActorId) || other.claimedByActorId == claimedByActorId)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.copiedFromId, copiedFromId) || other.copiedFromId == copiedFromId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.creatorActorId, creatorActorId) || other.creatorActorId == creatorActorId)&&const DeepCollectionEquality().equals(other.customFields, _customFields)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&const DeepCollectionEquality().equals(other.dependsOn, _dependsOn)&&(identical(other.dueAt, dueAt) || other.dueAt == dueAt)&&(identical(other.id, id) || other.id == id)&&(identical(other.lease, lease) || other.lease == lease)&&(identical(other.leaseExpiredAt, leaseExpiredAt) || other.leaseExpiredAt == leaseExpiredAt)&&(identical(other.leaseExpiredByActorId, leaseExpiredByActorId) || other.leaseExpiredByActorId == leaseExpiredByActorId)&&(identical(other.leaseExpiresAt, leaseExpiresAt) || other.leaseExpiresAt == leaseExpiresAt)&&(identical(other.parentId, parentId) || other.parentId == parentId)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.recurrence, recurrence) || other.recurrence == recurrence)&&(identical(other.recurrenceNextId, recurrenceNextId) || other.recurrenceNextId == recurrenceNextId)&&(identical(other.ref, ref) || other.ref == ref)&&(identical(other.seq, seq) || other.seq == seq)&&(identical(other.snoozedByActorId, snoozedByActorId) || other.snoozedByActorId == snoozedByActorId)&&(identical(other.snoozedUntil, snoozedUntil) || other.snoozedUntil == snoozedUntil)&&(identical(other.starred, starred) || other.starred == starred)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.tags, _tags)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.title, title) || other.title == title)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.version, version) || other.version == version)&&(identical(other.webUrl, webUrl) || other.webUrl == webUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hashAll([runtimeType,assigneeActorId,blocked,body,checklist,claimCount,claimedAt,claimedByActorId,completedAt,copiedFromId,createdAt,creatorActorId,const DeepCollectionEquality().hash(_customFields),deletedAt,const DeepCollectionEquality().hash(_dependsOn),dueAt,id,lease,leaseExpiredAt,leaseExpiredByActorId,leaseExpiresAt,parentId,priority,projectId,recurrence,recurrenceNextId,ref,seq,snoozedByActorId,snoozedUntil,starred,startedAt,status,const DeepCollectionEquality().hash(_tags),tenantId,title,updatedAt,version]);
+    return Object.hashAll([runtimeType,assigneeActorId,blocked,body,checklist,claimCount,claimedAt,claimedByActorId,completedAt,copiedFromId,createdAt,creatorActorId,const DeepCollectionEquality().hash(_customFields),deletedAt,const DeepCollectionEquality().hash(_dependsOn),dueAt,id,lease,leaseExpiredAt,leaseExpiredByActorId,leaseExpiresAt,parentId,priority,projectId,recurrence,recurrenceNextId,ref,seq,snoozedByActorId,snoozedUntil,starred,startedAt,status,const DeepCollectionEquality().hash(_tags),tenantId,title,updatedAt,version,webUrl]);
 }
 
 @override
 String toString() {
-    return 'Task(assigneeActorId: $assigneeActorId, blocked: $blocked, body: $body, checklist: $checklist, claimCount: $claimCount, claimedAt: $claimedAt, claimedByActorId: $claimedByActorId, completedAt: $completedAt, copiedFromId: $copiedFromId, createdAt: $createdAt, creatorActorId: $creatorActorId, customFields: $customFields, deletedAt: $deletedAt, dependsOn: $dependsOn, dueAt: $dueAt, id: $id, lease: $lease, leaseExpiredAt: $leaseExpiredAt, leaseExpiredByActorId: $leaseExpiredByActorId, leaseExpiresAt: $leaseExpiresAt, parentId: $parentId, priority: $priority, projectId: $projectId, recurrence: $recurrence, recurrenceNextId: $recurrenceNextId, ref: $ref, seq: $seq, snoozedByActorId: $snoozedByActorId, snoozedUntil: $snoozedUntil, starred: $starred, startedAt: $startedAt, status: $status, tags: $tags, tenantId: $tenantId, title: $title, updatedAt: $updatedAt, version: $version)';
+    return 'Task(assigneeActorId: $assigneeActorId, blocked: $blocked, body: $body, checklist: $checklist, claimCount: $claimCount, claimedAt: $claimedAt, claimedByActorId: $claimedByActorId, completedAt: $completedAt, copiedFromId: $copiedFromId, createdAt: $createdAt, creatorActorId: $creatorActorId, customFields: $customFields, deletedAt: $deletedAt, dependsOn: $dependsOn, dueAt: $dueAt, id: $id, lease: $lease, leaseExpiredAt: $leaseExpiredAt, leaseExpiredByActorId: $leaseExpiredByActorId, leaseExpiresAt: $leaseExpiresAt, parentId: $parentId, priority: $priority, projectId: $projectId, recurrence: $recurrence, recurrenceNextId: $recurrenceNextId, ref: $ref, seq: $seq, snoozedByActorId: $snoozedByActorId, snoozedUntil: $snoozedUntil, starred: $starred, startedAt: $startedAt, status: $status, tags: $tags, tenantId: $tenantId, title: $title, updatedAt: $updatedAt, version: $version, webUrl: $webUrl)';
 }
 
 
@@ -42042,7 +42720,7 @@ abstract mixin class _$TaskCopyWith<$Res> implements $TaskCopyWith<$Res> {
   factory _$TaskCopyWith(_Task value, $Res Function(_Task) _then) = __$TaskCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'assignee_actor_id') String assigneeActorId,@JsonKey(name: 'blocked') bool blocked,@JsonKey(name: 'body') String body,@JsonKey(name: 'checklist') Checklist? checklist,@JsonKey(name: 'claim_count') int claimCount,@JsonKey(name: 'claimed_at')@TixDateTime() DateTime? claimedAt,@JsonKey(name: 'claimed_by_actor_id') String claimedByActorId,@JsonKey(name: 'completed_at')@TixDateTime() DateTime? completedAt,@JsonKey(name: 'copied_from_id') String copiedFromId,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'creator_actor_id') String creatorActorId,@JsonKey(name: 'custom_fields') Map<String, Object?> customFields,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'depends_on') List<String> dependsOn,@JsonKey(name: 'due_at')@TixDateTime() DateTime? dueAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'lease') String lease,@JsonKey(name: 'lease_expired_at')@TixDateTime() DateTime? leaseExpiredAt,@JsonKey(name: 'lease_expired_by_actor_id') String leaseExpiredByActorId,@JsonKey(name: 'lease_expires_at')@TixDateTime() DateTime? leaseExpiresAt,@JsonKey(name: 'parent_id') String parentId,@JsonKey(name: 'priority') int priority,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'recurrence') String recurrence,@JsonKey(name: 'recurrence_next_id') String recurrenceNextId,@JsonKey(name: 'ref') String ref,@JsonKey(name: 'seq') int seq,@JsonKey(name: 'snoozed_by_actor_id') String snoozedByActorId,@JsonKey(name: 'snoozed_until')@TixDateTime() DateTime? snoozedUntil,@JsonKey(name: 'starred') bool starred,@JsonKey(name: 'started_at')@TixDateTime() DateTime? startedAt,@JsonKey(name: 'status') String status,@JsonKey(name: 'tags') List<String> tags,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'title') String title,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt,@JsonKey(name: 'version') int version
+@JsonKey(name: 'assignee_actor_id') String assigneeActorId,@JsonKey(name: 'blocked') bool blocked,@JsonKey(name: 'body') String body,@JsonKey(name: 'checklist') Checklist? checklist,@JsonKey(name: 'claim_count') int claimCount,@JsonKey(name: 'claimed_at')@TixDateTime() DateTime? claimedAt,@JsonKey(name: 'claimed_by_actor_id') String claimedByActorId,@JsonKey(name: 'completed_at')@TixDateTime() DateTime? completedAt,@JsonKey(name: 'copied_from_id') String copiedFromId,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'creator_actor_id') String creatorActorId,@JsonKey(name: 'custom_fields') Map<String, Object?> customFields,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'depends_on') List<String> dependsOn,@JsonKey(name: 'due_at')@TixDateTime() DateTime? dueAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'lease') String lease,@JsonKey(name: 'lease_expired_at')@TixDateTime() DateTime? leaseExpiredAt,@JsonKey(name: 'lease_expired_by_actor_id') String leaseExpiredByActorId,@JsonKey(name: 'lease_expires_at')@TixDateTime() DateTime? leaseExpiresAt,@JsonKey(name: 'parent_id') String parentId,@JsonKey(name: 'priority') int priority,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'recurrence') String recurrence,@JsonKey(name: 'recurrence_next_id') String recurrenceNextId,@JsonKey(name: 'ref') String ref,@JsonKey(name: 'seq') int seq,@JsonKey(name: 'snoozed_by_actor_id') String snoozedByActorId,@JsonKey(name: 'snoozed_until')@TixDateTime() DateTime? snoozedUntil,@JsonKey(name: 'starred') bool starred,@JsonKey(name: 'started_at')@TixDateTime() DateTime? startedAt,@JsonKey(name: 'status') String status,@JsonKey(name: 'tags') List<String> tags,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'title') String title,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt,@JsonKey(name: 'version') int version,@JsonKey(name: 'web_url') String webUrl
 });
 
 
@@ -42059,7 +42737,7 @@ class __$TaskCopyWithImpl<$Res>
 
 /// Create a copy of Task
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? assigneeActorId = null,Object? blocked = null,Object? body = null,Object? checklist = freezed,Object? claimCount = null,Object? claimedAt = freezed,Object? claimedByActorId = null,Object? completedAt = freezed,Object? copiedFromId = null,Object? createdAt = freezed,Object? creatorActorId = null,Object? customFields = null,Object? deletedAt = freezed,Object? dependsOn = null,Object? dueAt = freezed,Object? id = null,Object? lease = null,Object? leaseExpiredAt = freezed,Object? leaseExpiredByActorId = null,Object? leaseExpiresAt = freezed,Object? parentId = null,Object? priority = null,Object? projectId = null,Object? recurrence = null,Object? recurrenceNextId = null,Object? ref = null,Object? seq = null,Object? snoozedByActorId = null,Object? snoozedUntil = freezed,Object? starred = null,Object? startedAt = freezed,Object? status = null,Object? tags = null,Object? tenantId = null,Object? title = null,Object? updatedAt = freezed,Object? version = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? assigneeActorId = null,Object? blocked = null,Object? body = null,Object? checklist = freezed,Object? claimCount = null,Object? claimedAt = freezed,Object? claimedByActorId = null,Object? completedAt = freezed,Object? copiedFromId = null,Object? createdAt = freezed,Object? creatorActorId = null,Object? customFields = null,Object? deletedAt = freezed,Object? dependsOn = null,Object? dueAt = freezed,Object? id = null,Object? lease = null,Object? leaseExpiredAt = freezed,Object? leaseExpiredByActorId = null,Object? leaseExpiresAt = freezed,Object? parentId = null,Object? priority = null,Object? projectId = null,Object? recurrence = null,Object? recurrenceNextId = null,Object? ref = null,Object? seq = null,Object? snoozedByActorId = null,Object? snoozedUntil = freezed,Object? starred = null,Object? startedAt = freezed,Object? status = null,Object? tags = null,Object? tenantId = null,Object? title = null,Object? updatedAt = freezed,Object? version = null,Object? webUrl = null,}) {
   return _then(_Task(
 assigneeActorId: null == assigneeActorId ? _self.assigneeActorId : assigneeActorId // ignore: cast_nullable_to_non_nullable
 as String,blocked: null == blocked ? _self.blocked : blocked // ignore: cast_nullable_to_non_nullable
@@ -42098,7 +42776,8 @@ as List<String>,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
-as int,
+as int,webUrl: null == webUrl ? _self.webUrl : webUrl // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -45724,7 +46403,10 @@ mixin _$TenantUser {
 @JsonKey(name: 'email') String get email;/// GlobalAdmin reports whether the user is a global admin, who administers
 /// every tenant of the installation rather than only their own.
 @JsonKey(name: 'global_admin') bool get globalAdmin;/// ID is the user's actor identifier.
-@JsonKey(name: 'id') String get id;/// RequirePasswordChange reports whether the next password sign-in must choose
+@JsonKey(name: 'id') String get id;/// Removed reports that the person was removed from this tenant: their actor
+/// stays so history still names them, but they hold no membership. A listing
+/// returns such a person only when asked to include them.
+@JsonKey(name: 'removed') bool get removed;/// RequirePasswordChange reports whether the next password sign-in must choose
 /// a new password before a session is minted.
 @JsonKey(name: 'require_password_change') bool get requirePasswordChange;/// Role is the user's role in that tenant; empty when they hold no membership
 /// there.
@@ -45751,20 +46433,20 @@ $TenantUserCopyWith<TenantUser> get copyWith => _$TenantUserCopyWithImpl<TenantU
 @override
 bool operator ==(Object other) {
   final _this = this as TenantUser;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TenantUser&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.disabledAt, _this.disabledAt) || other.disabledAt == _this.disabledAt)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.globalAdmin, _this.globalAdmin) || other.globalAdmin == _this.globalAdmin)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.requirePasswordChange, _this.requirePasswordChange) || other.requirePasswordChange == _this.requirePasswordChange)&&(identical(other.role, _this.role) || other.role == _this.role)&&(identical(other.ssoProvider, _this.ssoProvider) || other.ssoProvider == _this.ssoProvider)&&(identical(other.ssoSubject, _this.ssoSubject) || other.ssoSubject == _this.ssoSubject)&&(identical(other.totpEnrolled, _this.totpEnrolled) || other.totpEnrolled == _this.totpEnrolled)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TenantUser&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.disabledAt, _this.disabledAt) || other.disabledAt == _this.disabledAt)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.globalAdmin, _this.globalAdmin) || other.globalAdmin == _this.globalAdmin)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.removed, _this.removed) || other.removed == _this.removed)&&(identical(other.requirePasswordChange, _this.requirePasswordChange) || other.requirePasswordChange == _this.requirePasswordChange)&&(identical(other.role, _this.role) || other.role == _this.role)&&(identical(other.ssoProvider, _this.ssoProvider) || other.ssoProvider == _this.ssoProvider)&&(identical(other.ssoSubject, _this.ssoSubject) || other.ssoSubject == _this.ssoSubject)&&(identical(other.totpEnrolled, _this.totpEnrolled) || other.totpEnrolled == _this.totpEnrolled)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as TenantUser;
-  return Object.hash(runtimeType,_this.createdAt,_this.disabledAt,_this.displayName,_this.email,_this.globalAdmin,_this.id,_this.requirePasswordChange,_this.role,_this.ssoProvider,_this.ssoSubject,_this.totpEnrolled,_this.updatedAt);
+  return Object.hash(runtimeType,_this.createdAt,_this.disabledAt,_this.displayName,_this.email,_this.globalAdmin,_this.id,_this.removed,_this.requirePasswordChange,_this.role,_this.ssoProvider,_this.ssoSubject,_this.totpEnrolled,_this.updatedAt);
 }
 
 @override
 String toString() {
   final _this = this as TenantUser;
-  return 'TenantUser(createdAt: ${_this.createdAt}, disabledAt: ${_this.disabledAt}, displayName: ${_this.displayName}, email: ${_this.email}, globalAdmin: ${_this.globalAdmin}, id: ${_this.id}, requirePasswordChange: ${_this.requirePasswordChange}, role: ${_this.role}, ssoProvider: ${_this.ssoProvider}, ssoSubject: ${_this.ssoSubject}, totpEnrolled: ${_this.totpEnrolled}, updatedAt: ${_this.updatedAt})';
+  return 'TenantUser(createdAt: ${_this.createdAt}, disabledAt: ${_this.disabledAt}, displayName: ${_this.displayName}, email: ${_this.email}, globalAdmin: ${_this.globalAdmin}, id: ${_this.id}, removed: ${_this.removed}, requirePasswordChange: ${_this.requirePasswordChange}, role: ${_this.role}, ssoProvider: ${_this.ssoProvider}, ssoSubject: ${_this.ssoSubject}, totpEnrolled: ${_this.totpEnrolled}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -45775,7 +46457,7 @@ abstract mixin class $TenantUserCopyWith<$Res>  {
   factory $TenantUserCopyWith(TenantUser value, $Res Function(TenantUser) _then) = _$TenantUserCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'disabled_at')@TixDateTime() DateTime? disabledAt,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'id') String id,@JsonKey(name: 'require_password_change') bool requirePasswordChange,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'sso_provider') String ssoProvider,@JsonKey(name: 'sso_subject') String ssoSubject,@JsonKey(name: 'totp_enrolled') bool totpEnrolled,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'disabled_at')@TixDateTime() DateTime? disabledAt,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'id') String id,@JsonKey(name: 'removed') bool removed,@JsonKey(name: 'require_password_change') bool requirePasswordChange,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'sso_provider') String ssoProvider,@JsonKey(name: 'sso_subject') String ssoSubject,@JsonKey(name: 'totp_enrolled') bool totpEnrolled,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -45792,7 +46474,7 @@ class _$TenantUserCopyWithImpl<$Res>
 
 /// Create a copy of TenantUser
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? createdAt = freezed,Object? disabledAt = freezed,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? id = null,Object? requirePasswordChange = null,Object? role = freezed,Object? ssoProvider = null,Object? ssoSubject = null,Object? totpEnrolled = null,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? createdAt = freezed,Object? disabledAt = freezed,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? id = null,Object? removed = null,Object? requirePasswordChange = null,Object? role = freezed,Object? ssoProvider = null,Object? ssoSubject = null,Object? totpEnrolled = null,Object? updatedAt = freezed,}) {
   return _then(TenantUser(
 createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,disabledAt: freezed == disabledAt ? _self.disabledAt : disabledAt // ignore: cast_nullable_to_non_nullable
@@ -45800,7 +46482,8 @@ as DateTime?,displayName: null == displayName ? _self.displayName : displayName 
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,globalAdmin: null == globalAdmin ? _self.globalAdmin : globalAdmin // ignore: cast_nullable_to_non_nullable
 as bool,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,requirePasswordChange: null == requirePasswordChange ? _self.requirePasswordChange : requirePasswordChange // ignore: cast_nullable_to_non_nullable
+as String,removed: null == removed ? _self.removed : removed // ignore: cast_nullable_to_non_nullable
+as bool,requirePasswordChange: null == requirePasswordChange ? _self.requirePasswordChange : requirePasswordChange // ignore: cast_nullable_to_non_nullable
 as bool,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as Role?,ssoProvider: null == ssoProvider ? _self.ssoProvider : ssoProvider // ignore: cast_nullable_to_non_nullable
 as String,ssoSubject: null == ssoSubject ? _self.ssoSubject : ssoSubject // ignore: cast_nullable_to_non_nullable
@@ -45891,10 +46574,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'disabled_at')@TixDateTime()  DateTime? disabledAt, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'id')  String id, @JsonKey(name: 'require_password_change')  bool requirePasswordChange, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'sso_provider')  String ssoProvider, @JsonKey(name: 'sso_subject')  String ssoSubject, @JsonKey(name: 'totp_enrolled')  bool totpEnrolled, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'disabled_at')@TixDateTime()  DateTime? disabledAt, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'id')  String id, @JsonKey(name: 'removed')  bool removed, @JsonKey(name: 'require_password_change')  bool requirePasswordChange, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'sso_provider')  String ssoProvider, @JsonKey(name: 'sso_subject')  String ssoSubject, @JsonKey(name: 'totp_enrolled')  bool totpEnrolled, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TenantUser() when $default != null:
-return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_that.globalAdmin,_that.id,_that.requirePasswordChange,_that.role,_that.ssoProvider,_that.ssoSubject,_that.totpEnrolled,_that.updatedAt);case _:
+return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_that.globalAdmin,_that.id,_that.removed,_that.requirePasswordChange,_that.role,_that.ssoProvider,_that.ssoSubject,_that.totpEnrolled,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -45912,10 +46595,10 @@ return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'disabled_at')@TixDateTime()  DateTime? disabledAt, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'id')  String id, @JsonKey(name: 'require_password_change')  bool requirePasswordChange, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'sso_provider')  String ssoProvider, @JsonKey(name: 'sso_subject')  String ssoSubject, @JsonKey(name: 'totp_enrolled')  bool totpEnrolled, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'disabled_at')@TixDateTime()  DateTime? disabledAt, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'id')  String id, @JsonKey(name: 'removed')  bool removed, @JsonKey(name: 'require_password_change')  bool requirePasswordChange, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'sso_provider')  String ssoProvider, @JsonKey(name: 'sso_subject')  String ssoSubject, @JsonKey(name: 'totp_enrolled')  bool totpEnrolled, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _TenantUser():
-return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_that.globalAdmin,_that.id,_that.requirePasswordChange,_that.role,_that.ssoProvider,_that.ssoSubject,_that.totpEnrolled,_that.updatedAt);case _:
+return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_that.globalAdmin,_that.id,_that.removed,_that.requirePasswordChange,_that.role,_that.ssoProvider,_that.ssoSubject,_that.totpEnrolled,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -45932,10 +46615,10 @@ return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'disabled_at')@TixDateTime()  DateTime? disabledAt, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'id')  String id, @JsonKey(name: 'require_password_change')  bool requirePasswordChange, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'sso_provider')  String ssoProvider, @JsonKey(name: 'sso_subject')  String ssoSubject, @JsonKey(name: 'totp_enrolled')  bool totpEnrolled, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'disabled_at')@TixDateTime()  DateTime? disabledAt, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'id')  String id, @JsonKey(name: 'removed')  bool removed, @JsonKey(name: 'require_password_change')  bool requirePasswordChange, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'sso_provider')  String ssoProvider, @JsonKey(name: 'sso_subject')  String ssoSubject, @JsonKey(name: 'totp_enrolled')  bool totpEnrolled, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _TenantUser() when $default != null:
-return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_that.globalAdmin,_that.id,_that.requirePasswordChange,_that.role,_that.ssoProvider,_that.ssoSubject,_that.totpEnrolled,_that.updatedAt);case _:
+return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_that.globalAdmin,_that.id,_that.removed,_that.requirePasswordChange,_that.role,_that.ssoProvider,_that.ssoSubject,_that.totpEnrolled,_that.updatedAt);case _:
   return null;
 
 }
@@ -45947,7 +46630,7 @@ return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_
 @JsonSerializable()
 
 class _TenantUser implements TenantUser {
-  const _TenantUser({@JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'disabled_at')@TixDateTime() this.disabledAt, @JsonKey(name: 'display_name') this.displayName = '', @JsonKey(name: 'email') this.email = '', @JsonKey(name: 'global_admin') this.globalAdmin = false, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'require_password_change') this.requirePasswordChange = false, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.role, @JsonKey(name: 'sso_provider') this.ssoProvider = '', @JsonKey(name: 'sso_subject') this.ssoSubject = '', @JsonKey(name: 'totp_enrolled') this.totpEnrolled = false, @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt});
+  const _TenantUser({@JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'disabled_at')@TixDateTime() this.disabledAt, @JsonKey(name: 'display_name') this.displayName = '', @JsonKey(name: 'email') this.email = '', @JsonKey(name: 'global_admin') this.globalAdmin = false, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'removed') this.removed = false, @JsonKey(name: 'require_password_change') this.requirePasswordChange = false, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.role, @JsonKey(name: 'sso_provider') this.ssoProvider = '', @JsonKey(name: 'sso_subject') this.ssoSubject = '', @JsonKey(name: 'totp_enrolled') this.totpEnrolled = false, @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt});
   factory _TenantUser.fromJson(Map<String, dynamic> json) => _$TenantUserFromJson(json);
 
 /// CreatedAt is when the user was created, RFC 3339.
@@ -45965,6 +46648,10 @@ class _TenantUser implements TenantUser {
 @override@JsonKey(name: 'global_admin') final  bool globalAdmin;
 /// ID is the user's actor identifier.
 @override@JsonKey(name: 'id') final  String id;
+/// Removed reports that the person was removed from this tenant: their actor
+/// stays so history still names them, but they hold no membership. A listing
+/// returns such a person only when asked to include them.
+@override@JsonKey(name: 'removed') final  bool removed;
 /// RequirePasswordChange reports whether the next password sign-in must choose
 /// a new password before a session is minted.
 @override@JsonKey(name: 'require_password_change') final  bool requirePasswordChange;
@@ -45998,18 +46685,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TenantUser&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.disabledAt, disabledAt) || other.disabledAt == disabledAt)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.email, email) || other.email == email)&&(identical(other.globalAdmin, globalAdmin) || other.globalAdmin == globalAdmin)&&(identical(other.id, id) || other.id == id)&&(identical(other.requirePasswordChange, requirePasswordChange) || other.requirePasswordChange == requirePasswordChange)&&(identical(other.role, role) || other.role == role)&&(identical(other.ssoProvider, ssoProvider) || other.ssoProvider == ssoProvider)&&(identical(other.ssoSubject, ssoSubject) || other.ssoSubject == ssoSubject)&&(identical(other.totpEnrolled, totpEnrolled) || other.totpEnrolled == totpEnrolled)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TenantUser&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.disabledAt, disabledAt) || other.disabledAt == disabledAt)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.email, email) || other.email == email)&&(identical(other.globalAdmin, globalAdmin) || other.globalAdmin == globalAdmin)&&(identical(other.id, id) || other.id == id)&&(identical(other.removed, removed) || other.removed == removed)&&(identical(other.requirePasswordChange, requirePasswordChange) || other.requirePasswordChange == requirePasswordChange)&&(identical(other.role, role) || other.role == role)&&(identical(other.ssoProvider, ssoProvider) || other.ssoProvider == ssoProvider)&&(identical(other.ssoSubject, ssoSubject) || other.ssoSubject == ssoSubject)&&(identical(other.totpEnrolled, totpEnrolled) || other.totpEnrolled == totpEnrolled)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,createdAt,disabledAt,displayName,email,globalAdmin,id,requirePasswordChange,role,ssoProvider,ssoSubject,totpEnrolled,updatedAt);
+    return Object.hash(runtimeType,createdAt,disabledAt,displayName,email,globalAdmin,id,removed,requirePasswordChange,role,ssoProvider,ssoSubject,totpEnrolled,updatedAt);
 }
 
 @override
 String toString() {
-    return 'TenantUser(createdAt: $createdAt, disabledAt: $disabledAt, displayName: $displayName, email: $email, globalAdmin: $globalAdmin, id: $id, requirePasswordChange: $requirePasswordChange, role: $role, ssoProvider: $ssoProvider, ssoSubject: $ssoSubject, totpEnrolled: $totpEnrolled, updatedAt: $updatedAt)';
+    return 'TenantUser(createdAt: $createdAt, disabledAt: $disabledAt, displayName: $displayName, email: $email, globalAdmin: $globalAdmin, id: $id, removed: $removed, requirePasswordChange: $requirePasswordChange, role: $role, ssoProvider: $ssoProvider, ssoSubject: $ssoSubject, totpEnrolled: $totpEnrolled, updatedAt: $updatedAt)';
 }
 
 
@@ -46020,7 +46707,7 @@ abstract mixin class _$TenantUserCopyWith<$Res> implements $TenantUserCopyWith<$
   factory _$TenantUserCopyWith(_TenantUser value, $Res Function(_TenantUser) _then) = __$TenantUserCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'disabled_at')@TixDateTime() DateTime? disabledAt,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'id') String id,@JsonKey(name: 'require_password_change') bool requirePasswordChange,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'sso_provider') String ssoProvider,@JsonKey(name: 'sso_subject') String ssoSubject,@JsonKey(name: 'totp_enrolled') bool totpEnrolled,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'disabled_at')@TixDateTime() DateTime? disabledAt,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'id') String id,@JsonKey(name: 'removed') bool removed,@JsonKey(name: 'require_password_change') bool requirePasswordChange,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'sso_provider') String ssoProvider,@JsonKey(name: 'sso_subject') String ssoSubject,@JsonKey(name: 'totp_enrolled') bool totpEnrolled,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -46037,7 +46724,7 @@ class __$TenantUserCopyWithImpl<$Res>
 
 /// Create a copy of TenantUser
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? createdAt = freezed,Object? disabledAt = freezed,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? id = null,Object? requirePasswordChange = null,Object? role = freezed,Object? ssoProvider = null,Object? ssoSubject = null,Object? totpEnrolled = null,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? createdAt = freezed,Object? disabledAt = freezed,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? id = null,Object? removed = null,Object? requirePasswordChange = null,Object? role = freezed,Object? ssoProvider = null,Object? ssoSubject = null,Object? totpEnrolled = null,Object? updatedAt = freezed,}) {
   return _then(_TenantUser(
 createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,disabledAt: freezed == disabledAt ? _self.disabledAt : disabledAt // ignore: cast_nullable_to_non_nullable
@@ -46045,13 +46732,327 @@ as DateTime?,displayName: null == displayName ? _self.displayName : displayName 
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,globalAdmin: null == globalAdmin ? _self.globalAdmin : globalAdmin // ignore: cast_nullable_to_non_nullable
 as bool,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,requirePasswordChange: null == requirePasswordChange ? _self.requirePasswordChange : requirePasswordChange // ignore: cast_nullable_to_non_nullable
+as String,removed: null == removed ? _self.removed : removed // ignore: cast_nullable_to_non_nullable
+as bool,requirePasswordChange: null == requirePasswordChange ? _self.requirePasswordChange : requirePasswordChange // ignore: cast_nullable_to_non_nullable
 as bool,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as Role?,ssoProvider: null == ssoProvider ? _self.ssoProvider : ssoProvider // ignore: cast_nullable_to_non_nullable
 as String,ssoSubject: null == ssoSubject ? _self.ssoSubject : ssoSubject // ignore: cast_nullable_to_non_nullable
 as String,totpEnrolled: null == totpEnrolled ? _self.totpEnrolled : totpEnrolled // ignore: cast_nullable_to_non_nullable
 as bool,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$Theme {
+
+/// Accent is the brand colour, as #rrggbb.
+@JsonKey(name: 'accent') String get accent;/// AccentDark is the accent for the dark and dim schemes, as #rrggbb. The dark
+/// pair exists because an accent picked to read on white is usually too dark to
+/// read on near-black, and the browser defaults to the dark scheme: a theme
+/// with only a light accent renders as a barely visible smear on the scheme
+/// most people actually see. Empty falls back to the light pair, so a
+/// configured theme that names only an accent still applies everywhere rather
+/// than being ignored on half the schemes.
+@JsonKey(name: 'accent_dark') String get accentDark;/// AccentSoft is the tint it sits on, as #rrggbb.
+@JsonKey(name: 'accent_soft') String get accentSoft;/// AccentSoftDark is the tint it sits on in those schemes, as #rrggbb.
+@JsonKey(name: 'accent_soft_dark') String get accentSoftDark;/// BuiltIn reports whether this theme ships with tix rather than coming from
+/// configuration. Listing says which, so an operator can tell what they can
+/// redefine.
+@JsonKey(name: 'built_in') bool get builtIn;/// Name is the theme's name, or the #rrggbb a custom accent was named as.
+@JsonKey(name: 'name') String get name;
+/// Create a copy of Theme
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ThemeCopyWith<Theme> get copyWith => _$ThemeCopyWithImpl<Theme>(this as Theme, _$identity);
+
+  /// Serializes this Theme to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as Theme;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Theme&&(identical(other.accent, _this.accent) || other.accent == _this.accent)&&(identical(other.accentDark, _this.accentDark) || other.accentDark == _this.accentDark)&&(identical(other.accentSoft, _this.accentSoft) || other.accentSoft == _this.accentSoft)&&(identical(other.accentSoftDark, _this.accentSoftDark) || other.accentSoftDark == _this.accentSoftDark)&&(identical(other.builtIn, _this.builtIn) || other.builtIn == _this.builtIn)&&(identical(other.name, _this.name) || other.name == _this.name));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as Theme;
+  return Object.hash(runtimeType,_this.accent,_this.accentDark,_this.accentSoft,_this.accentSoftDark,_this.builtIn,_this.name);
+}
+
+@override
+String toString() {
+  final _this = this as Theme;
+  return 'Theme(accent: ${_this.accent}, accentDark: ${_this.accentDark}, accentSoft: ${_this.accentSoft}, accentSoftDark: ${_this.accentSoftDark}, builtIn: ${_this.builtIn}, name: ${_this.name})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ThemeCopyWith<$Res>  {
+  factory $ThemeCopyWith(Theme value, $Res Function(Theme) _then) = _$ThemeCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'accent') String accent,@JsonKey(name: 'accent_dark') String accentDark,@JsonKey(name: 'accent_soft') String accentSoft,@JsonKey(name: 'accent_soft_dark') String accentSoftDark,@JsonKey(name: 'built_in') bool builtIn,@JsonKey(name: 'name') String name
+});
+
+
+
+
+}
+/// @nodoc
+class _$ThemeCopyWithImpl<$Res>
+    implements $ThemeCopyWith<$Res> {
+  _$ThemeCopyWithImpl(this._self, this._then);
+
+  final Theme _self;
+  final $Res Function(Theme) _then;
+
+/// Create a copy of Theme
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? accent = null,Object? accentDark = null,Object? accentSoft = null,Object? accentSoftDark = null,Object? builtIn = null,Object? name = null,}) {
+  return _then(Theme(
+accent: null == accent ? _self.accent : accent // ignore: cast_nullable_to_non_nullable
+as String,accentDark: null == accentDark ? _self.accentDark : accentDark // ignore: cast_nullable_to_non_nullable
+as String,accentSoft: null == accentSoft ? _self.accentSoft : accentSoft // ignore: cast_nullable_to_non_nullable
+as String,accentSoftDark: null == accentSoftDark ? _self.accentSoftDark : accentSoftDark // ignore: cast_nullable_to_non_nullable
+as String,builtIn: null == builtIn ? _self.builtIn : builtIn // ignore: cast_nullable_to_non_nullable
+as bool,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [Theme].
+extension ThemePatterns on Theme {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Theme value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Theme() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Theme value)  $default,){
+final _that = this;
+switch (_that) {
+case _Theme():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Theme value)?  $default,){
+final _that = this;
+switch (_that) {
+case _Theme() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'accent')  String accent, @JsonKey(name: 'accent_dark')  String accentDark, @JsonKey(name: 'accent_soft')  String accentSoft, @JsonKey(name: 'accent_soft_dark')  String accentSoftDark, @JsonKey(name: 'built_in')  bool builtIn, @JsonKey(name: 'name')  String name)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Theme() when $default != null:
+return $default(_that.accent,_that.accentDark,_that.accentSoft,_that.accentSoftDark,_that.builtIn,_that.name);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'accent')  String accent, @JsonKey(name: 'accent_dark')  String accentDark, @JsonKey(name: 'accent_soft')  String accentSoft, @JsonKey(name: 'accent_soft_dark')  String accentSoftDark, @JsonKey(name: 'built_in')  bool builtIn, @JsonKey(name: 'name')  String name)  $default,) {final _that = this;
+switch (_that) {
+case _Theme():
+return $default(_that.accent,_that.accentDark,_that.accentSoft,_that.accentSoftDark,_that.builtIn,_that.name);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'accent')  String accent, @JsonKey(name: 'accent_dark')  String accentDark, @JsonKey(name: 'accent_soft')  String accentSoft, @JsonKey(name: 'accent_soft_dark')  String accentSoftDark, @JsonKey(name: 'built_in')  bool builtIn, @JsonKey(name: 'name')  String name)?  $default,) {final _that = this;
+switch (_that) {
+case _Theme() when $default != null:
+return $default(_that.accent,_that.accentDark,_that.accentSoft,_that.accentSoftDark,_that.builtIn,_that.name);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _Theme implements Theme {
+  const _Theme({@JsonKey(name: 'accent') this.accent = '', @JsonKey(name: 'accent_dark') this.accentDark = '', @JsonKey(name: 'accent_soft') this.accentSoft = '', @JsonKey(name: 'accent_soft_dark') this.accentSoftDark = '', @JsonKey(name: 'built_in') this.builtIn = false, @JsonKey(name: 'name') this.name = ''});
+  factory _Theme.fromJson(Map<String, dynamic> json) => _$ThemeFromJson(json);
+
+/// Accent is the brand colour, as #rrggbb.
+@override@JsonKey(name: 'accent') final  String accent;
+/// AccentDark is the accent for the dark and dim schemes, as #rrggbb. The dark
+/// pair exists because an accent picked to read on white is usually too dark to
+/// read on near-black, and the browser defaults to the dark scheme: a theme
+/// with only a light accent renders as a barely visible smear on the scheme
+/// most people actually see. Empty falls back to the light pair, so a
+/// configured theme that names only an accent still applies everywhere rather
+/// than being ignored on half the schemes.
+@override@JsonKey(name: 'accent_dark') final  String accentDark;
+/// AccentSoft is the tint it sits on, as #rrggbb.
+@override@JsonKey(name: 'accent_soft') final  String accentSoft;
+/// AccentSoftDark is the tint it sits on in those schemes, as #rrggbb.
+@override@JsonKey(name: 'accent_soft_dark') final  String accentSoftDark;
+/// BuiltIn reports whether this theme ships with tix rather than coming from
+/// configuration. Listing says which, so an operator can tell what they can
+/// redefine.
+@override@JsonKey(name: 'built_in') final  bool builtIn;
+/// Name is the theme's name, or the #rrggbb a custom accent was named as.
+@override@JsonKey(name: 'name') final  String name;
+
+/// Create a copy of Theme
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ThemeCopyWith<_Theme> get copyWith => __$ThemeCopyWithImpl<_Theme>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$ThemeToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Theme&&(identical(other.accent, accent) || other.accent == accent)&&(identical(other.accentDark, accentDark) || other.accentDark == accentDark)&&(identical(other.accentSoft, accentSoft) || other.accentSoft == accentSoft)&&(identical(other.accentSoftDark, accentSoftDark) || other.accentSoftDark == accentSoftDark)&&(identical(other.builtIn, builtIn) || other.builtIn == builtIn)&&(identical(other.name, name) || other.name == name));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,accent,accentDark,accentSoft,accentSoftDark,builtIn,name);
+}
+
+@override
+String toString() {
+    return 'Theme(accent: $accent, accentDark: $accentDark, accentSoft: $accentSoft, accentSoftDark: $accentSoftDark, builtIn: $builtIn, name: $name)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ThemeCopyWith<$Res> implements $ThemeCopyWith<$Res> {
+  factory _$ThemeCopyWith(_Theme value, $Res Function(_Theme) _then) = __$ThemeCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'accent') String accent,@JsonKey(name: 'accent_dark') String accentDark,@JsonKey(name: 'accent_soft') String accentSoft,@JsonKey(name: 'accent_soft_dark') String accentSoftDark,@JsonKey(name: 'built_in') bool builtIn,@JsonKey(name: 'name') String name
+});
+
+
+
+
+}
+/// @nodoc
+class __$ThemeCopyWithImpl<$Res>
+    implements _$ThemeCopyWith<$Res> {
+  __$ThemeCopyWithImpl(this._self, this._then);
+
+  final _Theme _self;
+  final $Res Function(_Theme) _then;
+
+/// Create a copy of Theme
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? accent = null,Object? accentDark = null,Object? accentSoft = null,Object? accentSoftDark = null,Object? builtIn = null,Object? name = null,}) {
+  return _then(_Theme(
+accent: null == accent ? _self.accent : accent // ignore: cast_nullable_to_non_nullable
+as String,accentDark: null == accentDark ? _self.accentDark : accentDark // ignore: cast_nullable_to_non_nullable
+as String,accentSoft: null == accentSoft ? _self.accentSoft : accentSoft // ignore: cast_nullable_to_non_nullable
+as String,accentSoftDark: null == accentSoftDark ? _self.accentSoftDark : accentSoftDark // ignore: cast_nullable_to_non_nullable
+as String,builtIn: null == builtIn ? _self.builtIn : builtIn // ignore: cast_nullable_to_non_nullable
+as bool,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -50173,7 +51174,10 @@ mixin _$User {
 @JsonKey(name: 'email') String get email;/// GlobalAdmin reports whether the user is a global admin, who administers
 /// every tenant of the installation rather than only their own.
 @JsonKey(name: 'global_admin') bool get globalAdmin;/// ID is the user's actor identifier.
-@JsonKey(name: 'id') String get id;/// RequirePasswordChange reports whether the next password sign-in must choose
+@JsonKey(name: 'id') String get id;/// Removed reports that the person was removed from this tenant: their actor
+/// stays so history still names them, but they hold no membership. A listing
+/// returns such a person only when asked to include them.
+@JsonKey(name: 'removed') bool get removed;/// RequirePasswordChange reports whether the next password sign-in must choose
 /// a new password before a session is minted.
 @JsonKey(name: 'require_password_change') bool get requirePasswordChange;/// SSOProvider names the single sign-on provider that vouches for the user.
 /// Empty for a password user.
@@ -50198,20 +51202,20 @@ $UserCopyWith<User> get copyWith => _$UserCopyWithImpl<User>(this as User, _$ide
 @override
 bool operator ==(Object other) {
   final _this = this as User;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.disabledAt, _this.disabledAt) || other.disabledAt == _this.disabledAt)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.globalAdmin, _this.globalAdmin) || other.globalAdmin == _this.globalAdmin)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.requirePasswordChange, _this.requirePasswordChange) || other.requirePasswordChange == _this.requirePasswordChange)&&(identical(other.ssoProvider, _this.ssoProvider) || other.ssoProvider == _this.ssoProvider)&&(identical(other.ssoSubject, _this.ssoSubject) || other.ssoSubject == _this.ssoSubject)&&(identical(other.totpEnrolled, _this.totpEnrolled) || other.totpEnrolled == _this.totpEnrolled)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.disabledAt, _this.disabledAt) || other.disabledAt == _this.disabledAt)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.globalAdmin, _this.globalAdmin) || other.globalAdmin == _this.globalAdmin)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.removed, _this.removed) || other.removed == _this.removed)&&(identical(other.requirePasswordChange, _this.requirePasswordChange) || other.requirePasswordChange == _this.requirePasswordChange)&&(identical(other.ssoProvider, _this.ssoProvider) || other.ssoProvider == _this.ssoProvider)&&(identical(other.ssoSubject, _this.ssoSubject) || other.ssoSubject == _this.ssoSubject)&&(identical(other.totpEnrolled, _this.totpEnrolled) || other.totpEnrolled == _this.totpEnrolled)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as User;
-  return Object.hash(runtimeType,_this.createdAt,_this.disabledAt,_this.displayName,_this.email,_this.globalAdmin,_this.id,_this.requirePasswordChange,_this.ssoProvider,_this.ssoSubject,_this.totpEnrolled,_this.updatedAt);
+  return Object.hash(runtimeType,_this.createdAt,_this.disabledAt,_this.displayName,_this.email,_this.globalAdmin,_this.id,_this.removed,_this.requirePasswordChange,_this.ssoProvider,_this.ssoSubject,_this.totpEnrolled,_this.updatedAt);
 }
 
 @override
 String toString() {
   final _this = this as User;
-  return 'User(createdAt: ${_this.createdAt}, disabledAt: ${_this.disabledAt}, displayName: ${_this.displayName}, email: ${_this.email}, globalAdmin: ${_this.globalAdmin}, id: ${_this.id}, requirePasswordChange: ${_this.requirePasswordChange}, ssoProvider: ${_this.ssoProvider}, ssoSubject: ${_this.ssoSubject}, totpEnrolled: ${_this.totpEnrolled}, updatedAt: ${_this.updatedAt})';
+  return 'User(createdAt: ${_this.createdAt}, disabledAt: ${_this.disabledAt}, displayName: ${_this.displayName}, email: ${_this.email}, globalAdmin: ${_this.globalAdmin}, id: ${_this.id}, removed: ${_this.removed}, requirePasswordChange: ${_this.requirePasswordChange}, ssoProvider: ${_this.ssoProvider}, ssoSubject: ${_this.ssoSubject}, totpEnrolled: ${_this.totpEnrolled}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -50222,7 +51226,7 @@ abstract mixin class $UserCopyWith<$Res>  {
   factory $UserCopyWith(User value, $Res Function(User) _then) = _$UserCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'disabled_at')@TixDateTime() DateTime? disabledAt,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'id') String id,@JsonKey(name: 'require_password_change') bool requirePasswordChange,@JsonKey(name: 'sso_provider') String ssoProvider,@JsonKey(name: 'sso_subject') String ssoSubject,@JsonKey(name: 'totp_enrolled') bool totpEnrolled,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'disabled_at')@TixDateTime() DateTime? disabledAt,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'id') String id,@JsonKey(name: 'removed') bool removed,@JsonKey(name: 'require_password_change') bool requirePasswordChange,@JsonKey(name: 'sso_provider') String ssoProvider,@JsonKey(name: 'sso_subject') String ssoSubject,@JsonKey(name: 'totp_enrolled') bool totpEnrolled,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -50239,7 +51243,7 @@ class _$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? createdAt = freezed,Object? disabledAt = freezed,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? id = null,Object? requirePasswordChange = null,Object? ssoProvider = null,Object? ssoSubject = null,Object? totpEnrolled = null,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? createdAt = freezed,Object? disabledAt = freezed,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? id = null,Object? removed = null,Object? requirePasswordChange = null,Object? ssoProvider = null,Object? ssoSubject = null,Object? totpEnrolled = null,Object? updatedAt = freezed,}) {
   return _then(User(
 createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,disabledAt: freezed == disabledAt ? _self.disabledAt : disabledAt // ignore: cast_nullable_to_non_nullable
@@ -50247,7 +51251,8 @@ as DateTime?,displayName: null == displayName ? _self.displayName : displayName 
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,globalAdmin: null == globalAdmin ? _self.globalAdmin : globalAdmin // ignore: cast_nullable_to_non_nullable
 as bool,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,requirePasswordChange: null == requirePasswordChange ? _self.requirePasswordChange : requirePasswordChange // ignore: cast_nullable_to_non_nullable
+as String,removed: null == removed ? _self.removed : removed // ignore: cast_nullable_to_non_nullable
+as bool,requirePasswordChange: null == requirePasswordChange ? _self.requirePasswordChange : requirePasswordChange // ignore: cast_nullable_to_non_nullable
 as bool,ssoProvider: null == ssoProvider ? _self.ssoProvider : ssoProvider // ignore: cast_nullable_to_non_nullable
 as String,ssoSubject: null == ssoSubject ? _self.ssoSubject : ssoSubject // ignore: cast_nullable_to_non_nullable
 as String,totpEnrolled: null == totpEnrolled ? _self.totpEnrolled : totpEnrolled // ignore: cast_nullable_to_non_nullable
@@ -50337,10 +51342,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'disabled_at')@TixDateTime()  DateTime? disabledAt, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'id')  String id, @JsonKey(name: 'require_password_change')  bool requirePasswordChange, @JsonKey(name: 'sso_provider')  String ssoProvider, @JsonKey(name: 'sso_subject')  String ssoSubject, @JsonKey(name: 'totp_enrolled')  bool totpEnrolled, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'disabled_at')@TixDateTime()  DateTime? disabledAt, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'id')  String id, @JsonKey(name: 'removed')  bool removed, @JsonKey(name: 'require_password_change')  bool requirePasswordChange, @JsonKey(name: 'sso_provider')  String ssoProvider, @JsonKey(name: 'sso_subject')  String ssoSubject, @JsonKey(name: 'totp_enrolled')  bool totpEnrolled, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_that.globalAdmin,_that.id,_that.requirePasswordChange,_that.ssoProvider,_that.ssoSubject,_that.totpEnrolled,_that.updatedAt);case _:
+return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_that.globalAdmin,_that.id,_that.removed,_that.requirePasswordChange,_that.ssoProvider,_that.ssoSubject,_that.totpEnrolled,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -50358,10 +51363,10 @@ return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'disabled_at')@TixDateTime()  DateTime? disabledAt, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'id')  String id, @JsonKey(name: 'require_password_change')  bool requirePasswordChange, @JsonKey(name: 'sso_provider')  String ssoProvider, @JsonKey(name: 'sso_subject')  String ssoSubject, @JsonKey(name: 'totp_enrolled')  bool totpEnrolled, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'disabled_at')@TixDateTime()  DateTime? disabledAt, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'id')  String id, @JsonKey(name: 'removed')  bool removed, @JsonKey(name: 'require_password_change')  bool requirePasswordChange, @JsonKey(name: 'sso_provider')  String ssoProvider, @JsonKey(name: 'sso_subject')  String ssoSubject, @JsonKey(name: 'totp_enrolled')  bool totpEnrolled, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _User():
-return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_that.globalAdmin,_that.id,_that.requirePasswordChange,_that.ssoProvider,_that.ssoSubject,_that.totpEnrolled,_that.updatedAt);case _:
+return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_that.globalAdmin,_that.id,_that.removed,_that.requirePasswordChange,_that.ssoProvider,_that.ssoSubject,_that.totpEnrolled,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -50378,10 +51383,10 @@ return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'disabled_at')@TixDateTime()  DateTime? disabledAt, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'id')  String id, @JsonKey(name: 'require_password_change')  bool requirePasswordChange, @JsonKey(name: 'sso_provider')  String ssoProvider, @JsonKey(name: 'sso_subject')  String ssoSubject, @JsonKey(name: 'totp_enrolled')  bool totpEnrolled, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'disabled_at')@TixDateTime()  DateTime? disabledAt, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'id')  String id, @JsonKey(name: 'removed')  bool removed, @JsonKey(name: 'require_password_change')  bool requirePasswordChange, @JsonKey(name: 'sso_provider')  String ssoProvider, @JsonKey(name: 'sso_subject')  String ssoSubject, @JsonKey(name: 'totp_enrolled')  bool totpEnrolled, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_that.globalAdmin,_that.id,_that.requirePasswordChange,_that.ssoProvider,_that.ssoSubject,_that.totpEnrolled,_that.updatedAt);case _:
+return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_that.globalAdmin,_that.id,_that.removed,_that.requirePasswordChange,_that.ssoProvider,_that.ssoSubject,_that.totpEnrolled,_that.updatedAt);case _:
   return null;
 
 }
@@ -50393,7 +51398,7 @@ return $default(_that.createdAt,_that.disabledAt,_that.displayName,_that.email,_
 @JsonSerializable()
 
 class _User implements User {
-  const _User({@JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'disabled_at')@TixDateTime() this.disabledAt, @JsonKey(name: 'display_name') this.displayName = '', @JsonKey(name: 'email') this.email = '', @JsonKey(name: 'global_admin') this.globalAdmin = false, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'require_password_change') this.requirePasswordChange = false, @JsonKey(name: 'sso_provider') this.ssoProvider = '', @JsonKey(name: 'sso_subject') this.ssoSubject = '', @JsonKey(name: 'totp_enrolled') this.totpEnrolled = false, @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt});
+  const _User({@JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'disabled_at')@TixDateTime() this.disabledAt, @JsonKey(name: 'display_name') this.displayName = '', @JsonKey(name: 'email') this.email = '', @JsonKey(name: 'global_admin') this.globalAdmin = false, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'removed') this.removed = false, @JsonKey(name: 'require_password_change') this.requirePasswordChange = false, @JsonKey(name: 'sso_provider') this.ssoProvider = '', @JsonKey(name: 'sso_subject') this.ssoSubject = '', @JsonKey(name: 'totp_enrolled') this.totpEnrolled = false, @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt});
   factory _User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
 /// CreatedAt is when the user was created, RFC 3339.
@@ -50411,6 +51416,10 @@ class _User implements User {
 @override@JsonKey(name: 'global_admin') final  bool globalAdmin;
 /// ID is the user's actor identifier.
 @override@JsonKey(name: 'id') final  String id;
+/// Removed reports that the person was removed from this tenant: their actor
+/// stays so history still names them, but they hold no membership. A listing
+/// returns such a person only when asked to include them.
+@override@JsonKey(name: 'removed') final  bool removed;
 /// RequirePasswordChange reports whether the next password sign-in must choose
 /// a new password before a session is minted.
 @override@JsonKey(name: 'require_password_change') final  bool requirePasswordChange;
@@ -50441,18 +51450,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.disabledAt, disabledAt) || other.disabledAt == disabledAt)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.email, email) || other.email == email)&&(identical(other.globalAdmin, globalAdmin) || other.globalAdmin == globalAdmin)&&(identical(other.id, id) || other.id == id)&&(identical(other.requirePasswordChange, requirePasswordChange) || other.requirePasswordChange == requirePasswordChange)&&(identical(other.ssoProvider, ssoProvider) || other.ssoProvider == ssoProvider)&&(identical(other.ssoSubject, ssoSubject) || other.ssoSubject == ssoSubject)&&(identical(other.totpEnrolled, totpEnrolled) || other.totpEnrolled == totpEnrolled)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.disabledAt, disabledAt) || other.disabledAt == disabledAt)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.email, email) || other.email == email)&&(identical(other.globalAdmin, globalAdmin) || other.globalAdmin == globalAdmin)&&(identical(other.id, id) || other.id == id)&&(identical(other.removed, removed) || other.removed == removed)&&(identical(other.requirePasswordChange, requirePasswordChange) || other.requirePasswordChange == requirePasswordChange)&&(identical(other.ssoProvider, ssoProvider) || other.ssoProvider == ssoProvider)&&(identical(other.ssoSubject, ssoSubject) || other.ssoSubject == ssoSubject)&&(identical(other.totpEnrolled, totpEnrolled) || other.totpEnrolled == totpEnrolled)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,createdAt,disabledAt,displayName,email,globalAdmin,id,requirePasswordChange,ssoProvider,ssoSubject,totpEnrolled,updatedAt);
+    return Object.hash(runtimeType,createdAt,disabledAt,displayName,email,globalAdmin,id,removed,requirePasswordChange,ssoProvider,ssoSubject,totpEnrolled,updatedAt);
 }
 
 @override
 String toString() {
-    return 'User(createdAt: $createdAt, disabledAt: $disabledAt, displayName: $displayName, email: $email, globalAdmin: $globalAdmin, id: $id, requirePasswordChange: $requirePasswordChange, ssoProvider: $ssoProvider, ssoSubject: $ssoSubject, totpEnrolled: $totpEnrolled, updatedAt: $updatedAt)';
+    return 'User(createdAt: $createdAt, disabledAt: $disabledAt, displayName: $displayName, email: $email, globalAdmin: $globalAdmin, id: $id, removed: $removed, requirePasswordChange: $requirePasswordChange, ssoProvider: $ssoProvider, ssoSubject: $ssoSubject, totpEnrolled: $totpEnrolled, updatedAt: $updatedAt)';
 }
 
 
@@ -50463,7 +51472,7 @@ abstract mixin class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   factory _$UserCopyWith(_User value, $Res Function(_User) _then) = __$UserCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'disabled_at')@TixDateTime() DateTime? disabledAt,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'id') String id,@JsonKey(name: 'require_password_change') bool requirePasswordChange,@JsonKey(name: 'sso_provider') String ssoProvider,@JsonKey(name: 'sso_subject') String ssoSubject,@JsonKey(name: 'totp_enrolled') bool totpEnrolled,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'disabled_at')@TixDateTime() DateTime? disabledAt,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'id') String id,@JsonKey(name: 'removed') bool removed,@JsonKey(name: 'require_password_change') bool requirePasswordChange,@JsonKey(name: 'sso_provider') String ssoProvider,@JsonKey(name: 'sso_subject') String ssoSubject,@JsonKey(name: 'totp_enrolled') bool totpEnrolled,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -50480,7 +51489,7 @@ class __$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? createdAt = freezed,Object? disabledAt = freezed,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? id = null,Object? requirePasswordChange = null,Object? ssoProvider = null,Object? ssoSubject = null,Object? totpEnrolled = null,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? createdAt = freezed,Object? disabledAt = freezed,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? id = null,Object? removed = null,Object? requirePasswordChange = null,Object? ssoProvider = null,Object? ssoSubject = null,Object? totpEnrolled = null,Object? updatedAt = freezed,}) {
   return _then(_User(
 createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,disabledAt: freezed == disabledAt ? _self.disabledAt : disabledAt // ignore: cast_nullable_to_non_nullable
@@ -50488,7 +51497,8 @@ as DateTime?,displayName: null == displayName ? _self.displayName : displayName 
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,globalAdmin: null == globalAdmin ? _self.globalAdmin : globalAdmin // ignore: cast_nullable_to_non_nullable
 as bool,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,requirePasswordChange: null == requirePasswordChange ? _self.requirePasswordChange : requirePasswordChange // ignore: cast_nullable_to_non_nullable
+as String,removed: null == removed ? _self.removed : removed // ignore: cast_nullable_to_non_nullable
+as bool,requirePasswordChange: null == requirePasswordChange ? _self.requirePasswordChange : requirePasswordChange // ignore: cast_nullable_to_non_nullable
 as bool,ssoProvider: null == ssoProvider ? _self.ssoProvider : ssoProvider // ignore: cast_nullable_to_non_nullable
 as String,ssoSubject: null == ssoSubject ? _self.ssoSubject : ssoSubject // ignore: cast_nullable_to_non_nullable
 as String,totpEnrolled: null == totpEnrolled ? _self.totpEnrolled : totpEnrolled // ignore: cast_nullable_to_non_nullable
