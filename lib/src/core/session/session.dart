@@ -843,11 +843,13 @@ IdentityRepository identityRepository(Ref ref) => IdentityRepository(
   ref.watch(responseCacheProvider),
 );
 
-/// Project administration and custom fields, for the active session.
+/// Project administration, custom fields and the reader's project stars,
+/// for the active session.
 @riverpod
 ProjectsRepository projectsRepository(Ref ref) => ProjectsRepository(
   ref.watch(sessionApiProvider),
   ref.watch(responseCacheProvider),
+  outbox: ref.watch(outboxProvider),
 );
 
 /// The tenant's workflows, for the active session.

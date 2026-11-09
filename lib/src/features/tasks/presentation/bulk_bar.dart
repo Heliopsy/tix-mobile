@@ -6,9 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/session/project_stars.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/data/models/bulk.dart';
-import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/models/workflow.dart';
 import 'package:tix_mobile/src/features/tasks/application/listing.dart';
@@ -325,6 +325,7 @@ Future<void> runBulkChoice(
         context,
         title: l10n.bulkCopyTitle(refs.length),
         keyPrefix: 'copy',
+        starred: ref.read(projectStarsProvider).value?.keys ?? const {},
         projects: [
           for (final p in projects)
             if (p.archivedAt == null) p,

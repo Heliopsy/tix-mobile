@@ -133,6 +133,20 @@ void main() {
     expect(line(), findsNothing);
   });
 
+  testWidgets('the picker offers starred projects first', (tester) async {
+    server
+      ..keepsProjectStars = true
+      ..projectStars.add('web');
+    await pump(tester, project: 'infra');
+    await tester.tap(find.byKey(const Key('quickAdd.project')));
+    await tester.pumpAndSettle();
+    double top(String key) =>
+        tester.getTopLeft(find.byKey(Key('quickAdd.project.$key'))).dy;
+    expect(top('web'), lessThan(top('infra')));
+    expect(find.byKey(const Key('projectOption.web.star')), findsOneWidget);
+    expect(find.byKey(const Key('projectOption.infra.star')), findsNothing);
+  });
+
   testWidgets('a tag completes the word under the cursor', (tester) async {
     await pump(tester);
     await type(tester, 'Fix #au');

@@ -10,13 +10,14 @@ import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
+import 'package:tix_mobile/src/core/session/project_stars.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
+import 'package:tix_mobile/src/core/widgets/project_star_button.dart';
 import 'package:tix_mobile/src/core/widgets/saved_copy_mark.dart';
 import 'package:tix_mobile/src/data/models/group_pref.dart';
-import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/models/workflow.dart';
 import 'package:tix_mobile/src/features/tasks/application/listing.dart';
@@ -501,7 +502,8 @@ class _ProjectTitle extends ConsumerWidget {
         ? projectKey
         : project.name;
     final projects = taskContext?.projects ?? const <Project>[];
-    return InkWell(
+    final stars = ref.watch(projectStarsProvider).value;
+    final switcher = InkWell(
       key: const Key('project.switch'),
       borderRadius: BorderRadius.circular(TixRadius.md),
       onTap: projects.length < 2
@@ -512,6 +514,7 @@ class _ProjectTitle extends ConsumerWidget {
                 title: l10n.boardSwitchProject,
                 keyPrefix: 'project.switch',
                 current: project?.key ?? projectKey,
+                starred: stars?.keys ?? const {},
                 projects: [
                   for (final p in projects)
                     if (p.archivedAt == null || p.key == project?.key) p,
@@ -537,6 +540,14 @@ class _ProjectTitle extends ConsumerWidget {
             Icon(Icons.arrow_drop_down, color: context.tix.muted),
         ],
       ),
+    );
+    if (project == null) return switcher;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Flexible(child: switcher),
+        ProjectStarButton(project: project),
+      ],
     );
   }
 }

@@ -115,6 +115,9 @@ const bindings = <String, Binding>{
   'filter.delete': Binding(feature: 'tasks', action: 'delete-filter', wave: 1),
   'filter.order': Binding(feature: 'tasks', action: 'order-filters', wave: 1),
   'stats.read': Binding(feature: 'projects', action: 'open-count', wave: 1),
+  'project.starred': Binding(feature: 'projects', action: 'starred', wave: 1),
+  'project.star': Binding(feature: 'projects', action: 'star', wave: 1),
+  'project.unstar': Binding(feature: 'projects', action: 'unstar', wave: 1),
   // Inbox, notifications and the summary (wave 1, area C).
   'inbox.list': Binding(feature: 'inbox', action: 'list', wave: 1),
   'inbox.count': Binding(feature: 'inbox', action: 'badge', wave: 1),

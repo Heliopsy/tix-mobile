@@ -6864,6 +6864,38 @@ class AppLocalizationsBg extends AppLocalizations {
   String get projectsShowArchived => 'Показване на архивираните';
 
   @override
+  String get projectStar => 'Отбележи проекта със звезда';
+
+  @override
+  String get projectUnstar => 'Махни звездата';
+
+  @override
+  String projectStarred(String name) {
+    return '$name е отбелязан със звезда';
+  }
+
+  @override
+  String projectUnstarred(String name) {
+    return 'Звездата на $name е махната';
+  }
+
+  @override
+  String get projectsStarredHeading => 'Със звезда';
+
+  @override
+  String get projectsRestHeading => 'Други проекти';
+
+  @override
+  String syncOpStarProject(String key) {
+    return '$key: звезда на проекта';
+  }
+
+  @override
+  String syncOpUnstarProject(String key) {
+    return '$key: махане на звездата на проекта';
+  }
+
+  @override
   String get manageBundlesSubtitle =>
       'Работни процеси, полета, етикети и webhooks в един файл';
 

@@ -110,4 +110,46 @@ void main() {
     await tester.pumpAndSettle();
     expect(picked, 'WEB');
   });
+
+  testWidgets('a starred project carries a star and says so', (tester) async {
+    final semantics = tester.ensureSemantics();
+    await pumpComponent(
+      tester,
+      const ProjectOption(project: web, starred: true),
+    );
+    expect(find.byKey(const Key('projectOption.WEB.star')), findsOneWidget);
+    expect(
+      tester.getSemantics(find.byType(ProjectOption)),
+      isSemantics(label: 'Web', value: 'Starred'),
+    );
+    semantics.dispose();
+  });
+
+  testWidgets('the picker lists starred projects first, marked', (
+    tester,
+  ) async {
+    await pumpComponent(
+      tester,
+      Builder(
+        builder: (context) => TextButton(
+          onPressed: () => showProjectPicker(
+            context,
+            title: 'Switch project',
+            keyPrefix: 'pick',
+            projects: const [infra, web, bare],
+            starred: const {'OPS'},
+          ),
+          child: const Text('open'),
+        ),
+      ),
+    );
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+    double top(String key) =>
+        tester.getTopLeft(find.byKey(Key('pick.$key'))).dy;
+    expect(top('OPS'), lessThan(top('INFRA')));
+    expect(top('INFRA'), lessThan(top('WEB')));
+    expect(find.byKey(const Key('projectOption.OPS.star')), findsOneWidget);
+    expect(find.byKey(const Key('projectOption.INFRA.star')), findsNothing);
+  });
 }

@@ -9,8 +9,8 @@ import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
 
 /// A project as a choice in a picker: its mark in its colour, its name and
-/// key, an archived badge, and a check when [selected], as the project list
-/// draws it.
+/// key, a star when the reader [starred] it, an archived badge, and a check
+/// when [selected], as the project list draws it.
 ///
 /// The mark is decorative; the row reads as the project's name.
 class ProjectOption extends StatelessWidget {
@@ -18,6 +18,7 @@ class ProjectOption extends StatelessWidget {
   const ProjectOption({
     required this.project,
     this.selected = false,
+    this.starred = false,
     this.markSize = TixSize.controlSmall,
     super.key,
   });
@@ -28,6 +29,9 @@ class ProjectOption extends StatelessWidget {
   /// Whether it is the current choice, drawn with a check.
   final bool selected;
 
+  /// Whether the reader starred it, drawn with a star.
+  final bool starred;
+
   /// The mark's width and height.
   final double markSize;
 
@@ -37,10 +41,14 @@ class ProjectOption extends StatelessWidget {
     final l10n = context.l10n;
     final name = project.name.isEmpty ? project.key : project.name;
     final archived = project.archivedAt != null;
+    final marks = [
+      if (starred) l10n.starred,
+      if (archived) l10n.projectArchivedBadge,
+    ];
     return Semantics(
       container: true,
       label: name,
-      value: archived ? l10n.projectArchivedBadge : null,
+      value: marks.isEmpty ? null : marks.join(', '),
       selected: selected,
       excludeSemantics: true,
       child: Row(
@@ -69,6 +77,15 @@ class ProjectOption extends StatelessWidget {
             const SizedBox(width: TixSpace.s2),
             Text(project.key, style: tixMono(context)),
           ],
+          if (starred) ...[
+            const SizedBox(width: TixSpace.s2),
+            Icon(
+              Icons.star_rounded,
+              key: Key('projectOption.${project.key}.star'),
+              size: 16,
+              color: t.accent,
+            ),
+          ],
           if (archived) ...[
             const SizedBox(width: TixSpace.s2),
             TixBadge(l10n.projectArchivedBadge),
@@ -89,7 +106,8 @@ class ProjectOption extends StatelessWidget {
 }
 
 /// Opens a sheet titled [title] listing [projects] as [ProjectOption]s,
-/// [current] checked; returns the chosen key, or null when dismissed.
+/// those whose keys are in [starred] first and marked, [current] checked;
+/// returns the chosen key, or null when dismissed.
 ///
 /// Each row is keyed `<keyPrefix>.<project key>`.
 Future<String?> showProjectPicker(
@@ -98,6 +116,7 @@ Future<String?> showProjectPicker(
   required List<Project> projects,
   required String keyPrefix,
   String? current,
+  Set<String> starred = const {},
 }) => showTixSheet<String>(
   context,
   builder: (context) => TixSheetBody(
@@ -105,7 +124,7 @@ Future<String?> showProjectPicker(
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        for (final p in projects)
+        for (final p in starredFirst(projects, (p) => starred.contains(p.key)))
           ListTile(
             key: Key('$keyPrefix.${p.key}'),
             contentPadding: const EdgeInsets.symmetric(horizontal: TixSpace.s2),
@@ -113,7 +132,11 @@ Future<String?> showProjectPicker(
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(TixRadius.md)),
             ),
-            title: ProjectOption(project: p, selected: p.key == current),
+            title: ProjectOption(
+              project: p,
+              selected: p.key == current,
+              starred: starred.contains(p.key),
+            ),
             onTap: () => Navigator.of(context).pop(p.key),
           ),
       ],

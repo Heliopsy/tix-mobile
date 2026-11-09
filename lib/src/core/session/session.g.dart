@@ -1008,12 +1008,14 @@ final class IdentityRepositoryProvider
 String _$identityRepositoryHash() =>
     r'cb010e13c4ce381b2ac97c3cf10b7cbb5522efdf';
 
-/// Project administration and custom fields, for the active session.
+/// Project administration, custom fields and the reader's project stars,
+/// for the active session.
 
 @ProviderFor(projectsRepository)
 final projectsRepositoryProvider = ProjectsRepositoryProvider._();
 
-/// Project administration and custom fields, for the active session.
+/// Project administration, custom fields and the reader's project stars,
+/// for the active session.
 
 final class ProjectsRepositoryProvider
     extends
@@ -1023,7 +1025,8 @@ final class ProjectsRepositoryProvider
           ProjectsRepository
         >
     with $Provider<ProjectsRepository> {
-  /// Project administration and custom fields, for the active session.
+  /// Project administration, custom fields and the reader's project stars,
+  /// for the active session.
   ProjectsRepositoryProvider._()
     : super(
         from: null,
@@ -1059,7 +1062,7 @@ final class ProjectsRepositoryProvider
 }
 
 String _$projectsRepositoryHash() =>
-    r'78b1b709fcdeadec70d323419b3d0403b91b6bdb';
+    r'9cd7c0ce237b3c92400fb3739d8cda61f5a5bfd7';
 
 /// The tenant's workflows, for the active session.
 

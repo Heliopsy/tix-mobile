@@ -3958,6 +3958,44 @@
     }
   },
   "projectsShowArchived": "Show archived",
+  "projectStar": "Star project",
+  "projectUnstar": "Remove star",
+  "projectStarred": "{name} starred",
+  "@projectStarred": {
+    "description": "Toast after starring a project.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "projectUnstarred": "Star removed from {name}",
+  "@projectUnstarred": {
+    "description": "Toast after taking the star off a project.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "projectsStarredHeading": "Starred",
+  "projectsRestHeading": "Other projects",
+  "syncOpStarProject": "{key}: star project",
+  "@syncOpStarProject": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "syncOpUnstarProject": "{key}: remove project star",
+  "@syncOpUnstarProject": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
   "manageBundlesSubtitle": "Workflows, fields, tags and webhooks as one file",
   "manageSnapshotSubtitle": "Bring a whole tenant's export in",
   "manageStatusSubtitle": "Version, server processes and the tenant's work",

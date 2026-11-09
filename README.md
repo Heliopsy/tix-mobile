@@ -96,6 +96,8 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 - **Projects** visible to the active connection, each in its colour with its open task count, and a switcher in
   the project's title. Create one, change its name, key, description, colour, icon, workflow and lease bounds,
   archive it, or delete it with its tasks moved or deleted. Archived projects show behind a filter, badged.
+  Star the ones you use most: they get their own section at the top and come first in the switcher, quick add and
+  the Project widget's picker. A star is yours alone and follows you to tix's web and terminal views.
 - **Manage**: every management area the credential can use, grouped, nothing offered that the server would refuse.
   Server status, bundles of workflows, fields, tags and webhooks out and in after a preview, and snapshot imports
   after a dry run.

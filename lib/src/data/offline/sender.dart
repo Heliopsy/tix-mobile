@@ -241,6 +241,12 @@ class ApiOutboxSender implements OutboxSender {
         return null;
       case OutboxOp.restore:
         return await api.task.restore(target, idempotencyKey: key);
+      case OutboxOp.projectStar:
+        await api.project.star(target, idempotencyKey: key);
+        return null;
+      case OutboxOp.projectUnstar:
+        await api.project.unstar(target, idempotencyKey: key);
+        return null;
     }
   }
 

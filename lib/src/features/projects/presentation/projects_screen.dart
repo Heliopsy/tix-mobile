@@ -5,16 +5,19 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/paging/paged.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/access.dart';
+import 'package:tix_mobile/src/core/session/project_stars.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/core/widgets/paged_list_view.dart';
-import 'package:tix_mobile/src/data/models/project.dart';
+import 'package:tix_mobile/src/core/widgets/project_star_button.dart';
 import 'package:tix_mobile/src/features/projects/application/projects.dart';
 import 'package:tix_mobile/src/features/projects/presentation/project_form.dart';
 
-/// Every project on the active server.
+/// Every project on the active server, the ones the reader starred first
+/// under their own heading.
 class ProjectsScreen extends ConsumerWidget {
   /// Creates the screen.
   const ProjectsScreen({super.key});
@@ -37,6 +40,13 @@ class ProjectsScreen extends ConsumerWidget {
             onPressed: () => showCreateProjectSheet(context),
           )
         : null;
+    final archived = ref.watch(showArchivedProjectsProvider);
+    final stars = ref.watch(projectStarsProvider).value;
+    final starred = [
+      for (final p in stars?.projects ?? const <Project>[])
+        if (archived || p.archivedAt == null) p,
+    ];
+    void loadMore() => ref.read(projectsProvider.notifier).loadMore();
     return TixPage(
       title: l10n.projectsTitle,
       subtitle: tenant.isEmpty ? null : l10n.projectsSubtitle(tenant),
@@ -44,20 +54,73 @@ class ProjectsScreen extends ConsumerWidget {
       body: AsyncBody(
         value: ref.watch(projectsProvider),
         onRetry: () => ref.invalidate(projectsProvider),
-        data: (paged) => PagedListView(
-          paged: paged,
-          header: const _ArchivedFilter(),
-          empty: EmptyState(
-            icon: Icons.folder_outlined,
-            title: l10n.projectsEmpty,
-            body: l10n.projectsEmptyBody,
-            action: create,
-          ),
-          onRefresh: () => ref.refresh(projectsProvider.future),
-          onLoadMore: () => ref.read(projectsProvider.notifier).loadMore(),
-          itemBuilder: (context, project) => ProjectTile(project: project),
-        ),
+        data: (paged) {
+          final rest = withoutStarred(paged, stars);
+          if (rest.items.isEmpty && starred.isNotEmpty && _canLoad(paged)) {
+            WidgetsBinding.instance.addPostFrameCallback((_) => loadMore());
+          }
+          return PagedListView(
+            paged: rest,
+            header: _Header(starred: starred),
+            empty: starred.isEmpty
+                ? EmptyState(
+                    icon: Icons.folder_outlined,
+                    title: l10n.projectsEmpty,
+                    body: l10n.projectsEmptyBody,
+                    action: create,
+                  )
+                : const SizedBox.shrink(),
+            onRefresh: () {
+              ref.invalidate(projectStarsProvider);
+              return ref.refresh(projectsProvider.future);
+            },
+            onLoadMore: loadMore,
+            itemBuilder: (context, project) => ProjectTile(project: project),
+          );
+        },
       ),
+    );
+  }
+
+  static bool _canLoad(Paged<Project> p) =>
+      p.hasMore && !p.loadingMore && p.moreError == null;
+}
+
+/// [paged] without the projects in [stars], which the Starred section
+/// lists, so no project is listed twice.
+Paged<Project> withoutStarred(Paged<Project> paged, StarredProjects? stars) {
+  if (stars == null || stars.projects.isEmpty) return paged;
+  return paged.copyWith(
+    items: [
+      for (final p in paged.items)
+        if (!stars.has(p.key)) p,
+    ],
+    moreError: paged.moreError,
+  );
+}
+
+class _Header extends StatelessWidget {
+  const _Header({required this.starred});
+
+  final List<Project> starred;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    if (starred.isEmpty) return const _ArchivedFilter();
+    return Column(
+      key: const Key('projects.starred'),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const _ArchivedFilter(),
+        SectionHeader(title: l10n.projectsStarredHeading),
+        for (final p in starred)
+          ProjectTile(key: Key('projects.starred.${p.key}'), project: p),
+        SectionHeader(
+          key: const Key('projects.rest'),
+          title: l10n.projectsRestHeading,
+        ),
+      ],
     );
   }
 }
@@ -175,6 +238,7 @@ class ProjectTile extends ConsumerWidget {
               ),
             if (project.archivedAt != null)
               TixBadge(context.l10n.projectArchivedBadge),
+            ProjectStarButton(project: project),
             TixIconButton(
               key: Key('project.${project.key}.settings'),
               icon: Icons.settings_outlined,

@@ -994,6 +994,66 @@ void main() {
     });
   });
 
+  group('project stars', () {
+    test('a queued star and unstar are sent in order to the project', () async {
+      await queue(OutboxOp.projectStar, 'infra');
+      await queue(OutboxOp.projectStar, 'web');
+      await queue(OutboxOp.projectUnstar, 'infra');
+
+      final report = await replayer.replay();
+
+      expect(report.sent, 3);
+      expect(entries(), isEmpty);
+      expect(server.projectStars, {'web'});
+      expect(
+        [
+          for (final c in server.calls)
+            if (c.target == 'infra') c.op,
+        ],
+        [OutboxOp.projectStar, OutboxOp.projectUnstar],
+      );
+    });
+
+    test(
+      'a project gone on the server is refused, not a deleted task',
+      () async {
+        await queue(OutboxOp.projectStar, 'gone');
+
+        final report = await replayer.replay();
+
+        expect(report.failed, 1);
+        expect(entries().single.state, OutboxState.failed);
+        expect(conflicts(), isEmpty);
+      },
+    );
+
+    test('a star applied whose answer was lost is done without reading a '
+        'task', () async {
+      server.honoursKeys = true;
+      await queue(OutboxOp.projectStar, 'infra');
+      server.refuse['infra'] = const TixException(
+        TixErrorKind.conflict,
+        message:
+            'the request with this idempotency key was applied but its '
+            'response was not kept',
+      );
+
+      await replayer.replay();
+
+      expect(entries(), isEmpty);
+    });
+
+    test('only waiting stars are listed, oldest first', () async {
+      await queue(OutboxOp.projectStar, 'infra');
+      await queue(OutboxOp.update, a.ref, base: a, values: {'title': 'One'});
+      await queue(OutboxOp.projectUnstar, 'web');
+      expect(outbox.projectStarWrites().map((e) => (e.op, e.target)), [
+        (OutboxOp.projectStar, 'infra'),
+        (OutboxOp.projectUnstar, 'web'),
+      ]);
+    });
+  });
+
   group('overlay', () {
     test("draws waiting writes on the server's task", () async {
       await queue(OutboxOp.update, a.ref, base: a, values: {'title': 'One'});

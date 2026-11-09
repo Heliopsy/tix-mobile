@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/l10n/generated/app_localizations.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/cache/cache_store.dart';
 import 'package:tix_mobile/src/data/offline/sync_store.dart';
@@ -251,4 +252,24 @@ void main() {
       });
     });
   }
+
+  test('a waiting project star names the project', () {
+    final en = lookupAppLocalizations(const Locale('en'));
+    OutboxEntry entry(OutboxOp op) => OutboxEntry(
+      id: 'e1',
+      seq: 1,
+      op: op,
+      target: 'infra',
+      idempotencyKey: 'k',
+      createdAt: DateTime.utc(2026, 11, 9),
+    );
+    expect(
+      describeEntry(en, entry(OutboxOp.projectStar)),
+      'infra: star project',
+    );
+    expect(
+      describeEntry(en, entry(OutboxOp.projectUnstar)),
+      'infra: remove project star',
+    );
+  });
 }

@@ -6856,6 +6856,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String get projectsShowArchived => 'Show archived';
 
   @override
+  String get projectStar => 'Star project';
+
+  @override
+  String get projectUnstar => 'Remove star';
+
+  @override
+  String projectStarred(String name) {
+    return '$name starred';
+  }
+
+  @override
+  String projectUnstarred(String name) {
+    return 'Star removed from $name';
+  }
+
+  @override
+  String get projectsStarredHeading => 'Starred';
+
+  @override
+  String get projectsRestHeading => 'Other projects';
+
+  @override
+  String syncOpStarProject(String key) {
+    return '$key: star project';
+  }
+
+  @override
+  String syncOpUnstarProject(String key) {
+    return '$key: remove project star';
+  }
+
+  @override
   String get manageBundlesSubtitle =>
       'Workflows, fields, tags and webhooks as one file';
 
