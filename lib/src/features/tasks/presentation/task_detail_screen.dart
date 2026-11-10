@@ -51,7 +51,12 @@ class TaskDetailScreen extends StatelessWidget {
 /// screen and the wide list's second pane both show.
 class TaskDetailView extends ConsumerWidget {
   /// Shows the task [taskRef].
-  const TaskDetailView({required this.taskRef, this.showRef = true, super.key});
+  const TaskDetailView({
+    required this.taskRef,
+    this.showRef = true,
+    this.onClose,
+    super.key,
+  });
 
   /// The task's reference.
   final String taskRef;
@@ -59,16 +64,49 @@ class TaskDetailView extends ConsumerWidget {
   /// Whether the reference heads the view; off when a page header has it.
   final bool showRef;
 
+  /// Closes the pane the view sits in; null draws no close button.
+  final VoidCallback? onClose;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final provider = taskDetailControllerProvider(taskRef);
-    return AsyncBody(
-      value: ref.watch(provider),
+    final value = ref.watch(provider);
+    final body = AsyncBody(
+      value: value,
       onRetry: () => ref.invalidate(provider),
       loading: const _DetailSkeleton(),
-      data: (task) => _TaskHub(task: task, showRef: showRef),
+      data: (task) => _TaskHub(task: task, showRef: showRef, onClose: onClose),
+    );
+    final close = onClose;
+    if (close == null || value.hasValue) return body;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Align(
+          alignment: AlignmentDirectional.centerEnd,
+          child: CloseTaskButton(onPressed: close),
+        ),
+        Expanded(child: body),
+      ],
     );
   }
+}
+
+/// Closes the task open beside a list.
+class CloseTaskButton extends StatelessWidget {
+  /// A button that calls [onPressed].
+  const CloseTaskButton({required this.onPressed, super.key});
+
+  /// Closes the pane.
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) => TixIconButton(
+    key: const Key('tasks.detail.close'),
+    icon: Icons.close,
+    tooltip: context.l10n.taskPanelClose,
+    onPressed: onPressed,
+  );
 }
 
 class _DetailSkeleton extends StatelessWidget {
@@ -98,10 +136,11 @@ class _DetailSkeleton extends StatelessWidget {
 }
 
 class _TaskHub extends ConsumerStatefulWidget {
-  const _TaskHub({required this.task, required this.showRef});
+  const _TaskHub({required this.task, required this.showRef, this.onClose});
 
   final Task task;
   final bool showRef;
+  final VoidCallback? onClose;
 
   @override
   ConsumerState<_TaskHub> createState() => _TaskHubState();
@@ -472,6 +511,7 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
       snoozed: _snoozed,
       onEditTitle: _editTitle,
       onMenu: _menu,
+      onClose: widget.onClose,
     );
     final props = TaskProperties(task: task);
     final main = Column(
@@ -597,6 +637,7 @@ class _Header extends ConsumerWidget {
     required this.snoozed,
     required this.onEditTitle,
     required this.onMenu,
+    this.onClose,
   });
 
   final Task task;
@@ -611,6 +652,9 @@ class _Header extends ConsumerWidget {
   final bool snoozed;
   final ValueChanged<bool> onEditTitle;
   final VoidCallback onMenu;
+
+  /// Closes the pane the task sits in; null draws no close button.
+  final VoidCallback? onClose;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -667,6 +711,7 @@ class _Header extends ConsumerWidget {
               tooltip: l10n.taskDetailActionsFor(task.ref),
               onPressed: onMenu,
             ),
+            if (onClose case final close?) CloseTaskButton(onPressed: close),
           ],
         ),
         if (editingTitle && titleChanged)
