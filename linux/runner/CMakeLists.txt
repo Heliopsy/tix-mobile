@@ -26,5 +26,7 @@ target_link_libraries(${BINARY_NAME} PRIVATE PkgConfig::GTK)
 # The quick-add hotkey grabs its key on the X11 root window (desktop.cc).
 pkg_check_modules(X11 REQUIRED IMPORTED_TARGET x11)
 target_link_libraries(${BINARY_NAME} PRIVATE PkgConfig::X11)
+# desktop.cc finds the tray's AppIndicator type with dlsym.
+target_link_libraries(${BINARY_NAME} PRIVATE ${CMAKE_DL_LIBS})
 
 target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}")

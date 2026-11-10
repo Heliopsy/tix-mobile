@@ -4,17 +4,21 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/desktop/desktop_state.dart';
+import 'package:tix_mobile/src/core/desktop/tray_status.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/logging/log.dart';
 import 'package:tix_mobile/src/core/notifications/local_notifier.dart';
 import 'package:tix_mobile/src/core/platform/deep_links.dart';
 import 'package:tix_mobile/src/core/platform/desktop.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/update/updates.dart';
 
 /// Mounted above the router on every screen: keeps the desktop's tray icon,
-/// its menu and the dock badge in step with the active context, hides the
+/// its menu, its hover text and the dock badge in step with the active
+/// context, hides the
 /// window on close when that is chosen, and turns tray picks and the
 /// quick-add hotkey into the same `tix://` links Android's tiles open. Does
 /// nothing where the platform offers none of it. It also keeps the update
@@ -37,6 +41,10 @@ class _DesktopHostState extends ConsumerState<DesktopHost> {
   bool _ready = false;
   TrayMenu? _menu;
   bool? _close;
+  TrayTooltip? _tooltip;
+  TrayTooltip? _pending;
+  Timer? _cooldown;
+  Timer? _refresh;
 
   DesktopShell get _shell => ref.read(desktopShellProvider);
 
@@ -54,6 +62,8 @@ class _DesktopHostState extends ConsumerState<DesktopHost> {
   void dispose() {
     unawaited(_events?.cancel());
     unawaited(_taps?.cancel());
+    _cooldown?.cancel();
+    _refresh?.cancel();
     super.dispose();
   }
 
@@ -146,10 +156,32 @@ class _DesktopHostState extends ConsumerState<DesktopHost> {
     }
   }
 
+  void _syncStatus(DesktopCaps caps) {
+    if (!caps.tray) return;
+    _refresh ??= Timer.periodic(trayStatusRefresh, (_) {
+      if (mounted) setState(() {});
+    });
+    final status = ref.watch(trayStatusProvider);
+    if (status == null) return;
+    _pending = trayTooltip(context.times, status, ref.read(clockProvider)());
+    if (!(_cooldown?.isActive ?? false)) _flushStatus();
+  }
+
+  void _flushStatus() {
+    final tooltip = _pending;
+    _pending = null;
+    if (tooltip == null || tooltip == _tooltip) return;
+    _tooltip = tooltip;
+    unawaited(_shell.setTrayStatus(tooltip));
+    _cooldown = Timer(trayStatusThrottle, _flushStatus);
+  }
+
   @override
   Widget build(BuildContext context) {
     final update = ref.watch(updatesProvider);
-    _sync(ref.watch(desktopCapsProvider).value ?? DesktopCaps.none, update);
+    final caps = ref.watch(desktopCapsProvider).value ?? DesktopCaps.none;
+    _sync(caps, update);
+    _syncStatus(caps);
     return widget.child;
   }
 }

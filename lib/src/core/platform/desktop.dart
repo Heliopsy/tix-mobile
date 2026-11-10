@@ -77,19 +77,11 @@ enum TrayAction {
   quit,
 }
 
-/// The tray icon's tooltip, its menu labels and the dock badge.
+/// The tray icon's menu labels and the dock badge.
 @immutable
 class TrayMenu {
   /// A menu with these labels.
-  const TrayMenu({
-    required this.tooltip,
-    required this.labels,
-    this.context,
-    this.badge,
-  });
-
-  /// The icon's tooltip (Windows, macOS).
-  final String tooltip;
+  const TrayMenu({required this.labels, this.context, this.badge});
 
   /// The label of each action, in menu order; [TrayAction.update] only
   /// while an update is known.
@@ -104,18 +96,60 @@ class TrayMenu {
   @override
   bool operator ==(Object other) =>
       other is TrayMenu &&
-      other.tooltip == tooltip &&
       mapEquals(other.labels, labels) &&
       other.context == context &&
       other.badge == badge;
 
   @override
   int get hashCode => Object.hash(
-    tooltip,
     Object.hashAll(labels.entries.map((e) => (e.key, e.value))),
     context,
     badge,
   );
+}
+
+/// The tray icon's hover text: a [title] line, then [details] and a
+/// [footer].
+@immutable
+class TrayTooltip {
+  /// Hover text headed by [title].
+  const TrayTooltip(this.title, {this.details = const [], this.footer});
+
+  /// The first line, the one a single-line tray shows.
+  final String title;
+
+  /// Lines under the title, the first to go when space runs out.
+  final List<String> details;
+
+  /// The last line, kept while there is room for it.
+  final String? footer;
+
+  /// Every line but the title.
+  List<String> get body => [...details, ?footer];
+
+  /// The lines joined, within [max] UTF-16 units when given: details go
+  /// from the end, then the footer, then the title is cut.
+  String text({int? max}) {
+    final kept = [...details];
+    String join(String? footer) => [title, ...kept, ?footer].join('\n');
+    if (max == null) return join(footer);
+    while (kept.isNotEmpty && join(footer).length > max) {
+      kept.removeLast();
+    }
+    if (join(footer).length <= max) return join(footer);
+    if (title.length <= max) return title;
+    return '${title.substring(0, max - 1)}…';
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is TrayTooltip &&
+      other.title == title &&
+      listEquals(other.details, details) &&
+      other.footer == footer;
+
+  @override
+  int get hashCode => Object.hash(title, Object.hashAll(details), footer);
 }
 
 /// Something that happened in the tray, the window or the hotkey.
@@ -163,6 +197,9 @@ abstract interface class DesktopShell {
   /// Shows [menu], or removes the icon with null.
   Future<void> setTray(TrayMenu? menu);
 
+  /// Sets the tray icon's hover text, now or once the icon shows.
+  Future<void> setTrayStatus(TrayTooltip tooltip);
+
   /// Whether the close button hides the window instead of ending the app.
   Future<void> setCloseToTray({required bool on});
 
@@ -202,6 +239,7 @@ class PluginDesktopShell
   final _events = StreamController<DesktopEvent>.broadcast();
   Map<String, TrayAction> _ids = const {};
   bool _tray = false;
+  TrayTooltip? _tooltip;
   bool _started = false;
 
   /// Whether this platform is a desktop the app ships on.
@@ -254,8 +292,8 @@ class PluginDesktopShell
     if (!_tray) {
       await trayManager.setIcon(_icon(), isTemplate: Platform.isMacOS);
       _tray = true;
+      await _showTooltip();
     }
-    if (!Platform.isLinux) await trayManager.setToolTip(menu.tooltip);
     if (Platform.isMacOS) await windowManager.setBadgeLabel(menu.badge);
     final ids = <String, TrayAction>{};
     MenuItem item(TrayAction a) {
@@ -283,6 +321,29 @@ class PluginDesktopShell
       ),
     );
     _ids = ids;
+  }
+
+  @override
+  Future<void> setTrayStatus(TrayTooltip tooltip) async {
+    _tooltip = tooltip;
+    if (_tray) await _showTooltip();
+  }
+
+  /// Windows keeps 127 characters of a tooltip; tray_manager has none on
+  /// Linux, so the runner sets the AppIndicator's title and tooltip there.
+  Future<void> _showTooltip() async {
+    final tooltip = _tooltip;
+    if (tooltip == null) return;
+    if (Platform.isLinux) {
+      await channel.invokeMethod<bool>('setTrayStatus', {
+        'title': tooltip.title,
+        'body': tooltip.body.join('\n'),
+      });
+    } else {
+      await trayManager.setToolTip(
+        tooltip.text(max: Platform.isWindows ? 127 : null),
+      );
+    }
   }
 
   /// The tray icon: Linux reads the bundle's PNG, or the installed icon by

@@ -23,7 +23,6 @@ void main() {
   group('trayMenu', () {
     test('nothing unread: plain labels, no badge', () {
       final menu = trayMenu(en, unread: 0, context: 'Work · Acme');
-      expect(menu.tooltip, 'tix');
       expect(menu.labels, {
         TrayAction.open: 'Open tix',
         TrayAction.quickAdd: 'Quick add',
@@ -34,10 +33,9 @@ void main() {
       expect(menu.badge, isNull);
     });
 
-    test('unread items show in the inbox entry, tooltip and badge', () {
+    test('unread items show in the inbox entry and badge', () {
       final menu = trayMenu(en, unread: 3);
       expect(menu.labels[TrayAction.inbox], 'Inbox (3 unread)');
-      expect(menu.tooltip, 'tix: 3 unread');
       expect(menu.badge, '3');
       expect(menu.context, isNull);
     });

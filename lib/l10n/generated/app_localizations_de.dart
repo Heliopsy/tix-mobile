@@ -7499,13 +7499,78 @@ class AppLocalizationsDe extends AppLocalizations {
   String get trayQuit => 'tix beenden';
 
   @override
-  String trayTooltip(int count) {
+  String get trayStatusSignedOut => 'tix · nicht angemeldet';
+
+  @override
+  String trayStatusHeadline(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'tix: $count ungelesen',
-      one: 'tix: 1 ungelesen',
-      zero: 'tix',
+      other: 'tix · $count Instanzen verbunden',
+      one: 'tix · 1 Instanz verbunden',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String trayStatusInstance(String name, String place, String state) {
+    return '$name ($place): $state';
+  }
+
+  @override
+  String trayStatusInstanceQuiet(String name, String place) {
+    return '$name ($place)';
+  }
+
+  @override
+  String get trayStatusLocal => 'lokal';
+
+  @override
+  String get trayStatusLive => 'live';
+
+  @override
+  String get trayStatusConnecting => 'verbindet';
+
+  @override
+  String get trayStatusSyncing => 'synchronisiert gerade';
+
+  @override
+  String get trayStatusOffline => 'offline';
+
+  @override
+  String trayStatusSynced(String ago) {
+    return 'synchronisiert $ago';
+  }
+
+  @override
+  String trayStatusQueued(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Änderungen warten',
+      one: '1 Änderung wartet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String trayStatusMore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '+$count weitere',
+      one: '+1 weitere',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String trayStatusUnread(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ungelesen im Posteingang',
+      one: '1 ungelesen im Posteingang',
     );
     return '$_temp0';
   }

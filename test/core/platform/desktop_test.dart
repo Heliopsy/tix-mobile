@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/core/platform/desktop.dart';
@@ -88,7 +90,6 @@ void main() {
     await shell.start();
     await shell.setTray(
       const TrayMenu(
-        tooltip: 'tix: 2 unread',
         labels: {
           TrayAction.open: 'Open tix',
           TrayAction.quickAdd: 'Quick add',
@@ -122,9 +123,7 @@ void main() {
   test('a picked entry becomes an event', () async {
     final shell = PluginDesktopShell(runner);
     await shell.start();
-    await shell.setTray(
-      const TrayMenu(tooltip: 'tix', labels: {TrayAction.inbox: 'Inbox'}),
-    );
+    await shell.setTray(const TrayMenu(labels: {TrayAction.inbox: 'Inbox'}));
     final menu = trayCalls.lastWhere((c) => c.method == 'setContextMenu');
     final items = ((menu.arguments as Map)['menu'] as Map)['items'] as List;
     final inbox = items.cast<Map<Object?, Object?>>().firstWhere(
@@ -153,13 +152,40 @@ void main() {
   test('the icon is set once and removed with null', () async {
     final shell = PluginDesktopShell(runner);
     await shell.start();
-    const menu = TrayMenu(tooltip: 'tix', labels: {});
+    const menu = TrayMenu(labels: {});
     await shell.setTray(menu);
     await shell.setTray(menu);
     await shell.setTray(null);
     expect(trayCalls.where((c) => c.method == 'setIcon'), hasLength(1));
     expect(trayCalls.last.method, 'destroy');
   });
+
+  test(
+    'on Linux the hover text goes to the runner once the icon shows',
+    () async {
+      final shell = PluginDesktopShell(runner);
+      await shell.start();
+      const tooltip = TrayTooltip(
+        'tix · 1 instance connected',
+        details: ['work (tix.example.com): live'],
+        footer: '2 unread in inbox',
+      );
+      await shell.setTrayStatus(tooltip);
+      expect(runnerCalls.where((c) => c.method == 'setTrayStatus'), isEmpty);
+      await shell.setTray(const TrayMenu(labels: {}));
+      await shell.setTrayStatus(tooltip);
+      final sent = runnerCalls.where((c) => c.method == 'setTrayStatus');
+      expect(sent.map((c) => c.arguments), [
+        for (var i = 0; i < 2; i++)
+          {
+            'title': 'tix · 1 instance connected',
+            'body': 'work (tix.example.com): live\n2 unread in inbox',
+          },
+      ]);
+      expect(trayCalls.where((c) => c.method == 'setToolTip'), isEmpty);
+    },
+    skip: !Platform.isLinux,
+  );
 
   test('start at login and the hotkey go to the runner', () async {
     final shell = PluginDesktopShell(runner);

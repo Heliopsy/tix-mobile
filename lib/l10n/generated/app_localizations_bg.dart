@@ -7439,13 +7439,78 @@ class AppLocalizationsBg extends AppLocalizations {
   String get trayQuit => 'Изход от tix';
 
   @override
-  String trayTooltip(int count) {
+  String get trayStatusSignedOut => 'tix · не сте влезли';
+
+  @override
+  String trayStatusHeadline(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'tix: $count непрочетени',
-      one: 'tix: 1 непрочетено',
-      zero: 'tix',
+      other: 'tix · $count свързани инстанции',
+      one: 'tix · 1 свързана инстанция',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String trayStatusInstance(String name, String place, String state) {
+    return '$name ($place): $state';
+  }
+
+  @override
+  String trayStatusInstanceQuiet(String name, String place) {
+    return '$name ($place)';
+  }
+
+  @override
+  String get trayStatusLocal => 'локална';
+
+  @override
+  String get trayStatusLive => 'на живо';
+
+  @override
+  String get trayStatusConnecting => 'свързване';
+
+  @override
+  String get trayStatusSyncing => 'синхронизира се';
+
+  @override
+  String get trayStatusOffline => 'офлайн';
+
+  @override
+  String trayStatusSynced(String ago) {
+    return 'синхронизирано $ago';
+  }
+
+  @override
+  String trayStatusQueued(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count промени чакат',
+      one: '1 промяна чака',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String trayStatusMore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '+$count още',
+      one: '+1 още',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String trayStatusUnread(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count непрочетени във Входящи',
+      one: '1 непрочетено във Входящи',
     );
     return '$_temp0';
   }
