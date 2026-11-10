@@ -7706,4 +7706,94 @@ class AppLocalizationsEn extends AppLocalizations {
   String watchSyncedFrom(String system) {
     return 'synced from $system';
   }
+
+  @override
+  String get settingsUpdates => 'Updates';
+
+  @override
+  String get settingsUpdatesHelp =>
+      'tix looks for new releases on GitHub. Updates are checked before they are installed: the download has to match the checksums the release signed.';
+
+  @override
+  String get settingsUpdateCheck => 'Check for updates';
+
+  @override
+  String get settingsUpdateCheckHelp => 'When tix starts and every few hours.';
+
+  @override
+  String get settingsUpdateAuto => 'Install updates automatically';
+
+  @override
+  String get settingsUpdateAutoHelp =>
+      'A downloaded update is installed when you quit tix.';
+
+  @override
+  String get updateCheckNow => 'Check now';
+
+  @override
+  String get updateIdle => 'Not checked yet.';
+
+  @override
+  String get updateChecking => 'Checking for updates…';
+
+  @override
+  String updateCurrent(String version) {
+    return 'tix $version is the latest version.';
+  }
+
+  @override
+  String updateAvailable(String version) {
+    return 'Update available: tix $version';
+  }
+
+  @override
+  String get updateAvailableHelp => 'Download it from the release page.';
+
+  @override
+  String updateDownloading(String version, int percent) {
+    return 'Downloading tix $version… $percent%';
+  }
+
+  @override
+  String updateReady(String version) {
+    return 'tix $version is ready to install.';
+  }
+
+  @override
+  String get updateReadyAuto =>
+      'It installs when you quit tix, or now with a restart.';
+
+  @override
+  String get updateRestart => 'Restart to update';
+
+  @override
+  String get updateDownload => 'Download';
+
+  @override
+  String get updateWhatsNew => 'What\'s new';
+
+  @override
+  String get updateFailedNetwork =>
+      'Couldn\'t reach GitHub to check for updates.';
+
+  @override
+  String get updateFailedVerify =>
+      'The update couldn\'t be verified, so it wasn\'t installed.';
+
+  @override
+  String get updateFailedInstall => 'The update couldn\'t be installed.';
+
+  @override
+  String get updateNoAsset =>
+      'There is no download for this system in the release.';
+
+  @override
+  String trayUpdateAvailable(String version) {
+    return 'Update available ($version)';
+  }
+
+  @override
+  String trayRestartToUpdate(String version) {
+    return 'Restart to update ($version)';
+  }
 }

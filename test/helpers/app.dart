@@ -21,6 +21,7 @@ import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/session/api.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
+import 'package:tix_mobile/src/core/update/updates.dart';
 import 'package:tix_mobile/src/data/cache/cache_store.dart';
 import 'package:tix_mobile/src/data/local/local_engine.dart';
 
@@ -128,6 +129,7 @@ List<Override> fakeOverrides(
   NetworkState network = NetworkState.unmetered,
   Stream<NetworkState>? networks,
   bool autoSync = false,
+  UpdateMode updates = UpdateMode.off,
 }) => [
   keyValueStoreProvider.overrideWithValue(settings ?? MemoryKeyValueStore()),
   secretStoreProvider.overrideWithValue(secrets ?? MemorySecretStore()),
@@ -157,6 +159,7 @@ List<Override> fakeOverrides(
   else
     networkStateProvider.overrideWith((ref) => networks),
   autoSyncProvider.overrideWithValue(autoSync),
+  updateModeProvider.overrideWithValue(AsyncData(updates)),
 ];
 
 /// The time every test runs at.

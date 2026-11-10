@@ -66,6 +66,10 @@ enum TrayAction {
   /// Shows the window on the inbox.
   inbox,
 
+  /// Installs a staged update, or shows where one is offered; only in the
+  /// menu while an update is known.
+  update,
+
   /// Ends the app.
   quit,
 }
@@ -84,7 +88,8 @@ class TrayMenu {
   /// The icon's tooltip (Windows, macOS).
   final String tooltip;
 
-  /// The label of each action, in menu order.
+  /// The label of each action, in menu order; [TrayAction.update] only
+  /// while an update is known.
   final Map<TrayAction, String> labels;
 
   /// The active context, shown as a disabled entry; null when signed out.
@@ -262,6 +267,8 @@ class PluginDesktopShell
           item(TrayAction.open),
           item(TrayAction.quickAdd),
           item(TrayAction.inbox),
+          if (menu.labels.containsKey(TrayAction.update))
+            item(TrayAction.update),
           MenuItem.separator(),
           if (context != null) ...[
             MenuItem(key: 'context', label: context, disabled: true),

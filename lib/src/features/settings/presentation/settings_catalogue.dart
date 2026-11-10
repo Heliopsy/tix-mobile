@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/desktop.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
+import 'package:tix_mobile/src/core/update/updates.dart';
 import 'package:tix_mobile/src/data/models/scopes.dart';
 
 /// Where a setting is kept.
@@ -47,6 +48,9 @@ enum SettingsSection {
 
   /// What the active context keeps on this device for offline use.
   offline(SettingsScope.device),
+
+  /// Looking for and installing new releases.
+  updates(SettingsScope.device),
 
   /// Developer controls: commands over ADB.
   advanced(SettingsScope.device),
@@ -136,6 +140,7 @@ String settingsSectionTitle(AppLocalizations l10n, SettingsSection section) =>
       SettingsSection.localEngine => l10n.localInstanceIdleTitle,
       SettingsSection.widgets => l10n.settingsWidgets,
       SettingsSection.offline => l10n.offlineTitle,
+      SettingsSection.updates => l10n.settingsUpdates,
       SettingsSection.advanced => l10n.settingsAdvanced,
       SettingsSection.about => l10n.aboutTitle,
       SettingsSection.profile => l10n.settingsProfileTitle,
@@ -160,7 +165,9 @@ String settingsScopeLabel(AppLocalizations l10n, SettingsScope scope) =>
 /// a session, tenant settings only for an administrator, the black switch
 /// only under the system theme, the idle timeout only where local databases
 /// are offered, widgets only where the platform has them, the desktop's
-/// switches only where [desktop] offers them, ADB control only on Android.
+/// switches only where [desktop] offers them, updates only where [updates]
+/// is not off and installing automatically only where the app installs
+/// itself, ADB control only on Android.
 List<SettingsItem> settingsCatalogue(
   AppLocalizations l10n, {
   required bool signedIn,
@@ -171,6 +178,7 @@ List<SettingsItem> settingsCatalogue(
   bool widgets = false,
   bool adb = false,
   DesktopCaps desktop = DesktopCaps.none,
+  UpdateMode updates = UpdateMode.off,
   String tenant = '',
 }) => [
   SettingsItem(
@@ -288,6 +296,30 @@ List<SettingsItem> settingsCatalogue(
       icon: Icons.cloud_off_outlined,
       keywords: '${l10n.offlineAvailableTitle} ${l10n.offlineSyncTitle}',
       route: Routes.offline,
+    ),
+  if (updates != UpdateMode.off) ...[
+    SettingsItem(
+      id: 'updates.status',
+      section: SettingsSection.updates,
+      label: l10n.updateCheckNow,
+      icon: Icons.system_update_outlined,
+      keywords: '${l10n.settingsUpdates} ${l10n.updateWhatsNew}',
+    ),
+    SettingsItem(
+      id: 'updates.check',
+      section: SettingsSection.updates,
+      label: l10n.settingsUpdateCheck,
+      icon: Icons.update,
+      keywords: l10n.settingsUpdates,
+    ),
+  ],
+  if (updates == UpdateMode.install)
+    SettingsItem(
+      id: 'updates.auto',
+      section: SettingsSection.updates,
+      label: l10n.settingsUpdateAuto,
+      icon: Icons.install_desktop_outlined,
+      keywords: l10n.settingsUpdates,
     ),
   if (adb)
     SettingsItem(

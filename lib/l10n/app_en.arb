@@ -4787,5 +4787,134 @@
         "type": "String"
       }
     }
+  },
+  "settingsUpdates": "Updates",
+  "@settingsUpdates": {
+    "description": "Settings and About section for app updates"
+  },
+  "settingsUpdatesHelp": "tix looks for new releases on GitHub. Updates are checked before they are installed: the download has to match the checksums the release signed.",
+  "@settingsUpdatesHelp": {
+    "description": "Explanation at the top of the updates settings section"
+  },
+  "settingsUpdateCheck": "Check for updates",
+  "@settingsUpdateCheck": {
+    "description": "Switch: look for new releases automatically"
+  },
+  "settingsUpdateCheckHelp": "When tix starts and every few hours.",
+  "@settingsUpdateCheckHelp": {
+    "description": "Help under the check for updates switch"
+  },
+  "settingsUpdateAuto": "Install updates automatically",
+  "@settingsUpdateAuto": {
+    "description": "Switch: install a downloaded update when the app quits"
+  },
+  "settingsUpdateAutoHelp": "A downloaded update is installed when you quit tix.",
+  "@settingsUpdateAutoHelp": {
+    "description": "Help under the install updates automatically switch"
+  },
+  "updateCheckNow": "Check now",
+  "@updateCheckNow": {
+    "description": "Button: check for updates right away"
+  },
+  "updateIdle": "Not checked yet.",
+  "@updateIdle": {
+    "description": "Update status before the first check"
+  },
+  "updateChecking": "Checking for updates…",
+  "@updateChecking": {
+    "description": "Update status while checking"
+  },
+  "updateCurrent": "tix {version} is the latest version.",
+  "@updateCurrent": {
+    "description": "Update status when no newer release exists",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateAvailable": "Update available: tix {version}",
+  "@updateAvailable": {
+    "description": "Update status when a newer release exists",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateAvailableHelp": "Download it from the release page.",
+  "@updateAvailableHelp": {
+    "description": "Under an available update that the app does not install itself"
+  },
+  "updateDownloading": "Downloading tix {version}… {percent}%",
+  "@updateDownloading": {
+    "description": "Update status while downloading",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "updateReady": "tix {version} is ready to install.",
+  "@updateReady": {
+    "description": "Update status when an update is downloaded and verified",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateReadyAuto": "It installs when you quit tix, or now with a restart.",
+  "@updateReadyAuto": {
+    "description": "Under a ready update when install automatically is on"
+  },
+  "updateRestart": "Restart to update",
+  "@updateRestart": {
+    "description": "Button: install the downloaded update and restart"
+  },
+  "updateDownload": "Download",
+  "@updateDownload": {
+    "description": "Button: open the release page to download the update by hand"
+  },
+  "updateWhatsNew": "What's new",
+  "@updateWhatsNew": {
+    "description": "Button: open the release notes"
+  },
+  "updateFailedNetwork": "Couldn't reach GitHub to check for updates.",
+  "@updateFailedNetwork": {
+    "description": "Update status when the check or download failed on the network"
+  },
+  "updateFailedVerify": "The update couldn't be verified, so it wasn't installed.",
+  "@updateFailedVerify": {
+    "description": "Update status when the signature or checksum did not match"
+  },
+  "updateFailedInstall": "The update couldn't be installed.",
+  "@updateFailedInstall": {
+    "description": "Update status when unpacking or replacing the app failed"
+  },
+  "updateNoAsset": "There is no download for this system in the release.",
+  "@updateNoAsset": {
+    "description": "Under an available update when the release has no archive for this OS or CPU"
+  },
+  "trayUpdateAvailable": "Update available ({version})",
+  "@trayUpdateAvailable": {
+    "description": "Tray menu entry while a newer release exists",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "trayRestartToUpdate": "Restart to update ({version})",
+  "@trayRestartToUpdate": {
+    "description": "Tray menu entry once an update is ready to install",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   }
 }

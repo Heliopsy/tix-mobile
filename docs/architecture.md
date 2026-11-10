@@ -363,6 +363,39 @@ flowchart LR
 - **Talking to it.** Once started, a local instance is an ordinary server on loopback: the same `TixApi`, the same
   errors. Android allows cleartext HTTP to `127.0.0.1` only; Apple platforms set `NSAllowsLocalNetworking`.
 
+## Desktop updates
+
+Builds from the GitHub release update themselves. Nothing here is the tix API: `data/update/` has its own small
+GitHub client (`GitHubReleaseFeed`), and the rest is pure functions and one interface.
+
+```mermaid
+flowchart LR
+  GH["GitHub releases/latest"] --> F["GitHubReleaseFeed"]
+  F --> U["Updater<br/>compare, pick asset, verify"]
+  U --> I["UpdateInstaller<br/>stage, apply"]
+  U --> C["updatesProvider<br/>core/update"]
+  C --> P["UpdatePanel<br/>Settings, About"]
+  C --> T["DesktopHost<br/>tray entry, install on quit"]
+```
+
+- **Mode.** `updateModeProvider` is `off`, `notify` or `install` (`updateModeFor` in `data/update/updater.dart`).
+  Off for builds made with `--dart-define=TIX_SELF_UPDATE=false` (Flatpak, the Play bundle, F-Droid), inside
+  Flatpak or Snap, on iOS, and on Android installs from a store. Notify for an APK installed through the system
+  package installer, and for a desktop that is a debug build, has no pinned key, runs in the macOS App Sandbox or
+  cannot write its install. Install otherwise.
+- **Check.** `releases/latest` at start and every six hours while "Check for updates" is on, and on Check now.
+  `ReleaseVersion` compares by semver precedence; drafts and prereleases never count.
+- **Verify.** `SHA256SUMS.sig` is an Ed25519 signature over `SHA256SUMS` by the key pinned in
+  `data/update/signing_key.dart`, checked before the archive is fetched; the archive's SHA-256 must then match its
+  signed line. Any failure means Download (the release page), never an install.
+- **Install.** `UpdateInstaller` (`data/update/installer.dart`) stages the archive next to the install and swaps
+  it in on restart. `LinuxInstaller` swaps the bundle directory by rename and relaunches once this process has
+  exited; `WindowsInstaller` leaves the swap to a PowerShell script that waits for the exe to unlock;
+  `MacInstaller` unpacks with `ditto` and swaps `tix.app`. Tests use `FakeInstaller`; only the swap itself is
+  platform code.
+- **When.** Restart to update applies it and quits. With "Install updates automatically" on, the tray's Quit and
+  the window's close button (held while an update waits) apply it without relaunching.
+
 ## Licences
 
 `TixBinding` replaces Flutter's licence collector. It lists Flutter's notices for runtime packages only (the

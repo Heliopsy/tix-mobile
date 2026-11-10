@@ -8,11 +8,13 @@ import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/desktop.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
+import 'package:tix_mobile/src/core/update/updates.dart';
 
 import '../../helpers/app.dart';
 import '../../helpers/container.dart';
 import '../../helpers/fake_desktop.dart';
 import '../../helpers/fake_tix.dart';
+import '../../helpers/fixed_updates.dart';
 import '../../helpers/stores.dart';
 
 void main() {
@@ -47,6 +49,37 @@ void main() {
 
     test('no count yet reads as nothing unread', () {
       expect(trayMenu(en), trayMenu(en, unread: 0));
+    });
+
+    test('an update entry sits before Quit', () {
+      final menu = trayMenu(en, update: 'Update available (0.12.0)');
+      expect(menu.labels.keys, [
+        TrayAction.open,
+        TrayAction.quickAdd,
+        TrayAction.inbox,
+        TrayAction.update,
+        TrayAction.quit,
+      ]);
+      expect(menu, isNot(trayMenu(en)));
+    });
+
+    test('the update entry follows the update', () {
+      expect(trayUpdateLabel(en, const UpdateState()), isNull);
+      expect(
+        trayUpdateLabel(en, const UpdateState(phase: UpdatePhase.current)),
+        isNull,
+      );
+      expect(
+        trayUpdateLabel(
+          en,
+          UpdateState(phase: UpdatePhase.available, offer: offerOf('0.12.0')),
+        ),
+        'Update available (0.12.0)',
+      );
+      expect(
+        trayUpdateLabel(en, readyState('0.12.0')),
+        'Restart to update (0.12.0)',
+      );
     });
 
     test('menus compare by content', () {

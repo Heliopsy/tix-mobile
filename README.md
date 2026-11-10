@@ -133,6 +133,11 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   unread count in the tooltip and on the macOS Dock. Optional start at login, and Ctrl+Shift+Space (⌃⇧Space on a
   Mac) to open quick add from any app, where the desktop allows global shortcuts. A second launch or a `tix://`
   link brings the running window forward instead of starting another copy.
+- **Updates** for the desktop downloads from GitHub: tix looks for a new release at start and every few hours, and
+  shows it in Settings, About and the tray. It downloads the archive for your system, checks it against the
+  release's signed `SHA256SUMS`, and installs it when you pick Restart to update, or on quit if you turn that on.
+  Where it cannot write its own folder, it links to the release page instead. Flatpak, store builds and phones
+  leave updates to their store; an APK installed from GitHub only says a new version is out.
 - **Command palette** (Ctrl+K or Cmd+K): every command, projects, recent tasks and any task by reference; `?` lists
   the shortcuts.
 - **Inbox**: mentions, assignments, comments and status changes, grouped by day, with filters per kind, swipe to
@@ -197,7 +202,7 @@ On Linux, this downloads the latest release for your CPU, checks it against `SHA
 in `~/.local/opt/tix-mobile` with a launcher entry and `~/.local/bin/tix-mobile`, and starts it. Paste it from any
 directory; a failed step stops it without touching what is installed. It needs curl, GTK 3, libayatana-appindicator3
 (`libayatana-appindicator3-1` on Debian and Ubuntu, `libayatana-appindicator-gtk3` on Fedora and Arch) and a Secret
-Service keyring (GNOME Keyring or KWallet).
+Service keyring (GNOME Keyring or KWallet). Once installed, tix updates itself from Settings or the tray menu.
 
 ```sh
 (

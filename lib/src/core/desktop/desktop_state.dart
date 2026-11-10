@@ -6,6 +6,7 @@ import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/desktop.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
+import 'package:tix_mobile/src/core/update/updates.dart';
 import 'package:tix_mobile/src/data/repositories/settings_repository.dart';
 
 part 'desktop_state.g.dart';
@@ -99,9 +100,23 @@ String? trayContextLabel(Session? session) {
   return label.isEmpty ? null : label;
 }
 
+/// The tray's entry for [update], null while there is nothing to offer.
+String? trayUpdateLabel(AppLocalizations l10n, UpdateState update) {
+  final version = update.offer?.version.toString();
+  if (version == null) return null;
+  return update.phase == UpdatePhase.ready
+      ? l10n.trayRestartToUpdate(version)
+      : l10n.trayUpdateAvailable(version);
+}
+
 /// The tray's tooltip, menu and dock badge for [unread] items in
-/// [context].
-TrayMenu trayMenu(AppLocalizations l10n, {int? unread, String? context}) {
+/// [context], with an [update] entry when one is given.
+TrayMenu trayMenu(
+  AppLocalizations l10n, {
+  int? unread,
+  String? context,
+  String? update,
+}) {
   final count = unread ?? 0;
   return TrayMenu(
     tooltip: l10n.trayTooltip(count),
@@ -109,6 +124,7 @@ TrayMenu trayMenu(AppLocalizations l10n, {int? unread, String? context}) {
       TrayAction.open: l10n.trayOpen,
       TrayAction.quickAdd: l10n.quickAddTitle,
       TrayAction.inbox: l10n.trayInbox(count),
+      TrayAction.update: ?update,
       TrayAction.quit: l10n.trayQuit,
     },
     context: context,

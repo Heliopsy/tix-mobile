@@ -7767,4 +7767,96 @@ class AppLocalizationsFr extends AppLocalizations {
   String watchSyncedFrom(String system) {
     return 'synchronisé depuis $system';
   }
+
+  @override
+  String get settingsUpdates => 'Mises à jour';
+
+  @override
+  String get settingsUpdatesHelp =>
+      'tix cherche les nouvelles versions sur GitHub. Les mises à jour sont vérifiées avant l’installation : le téléchargement doit correspondre aux sommes de contrôle signées de la version.';
+
+  @override
+  String get settingsUpdateCheck => 'Rechercher des mises à jour';
+
+  @override
+  String get settingsUpdateCheckHelp =>
+      'Au démarrage de tix et toutes les quelques heures.';
+
+  @override
+  String get settingsUpdateAuto => 'Installer les mises à jour automatiquement';
+
+  @override
+  String get settingsUpdateAutoHelp =>
+      'Une mise à jour téléchargée est installée quand vous quittez tix.';
+
+  @override
+  String get updateCheckNow => 'Vérifier maintenant';
+
+  @override
+  String get updateIdle => 'Pas encore vérifié.';
+
+  @override
+  String get updateChecking => 'Recherche de mises à jour…';
+
+  @override
+  String updateCurrent(String version) {
+    return 'tix $version est la dernière version.';
+  }
+
+  @override
+  String updateAvailable(String version) {
+    return 'Mise à jour disponible : tix $version';
+  }
+
+  @override
+  String get updateAvailableHelp =>
+      'Téléchargez-la depuis la page de la version.';
+
+  @override
+  String updateDownloading(String version, int percent) {
+    return 'Téléchargement de tix $version… $percent %';
+  }
+
+  @override
+  String updateReady(String version) {
+    return 'tix $version est prêt à être installé.';
+  }
+
+  @override
+  String get updateReadyAuto =>
+      'Elle s’installe quand vous quittez tix, ou tout de suite avec un redémarrage.';
+
+  @override
+  String get updateRestart => 'Redémarrer pour mettre à jour';
+
+  @override
+  String get updateDownload => 'Télécharger';
+
+  @override
+  String get updateWhatsNew => 'Nouveautés';
+
+  @override
+  String get updateFailedNetwork =>
+      'Impossible de joindre GitHub pour rechercher des mises à jour.';
+
+  @override
+  String get updateFailedVerify =>
+      'La mise à jour n’a pas pu être vérifiée, elle n’a donc pas été installée.';
+
+  @override
+  String get updateFailedInstall => 'La mise à jour n’a pas pu être installée.';
+
+  @override
+  String get updateNoAsset =>
+      'La version ne contient pas de téléchargement pour ce système.';
+
+  @override
+  String trayUpdateAvailable(String version) {
+    return 'Mise à jour disponible ($version)';
+  }
+
+  @override
+  String trayRestartToUpdate(String version) {
+    return 'Redémarrer pour mettre à jour ($version)';
+  }
 }

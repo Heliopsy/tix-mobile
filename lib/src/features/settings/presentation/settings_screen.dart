@@ -18,7 +18,9 @@ import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/people.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/time/reader_time.dart';
+import 'package:tix_mobile/src/core/update/updates.dart';
 import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
+import 'package:tix_mobile/src/core/widgets/update_panel.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
 import 'package:tix_mobile/src/features/settings/presentation/date_settings.dart';
 import 'package:tix_mobile/src/features/settings/presentation/settings_catalogue.dart';
@@ -61,6 +63,7 @@ List<SettingsItem> currentSettings(WidgetRef ref, AppLocalizations l10n) {
     widgets: ref.watch(widgetBridgeProvider).supported,
     adb: ref.watch(adbControlOfferedProvider),
     desktop: ref.watch(desktopCapsProvider).value ?? DesktopCaps.none,
+    updates: ref.watch(updateModeProvider).value ?? UpdateMode.off,
     tenant: session?.connection.tenantLabel ?? '',
   );
 }
@@ -244,6 +247,7 @@ class _Section extends StatelessWidget {
         SettingsSection.localEngine => l10n.localInstanceIdleHelp,
         SettingsSection.widgets => l10n.settingsWidgetsHelp,
         SettingsSection.desktop => l10n.settingsDesktopHelp,
+        SettingsSection.updates => l10n.settingsUpdatesHelp,
         _ => null,
       },
       children: [
@@ -287,6 +291,9 @@ class _Entry extends StatelessWidget {
       'desktop.closeToTray' => const _CloseToTrayEntry(),
       'desktop.autostart' => const _AutostartEntry(),
       'desktop.hotkey' => const _HotkeyEntry(),
+      'updates.status' => const UpdatePanel(),
+      'updates.check' => const _UpdateCheckEntry(),
+      'updates.auto' => const _AutoInstallEntry(),
       'deviceNotifications.open' => _LinkEntry(
         item: item,
         subtitle: l10n.settingsDeviceNotifSubtitle,
@@ -588,6 +595,34 @@ class _HotkeyEntry extends ConsumerWidget {
     ),
     value: ref.watch(quickAddHotkeySettingProvider),
     onChanged: (on) => unawaited(_set(context, ref, on)),
+  );
+}
+
+class _UpdateCheckEntry extends ConsumerWidget {
+  const _UpdateCheckEntry();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => TixSwitchRow(
+    key: const Key('settings.updateCheck'),
+    title: context.l10n.settingsUpdateCheck,
+    subtitle: context.l10n.settingsUpdateCheckHelp,
+    value: ref.watch(updateCheckSettingProvider),
+    onChanged: (on) =>
+        ref.read(updateCheckSettingProvider.notifier).set(on: on),
+  );
+}
+
+class _AutoInstallEntry extends ConsumerWidget {
+  const _AutoInstallEntry();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => TixSwitchRow(
+    key: const Key('settings.updateAuto'),
+    title: context.l10n.settingsUpdateAuto,
+    subtitle: context.l10n.settingsUpdateAutoHelp,
+    value: ref.watch(autoInstallSettingProvider),
+    onChanged: (on) =>
+        ref.read(autoInstallSettingProvider.notifier).set(on: on),
   );
 }
 

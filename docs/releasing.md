@@ -38,7 +38,8 @@ Android that also checks it is stored uncompressed and 16 KB aligned, which Goog
 tix, change `tix.lock`, run `just engine-notices`, and commit both.
 
 Every release also carries `SHA256SUMS` over all of them, and each artifact has a GitHub build provenance
-attestation. Users verify with:
+attestation. With the [update signing key](#desktop-update-signing) set, `SHA256SUMS.sig` signs the checksums for
+the desktop apps' self-update. Users verify with:
 
 ```sh
 sha256sum --check --ignore-missing SHA256SUMS
@@ -119,6 +120,74 @@ unsigned and the macOS app is ad-hoc signed, so Gatekeeper warns on first launch
 The Windows archive is not code-signed. SmartScreen warns on first launch; the checksum and provenance
 attestation are the way to check a download.
 
+### Desktop update signing
+
+The Linux, Windows and macOS downloads update themselves (`docs/architecture.md`, Desktop updates). `SHA256SUMS`
+from the same release only proves a download is intact, so the apps also want `SHA256SUMS.sig`: a raw 64-byte
+Ed25519 signature over `SHA256SUMS`, made in the `publish` job by `scripts/update-sign.sh` with the
+`UPDATE_SIGNING_KEY` secret. The apps check it against the public key pinned in
+`lib/src/data/update/signing_key.dart` before they download anything else, and refuse to install without it.
+
+Without the secret the release is published as before, without `SHA256SUMS.sig`, and the apps show the update
+with a link to the release page. An app with no key pinned (`updateSigningPublicKey` empty, as it ships until the
+steps below) does the same.
+
+Owner, once (OpenSSL 3; on macOS use Homebrew's `openssl@3`, the system LibreSSL has no Ed25519):
+
+1. Create the key, somewhere outside the repository, and keep the `.pem` offline:
+
+   ```sh
+   openssl genpkey -algorithm ed25519 -out tix-update-signing.pem
+   ```
+
+2. Store it as the secret (or paste the whole file, header and footer lines included, under **Settings → Secrets
+   and variables → Actions**):
+
+   ```sh
+   gh secret set UPDATE_SIGNING_KEY --repo heliopsy/tix-mobile < tix-update-signing.pem
+   ```
+
+3. Print the public key as the app pins it, the base64 of its 32 raw bytes:
+
+   ```sh
+   openssl pkey -in tix-update-signing.pem -pubout -outform DER | tail -c 32 | base64
+   ```
+
+4. Put that string in `lib/src/data/update/signing_key.dart`, drop the TODO above it, and merge it as a `feat:`
+   pull request:
+
+   ```dart
+   const updateSigningPublicKey = '<the 44 characters from step 3>';
+   ```
+
+| Secret | Value |
+| --- | --- |
+| `UPDATE_SIGNING_KEY` | The whole Ed25519 private key file in PEM, its `BEGIN PRIVATE KEY` and `END PRIVATE KEY` lines included |
+
+The release that carries the pinned key is the first that can update itself; it installs the release after it.
+Copies from before keep offering Download, so people update to that release by hand once.
+
+Verify: the `publish` job's log says `signed dist/SHA256SUMS with the update key ...` with the key from step 3 and
+no warning, the release lists `SHA256SUMS.sig`, and by hand:
+
+```sh
+openssl pkey -in tix-update-signing.pem -pubout -out tix-update-signing.pub.pem
+openssl pkeyutl -verify -pubin -inkey tix-update-signing.pub.pem -rawin -in SHA256SUMS -sigfile SHA256SUMS.sig
+```
+
+prints `Signature Verified Successfully`. The job warns when the key pinned at the release's commit differs from
+the secret's.
+
+Rotating the key (lost, or leaked): create a new one, replace the secret and the pinned key in the same release.
+Copies pinning the old key cannot verify anything signed with the new one and fall back to Download, so after a
+rotation everyone updates by hand once. Losing the key without a leak is no emergency: releases go out unsigned
+and the apps offer the download until a new key is pinned.
+
+Self-update is off, and nothing is checked, in Flatpak (Flathub updates it), in builds made with
+`--dart-define=TIX_SELF_UPDATE=false` (`flatpak/build.sh`, `just build-aab` for Google Play, the F-Droid recipe and
+`just build-fdroid`), and on iOS. Android APKs from the release only show that a new version is out, and only when
+the system package installer installed them; Play and F-Droid installs never check.
+
 ## When a release goes wrong
 
 - **No artifacts on a release.** A tag created with the workflow's own `GITHUB_TOKEN` cannot start another
@@ -151,6 +220,7 @@ Secrets go in **Settings → Secrets and variables → Actions → Secrets**. To
 | [macOS notarisation](#macos-notarisation) | Ad-hoc signed zip | Developer ID Application certificate (same Apple account) |
 | [F-Droid](#f-droid) | Recipe in `fdroid/`, not submitted | A merge request to fdroiddata |
 | [Flathub](#flathub) | Manifest in `flatpak/`, not submitted | A submission pull request to Flathub |
+| [Desktop update signing](#desktop-update-signing) | No `SHA256SUMS.sig`; desktop apps offer the download | An Ed25519 key |
 
 ### Store text
 

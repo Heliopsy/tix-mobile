@@ -13,6 +13,7 @@ import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/update/updates.dart';
 import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
 import 'package:tix_mobile/src/data/cache/cache_store.dart';
 import 'package:tix_mobile/src/data/offline/sync_store.dart';
@@ -24,6 +25,7 @@ import '../../../helpers/design.dart';
 import '../../../helpers/fake_desktop.dart';
 import '../../../helpers/fake_tix.dart';
 import '../../../helpers/fake_widgets.dart';
+import '../../../helpers/fixed_updates.dart';
 import '../../../helpers/stores.dart';
 
 void main() {
@@ -41,6 +43,8 @@ void main() {
     CacheStore? cache,
     bool adb = false,
     FakeDesktop? desktop,
+    UpdateMode updates = UpdateMode.off,
+    FixedUpdates? updater,
   }) async {
     server = tix ?? FakeTix();
     final s = signedInStores();
@@ -68,7 +72,9 @@ void main() {
           local: local,
           widgets: widgets,
           cache: cache,
+          updates: updates,
         ),
+        fixedUpdates(updater ?? FixedUpdates(const UpdateState())),
         adbControlOfferedProvider.overrideWithValue(adb),
         desktopShellProvider.overrideWithValue(
           desktop ?? FakeDesktop(caps: DesktopCaps.none),
@@ -81,6 +87,59 @@ void main() {
     await tester.pumpAndSettle();
     return c;
   }
+
+  group('updates', () {
+    Finder section() => find.byKey(const Key('settings.section.updates'));
+
+    testWidgets('no Updates section where updates are off', (tester) async {
+      await pump(tester);
+      expect(section(), findsNothing);
+      expect(find.byKey(const Key('update.status')), findsNothing);
+    });
+
+    testWidgets('a self-installing build offers all three', (tester) async {
+      final updater = FixedUpdates(const UpdateState());
+      final c = await pump(
+        tester,
+        updates: UpdateMode.install,
+        updater: updater,
+      );
+      expect(section(), findsOneWidget);
+      expect(find.text('Check for updates'), findsOneWidget);
+      expect(find.text('Install updates automatically'), findsOneWidget);
+      expect(c.read(updateCheckSettingProvider), isTrue);
+      expect(c.read(autoInstallSettingProvider), isFalse);
+
+      await tester.tap(find.byKey(const Key('settings.updateAuto')));
+      await tester.pumpAndSettle();
+      expect(c.read(autoInstallSettingProvider), isTrue);
+      expect(stores.settings.values['settings.updateAutoInstall'], 'true');
+
+      await tester.tap(find.byKey(const Key('settings.updateCheck')));
+      await tester.pumpAndSettle();
+      expect(c.read(updateCheckSettingProvider), isFalse);
+      expect(stores.settings.values['settings.updateCheck'], 'off');
+
+      await tester.tap(find.byKey(const Key('update.check')));
+      await tester.pumpAndSettle();
+      expect(updater.checks, 1);
+    });
+
+    testWidgets('a build that only notifies has no install switch', (
+      tester,
+    ) async {
+      await pump(tester, updates: UpdateMode.notify);
+      expect(section(), findsOneWidget);
+      expect(find.text('Check for updates'), findsOneWidget);
+      expect(find.byKey(const Key('settings.updateAuto')), findsNothing);
+    });
+
+    testWidgets('search finds the update settings', (tester) async {
+      await pump(tester, updates: UpdateMode.install, query: 'automatically');
+      expect(find.byKey(const Key('settings.updateAuto')), findsOneWidget);
+      expect(find.byKey(const Key('settings.updateCheck')), findsNothing);
+    });
+  });
 
   group('desktop', () {
     Finder section() => find.byKey(const Key('settings.section.desktop'));

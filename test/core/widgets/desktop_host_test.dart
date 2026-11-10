@@ -6,12 +6,14 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/desktop/desktop_state.dart';
 import 'package:tix_mobile/src/core/platform/deep_links.dart';
 import 'package:tix_mobile/src/core/platform/desktop.dart';
+import 'package:tix_mobile/src/core/update/updates.dart';
 import 'package:tix_mobile/src/core/widgets/desktop_host.dart';
 
 import '../../helpers/app.dart';
 import '../../helpers/fake_desktop.dart';
 import '../../helpers/fake_notes.dart';
 import '../../helpers/fake_tix.dart';
+import '../../helpers/fixed_updates.dart';
 
 void main() {
   late FakeDesktop desktop;
@@ -27,6 +29,7 @@ void main() {
     bool signedIn = true,
     int? unread,
     Map<String, String> settings = const {},
+    FixedUpdates? updates,
   }) {
     final server = FakeTix();
     final stores = signInStores(server);
@@ -41,9 +44,11 @@ void main() {
           settings: stores.settings,
           secrets: stores.secrets,
           notes: notes,
+          updates: updates == null ? UpdateMode.off : UpdateMode.install,
         ),
         desktopShellProvider.overrideWithValue(desktop),
         trayUnreadProvider.overrideWithValue(unread),
+        if (updates != null) fixedUpdates(updates),
       ],
     );
   }
@@ -198,5 +203,87 @@ void main() {
       ..shown = false;
     await pump(tester, settings: {'settings.closeToTray': 'false'});
     expect(desktop.shows, 1);
+  });
+
+  group('updates', () {
+    testWidgets('no update entry while there is nothing to offer', (
+      tester,
+    ) async {
+      await pump(tester, updates: FixedUpdates(const UpdateState()));
+      expect(desktop.menus.last!.labels, isNot(contains(TrayAction.update)));
+    });
+
+    testWidgets('an available update shows in the tray and opens About', (
+      tester,
+    ) async {
+      final updates = FixedUpdates(
+        UpdateState(phase: UpdatePhase.available, offer: offerOf('0.12.0')),
+      );
+      final c = await pump(tester, updates: updates);
+      expect(
+        desktop.menus.last!.labels[TrayAction.update],
+        'Update available (0.12.0)',
+      );
+      desktop
+        ..shown = false
+        ..emit(const TrayPicked(TrayAction.update));
+      await tester.pumpAndSettle();
+      expect(desktop.shown, isTrue);
+      expect(c.read(deepLinkIntakeProvider).take(), Uri.parse('tix://about'));
+      expect(updates.restarts, 0);
+    });
+
+    testWidgets('a staged update restarts from the tray', (tester) async {
+      final updates = FixedUpdates(readyState('0.12.0'));
+      await pump(tester, updates: updates);
+      expect(
+        desktop.menus.last!.labels[TrayAction.update],
+        'Restart to update (0.12.0)',
+      );
+      desktop.emit(const TrayPicked(TrayAction.update));
+      await tester.pumpAndSettle();
+      expect(updates.restarts, 1);
+    });
+
+    testWidgets('Quit asks to install on quit first', (tester) async {
+      final updates = FixedUpdates(readyState('0.12.0'));
+      await pump(tester, updates: updates);
+      desktop.emit(const TrayPicked(TrayAction.quit));
+      await tester.pumpAndSettle();
+      expect(updates.quits, 1);
+      expect(desktop.quits, 1);
+    });
+
+    testWidgets('without a tray, close is held while an update waits', (
+      tester,
+    ) async {
+      desktop.caps = const DesktopCaps(autostart: true);
+      final updates = FixedUpdates(const UpdateState());
+      await pump(
+        tester,
+        updates: updates,
+        settings: {'settings.updateAutoInstall': 'true'},
+      );
+      expect(desktop.closeToTray, isEmpty);
+      updates.state = readyState('0.12.0');
+      await tester.pumpAndSettle();
+      expect(desktop.closeToTray, [true]);
+      desktop.emit(const CloseRequested());
+      await tester.pumpAndSettle();
+      expect(updates.quits, 1);
+      expect(desktop.quits, 1);
+      expect(desktop.hides, 0);
+    });
+
+    testWidgets('a staged update is not installed on close unless chosen', (
+      tester,
+    ) async {
+      desktop.caps = const DesktopCaps(autostart: true);
+      await pump(tester, updates: FixedUpdates(readyState('0.12.0')));
+      expect(desktop.closeToTray, isEmpty);
+      desktop.emit(const CloseRequested());
+      await tester.pumpAndSettle();
+      expect(desktop.quits, 0);
+    });
   });
 }

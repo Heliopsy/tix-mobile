@@ -7716,4 +7716,94 @@ class AppLocalizationsBg extends AppLocalizations {
   String watchSyncedFrom(String system) {
     return 'синхронизирано от $system';
   }
+
+  @override
+  String get settingsUpdates => 'Обновления';
+
+  @override
+  String get settingsUpdatesHelp =>
+      'tix търси нови версии в GitHub. Обновленията се проверяват преди инсталиране: изтеглянето трябва да съвпада с подписаните контролни суми на версията.';
+
+  @override
+  String get settingsUpdateCheck => 'Проверявай за обновления';
+
+  @override
+  String get settingsUpdateCheckHelp =>
+      'При стартиране на tix и на всеки няколко часа.';
+
+  @override
+  String get settingsUpdateAuto => 'Инсталирай обновленията автоматично';
+
+  @override
+  String get settingsUpdateAutoHelp =>
+      'Изтегленото обновление се инсталира, когато излезете от tix.';
+
+  @override
+  String get updateCheckNow => 'Провери сега';
+
+  @override
+  String get updateIdle => 'Още не е проверено.';
+
+  @override
+  String get updateChecking => 'Проверка за обновления…';
+
+  @override
+  String updateCurrent(String version) {
+    return 'tix $version е най-новата версия.';
+  }
+
+  @override
+  String updateAvailable(String version) {
+    return 'Налично обновление: tix $version';
+  }
+
+  @override
+  String get updateAvailableHelp => 'Изтеглете го от страницата на версията.';
+
+  @override
+  String updateDownloading(String version, int percent) {
+    return 'Изтегляне на tix $version… $percent%';
+  }
+
+  @override
+  String updateReady(String version) {
+    return 'tix $version е готов за инсталиране.';
+  }
+
+  @override
+  String get updateReadyAuto =>
+      'Инсталира се, когато излезете от tix, или веднага с рестарт.';
+
+  @override
+  String get updateRestart => 'Рестартирай за обновяване';
+
+  @override
+  String get updateDownload => 'Изтегли';
+
+  @override
+  String get updateWhatsNew => 'Какво ново';
+
+  @override
+  String get updateFailedNetwork =>
+      'Няма връзка с GitHub за проверка на обновленията.';
+
+  @override
+  String get updateFailedVerify =>
+      'Обновлението не можа да бъде проверено, затова не е инсталирано.';
+
+  @override
+  String get updateFailedInstall => 'Обновлението не можа да бъде инсталирано.';
+
+  @override
+  String get updateNoAsset => 'Във версията няма файл за тази система.';
+
+  @override
+  String trayUpdateAvailable(String version) {
+    return 'Налично обновление ($version)';
+  }
+
+  @override
+  String trayRestartToUpdate(String version) {
+    return 'Рестартирай за обновяване ($version)';
+  }
 }

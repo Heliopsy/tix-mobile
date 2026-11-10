@@ -4,7 +4,7 @@ import 'package:tix_mobile/src/core/storage/stores.dart';
 
 /// The choices kept on this device: theme, language, motion, haptics, the
 /// screen the app opens on, the local engine's idle timeout and the desktop's
-/// tray, login and hotkey choices, stored by name.
+/// tray, login and hotkey choices and the update choices, stored by name.
 class SettingsRepository {
   /// Keeps the choices in [_store].
   SettingsRepository(this._store);
@@ -20,6 +20,8 @@ class SettingsRepository {
   static const _closeToTrayKey = 'settings.closeToTray';
   static const _autostartKey = 'settings.autostart';
   static const _hotkeyKey = 'settings.quickAddHotkey';
+  static const _updateCheckKey = 'settings.updateCheck';
+  static const _updateAutoKey = 'settings.updateAutoInstall';
 
   final KeyValueStore _store;
 
@@ -109,4 +111,19 @@ class SettingsRepository {
   /// Saves whether the global quick-add hotkey is on.
   Future<void> setQuickAddHotkey({required bool on}) =>
       on ? _store.write(_hotkeyKey, 'true') : _store.delete(_hotkeyKey);
+
+  /// Whether the app looks for updates on its own; on until turned off.
+  bool updateCheck() => _store.read(_updateCheckKey) != 'off';
+
+  /// Saves whether the app looks for updates on its own.
+  Future<void> setUpdateCheck({required bool on}) => on
+      ? _store.delete(_updateCheckKey)
+      : _store.write(_updateCheckKey, 'off');
+
+  /// Whether a downloaded update is installed on quit; off until turned on.
+  bool updateAutoInstall() => _store.read(_updateAutoKey) == 'true';
+
+  /// Saves whether a downloaded update is installed on quit.
+  Future<void> setUpdateAutoInstall({required bool on}) =>
+      on ? _store.write(_updateAutoKey, 'true') : _store.delete(_updateAutoKey);
 }
