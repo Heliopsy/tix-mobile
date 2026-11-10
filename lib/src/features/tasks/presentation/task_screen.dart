@@ -96,9 +96,6 @@ class TaskScreenView extends ConsumerStatefulWidget {
   /// The task open beside the list on wide windows, from the route.
   final String? selectedRef;
 
-  /// How wide the list is beside an open task.
-  static const listPaneWidth = 420.0;
-
   @override
   ConsumerState<TaskScreenView> createState() => _TaskScreenViewState();
 }
@@ -299,36 +296,17 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
       ],
     );
 
+    // The list takes the whole width until a task is opened; then the task
+    // shows in a panel beside it that can be resized and closed.
     final Widget framed;
     if (context.isTwoPane && selectedRef != null) {
-      final detail = TaskPanel(
-        key: ValueKey(selectedRef),
-        taskRef: selectedRef,
-        onClose: _closeTask,
-      );
-      framed = view == TaskView.list
-          ? Row(
-              children: [
-                SizedBox(width: TaskScreenView.listPaneWidth, child: body),
-                const VerticalDivider(width: 1),
-                Expanded(child: detail),
-              ],
-            )
-          : ResizableTaskPanel(list: body, panel: detail);
-    } else if (context.isTwoPane &&
-        view == TaskView.list &&
-        scope is ProjectScope) {
-      framed = Row(
-        children: [
-          SizedBox(width: TaskScreenView.listPaneWidth, child: body),
-          const VerticalDivider(width: 1),
-          Expanded(
-            child: EmptyState(
-              icon: Icons.touch_app_outlined,
-              title: l10n.noTaskSelected,
-            ),
-          ),
-        ],
+      framed = ResizableTaskPanel(
+        list: body,
+        panel: TaskPanel(
+          key: ValueKey(selectedRef),
+          taskRef: selectedRef,
+          onClose: _closeTask,
+        ),
       );
     } else {
       framed = body;
@@ -783,7 +761,7 @@ class ResizableTaskPanel extends ConsumerWidget {
     super.key,
   });
 
-  /// The board or lanes.
+  /// The list, board or lanes.
   final Widget list;
 
   /// The open task.

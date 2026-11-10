@@ -24,7 +24,6 @@
   "unassigned": "Nicht zugewiesen",
   "noDueDate": "Kein Fälligkeitsdatum",
   "noDescription": "Keine Beschreibung.",
-  "noTaskSelected": "Wählen Sie eine Aufgabe, um sie hier zu sehen.",
   "priorityLabel": "{priority, select, 1{Sehr hoch} 2{Hoch} 3{Normal} 4{Niedrig} 5{Sehr niedrig} other{Keine}}",
   "quickAddTitle": "Schnell hinzufügen",
   "quickAddHint": "Login reparieren !high #auth @raj due:fri",

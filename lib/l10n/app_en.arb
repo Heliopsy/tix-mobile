@@ -24,7 +24,6 @@
   "unassigned": "Unassigned",
   "noDueDate": "No due date",
   "noDescription": "No description.",
-  "noTaskSelected": "Pick a task to see it here.",
   "priorityLabel": "{priority, select, 1{Highest} 2{High} 3{Normal} 4{Low} 5{Lowest} other{None}}",
   "@priorityLabel": {
     "placeholders": {

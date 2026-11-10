@@ -160,17 +160,18 @@ void main() {
     );
   });
 
-  testWidgets('on a wide screen with nothing selected the pane says so', (
-    tester,
-  ) async {
-    await pump(
-      tester,
-      const TaskListScreen(projectKey: 'infra'),
-      size: desktop,
-    );
-    expect(find.text('Pick a task to see it here.'), findsOneWidget);
-    expect(find.byType(TaskDetailView), findsNothing);
-  });
+  testWidgets(
+    'on a wide screen with nothing selected there is no second pane',
+    (tester) async {
+      await pump(
+        tester,
+        const TaskListScreen(projectKey: 'infra'),
+        size: desktop,
+      );
+      expect(find.byType(TaskDetailView), findsNothing);
+      expect(find.byType(VerticalDivider), findsNothing);
+    },
+  );
 
   testWidgets('an empty project says so', (tester) async {
     await pump(tester, const TaskListScreen(projectKey: 'web'));

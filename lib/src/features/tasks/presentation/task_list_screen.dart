@@ -16,9 +16,6 @@ class TaskListScreen extends StatelessWidget {
   /// The task open beside the list on wide screens.
   final String? selectedRef;
 
-  /// The width of the list pane in the two-pane layout.
-  static const double listPaneWidth = TaskScreenView.listPaneWidth;
-
   @override
   Widget build(BuildContext context) =>
       TaskScreenView(scope: ProjectScope(projectKey), selectedRef: selectedRef);
