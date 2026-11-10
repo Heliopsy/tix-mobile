@@ -311,6 +311,7 @@ ThemeData buildTixTheme(
     ),
     snackBarTheme: SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
+      dismissDirection: DismissDirection.horizontal,
       backgroundColor: t.accentSoft,
       contentTextStyle: text.bodyMedium?.copyWith(color: t.accent),
       actionTextColor: t.accent,

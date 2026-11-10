@@ -10,7 +10,8 @@ import 'package:tix_mobile/src/core/l10n/l10n.dart';
 
 /// Shows [message] as tix's flash: the accent on its tint, or the danger
 /// colours when [tone] is [TixTone.danger]. With [onUndo] it offers Undo,
-/// and stays long enough to reach it.
+/// and stays long enough to reach it. It is swiped away sideways (the
+/// theme's direction) or down.
 ///
 /// Use it to confirm what just happened and to undo it. Never for
 /// something the person must read to continue; that belongs on the screen.
@@ -31,7 +32,9 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showTixToast(
   messenger.hideCurrentSnackBar();
   return messenger.showSnackBar(
     SnackBar(
-      content: Text(message, style: TextStyle(color: fg)),
+      content: _SwipeDownToHide(
+        child: Text(message, style: TextStyle(color: fg)),
+      ),
       backgroundColor: danger ? t.dangerSoft : t.accentSoft,
       duration: Duration(seconds: action == null ? 4 : 7),
       shape: RoundedRectangleBorder(
@@ -47,6 +50,43 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showTixToast(
               onPressed: action,
             ),
     ),
+  );
+}
+
+/// The speed of a downward fling that hides a toast, as [Dismissible] uses.
+const double _hideFlingVelocity = 700;
+
+/// Hides the current toast on a downward fling or a drag past half its
+/// height. A snack bar takes one dismiss direction and the theme's is
+/// horizontal, so this keeps the old downward swipe.
+class _SwipeDownToHide extends StatefulWidget {
+  const _SwipeDownToHide({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_SwipeDownToHide> createState() => _SwipeDownToHideState();
+}
+
+class _SwipeDownToHideState extends State<_SwipeDownToHide> {
+  double _dragged = 0;
+
+  void _end(DragEndDetails details) {
+    final height = context.size?.height ?? 0;
+    final flung = (details.primaryVelocity ?? 0) >= _hideFlingVelocity;
+    if (flung || _dragged > height / 2) {
+      ScaffoldMessenger.of(context)
+          .hideCurrentSnackBar(reason: SnackBarClosedReason.swipe);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+    behavior: HitTestBehavior.opaque,
+    onVerticalDragStart: (_) => _dragged = 0,
+    onVerticalDragUpdate: (d) => _dragged += d.delta.dy,
+    onVerticalDragEnd: _end,
+    child: widget.child,
   );
 }
 
