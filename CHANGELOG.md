@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.13.0](https://github.com/Heliopsy/tix-mobile/compare/v0.12.0...v0.13.0) (2026-11-10)
+
+
+### Features
+
+* **design:** swipe toasts away to the left or right as well as down ([4f00fe0](https://github.com/Heliopsy/tix-mobile/commit/4f00fe09aa9e5ca2a29eebb57deee9f07700d8e1))
+* **desktop:** show connection, sync and inbox status when hovering the tray icon ([84fcffb](https://github.com/Heliopsy/tix-mobile/commit/84fcffb6046c1992256b1226453016234ee5c43e))
+* **keyboard:** keymap presets and keyboard-only navigation ([a5ba000](https://github.com/Heliopsy/tix-mobile/commit/a5ba0000e603cf21fccfd6342a6fc20f99ffda12))
+* **shell:** resizable, collapsible rail and a closable task panel on wide windows ([aac1558](https://github.com/Heliopsy/tix-mobile/commit/aac155812c6b4ad86ff366fad22b0be01c782d5e))
+* **tasks:** edit a task from its row and animate the tick ([5c325ee](https://github.com/Heliopsy/tix-mobile/commit/5c325eeac01a240295125fef0e632eca07f49ee0))
+* **watch:** shortcuts, a live dot that moves, and rows that say who and what ([6ae2d3c](https://github.com/Heliopsy/tix-mobile/commit/6ae2d3cd8f3b41a95b539949744a122c45f205c9))
+
+
+### Bug Fixes
+
+* **desktop:** let letters typed into a field reach it ([2dfafb9](https://github.com/Heliopsy/tix-mobile/commit/2dfafb94bd82172cae8f91ba5d0fa0b4b5da1659))
+* **linux:** bundle libayatana-appindicator 0.6.1 for the tray tooltip ([b65cd3a](https://github.com/Heliopsy/tix-mobile/commit/b65cd3af389800284ca09b2b18eaa69194f584b2))
+* **linux:** ship the tray libraries in the tarball ([96a3130](https://github.com/Heliopsy/tix-mobile/commit/96a3130a3346591317a931b58789b4e375262b77))
+* **tasks:** put the panel's close button in the task header ([e71f63f](https://github.com/Heliopsy/tix-mobile/commit/e71f63f51c75476f5e8c712e7315af6b54f0be84))
+
 ## [0.12.0](https://github.com/Heliopsy/tix-mobile/compare/v0.11.1...v0.12.0) (2026-11-10)
 
 
