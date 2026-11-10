@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.11.0](https://github.com/Heliopsy/tix-mobile/compare/v0.10.0...v0.11.0) (2026-11-10)
+
+
+### Features
+
+* **desktop:** tray icon, close to tray, start at login and one instance ([afa80d3](https://github.com/Heliopsy/tix-mobile/commit/afa80d3b7e99ec07a54338b88ead6b49cb88f225))
+
+
+### Bug Fixes
+
+* **desktop:** a login launch while tix runs leaves the window alone ([de7b769](https://github.com/Heliopsy/tix-mobile/commit/de7b76925c6fdad75c2713bab749d44e8ac1abe4))
+
 ## [0.10.0](https://github.com/Heliopsy/tix-mobile/compare/v0.9.0...v0.10.0) (2026-11-09)
 
 
