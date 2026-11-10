@@ -10,6 +10,7 @@ import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/core/widgets/confirm.dart';
 import 'package:tix_mobile/src/core/widgets/live_details.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
@@ -48,13 +49,20 @@ class ContextSwitcherButton extends ConsumerWidget {
   final bool extended;
 
   Future<void> _open(BuildContext context, WidgetRef ref) async {
-    final picked = await showModalBottomSheet<ContextEntry>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      useSafeArea: true,
-      builder: (_) => const ContextSwitcherSheet(),
-    );
+    // A sheet from the bottom edge on a phone; anywhere wider it opens as a
+    // dialog, not stretched across the foot of a desktop window.
+    final picked = context.isCompact
+        ? await showModalBottomSheet<ContextEntry>(
+            context: context,
+            isScrollControlled: true,
+            showDragHandle: true,
+            useSafeArea: true,
+            builder: (_) => const ContextSwitcherSheet(),
+          )
+        : await showTixSheet<ContextEntry>(
+            context,
+            builder: (_) => const ContextSwitcherSheet(),
+          );
     if (picked == null || !context.mounted) return;
     if (picked.elsewhere.isNotEmpty) {
       final scheme = Uri.tryParse(picked.instance.baseUrl)?.scheme ?? 'https';
