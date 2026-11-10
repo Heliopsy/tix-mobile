@@ -213,7 +213,10 @@ void main() {
     expect(sub['filter'], {
       'types': ['task.*'],
     });
-    expect(sockets.last.sent, contains({'type': 'unsubscribe', 'id': 'w1'}));
+    expect(
+      sockets.last.sent,
+      contains(equals({'type': 'unsubscribe', 'id': 'w1'})),
+    );
     expect(sockets.sockets, hasLength(1));
     expect(find.byKey(const Key('watch.filtering')), findsOneWidget);
   });
