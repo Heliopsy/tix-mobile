@@ -942,3 +942,47 @@ class GallerySync extends StatelessWidget {
     ],
   );
 }
+
+/// A pane with a resize handle beside a filler, the handle working.
+class GalleryPanes extends StatefulWidget {
+  /// Creates the sample.
+  const GalleryPanes({super.key});
+
+  @override
+  State<GalleryPanes> createState() => _GalleryPanesState();
+}
+
+class _GalleryPanesState extends State<GalleryPanes> {
+  static const _min = 120.0;
+  static const _max = 280.0;
+  static const _default = 180.0;
+  double _width = _default;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tix;
+    return SizedBox(
+      height: 96,
+      child: Row(
+        children: [
+          SizedBox(
+            width: _width,
+            child: ColoredBox(
+              color: t.surface,
+              child: Center(child: Text('${_width.round()}')),
+            ),
+          ),
+          TixPaneResizer(
+            label: 'Resize pane',
+            width: _width,
+            min: _min,
+            max: _max,
+            onResize: (w, {required done}) => setState(() => _width = w),
+            onReset: () => setState(() => _width = _default),
+          ),
+          const Expanded(child: SizedBox.expand()),
+        ],
+      ),
+    );
+  }
+}

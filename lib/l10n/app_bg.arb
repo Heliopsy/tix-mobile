@@ -2198,5 +2198,12 @@
   "boardPrioritySet": "Приоритетът на {ref} е променен",
   "boardDueSet": "Крайният срок на {ref} е зададен",
   "boardDueCleared": "Крайният срок на {ref} е премахнат",
-  "boardTagged": "{ref} получи етикет {tag}"
+  "boardTagged": "{ref} получи етикет {tag}",
+  "sidebarCollapse": "Свий страничната лента",
+  "sidebarExpand": "Разгъни страничната лента",
+  "sidebarResize": "Преоразмери страничната лента",
+  "paneCollapsed": "Свита",
+  "paneResizeHint": "Плъзнете или използвайте стрелките. Enter или двойно щракване връща ширината.",
+  "taskPanelClose": "Затвори задачата",
+  "taskPanelResize": "Преоразмери панела на задачата"
 }

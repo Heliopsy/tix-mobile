@@ -1,14 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'package:flutter/gestures.dart'
+    show kDoubleTapMinTime, kDoubleTapTimeout;
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/features/shell/presentation/home_shell.dart';
 
 import '../../../helpers/app.dart';
 import '../../../helpers/fake_tix.dart';
+import '../../../helpers/stores.dart';
 
 void main() {
   List<ShellDestination> make(int n) => [
@@ -193,5 +198,152 @@ void main() {
       ),
       findsOneWidget,
     );
+  });
+
+  group('the wide frame', () {
+    late MemoryKeyValueStore settings;
+
+    setUp(() => settings = MemoryKeyValueStore());
+
+    Future<void> frame(WidgetTester tester, {Size size = desktop}) async {
+      await pumpScreen(
+        tester,
+        TixShortcuts(
+          child: WideShellFrame(
+            rail: (context, {required extended, required width}) => Column(
+              key: Key(extended ? 'rail.extended' : 'rail.collapsed'),
+              children: const [SidebarToggle()],
+            ),
+            child: const Text('screens'),
+          ),
+        ),
+        size: size,
+        overrides: fakeOverrides(FakeTix(), settings: settings),
+      );
+    }
+
+    final sidebar = find.byKey(const Key('shell.sidebar'));
+    final handle = find.byKey(const Key('shell.sidebar.resize'));
+    final toggle = find.byKey(const Key('shell.sidebar.toggle'));
+    double width(WidgetTester tester) => tester.getSize(sidebar).width;
+
+    testWidgets('drags wider and keeps the width', (tester) async {
+      await frame(tester);
+      expect(width(tester), 256);
+      await tester.drag(handle, const Offset(100, 0));
+      await tester.pump(kDoubleTapTimeout);
+      await tester.pumpAndSettle();
+      expect(width(tester), 356);
+      expect(settings.values['layout.sidebar.width'], '356');
+      expect(settings.values['layout.sidebar.collapsed'], '0');
+    });
+
+    testWidgets('a drag past the minimum collapses it to the rail', (
+      tester,
+    ) async {
+      await frame(tester);
+      await tester.drag(handle, const Offset(-200, 0));
+      await tester.pump(kDoubleTapTimeout);
+      await tester.pumpAndSettle();
+      expect(sidebar, findsNothing);
+      expect(find.byKey(const Key('rail.collapsed')), findsOneWidget);
+      expect(settings.values['layout.sidebar.collapsed'], '1');
+    });
+
+    testWidgets('a double click restores the default width', (tester) async {
+      settings.values['layout.sidebar.width'] = '400';
+      await frame(tester);
+      expect(width(tester), 400);
+      await tester.tap(handle);
+      await tester.pump(kDoubleTapMinTime);
+      await tester.tap(handle);
+      await tester.pumpAndSettle();
+      expect(width(tester), 256);
+      expect(settings.values.containsKey('layout.sidebar.width'), isFalse);
+    });
+
+    testWidgets('the toggle collapses and expands, and says which', (
+      tester,
+    ) async {
+      await frame(tester);
+      expect(find.byTooltip('Collapse sidebar'), findsOneWidget);
+      await tester.tap(toggle);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('rail.collapsed')), findsOneWidget);
+      expect(find.byTooltip('Expand sidebar'), findsOneWidget);
+      expect(settings.values['layout.sidebar.collapsed'], '1');
+      await tester.tap(toggle);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('rail.extended')), findsOneWidget);
+      expect(settings.values['layout.sidebar.collapsed'], '0');
+    });
+
+    testWidgets('the palette collapses it too', (tester) async {
+      await frame(tester);
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyK);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+      await tester.pumpAndSettle();
+      await tester.enterText(
+        find.byKey(const Key('palette.query')),
+        'collapse sidebar',
+      );
+      await tester.pump();
+      await tester.tap(find.byKey(const Key('palette.shell.sidebar')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('rail.collapsed')), findsOneWidget);
+    });
+
+    testWidgets('the keyboard resizes, collapses and expands it', (
+      tester,
+    ) async {
+      await frame(tester);
+      Focus.of(
+        tester.element(
+          find.descendant(of: handle, matching: find.byType(MouseRegion)),
+        ),
+      ).requestFocus();
+      await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pumpAndSettle();
+      expect(width(tester), 272);
+      await tester.sendKeyEvent(LogicalKeyboardKey.home);
+      await tester.pumpAndSettle();
+      expect(width(tester), 180);
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+      await tester.pumpAndSettle();
+      expect(sidebar, findsNothing);
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pumpAndSettle();
+      expect(width(tester), 180);
+      expect(settings.values['layout.sidebar.width'], '180');
+    });
+
+    testWidgets('a restart restores what was kept', (tester) async {
+      settings.values
+        ..['layout.sidebar.width'] = '300'
+        ..['layout.sidebar.collapsed'] = '1';
+      await frame(tester);
+      expect(find.byKey(const Key('rail.collapsed')), findsOneWidget);
+      await tester.tap(toggle);
+      await tester.pumpAndSettle();
+      expect(width(tester), 300);
+    });
+
+    testWidgets('untouched, it is a rail under 1200 wide', (tester) async {
+      await frame(tester, size: const Size(900, 800));
+      expect(find.byKey(const Key('rail.collapsed')), findsOneWidget);
+    });
+
+    testWidgets('a kept width never takes more than half the window', (
+      tester,
+    ) async {
+      settings.values
+        ..['layout.sidebar.width'] = '480'
+        ..['layout.sidebar.collapsed'] = '0';
+      await frame(tester, size: const Size(700, 800));
+      expect(width(tester), 350);
+      expect(settings.values['layout.sidebar.width'], '480');
+    });
   });
 }

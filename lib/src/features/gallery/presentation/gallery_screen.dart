@@ -102,6 +102,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
                 const GalleryBlock(title: 'States', child: GalleryStates()),
                 const GalleryBlock(title: 'Record', child: GalleryRecord()),
                 const GalleryBlock(title: 'Manage', child: GalleryManage()),
+                const GalleryBlock(title: 'Panes', child: GalleryPanes()),
                 GalleryBlock(
                   title: 'Overlays',
                   child: GalleryOverlays(registry: registry),

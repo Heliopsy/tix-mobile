@@ -12,6 +12,7 @@ import 'package:tix_mobile/src/core/quick/quick_add.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
+import 'package:tix_mobile/src/core/theme/panes.dart';
 import 'package:tix_mobile/src/features/shell/presentation/context_switcher.dart';
 import 'package:tix_mobile/src/features/shell/presentation/watch_shortcut.dart';
 
@@ -189,8 +190,7 @@ class HomeShell extends StatelessWidget {
   }
 
   Widget _frame(BuildContext context, List<ShellDestination> all) {
-    final width = MediaQuery.sizeOf(context).width;
-    if (width < compactMaxWidth) {
+    if (MediaQuery.sizeOf(context).width < compactMaxWidth) {
       return Scaffold(
         body: shell,
         bottomNavigationBar: Column(
@@ -222,44 +222,157 @@ class HomeShell extends StatelessWidget {
         ),
       );
     }
-    final extended = width >= extendedRailMinWidth;
-    return Scaffold(
-      body: Row(
-        children: [
-          SafeArea(
-            child: NavigationRail(
-              extended: extended,
-              leading: Column(
+    return WideShellFrame(
+      rail: (context, {required extended, required width}) => NavigationRail(
+        extended: extended,
+        minExtendedWidth: extended ? width : null,
+        leading: Column(
+          children: [
+            if (extended)
+              Row(
                 children: [
-                  ContextSwitcherButton(rail: true, extended: extended),
-                  const SyncBadgeButton(),
-                  const WatchShortcutButton(),
-                  const SizedBox(height: TixSpace.s2),
-                  QuickAddButton(extended: extended),
-                ],
-              ),
-              trailing: Padding(
-                padding: const EdgeInsets.only(top: TixSpace.s2),
-                child: ShellAboutButton(extended: extended),
-              ),
-              labelType: extended
-                  ? NavigationRailLabelType.none
-                  : NavigationRailLabelType.all,
-              selectedIndex: shell.currentIndex,
-              onDestinationSelected: _select,
-              destinations: [
-                for (final d in all)
-                  NavigationRailDestination(
-                    icon: _decorate(d, Icon(d.icon)),
-                    selectedIcon: _decorate(d, Icon(d.selectedIcon)),
-                    label: Text(d.label),
+                  Flexible(
+                    child: ContextSwitcherButton(
+                      rail: true,
+                      extended: extended,
+                    ),
                   ),
-              ],
+                  const SidebarToggle(),
+                ],
+              )
+            else ...[
+              const SidebarToggle(),
+              ContextSwitcherButton(rail: true, extended: extended),
+            ],
+            const SyncBadgeButton(),
+            const WatchShortcutButton(),
+            const SizedBox(height: TixSpace.s2),
+            QuickAddButton(extended: extended),
+          ],
+        ),
+        trailing: Padding(
+          padding: const EdgeInsets.only(top: TixSpace.s2),
+          child: ShellAboutButton(extended: extended),
+        ),
+        labelType: extended
+            ? NavigationRailLabelType.none
+            : NavigationRailLabelType.all,
+        selectedIndex: shell.currentIndex,
+        onDestinationSelected: _select,
+        destinations: [
+          for (final d in all)
+            NavigationRailDestination(
+              icon: _decorate(d, Icon(d.icon)),
+              selectedIcon: _decorate(d, Icon(d.selectedIcon)),
+              label: Text(d.label),
             ),
-          ),
-          const VerticalDivider(width: 1),
-          Expanded(child: shell),
         ],
+      ),
+      child: shell,
+    );
+  }
+}
+
+/// Draws [rail] beside [child] on anything wider than a phone, with a
+/// handle on its edge that resizes and collapses it, as tix web's sidebar.
+/// The width and the collapsed state are kept on the device.
+class WideShellFrame extends ConsumerWidget {
+  /// Frames [child] with the rail [rail] draws.
+  const WideShellFrame({required this.rail, required this.child, super.key});
+
+  /// Draws the rail, labelled beside its icons when `extended`, at `width`
+  /// when it is.
+  final Widget Function(
+    BuildContext context, {
+    required bool extended,
+    required double width,
+  })
+  rail;
+
+  /// The screens.
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final window = MediaQuery.sizeOf(context).width;
+    final sizes = ref.watch(panesProvider);
+    final panes = ref.read(panesProvider.notifier);
+    final collapsed = sizes.collapsedIn(window);
+    final width = sizes.sidebarIn(window);
+    return CommandScope(
+      commands: [
+        TixCommand(
+          id: 'shell.sidebar',
+          label: collapsed ? l10n.sidebarExpand : l10n.sidebarCollapse,
+          group: l10n.commandsNavigate,
+          icon: collapsed
+              ? Icons.keyboard_double_arrow_right
+              : Icons.keyboard_double_arrow_left,
+          run: () => unawaited(panes.collapseSidebar(collapsed: !collapsed)),
+        ),
+      ],
+      child: Scaffold(
+        body: Row(
+          children: [
+            SafeArea(
+              child: collapsed
+                  ? rail(context, extended: false, width: width)
+                  : SizedBox(
+                      key: const Key('shell.sidebar'),
+                      width: width,
+                      child: rail(context, extended: true, width: width),
+                    ),
+            ),
+            TixPaneResizer(
+              key: const Key('shell.sidebar.resize'),
+              label: l10n.sidebarResize,
+              width: collapsed ? railWidth : width,
+              min: sidebarMinWidth,
+              max: sidebarMaxFor(window),
+              collapsed: collapsed,
+              collapseAt: sidebarCollapseAt,
+              onResize: (w, {required done}) =>
+                  unawaited(panes.resizeSidebar(w, save: done)),
+              onReset: () => unawaited(panes.resizeSidebar(null)),
+              onCollapse: () =>
+                  unawaited(panes.collapseSidebar(collapsed: true)),
+              onExpand: () =>
+                  unawaited(panes.collapseSidebar(collapsed: false)),
+            ),
+            Expanded(child: child),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Collapses the rail to its icons and expands it again, at its top as
+/// tix web has it beside its name.
+class SidebarToggle extends ConsumerWidget {
+  /// Creates the button.
+  const SidebarToggle({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final collapsed = ref
+        .watch(panesProvider)
+        .collapsedIn(MediaQuery.sizeOf(context).width);
+    return Semantics(
+      expanded: !collapsed,
+      child: TixIconButton(
+        key: const Key('shell.sidebar.toggle'),
+        icon: collapsed
+            ? Icons.keyboard_double_arrow_right
+            : Icons.keyboard_double_arrow_left,
+        tooltip: collapsed ? l10n.sidebarExpand : l10n.sidebarCollapse,
+        onPressed: () => unawaited(
+          ref
+              .read(panesProvider.notifier)
+              .collapseSidebar(collapsed: !collapsed),
+        ),
       ),
     );
   }

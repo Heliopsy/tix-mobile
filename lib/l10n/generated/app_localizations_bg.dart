@@ -7978,4 +7978,26 @@ class AppLocalizationsBg extends AppLocalizations {
   String boardTagged(String ref, String tag) {
     return '$ref получи етикет $tag';
   }
+
+  @override
+  String get sidebarCollapse => 'Свий страничната лента';
+
+  @override
+  String get sidebarExpand => 'Разгъни страничната лента';
+
+  @override
+  String get sidebarResize => 'Преоразмери страничната лента';
+
+  @override
+  String get paneCollapsed => 'Свита';
+
+  @override
+  String get paneResizeHint =>
+      'Плъзнете или използвайте стрелките. Enter или двойно щракване връща ширината.';
+
+  @override
+  String get taskPanelClose => 'Затвори задачата';
+
+  @override
+  String get taskPanelResize => 'Преоразмери панела на задачата';
 }

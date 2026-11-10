@@ -8031,4 +8031,26 @@ class AppLocalizationsFr extends AppLocalizations {
   String boardTagged(String ref, String tag) {
     return 'Tag $tag ajouté à $ref';
   }
+
+  @override
+  String get sidebarCollapse => 'Réduire la barre latérale';
+
+  @override
+  String get sidebarExpand => 'Déplier la barre latérale';
+
+  @override
+  String get sidebarResize => 'Redimensionner la barre latérale';
+
+  @override
+  String get paneCollapsed => 'Réduite';
+
+  @override
+  String get paneResizeHint =>
+      'Faites glisser ou utilisez les flèches. Entrée ou un double clic rétablit la largeur.';
+
+  @override
+  String get taskPanelClose => 'Fermer la tâche';
+
+  @override
+  String get taskPanelResize => 'Redimensionner le panneau de la tâche';
 }

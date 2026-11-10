@@ -7968,4 +7968,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String boardTagged(String ref, String tag) {
     return '$ref tagged $tag';
   }
+
+  @override
+  String get sidebarCollapse => 'Collapse sidebar';
+
+  @override
+  String get sidebarExpand => 'Expand sidebar';
+
+  @override
+  String get sidebarResize => 'Resize sidebar';
+
+  @override
+  String get paneCollapsed => 'Collapsed';
+
+  @override
+  String get paneResizeHint =>
+      'Drag, or use the arrow keys. Enter or a double click resets the width.';
+
+  @override
+  String get taskPanelClose => 'Close task';
+
+  @override
+  String get taskPanelResize => 'Resize task panel';
 }
