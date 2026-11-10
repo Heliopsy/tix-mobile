@@ -48,6 +48,11 @@ then the links; the destination open from More SHALL mark More as selected. The 
 - **WHEN** the app has six destinations on a 400 pixel wide window
 - **THEN** the bar shows four and More, and More lists the other two, then About
 
+#### Scenario: The app's destinations
+
+- **WHEN** a signed-in person opens the app on a 400 pixel wide window
+- **THEN** the bar shows Projects, Tasks, My work, Inbox and More, and More lists Watch, Manage, Settings, then About
+
 ### Requirement: The rail can be resized
 
 From 600 logical pixels wide the expanded rail SHALL have a drag handle on its edge that resizes it between 180
