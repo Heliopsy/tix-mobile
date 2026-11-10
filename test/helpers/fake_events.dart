@@ -67,6 +67,7 @@ class FakeSocket implements EventSocket {
     String projectId = 'p1',
     String actorId = '',
     Map<String, Object?> payload = const {},
+    Map<String, Object?>? via,
   }) => push({
     'type': 'event',
     'id': id,
@@ -78,6 +79,7 @@ class FakeSocket implements EventSocket {
       'project_id': projectId,
       'actor_id': actorId,
       'payload': payload,
+      'via': ?via,
       'occurred_at': '2026-11-08T10:00:00Z',
     },
   });

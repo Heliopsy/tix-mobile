@@ -7870,4 +7870,82 @@ class AppLocalizationsDe extends AppLocalizations {
   String trayRestartToUpdate(String version) {
     return 'Neu starten für Update ($version)';
   }
+
+  @override
+  String get trayWatch => 'Beobachten';
+
+  @override
+  String get watchShortcut => 'Live-Ereignisse beobachten';
+
+  @override
+  String watchVia(String channel) {
+    return 'über $channel';
+  }
+
+  @override
+  String watchViaNamed(String channel, String name) {
+    return 'über $channel ($name)';
+  }
+
+  @override
+  String get watchChannelWeb => 'Web';
+
+  @override
+  String get watchChannelApi => 'API';
+
+  @override
+  String get watchChannelCli => 'CLI';
+
+  @override
+  String get watchChannelSsh => 'SSH';
+
+  @override
+  String get watchChannelMcp => 'MCP';
+
+  @override
+  String get watchChannelSync => 'Sync';
+
+  @override
+  String get watchChannelImport => 'Import';
+
+  @override
+  String get watchChannelSystem => 'System';
+
+  @override
+  String get watchChannelUnknown => 'einen unbekannten Kanal';
+
+  @override
+  String get watchFieldTitle => 'Titel';
+
+  @override
+  String get watchFieldBody => 'Beschreibung';
+
+  @override
+  String get watchFieldPriority => 'Priorität';
+
+  @override
+  String get watchFieldAssignee => 'Zuständige Person';
+
+  @override
+  String get watchFieldTags => 'Tags';
+
+  @override
+  String get watchFieldDue => 'Fälligkeit';
+
+  @override
+  String get watchFieldRecurrence => 'Wiederholung';
+
+  @override
+  String get watchFieldCustom => 'eigene Felder';
+
+  @override
+  String get watchFieldParent => 'übergeordnete Aufgabe';
+
+  @override
+  String get watchCommentEdited => 'bearbeitet';
+
+  @override
+  String watchCommentBy(String author, String text) {
+    return '$author: $text';
+  }
 }

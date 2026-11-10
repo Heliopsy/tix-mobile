@@ -109,7 +109,7 @@ final class WatchFeedProvider extends $NotifierProvider<WatchFeed, WatchState> {
   }
 }
 
-String _$watchFeedHash() => r'52b133a53fcf762c306edbb253312d995dba45ae';
+String _$watchFeedHash() => r'95288c5f4a492268efffaa0b5734a579d007b727';
 
 /// The active context's events as they arrive, over the connection live
 /// updates already hold. Changing the projects, types or replay point
@@ -267,3 +267,220 @@ final class WatchProjectsProvider
 }
 
 String _$watchProjectsHash() => r'ec88293e84882ad205f734e60d66f093674092ed';
+
+/// The tenant's actors by id, to put a name to who caused an event. The
+/// event itself carries only the actor's id and handle.
+
+@ProviderFor(watchActors)
+final watchActorsProvider = WatchActorsProvider._();
+
+/// The tenant's actors by id, to put a name to who caused an event. The
+/// event itself carries only the actor's id and handle.
+
+final class WatchActorsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Map<String, Actor>>,
+          Map<String, Actor>,
+          FutureOr<Map<String, Actor>>
+        >
+    with
+        $FutureModifier<Map<String, Actor>>,
+        $FutureProvider<Map<String, Actor>> {
+  /// The tenant's actors by id, to put a name to who caused an event. The
+  /// event itself carries only the actor's id and handle.
+  WatchActorsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'watchActorsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$watchActorsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<Map<String, Actor>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Map<String, Actor>> create(Ref ref) {
+    return watchActors(ref);
+  }
+}
+
+String _$watchActorsHash() => r'61e32885a18724c34a00e2b59558a9efd0908ea7';
+
+/// The comments on the task [taskRef], read when Watch shows a comment on
+/// it, since a `comment.added` event carries no text.
+
+@ProviderFor(watchTaskComments)
+final watchTaskCommentsProvider = WatchTaskCommentsFamily._();
+
+/// The comments on the task [taskRef], read when Watch shows a comment on
+/// it, since a `comment.added` event carries no text.
+
+final class WatchTaskCommentsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Comment>>,
+          List<Comment>,
+          FutureOr<List<Comment>>
+        >
+    with $FutureModifier<List<Comment>>, $FutureProvider<List<Comment>> {
+  /// The comments on the task [taskRef], read when Watch shows a comment on
+  /// it, since a `comment.added` event carries no text.
+  WatchTaskCommentsProvider._({
+    required WatchTaskCommentsFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'watchTaskCommentsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$watchTaskCommentsHash();
+
+  @override
+  String toString() {
+    return r'watchTaskCommentsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Comment>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Comment>> create(Ref ref) {
+    final argument = this.argument as String;
+    return watchTaskComments(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is WatchTaskCommentsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$watchTaskCommentsHash() => r'637138f36f902a9803be73a629959115d6236fb5';
+
+/// The comments on the task [taskRef], read when Watch shows a comment on
+/// it, since a `comment.added` event carries no text.
+
+final class WatchTaskCommentsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<Comment>>, String> {
+  WatchTaskCommentsFamily._()
+    : super(
+        retry: null,
+        name: r'watchTaskCommentsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// The comments on the task [taskRef], read when Watch shows a comment on
+  /// it, since a `comment.added` event carries no text.
+
+  WatchTaskCommentsProvider call(String taskRef) =>
+      WatchTaskCommentsProvider._(argument: taskRef, from: this);
+
+  @override
+  String toString() => r'watchTaskCommentsProvider';
+}
+
+/// The comment [commentId] on [taskRef], null once it is gone.
+
+@ProviderFor(watchComment)
+final watchCommentProvider = WatchCommentFamily._();
+
+/// The comment [commentId] on [taskRef], null once it is gone.
+
+final class WatchCommentProvider
+    extends
+        $FunctionalProvider<AsyncValue<Comment?>, Comment?, FutureOr<Comment?>>
+    with $FutureModifier<Comment?>, $FutureProvider<Comment?> {
+  /// The comment [commentId] on [taskRef], null once it is gone.
+  WatchCommentProvider._({
+    required WatchCommentFamily super.from,
+    required (String, String) super.argument,
+  }) : super(
+         retry: null,
+         name: r'watchCommentProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$watchCommentHash();
+
+  @override
+  String toString() {
+    return r'watchCommentProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<Comment?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Comment?> create(Ref ref) {
+    final argument = this.argument as (String, String);
+    return watchComment(ref, argument.$1, argument.$2);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is WatchCommentProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$watchCommentHash() => r'9580699d2fc55b6801e65485e80f14088425c11f';
+
+/// The comment [commentId] on [taskRef], null once it is gone.
+
+final class WatchCommentFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<Comment?>, (String, String)> {
+  WatchCommentFamily._()
+    : super(
+        retry: null,
+        name: r'watchCommentProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// The comment [commentId] on [taskRef], null once it is gone.
+
+  WatchCommentProvider call(String taskRef, String commentId) =>
+      WatchCommentProvider._(argument: (taskRef, commentId), from: this);
+
+  @override
+  String toString() => r'watchCommentProvider';
+}

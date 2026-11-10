@@ -7806,4 +7806,82 @@ class AppLocalizationsBg extends AppLocalizations {
   String trayRestartToUpdate(String version) {
     return 'Рестартирай за обновяване ($version)';
   }
+
+  @override
+  String get trayWatch => 'Наблюдение';
+
+  @override
+  String get watchShortcut => 'Наблюдение на събитията на живо';
+
+  @override
+  String watchVia(String channel) {
+    return 'през $channel';
+  }
+
+  @override
+  String watchViaNamed(String channel, String name) {
+    return 'през $channel ($name)';
+  }
+
+  @override
+  String get watchChannelWeb => 'уеб';
+
+  @override
+  String get watchChannelApi => 'API';
+
+  @override
+  String get watchChannelCli => 'CLI';
+
+  @override
+  String get watchChannelSsh => 'SSH';
+
+  @override
+  String get watchChannelMcp => 'MCP';
+
+  @override
+  String get watchChannelSync => 'синхронизация';
+
+  @override
+  String get watchChannelImport => 'импорт';
+
+  @override
+  String get watchChannelSystem => 'системата';
+
+  @override
+  String get watchChannelUnknown => 'неизвестен канал';
+
+  @override
+  String get watchFieldTitle => 'заглавие';
+
+  @override
+  String get watchFieldBody => 'описание';
+
+  @override
+  String get watchFieldPriority => 'приоритет';
+
+  @override
+  String get watchFieldAssignee => 'отговорник';
+
+  @override
+  String get watchFieldTags => 'етикети';
+
+  @override
+  String get watchFieldDue => 'краен срок';
+
+  @override
+  String get watchFieldRecurrence => 'правило за повторение';
+
+  @override
+  String get watchFieldCustom => 'потребителски полета';
+
+  @override
+  String get watchFieldParent => 'родителска задача';
+
+  @override
+  String get watchCommentEdited => 'редактиран';
+
+  @override
+  String watchCommentBy(String author, String text) {
+    return '$author: $text';
+  }
 }

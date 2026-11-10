@@ -22,12 +22,16 @@ LiveState? liveStateOf(LiveMode? mode) => switch (mode) {
 /// tap, so the switcher opens them on a long press instead.
 class LiveStatusIndicator extends ConsumerWidget {
   /// Draws the indicator; [compact] draws the dot alone, [leading] starts
-  /// it at its target's leading edge.
+  /// it at its target's leading edge, [pulse] makes a live dot breathe.
   const LiveStatusIndicator({
     this.compact = false,
     this.leading = false,
+    this.pulse = false,
     super.key,
   });
+
+  /// Whether the dot breathes while live or connecting.
+  final bool pulse;
 
   /// Whether to draw the dot alone.
   final bool compact;
@@ -43,6 +47,7 @@ class LiveStatusIndicator extends ConsumerWidget {
       state: state,
       compact: compact,
       leading: leading,
+      pulse: pulse,
       onTap: () => showLiveDetails(context),
       refreshSeconds: ref.watch(liveConfigProvider).refreshEvery.inSeconds,
     );

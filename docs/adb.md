@@ -86,6 +86,7 @@ adb shell am start -a android.intent.action.VIEW -d "'tix://quick-add?project=OP
 | `tix://projects/<KEY>/tasks/<ref>` | The task |
 | `tix://settings` | Settings |
 | `tix://about` | About |
+| `tix://watch` | Watch |
 | `tix://connection` | Connection details, over the screen on show |
 | `tix://quick-add` | Quick add over the screen on show; `?project=<KEY>` picks the project |
 
