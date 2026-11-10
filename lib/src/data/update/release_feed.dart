@@ -36,6 +36,12 @@ class UpdateException implements Exception {
   String toString() => 'UpdateException(${kind.name}): $detail';
 }
 
+/// Whether [url] is an HTTPS download from GitHub: a release asset on
+/// `github.com` or the `*.githubusercontent.com` host it redirects to.
+bool trustedReleaseUrl(Uri url) =>
+    url.scheme == 'https' &&
+    (url.host == 'github.com' || url.host.endsWith('.githubusercontent.com'));
+
 /// Where releases are published.
 abstract interface class ReleaseFeed {
   /// The latest published release, null when there is none.
@@ -94,6 +100,15 @@ class GitHubReleaseFeed implements ReleaseFeed {
     }
   }
 
+  static void _landed(Response<Object?> r) {
+    if (!trustedReleaseUrl(r.realUri)) {
+      throw UpdateException(
+        UpdateErrorKind.unverified,
+        'redirected to ${r.realUri}, not a GitHub HTTPS download',
+      );
+    }
+  }
+
   @override
   Future<List<int>> bytes(Uri url) async {
     try {
@@ -101,6 +116,7 @@ class GitHubReleaseFeed implements ReleaseFeed {
         url,
         options: Options(responseType: ResponseType.bytes),
       );
+      _landed(r);
       return r.data ?? const [];
     } on DioException catch (e) {
       throw UpdateException(UpdateErrorKind.network, e.message ?? '$e');
@@ -114,13 +130,14 @@ class GitHubReleaseFeed implements ReleaseFeed {
     void Function(double progress)? onProgress,
   }) async {
     try {
-      await _dio.downloadUri(
+      final r = await _dio.downloadUri(
         url,
         to.path,
         onReceiveProgress: (got, total) {
           if (total > 0) onProgress?.call(got / total);
         },
       );
+      _landed(r);
     } on DioException catch (e) {
       throw UpdateException(UpdateErrorKind.network, e.message ?? '$e');
     }

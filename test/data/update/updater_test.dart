@@ -27,17 +27,12 @@ void main() {
       expect(updateModeFor(linux), UpdateMode.notify);
     });
 
-    test('a debug build or no pinned key only notifies', () {
+    test('a debug build only notifies', () {
       const debug = UpdateEnvironment(
         desktop: DesktopOs.linux,
         releaseBuild: false,
       );
-      const unpinned = UpdateEnvironment(
-        desktop: DesktopOs.windows,
-        keyPinned: false,
-      );
       expect(updateModeFor(debug, target: writable), UpdateMode.notify);
-      expect(updateModeFor(unpinned, target: writable), UpdateMode.notify);
     });
 
     test('Flatpak, Snap and a build flag turn it off', () {
@@ -181,7 +176,7 @@ void main() {
         expect(progress, [0.5, 1]);
       });
 
-      test('no signature: nothing is downloaded or staged', () async {
+      test('pinned key and no signature: nothing is downloaded', () async {
         await publish(feed, version: '0.12.0', archives: {linuxX64: archive});
         final u = updater();
         await expectLater(
@@ -192,13 +187,70 @@ void main() {
         expect(installer.staged, isEmpty);
       });
 
-      test('no pinned key: nothing is fetched at all', () async {
-        await publish(
+      test(
+        'no pinned key: a matching archive is staged on its checksum',
+        () async {
+          await publish(feed, version: '0.12.0', archives: {linuxX64: archive});
+          final u = updater(publicKey: '');
+          await u.download((await u.check())!);
+          expect(installer.staged, [archive]);
+          expect(feed.reads.map((r) => r.pathSegments.last), ['SHA256SUMS']);
+        },
+      );
+
+      test('no pinned key: a checksum mismatch is refused', () async {
+        final release = await publish(
           feed,
           version: '0.12.0',
           archives: {linuxX64: archive},
-          signer: key,
         );
+        feed.files[release.asset(linuxX64)!.url] = utf8.encode('tampered');
+        final u = updater(publicKey: '');
+        await expectLater(
+          u.download((await u.check())!),
+          fails(UpdateErrorKind.unverified),
+        );
+        expect(installer.staged, isEmpty);
+      });
+
+      test('no pinned key: a release without SHA256SUMS is refused', () async {
+        final release = await publish(
+          feed,
+          version: '0.12.0',
+          archives: {linuxX64: archive},
+        );
+        feed.release = Release(
+          tag: release.tag,
+          version: release.version,
+          page: release.page,
+          assets: [release.asset(linuxX64)!],
+        );
+        final u = updater(publicKey: '');
+        await expectLater(
+          u.download((await u.check())!),
+          fails(UpdateErrorKind.unverified),
+        );
+        expect(feed.downloads, isEmpty);
+      });
+
+      test('a download from outside GitHub over HTTPS is refused', () async {
+        final release = await publish(
+          feed,
+          version: '0.12.0',
+          archives: {linuxX64: archive},
+        );
+        final plain = Uri.parse('http://github.com/a/$linuxX64');
+        feed
+          ..release = Release(
+            tag: release.tag,
+            version: release.version,
+            page: release.page,
+            assets: [
+              ReleaseAsset(name: linuxX64, url: plain),
+              release.asset('SHA256SUMS')!,
+            ],
+          )
+          ..files[plain] = archive;
         final u = updater(publicKey: '');
         await expectLater(
           u.download((await u.check())!),
@@ -206,6 +258,24 @@ void main() {
         );
         expect(feed.reads, isEmpty);
         expect(feed.downloads, isEmpty);
+      });
+
+      test('trusted hosts are GitHub and its asset CDN over HTTPS', () {
+        for (final ok in [
+          'https://github.com/heliopsy/tix-mobile/releases/download/v1/x',
+          'https://objects.githubusercontent.com/github-production-release/x',
+          'https://release-assets.githubusercontent.com/x',
+        ]) {
+          expect(trustedReleaseUrl(Uri.parse(ok)), isTrue, reason: ok);
+        }
+        for (final bad in [
+          'http://github.com/x',
+          'https://github.com.evil.test/x',
+          'https://evilgithubusercontent.com/x',
+          'https://example.com/x',
+        ]) {
+          expect(trustedReleaseUrl(Uri.parse(bad)), isFalse, reason: bad);
+        }
       });
 
       test('a signature by another key: nothing is downloaded', () async {

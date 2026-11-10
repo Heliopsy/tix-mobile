@@ -33,7 +33,6 @@ class UpdateEnvironment {
     this.flatpak = false,
     this.snap = false,
     this.releaseBuild = true,
-    this.keyPinned = true,
     this.androidInstaller,
   });
 
@@ -58,9 +57,6 @@ class UpdateEnvironment {
   /// Whether this is a release build rather than `flutter run`.
   final bool releaseBuild;
 
-  /// Whether an update signing key is built in.
-  final bool keyPinned;
-
   /// The package that installed the app on Android, null when unknown.
   final String? androidInstaller;
 }
@@ -83,8 +79,7 @@ UpdateMode updateModeFor(UpdateEnvironment env, {InstallTarget? target}) {
         : UpdateMode.off;
   }
   if (env.desktop == null || env.flatpak || env.snap) return UpdateMode.off;
-  final installs =
-      env.releaseBuild && env.keyPinned && (target?.writable ?? false);
+  final installs = env.releaseBuild && (target?.writable ?? false);
   return installs ? UpdateMode.install : UpdateMode.notify;
 }
 
@@ -130,7 +125,10 @@ class Updater {
   /// The running version.
   final ReleaseVersion current;
 
-  /// The pinned Ed25519 key, base64; empty for none.
+  /// The pinned Ed25519 key, base64. Empty means checksum-only: the
+  /// archive is installed when it matches `SHA256SUMS` from the same
+  /// release, fetched over HTTPS from GitHub, the trust of a download by
+  /// hand from the release page.
   final String publicKey;
 
   /// The desktop, null on a phone.
@@ -152,15 +150,17 @@ class Updater {
     );
   }
 
-  /// Checks the signature of the release's checksums, downloads [offer]'s
-  /// archive, checks its hash and stages it. Nothing large is fetched
-  /// before the signature holds.
+  /// Checks the signature of the release's checksums when a key is pinned,
+  /// downloads [offer]'s archive, checks its hash and stages it. Nothing
+  /// large is fetched before the signature holds, and nothing is fetched
+  /// from outside GitHub over HTTPS.
   Future<StagedUpdate> download(
     UpdateOffer offer, {
     void Function(double progress)? onProgress,
   }) async {
     final asset = offer.asset;
     if (asset == null) throw const UpdateException(UpdateErrorKind.noAsset);
+    _trusted(asset.url);
     final expected = await _signedChecksum(offer.release, asset.name);
     final dir = await Directory.systemTemp.createTemp('tix-update-');
     try {
@@ -183,30 +183,50 @@ class Updater {
     }
   }
 
+  static void _trusted(Uri url) {
+    if (!trustedReleaseUrl(url)) {
+      throw UpdateException(
+        UpdateErrorKind.unverified,
+        '$url is not a GitHub HTTPS download',
+      );
+    }
+  }
+
+  /// The archive's line in `SHA256SUMS`: signed when a key is pinned, and
+  /// then a missing or bad signature is refused; checksum-only otherwise.
   Future<String> _signedChecksum(Release release, String name) async {
     final sums = release.asset('SHA256SUMS');
-    final sig = release.asset('SHA256SUMS.sig');
+    if (sums == null) {
+      throw const UpdateException(
+        UpdateErrorKind.unverified,
+        'the release has no SHA256SUMS',
+      );
+    }
+    _trusted(sums.url);
+    final List<int> text;
     if (publicKey.isEmpty) {
-      throw const UpdateException(UpdateErrorKind.unverified, 'no key pinned');
-    }
-    if (sums == null || sig == null) {
-      throw const UpdateException(
-        UpdateErrorKind.unverified,
-        'the release has no signed SHA256SUMS',
+      text = await feed.bytes(sums.url);
+    } else {
+      final sig = release.asset('SHA256SUMS.sig');
+      if (sig == null) {
+        throw const UpdateException(
+          UpdateErrorKind.unverified,
+          'a key is pinned but the release has no SHA256SUMS.sig',
+        );
+      }
+      _trusted(sig.url);
+      text = await feed.bytes(sums.url);
+      final ok = await verifyEd25519(
+        message: text,
+        signature: await feed.bytes(sig.url),
+        publicKey: publicKey,
       );
-    }
-    final text = await feed.bytes(sums.url);
-    final signature = await feed.bytes(sig.url);
-    final ok = await verifyEd25519(
-      message: text,
-      signature: signature,
-      publicKey: publicKey,
-    );
-    if (!ok) {
-      throw const UpdateException(
-        UpdateErrorKind.unverified,
-        'SHA256SUMS.sig does not match the pinned key',
-      );
+      if (!ok) {
+        throw const UpdateException(
+          UpdateErrorKind.unverified,
+          'SHA256SUMS.sig does not match the pinned key',
+        );
+      }
     }
     final expected = parseSha256Sums(
       utf8.decode(text, allowMalformed: true),

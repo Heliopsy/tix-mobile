@@ -63,7 +63,6 @@ Future<UpdateEnvironment> updateEnvironment(Ref ref) async {
     flatpak: Platform.isLinux && File('/.flatpak-info').existsSync(),
     snap: Platform.environment.containsKey('SNAP'),
     releaseBuild: kReleaseMode,
-    keyPinned: updateSigningPublicKey.isNotEmpty,
     androidInstaller: Platform.isAndroid
         ? (await PackageInfo.fromPlatform()).installerStore
         : null,

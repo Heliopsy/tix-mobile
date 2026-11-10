@@ -381,13 +381,15 @@ flowchart LR
 - **Mode.** `updateModeProvider` is `off`, `notify` or `install` (`updateModeFor` in `data/update/updater.dart`).
   Off for builds made with `--dart-define=TIX_SELF_UPDATE=false` (Flatpak, the Play bundle, F-Droid), inside
   Flatpak or Snap, on iOS, and on Android installs from a store. Notify for an APK installed through the system
-  package installer, and for a desktop that is a debug build, has no pinned key, runs in the macOS App Sandbox or
-  cannot write its install. Install otherwise.
+  package installer, and for a desktop that is a debug build, runs in the macOS App Sandbox or cannot write its
+  install. Install otherwise.
 - **Check.** `releases/latest` at start and every six hours while "Check for updates" is on, and on Check now.
   `ReleaseVersion` compares by semver precedence; drafts and prereleases never count.
-- **Verify.** `SHA256SUMS.sig` is an Ed25519 signature over `SHA256SUMS` by the key pinned in
-  `data/update/signing_key.dart`, checked before the archive is fetched; the archive's SHA-256 must then match its
-  signed line. Any failure means Download (the release page), never an install.
+- **Verify.** The archive's SHA-256 must match its line in `SHA256SUMS`. With a key pinned in
+  `data/update/signing_key.dart`, `SHA256SUMS.sig` (Ed25519) must verify first, before the archive is fetched;
+  with none pinned the check is checksum-only, the trust of a download by hand. Every file must be HTTPS from
+  `github.com` or `*.githubusercontent.com` (`trustedReleaseUrl`), before and after redirects. Any failure means
+  Download (the release page), never an install.
 - **Install.** `UpdateInstaller` (`data/update/installer.dart`) stages the archive next to the install and swaps
   it in on restart. `LinuxInstaller` swaps the bundle directory by rename and relaunches once this process has
   exited; `WindowsInstaller` leaves the swap to a PowerShell script that waits for the exe to unlock;
