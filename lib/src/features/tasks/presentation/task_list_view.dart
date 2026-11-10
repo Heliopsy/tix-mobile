@@ -445,8 +445,9 @@ class _TaskListViewState extends ConsumerState<TaskListView> {
 
 /// A row's place in the list: as drawn, or held by a [_Hold] until
 /// [TixMotion.settle] has passed, then collapsed when it is leaving, and
-/// [onReleased] called. A hold that turns into a leaving one starts again. The structure never changes with the hold, so the
-/// row under it keeps its state and its tick goes on playing.
+/// [onReleased] called. A hold that turns into a leaving one starts again.
+/// The structure never changes with the hold, so the row under it keeps its
+/// state and its tick goes on playing.
 class _Slot extends StatefulWidget {
   const _Slot({
     required this.hold,
