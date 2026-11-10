@@ -7,8 +7,10 @@ import 'dart:math';
 
 import 'package:meta/meta.dart';
 import 'package:tix_mobile/src/core/logging/log.dart';
+import 'package:tix_mobile/src/data/events/event_tail.dart';
 import 'package:tix_mobile/src/data/events/tix_event.dart';
 
+export 'package:tix_mobile/src/data/events/event_tail.dart';
 export 'package:tix_mobile/src/data/events/tix_event.dart';
 
 /// One open WebSocket: text frames in, text frames out.
@@ -239,6 +241,7 @@ class TixEventStream {
   bool _wasLive = false;
   bool _expired = false;
   EventStreamState _state = EventStreamState.connecting;
+  final _tails = <String, EventTail>{};
 
   /// Every update: events, gaps and state changes.
   Stream<EventStreamUpdate> get updates => _updates.stream;
@@ -256,6 +259,20 @@ class TixEventStream {
     _retry!.cancel();
     _retry = null;
     unawaited(_connect());
+  }
+
+  /// Subscribes [tail] on this connection as well, now if it is open and
+  /// again from its cursor after every reconnect.
+  void attach(EventTail tail) {
+    if (tail.stopped) return;
+    _tails[tail.id] = tail;
+    _socket?.send(jsonEncode(tail.subscribeFrame()));
+  }
+
+  /// Ends [tail]'s subscription on this connection.
+  void detach(EventTail tail) {
+    if (_tails.remove(tail.id) == null) return;
+    _socket?.send(jsonEncode({'type': 'unsubscribe', 'id': tail.id}));
   }
 
   /// Closes the socket and the stream. Nothing reconnects after this.
@@ -312,6 +329,9 @@ class TixEventStream {
           _lost(EventSocketClosed(socket.closeCode, socket.closeReason)),
     );
     _subscribe(resume: true);
+    for (final tail in _tails.values) {
+      socket.send(jsonEncode(tail.subscribeFrame()));
+    }
   }
 
   void _subscribe({required bool resume}) {
@@ -334,6 +354,12 @@ class TixEventStream {
       log('event stream: unreadable frame');
       return;
     }
+    final id = msg['id'];
+    if (id is String && id != _subscription) {
+      final tail = _tails[id];
+      if (tail != null) _onTail(tail, msg);
+      return;
+    }
     switch (msg['type']) {
       case 'subscribed':
         final resumed = msg['since_seq'] != null || _cursor > 0;
@@ -353,6 +379,31 @@ class TixEventStream {
         _updates.add(EventReceived(event));
       case 'error':
         _onError(msg['error']);
+    }
+  }
+
+  void _onTail(EventTail tail, Map<String, Object?> msg) {
+    switch (msg['type']) {
+      case 'subscribed':
+        tail.subscribed();
+      case 'event':
+        final raw = msg['event'];
+        if (raw is Map<String, Object?>) tail.deliver(TixEvent.fromJson(raw));
+      case 'error':
+        final body = msg['error'] is Map
+            ? msg['error']! as Map
+            : const <String, Object?>{};
+        final code = body['code'] is String ? body['code'] as String : '';
+        final message = body['message'] is String
+            ? body['message'] as String
+            : '';
+        if (code == 'invalid' && message.contains('no longer available')) {
+          tail.expired();
+          _socket?.send(jsonEncode(tail.subscribeFrame()));
+          return;
+        }
+        _tails.remove(tail.id);
+        tail.refused(code: code, message: message);
     }
   }
 

@@ -168,6 +168,9 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   Redeliver, external sync sources from Jira, OpenProject or a file (check, run, preview, history), retention and
   pruning, housekeeping, the trash with restore and delete for good, and the audit log filtered by channel,
   surface, actor, action, token and time.
+- **Watch**: the tenant's events as they happen, as `tix watch` shows them, newest first with the sequence number,
+  time, actor, type and what changed. Filter by project, type (`task.*`) and actor, pause with a count of what
+  arrived, replay from a sequence number, open the task or project, or read the whole payload.
 - **Adaptive layout**: a bottom navigation bar on phones, a navigation rail and a two-pane list and detail on tablets
   and desktops.
 

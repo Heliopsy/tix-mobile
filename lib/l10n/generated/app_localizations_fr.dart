@@ -7541,4 +7541,230 @@ class AppLocalizationsFr extends AppLocalizations {
   String settingsHotkeyTaken(String keys) {
     return '$keys est déjà utilisé par une autre application';
   }
+
+  @override
+  String get goWatch => 'Aller à Suivi';
+
+  @override
+  String get watchTitle => 'Suivi';
+
+  @override
+  String get watchSubtitle =>
+      'Les événements de l\'organisation au moment où ils arrivent, les plus récents en premier.';
+
+  @override
+  String get watchPause => 'Mettre en pause';
+
+  @override
+  String get watchResume => 'Reprendre';
+
+  @override
+  String get watchClear => 'Vider la liste';
+
+  @override
+  String get watchPaused => 'En pause.';
+
+  @override
+  String watchPausedNew(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'En pause, $count nouveaux événements.',
+      one: 'En pause, 1 nouvel événement.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get watchFilters => 'Filtres';
+
+  @override
+  String watchFiltersCount(int count) {
+    return 'Filtres ($count)';
+  }
+
+  @override
+  String get watchAllTypes => 'Tous les types';
+
+  @override
+  String watchFiltering(String filters) {
+    return 'Filtré sur $filters';
+  }
+
+  @override
+  String watchFilterProject(String projects) {
+    return 'projet $projects';
+  }
+
+  @override
+  String watchFilterType(String types) {
+    return 'type $types';
+  }
+
+  @override
+  String watchFilterActor(String actors) {
+    return 'acteur $actors';
+  }
+
+  @override
+  String watchFilterSince(int seq) {
+    return 'après n° $seq';
+  }
+
+  @override
+  String get watchProjects => 'Projets';
+
+  @override
+  String get watchProjectsHelp =>
+      'Envoyé au serveur. Sans choix, tous les projets sont suivis.';
+
+  @override
+  String get watchTypes => 'Types d\'événement';
+
+  @override
+  String get watchTypesHelp =>
+      'Séparés par des virgules, envoyés au serveur. Un * final correspond à un préfixe, comme task.*.';
+
+  @override
+  String get watchActors => 'Acteurs';
+
+  @override
+  String get watchActorsHelp =>
+      'Identifiants ou pseudos, séparés par des virgules. Comparés sur cet appareil, comme le fait tix watch.';
+
+  @override
+  String get watchReplay => 'Rejouer depuis le numéro de séquence';
+
+  @override
+  String get watchReplayHelp =>
+      'Affiche à nouveau les événements après ce numéro, puis suit en direct. Vide commence maintenant.';
+
+  @override
+  String get watchDetails => 'Détails';
+
+  @override
+  String get watchOpen => 'Ouvrir';
+
+  @override
+  String get watchSeq => 'Séquence';
+
+  @override
+  String get watchType => 'Type';
+
+  @override
+  String get watchProject => 'Projet';
+
+  @override
+  String get watchEventId => 'Identifiant de l\'événement';
+
+  @override
+  String get watchPayload => 'Contenu';
+
+  @override
+  String get watchEmpty => 'En attente d\'événements';
+
+  @override
+  String get watchEmptyBody =>
+      'Les changements de cette organisation apparaissent ici au moment où ils arrivent. Les précédents ne s\'affichent que si vous rejouez depuis un numéro de séquence.';
+
+  @override
+  String get watchNoMatch => 'Rien ne correspond pour l\'instant';
+
+  @override
+  String get watchNoMatchBody =>
+      'Des événements arrivent, mais aucun ne correspond à ces filtres.';
+
+  @override
+  String get watchConnecting => 'Connexion au flux d\'événements';
+
+  @override
+  String get watchOffline => 'Hors ligne';
+
+  @override
+  String get watchOfflineBody =>
+      'Le serveur est injoignable. Le suivi reprend là où il s\'était arrêté dès qu\'il le redevient.';
+
+  @override
+  String get watchNoContext => 'Aucun contexte actif';
+
+  @override
+  String get watchRefused =>
+      'Cette connexion ne peut pas suivre les événements';
+
+  @override
+  String get watchRefusedBody =>
+      'Suivre les événements demande la portée event:subscribe. Utilisez un jeton qui l\'a, ou demandez-la à un administrateur.';
+
+  @override
+  String get watchFilterRefused => 'Le serveur a refusé ce filtre';
+
+  @override
+  String get watchUnsupported =>
+      'Ce serveur ne peut pas envoyer d\'événements à l\'application pour l\'instant, le suivi reste donc vide. Il reprendra quand les mises à jour en direct fonctionneront.';
+
+  @override
+  String watchExpired(int seq) {
+    return 'Les événements après le n° $seq ne sont plus conservés sur le serveur. Les nouveaux s\'affichent à partir de maintenant.';
+  }
+
+  @override
+  String get watchMissed =>
+      'La connexion est revenue sans curseur, des événements peuvent donc manquer.';
+
+  @override
+  String get watchDismiss => 'Masquer';
+
+  @override
+  String watchKeeping(int count) {
+    return 'Les $count derniers événements sont gardés ; les plus anciens sont retirés.';
+  }
+
+  @override
+  String watchFor(String holder) {
+    return 'pour $holder';
+  }
+
+  @override
+  String watchLease(String duration) {
+    return 'bail $duration';
+  }
+
+  @override
+  String watchHeldBy(String holder) {
+    return 'détenue par $holder';
+  }
+
+  @override
+  String watchRevertedTo(String status) {
+    return 'revenue à $status';
+  }
+
+  @override
+  String watchChanged(String fields) {
+    return 'modifié : $fields';
+  }
+
+  @override
+  String get watchRestored => 'restaurée';
+
+  @override
+  String get watchCommentDeleted => 'commentaire supprimé';
+
+  @override
+  String get watchLeaseRenewed => 'bail renouvelé';
+
+  @override
+  String watchTagRemoved(String tag) {
+    return 'étiquette retirée : $tag';
+  }
+
+  @override
+  String watchDependencyRemoved(String ref) {
+    return 'dépendance retirée : $ref';
+  }
+
+  @override
+  String watchSyncedFrom(String system) {
+    return 'synchronisé depuis $system';
+  }
 }

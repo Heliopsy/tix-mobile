@@ -13,9 +13,9 @@ import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/core/widgets/confirm.dart';
 import 'package:tix_mobile/src/core/widgets/live_details.dart';
+import 'package:tix_mobile/src/core/widgets/live_status.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
-import 'package:tix_mobile/src/features/shell/presentation/live_status.dart';
 
 /// "Instance › Tenant" for [session].
 String contextTitle(Session session) {

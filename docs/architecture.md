@@ -149,6 +149,14 @@ when no event came back (tix reads past events the filter or the credential leav
 when a server with a shorter request timeout refuses 25 s, and turns 404 or 405 from an older tix into periodic
 refresh.
 
+**Tails.** `LiveEvents.tail(types, projectIds, since)` hands out an `EventTail`: a filtered view of the log with its
+own cursor, for Watch. It never opens a socket of its own. Over the WebSocket it is another subscription on the open
+connection (`w1`, `w2`, ...), with the server's filter and `since_seq`; `TixEventStream` routes frames by their `id`,
+resubscribes tails from their cursor after a reconnect, and keeps a tail's refusal or expired cursor away from the
+app's own subscription. While polling, each tail is polled once, without waiting, before each of the app's own long
+polls. While refreshing on a timer a tail reports `TailUnsupported`; a refused connection reports `TailRefused` to
+every tail, which comes back with Reconnect now. A tail starts after the app's cursor unless asked to replay.
+
 A provider declares what it depends on in `build`:
 
 ```dart

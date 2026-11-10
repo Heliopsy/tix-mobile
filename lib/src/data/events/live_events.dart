@@ -201,6 +201,9 @@ class LiveEvents {
 
   Timer? _refreshTimer;
 
+  final _tails = <EventTail>[];
+  var _tailCount = 0;
+
   /// Every event once in `seq` order, and every possible gap.
   Stream<EventStreamUpdate> get updates => _updates.stream;
 
@@ -235,6 +238,49 @@ class LiveEvents {
     cursor: _cursor,
     history: List.unmodifiable(_history),
   );
+
+  /// A filtered tail of the log for [types] and [projectIds], resuming after
+  /// [since] or, when null, after [cursor], over whatever transport carries
+  /// live updates: another subscription on the same WebSocket, or a filtered
+  /// poll after each of the app's own while polling.
+  EventTail tail({
+    List<String> types = const [],
+    List<String> projectIds = const [],
+    int? since,
+  }) {
+    final tail = EventTail(
+      id: 'w${++_tailCount}',
+      types: types,
+      projectIds: projectIds,
+      since: since ?? _cursor,
+      onClose: _untail,
+    );
+    if (_mode == LiveMode.closed) {
+      unawaited(tail.close());
+      return tail;
+    }
+    _tails.add(tail);
+    if (!_started) {
+      _start();
+      return tail;
+    }
+    switch (_transport) {
+      case LiveTransport.websocket:
+        _socket?.attach(tail);
+      case LiveTransport.poll:
+        _kickPoll();
+      case LiveTransport.refresh:
+        tail.unsupported();
+      case LiveTransport.none:
+        if (_mode == LiveMode.unavailable) _refuseTail(tail, _lastError);
+    }
+    return tail;
+  }
+
+  void _untail(EventTail tail) {
+    _tails.remove(tail);
+    _socket?.detach(tail);
+  }
 
   /// Tries the WebSocket at once, whatever the mode, as when the person
   /// asks to reconnect: also after a refusal, which is otherwise final.
@@ -316,6 +362,9 @@ class LiveEvents {
     if (_mode == LiveMode.closed) return;
     _set(LiveMode.closed);
     await _stopAll();
+    for (final tail in List.of(_tails)) {
+      await tail.close();
+    }
     await _updates.close();
     await _statuses.close();
     await _diagnostics.close();
@@ -347,6 +396,7 @@ class LiveEvents {
       _probeSub = sub;
     } else {
       _socketSub = sub;
+      _tails.forEach(stream.attach);
     }
     return stream;
   }
@@ -438,6 +488,8 @@ class LiveEvents {
     _pollCancel = cancel;
     final since = _cursor;
     try {
+      final tailed = _tails.isNotEmpty && await _pollTails(cancel);
+      if (cancel.isCancelled) return;
       final page = await _poller.poll(
         sinceSeq: since,
         types: _types,
@@ -446,8 +498,9 @@ class LiveEvents {
         cancel: cancel,
       );
       if (cancel.isCancelled) return;
+      final idle = _polled(page, since);
       _pollCancel = null;
-      _polled(page, since);
+      _schedulePoll(idle && !tailed ? _idlePause : Duration.zero);
     } on EventPollUnsupported {
       if (cancel.isCancelled) return;
       _pollCancel = null;
@@ -462,7 +515,8 @@ class LiveEvents {
     }
   }
 
-  void _polled(EventPollPage page, int since) {
+  /// Delivers the app's own poll [page] and says whether it was idle.
+  bool _polled(EventPollPage page, int since) {
     final recovered = _pollAttempt > 0;
     _pollAttempt = 0;
     _succeeded();
@@ -474,8 +528,52 @@ class LiveEvents {
     if (page.nextSeq > _cursor) _cursor = page.nextSeq;
     _set(LiveMode.polling);
     if (recovered) _probeNow();
-    final idle = page.events.isEmpty && _cursor == before;
-    _schedulePoll(idle ? _idlePause : Duration.zero);
+    return page.events.isEmpty && _cursor == before;
+  }
+
+  /// Polls each tail once from its cursor with its filter, without waiting,
+  /// and says whether any of them got an event. It runs before each of the
+  /// app's own polls, so whatever woke that one reaches the tails next.
+  Future<bool> _pollTails(CancelToken cancel) async {
+    var any = false;
+    for (final tail in List.of(_tails)) {
+      if (tail.stopped || cancel.isCancelled) continue;
+      try {
+        final page = await _poller.poll(
+          sinceSeq: tail.cursor,
+          types: tail.types,
+          projectIds: tail.projectIds,
+          limit: config.pollLimit,
+          cancel: cancel,
+        );
+        if (cancel.isCancelled) return any;
+        any = any || page.events.isNotEmpty;
+        tail.polled(page.events, page.nextSeq);
+      } on EventPollUnsupported {
+        return any;
+      } on TixException catch (e) {
+        if (cancel.isCancelled) return any;
+        if (e.kind == TixErrorKind.invalid &&
+            e.message.contains('no longer available')) {
+          tail.expired();
+          any = true;
+        } else if (e.kind == TixErrorKind.invalid ||
+            e.kind == TixErrorKind.forbidden ||
+            e.kind == TixErrorKind.unauthenticated) {
+          _tails.remove(tail);
+          tail.refused(code: e.kind.name, message: e.message);
+        }
+      }
+    }
+    return any;
+  }
+
+  /// Cuts the poll in flight short so a new tail is served at once.
+  void _kickPoll() {
+    if (_transport != LiveTransport.poll || !_awake) return;
+    _pollCancel?.cancel();
+    _pollCancel = null;
+    _schedulePoll(Duration.zero);
   }
 
   void _pollFailed(TixException e) {
@@ -514,6 +612,9 @@ class LiveEvents {
     _transport = LiveTransport.refresh;
     _cursor = 0;
     _set(LiveMode.refreshing);
+    for (final tail in _tails) {
+      tail.unsupported();
+    }
     _gap();
     _scheduleRefresh();
   }
@@ -572,6 +673,7 @@ class LiveEvents {
     _probe = null;
     _probeSub = null;
     _transport = LiveTransport.websocket;
+    _tails.forEach(_socket!.attach);
     _clearFailures();
     if (since == 0 && _hadLive) _gap();
   }
@@ -586,7 +688,26 @@ class LiveEvents {
           : LiveErrorSource.websocket,
     );
     _set(LiveMode.unavailable);
+    for (final tail in _tails) {
+      _refuseTail(tail, error);
+    }
     unawaited(_stopAll());
+  }
+
+  static void _refuseTail(EventTail tail, Object? error) {
+    final (code, message) = switch (error) {
+      TixException(:final kind, :final message) => (kind.name, message),
+      WebSocketException(:final httpStatusCode) => (
+        httpStatusCode == 401 ? 'unauthenticated' : 'forbidden',
+        '',
+      ),
+      {'code': final String code, 'message': final String message} => (
+        code,
+        message,
+      ),
+      _ => ('forbidden', ''),
+    };
+    tail.connectionRefused(code: code, message: message);
   }
 
   /// Reports [EventsMissed], so everything that refreshes on a gap reads the

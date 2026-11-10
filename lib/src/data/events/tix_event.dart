@@ -68,6 +68,7 @@ abstract final class TixEventTypes {
     'filter.deleted',
     'inbox.updated',
     'template.updated',
+    'webhook.ping',
   ];
 
   /// Whether [type] matches [pattern], a glob where `*` is any run of

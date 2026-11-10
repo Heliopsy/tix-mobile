@@ -4470,5 +4470,322 @@
         "type": "String"
       }
     }
+  },
+  "goWatch": "Go to Watch",
+  "@goWatch": {
+    "description": "Palette command opening the Watch screen"
+  },
+  "watchTitle": "Watch",
+  "@watchTitle": {
+    "description": "Title of the screen that shows the tenant's events live"
+  },
+  "watchSubtitle": "The tenant's events as they happen, newest first.",
+  "@watchSubtitle": {
+    "description": "Subtitle of the Watch screen and its Manage entry"
+  },
+  "watchPause": "Pause",
+  "@watchPause": {
+    "description": "Button: stop the Watch list moving"
+  },
+  "watchResume": "Resume",
+  "@watchResume": {
+    "description": "Button: show held events and follow again"
+  },
+  "watchClear": "Clear the list",
+  "@watchClear": {
+    "description": "Button: forget the events shown on Watch"
+  },
+  "watchPaused": "Paused.",
+  "@watchPaused": {
+    "description": "Notice while Watch is paused and nothing new arrived"
+  },
+  "watchPausedNew": "{count, plural, =1{Paused, 1 new event.} other{Paused, {count} new events.}}",
+  "@watchPausedNew": {
+    "description": "Notice while Watch is paused, with how many events arrived",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "watchFilters": "Filters",
+  "@watchFilters": {
+    "description": "Button and sheet title: Watch filters"
+  },
+  "watchFiltersCount": "Filters ({count})",
+  "@watchFiltersCount": {
+    "description": "Watch filters button with how many are set",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "watchAllTypes": "Every type",
+  "@watchAllTypes": {
+    "description": "Filter chip: no event type filter"
+  },
+  "watchFiltering": "Filtering on {filters}",
+  "@watchFiltering": {
+    "description": "Line under the Watch filters naming what is in force",
+    "placeholders": {
+      "filters": {
+        "type": "String"
+      }
+    }
+  },
+  "watchFilterProject": "project {projects}",
+  "@watchFilterProject": {
+    "description": "Part of the Watch filter line",
+    "placeholders": {
+      "projects": {
+        "type": "String"
+      }
+    }
+  },
+  "watchFilterType": "type {types}",
+  "@watchFilterType": {
+    "description": "Part of the Watch filter line",
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "watchFilterActor": "actor {actors}",
+  "@watchFilterActor": {
+    "description": "Part of the Watch filter line",
+    "placeholders": {
+      "actors": {
+        "type": "String"
+      }
+    }
+  },
+  "watchFilterSince": "after #{seq}",
+  "@watchFilterSince": {
+    "description": "Part of the Watch filter line: replaying after a sequence number",
+    "placeholders": {
+      "seq": {
+        "type": "int"
+      }
+    }
+  },
+  "watchProjects": "Projects",
+  "@watchProjects": {
+    "description": "Label of the project choices in the Watch filters"
+  },
+  "watchProjectsHelp": "Sent to the server. None picked follows every project.",
+  "@watchProjectsHelp": {
+    "description": "Help under the Watch project choices"
+  },
+  "watchTypes": "Event types",
+  "@watchTypes": {
+    "description": "Label of the event type field in the Watch filters"
+  },
+  "watchTypesHelp": "Comma separated, sent to the server. A trailing * matches a prefix, as in task.*.",
+  "@watchTypesHelp": {
+    "description": "Help under the event type field"
+  },
+  "watchActors": "Actors",
+  "@watchActors": {
+    "description": "Label of the actor field in the Watch filters"
+  },
+  "watchActorsHelp": "Handles or ids, comma separated. Matched on this device, as tix watch does.",
+  "@watchActorsHelp": {
+    "description": "Help under the actor field"
+  },
+  "watchReplay": "Replay from sequence number",
+  "@watchReplay": {
+    "description": "Label of the replay field in the Watch filters"
+  },
+  "watchReplayHelp": "Shows the events after this number again, then follows live. Empty starts from now.",
+  "@watchReplayHelp": {
+    "description": "Help under the replay field"
+  },
+  "watchDetails": "Details",
+  "@watchDetails": {
+    "description": "Tooltip of the button opening an event's details"
+  },
+  "watchOpen": "Open",
+  "@watchOpen": {
+    "description": "Button in an event's details: open its task or project"
+  },
+  "watchSeq": "Sequence",
+  "@watchSeq": {
+    "description": "Label: an event's sequence number"
+  },
+  "watchType": "Type",
+  "@watchType": {
+    "description": "Label: an event's type"
+  },
+  "watchProject": "Project",
+  "@watchProject": {
+    "description": "Label: an event's project"
+  },
+  "watchEventId": "Event id",
+  "@watchEventId": {
+    "description": "Label: an event's id"
+  },
+  "watchPayload": "Payload",
+  "@watchPayload": {
+    "description": "Heading over an event's full payload"
+  },
+  "watchEmpty": "Waiting for events",
+  "@watchEmpty": {
+    "description": "Watch has no events yet"
+  },
+  "watchEmptyBody": "Changes in this tenant show up here as they happen. Earlier ones are not shown unless you replay from a sequence number.",
+  "@watchEmptyBody": {
+    "description": "Body of Watch's empty state"
+  },
+  "watchNoMatch": "Nothing matches yet",
+  "@watchNoMatch": {
+    "description": "Watch has events, but none pass the filters"
+  },
+  "watchNoMatchBody": "Events arrive, but none match these filters.",
+  "@watchNoMatchBody": {
+    "description": "Body when nothing passes the Watch filters"
+  },
+  "watchConnecting": "Connecting to the event stream",
+  "@watchConnecting": {
+    "description": "Watch is subscribing"
+  },
+  "watchOffline": "Offline",
+  "@watchOffline": {
+    "description": "Watch cannot reach the server"
+  },
+  "watchOfflineBody": "The server cannot be reached. Watch carries on from where it stopped once it can.",
+  "@watchOfflineBody": {
+    "description": "Body when Watch is offline"
+  },
+  "watchNoContext": "No context is active",
+  "@watchNoContext": {
+    "description": "Watch has no server to follow"
+  },
+  "watchRefused": "This connection cannot watch events",
+  "@watchRefused": {
+    "description": "Title when the credential may not follow events"
+  },
+  "watchRefusedBody": "Following events needs the event:subscribe scope. Use a token that has it, or ask an administrator for it.",
+  "@watchRefusedBody": {
+    "description": "Why the credential may not follow events"
+  },
+  "watchFilterRefused": "The server refused this filter",
+  "@watchFilterRefused": {
+    "description": "Title of the notice when a Watch filter is refused"
+  },
+  "watchUnsupported": "This server cannot stream events to the app right now, so Watch stays empty. It picks up again once live updates work.",
+  "@watchUnsupported": {
+    "description": "Notice when live updates only refresh on a timer"
+  },
+  "watchExpired": "Events after #{seq} are no longer kept on the server. Showing new events from now.",
+  "@watchExpired": {
+    "description": "Notice when the server refused an expired cursor",
+    "placeholders": {
+      "seq": {
+        "type": "int"
+      }
+    }
+  },
+  "watchMissed": "The connection came back without a cursor, so some events may be missing.",
+  "@watchMissed": {
+    "description": "Notice when Watch resubscribed without a cursor"
+  },
+  "watchDismiss": "Dismiss",
+  "@watchDismiss": {
+    "description": "Button hiding a Watch notice"
+  },
+  "watchKeeping": "Keeping the latest {count} events; older ones are dropped.",
+  "@watchKeeping": {
+    "description": "Footer when Watch reached its cap",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "watchFor": "for {holder}",
+  "@watchFor": {
+    "description": "Event summary: claimed on behalf of someone",
+    "placeholders": {
+      "holder": {
+        "type": "String"
+      }
+    }
+  },
+  "watchLease": "lease {duration}",
+  "@watchLease": {
+    "description": "Event summary: how long a claim's lease runs, such as 30m",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "watchHeldBy": "held by {holder}",
+  "@watchHeldBy": {
+    "description": "Event summary: who lost an expired lease",
+    "placeholders": {
+      "holder": {
+        "type": "String"
+      }
+    }
+  },
+  "watchRevertedTo": "reverted to {status}",
+  "@watchRevertedTo": {
+    "description": "Event summary: the status a task went back to",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "watchChanged": "changed {fields}",
+  "@watchChanged": {
+    "description": "Event summary: which task fields an update changed",
+    "placeholders": {
+      "fields": {
+        "type": "String"
+      }
+    }
+  },
+  "watchRestored": "restored",
+  "@watchRestored": {
+    "description": "Event summary: a task came back from the trash"
+  },
+  "watchCommentDeleted": "comment deleted",
+  "@watchCommentDeleted": {
+    "description": "Event summary"
+  },
+  "watchLeaseRenewed": "lease renewed",
+  "@watchLeaseRenewed": {
+    "description": "Event summary"
+  },
+  "watchTagRemoved": "tag removed: {tag}",
+  "@watchTagRemoved": {
+    "description": "Event summary",
+    "placeholders": {
+      "tag": {
+        "type": "String"
+      }
+    }
+  },
+  "watchDependencyRemoved": "dependency removed: {ref}",
+  "@watchDependencyRemoved": {
+    "description": "Event summary",
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "watchSyncedFrom": "synced from {system}",
+  "@watchSyncedFrom": {
+    "description": "Event summary: an update from an external sync source",
+    "placeholders": {
+      "system": {
+        "type": "String"
+      }
+    }
   }
 }

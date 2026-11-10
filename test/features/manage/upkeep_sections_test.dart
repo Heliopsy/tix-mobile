@@ -36,6 +36,17 @@ void main() {
     expect(routes.intersection(upkeep), {Routes.webhooks});
   });
 
+  test('Watch shows with event:subscribe and not without', () {
+    expect(
+      visible(const Actor(scopes: ['event:subscribe'])),
+      contains(Routes.watch),
+    );
+    expect(
+      visible(const Actor(scopes: ['task:read'])),
+      isNot(contains(Routes.watch)),
+    );
+  });
+
   test('they sit in the Tenant group', () {
     for (final e in manageSections) {
       if (upkeep.contains(e.route)) {
