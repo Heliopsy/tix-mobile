@@ -234,7 +234,7 @@ void main() {
           fire = run;
           return Timer(Duration.zero, () {});
         },
-      )..feed(_g, candidates);
+      ).feed(_g, candidates);
       fire!();
       expect(timedOut, ['top']);
     });
