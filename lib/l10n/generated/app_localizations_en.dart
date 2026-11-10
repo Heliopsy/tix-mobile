@@ -7411,4 +7411,75 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pinFailed => 'Couldn\'t add it to the home screen';
+
+  @override
+  String get trayOpen => 'Open tix';
+
+  @override
+  String trayInbox(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Inbox ($count unread)',
+      one: 'Inbox (1 unread)',
+      zero: 'Inbox',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get trayQuit => 'Quit tix';
+
+  @override
+  String trayTooltip(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'tix: $count unread',
+      one: 'tix: 1 unread',
+      zero: 'tix',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsDesktop => 'Desktop';
+
+  @override
+  String get settingsDesktopHelp =>
+      'How tix behaves on this computer: the tray icon, starting at login and a shortcut that works in any app.';
+
+  @override
+  String get settingsCloseToTray => 'Keep running in the tray';
+
+  @override
+  String get settingsCloseToTrayHelp =>
+      'Closing the window hides it, and sync and notifications carry on. Quit from the tray icon\'s menu.';
+
+  @override
+  String get settingsCloseToTrayNone =>
+      'This desktop shows no tray icons, so closing the window quits tix.';
+
+  @override
+  String get settingsAutostart => 'Start at login';
+
+  @override
+  String get settingsAutostartHelp =>
+      'tix starts when you sign in to this computer.';
+
+  @override
+  String get settingsAutostartFailed => 'Could not change start at login';
+
+  @override
+  String get settingsHotkey => 'Quick add from any app';
+
+  @override
+  String settingsHotkeyHelp(String keys) {
+    return '$keys opens quick add, even while tix is in the background.';
+  }
+
+  @override
+  String settingsHotkeyTaken(String keys) {
+    return '$keys is taken by another app';
+  }
 }

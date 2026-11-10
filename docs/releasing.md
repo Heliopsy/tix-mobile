@@ -295,7 +295,8 @@ it to something like `red.tix.TixMobile` would move every Linux user's data dire
   regenerates it from the tag). `just metainfo` also runs `appstreamcli validate`.
 - `flatpak/red.tix.tix_mobile.yml` builds the app and libtix from source on the GNOME runtime, with Go from
   go.dev; `flatpak/build.sh` is its build. It requests network, Wayland/X11, the GPU, the secret service (tokens)
-  and notifications, and no filesystem access: files go through the portals.
+  and notifications, the StatusNotifierWatcher for the tray icon, and no filesystem access: files go through the
+  portals, and start at login through the Background portal.
 
 Flathub builds offline, so before submitting, the offline sources are generated next to the manifest (the
 manifest names them under `generated/`; rename to match what the tools write):
@@ -304,6 +305,9 @@ manifest names them under `generated/`; rename to match what the tools write):
   [flatpak-flutter](https://github.com/TheAppgineer/flatpak-flutter), run on the manifest.
 - tix's Go modules, unpacked as `tix-src/vendor`, with [flatpak-go-mod](https://github.com/dennwc/flatpak-go-mod)
   run on a tix checkout at the `tix.lock` commit.
+- [flathub/shared-modules](https://github.com/flathub/shared-modules) as a `shared-modules` git submodule beside
+  the manifest, for `libayatana-appindicator` (the tray icon). Its sources are downloads Flathub fetches like any
+  other, so it needs nothing generated.
 
 Neither has been run yet, and the manifest has not been built: that needs `flatpak-builder` and the generated
 files, and is the first step below.

@@ -69,7 +69,7 @@ for the CLI.
 | Android | 7.0, API 24 (Flutter's default `minSdk`) | APK per ABI, AAB | Android Keystore |
 | iOS | 15.0 | None yet, build from source | Keychain |
 | macOS | 12.0 | `.zip` | Keychain |
-| Linux | x64 and arm64 desktop with GTK 3 | `.tar.gz` | libsecret (GNOME Keyring, KWallet) |
+| Linux | x64 and arm64 desktop with GTK 3 and libayatana-appindicator3 | `.tar.gz` | libsecret (GNOME Keyring, KWallet) |
 | Windows | Windows 10, x64 | `.zip` | DPAPI |
 
 Every platform carries the embedded tix engine for local databases, which makes each artifact roughly 30 MB
@@ -128,6 +128,11 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   opens the inbox.
 - **Add to home screen** on a project or a saved filter, on Android launchers that pin shortcuts. The shortcut
   opens it in the context it was made in.
+- **Tray and menu bar** on Linux, Windows and macOS: Open tix, Quick add, Inbox with the unread count, the active
+  context and Quit. Closing the window keeps tix running there (a setting, on wherever a tray shows), with the
+  unread count in the tooltip and on the macOS Dock. Optional start at login, and Ctrl+Shift+Space (⌃⇧Space on a
+  Mac) to open quick add from any app, where the desktop allows global shortcuts. A second launch or a `tix://`
+  link brings the running window forward instead of starting another copy.
 - **Command palette** (Ctrl+K or Cmd+K): every command, projects, recent tasks and any task by reference; `?` lists
   the shortcuts.
 - **Inbox**: mentions, assignments, comments and status changes, grouped by day, with filters per kind, swipe to
@@ -187,8 +192,9 @@ and an AAB, Linux `.tar.gz` files for x64 and arm64, a macOS `.zip`, a Windows `
 
 On Linux, this downloads the latest release for your CPU, checks it against `SHA256SUMS`, installs or upgrades it
 in `~/.local/opt/tix-mobile` with a launcher entry and `~/.local/bin/tix-mobile`, and starts it. Paste it from any
-directory; a failed step stops it without touching what is installed. It needs curl, GTK 3 and a Secret Service
-keyring (GNOME Keyring or KWallet).
+directory; a failed step stops it without touching what is installed. It needs curl, GTK 3, libayatana-appindicator3
+(`libayatana-appindicator3-1` on Debian and Ubuntu, `libayatana-appindicator-gtk3` on Fedora and Arch) and a Secret
+Service keyring (GNOME Keyring or KWallet).
 
 ```sh
 (
@@ -215,7 +221,7 @@ if [ -e "$dest" ]; then mv "$dest" "$dest.old"; fi
 mv "$dest.new" "$dest" || { mv "$dest.old" "$dest"; exit 1; }
 rm -rf "$dest.old"
 cp -R "$dest/share/icons/." "$HOME/.local/share/icons/"
-sed -e '/^#/d' -e "s|^Exec=.*|Exec=\"$dest/tix_mobile\"|" \
+sed -e '/^#/d' -e "s|^Exec=.*|Exec=\"$dest/tix_mobile\" %u|" \
   "$dest/share/applications/red.tix.tix_mobile.desktop" \
   > "$HOME/.local/share/applications/red.tix.tix_mobile.desktop"
 if command -v update-desktop-database >/dev/null 2>&1; then update-desktop-database -q "$HOME/.local/share/applications" || true; fi

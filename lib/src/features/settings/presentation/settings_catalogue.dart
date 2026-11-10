@@ -2,6 +2,7 @@
 
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/platform/desktop.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/data/models/scopes.dart';
 
@@ -28,6 +29,9 @@ enum SettingsSection {
 
   /// The screen the app opens on.
   start(SettingsScope.device),
+
+  /// The tray, start at login and the global hotkey on a desktop.
+  desktop(SettingsScope.device),
 
   /// Whether this device notifies.
   deviceNotifications(SettingsScope.device),
@@ -126,6 +130,7 @@ String settingsSectionTitle(AppLocalizations l10n, SettingsSection section) =>
       SettingsSection.appearance => l10n.appearanceLabel,
       SettingsSection.language => l10n.languageLabel,
       SettingsSection.start => l10n.settingsStartTitle,
+      SettingsSection.desktop => l10n.settingsDesktop,
       SettingsSection.deviceNotifications => l10n.settingsDeviceNotifTitle,
       SettingsSection.servers => l10n.instancesTitle,
       SettingsSection.localEngine => l10n.localInstanceIdleTitle,
@@ -154,8 +159,8 @@ String settingsScopeLabel(AppLocalizations l10n, SettingsScope scope) =>
 /// Every setting the screen offers right now: account settings only with
 /// a session, tenant settings only for an administrator, the black switch
 /// only under the system theme, the idle timeout only where local databases
-/// are offered, widgets only where the platform has them, ADB control only
-/// on Android.
+/// are offered, widgets only where the platform has them, the desktop's
+/// switches only where [desktop] offers them, ADB control only on Android.
 List<SettingsItem> settingsCatalogue(
   AppLocalizations l10n, {
   required bool signedIn,
@@ -165,6 +170,7 @@ List<SettingsItem> settingsCatalogue(
   bool localEngines = false,
   bool widgets = false,
   bool adb = false,
+  DesktopCaps desktop = DesktopCaps.none,
   String tenant = '',
 }) => [
   SettingsItem(
@@ -218,6 +224,30 @@ List<SettingsItem> settingsCatalogue(
       l10n.inboxTitle,
     ].join(' '),
   ),
+  if (desktop.any)
+    SettingsItem(
+      id: 'desktop.closeToTray',
+      section: SettingsSection.desktop,
+      label: l10n.settingsCloseToTray,
+      icon: Icons.move_to_inbox_outlined,
+      keywords: '${l10n.settingsDesktop} ${l10n.trayQuit}',
+    ),
+  if (desktop.autostart)
+    SettingsItem(
+      id: 'desktop.autostart',
+      section: SettingsSection.desktop,
+      label: l10n.settingsAutostart,
+      icon: Icons.login,
+      keywords: l10n.settingsDesktop,
+    ),
+  if (desktop.hotkey)
+    SettingsItem(
+      id: 'desktop.hotkey',
+      section: SettingsSection.desktop,
+      label: l10n.settingsHotkey,
+      icon: Icons.keyboard_outlined,
+      keywords: '${l10n.settingsDesktop} ${l10n.quickAddTitle}',
+    ),
   SettingsItem(
     id: 'deviceNotifications.open',
     section: SettingsSection.deviceNotifications,

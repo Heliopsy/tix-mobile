@@ -30,4 +30,27 @@ void main() {
     await repo.setLocalIdleMinutes(30);
     expect(repo.localIdleMinutes(), 30);
   });
+
+  test('close to tray is unset until chosen, then either way', () async {
+    final repo = SettingsRepository(MemoryKeyValueStore());
+    expect(repo.closeToTray(), isNull);
+    await repo.setCloseToTray(on: false);
+    expect(repo.closeToTray(), isFalse);
+    await repo.setCloseToTray(on: true);
+    expect(repo.closeToTray(), isTrue);
+  });
+
+  test('start at login and the hotkey are off until turned on', () async {
+    final store = MemoryKeyValueStore();
+    final repo = SettingsRepository(store);
+    expect(repo.autostart(), isFalse);
+    expect(repo.quickAddHotkey(), isFalse);
+    await repo.setAutostart(on: true);
+    await repo.setQuickAddHotkey(on: true);
+    expect(repo.autostart(), isTrue);
+    expect(repo.quickAddHotkey(), isTrue);
+    await repo.setAutostart(on: false);
+    await repo.setQuickAddHotkey(on: false);
+    expect(store.values, isEmpty);
+  });
 }

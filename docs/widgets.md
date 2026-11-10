@@ -283,7 +283,8 @@ needs MSIX packaging and package identity; the app ships as an unpackaged Flutte
 app is MSIX packaged (also wanted for the Store), add a small C++/WinRT provider that reads the same JSON snapshots
 from the app's local folder and renders My work and Inbox as Adaptive Cards, with ticks queued exactly as on macOS.
 Linux has no common widget host (GNOME has none; KDE Plasma widgets are QML), so the tray and notifications remain
-the desktop answer there.
+the desktop answer there: the tray menu shows the inbox's unread count and opens quick add and the inbox (see
+[Desktop integration](development.md#desktop-integration)).
 
 ## Testing
 

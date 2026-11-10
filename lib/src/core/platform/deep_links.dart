@@ -128,8 +128,9 @@ Uri tixLinkTo(
 }
 
 /// `tix://` links the platform opened the app with. Android's
-/// `MainActivity` holds the latest one until it is taken over the
-/// `tix/links` channel, and says `opened` when one arrives while running.
+/// `MainActivity`, and the Linux, Windows and macOS runners, hold the latest
+/// one until it is taken over the `tix/links` channel, and say `opened` when
+/// one arrives while running.
 class DeepLinkIntake {
   /// Listens on [channel].
   DeepLinkIntake([this.channel = const MethodChannel('tix/links')]) {
@@ -165,7 +166,12 @@ class DeepLinkIntake {
       return;
     }
     final uri = taken == null ? null : Uri.tryParse(taken);
-    if (uri == null) return;
+    if (uri != null) deliver(uri);
+  }
+
+  /// Hands [uri] over as if the platform had opened it: the desktop tray and
+  /// hotkey send their links this way.
+  void deliver(Uri uri) {
     if (_links.hasListener) {
       _links.add(uri);
     } else {

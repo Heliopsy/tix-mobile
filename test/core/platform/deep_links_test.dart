@@ -169,5 +169,23 @@ void main() {
       expect(intake.take(), Uri.parse('tix://about'));
       expect(intake.take(), isNull);
     });
+
+    test('a delivered link reaches a listener', () async {
+      final intake = DeepLinkIntake(channel);
+      addTearDown(intake.dispose);
+      final got = <Uri>[];
+      intake.links.listen(got.add);
+      intake.deliver(Uri.parse('tix://quick-add'));
+      await pumpEventQueue();
+      expect(got, [Uri.parse('tix://quick-add')]);
+      expect(intake.take(), isNull);
+    });
+
+    test('a delivered link nobody listens for waits to be taken', () {
+      final intake = DeepLinkIntake(channel);
+      addTearDown(intake.dispose);
+      intake.deliver(Uri.parse('tix://inbox'));
+      expect(intake.take(), Uri.parse('tix://inbox'));
+    });
   });
 }

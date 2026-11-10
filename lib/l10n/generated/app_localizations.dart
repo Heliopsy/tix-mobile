@@ -12462,6 +12462,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t add it to the home screen'**
   String get pinFailed;
+
+  /// Tray menu entry that shows the window
+  ///
+  /// In en, this message translates to:
+  /// **'Open tix'**
+  String get trayOpen;
+
+  /// Tray menu entry that opens the inbox, with the unread count
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Inbox} =1{Inbox (1 unread)} other{Inbox ({count} unread)}}'**
+  String trayInbox(int count);
+
+  /// Tray menu entry that ends the app
+  ///
+  /// In en, this message translates to:
+  /// **'Quit tix'**
+  String get trayQuit;
+
+  /// Tooltip of the tray icon, with the unread inbox count
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{tix} =1{tix: 1 unread} other{tix: {count} unread}}'**
+  String trayTooltip(int count);
+
+  /// Settings section for the tray, start at login and the global shortcut
+  ///
+  /// In en, this message translates to:
+  /// **'Desktop'**
+  String get settingsDesktop;
+
+  /// Explanation at the top of the desktop settings section
+  ///
+  /// In en, this message translates to:
+  /// **'How tix behaves on this computer: the tray icon, starting at login and a shortcut that works in any app.'**
+  String get settingsDesktopHelp;
+
+  /// Switch: closing the window hides it to the tray
+  ///
+  /// In en, this message translates to:
+  /// **'Keep running in the tray'**
+  String get settingsCloseToTray;
+
+  /// Help under the close to tray switch
+  ///
+  /// In en, this message translates to:
+  /// **'Closing the window hides it, and sync and notifications carry on. Quit from the tray icon\'s menu.'**
+  String get settingsCloseToTrayHelp;
+
+  /// Shown instead of the help when the desktop has no tray, e.g. GNOME without an extension
+  ///
+  /// In en, this message translates to:
+  /// **'This desktop shows no tray icons, so closing the window quits tix.'**
+  String get settingsCloseToTrayNone;
+
+  /// Switch: start tix when signing in to the computer
+  ///
+  /// In en, this message translates to:
+  /// **'Start at login'**
+  String get settingsAutostart;
+
+  /// Help under the start at login switch
+  ///
+  /// In en, this message translates to:
+  /// **'tix starts when you sign in to this computer.'**
+  String get settingsAutostartHelp;
+
+  /// Toast when the system refused to change start at login
+  ///
+  /// In en, this message translates to:
+  /// **'Could not change start at login'**
+  String get settingsAutostartFailed;
+
+  /// Switch: a global keyboard shortcut opens quick add
+  ///
+  /// In en, this message translates to:
+  /// **'Quick add from any app'**
+  String get settingsHotkey;
+
+  /// Help under the global shortcut switch; keys is the shortcut, such as Ctrl+Shift+Space
+  ///
+  /// In en, this message translates to:
+  /// **'{keys} opens quick add, even while tix is in the background.'**
+  String settingsHotkeyHelp(String keys);
+
+  /// Toast when the global shortcut could not be registered
+  ///
+  /// In en, this message translates to:
+  /// **'{keys} is taken by another app'**
+  String settingsHotkeyTaken(String keys);
 }
 
 class _AppLocalizationsDelegate

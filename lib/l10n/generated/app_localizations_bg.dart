@@ -7419,4 +7419,76 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get pinFailed => 'Не можа да се добави на началния екран';
+
+  @override
+  String get trayOpen => 'Отвори tix';
+
+  @override
+  String trayInbox(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Входящи ($count непрочетени)',
+      one: 'Входящи (1 непрочетено)',
+      zero: 'Входящи',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get trayQuit => 'Изход от tix';
+
+  @override
+  String trayTooltip(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'tix: $count непрочетени',
+      one: 'tix: 1 непрочетено',
+      zero: 'tix',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsDesktop => 'Работен плот';
+
+  @override
+  String get settingsDesktopHelp =>
+      'Как се държи tix на този компютър: иконата в областта за известия, стартирането при влизане и клавишна комбинация, която работи във всяко приложение.';
+
+  @override
+  String get settingsCloseToTray => 'Остави да работи в областта за известия';
+
+  @override
+  String get settingsCloseToTrayHelp =>
+      'Затварянето на прозореца го скрива, а синхронизацията и известията продължават. Изход има в менюто на иконата.';
+
+  @override
+  String get settingsCloseToTrayNone =>
+      'Този работен плот не показва икони в областта за известия, затова затварянето на прозореца спира tix.';
+
+  @override
+  String get settingsAutostart => 'Стартиране при влизане';
+
+  @override
+  String get settingsAutostartHelp =>
+      'tix се стартира, когато влезете в този компютър.';
+
+  @override
+  String get settingsAutostartFailed =>
+      'Стартирането при влизане не можа да се промени';
+
+  @override
+  String get settingsHotkey => 'Бързо добавяне от всяко приложение';
+
+  @override
+  String settingsHotkeyHelp(String keys) {
+    return '$keys отваря бързото добавяне, дори когато tix е във фонов режим.';
+  }
+
+  @override
+  String settingsHotkeyTaken(String keys) {
+    return '$keys се използва от друго приложение';
+  }
 }

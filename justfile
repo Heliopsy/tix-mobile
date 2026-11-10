@@ -63,7 +63,7 @@ setup:
 [group('setup')]
 setup-linux:
     sudo apt-get update -q
-    sudo apt-get install -y -q --no-install-recommends clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libsecret-1-dev
+    sudo apt-get install -y -q --no-install-recommends clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libsecret-1-dev libayatana-appindicator3-dev
 
 # flutter doctor -v.
 [group('setup')]

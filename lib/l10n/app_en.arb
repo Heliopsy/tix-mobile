@@ -4390,5 +4390,85 @@
   "pinFailed": "Couldn't add it to the home screen",
   "@pinFailed": {
     "description": "Toast when the launcher could not be asked to pin a shortcut"
+  },
+  "trayOpen": "Open tix",
+  "@trayOpen": {
+    "description": "Tray menu entry that shows the window"
+  },
+  "trayInbox": "{count, plural, =0{Inbox} =1{Inbox (1 unread)} other{Inbox ({count} unread)}}",
+  "@trayInbox": {
+    "description": "Tray menu entry that opens the inbox, with the unread count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trayQuit": "Quit tix",
+  "@trayQuit": {
+    "description": "Tray menu entry that ends the app"
+  },
+  "trayTooltip": "{count, plural, =0{tix} =1{tix: 1 unread} other{tix: {count} unread}}",
+  "@trayTooltip": {
+    "description": "Tooltip of the tray icon, with the unread inbox count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDesktop": "Desktop",
+  "@settingsDesktop": {
+    "description": "Settings section for the tray, start at login and the global shortcut"
+  },
+  "settingsDesktopHelp": "How tix behaves on this computer: the tray icon, starting at login and a shortcut that works in any app.",
+  "@settingsDesktopHelp": {
+    "description": "Explanation at the top of the desktop settings section"
+  },
+  "settingsCloseToTray": "Keep running in the tray",
+  "@settingsCloseToTray": {
+    "description": "Switch: closing the window hides it to the tray"
+  },
+  "settingsCloseToTrayHelp": "Closing the window hides it, and sync and notifications carry on. Quit from the tray icon's menu.",
+  "@settingsCloseToTrayHelp": {
+    "description": "Help under the close to tray switch"
+  },
+  "settingsCloseToTrayNone": "This desktop shows no tray icons, so closing the window quits tix.",
+  "@settingsCloseToTrayNone": {
+    "description": "Shown instead of the help when the desktop has no tray, e.g. GNOME without an extension"
+  },
+  "settingsAutostart": "Start at login",
+  "@settingsAutostart": {
+    "description": "Switch: start tix when signing in to the computer"
+  },
+  "settingsAutostartHelp": "tix starts when you sign in to this computer.",
+  "@settingsAutostartHelp": {
+    "description": "Help under the start at login switch"
+  },
+  "settingsAutostartFailed": "Could not change start at login",
+  "@settingsAutostartFailed": {
+    "description": "Toast when the system refused to change start at login"
+  },
+  "settingsHotkey": "Quick add from any app",
+  "@settingsHotkey": {
+    "description": "Switch: a global keyboard shortcut opens quick add"
+  },
+  "settingsHotkeyHelp": "{keys} opens quick add, even while tix is in the background.",
+  "@settingsHotkeyHelp": {
+    "description": "Help under the global shortcut switch; keys is the shortcut, such as Ctrl+Shift+Space",
+    "placeholders": {
+      "keys": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsHotkeyTaken": "{keys} is taken by another app",
+  "@settingsHotkeyTaken": {
+    "description": "Toast when the global shortcut could not be registered",
+    "placeholders": {
+      "keys": {
+        "type": "String"
+      }
+    }
   }
 }

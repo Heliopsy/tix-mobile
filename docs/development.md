@@ -50,14 +50,21 @@ Then `just doctor` runs `flutter doctor` against the pinned toolchain and says w
 
 ### Linux
 
-Flutter's desktop build dependencies, plus libsecret for the token store. On Debian and Ubuntu:
+Flutter's desktop build dependencies, plus libsecret for the token store and libayatana-appindicator3 for the tray
+icon (`tray_manager`). On Debian and Ubuntu:
 
 ```sh
-sudo apt install clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libsecret-1-dev
+sudo apt install clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libsecret-1-dev \
+  libayatana-appindicator3-dev
 ```
 
+`just setup-linux` installs the same list. On Fedora the tray library is `libayatana-appindicator-gtk3-devel`, on
+Arch `libayatana-appindicator`; the older `libappindicator3` works too.
+
 At run time the token store needs a Secret Service provider, such as GNOME Keyring or KWallet, unlocked in the
-session. Without one there is nowhere safe to keep the token, and the app does not fall back to a plain file.
+session. Without one there is nowhere safe to keep the token, and the app does not fall back to a plain file. The
+tray needs the appindicator library at run time as well, and a desktop that shows StatusNotifierItem icons (KDE,
+Xfce, Cinnamon, Budgie, GNOME with the AppIndicator extension); see [Desktop integration](#desktop-integration).
 
 ### Windows
 
@@ -258,6 +265,28 @@ just run -d linux      # or -d macos, -d windows
 
 The quickest loop for most work. Resize the window across 600 and 840 logical pixels to see the layout switch
 between the phone, rail and two-pane forms.
+
+### Desktop integration
+
+On Linux, Windows and macOS the app puts an icon in the tray or menu bar (`core/platform/desktop.dart` over
+`tray_manager` and `window_manager`; `core/widgets/desktop_host.dart` keeps it current). Its menu opens the window,
+quick add or the inbox through the same `tix://` links Android's tiles use. The runners answer two channels of
+their own: `tix/links` (the link a launch or a second launch brought) and `tix/desktop` (what the desktop offers,
+start at login, the quick-add hotkey). The code is in `linux/runner/desktop.cc`, `windows/runner/flutter_window.cpp`
+and `macos/Runner/MainFlutterWindow.swift`.
+
+| | Linux X11 | Linux Wayland | Linux Flatpak | Windows | macOS |
+| --- | --- | --- | --- | --- | --- |
+| Tray | Where a StatusNotifierWatcher runs | Same | Same, through `org.kde.StatusNotifierWatcher` | Notification area | Menu bar, plus a Dock badge |
+| Icon click | Opens the menu | Opens the menu | Opens the menu | Shows or hides the window | Shows or hides the window |
+| Start at login | `~/.config/autostart` | Same | Background portal | `HKCU\…\Run` | `SMAppService`, macOS 13 and later |
+| Quick-add hotkey | Ctrl+Shift+Space | Not offered | Under X11 only | Ctrl+Shift+Space | ⌃⇧Space |
+| One instance | GApplication on D-Bus | Same | Same | A mutex and `WM_COPYDATA` | The system's |
+| `tix://` links | `x-scheme-handler/tix` | Same | Same | Passed on the command line only | `CFBundleURLTypes` |
+
+Without a tray (plain GNOME), closing the window quits and the close-to-tray setting says why it is off. A launch
+from the login item starts hidden when there is a tray to come back from. To try the second-instance path, run the
+bundle twice, or `tix_mobile tix://inbox` while it runs.
 
 ### Android emulator
 
