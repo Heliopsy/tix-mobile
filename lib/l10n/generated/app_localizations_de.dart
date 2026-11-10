@@ -86,9 +86,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noDescription => 'Keine Beschreibung.';
 
   @override
-  String get noTaskSelected => 'Wählen Sie eine Aufgabe, um sie hier zu sehen.';
-
-  @override
   String priorityLabel(String priority) {
     String _temp0 = intl.Intl.selectLogic(priority, {
       '1': 'Sehr hoch',

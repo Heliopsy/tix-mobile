@@ -24,7 +24,6 @@
   "unassigned": "Non assignée",
   "noDueDate": "Pas d’échéance",
   "noDescription": "Aucune description.",
-  "noTaskSelected": "Choisissez une tâche pour l’afficher ici.",
   "priorityLabel": "{priority, select, 1{Maximale} 2{Haute} 3{Normale} 4{Basse} 5{Minimale} other{Aucune}}",
   "quickAddTitle": "Ajout rapide",
   "quickAddHint": "Corriger la connexion !high #auth @raj due:fri",

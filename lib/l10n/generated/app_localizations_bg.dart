@@ -86,9 +86,6 @@ class AppLocalizationsBg extends AppLocalizations {
   String get noDescription => 'Няма описание.';
 
   @override
-  String get noTaskSelected => 'Изберете задача, за да я видите тук.';
-
-  @override
   String priorityLabel(String priority) {
     String _temp0 = intl.Intl.selectLogic(priority, {
       '1': 'Най-висок',

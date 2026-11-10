@@ -247,12 +247,6 @@ abstract class AppLocalizations {
   /// **'No description.'**
   String get noDescription;
 
-  /// No description provided for @noTaskSelected.
-  ///
-  /// In en, this message translates to:
-  /// **'Pick a task to see it here.'**
-  String get noTaskSelected;
-
   /// No description provided for @priorityLabel.
   ///
   /// In en, this message translates to:

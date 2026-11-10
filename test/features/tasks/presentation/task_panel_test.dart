@@ -134,6 +134,30 @@ void main() {
     expect(find.text('route:/projects/infra'), findsOneWidget);
   });
 
+  testWidgets('with no task open the list takes the whole window', (
+    tester,
+  ) async {
+    await pump(tester, const TaskListScreen(projectKey: 'infra'));
+    expect(panel, findsNothing);
+    expect(find.byKey(const Key('tasks.detail.pane')), findsNothing);
+    expect(find.byType(VerticalDivider), findsNothing);
+    expect(find.byType(EmptyState), findsNothing);
+    final row = tester.getSize(find.byType(TaskRow).first);
+    expect(row.width, greaterThan(desktop.width / 2));
+  });
+
+  testWidgets('a task open beside the list gets the resizable panel', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      const TaskListScreen(projectKey: 'infra', selectedRef: 'infra-1'),
+    );
+    expect(panel, findsOneWidget);
+    expect(find.byKey(const Key('tasks.detail.pane')), findsOneWidget);
+    expect(find.byKey(const Key('tasks.detail.resize')), findsOneWidget);
+  });
+
   group('beside a board', () {
     final pane = find.byKey(const Key('tasks.detail.pane'));
     final handle = find.byKey(const Key('tasks.detail.resize'));

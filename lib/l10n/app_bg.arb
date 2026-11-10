@@ -24,7 +24,6 @@
   "unassigned": "Без изпълнител",
   "noDueDate": "Без краен срок",
   "noDescription": "Няма описание.",
-  "noTaskSelected": "Изберете задача, за да я видите тук.",
   "priorityLabel": "{priority, select, 1{Най-висок} 2{Висок} 3{Нормален} 4{Нисък} 5{Най-нисък} other{Няма}}",
   "quickAddTitle": "Бързо добавяне",
   "quickAddHint": "Поправи входа !high #auth @raj due:fri",

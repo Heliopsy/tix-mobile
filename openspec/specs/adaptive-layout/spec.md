@@ -23,9 +23,9 @@ from 1200 and below them under 1200. Tapping the current destination SHALL retur
 
 ### Requirement: Wide screens show the task beside the list
 
-From 840 logical pixels wide, opening a task SHALL show it beside its project's task list, with the open task
-highlighted in the list. Narrower screens SHALL show the task on a screen of its own. The task's location
-SHALL be the same at every width.
+From 840 logical pixels wide, opening a task SHALL show it in a resizable panel beside its task list, with the open
+task highlighted in the list. With no task open the list SHALL take the whole width. Narrower screens SHALL show the
+task on a screen of its own. The task's location SHALL be the same at every width.
 
 #### Scenario: Two panes
 
@@ -34,8 +34,8 @@ SHALL be the same at every width.
 
 #### Scenario: Nothing selected
 
-- **WHEN** a project is open on a wide window and no task is
-- **THEN** the second pane asks the person to pick a task
+- **WHEN** a project is open on a wide window and no task is open
+- **THEN** the list takes the whole width and no second pane is shown
 
 ### Requirement: The phone bar holds at most five destinations
 
