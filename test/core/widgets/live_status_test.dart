@@ -4,12 +4,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/events/events.dart';
+import 'package:tix_mobile/src/core/widgets/live_status.dart';
 import 'package:tix_mobile/src/features/shell/presentation/context_switcher.dart';
-import 'package:tix_mobile/src/features/shell/presentation/live_status.dart';
 
-import '../../../helpers/app.dart';
-import '../../../helpers/fake_events.dart';
-import '../../../helpers/fake_tix.dart';
+import '../../helpers/app.dart';
+import '../../helpers/fake_events.dart';
+import '../../helpers/fake_tix.dart';
 
 void main() {
   Finder inSwitcher(Finder f) =>

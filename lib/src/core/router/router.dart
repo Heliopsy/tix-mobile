@@ -60,6 +60,7 @@ import 'package:tix_mobile/src/features/templates/presentation/templates_command
 import 'package:tix_mobile/src/features/templates/presentation/templates_screen.dart';
 import 'package:tix_mobile/src/features/tokens/presentation/tokens_screen.dart';
 import 'package:tix_mobile/src/features/transfer/presentation/transfer_screen.dart';
+import 'package:tix_mobile/src/features/watch/presentation/watch_screen.dart';
 import 'package:tix_mobile/src/features/widgets/presentation/home_widgets_scope.dart';
 import 'package:tix_mobile/src/features/workflows/presentation/workflow_editor_screen.dart';
 import 'package:tix_mobile/src/features/workflows/presentation/workflows_screen.dart';
@@ -494,6 +495,7 @@ final upkeepRoutes = <RouteBase>[
   GoRoute(path: 'housekeeping', builder: (_, _) => const HousekeepingScreen()),
   GoRoute(path: 'trash', builder: (_, _) => const TrashScreen()),
   GoRoute(path: 'audit', builder: (_, _) => const AuditScreen()),
+  GoRoute(path: 'watch', builder: (_, _) => const WatchScreen()),
 ];
 
 /// Tenant and server administration (wave 3), under Manage.

@@ -272,4 +272,137 @@ void main() {
     expect(TixEventTypes.matches('*', 'inbox.updated'), isTrue);
     expect(TixEventTypes.all, contains('template.updated'));
   });
+
+  group('tails', () {
+    late EventTail tail;
+    late List<TailUpdate> got;
+    StreamSubscription<TailUpdate>? tailSub;
+
+    List<int> tailSeqs() => [
+      for (final u in got)
+        if (u is TailEvent) u.event.seq,
+    ];
+
+    void follow({List<String> types = const ['task.*'], int since = 0}) {
+      tail = EventTail(
+        id: 'w1',
+        types: types,
+        projectIds: const ['p1'],
+        since: since,
+      );
+      got = [];
+      tailSub = tail.updates.listen(got.add);
+      stream.attach(tail);
+    }
+
+    tearDown(() async {
+      await tailSub?.cancel();
+      tailSub = null;
+    });
+
+    test('subscribes on the same socket with its filter and cursor', () async {
+      start();
+      await settle();
+      follow(since: 4);
+      final s = sockets.last;
+      expect(sockets.sockets, hasLength(1));
+      expect(s.subscribes('w1').single, {
+        'type': 'subscribe',
+        'id': 'w1',
+        'since_seq': 4,
+        'filter': {
+          'types': ['task.*'],
+          'project_ids': ['p1'],
+        },
+      });
+      s
+        ..ack('s1')
+        ..ack('w1')
+        ..event(5, 'task.created', id: 'w1')
+        ..event(6, 'comment.added');
+      await settle();
+      expect(got.whereType<TailLive>(), hasLength(1));
+      expect(tailSeqs(), [5]);
+      expect(seqs(), [6]);
+      expect(tail.cursor, 5);
+      expect(stream.cursor, 6);
+    });
+
+    test('a refused tail leaves the stream live', () async {
+      start();
+      await settle();
+      follow(types: const ['bogus']);
+      sockets.last
+        ..ack('s1')
+        ..push({
+          'type': 'error',
+          'id': 'w1',
+          'error': {'code': 'invalid', 'message': 'unknown event type bogus'},
+        })
+        ..event(7, 'task.created');
+      await settle();
+      final refusal = got.whereType<TailRefused>().single;
+      expect(refusal.code, 'invalid');
+      expect(refusal.message, contains('bogus'));
+      expect(refusal.credential, isFalse);
+      expect(tail.stopped, isTrue);
+      expect(stream.state, EventStreamState.live);
+      expect(seqs(), [7]);
+    });
+
+    test('an expired cursor is reported and followed live', () async {
+      start();
+      await settle();
+      follow(since: 3);
+      final s = sockets.last
+        ..push({
+          'type': 'error',
+          'id': 'w1',
+          'error': {
+            'code': 'invalid',
+            'message':
+                'cursor 3 is no longer available; '
+                'the oldest retained event is 40',
+          },
+        });
+      await settle();
+      expect(got.whereType<TailExpired>().single.since, 3);
+      final again = s.subscribes('w1');
+      expect(again, hasLength(2));
+      expect(again.last.containsKey('since_seq'), isFalse);
+      s.ack('w1');
+      await settle();
+      expect(got.whereType<TailGap>(), isEmpty);
+      expect(stream.state, isNot(EventStreamState.unavailable));
+    });
+
+    test('resubscribes from its cursor after a reconnect', () async {
+      start();
+      await settle();
+      follow();
+      sockets.last
+        ..ack('s1')
+        ..ack('w1')
+        ..event(8, 'task.updated', id: 'w1');
+      await settle();
+      await sockets.last.drop();
+      final next = await sockets.opened.first;
+      await settle();
+      expect(sockets.sockets, hasLength(2));
+      expect(next.subscribes('w1').single['since_seq'], 8);
+    });
+
+    test('detach unsubscribes and drops its frames', () async {
+      start();
+      await settle();
+      follow();
+      final s = sockets.last..ack('w1');
+      await settle();
+      stream.detach(tail);
+      expect(s.sent.last, {'type': 'unsubscribe', 'id': 'w1'});
+      s.event(9, 'task.created', id: 'w1');
+      await settle();
+      expect(tailSeqs(), isEmpty);
+    });
+  });
 }

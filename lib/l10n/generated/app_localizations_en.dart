@@ -7482,4 +7482,228 @@ class AppLocalizationsEn extends AppLocalizations {
   String settingsHotkeyTaken(String keys) {
     return '$keys is taken by another app';
   }
+
+  @override
+  String get goWatch => 'Go to Watch';
+
+  @override
+  String get watchTitle => 'Watch';
+
+  @override
+  String get watchSubtitle =>
+      'The tenant\'s events as they happen, newest first.';
+
+  @override
+  String get watchPause => 'Pause';
+
+  @override
+  String get watchResume => 'Resume';
+
+  @override
+  String get watchClear => 'Clear the list';
+
+  @override
+  String get watchPaused => 'Paused.';
+
+  @override
+  String watchPausedNew(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Paused, $count new events.',
+      one: 'Paused, 1 new event.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get watchFilters => 'Filters';
+
+  @override
+  String watchFiltersCount(int count) {
+    return 'Filters ($count)';
+  }
+
+  @override
+  String get watchAllTypes => 'Every type';
+
+  @override
+  String watchFiltering(String filters) {
+    return 'Filtering on $filters';
+  }
+
+  @override
+  String watchFilterProject(String projects) {
+    return 'project $projects';
+  }
+
+  @override
+  String watchFilterType(String types) {
+    return 'type $types';
+  }
+
+  @override
+  String watchFilterActor(String actors) {
+    return 'actor $actors';
+  }
+
+  @override
+  String watchFilterSince(int seq) {
+    return 'after #$seq';
+  }
+
+  @override
+  String get watchProjects => 'Projects';
+
+  @override
+  String get watchProjectsHelp =>
+      'Sent to the server. None picked follows every project.';
+
+  @override
+  String get watchTypes => 'Event types';
+
+  @override
+  String get watchTypesHelp =>
+      'Comma separated, sent to the server. A trailing * matches a prefix, as in task.*.';
+
+  @override
+  String get watchActors => 'Actors';
+
+  @override
+  String get watchActorsHelp =>
+      'Handles or ids, comma separated. Matched on this device, as tix watch does.';
+
+  @override
+  String get watchReplay => 'Replay from sequence number';
+
+  @override
+  String get watchReplayHelp =>
+      'Shows the events after this number again, then follows live. Empty starts from now.';
+
+  @override
+  String get watchDetails => 'Details';
+
+  @override
+  String get watchOpen => 'Open';
+
+  @override
+  String get watchSeq => 'Sequence';
+
+  @override
+  String get watchType => 'Type';
+
+  @override
+  String get watchProject => 'Project';
+
+  @override
+  String get watchEventId => 'Event id';
+
+  @override
+  String get watchPayload => 'Payload';
+
+  @override
+  String get watchEmpty => 'Waiting for events';
+
+  @override
+  String get watchEmptyBody =>
+      'Changes in this tenant show up here as they happen. Earlier ones are not shown unless you replay from a sequence number.';
+
+  @override
+  String get watchNoMatch => 'Nothing matches yet';
+
+  @override
+  String get watchNoMatchBody => 'Events arrive, but none match these filters.';
+
+  @override
+  String get watchConnecting => 'Connecting to the event stream';
+
+  @override
+  String get watchOffline => 'Offline';
+
+  @override
+  String get watchOfflineBody =>
+      'The server cannot be reached. Watch carries on from where it stopped once it can.';
+
+  @override
+  String get watchNoContext => 'No context is active';
+
+  @override
+  String get watchRefused => 'This connection cannot watch events';
+
+  @override
+  String get watchRefusedBody =>
+      'Following events needs the event:subscribe scope. Use a token that has it, or ask an administrator for it.';
+
+  @override
+  String get watchFilterRefused => 'The server refused this filter';
+
+  @override
+  String get watchUnsupported =>
+      'This server cannot stream events to the app right now, so Watch stays empty. It picks up again once live updates work.';
+
+  @override
+  String watchExpired(int seq) {
+    return 'Events after #$seq are no longer kept on the server. Showing new events from now.';
+  }
+
+  @override
+  String get watchMissed =>
+      'The connection came back without a cursor, so some events may be missing.';
+
+  @override
+  String get watchDismiss => 'Dismiss';
+
+  @override
+  String watchKeeping(int count) {
+    return 'Keeping the latest $count events; older ones are dropped.';
+  }
+
+  @override
+  String watchFor(String holder) {
+    return 'for $holder';
+  }
+
+  @override
+  String watchLease(String duration) {
+    return 'lease $duration';
+  }
+
+  @override
+  String watchHeldBy(String holder) {
+    return 'held by $holder';
+  }
+
+  @override
+  String watchRevertedTo(String status) {
+    return 'reverted to $status';
+  }
+
+  @override
+  String watchChanged(String fields) {
+    return 'changed $fields';
+  }
+
+  @override
+  String get watchRestored => 'restored';
+
+  @override
+  String get watchCommentDeleted => 'comment deleted';
+
+  @override
+  String get watchLeaseRenewed => 'lease renewed';
+
+  @override
+  String watchTagRemoved(String tag) {
+    return 'tag removed: $tag';
+  }
+
+  @override
+  String watchDependencyRemoved(String ref) {
+    return 'dependency removed: $ref';
+  }
+
+  @override
+  String watchSyncedFrom(String system) {
+    return 'synced from $system';
+  }
 }

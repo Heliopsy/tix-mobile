@@ -45,9 +45,12 @@ class FakeSocket implements EventSocket {
   /// Sends the server frame [msg].
   void push(Map<String, Object?> msg) => _incoming.add(jsonEncode(msg));
 
-  /// Acknowledges the last subscription, echoing its `since_seq`.
-  void ack() {
-    final sub = sent.lastWhere((m) => m['type'] == 'subscribe');
+  /// Acknowledges the last subscription, or the last one named [id],
+  /// echoing its `since_seq`.
+  void ack([String? id]) {
+    final sub = sent.lastWhere(
+      (m) => m['type'] == 'subscribe' && (id == null || m['id'] == id),
+    );
     push({
       'type': 'subscribed',
       'id': sub['id'],
@@ -55,24 +58,35 @@ class FakeSocket implements EventSocket {
     });
   }
 
-  /// Delivers an event with [seq] and [type].
+  /// Delivers an event with [seq] and [type] to the subscription [id].
   void event(
     int seq,
     String type, {
+    String id = 's1',
     String subjectId = 'id-infra-1',
     String projectId = 'p1',
+    String actorId = '',
+    Map<String, Object?> payload = const {},
   }) => push({
     'type': 'event',
-    'id': 's1',
+    'id': id,
     'event': {
       'seq': seq,
       'type': type,
       'subject_type': type.split('.').first,
       'subject_id': subjectId,
       'project_id': projectId,
+      'actor_id': actorId,
+      'payload': payload,
       'occurred_at': '2026-11-08T10:00:00Z',
     },
   });
+
+  /// The subscribe frames sent for [id], in order.
+  List<Map<String, Object?>> subscribes(String id) => [
+    for (final m in sent)
+      if (m['type'] == 'subscribe' && m['id'] == id) m,
+  ];
 
   /// Drops the connection as a network failure would, or closes it with
   /// [code] and [reason] as a server or proxy would.

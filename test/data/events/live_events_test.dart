@@ -647,6 +647,125 @@ void main() {
       });
     });
   });
+
+  group('tails', () {
+    List<int> seqsOf(List<TailUpdate> got) => [
+      for (final u in got)
+        if (u is TailEvent) u.event.seq,
+    ];
+
+    test('ride the open WebSocket instead of a second one', () {
+      fakeAsync((async) {
+        final r = Rig()..open(async);
+        final got = <TailUpdate>[];
+        final tail = r.live.tail(types: const ['task.*']);
+        tail.updates.listen(got.add);
+        async.flushMicrotasks();
+        expect(r.sockets.sockets, hasLength(1));
+        final sub = r.sockets.last.subscribes(tail.id).single;
+        expect(sub['filter'], {
+          'types': ['task.*'],
+        });
+        r.sockets.last
+          ..ack(tail.id)
+          ..event(3, 'task.created', id: tail.id);
+        async.flushMicrotasks();
+        expect(got.whereType<TailLive>(), hasLength(1));
+        expect(seqsOf(got), [3]);
+        unawaited(tail.close());
+        async.flushMicrotasks();
+        expect(r.sockets.last.sent.last, {
+          'type': 'unsubscribe',
+          'id': tail.id,
+        });
+      });
+    });
+
+    test('start after the app cursor unless told to replay', () {
+      fakeAsync((async) {
+        final r = Rig()..open(async);
+        r.sockets.last.event(12, 'task.created');
+        async.flushMicrotasks();
+        final follow = r.live.tail();
+        final replay = r.live.tail(since: 4);
+        async.flushMicrotasks();
+        expect(r.sockets.last.subscribes(follow.id).single['since_seq'], 12);
+        expect(r.sockets.last.subscribes(replay.id).single['since_seq'], 4);
+      });
+    });
+
+    test('are polled with their filter while live updates poll', () {
+      fakeAsync((async) {
+        final r = Rig()..breakSocket(async);
+        final got = <TailUpdate>[];
+        r.live.tail(types: const ['comment.*']).updates.listen(got.add);
+        async.elapse(const Duration(milliseconds: 10));
+        final tailPolls = [
+          for (final p in r.server.polls)
+            if (p.uri.queryParametersAll['types'] != null) p,
+        ];
+        expect(tailPolls, isNotEmpty);
+        expect(tailPolls.first.uri.queryParametersAll['types'], ['comment.*']);
+        expect(tailPolls.first.uri.queryParameters.containsKey('wait'), false);
+        expect(got.whereType<TailLive>(), hasLength(1));
+        r.server
+          ..addEvent(8, 'task.updated')
+          ..addEvent(9, 'comment.added');
+        async.elapse(const Duration(seconds: 1));
+        expect(seqsOf(got), [9]);
+        expect(r.seqs, containsAll([8, 9]));
+      });
+    });
+
+    test('are told when the connection is refused', () {
+      fakeAsync((async) {
+        final r = Rig(refuse: 403);
+        final got = <TailUpdate>[];
+        r.live.tail().updates.listen(got.add);
+        async.elapse(const Duration(seconds: 1));
+        expect(r.mode, LiveMode.unavailable);
+        final refusal = got.whereType<TailRefused>().single;
+        expect(refusal.credential, isTrue);
+        final after = <TailUpdate>[];
+        r.live.tail().updates.listen(after.add);
+        async.flushMicrotasks();
+        expect(after.whereType<TailRefused>().single.code, 'forbidden');
+      });
+    });
+
+    test('move to the WebSocket from their cursor when it works again', () {
+      fakeAsync((async) {
+        final r = Rig()..breakSocket(async);
+        final got = <TailUpdate>[];
+        final tail = r.live.tail(types: const ['task.*']);
+        tail.updates.listen(got.add);
+        r.server.addEvent(9, 'task.updated');
+        async.elapse(const Duration(seconds: 1));
+        expect(seqsOf(got), [9]);
+        r.sockets.refuse = null;
+        async.elapse(const Duration(minutes: 2));
+        final probe = r.sockets.last;
+        expect(probe.subscribes(tail.id), isEmpty);
+        probe.ack('s1');
+        async.flushMicrotasks();
+        expect(r.mode, LiveMode.websocket);
+        expect(probe.subscribes(tail.id).single['since_seq'], 9);
+      });
+    });
+
+    test('cannot be served while refreshing on a timer', () {
+      fakeAsync((async) {
+        final r = Rig();
+        r.server.pollSupported = false;
+        r.breakSocket(async);
+        expect(r.mode, LiveMode.refreshing);
+        final got = <TailUpdate>[];
+        r.live.tail().updates.listen(got.add);
+        async.flushMicrotasks();
+        expect(got.single, isA<TailUnsupported>());
+      });
+    });
+  });
 }
 
 /// A poller that fails with each of [failures] in turn, then answers
@@ -659,6 +778,7 @@ class _ScriptedPoller implements EventPoller {
   Future<EventPollPage> poll({
     required int sinceSeq,
     List<String> types = const [],
+    List<String> projectIds = const [],
     Duration wait = Duration.zero,
     int limit = 200,
     CancelToken? cancel,

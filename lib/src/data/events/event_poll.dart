@@ -32,12 +32,14 @@ final class EventPollUnsupported implements Exception {
 
 /// Reads tix's event log over plain HTTP.
 abstract interface class EventPoller {
-  /// The events after [sinceSeq], waiting up to [wait] for one when none is
-  /// there yet. Throws [EventPollUnsupported] when the server lacks the
-  /// endpoint and a [TixException] for anything else; [cancel] abandons it.
+  /// The events after [sinceSeq] of [types] in [projectIds] (empty keeps
+  /// all), waiting up to [wait] for one when none is there yet. Throws
+  /// [EventPollUnsupported] when the server lacks the endpoint and a
+  /// [TixException] for anything else; [cancel] abandons it.
   Future<EventPollPage> poll({
     required int sinceSeq,
     List<String> types = const [],
+    List<String> projectIds = const [],
     Duration wait = Duration.zero,
     int limit = 200,
     CancelToken? cancel,
@@ -69,6 +71,7 @@ class TixEventPoller implements EventPoller {
   Future<EventPollPage> poll({
     required int sinceSeq,
     List<String> types = const [],
+    List<String> projectIds = const [],
     Duration wait = Duration.zero,
     int limit = 200,
     CancelToken? cancel,
@@ -78,6 +81,7 @@ class TixEventPoller implements EventPoller {
       final page = await api.event.poll(
         sinceSeq: sinceSeq > 0 ? sinceSeq : null,
         types: types.isEmpty ? null : types,
+        projectIds: projectIds.isEmpty ? null : projectIds,
         limit: limit,
         wait: wait > Duration.zero ? '${wait.inSeconds}s' : null,
       );

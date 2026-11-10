@@ -7491,4 +7491,229 @@ class AppLocalizationsBg extends AppLocalizations {
   String settingsHotkeyTaken(String keys) {
     return '$keys се използва от друго приложение';
   }
+
+  @override
+  String get goWatch => 'Към Наблюдение';
+
+  @override
+  String get watchTitle => 'Наблюдение';
+
+  @override
+  String get watchSubtitle =>
+      'Събитията в организацията, докато се случват, най-новите най-отгоре.';
+
+  @override
+  String get watchPause => 'Пауза';
+
+  @override
+  String get watchResume => 'Продължи';
+
+  @override
+  String get watchClear => 'Изчисти списъка';
+
+  @override
+  String get watchPaused => 'На пауза.';
+
+  @override
+  String watchPausedNew(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'На пауза, $count нови събития.',
+      one: 'На пауза, 1 ново събитие.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get watchFilters => 'Филтри';
+
+  @override
+  String watchFiltersCount(int count) {
+    return 'Филтри ($count)';
+  }
+
+  @override
+  String get watchAllTypes => 'Всички типове';
+
+  @override
+  String watchFiltering(String filters) {
+    return 'Филтрирано по $filters';
+  }
+
+  @override
+  String watchFilterProject(String projects) {
+    return 'проект $projects';
+  }
+
+  @override
+  String watchFilterType(String types) {
+    return 'тип $types';
+  }
+
+  @override
+  String watchFilterActor(String actors) {
+    return 'автор $actors';
+  }
+
+  @override
+  String watchFilterSince(int seq) {
+    return 'след №$seq';
+  }
+
+  @override
+  String get watchProjects => 'Проекти';
+
+  @override
+  String get watchProjectsHelp =>
+      'Изпраща се на сървъра. Без избран проект се следят всички.';
+
+  @override
+  String get watchTypes => 'Типове събития';
+
+  @override
+  String get watchTypesHelp =>
+      'Разделени със запетая, изпращат се на сървъра. * накрая значи всички с това начало, например task.*.';
+
+  @override
+  String get watchActors => 'Автори';
+
+  @override
+  String get watchActorsHelp =>
+      'Псевдоними или идентификатори, разделени със запетая. Сравняват се на това устройство, както прави tix watch.';
+
+  @override
+  String get watchReplay => 'Повтори от пореден номер';
+
+  @override
+  String get watchReplayHelp =>
+      'Показва отново събитията след този номер и после продължава на живо. Празно започва от сега.';
+
+  @override
+  String get watchDetails => 'Подробности';
+
+  @override
+  String get watchOpen => 'Отвори';
+
+  @override
+  String get watchSeq => 'Пореден номер';
+
+  @override
+  String get watchType => 'Тип';
+
+  @override
+  String get watchProject => 'Проект';
+
+  @override
+  String get watchEventId => 'Идентификатор на събитието';
+
+  @override
+  String get watchPayload => 'Данни';
+
+  @override
+  String get watchEmpty => 'Очакват се събития';
+
+  @override
+  String get watchEmptyBody =>
+      'Промените в организацията се показват тук, докато се случват. По-ранните не се показват, освен ако не повторите от пореден номер.';
+
+  @override
+  String get watchNoMatch => 'Още няма съвпадения';
+
+  @override
+  String get watchNoMatchBody =>
+      'Събития пристигат, но никое не отговаря на тези филтри.';
+
+  @override
+  String get watchConnecting => 'Свързване с потока от събития';
+
+  @override
+  String get watchOffline => 'Няма връзка';
+
+  @override
+  String get watchOfflineBody =>
+      'Сървърът не е достъпен. Наблюдението продължава оттам, докъдето е стигнало, щом връзката се възстанови.';
+
+  @override
+  String get watchNoContext => 'Няма активен контекст';
+
+  @override
+  String get watchRefused => 'Тази връзка не може да наблюдава събития';
+
+  @override
+  String get watchRefusedBody =>
+      'За следене на събития е нужен обхватът event:subscribe. Използвайте токен с него или го поискайте от администратор.';
+
+  @override
+  String get watchFilterRefused => 'Сървърът отказа този филтър';
+
+  @override
+  String get watchUnsupported =>
+      'Сървърът в момента не може да изпраща събития към приложението, затова Наблюдението остава празно. Ще продължи, щом обновяването на живо заработи.';
+
+  @override
+  String watchExpired(int seq) {
+    return 'Събитията след №$seq вече не се пазят на сървъра. Показват се новите събития от сега.';
+  }
+
+  @override
+  String get watchMissed =>
+      'Връзката се възстанови без курсор, затова може да липсват събития.';
+
+  @override
+  String get watchDismiss => 'Скрий';
+
+  @override
+  String watchKeeping(int count) {
+    return 'Пазят се последните $count събития; по-старите отпадат.';
+  }
+
+  @override
+  String watchFor(String holder) {
+    return 'за $holder';
+  }
+
+  @override
+  String watchLease(String duration) {
+    return 'наем $duration';
+  }
+
+  @override
+  String watchHeldBy(String holder) {
+    return 'държана от $holder';
+  }
+
+  @override
+  String watchRevertedTo(String status) {
+    return 'върната в $status';
+  }
+
+  @override
+  String watchChanged(String fields) {
+    return 'промени $fields';
+  }
+
+  @override
+  String get watchRestored => 'възстановена';
+
+  @override
+  String get watchCommentDeleted => 'изтрит коментар';
+
+  @override
+  String get watchLeaseRenewed => 'наемът е подновен';
+
+  @override
+  String watchTagRemoved(String tag) {
+    return 'премахнат етикет: $tag';
+  }
+
+  @override
+  String watchDependencyRemoved(String ref) {
+    return 'премахната зависимост: $ref';
+  }
+
+  @override
+  String watchSyncedFrom(String system) {
+    return 'синхронизирано от $system';
+  }
 }

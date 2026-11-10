@@ -7551,4 +7551,230 @@ class AppLocalizationsDe extends AppLocalizations {
   String settingsHotkeyTaken(String keys) {
     return '$keys wird bereits von einer anderen App verwendet';
   }
+
+  @override
+  String get goWatch => 'Zu Beobachten';
+
+  @override
+  String get watchTitle => 'Beobachten';
+
+  @override
+  String get watchSubtitle =>
+      'Die Ereignisse des Mandanten, sobald sie passieren, neueste zuerst.';
+
+  @override
+  String get watchPause => 'Anhalten';
+
+  @override
+  String get watchResume => 'Fortsetzen';
+
+  @override
+  String get watchClear => 'Liste leeren';
+
+  @override
+  String get watchPaused => 'Angehalten.';
+
+  @override
+  String watchPausedNew(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Angehalten, $count neue Ereignisse.',
+      one: 'Angehalten, 1 neues Ereignis.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get watchFilters => 'Filter';
+
+  @override
+  String watchFiltersCount(int count) {
+    return 'Filter ($count)';
+  }
+
+  @override
+  String get watchAllTypes => 'Alle Typen';
+
+  @override
+  String watchFiltering(String filters) {
+    return 'Gefiltert nach $filters';
+  }
+
+  @override
+  String watchFilterProject(String projects) {
+    return 'Projekt $projects';
+  }
+
+  @override
+  String watchFilterType(String types) {
+    return 'Typ $types';
+  }
+
+  @override
+  String watchFilterActor(String actors) {
+    return 'Akteur $actors';
+  }
+
+  @override
+  String watchFilterSince(int seq) {
+    return 'nach #$seq';
+  }
+
+  @override
+  String get watchProjects => 'Projekte';
+
+  @override
+  String get watchProjectsHelp =>
+      'Wird an den Server gesendet. Ohne Auswahl werden alle Projekte verfolgt.';
+
+  @override
+  String get watchTypes => 'Ereignistypen';
+
+  @override
+  String get watchTypesHelp =>
+      'Durch Kommas getrennt, an den Server gesendet. Ein * am Ende passt auf einen Anfang, etwa task.*.';
+
+  @override
+  String get watchActors => 'Akteure';
+
+  @override
+  String get watchActorsHelp =>
+      'Handles oder IDs, durch Kommas getrennt. Wird auf diesem Gerät verglichen, wie bei tix watch.';
+
+  @override
+  String get watchReplay => 'Ab Sequenznummer wiederholen';
+
+  @override
+  String get watchReplayHelp =>
+      'Zeigt die Ereignisse nach dieser Nummer erneut und folgt dann live. Leer beginnt ab jetzt.';
+
+  @override
+  String get watchDetails => 'Details';
+
+  @override
+  String get watchOpen => 'Öffnen';
+
+  @override
+  String get watchSeq => 'Sequenz';
+
+  @override
+  String get watchType => 'Typ';
+
+  @override
+  String get watchProject => 'Projekt';
+
+  @override
+  String get watchEventId => 'Ereignis-ID';
+
+  @override
+  String get watchPayload => 'Nutzdaten';
+
+  @override
+  String get watchEmpty => 'Warten auf Ereignisse';
+
+  @override
+  String get watchEmptyBody =>
+      'Änderungen in diesem Mandanten erscheinen hier, sobald sie passieren. Frühere werden nur angezeigt, wenn Sie ab einer Sequenznummer wiederholen.';
+
+  @override
+  String get watchNoMatch => 'Noch keine Treffer';
+
+  @override
+  String get watchNoMatchBody =>
+      'Ereignisse kommen an, aber keines passt zu diesen Filtern.';
+
+  @override
+  String get watchConnecting => 'Verbindung zum Ereignisstrom wird aufgebaut';
+
+  @override
+  String get watchOffline => 'Offline';
+
+  @override
+  String get watchOfflineBody =>
+      'Der Server ist nicht erreichbar. Beobachten macht dort weiter, wo es aufgehört hat, sobald er wieder erreichbar ist.';
+
+  @override
+  String get watchNoContext => 'Kein Kontext aktiv';
+
+  @override
+  String get watchRefused =>
+      'Diese Verbindung kann keine Ereignisse beobachten';
+
+  @override
+  String get watchRefusedBody =>
+      'Zum Verfolgen von Ereignissen ist der Bereich event:subscribe nötig. Verwenden Sie ein Token damit oder fragen Sie einen Administrator.';
+
+  @override
+  String get watchFilterRefused => 'Der Server hat diesen Filter abgelehnt';
+
+  @override
+  String get watchUnsupported =>
+      'Dieser Server kann gerade keine Ereignisse an die App senden, daher bleibt Beobachten leer. Es setzt wieder ein, sobald Live-Updates funktionieren.';
+
+  @override
+  String watchExpired(int seq) {
+    return 'Ereignisse nach #$seq werden auf dem Server nicht mehr aufbewahrt. Neue Ereignisse werden ab jetzt angezeigt.';
+  }
+
+  @override
+  String get watchMissed =>
+      'Die Verbindung kam ohne Cursor zurück, daher fehlen möglicherweise Ereignisse.';
+
+  @override
+  String get watchDismiss => 'Ausblenden';
+
+  @override
+  String watchKeeping(int count) {
+    return 'Die letzten $count Ereignisse werden behalten, ältere entfallen.';
+  }
+
+  @override
+  String watchFor(String holder) {
+    return 'für $holder';
+  }
+
+  @override
+  String watchLease(String duration) {
+    return 'Lease $duration';
+  }
+
+  @override
+  String watchHeldBy(String holder) {
+    return 'gehalten von $holder';
+  }
+
+  @override
+  String watchRevertedTo(String status) {
+    return 'zurück auf $status';
+  }
+
+  @override
+  String watchChanged(String fields) {
+    return 'geändert: $fields';
+  }
+
+  @override
+  String get watchRestored => 'wiederhergestellt';
+
+  @override
+  String get watchCommentDeleted => 'Kommentar gelöscht';
+
+  @override
+  String get watchLeaseRenewed => 'Lease verlängert';
+
+  @override
+  String watchTagRemoved(String tag) {
+    return 'Tag entfernt: $tag';
+  }
+
+  @override
+  String watchDependencyRemoved(String ref) {
+    return 'Abhängigkeit entfernt: $ref';
+  }
+
+  @override
+  String watchSyncedFrom(String system) {
+    return 'synchronisiert von $system';
+  }
 }

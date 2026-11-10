@@ -153,6 +153,13 @@ class HomeShell extends StatelessWidget {
             run: () => _select(at('settings')),
           ),
           TixCommand(
+            id: 'go.watch',
+            label: l10n.goWatch,
+            group: l10n.commandsNavigate,
+            icon: Icons.stream,
+            run: () => context.go(Routes.watch),
+          ),
+          TixCommand(
             id: 'go.instances',
             label: l10n.goInstances,
             group: l10n.commandsNavigate,

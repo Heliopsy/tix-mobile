@@ -3,10 +3,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show SocketException;
+import 'dart:math' show max;
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
+import 'package:tix_mobile/src/data/events/tix_event.dart' show TixEventTypes;
 
 /// The JSON body a request sent.
 extension SentBody on RequestOptions {
@@ -440,13 +442,18 @@ class FakeTix {
   Completer<void> _logged = Completer<void>();
 
   /// Commits an event with [seq] and [type], waking polls waiting for one.
-  void addEvent(int seq, String type, {String subjectId = 'id-infra-1'}) {
+  void addEvent(
+    int seq,
+    String type, {
+    String subjectId = 'id-infra-1',
+    String projectId = 'p1',
+  }) {
     eventLog.add({
       'seq': seq,
       'type': type,
       'subject_type': type.split('.').first,
       'subject_id': subjectId,
-      'project_id': 'p1',
+      'project_id': projectId,
       'occurred_at': '2026-11-08T10:00:00Z',
     });
     final woke = _logged;
@@ -457,7 +464,10 @@ class FakeTix {
   /// Requests to the poll endpoint, in order.
   List<RequestOptions> get polls => requestsTo('/api/v1/events/poll');
 
-  Future<FakeResponse> _poll(Map<String, String> q) async {
+  Future<FakeResponse> _poll(
+    Map<String, String> q, [
+    Map<String, List<String>> all = const {},
+  ]) async {
     if (pollOffline) {
       throw const SocketException('network is unreachable');
     }
@@ -481,10 +491,22 @@ class FakeTix {
     final since = requested == 0 ? head : requested;
     final limit = int.tryParse(q['limit'] ?? '') ?? 200;
     final wait = int.tryParse((q['wait'] ?? '0s').replaceAll('s', '')) ?? 0;
+    final types = [
+      for (final t in all['types'] ?? const <String>[]) ...t.split(','),
+    ];
+    final projects = [
+      for (final p in all['project_ids'] ?? const <String>[]) ...p.split(','),
+    ];
+    bool kept(Map<String, Object?> e) =>
+        (types.isEmpty ||
+            types.any((t) => TixEventTypes.matches(t, e['type']! as String))) &&
+        (projects.isEmpty || projects.contains(e['project_id']));
     List<Map<String, Object?>> after() => [
       for (final e in eventLog)
-        if ((e['seq']! as int) > since) e,
+        if ((e['seq']! as int) > since && kept(e)) e,
     ].take(limit).toList();
+    int read() =>
+        eventLog.isEmpty ? since : max(since, eventLog.last['seq']! as int);
     if (wait > maxWait) {
       return FakeResponse(
         400,
@@ -504,7 +526,7 @@ class FakeTix {
     }
     return FakeResponse(200, {
       'events': events,
-      'next_seq': events.isEmpty ? since : events.last['seq'],
+      'next_seq': events.length == limit ? events.last['seq'] : read(),
     });
   }
 
@@ -609,7 +631,7 @@ class FakeTix {
     if (quick != null) return quick;
     switch ((o.method, path)) {
       case ('GET', '/api/v1/events/poll'):
-        return await _poll(q);
+        return await _poll(q, o.uri.queryParametersAll);
       case ('GET', '/api/v1/me/time') when keepsTime:
         return FakeResponse(200, _timeSettings());
       case ('GET', '/api/v1/me/starred-projects') when keepsProjectStars:

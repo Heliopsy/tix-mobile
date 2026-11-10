@@ -12552,6 +12552,354 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{keys} is taken by another app'**
   String settingsHotkeyTaken(String keys);
+
+  /// Palette command opening the Watch screen
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Watch'**
+  String get goWatch;
+
+  /// Title of the screen that shows the tenant's events live
+  ///
+  /// In en, this message translates to:
+  /// **'Watch'**
+  String get watchTitle;
+
+  /// Subtitle of the Watch screen and its Manage entry
+  ///
+  /// In en, this message translates to:
+  /// **'The tenant\'s events as they happen, newest first.'**
+  String get watchSubtitle;
+
+  /// Button: stop the Watch list moving
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get watchPause;
+
+  /// Button: show held events and follow again
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get watchResume;
+
+  /// Button: forget the events shown on Watch
+  ///
+  /// In en, this message translates to:
+  /// **'Clear the list'**
+  String get watchClear;
+
+  /// Notice while Watch is paused and nothing new arrived
+  ///
+  /// In en, this message translates to:
+  /// **'Paused.'**
+  String get watchPaused;
+
+  /// Notice while Watch is paused, with how many events arrived
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Paused, 1 new event.} other{Paused, {count} new events.}}'**
+  String watchPausedNew(int count);
+
+  /// Button and sheet title: Watch filters
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get watchFilters;
+
+  /// Watch filters button with how many are set
+  ///
+  /// In en, this message translates to:
+  /// **'Filters ({count})'**
+  String watchFiltersCount(int count);
+
+  /// Filter chip: no event type filter
+  ///
+  /// In en, this message translates to:
+  /// **'Every type'**
+  String get watchAllTypes;
+
+  /// Line under the Watch filters naming what is in force
+  ///
+  /// In en, this message translates to:
+  /// **'Filtering on {filters}'**
+  String watchFiltering(String filters);
+
+  /// Part of the Watch filter line
+  ///
+  /// In en, this message translates to:
+  /// **'project {projects}'**
+  String watchFilterProject(String projects);
+
+  /// Part of the Watch filter line
+  ///
+  /// In en, this message translates to:
+  /// **'type {types}'**
+  String watchFilterType(String types);
+
+  /// Part of the Watch filter line
+  ///
+  /// In en, this message translates to:
+  /// **'actor {actors}'**
+  String watchFilterActor(String actors);
+
+  /// Part of the Watch filter line: replaying after a sequence number
+  ///
+  /// In en, this message translates to:
+  /// **'after #{seq}'**
+  String watchFilterSince(int seq);
+
+  /// Label of the project choices in the Watch filters
+  ///
+  /// In en, this message translates to:
+  /// **'Projects'**
+  String get watchProjects;
+
+  /// Help under the Watch project choices
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to the server. None picked follows every project.'**
+  String get watchProjectsHelp;
+
+  /// Label of the event type field in the Watch filters
+  ///
+  /// In en, this message translates to:
+  /// **'Event types'**
+  String get watchTypes;
+
+  /// Help under the event type field
+  ///
+  /// In en, this message translates to:
+  /// **'Comma separated, sent to the server. A trailing * matches a prefix, as in task.*.'**
+  String get watchTypesHelp;
+
+  /// Label of the actor field in the Watch filters
+  ///
+  /// In en, this message translates to:
+  /// **'Actors'**
+  String get watchActors;
+
+  /// Help under the actor field
+  ///
+  /// In en, this message translates to:
+  /// **'Handles or ids, comma separated. Matched on this device, as tix watch does.'**
+  String get watchActorsHelp;
+
+  /// Label of the replay field in the Watch filters
+  ///
+  /// In en, this message translates to:
+  /// **'Replay from sequence number'**
+  String get watchReplay;
+
+  /// Help under the replay field
+  ///
+  /// In en, this message translates to:
+  /// **'Shows the events after this number again, then follows live. Empty starts from now.'**
+  String get watchReplayHelp;
+
+  /// Tooltip of the button opening an event's details
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get watchDetails;
+
+  /// Button in an event's details: open its task or project
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get watchOpen;
+
+  /// Label: an event's sequence number
+  ///
+  /// In en, this message translates to:
+  /// **'Sequence'**
+  String get watchSeq;
+
+  /// Label: an event's type
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get watchType;
+
+  /// Label: an event's project
+  ///
+  /// In en, this message translates to:
+  /// **'Project'**
+  String get watchProject;
+
+  /// Label: an event's id
+  ///
+  /// In en, this message translates to:
+  /// **'Event id'**
+  String get watchEventId;
+
+  /// Heading over an event's full payload
+  ///
+  /// In en, this message translates to:
+  /// **'Payload'**
+  String get watchPayload;
+
+  /// Watch has no events yet
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for events'**
+  String get watchEmpty;
+
+  /// Body of Watch's empty state
+  ///
+  /// In en, this message translates to:
+  /// **'Changes in this tenant show up here as they happen. Earlier ones are not shown unless you replay from a sequence number.'**
+  String get watchEmptyBody;
+
+  /// Watch has events, but none pass the filters
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing matches yet'**
+  String get watchNoMatch;
+
+  /// Body when nothing passes the Watch filters
+  ///
+  /// In en, this message translates to:
+  /// **'Events arrive, but none match these filters.'**
+  String get watchNoMatchBody;
+
+  /// Watch is subscribing
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting to the event stream'**
+  String get watchConnecting;
+
+  /// Watch cannot reach the server
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get watchOffline;
+
+  /// Body when Watch is offline
+  ///
+  /// In en, this message translates to:
+  /// **'The server cannot be reached. Watch carries on from where it stopped once it can.'**
+  String get watchOfflineBody;
+
+  /// Watch has no server to follow
+  ///
+  /// In en, this message translates to:
+  /// **'No context is active'**
+  String get watchNoContext;
+
+  /// Title when the credential may not follow events
+  ///
+  /// In en, this message translates to:
+  /// **'This connection cannot watch events'**
+  String get watchRefused;
+
+  /// Why the credential may not follow events
+  ///
+  /// In en, this message translates to:
+  /// **'Following events needs the event:subscribe scope. Use a token that has it, or ask an administrator for it.'**
+  String get watchRefusedBody;
+
+  /// Title of the notice when a Watch filter is refused
+  ///
+  /// In en, this message translates to:
+  /// **'The server refused this filter'**
+  String get watchFilterRefused;
+
+  /// Notice when live updates only refresh on a timer
+  ///
+  /// In en, this message translates to:
+  /// **'This server cannot stream events to the app right now, so Watch stays empty. It picks up again once live updates work.'**
+  String get watchUnsupported;
+
+  /// Notice when the server refused an expired cursor
+  ///
+  /// In en, this message translates to:
+  /// **'Events after #{seq} are no longer kept on the server. Showing new events from now.'**
+  String watchExpired(int seq);
+
+  /// Notice when Watch resubscribed without a cursor
+  ///
+  /// In en, this message translates to:
+  /// **'The connection came back without a cursor, so some events may be missing.'**
+  String get watchMissed;
+
+  /// Button hiding a Watch notice
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get watchDismiss;
+
+  /// Footer when Watch reached its cap
+  ///
+  /// In en, this message translates to:
+  /// **'Keeping the latest {count} events; older ones are dropped.'**
+  String watchKeeping(int count);
+
+  /// Event summary: claimed on behalf of someone
+  ///
+  /// In en, this message translates to:
+  /// **'for {holder}'**
+  String watchFor(String holder);
+
+  /// Event summary: how long a claim's lease runs, such as 30m
+  ///
+  /// In en, this message translates to:
+  /// **'lease {duration}'**
+  String watchLease(String duration);
+
+  /// Event summary: who lost an expired lease
+  ///
+  /// In en, this message translates to:
+  /// **'held by {holder}'**
+  String watchHeldBy(String holder);
+
+  /// Event summary: the status a task went back to
+  ///
+  /// In en, this message translates to:
+  /// **'reverted to {status}'**
+  String watchRevertedTo(String status);
+
+  /// Event summary: which task fields an update changed
+  ///
+  /// In en, this message translates to:
+  /// **'changed {fields}'**
+  String watchChanged(String fields);
+
+  /// Event summary: a task came back from the trash
+  ///
+  /// In en, this message translates to:
+  /// **'restored'**
+  String get watchRestored;
+
+  /// Event summary
+  ///
+  /// In en, this message translates to:
+  /// **'comment deleted'**
+  String get watchCommentDeleted;
+
+  /// Event summary
+  ///
+  /// In en, this message translates to:
+  /// **'lease renewed'**
+  String get watchLeaseRenewed;
+
+  /// Event summary
+  ///
+  /// In en, this message translates to:
+  /// **'tag removed: {tag}'**
+  String watchTagRemoved(String tag);
+
+  /// Event summary
+  ///
+  /// In en, this message translates to:
+  /// **'dependency removed: {ref}'**
+  String watchDependencyRemoved(String ref);
+
+  /// Event summary: an update from an external sync source
+  ///
+  /// In en, this message translates to:
+  /// **'synced from {system}'**
+  String watchSyncedFrom(String system);
 }
 
 class _AppLocalizationsDelegate
