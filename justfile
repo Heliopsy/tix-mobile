@@ -23,6 +23,9 @@ version := env("VERSION", `git describe --tags --always --dirty 2>/dev/null || e
 # Extra flags for every `flutter build`, e.g. the release workflow's
 # --build-name/--build-number from scripts/build-version.sh.
 build_args := env("BUILD_ARGS", "")
+# Where scripts/build-ayatana.sh builds the tray library the Linux bundle ships.
+# CI caches this directory.
+ayatana_prefix := "build/ayatana"
 
 # Generated Dart, excluded from formatting and coverage. Kept in step with
 # scripts/coverage.sh and codecov.yml.
@@ -63,7 +66,7 @@ setup:
 [group('setup')]
 setup-linux:
     sudo apt-get update -q
-    sudo apt-get install -y -q --no-install-recommends clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libsecret-1-dev libayatana-appindicator3-dev patchelf
+    sudo apt-get install -y -q --no-install-recommends clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libsecret-1-dev libayatana-appindicator3-dev libdbusmenu-gtk3-dev curl patchelf
 
 # flutter doctor -v.
 [group('setup')]
@@ -332,10 +335,15 @@ build-ipa *ARGS:
 build-linux *ARGS:
     flutter build linux --release {{build_args}} {{ARGS}}
 
+# Build the libayatana-appindicator the Linux bundle ships (0.6, for the tray tooltip) into build/ayatana.
+[group('build')]
+linux-ayatana:
+    scripts/build-ayatana.sh {{ayatana_prefix}}
+
 # Copy the tray libraries into a Linux bundle (`copy`), or fail unless they load from it (`check`).
 [group('build')]
 linux-libs MODE DIR:
-    scripts/bundle-linux-libs.sh {{MODE}} {{DIR}}
+    AYATANA_PREFIX={{ayatana_prefix}} scripts/bundle-linux-libs.sh {{MODE}} {{DIR}}
 
 # macOS app (release, macOS only).
 [group('build')]
