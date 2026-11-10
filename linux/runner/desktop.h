@@ -6,7 +6,8 @@
 
 // The runner's side of tix/links (tix:// links handed to Dart) and
 // tix/desktop (what the desktop offers, start at login, the quick-add
-// hotkey). See lib/src/core/platform/deep_links.dart and desktop.dart.
+// hotkey, the tray icon's hover text). See
+// lib/src/core/platform/deep_links.dart and desktop.dart.
 typedef struct _TixDesktop TixDesktop;
 
 // Listens on the two channels of `messenger`. `background` says this launch

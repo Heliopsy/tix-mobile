@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/desktop/desktop_state.dart';
+import 'package:tix_mobile/src/core/desktop/tray_status.dart';
 import 'package:tix_mobile/src/core/platform/deep_links.dart';
 import 'package:tix_mobile/src/core/platform/desktop.dart';
 import 'package:tix_mobile/src/core/update/updates.dart';
@@ -30,6 +32,8 @@ void main() {
     int? unread,
     Map<String, String> settings = const {},
     FixedUpdates? updates,
+    DateTime Function()? clock,
+    List<Override> extra = const [],
   }) {
     final server = FakeTix();
     final stores = signInStores(server);
@@ -45,10 +49,12 @@ void main() {
           secrets: stores.secrets,
           notes: notes,
           updates: updates == null ? UpdateMode.off : UpdateMode.install,
+          clock: clock,
         ),
         desktopShellProvider.overrideWithValue(desktop),
         trayUnreadProvider.overrideWithValue(unread),
         if (updates != null) fixedUpdates(updates),
+        ...extra,
       ],
     );
   }
@@ -58,10 +64,86 @@ void main() {
     final menu = desktop.menus.last!;
     expect(menu.labels[TrayAction.inbox], 'Inbox (4 unread)');
     expect(menu.labels[TrayAction.watch], 'Watch');
-    expect(menu.tooltip, 'tix: 4 unread');
     expect(menu.badge, '4');
     expect(menu.context, startsWith('Work · '));
     expect(desktop.closeToTray, [true]);
+  });
+
+  testWidgets('the hover text names the instances and the unread count', (
+    tester,
+  ) async {
+    await pump(tester, unread: 4);
+    await tester.pump(trayStatusThrottle);
+    final tooltip = desktop.tooltips.last;
+    expect(tooltip.title, 'tix · 1 instance connected');
+    expect(tooltip.details.single, startsWith('Work ('));
+    expect(tooltip.footer, '4 unread in inbox');
+  });
+
+  testWidgets('signed out the hover text says so', (tester) async {
+    await pump(tester, signedIn: false);
+    expect(desktop.tooltips.single, const TrayTooltip('tix · not signed in'));
+  });
+
+  testWidgets('a burst of changes reaches the tray at most every 2 s', (
+    tester,
+  ) async {
+    var status = const TrayStatus(signedIn: true);
+    final c = await pump(
+      tester,
+      extra: [trayStatusProvider.overrideWith((ref) => status)],
+    );
+    void unread(int n) {
+      status = TrayStatus(signedIn: true, unread: n);
+      c.invalidate(trayStatusProvider);
+    }
+
+    await tester.pump(trayStatusThrottle);
+    final menus = desktop.menus.length;
+
+    unread(1);
+    await tester.pump();
+    unread(2);
+    await tester.pump();
+    unread(3);
+    await tester.pump(const Duration(seconds: 1));
+    expect(desktop.tooltips.map((t) => t.footer), [null, '1 unread in inbox']);
+    expect(desktop.menus, hasLength(menus));
+
+    await tester.pump(trayStatusThrottle);
+    expect(desktop.tooltips.map((t) => t.footer), [
+      null,
+      '1 unread in inbox',
+      '3 unread in inbox',
+    ]);
+    expect(desktop.menus, hasLength(menus));
+  });
+
+  testWidgets('relative times move on every minute', (tester) async {
+    var now = fixedNow;
+    await pump(
+      tester,
+      clock: () => now,
+      extra: [
+        trayStatusProvider.overrideWith(
+          (ref) => TrayStatus(
+            signedIn: true,
+            instances: [
+              TrayInstance(name: 'work', local: true, syncedAt: fixedNow),
+            ],
+          ),
+        ),
+      ],
+    );
+    await tester.pump(trayStatusThrottle);
+    expect(desktop.tooltips.last.details, ['work (local): synced just now']);
+
+    now = now.add(trayStatusRefresh);
+    await tester.pump(trayStatusRefresh);
+    await tester.pump();
+    expect(desktop.tooltips.last.details, [
+      'work (local): synced 1 minute ago',
+    ]);
   });
 
   testWidgets('signed out the tray has no context and no count', (

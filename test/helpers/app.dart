@@ -130,6 +130,7 @@ List<Override> fakeOverrides(
   Stream<NetworkState>? networks,
   bool autoSync = false,
   UpdateMode updates = UpdateMode.off,
+  DateTime Function()? clock,
 }) => [
   keyValueStoreProvider.overrideWithValue(settings ?? MemoryKeyValueStore()),
   secretStoreProvider.overrideWithValue(secrets ?? MemorySecretStore()),
@@ -145,7 +146,7 @@ List<Override> fakeOverrides(
               : InPlaceKind.none,
         ),
   ),
-  clockProvider.overrideWithValue(() => fixedNow),
+  clockProvider.overrideWithValue(clock ?? () => fixedNow),
   cacheStoreProvider.overrideWithValue(cache ?? MemoryCacheStore()),
   eventSocketConnectorProvider.overrideWithValue(events),
   appResumedProvider.overrideWithValue(const AsyncData(null)),

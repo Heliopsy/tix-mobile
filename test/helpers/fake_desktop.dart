@@ -22,6 +22,7 @@ class FakeDesktop implements DesktopShell {
   bool accept = true;
 
   final menus = <TrayMenu?>[];
+  final tooltips = <TrayTooltip>[];
   final closeToTray = <bool>[];
   final autostarts = <bool>[];
   final hotkeys = <bool>[];
@@ -42,6 +43,10 @@ class FakeDesktop implements DesktopShell {
 
   @override
   Future<void> setTray(TrayMenu? menu) async => menus.add(menu);
+
+  @override
+  Future<void> setTrayStatus(TrayTooltip tooltip) async =>
+      tooltips.add(tooltip);
 
   @override
   Future<void> setCloseToTray({required bool on}) async => closeToTray.add(on);

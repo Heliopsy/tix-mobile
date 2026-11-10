@@ -109,9 +109,8 @@ String? trayUpdateLabel(AppLocalizations l10n, UpdateState update) {
       : l10n.trayUpdateAvailable(version);
 }
 
-/// The tray's tooltip, menu and dock badge for [unread] items in
-/// [context], with an [update] entry when one is given and a Watch entry
-/// with [watch].
+/// The tray's menu and dock badge for [unread] items in [context], with an
+/// [update] entry when one is given and a Watch entry with [watch].
 TrayMenu trayMenu(
   AppLocalizations l10n, {
   int? unread,
@@ -121,7 +120,6 @@ TrayMenu trayMenu(
 }) {
   final count = unread ?? 0;
   return TrayMenu(
-    tooltip: l10n.trayTooltip(count),
     labels: {
       TrayAction.open: l10n.trayOpen,
       TrayAction.quickAdd: l10n.quickAddTitle,

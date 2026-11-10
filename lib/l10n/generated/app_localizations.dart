@@ -12481,11 +12481,83 @@ abstract class AppLocalizations {
   /// **'Quit tix'**
   String get trayQuit;
 
-  /// Tooltip of the tray icon, with the unread inbox count
+  /// Tray icon hover text while no context is active
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =0{tix} =1{tix: 1 unread} other{tix: {count} unread}}'**
-  String trayTooltip(int count);
+  /// **'tix · not signed in'**
+  String get trayStatusSignedOut;
+
+  /// First line of the tray icon hover text: how many instances are set up
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{tix · 1 instance connected} other{tix · {count} instances connected}}'**
+  String trayStatusHeadline(int count);
+
+  /// Tray hover line for one instance: its name, where it is (host or 'local') and its state
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ({place}): {state}'**
+  String trayStatusInstance(String name, String place, String state);
+
+  /// Tray hover line for an instance with nothing to report
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ({place})'**
+  String trayStatusInstanceQuiet(String name, String place);
+
+  /// Where a local instance is, in the tray hover line, e.g. home (local)
+  ///
+  /// In en, this message translates to:
+  /// **'local'**
+  String get trayStatusLocal;
+
+  /// Tray hover: the instance follows live updates
+  ///
+  /// In en, this message translates to:
+  /// **'live'**
+  String get trayStatusLive;
+
+  /// Tray hover: connecting to live updates
+  ///
+  /// In en, this message translates to:
+  /// **'connecting'**
+  String get trayStatusConnecting;
+
+  /// Tray hover: an offline sync is running
+  ///
+  /// In en, this message translates to:
+  /// **'syncing'**
+  String get trayStatusSyncing;
+
+  /// Tray hover: the server cannot be reached
+  ///
+  /// In en, this message translates to:
+  /// **'offline'**
+  String get trayStatusOffline;
+
+  /// Tray hover: when the last sync finished; ago is e.g. '2 minutes ago'
+  ///
+  /// In en, this message translates to:
+  /// **'synced {ago}'**
+  String trayStatusSynced(String ago);
+
+  /// Tray hover: changes waiting in the outbox
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change queued} other{{count} changes queued}}'**
+  String trayStatusQueued(int count);
+
+  /// Tray hover: instances not listed
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{+1 more} other{+{count} more}}'**
+  String trayStatusMore(int count);
+
+  /// Tray hover: unread inbox items of the active context
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 unread in inbox} other{{count} unread in inbox}}'**
+  String trayStatusUnread(int count);
 
   /// Settings section for the tray, start at login and the global shortcut
   ///

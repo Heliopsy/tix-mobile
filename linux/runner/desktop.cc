@@ -1,5 +1,6 @@
 #include "desktop.h"
 
+#include <dlfcn.h>
 #include <gio/gio.h>
 #include <glib/gstdio.h>
 #include <string.h>
@@ -18,6 +19,10 @@ struct _TixDesktop {
   gboolean background;
   gboolean grabbed;
   guint keycode;
+  gpointer indicator_class;
+  guint status_signal;
+  gulong status_hook;
+  GObject* indicator;
 };
 
 static FlMethodResponse* success(FlValue* value) {
@@ -294,6 +299,77 @@ static gboolean set_hotkey(TixDesktop* self, gboolean on) {
 #endif
 }
 
+// ---------------------------------------------------------------- tray
+
+// tray_manager keeps its AppIndicator in a hidden global and has no tooltip
+// on Linux. Its setIcon turns the indicator active, which emits
+// "new-status"; an emission hook on that signal hands over the instance.
+// The library is already loaded for the plugin, so dlsym finds its type
+// without linking it here, and nothing happens where it is missing.
+static gboolean indicator_seen(GSignalInvocationHint* hint, guint n_params,
+                               const GValue* params, gpointer user_data) {
+  TixDesktop* self = static_cast<TixDesktop*>(user_data);
+  GObject* indicator = G_OBJECT(g_value_get_object(&params[0]));
+  if (indicator != self->indicator) {
+    if (self->indicator != nullptr) {
+      g_object_remove_weak_pointer(
+          self->indicator, reinterpret_cast<gpointer*>(&self->indicator));
+    }
+    self->indicator = indicator;
+    g_object_add_weak_pointer(indicator,
+                              reinterpret_cast<gpointer*>(&self->indicator));
+  }
+  return TRUE;
+}
+
+static void watch_indicator(TixDesktop* self) {
+  using GetType = GType (*)();
+  GetType get_type = reinterpret_cast<GetType>(
+      dlsym(RTLD_DEFAULT, "app_indicator_get_type"));
+  if (get_type == nullptr) {
+    return;
+  }
+  GType type = get_type();
+  self->indicator_class = g_type_class_ref(type);
+  self->status_signal = g_signal_lookup("new-status", type);
+  if (self->status_signal != 0) {
+    self->status_hook = g_signal_add_emission_hook(
+        self->status_signal, 0, indicator_seen, self, nullptr);
+  }
+}
+
+static const gchar* string_arg(FlValue* args, const gchar* key) {
+  FlValue* value = fl_value_lookup_string(args, key);
+  return value != nullptr && fl_value_get_type(value) == FL_VALUE_TYPE_STRING
+             ? fl_value_get_string(value)
+             : "";
+}
+
+static gboolean has_property(GObject* object, const gchar* name) {
+  return g_object_class_find_property(G_OBJECT_GET_CLASS(object), name) !=
+         nullptr;
+}
+
+// KDE shows the SNI ToolTip on hover and names the item by its Title.
+// libayatana-appindicator exports a ToolTip only from 0.6 on, so the
+// headline also goes into the title, which every version has.
+static gboolean set_tray_status(TixDesktop* self, FlValue* args) {
+  if (self->indicator == nullptr || args == nullptr ||
+      fl_value_get_type(args) != FL_VALUE_TYPE_MAP) {
+    return FALSE;
+  }
+  const gchar* title = string_arg(args, "title");
+  if (has_property(self->indicator, "title")) {
+    g_object_set(self->indicator, "title", title, nullptr);
+  }
+  if (has_property(self->indicator, "tooltip-title") &&
+      has_property(self->indicator, "tooltip-body")) {
+    g_object_set(self->indicator, "tooltip-title", title, "tooltip-body",
+                 string_arg(args, "body"), nullptr);
+  }
+  return TRUE;
+}
+
 // ---------------------------------------------------------------- desktop
 
 static gboolean bool_arg(FlMethodCall* call) {
@@ -331,6 +407,9 @@ static void desktop_call(FlMethodChannel* channel, FlMethodCall* call,
     respond(call, success(fl_value_new_bool(set_autostart_file(bool_arg(call)))));
   } else if (strcmp(method, "setHotkey") == 0) {
     respond(call, success(fl_value_new_bool(set_hotkey(self, bool_arg(call)))));
+  } else if (strcmp(method, "setTrayStatus") == 0) {
+    respond(call, success(fl_value_new_bool(
+                      set_tray_status(self, fl_method_call_get_args(call)))));
   } else {
     respond(call, FL_METHOD_RESPONSE(fl_method_not_implemented_response_new()));
   }
@@ -348,11 +427,22 @@ TixDesktop* tix_desktop_new(FlBinaryMessenger* messenger, gboolean background) {
       fl_method_channel_new(messenger, "tix/desktop", FL_METHOD_CODEC(codec));
   fl_method_channel_set_method_call_handler(self->desktop, desktop_call, self,
                                             nullptr);
+  watch_indicator(self);
   return self;
 }
 
 void tix_desktop_free(TixDesktop* self) {
   set_hotkey(self, FALSE);
+  if (self->status_hook != 0) {
+    g_signal_remove_emission_hook(self->status_signal, self->status_hook);
+  }
+  if (self->indicator != nullptr) {
+    g_object_remove_weak_pointer(self->indicator,
+                                 reinterpret_cast<gpointer*>(&self->indicator));
+  }
+  if (self->indicator_class != nullptr) {
+    g_type_class_unref(self->indicator_class);
+  }
   g_clear_object(&self->links);
   g_clear_object(&self->desktop);
   g_free(self->pending_link);
