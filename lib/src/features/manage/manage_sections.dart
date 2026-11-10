@@ -194,15 +194,6 @@ final manageSections = <ManageEntry>[
     scope: Scope.auditRead,
   ),
   ManageEntry(
-    id: 'tenant.watch',
-    group: ManageGroup.tenant,
-    icon: Icons.stream,
-    title: (l) => l.watchTitle,
-    subtitle: (l) => l.watchSubtitle,
-    route: Routes.watch,
-    scope: Scope.eventSubscribe,
-  ),
-  ManageEntry(
     id: 'server.tenants',
     group: ManageGroup.server,
     icon: Icons.domain,

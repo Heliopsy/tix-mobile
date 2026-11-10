@@ -2169,7 +2169,6 @@
   "trayUpdateAvailable": "Налично обновление ({version})",
   "trayRestartToUpdate": "Рестартирай за обновяване ({version})",
   "trayWatch": "Наблюдение",
-  "watchShortcut": "Наблюдение на събитията на живо",
   "watchVia": "през {channel}",
   "watchViaNamed": "през {channel} ({name})",
   "watchChannelWeb": "уеб",

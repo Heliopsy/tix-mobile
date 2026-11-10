@@ -36,15 +36,11 @@ void main() {
     expect(routes.intersection(upkeep), {Routes.webhooks});
   });
 
-  test('Watch shows with event:subscribe and not without', () {
-    expect(
-      visible(const Actor(scopes: ['event:subscribe'])),
-      contains(Routes.watch),
-    );
-    expect(
-      visible(const Actor(scopes: ['task:read'])),
-      isNot(contains(Routes.watch)),
-    );
+  test('Watch is a destination of its own, not listed under Manage', () {
+    final all = Actor(scopes: [for (final s in Scope.values) s.value]);
+    expect(visible(all), isNot(contains(Routes.watch)));
+    expect(visible(all), isNot(contains('/manage/watch')));
+    expect(manageSections.map((e) => e.id), isNot(contains('tenant.watch')));
   });
 
   test('they sit in the Tenant group', () {

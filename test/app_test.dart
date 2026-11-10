@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,10 +8,13 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/app.dart';
 import 'package:tix_mobile/src/core/config/config.dart';
 import 'package:tix_mobile/src/core/platform/app_info.dart';
+import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/features/about/presentation/about_screen.dart';
 import 'package:tix_mobile/src/features/inbox/presentation/inbox_screen.dart';
 import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';
+import 'package:tix_mobile/src/features/shell/presentation/home_shell.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
+import 'package:tix_mobile/src/features/watch/presentation/watch_screen.dart';
 
 import 'helpers/app.dart';
 import 'helpers/fake_tix.dart';
@@ -322,5 +326,115 @@ void main() {
     stores.settings.values['settings.start'] = 'inbox';
     await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
     expect(find.byType(InboxScreen), findsOneWidget);
+  });
+
+  group('Watch is a destination of its own', () {
+    void stillMotion(WidgetTester tester) {
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(disableAnimations: true);
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+      );
+    }
+
+    String location(WidgetTester tester) =>
+        ProviderScope.containerOf(tester.element(find.byType(App)))
+            .read(routerProvider)
+            .routerDelegate
+            .currentConfiguration
+            .uri
+            .path;
+
+    testWidgets('on a phone, under More between Inbox and Manage', (
+      tester,
+    ) async {
+      stillMotion(tester);
+      final stores = signedInStores();
+      await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
+      expect(find.byKey(const Key('nav.inbox')), findsOneWidget);
+      await tester.tap(find.byKey(const Key('nav.more')));
+      await tester.pumpAndSettle();
+      final watch = find.byKey(const Key('nav.more.watch'));
+      expect(
+        tester.getTopLeft(watch).dy,
+        lessThan(
+          tester.getTopLeft(find.byKey(const Key('nav.more.manage'))).dy,
+        ),
+      );
+      expect(
+        find.descendant(of: watch, matching: find.byIcon(Icons.sensors)),
+        findsNothing,
+      );
+      expect(
+        find.descendant(
+          of: watch,
+          matching: find.byIcon(Icons.sensors_outlined),
+        ),
+        findsOneWidget,
+      );
+      await tester.tap(watch);
+      await tester.pumpAndSettle();
+      expect(find.byType(WatchScreen), findsOneWidget);
+      expect(location(tester), Routes.watch);
+      expect(
+        tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
+        maxBarDestinations - 1,
+      );
+    });
+
+    testWidgets('on a desktop, in the rail, and g w opens it', (tester) async {
+      stillMotion(tester);
+      final stores = signedInStores();
+      await pumpApp(
+        tester,
+        size: desktop,
+        settings: stores.settings,
+        secrets: stores.secrets,
+      );
+      final rail = find.byType(NavigationRail);
+      expect(
+        tester
+            .widget<NavigationRail>(rail)
+            .destinations
+            .map((d) => (d.label as Text).data),
+        [
+          'Projects',
+          'Tasks',
+          'My work',
+          'Inbox',
+          'Watch',
+          'Manage',
+          'Settings',
+        ],
+      );
+      expect(
+        find.descendant(of: rail, matching: find.byIcon(Icons.stream)),
+        findsNothing,
+      );
+      await tester.tap(find.descendant(of: rail, matching: find.text('Watch')));
+      await tester.pumpAndSettle();
+      expect(find.byType(WatchScreen), findsOneWidget);
+      expect(tester.widget<NavigationRail>(rail).selectedIndex, 4);
+      await tester.tap(find.descendant(of: rail, matching: find.text('Inbox')));
+      await tester.pumpAndSettle();
+      expect(find.byType(WatchScreen), findsNothing);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyG);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyW);
+      await tester.pumpAndSettle();
+      expect(find.byType(WatchScreen), findsOneWidget);
+      expect(location(tester), Routes.watch);
+    });
+
+    testWidgets('an old /manage/watch link lands on it', (tester) async {
+      stillMotion(tester);
+      final stores = signedInStores();
+      await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
+      ProviderScope.containerOf(tester.element(find.byType(App)))
+          .read(routerProvider)
+          .go('/manage/watch');
+      await tester.pumpAndSettle();
+      expect(find.byType(WatchScreen), findsOneWidget);
+      expect(location(tester), Routes.watch);
+    });
   });
 }

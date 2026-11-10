@@ -180,7 +180,7 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   how long ago, who (name, handle, and the channel and token it came through), a coloured type badge and what
   changed: states, field names, the start of a comment. Filter by project, type (`task.*`) and actor, pause with a
   count of what arrived, replay from a sequence number, open the task or project and come back, or read the whole
-  payload. A button in the shell's bar and the desktop tray open it.
+  payload. It has its own place in the navigation, between Inbox and Manage, and the desktop tray opens it.
 - **Adaptive layout**: a bottom navigation bar on phones, a navigation rail and a two-pane list and detail on tablets
   and desktops.
 

@@ -19,7 +19,7 @@ void main() {
       'tix://projects/OPS/tasks/OPS-12': '/projects/OPS/tasks/OPS-12',
       'tix://settings': '/settings',
       'tix://about': '/settings/about',
-      'tix://watch': '/manage/watch',
+      'tix://watch': '/watch',
       'tix://projects/': '/projects',
       'tix:///inbox': '/inbox',
       'TIX://Inbox': '/inbox',

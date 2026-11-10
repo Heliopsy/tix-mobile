@@ -97,10 +97,10 @@ class _Refused extends StatelessWidget {
         if (message.isNotEmpty) message,
       ].join('\n\n'),
       action: TixAction(
-        label: l10n.back,
-        icon: Icons.arrow_back,
-        onPressed: () =>
-            context.canPop() ? context.pop() : context.go(Routes.manage),
+        key: const Key('watch.refused.instances'),
+        label: l10n.instancesTitle,
+        icon: Icons.dns_outlined,
+        onPressed: () => context.go(Routes.instances),
       ),
     );
   }
@@ -216,7 +216,7 @@ class _Feed extends ConsumerWidget {
         ),
         _ => EmptyState(
           key: const Key('watch.empty'),
-          icon: Icons.stream,
+          icon: Icons.sensors,
           title: l10n.watchEmpty,
           body: l10n.watchEmptyBody,
         ),

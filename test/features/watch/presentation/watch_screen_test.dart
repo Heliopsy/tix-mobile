@@ -120,15 +120,19 @@ void main() {
         expect(inRow(41, find.text('Fix')), findsOneWidget);
       });
 
-      testWidgets('a server refusal explains the scope and leaves a way back', (
-        tester,
-      ) async {
-        await pump(tester, size: size, events: refusingEventSocket);
-        expect(find.byKey(const Key('watch.refused')), findsOneWidget);
-        expect(find.textContaining('event:subscribe'), findsOneWidget);
-        expect(find.text('Back'), findsOneWidget);
-        expect(find.byKey(const Key('watch.list')), findsNothing);
-      });
+      testWidgets(
+        'a server refusal explains the scope and points to Instances',
+        (tester) async {
+          await pump(tester, size: size, events: refusingEventSocket);
+          expect(find.byKey(const Key('watch.refused')), findsOneWidget);
+          expect(find.textContaining('event:subscribe'), findsOneWidget);
+          expect(find.text('Back'), findsNothing);
+          expect(find.byKey(const Key('watch.list')), findsNothing);
+          await tester.tap(find.byKey(const Key('watch.refused.instances')));
+          await tester.pumpAndSettle();
+          expect(find.text('route:/settings/instances'), findsOneWidget);
+        },
+      );
     });
   }
 
