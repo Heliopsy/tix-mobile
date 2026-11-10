@@ -2,8 +2,8 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/data/events/event_stream.dart';
 import 'package:tix_mobile/src/features/watch/application/watch.dart';
@@ -32,7 +32,7 @@ void main() {
   }) {
     if (!motion) {
       tester.platformDispatcher.accessibilityFeaturesTestValue =
-          FakeAccessibilityFeatures(disableAnimations: true);
+          const FakeAccessibilityFeatures(disableAnimations: true);
       addTearDown(
         tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
       );
@@ -289,7 +289,7 @@ void main() {
     expect(
       find.descendant(
         of: find.byKey(const Key('watch.12.meta')),
-        matching: find.textContaining(RegExp(r'ago|just now|In a moment')),
+        matching: find.textContaining(RegExp('ago|just now|In a moment')),
       ),
       findsOneWidget,
     );
