@@ -780,6 +780,7 @@ void main() {
           widgets: FakeWidgetBridge(),
           adb: true,
           desktop: FakeDesktop(),
+          updates: UpdateMode.install,
         );
         await tester.pumpAndSettle();
         final list = find
