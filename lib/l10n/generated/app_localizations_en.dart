@@ -7990,4 +7990,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get taskPanelResize => 'Resize task panel';
+
+  @override
+  String get keysNextRow => 'Next row';
+
+  @override
+  String get keysPreviousRow => 'Previous row';
+
+  @override
+  String get keysFirstRow => 'First row';
+
+  @override
+  String get keysLastRow => 'Last row';
+
+  @override
+  String get keysPageDown => 'Page down';
+
+  @override
+  String get keysPageUp => 'Page up';
+
+  @override
+  String get keysOpenRow => 'Open the focused row';
+
+  @override
+  String get keysBack => 'Go back';
+
+  @override
+  String get keysLeaveField => 'Leave the text field';
+
+  @override
+  String get keysFirstTask => 'First task';
+
+  @override
+  String get keysLastTask => 'Last task';
+
+  @override
+  String get settingsKeyboard => 'Keyboard';
+
+  @override
+  String get settingsKeyboardHelp =>
+      'For a hardware keyboard, on any device. Keys typed into a text field always stay in the field.';
+
+  @override
+  String get settingsShortcutsHelp =>
+      'Off turns every shortcut off, Ctrl K for the palette included. Tab, Enter and Esc keep working.';
+
+  @override
+  String get settingsKeymap => 'Key preset';
+
+  @override
+  String get keymapDefault => 'Default';
+
+  @override
+  String get keymapVim => 'Vim';
+
+  @override
+  String get keymapEmacs => 'Emacs';
+
+  @override
+  String get keymapOff => 'Off';
+
+  @override
+  String get keymapDefaultHelp =>
+      'The app\'s keys and tix web\'s: j and k move, g p opens Projects, Ctrl 1 to 6 switch destinations.';
+
+  @override
+  String get keymapVimHelp =>
+      'Vim reflexes: gg and G jump, o adds, i renames, dd deletes after asking, h goes back.';
+
+  @override
+  String get keymapEmacsHelp =>
+      'Emacs reflexes outside text fields: C-n and C-p move, C-s filters, C-g cancels, M-x opens the palette.';
+
+  @override
+  String get keymapOffHelp =>
+      'No single key runs anything. Chords held with Ctrl, Alt or ⌘ still work.';
+
+  @override
+  String get settingsKeyBindings => 'Active bindings';
+
+  @override
+  String get settingsKeyBindingsOff => 'Keyboard shortcuts are off.';
 }

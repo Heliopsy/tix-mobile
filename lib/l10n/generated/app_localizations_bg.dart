@@ -8000,4 +8000,85 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get taskPanelResize => 'Преоразмери панела на задачата';
+
+  @override
+  String get keysNextRow => 'Следващ ред';
+
+  @override
+  String get keysPreviousRow => 'Предишен ред';
+
+  @override
+  String get keysFirstRow => 'Първи ред';
+
+  @override
+  String get keysLastRow => 'Последен ред';
+
+  @override
+  String get keysPageDown => 'Страница надолу';
+
+  @override
+  String get keysPageUp => 'Страница нагоре';
+
+  @override
+  String get keysOpenRow => 'Отвори избрания ред';
+
+  @override
+  String get keysBack => 'Назад';
+
+  @override
+  String get keysLeaveField => 'Излез от текстовото поле';
+
+  @override
+  String get keysFirstTask => 'Първа задача';
+
+  @override
+  String get keysLastTask => 'Последна задача';
+
+  @override
+  String get settingsKeyboard => 'Клавиатура';
+
+  @override
+  String get settingsKeyboardHelp =>
+      'За физическа клавиатура, на всяко устройство. Клавишите, въведени в текстово поле, винаги остават в полето.';
+
+  @override
+  String get settingsShortcutsHelp =>
+      'Изключено спира всички клавишни комбинации, включително Ctrl K за палитрата. Tab, Enter и Esc продължават да работят.';
+
+  @override
+  String get settingsKeymap => 'Подредба на клавишите';
+
+  @override
+  String get keymapDefault => 'По подразбиране';
+
+  @override
+  String get keymapVim => 'Vim';
+
+  @override
+  String get keymapEmacs => 'Emacs';
+
+  @override
+  String get keymapOff => 'Изключено';
+
+  @override
+  String get keymapDefaultHelp =>
+      'Клавишите на приложението и на tix web: j и k местят, g p отваря Проекти, Ctrl 1 до 6 сменят раздела.';
+
+  @override
+  String get keymapVimHelp =>
+      'Рефлекси от Vim: gg и G прескачат, o добавя, i преименува, dd изтрива след потвърждение, h връща назад.';
+
+  @override
+  String get keymapEmacsHelp =>
+      'Рефлекси от Emacs извън текстовите полета: C-n и C-p местят, C-s филтрира, C-g отказва, M-x отваря палитрата.';
+
+  @override
+  String get keymapOffHelp =>
+      'Нито един самостоятелен клавиш не прави нищо. Комбинациите с Ctrl, Alt или ⌘ продължават да работят.';
+
+  @override
+  String get settingsKeyBindings => 'Активни клавиши';
+
+  @override
+  String get settingsKeyBindingsOff => 'Клавишните комбинации са изключени.';
 }

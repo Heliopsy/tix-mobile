@@ -3,6 +3,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/accent_provider.dart';
+import 'package:tix_mobile/src/core/design/components/focus_ring.dart';
 import 'package:tix_mobile/src/core/design/components/motion.dart';
 import 'package:tix_mobile/src/core/design/theme.dart';
 import 'package:tix_mobile/src/core/design/tokens.dart';
@@ -13,8 +14,8 @@ import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/desktop_host.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
 
-/// The tix app: router, theme, localisation, the reader's date style and,
-/// on a desktop, the tray.
+/// The tix app: router, theme, localisation, the reader's date style, the
+/// keyboard focus ring and, on a desktop, the tray.
 class App extends ConsumerWidget {
   /// Creates the app.
   const App({super.key});
@@ -48,8 +49,10 @@ class App extends ConsumerWidget {
       localeListResolutionCallback: resolveLocale,
       routerConfig: router,
       builder: (context, child) {
-        final body = DesktopHost(
-          child: TixTimeScope(style: time, child: child!),
+        final body = TixFocusRing(
+          child: DesktopHost(
+            child: TixTimeScope(style: time, child: child!),
+          ),
         );
         if (!still) return body;
         return MediaQuery(

@@ -664,6 +664,9 @@ class GalleryOverlays extends StatelessWidget {
         label: 'Shortcut help',
         onPressed: () => showShortcutHelp(context, registry.commands),
       ),
+      KeyBindingKeys(
+        Keymap.of(KeymapPreset.vim).bindingsFor(KeyActions.taskDelete),
+      ),
     ],
   );
 }

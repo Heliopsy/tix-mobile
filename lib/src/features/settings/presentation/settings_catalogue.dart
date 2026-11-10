@@ -49,6 +49,9 @@ enum SettingsSection {
   /// What the active context keeps on this device for offline use.
   offline(SettingsScope.device),
 
+  /// Keyboard shortcuts and the keymap preset.
+  keyboard(SettingsScope.device),
+
   /// Looking for and installing new releases.
   updates(SettingsScope.device),
 
@@ -134,6 +137,7 @@ String settingsSectionTitle(AppLocalizations l10n, SettingsSection section) =>
       SettingsSection.appearance => l10n.appearanceLabel,
       SettingsSection.language => l10n.languageLabel,
       SettingsSection.start => l10n.settingsStartTitle,
+      SettingsSection.keyboard => l10n.settingsKeyboard,
       SettingsSection.desktop => l10n.settingsDesktop,
       SettingsSection.deviceNotifications => l10n.settingsDeviceNotifTitle,
       SettingsSection.servers => l10n.instancesTitle,
@@ -297,6 +301,34 @@ List<SettingsItem> settingsCatalogue(
       keywords: '${l10n.offlineAvailableTitle} ${l10n.offlineSyncTitle}',
       route: Routes.offline,
     ),
+  SettingsItem(
+    id: 'keyboard.shortcuts',
+    section: SettingsSection.keyboard,
+    label: l10n.shortcutsTitle,
+    icon: Icons.keyboard_outlined,
+    keywords: 'shortcut keymap ${l10n.settingsKeyboard} ${l10n.settingsKeymap}',
+  ),
+  SettingsItem(
+    id: 'keyboard.preset',
+    section: SettingsSection.keyboard,
+    label: l10n.settingsKeymap,
+    icon: Icons.keyboard_command_key,
+    keywords: [
+      'keymap shortcut',
+      l10n.settingsKeyboard,
+      l10n.keymapDefault,
+      l10n.keymapVim,
+      l10n.keymapEmacs,
+      l10n.keymapOff,
+    ].join(' '),
+  ),
+  SettingsItem(
+    id: 'keyboard.bindings',
+    section: SettingsSection.keyboard,
+    label: l10n.settingsKeyBindings,
+    icon: Icons.list_alt,
+    keywords: 'shortcut keymap ${l10n.settingsKeyboard}',
+  ),
   if (updates != UpdateMode.off) ...[
     SettingsItem(
       id: 'updates.status',
