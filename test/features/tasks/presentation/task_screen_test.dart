@@ -310,6 +310,159 @@ void main() {
     expect(find.text('route:/projects/infra/tasks/infra-2'), findsOneWidget);
   });
 
+  group('quick edits on a row', () {
+    List<Object?> patches(String ref) => [
+      for (final r in server.requestsTo('/tasks/$ref'))
+        if (r.method == 'PATCH') r.data,
+    ];
+
+    Finder inRow(String title, Finder f) =>
+        find.descendant(of: row(title), matching: f);
+
+    testWidgets('the priority opens the picker, and Undo puts it back', (
+      tester,
+    ) async {
+      await pump(tester, const TasksScreen());
+      await tester.tap(inRow('Fix login', find.byType(PriorityMark)));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('priority.2')));
+      await tester.pumpAndSettle();
+      expect(patches('infra-1'), [
+        {'priority': 2},
+      ]);
+      expect(
+        tester
+            .widget<PriorityMark>(inRow('Fix login', find.byType(PriorityMark)))
+            .priority,
+        2,
+      );
+      expect(find.text('infra-1 priority changed'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('toast.action')));
+      await tester.pumpAndSettle();
+      expect(patches('infra-1').last, {'priority': 1});
+      expect(
+        tester
+            .widget<PriorityMark>(inRow('Fix login', find.byType(PriorityMark)))
+            .priority,
+        1,
+      );
+    });
+
+    testWidgets('the status opens the moves its workflow allows', (
+      tester,
+    ) async {
+      await pump(tester, const TasksScreen());
+      await tester.tap(inRow('Fix login', find.byType(StatusPill)));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('move.doing')));
+      await tester.pumpAndSettle();
+      expect(server.requestsTo('/tasks/bulk').single.body, {
+        'action': 'move',
+        'refs': ['infra-1'],
+        'to': 'doing',
+      });
+      expect(find.text('infra-1 moved to Doing'), findsOneWidget);
+    });
+
+    testWidgets('the menu sets a due date and adds a tag', (tester) async {
+      await pump(tester, const TasksScreen());
+      Future<void> menu(String item) async {
+        await tester.tap(inRow('Fix login', find.byKey(const Key('row.more'))));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(Key(item)));
+        await tester.pumpAndSettle();
+      }
+
+      await menu('menu.due');
+      await tester.tap(find.byKey(const Key('due.tomorrow')));
+      await tester.pumpAndSettle();
+      final local = fixedNow.toLocal();
+      final tomorrow = DateTime(local.year, local.month, local.day + 1);
+      expect(patches('infra-1'), [
+        {'due_at': tomorrow.toUtc().toIso8601String()},
+      ]);
+      expect(find.text('infra-1 due date set'), findsOneWidget);
+
+      await menu('menu.tag');
+      await tester.tap(find.byKey(const Key('tag.offer.ops')));
+      await tester.pumpAndSettle();
+      expect(
+        [
+          for (final r in server.requestsTo('/tasks/infra-1/tags'))
+            if (r.method == 'POST') r.data,
+        ],
+        [
+          {'name': 'ops'},
+        ],
+      );
+      expect(find.text('infra-1 tagged ops'), findsOneWidget);
+    });
+
+    testWidgets('p on the focused row opens the priority picker', (
+      tester,
+    ) async {
+      await pump(tester, const TixShortcuts(child: TasksScreen()));
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyJ);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyJ);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyP);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('priority.1')));
+      await tester.pumpAndSettle();
+      expect(patches('infra-2'), [
+        {'priority': 1},
+      ]);
+      expect(patches('infra-1'), isEmpty);
+    });
+
+    testWidgets('in select mode the chips only pick', (tester) async {
+      await pump(tester, const TasksScreen());
+      await tester.longPress(row('Fix login'));
+      await tester.pumpAndSettle();
+      await tester.tap(inRow('Rotate keys', find.byType(PriorityMark)));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('priority.1')), findsNothing);
+      expect(find.text('2 selected'), findsOneWidget);
+    });
+  });
+
+  group('a ticked row', () {
+    Widget screen({required bool reduced}) => Builder(
+      builder: (context) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(disableAnimations: reduced),
+        child: const TixShortcuts(child: TasksScreen()),
+      ),
+    );
+
+    Future<void> tickThenRefresh(WidgetTester tester) async {
+      await tester.tap(
+        find.descendant(of: row('Fix login'), matching: find.byType(TaskCheck)),
+      );
+      await tester.pumpAndSettle();
+      expect(server.requestsTo('/tasks/bulk').single.body['to'], 'done');
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyR);
+      await tester.pump();
+      await tester.pump(TixMotion.fast);
+    }
+
+    testWidgets('stays a moment when the listing drops it, then collapses', (
+      tester,
+    ) async {
+      await pump(tester, screen(reduced: false));
+      await tickThenRefresh(tester);
+      expect(find.text('Fix login'), findsOneWidget);
+      await tester.pumpAndSettle();
+      expect(find.text('Fix login'), findsNothing);
+      expect(find.text('Rotate keys'), findsOneWidget);
+    });
+
+    testWidgets('goes at once with reduced motion', (tester) async {
+      await pump(tester, screen(reduced: true));
+      await tickThenRefresh(tester);
+      expect(find.text('Fix login'), findsNothing);
+      expect(find.text('Rotate keys'), findsOneWidget);
+    });
+  });
+
   group('select mode', () {
     Finder bar() => find.byKey(const Key('bulk.bar'));
 

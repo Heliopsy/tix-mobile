@@ -5033,5 +5033,43 @@
         "type": "String"
       }
     }
+  },
+  "boardPriorityTo": "Priority…",
+  "boardDueTo": "Due date…",
+  "boardTagAdd": "Add tag…",
+  "boardPrioritySet": "{ref} priority changed",
+  "@boardPrioritySet": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "boardDueSet": "{ref} due date set",
+  "@boardDueSet": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "boardDueCleared": "{ref} due date cleared",
+  "@boardDueCleared": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "boardTagged": "{ref} tagged {tag}",
+  "@boardTagged": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      },
+      "tag": {
+        "type": "String"
+      }
+    }
   }
 }

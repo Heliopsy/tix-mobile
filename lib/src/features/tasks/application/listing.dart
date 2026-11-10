@@ -15,6 +15,7 @@ import 'package:tix_mobile/src/data/models/bulk.dart';
 import 'package:tix_mobile/src/data/models/page.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
+import 'package:tix_mobile/src/data/models/task_patch.dart';
 import 'package:tix_mobile/src/data/query/task_index.dart';
 import 'package:tix_mobile/src/data/query/task_query.dart';
 import 'package:tix_mobile/src/data/repositories/task_list_repository.dart';
@@ -200,6 +201,19 @@ class TaskListing extends _$TaskListing {
   /// Asks the server to assign [ref] to [actorId], or nobody when empty.
   Future<void> sendAssign(String ref, String actorId) =>
       _repo.assign(ref, actorId);
+
+  /// Asks the server to apply [patch] to [task], as the row showed it.
+  Future<void> sendPatch(Task task, TaskPatch patch) async {
+    await ref
+        .read(taskDetailRepositoryProvider)
+        .update(task.ref, patch, base: task);
+  }
+
+  /// Asks the server to put the tag [name] on [taskRef], or take it off.
+  Future<void> sendTag(String taskRef, String name, {required bool add}) {
+    final repo = ref.read(taskDetailRepositoryProvider);
+    return add ? repo.addTag(taskRef, name) : repo.removeTag(taskRef, name);
+  }
 
   /// Applies [request] to the loaded rows at once, sends it, and puts back
   /// any task the server refused. Returns what happened and how to undo it.

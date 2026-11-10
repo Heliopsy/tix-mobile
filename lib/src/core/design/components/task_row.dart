@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/components/marks.dart';
@@ -61,8 +62,14 @@ bool isTaskDone(Task task, [StatusCategory? category]) =>
 /// the tick is drawn muted, without a tap target or semantics, so it still
 /// shows whether the task is done but cannot be mistaken for the picker.
 ///
+/// When the task turns done the tick fills and draws its check, the title is
+/// struck through from left to right and the row washes green and fades
+/// back; turning it open again plays the same backwards. Only a change
+/// animates, never a row drawn already done, and with reduced motion the
+/// change is instant.
+///
 /// Wrap it in `TixSwipeActions` for touch shortcuts.
-class TaskRow extends StatelessWidget {
+class TaskRow extends StatefulWidget {
   /// Draws [task] with [facts].
   const TaskRow({
     required this.task,
@@ -130,15 +137,72 @@ class TaskRow extends StatelessWidget {
   static const columnsMinWidth = 1100.0;
 
   @override
+  State<TaskRow> createState() => _TaskRowState();
+}
+
+class _TaskRowState extends State<TaskRow> with SingleTickerProviderStateMixin {
+  late final AnimationController _motion = AnimationController(
+    vsync: this,
+    value: _done(widget) ? 1 : 0,
+  )..addListener(() => setState(() {}));
+
+  static bool _done(TaskRow w) => isTaskDone(w.task, w.facts.statusCategory);
+
+  @override
+  void didUpdateWidget(TaskRow old) {
+    super.didUpdateWidget(old);
+    final done = _done(widget);
+    if (done == _done(old)) return;
+    _motion.duration = TixMotion.of(context, TixMotion.settle);
+    if (old.task.id != widget.task.id || _motion.duration == Duration.zero) {
+      _motion.value = done ? 1 : 0;
+    } else if (done) {
+      _motion.forward(from: 0);
+    } else {
+      _motion.reverse(from: 1);
+    }
+  }
+
+  @override
+  void dispose() {
+    _motion.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final motion = _motion.value;
+    final TaskRow(
+      :task,
+      :facts,
+      :selected,
+      :picked,
+      :focused,
+      :onTap,
+      :onLongPress,
+      :onMore,
+      :onPicked,
+      :onToggleDone,
+      :onToggleStar,
+      :onStatusTap,
+      :onPriorityTap,
+      :now,
+    ) = widget;
     final t = context.tix;
     final stripe = t.projectColour(facts.projectColour);
     final done = isTaskDone(task, facts.statusCategory);
+    final strike = _strikeCurve.transform(motion);
+    final wash = motion == 0 || motion == 1 ? 0.0 : math.sin(math.pi * motion);
     return LayoutBuilder(
       builder: (context, box) {
-        final wide = box.maxWidth >= columnsMinWidth;
+        final wide = box.maxWidth >= TaskRow.columnsMinWidth;
         final narrow = box.maxWidth < 600;
-        final title = _Title(task: task, done: done, sync: facts.sync);
+        final title = _Title(
+          task: task,
+          done: done,
+          strike: strike,
+          sync: facts.sync,
+        );
         final meta = _Meta(
           task: task,
           facts: facts,
@@ -152,7 +216,7 @@ class TaskRow extends StatelessWidget {
         return Material(
           color: selected || (picked ?? false)
               ? t.accentSoft
-              : Colors.transparent,
+              : Color.lerp(Colors.transparent, t.okSoft, wash),
           child: InkWell(
             onTap: onTap,
             onLongPress: onLongPress,
@@ -221,7 +285,7 @@ class TaskRow extends StatelessWidget {
                     ),
                   ),
                   if (onMore != null && picked == null)
-                    _More(onTap: onMore!)
+                    _More(onTap: onMore)
                   else
                     const SizedBox(width: TixSpace.s2),
                 ],
@@ -234,17 +298,40 @@ class TaskRow extends StatelessWidget {
   }
 }
 
+const _strikeCurve = Interval(0.2, 0.85, curve: Curves.easeInOut);
+
 class _Title extends StatelessWidget {
-  const _Title({required this.task, required this.done, this.sync});
+  const _Title({
+    required this.task,
+    required this.done,
+    required this.strike,
+    this.sync,
+  });
 
   final Task task;
   final bool done;
+
+  /// How far the strike-through has swept, 1 when it is drawn whole.
+  final double strike;
   final SyncMarkKind? sync;
 
   @override
   Widget build(BuildContext context) {
     final t = context.tix;
-    final muted = task.blocked || done;
+    final sweeping = strike > 0 && strike < 1;
+    final style = TextStyle(
+      fontSize: TixText.md,
+      height: 1.35,
+      color: task.blocked ? t.muted : Color.lerp(t.ink, t.muted, strike),
+      decoration: done && !sweeping ? TextDecoration.lineThrough : null,
+      decorationColor: t.muted,
+    );
+    final text = Text(
+      task.title,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      style: style,
+    );
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -259,18 +346,20 @@ class _Title extends StatelessWidget {
           const SizedBox(width: TixSpace.s1),
         ],
         Expanded(
-          child: Text(
-            task.title,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: TixText.md,
-              height: 1.35,
-              color: muted ? t.muted : t.ink,
-              decoration: done ? TextDecoration.lineThrough : null,
-              decorationColor: t.muted,
-            ),
-          ),
+          child: sweeping
+              ? CustomPaint(
+                  key: const Key('row.strike'),
+                  foregroundPainter: _StrikePainter(
+                    text: task.title,
+                    style: DefaultTextStyle.of(context).style.merge(style),
+                    scaler: MediaQuery.textScalerOf(context),
+                    direction: Directionality.of(context),
+                    progress: strike,
+                    colour: t.muted,
+                  ),
+                  child: text,
+                )
+              : text,
         ),
         if (sync case final SyncMarkKind kind) ...[
           const SizedBox(width: TixSpace.s1),
@@ -282,6 +371,63 @@ class _Title extends StatelessWidget {
       ],
     );
   }
+}
+
+/// A strike-through drawn line by line up to [progress] of the title's
+/// length, laid out as the [Text] under it is.
+class _StrikePainter extends CustomPainter {
+  _StrikePainter({
+    required this.text,
+    required this.style,
+    required this.scaler,
+    required this.direction,
+    required this.progress,
+    required this.colour,
+  });
+
+  final String text;
+  final TextStyle style;
+  final TextScaler scaler;
+  final TextDirection direction;
+  final double progress;
+  final Color colour;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final painter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: direction,
+      textScaler: scaler,
+      maxLines: 2,
+      ellipsis: '…',
+    )..layout(maxWidth: size.width);
+    final lines = painter.computeLineMetrics();
+    painter.dispose();
+    var left = progress * lines.fold(0.0, (sum, l) => sum + l.width);
+    final paint = Paint()
+      ..color = colour
+      ..strokeWidth = 1.5;
+    for (final line in lines) {
+      if (left <= 0) break;
+      final run = math.min(left, line.width);
+      final y = line.baseline - line.ascent * 0.32;
+      final rtl = direction == TextDirection.rtl;
+      final from = rtl ? line.left + line.width : line.left;
+      canvas.drawLine(
+        Offset(from, y),
+        Offset(rtl ? from - run : from + run, y),
+        paint,
+      );
+      left -= run;
+    }
+  }
+
+  @override
+  bool shouldRepaint(_StrikePainter old) =>
+      old.progress != progress ||
+      old.text != text ||
+      old.style != style ||
+      old.colour != colour;
 }
 
 class _Meta extends StatelessWidget {
@@ -492,12 +638,13 @@ class _Star extends StatelessWidget {
   }
 }
 
-/// The completion circle: empty, or filled in the ok colour with a tick
-/// that pops in. Null [onChanged] draws an open task as a dashed
-/// placeholder, tix's mark for a row that cannot be ticked from here.
-/// [inert] draws it small and muted with no tap target and no semantics,
-/// as select mode does.
-class TaskCheck extends StatelessWidget {
+/// The completion circle: empty, or filled in the ok colour with a check.
+/// Ticking it fills the circle with a small bounce and draws the check from
+/// left to right; unticking plays it backwards. Null [onChanged] draws an
+/// open task as a dashed placeholder, tix's mark for a row that cannot be
+/// ticked from here. [inert] draws it small and muted with no tap target and
+/// no semantics, as select mode does.
+class TaskCheck extends StatefulWidget {
   /// A circle that is ticked when [done].
   const TaskCheck({
     required this.done,
@@ -516,30 +663,92 @@ class TaskCheck extends StatelessWidget {
   final bool inert;
 
   @override
+  State<TaskCheck> createState() => _TaskCheckState();
+}
+
+final _bounce = TweenSequence<double>([
+  TweenSequenceItem(tween: Tween<double>(begin: 1, end: 0.85), weight: 25),
+  TweenSequenceItem(
+    tween: Tween(
+      begin: 0.85,
+      end: 1.12,
+    ).chain(CurveTween(curve: Curves.easeOut)),
+    weight: 40,
+  ),
+  TweenSequenceItem(
+    tween: Tween<double>(
+      begin: 1.12,
+      end: 1,
+    ).chain(CurveTween(curve: Curves.easeIn)),
+    weight: 35,
+  ),
+]);
+
+const _fillCurve = Interval(0, 0.45, curve: Curves.easeOut);
+
+const _drawCurve = Interval(0.3, 1, curve: Curves.easeOut);
+
+class _TaskCheckState extends State<TaskCheck>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _motion = AnimationController(
+    vsync: this,
+    value: widget.done ? 1 : 0,
+  );
+
+  @override
+  void didUpdateWidget(TaskCheck old) {
+    super.didUpdateWidget(old);
+    if (old.done == widget.done) return;
+    _motion.duration = TixMotion.of(context, TixMotion.slow);
+    if (_motion.duration == Duration.zero) {
+      _motion.value = widget.done ? 1 : 0;
+    } else if (widget.done) {
+      _motion.forward(from: 0);
+    } else {
+      _motion.reverse(from: 1);
+    }
+  }
+
+  @override
+  void dispose() {
+    _motion.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final t = context.tix;
     final l10n = context.l10n;
-    final duration = TixMotion.of(context, TixMotion.slow);
-    final circle = AnimatedContainer(
-      duration: TixMotion.of(context, TixMotion.fast),
-      curve: TixMotion.ease,
-      width: TixSize.check,
-      height: TixSize.check,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: done ? t.ok : Colors.transparent,
-        border: Border.all(color: done ? t.ok : t.lineStrong, width: 2),
-      ),
-      child: done
-          ? TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0.75, end: 1),
-              duration: duration,
-              curve: TixMotion.pop,
-              builder: (context, s, child) =>
-                  Transform.scale(scale: s, child: child),
-              child: Icon(Icons.check, size: 14, color: t.onOk),
-            )
-          : null,
+    final TaskCheck(:done, :onChanged, :inert) = widget;
+    final circle = AnimatedBuilder(
+      animation: _motion,
+      builder: (context, _) {
+        final v = _motion.value;
+        final fill = _fillCurve.transform(v);
+        final draw = _drawCurve.transform(v);
+        final icon = Icon(Icons.check, size: 14, color: t.onOk);
+        return Transform.scale(
+          scale: _bounce.transform(v),
+          child: Container(
+            key: const Key('check.circle'),
+            width: TixSize.check,
+            height: TixSize.check,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color.lerp(Colors.transparent, t.ok, fill),
+              border: Border.all(
+                color: Color.lerp(t.lineStrong, t.ok, fill)!,
+                width: 2,
+              ),
+            ),
+            child: draw == 0
+                ? null
+                : draw == 1
+                ? icon
+                : ClipRect(clipper: _Reveal(draw), child: icon),
+          ),
+        );
+      },
     );
     if (inert) {
       return ExcludeSemantics(
@@ -570,7 +779,7 @@ class TaskCheck extends StatelessWidget {
       ),
     );
     void toggle() {
-      if (!done) unawaited(TixHaptics.confirm());
+      if (!done) unawaited(TixHaptics.light());
       onChanged!();
     }
 
@@ -586,4 +795,18 @@ class TaskCheck extends StatelessWidget {
           : InkResponse(radius: 22, onTap: toggle, child: hit),
     );
   }
+}
+
+/// Shows the leading [fraction] of its child's width, in reading order.
+class _Reveal extends CustomClipper<Rect> {
+  const _Reveal(this.fraction);
+
+  final double fraction;
+
+  @override
+  Rect getClip(Size size) =>
+      Rect.fromLTWH(0, 0, size.width * fraction, size.height);
+
+  @override
+  bool shouldReclip(_Reveal old) => old.fraction != fraction;
 }

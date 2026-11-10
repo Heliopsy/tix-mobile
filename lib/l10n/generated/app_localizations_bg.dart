@@ -7884,4 +7884,33 @@ class AppLocalizationsBg extends AppLocalizations {
   String watchCommentBy(String author, String text) {
     return '$author: $text';
   }
+
+  @override
+  String get boardPriorityTo => 'Приоритет…';
+
+  @override
+  String get boardDueTo => 'Краен срок…';
+
+  @override
+  String get boardTagAdd => 'Добави етикет…';
+
+  @override
+  String boardPrioritySet(String ref) {
+    return 'Приоритетът на $ref е променен';
+  }
+
+  @override
+  String boardDueSet(String ref) {
+    return 'Крайният срок на $ref е зададен';
+  }
+
+  @override
+  String boardDueCleared(String ref) {
+    return 'Крайният срок на $ref е премахнат';
+  }
+
+  @override
+  String boardTagged(String ref, String tag) {
+    return '$ref получи етикет $tag';
+  }
 }

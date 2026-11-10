@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
@@ -141,6 +142,95 @@ void main() {
     );
     expect(tester.widget<TaskCheck>(find.byType(TaskCheck)).done, isTrue);
     expect(find.text('overdue'), findsNothing);
+  });
+
+  group('ticking', () {
+    Widget toggling({required bool reduced, bool startDone = false}) {
+      var done = startDone;
+      return StatefulBuilder(
+        builder: (context, setState) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(disableAnimations: reduced),
+          child: TaskRow(
+            task: task.copyWith(status: done ? 'done' : 'doing'),
+            onTap: () {},
+            onToggleDone: () => setState(() => done = !done),
+          ),
+        ),
+      );
+    }
+
+    Finder strike() => find.byKey(const Key('row.strike'));
+
+    TextDecoration? decoration(WidgetTester tester) =>
+        tester.widget<Text>(find.text(task.title)).style?.decoration;
+
+    Color? fill(WidgetTester tester) {
+      final box = tester.widget<Container>(
+        find.byKey(const Key('check.circle')),
+      );
+      return (box.decoration! as BoxDecoration).color;
+    }
+
+    testWidgets('fills the tick, sweeps the strike-through and settles', (
+      tester,
+    ) async {
+      final haptics = <Object?>[];
+      final messenger = tester.binding.defaultBinaryMessenger;
+      messenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+        if (call.method == 'HapticFeedback.vibrate') {
+          haptics.add(call.arguments);
+        }
+        return null;
+      });
+      addTearDown(
+        () => messenger.setMockMethodCallHandler(SystemChannels.platform, null),
+      );
+      await pumpComponent(tester, toggling(reduced: false));
+      final ok = tester.element(find.byType(TaskRow)).tix.ok;
+      await tester.tap(find.byType(TaskCheck));
+      await tester.pump();
+      await tester.pump(TixMotion.fast * 0.5);
+      expect(fill(tester), isNot(ok));
+      await tester.pump(TixMotion.settle * 0.5);
+      expect(strike(), findsOneWidget);
+      expect(decoration(tester), isNull);
+      await tester.pumpAndSettle();
+      expect(strike(), findsNothing);
+      expect(decoration(tester), TextDecoration.lineThrough);
+      expect(fill(tester), ok);
+      expect(haptics, ['HapticFeedbackType.lightImpact']);
+    });
+
+    testWidgets('unticking plays it backwards', (tester) async {
+      await pumpComponent(tester, toggling(reduced: false, startDone: true));
+      expect(decoration(tester), TextDecoration.lineThrough);
+      await tester.tap(find.byType(TaskCheck));
+      await tester.pump();
+      await tester.pump(TixMotion.settle * 0.5);
+      expect(strike(), findsOneWidget);
+      await tester.pumpAndSettle();
+      expect(strike(), findsNothing);
+      expect(decoration(tester), isNull);
+      expect(fill(tester), Colors.transparent);
+    });
+
+    testWidgets('with reduced motion the change is instant', (tester) async {
+      await pumpComponent(tester, toggling(reduced: true));
+      await tester.tap(find.byType(TaskCheck));
+      await tester.pump();
+      expect(strike(), findsNothing);
+      expect(decoration(tester), TextDecoration.lineThrough);
+      expect(fill(tester), tester.element(find.byType(TaskRow)).tix.ok);
+      await tester.pump(TixMotion.settle * 0.5);
+      expect(strike(), findsNothing);
+      expect(decoration(tester), TextDecoration.lineThrough);
+    });
+
+    testWidgets('a row drawn done does not animate', (tester) async {
+      await pumpComponent(tester, toggling(reduced: false, startDone: true));
+      expect(tester.hasRunningAnimations, isFalse);
+      expect(strike(), findsNothing);
+    });
   });
 
   testWidgets('the row opens the task', (tester) async {

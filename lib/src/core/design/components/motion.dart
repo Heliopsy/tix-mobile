@@ -16,6 +16,11 @@ abstract final class TixHaptics {
   static Future<void> tick() =>
       enabled ? HapticFeedback.selectionClick() : Future.value();
 
+  /// A task ticked done on its row: light, so working down a list does not
+  /// rattle the phone.
+  static Future<void> light() =>
+      enabled ? HapticFeedback.lightImpact() : Future.value();
+
   /// A task completed, a destructive action confirmed.
   static Future<void> confirm() =>
       enabled ? HapticFeedback.mediumImpact() : Future.value();

@@ -2179,5 +2179,12 @@
   "watchFieldCustom": "eigene Felder",
   "watchFieldParent": "übergeordnete Aufgabe",
   "watchCommentEdited": "bearbeitet",
-  "watchCommentBy": "{author}: {text}"
+  "watchCommentBy": "{author}: {text}",
+  "boardPriorityTo": "Priorität…",
+  "boardDueTo": "Fälligkeitsdatum…",
+  "boardTagAdd": "Tag hinzufügen…",
+  "boardPrioritySet": "Priorität von {ref} geändert",
+  "boardDueSet": "Fälligkeitsdatum von {ref} gesetzt",
+  "boardDueCleared": "Fälligkeitsdatum von {ref} entfernt",
+  "boardTagged": "{ref} mit {tag} getaggt"
 }

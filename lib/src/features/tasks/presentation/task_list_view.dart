@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/clock/clock.dart';
@@ -193,9 +195,15 @@ List<ListEntry> buildListEntries(
 }
 
 /// The rows of one listing: paged, grouped when asked, with swipes, the
-/// tick and star, a menu on the dots or a secondary click, and select mode
-/// for bulk actions, entered with a long press.
-class TaskListView extends ConsumerWidget {
+/// tick and star, status and priority that open their pickers, a menu on
+/// the dots or a secondary click, and select mode for bulk actions, entered
+/// with a long press.
+///
+/// A row just ticked done keeps its place for [TixMotion.settle] so its
+/// tick and strike-through can play, then moves to where the listing now
+/// puts it, or collapses away when the listing no longer holds it. With
+/// reduced motion it moves or goes at once.
+class TaskListView extends ConsumerStatefulWidget {
   /// Lists [entries] of the listing for [query].
   const TaskListView({
     required this.query,
@@ -230,13 +238,127 @@ class TaskListView extends ConsumerWidget {
   final String? focusedRef;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TaskListView> createState() => _TaskListViewState();
+}
+
+Object _keyOf(ListEntry e) => switch (e) {
+  RowEntry(:final task) => ('row', task.id),
+  HeadingEntry(:final group) => ('heading', group),
+  HiddenEntry() => 'hidden',
+};
+
+/// A row kept where it was drawn: [after] is the line it followed, and
+/// [leaving] says it has left the listing and collapses once its tick has
+/// played.
+@immutable
+class _Hold {
+  const _Hold(this.entry, {required this.after, required this.leaving});
+
+  final RowEntry entry;
+  final Object? after;
+  final bool leaving;
+}
+
+class _TaskListViewState extends ConsumerState<TaskListView> {
+  /// Tasks ticked done while this list was drawn. A task is kept here even
+  /// when it shows open again, since a refresh draws the cached page before
+  /// the server's and that briefly shows the tick undone.
+  final _ticked = <String>{};
+  final _held = <String, _Hold>{};
+  List<ListEntry> _drawn = const [];
+
+  bool _isDone(Task task) =>
+      ref.read(taskContextProvider).value?.isFinished(task) ?? isTaskDone(task);
+
+  @override
+  void didUpdateWidget(TaskListView old) {
+    super.didUpdateWidget(old);
+    if (old.query != widget.query ||
+        TixMotion.of(context, TixMotion.settle) == Duration.zero) {
+      _ticked.clear();
+      _held.clear();
+      return;
+    }
+    final next = <String, (int, Task)>{
+      for (final (i, e) in widget.entries.indexed)
+        if (e is RowEntry) e.task.id: (i, e.task),
+    };
+    Object? before;
+    for (final e in _drawn) {
+      if (e is! RowEntry) {
+        before = _keyOf(e);
+        continue;
+      }
+      final id = e.task.id;
+      final held = _held[id];
+      final anchor = before;
+      if (held == null || !held.leaving) before = _keyOf(e);
+      if (held != null && held.leaving) continue;
+      final now = next[id];
+      if (now == null) {
+        if (_ticked.contains(id)) {
+          _held[id] = _Hold(e, after: anchor, leaving: true);
+        }
+        continue;
+      }
+      final (at, task) = now;
+      final was = _isDone(e.task);
+      final done = _isDone(task);
+      if (was && !done) {
+        _held.remove(id);
+        continue;
+      }
+      if (!was && done) {
+        _ticked.add(id);
+        final moved =
+            (at == 0 ? null : _keyOf(widget.entries[at - 1])) != anchor;
+        if (moved) {
+          _held[id] = _Hold(RowEntry(task), after: anchor, leaving: false);
+        }
+        continue;
+      }
+      if (held != null && !identical(held.entry.task, task)) {
+        _held[id] = _Hold(RowEntry(task), after: held.after, leaving: false);
+      }
+    }
+  }
+
+  List<ListEntry> _merge(List<ListEntry> entries) {
+    if (_held.isEmpty) return entries;
+    final out = [
+      for (final e in entries)
+        if (e is! RowEntry || !_held.containsKey(e.task.id)) e,
+    ];
+    for (final hold in _held.values) {
+      final at = hold.after == null
+          ? 0
+          : out.indexWhere((e) => _keyOf(e) == hold.after) + 1;
+      out.insert(at, hold.entry);
+    }
+    return out;
+  }
+
+  void _release(String id) {
+    if (mounted && _held.containsKey(id)) setState(() => _held.remove(id));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final TaskListView(
+      :query,
+      :paged,
+      :onOpen,
+      :empty,
+      :selectedRef,
+      :focusedRef,
+    ) = widget;
+    final entries = _drawn = _merge(widget.entries);
     final provider = taskListingProvider(query);
     final selection = ref.watch(taskSelectionProvider(query.scope));
     final picking = selection.active;
     final selector = ref.read(taskSelectionProvider(query.scope).notifier);
     final order = [
-      for (final e in entries)
+      for (final e in widget.entries)
         if (e is RowEntry) e.task.ref,
     ];
     final taskContext = ref.watch(taskContextProvider).value;
@@ -250,7 +372,9 @@ class TaskListView extends ConsumerWidget {
       moreError: paged.moreError,
     );
     return PagedListView<ListEntry>(
-      paged: paged.items.isEmpty ? const Paged<ListEntry>(items: []) : lines,
+      paged: paged.items.isEmpty && _held.isEmpty
+          ? const Paged<ListEntry>(items: [])
+          : lines,
       padding: EdgeInsets.only(bottom: context.isCompact ? 96 : TixSpace.s5),
       empty: empty,
       onRefresh: () => ref.refresh(provider.future),
@@ -275,42 +399,146 @@ class TaskListView extends ConsumerWidget {
               ? null
               : StatusPill(label: entry.label, category: entry.category),
         ),
-        RowEntry(:final task) => _Row(
+        RowEntry(:final task) => _Slot(
           key: ValueKey(('row', task.id)),
-          task: task,
-          facts: factsFor(
-            task,
-            taskContext,
-            handle: assigneeHandle(ref, task),
-            sync: syncMarkOf(ref, task),
-            showProject: query.scope is! ProjectScope,
+          hold: _held[task.id],
+          onReleased: () => _release(task.id),
+          child: _Row(
+            task: task,
+            facts: factsFor(
+              task,
+              taskContext,
+              handle: assigneeHandle(ref, task),
+              sync: syncMarkOf(ref, task),
+              showProject: query.scope is! ProjectScope,
+            ),
+            now: now,
+            done: actions.isDone(task),
+            picked: picking ? selection.contains(task.ref) : null,
+            selected: task.ref == selectedRef,
+            focused: task.ref == focusedRef,
+            onTap: () => tapTask(
+              ref,
+              query.scope,
+              task.ref,
+              order: order,
+              open: () => onOpen(task),
+            ),
+            onPicked: (_) => selector.toggle(task.ref),
+            onLongPress: () => longPressTask(ref, query.scope, task.ref),
+            onMenu: () => showTaskMenu(
+              context,
+              actions,
+              task,
+              onOpen: () => onOpen(task),
+              onSelect: () => selector.toggle(task.ref),
+            ),
+            actions: actions,
+            completeLabel: l10n.complete,
+            snoozeLabel: l10n.snooze,
           ),
-          now: now,
-          done: actions.isDone(task),
-          picked: picking ? selection.contains(task.ref) : null,
-          selected: task.ref == selectedRef,
-          focused: task.ref == focusedRef,
-          onTap: () => tapTask(
-            ref,
-            query.scope,
-            task.ref,
-            order: order,
-            open: () => onOpen(task),
-          ),
-          onPicked: (_) => selector.toggle(task.ref),
-          onLongPress: () => longPressTask(ref, query.scope, task.ref),
-          onMenu: () => showTaskMenu(
-            context,
-            actions,
-            task,
-            onOpen: () => onOpen(task),
-            onSelect: () => selector.toggle(task.ref),
-          ),
-          actions: actions,
-          completeLabel: l10n.complete,
-          snoozeLabel: l10n.snooze,
         ),
       },
+    );
+  }
+}
+
+/// A row's place in the list: as drawn, or held by a [_Hold] until
+/// [TixMotion.settle] has passed, then collapsed when it is leaving, and
+/// [onReleased] called. A hold that turns into a leaving one starts again. The structure never changes with the hold, so the
+/// row under it keeps its state and its tick goes on playing.
+class _Slot extends StatefulWidget {
+  const _Slot({
+    required this.hold,
+    required this.onReleased,
+    required this.child,
+    super.key,
+  });
+
+  final _Hold? hold;
+  final VoidCallback onReleased;
+  final Widget child;
+
+  @override
+  State<_Slot> createState() => _SlotState();
+}
+
+class _SlotState extends State<_Slot> with SingleTickerProviderStateMixin {
+  late final AnimationController _timer = AnimationController(vsync: this)
+    ..addStatusListener((s) {
+      if (s == AnimationStatus.completed && widget.hold != null) {
+        widget.onReleased();
+      }
+    });
+  double _collapseFrom = 1;
+  bool? _running;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _start();
+  }
+
+  @override
+  void didUpdateWidget(_Slot old) {
+    super.didUpdateWidget(old);
+    _start();
+  }
+
+  void _start() {
+    final hold = widget.hold;
+    final kind = hold?.leaving;
+    if (kind == _running) return;
+    _running = kind;
+    if (hold == null) {
+      _timer.value = 0;
+      return;
+    }
+    final settle = TixMotion.of(context, TixMotion.settle);
+    final collapse = hold.leaving
+        ? TixMotion.of(context, TixMotion.base)
+        : Duration.zero;
+    final total = settle + collapse;
+    if (total == Duration.zero) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => widget.onReleased());
+      return;
+    }
+    _collapseFrom = settle.inMicroseconds / total.inMicroseconds;
+    _timer.duration = total;
+    _timer.forward(from: 0);
+  }
+
+  @override
+  void dispose() {
+    _timer.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final leaving = widget.hold?.leaving ?? false;
+    return IgnorePointer(
+      ignoring: leaving,
+      child: AnimatedBuilder(
+        animation: _timer,
+        builder: (context, child) {
+          final gone = leaving && _collapseFrom < 1
+              ? Interval(
+                  _collapseFrom,
+                  1,
+                  curve: TixMotion.ease,
+                ).transform(_timer.value)
+              : 0.0;
+          return ClipRect(
+            child: Align(
+              alignment: AlignmentDirectional.topStart,
+              heightFactor: 1 - gone,
+              child: Opacity(opacity: 1 - gone, child: child),
+            ),
+          );
+        },
+        child: widget.child,
+      ),
     );
   }
 }
@@ -331,7 +559,6 @@ class _Row extends StatelessWidget {
     required this.actions,
     required this.completeLabel,
     required this.snoozeLabel,
-    super.key,
   });
 
   final Task task;
@@ -349,6 +576,17 @@ class _Row extends StatelessWidget {
   final String completeLabel;
   final String snoozeLabel;
 
+  VoidCallback? _edit(Future<void> Function(Task) edit) {
+    if (picked != null) return null;
+    return () {
+      if (pickKeyHeld()) {
+        onTap();
+      } else {
+        unawaited(edit(task));
+      }
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final row = TaskRow(
@@ -364,6 +602,8 @@ class _Row extends StatelessWidget {
       onMore: onMenu,
       onToggleDone: () => actions.toggleDone(task),
       onToggleStar: () => actions.toggleStar(task),
+      onStatusTap: _edit(actions.pickMove),
+      onPriorityTap: _edit(actions.setPriority),
     );
     if (picked != null) return row;
     return TixSwipeActions(
