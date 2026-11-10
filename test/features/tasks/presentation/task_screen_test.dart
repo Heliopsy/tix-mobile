@@ -461,6 +461,33 @@ void main() {
       expect(find.text('Fix login'), findsNothing);
       expect(find.text('Rotate keys'), findsOneWidget);
     });
+
+    testWidgets('never shows open again while a refresh waits on the server', (
+      tester,
+    ) async {
+      await pump(tester, screen(reduced: false));
+      await tester.tap(
+        find.descendant(of: row('Fix login'), matching: find.byType(TaskCheck)),
+      );
+      await tester.pumpAndSettle();
+      final gate = server.gate = Completer<void>();
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyR);
+      for (var frame = 0; frame < 30; frame++) {
+        await tester.pump(const Duration(milliseconds: 16));
+        final ticks = find.descendant(
+          of: row('Fix login'),
+          matching: find.byType(TaskCheck),
+        );
+        for (final e in ticks.evaluate()) {
+          expect((e.widget as TaskCheck).done, isTrue, reason: 'frame $frame');
+        }
+      }
+      server.gate = null;
+      gate.complete();
+      await tester.pumpAndSettle();
+      expect(find.text('Fix login'), findsNothing);
+      expect(find.text('Rotate keys'), findsOneWidget);
+    });
   });
 
   group('select mode', () {
