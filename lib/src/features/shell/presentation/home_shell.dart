@@ -14,7 +14,6 @@ import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/core/theme/panes.dart';
 import 'package:tix_mobile/src/features/shell/presentation/context_switcher.dart';
-import 'package:tix_mobile/src/features/shell/presentation/watch_shortcut.dart';
 
 /// One top-level destination: the shell branch it opens, in branch order.
 @immutable
@@ -83,6 +82,12 @@ class HomeShell extends StatelessWidget {
       label: l10n.inboxTitle,
     ),
     ShellDestination(
+      id: 'watch',
+      icon: Icons.sensors_outlined,
+      selectedIcon: Icons.sensors,
+      label: l10n.watchTitle,
+    ),
+    ShellDestination(
       id: 'manage',
       icon: Icons.admin_panel_settings_outlined,
       selectedIcon: Icons.admin_panel_settings,
@@ -145,6 +150,14 @@ class HomeShell extends StatelessWidget {
             run: () => _select(at('inbox')),
           ),
           TixCommand(
+            id: 'go.watch',
+            action: KeyActions.navWatch,
+            label: l10n.goWatch,
+            group: l10n.commandsNavigate,
+            icon: Icons.sensors_outlined,
+            run: () => _select(at('watch')),
+          ),
+          TixCommand(
             id: 'go.manage',
             action: KeyActions.navManage,
             label: l10n.goManage,
@@ -159,14 +172,6 @@ class HomeShell extends StatelessWidget {
             group: l10n.commandsNavigate,
             icon: Icons.settings_outlined,
             run: () => _select(at('settings')),
-          ),
-          TixCommand(
-            id: 'go.watch',
-            action: KeyActions.navWatch,
-            label: l10n.goWatch,
-            group: l10n.commandsNavigate,
-            icon: Icons.stream,
-            run: () => context.go(Routes.watch),
           ),
           TixCommand(
             id: 'go.instances',
@@ -218,7 +223,6 @@ class HomeShell extends StatelessWidget {
               child: const Row(
                 children: [
                   Expanded(child: ContextSwitcherButton()),
-                  WatchShortcutButton(),
                   SyncBadgeButton(),
                   Padding(
                     padding: EdgeInsets.only(right: TixSpace.s2),
@@ -262,7 +266,6 @@ class HomeShell extends StatelessWidget {
               ContextSwitcherButton(rail: true, extended: extended),
             ],
             const SyncBadgeButton(),
-            const WatchShortcutButton(),
             const SizedBox(height: TixSpace.s2),
             QuickAddButton(extended: extended),
           ],

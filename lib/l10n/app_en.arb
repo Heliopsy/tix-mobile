@@ -5007,10 +5007,6 @@
   "@trayWatch": {
     "description": "Tray menu entry that opens the Watch screen"
   },
-  "watchShortcut": "Watch live events",
-  "@watchShortcut": {
-    "description": "Tooltip of the shell button that opens Watch"
-  },
   "watchVia": "via {channel}",
   "@watchVia": {
     "description": "Watch row: the channel an event came through",

@@ -7937,9 +7937,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get trayWatch => 'Beobachten';
 
   @override
-  String get watchShortcut => 'Live-Ereignisse beobachten';
-
-  @override
   String watchVia(String channel) {
     return 'über $channel';
   }

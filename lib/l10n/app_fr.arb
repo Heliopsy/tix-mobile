@@ -2168,7 +2168,6 @@
   "trayUpdateAvailable": "Mise à jour disponible ({version})",
   "trayRestartToUpdate": "Redémarrer pour mettre à jour ({version})",
   "trayWatch": "Suivi",
-  "watchShortcut": "Suivre les événements en direct",
   "watchVia": "via {channel}",
   "watchViaNamed": "via {channel} ({name})",
   "watchChannelWeb": "le web",

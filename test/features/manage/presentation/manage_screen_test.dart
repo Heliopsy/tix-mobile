@@ -74,6 +74,26 @@ void main() {
     });
   }
 
+  testWidgets('an admin with event:subscribe finds no Watch here', (
+    tester,
+  ) async {
+    final server = FakeTix()
+      ..identity = {
+        'role': 'admin',
+        'scopes': ['event:subscribe', 'audit:read'],
+      };
+    await pump(tester, server, size: desktop);
+    final audit = find.byKey(const Key('manage.tenant.audit'));
+    await tester.scrollUntilVisible(
+      audit,
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(audit, findsOneWidget);
+    expect(find.byKey(const Key('manage.tenant.watch')), findsNothing);
+    expect(find.text('Watch'), findsNothing);
+  });
+
   testWidgets('a member sees what its role reads', (tester) async {
     final server = FakeTix()..identity = {'role': 'member'};
     await pump(tester, server);

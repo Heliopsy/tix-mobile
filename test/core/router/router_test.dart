@@ -84,6 +84,7 @@ void main() {
     expect(from('/projects/infra/tasks/infra-1'), '/projects');
     expect(from('/projects/infra/settings'), '/projects');
     expect(from('/tasks?filter=f1'), '/tasks');
+    expect(from('/watch'), '/watch');
     expect(from('/inbox'), '/inbox');
     expect(from('/mine'), '/mine');
     expect(from('/templates'), '/templates');

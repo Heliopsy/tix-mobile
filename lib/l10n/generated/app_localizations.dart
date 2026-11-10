@@ -13117,12 +13117,6 @@ abstract class AppLocalizations {
   /// **'Watch'**
   String get trayWatch;
 
-  /// Tooltip of the shell button that opens Watch
-  ///
-  /// In en, this message translates to:
-  /// **'Watch live events'**
-  String get watchShortcut;
-
   /// Watch row: the channel an event came through
   ///
   /// In en, this message translates to:

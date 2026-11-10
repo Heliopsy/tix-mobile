@@ -138,7 +138,9 @@ void main() {
     });
   }
 
-  testWidgets('the shell lists Manage before Settings', (tester) async {
+  testWidgets('the shell lists Watch after Inbox, Manage before Settings', (
+    tester,
+  ) async {
     final stores = signedInStores();
     await pumpScreen(
       tester,
@@ -159,7 +161,7 @@ void main() {
       ),
     );
     expect(
-      find.text('projects,tasks,myWork,inbox,manage,settings'),
+      find.text('projects,tasks,myWork,inbox,watch,manage,settings'),
       findsOneWidget,
     );
   });

@@ -112,6 +112,7 @@ const Set<String> _tabRoots = {
   Routes.tasks,
   Routes.myWork,
   Routes.inbox,
+  Routes.watch,
   Routes.manage,
   Routes.settings,
 };
@@ -312,6 +313,14 @@ GoRouter router(Ref ref) {
               StatefulShellBranch(
                 routes: [
                   GoRoute(
+                    path: Routes.watch,
+                    builder: (_, _) => const WatchScreen(),
+                  ),
+                ],
+              ),
+              StatefulShellBranch(
+                routes: [
+                  GoRoute(
                     path: Routes.manage,
                     builder: (_, _) => const ManageScreen(),
                     routes: [
@@ -495,7 +504,8 @@ final upkeepRoutes = <RouteBase>[
   GoRoute(path: 'housekeeping', builder: (_, _) => const HousekeepingScreen()),
   GoRoute(path: 'trash', builder: (_, _) => const TrashScreen()),
   GoRoute(path: 'audit', builder: (_, _) => const AuditScreen()),
-  GoRoute(path: 'watch', builder: (_, _) => const WatchScreen()),
+  // Watch moved to its own destination; old /manage/watch links still land.
+  GoRoute(path: 'watch', redirect: (_, _) => Routes.watch),
 ];
 
 /// Tenant and server administration (wave 3), under Manage.

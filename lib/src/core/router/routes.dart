@@ -99,7 +99,7 @@ abstract final class Routes {
   static const audit = '/manage/audit';
 
   /// The tenant's events as they happen.
-  static const watch = '/manage/watch';
+  static const watch = '/watch';
 
   /// What stays available offline, its storage and sync.
   static const offline = '/settings/offline';

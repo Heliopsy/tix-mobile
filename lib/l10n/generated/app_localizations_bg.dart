@@ -7873,9 +7873,6 @@ class AppLocalizationsBg extends AppLocalizations {
   String get trayWatch => 'Наблюдение';
 
   @override
-  String get watchShortcut => 'Наблюдение на събитията на живо';
-
-  @override
   String watchVia(String channel) {
     return 'през $channel';
   }
