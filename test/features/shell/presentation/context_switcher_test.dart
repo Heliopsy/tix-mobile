@@ -215,6 +215,33 @@ void main() {
     expect(find.text('route:/settings/instances'), findsOneWidget);
   });
 
+  testWidgets('opens from the bottom edge on a phone', (tester) async {
+    await pump(tester);
+    await open(tester);
+    expect(find.byType(BottomSheet), findsOneWidget);
+    expect(find.byType(Dialog), findsNothing);
+  });
+
+  testWidgets('opens as a dialog in a wide window', (tester) async {
+    await pump(
+      tester,
+      size: desktop,
+      button: const ContextSwitcherButton(rail: true, extended: true),
+    );
+    await open(tester);
+    expect(find.byType(BottomSheet), findsNothing);
+    expect(
+      find.descendant(
+        of: find.byType(Dialog),
+        matching: find.byKey(const Key('switcher.sheet')),
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(inSheet(find.byKey(const Key('switcher.entry.s1.acme'))));
+    await tester.pumpAndSettle();
+    expect(find.byType(Dialog), findsNothing);
+  });
+
   testWidgets('add leads to connect', (tester) async {
     await pump(tester);
     await open(tester);
