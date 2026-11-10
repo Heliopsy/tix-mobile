@@ -14,6 +14,7 @@ import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/project_stars.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
+import 'package:tix_mobile/src/core/theme/panes.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/core/widgets/pin_shortcut_button.dart';
@@ -99,9 +100,6 @@ class TaskScreenView extends ConsumerStatefulWidget {
   /// How wide the list is beside an open task.
   static const listPaneWidth = 420.0;
 
-  /// How wide the open task is beside a board or lanes.
-  static const detailPaneWidth = 460.0;
-
   @override
   ConsumerState<TaskScreenView> createState() => _TaskScreenViewState();
 }
@@ -110,14 +108,47 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
   final _filterFocus = FocusNode(debugLabel: 'filter');
   String? _focused;
   String? _open;
+  String? _openAt;
+  GoRouterDelegate? _router;
   List<Task> _order = const [];
 
   TaskScope get _scope => widget.scope;
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final router = GoRouter.maybeOf(context)?.routerDelegate;
+    if (identical(router, _router)) return;
+    _router?.removeListener(_routeChanged);
+    _router = router?..addListener(_routeChanged);
+  }
+
+  @override
   void dispose() {
+    _router?.removeListener(_routeChanged);
     _filterFocus.dispose();
     super.dispose();
+  }
+
+  String? get _path {
+    final router = _router;
+    if (router == null || router.currentConfiguration.matches.isEmpty) {
+      return null;
+    }
+    return router.state.matchedLocation;
+  }
+
+  void _routeChanged() {
+    if (_open != null && _path != _openAt) setState(() => _open = null);
+  }
+
+  void _closeTask() {
+    final scope = _scope;
+    if (widget.selectedRef != null && scope is ProjectScope) {
+      context.go(Routes.project(scope.key));
+      return;
+    }
+    setState(() => _open = null);
   }
 
   void _openTask(Task task) {
@@ -131,7 +162,10 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
     final key = ref.read(taskContextProvider).value?.projectOf(task)?.key;
     if (key == null) return;
     if (context.isTwoPane) {
-      setState(() => _open = task.ref);
+      setState(() {
+        _open = task.ref;
+        _openAt = _path;
+      });
     } else {
       unawaited(context.push(Routes.task(key, task.ref)));
     }
@@ -263,9 +297,10 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
 
     final Widget framed;
     if (context.isTwoPane && selectedRef != null) {
-      final detail = TaskDetailView(
+      final detail = TaskPanel(
         key: ValueKey(selectedRef),
         taskRef: selectedRef,
+        onClose: _closeTask,
       );
       framed = view == TaskView.list
           ? Row(
@@ -275,13 +310,7 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
                 Expanded(child: detail),
               ],
             )
-          : Row(
-              children: [
-                Expanded(child: body),
-                const VerticalDivider(width: 1),
-                SizedBox(width: TaskScreenView.detailPaneWidth, child: detail),
-              ],
-            );
+          : ResizableTaskPanel(list: body, panel: detail);
     } else if (context.isTwoPane &&
         view == TaskView.list &&
         scope is ProjectScope) {
@@ -459,9 +488,22 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
           label: l10n.bulkExit,
           group: l10n.commandsTasks,
           icon: Icons.close,
-          shortcut: const SingleActivator(LogicalKeyboardKey.escape),
+          shortcut: selection.active || !detailBeside
+              ? const SingleActivator(LogicalKeyboardKey.escape)
+              : null,
           run: selector.exit,
         ),
+        if (detailBeside)
+          TixCommand(
+            id: 'tasks.closeDetail',
+            label: l10n.taskPanelClose,
+            group: l10n.commandsTasks,
+            icon: Icons.close,
+            shortcut: selection.active
+                ? null
+                : const SingleActivator(LogicalKeyboardKey.escape),
+            run: _closeTask,
+          ),
         TixCommand(
           id: 'tasks.filter',
           label: l10n.filterFocus,
@@ -678,6 +720,95 @@ class _ProjectTitle extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// An open task beside the list on a wide window, under a header with its
+/// reference and a button that closes it.
+class TaskPanel extends StatelessWidget {
+  /// Shows [taskRef]; [onClose] closes the panel.
+  const TaskPanel({required this.taskRef, required this.onClose, super.key});
+
+  /// The task's reference.
+  final String taskRef;
+
+  /// Closes the panel.
+  final VoidCallback onClose;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Padding(
+        padding: const EdgeInsetsDirectional.only(
+          start: TixSpace.s5,
+          end: TixSpace.s2,
+          top: TixSpace.s1,
+        ),
+        child: Row(
+          children: [
+            Expanded(child: RefText(taskRef, size: TixText.sm)),
+            TixIconButton(
+              key: const Key('tasks.detail.close'),
+              icon: Icons.close,
+              tooltip: context.l10n.taskPanelClose,
+              onPressed: onClose,
+            ),
+          ],
+        ),
+      ),
+      Expanded(child: TaskDetailView(taskRef: taskRef, showRef: false)),
+    ],
+  );
+}
+
+/// [list] beside [panel], which has a handle on its left edge that resizes
+/// it, as the sidebar's does; the width is kept on the device.
+class ResizableTaskPanel extends ConsumerWidget {
+  /// Draws [list] and [panel] side by side.
+  const ResizableTaskPanel({
+    required this.list,
+    required this.panel,
+    super.key,
+  });
+
+  /// The board or lanes.
+  final Widget list;
+
+  /// The open task.
+  final Widget panel;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final sizes = ref.watch(panesProvider);
+    final panes = ref.read(panesProvider.notifier);
+    return LayoutBuilder(
+      builder: (context, box) {
+        final width = sizes.detailIn(box.maxWidth);
+        return Row(
+          children: [
+            Expanded(child: list),
+            TixPaneResizer(
+              key: const Key('tasks.detail.resize'),
+              label: l10n.taskPanelResize,
+              width: width,
+              min: detailMinWidth,
+              max: detailMaxFor(box.maxWidth),
+              growsLeft: true,
+              onResize: (w, {required done}) =>
+                  unawaited(panes.resizeDetail(w, save: done)),
+              onReset: () => unawaited(panes.resizeDetail(null)),
+            ),
+            SizedBox(
+              key: const Key('tasks.detail.pane'),
+              width: width,
+              child: panel,
+            ),
+          ],
+        );
+      },
     );
   }
 }

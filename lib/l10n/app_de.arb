@@ -2198,5 +2198,12 @@
   "boardPrioritySet": "Priorität von {ref} geändert",
   "boardDueSet": "Fälligkeitsdatum von {ref} gesetzt",
   "boardDueCleared": "Fälligkeitsdatum von {ref} entfernt",
-  "boardTagged": "{ref} mit {tag} getaggt"
+  "boardTagged": "{ref} mit {tag} getaggt",
+  "sidebarCollapse": "Seitenleiste einklappen",
+  "sidebarExpand": "Seitenleiste ausklappen",
+  "sidebarResize": "Größe der Seitenleiste ändern",
+  "paneCollapsed": "Eingeklappt",
+  "paneResizeHint": "Ziehen oder die Pfeiltasten verwenden. Eingabe oder ein Doppelklick setzt die Breite zurück.",
+  "taskPanelClose": "Aufgabe schließen",
+  "taskPanelResize": "Größe des Aufgabenbereichs ändern"
 }

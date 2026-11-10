@@ -2198,5 +2198,12 @@
   "boardPrioritySet": "Priorité de {ref} modifiée",
   "boardDueSet": "Échéance de {ref} définie",
   "boardDueCleared": "Échéance de {ref} retirée",
-  "boardTagged": "Tag {tag} ajouté à {ref}"
+  "boardTagged": "Tag {tag} ajouté à {ref}",
+  "sidebarCollapse": "Réduire la barre latérale",
+  "sidebarExpand": "Déplier la barre latérale",
+  "sidebarResize": "Redimensionner la barre latérale",
+  "paneCollapsed": "Réduite",
+  "paneResizeHint": "Faites glisser ou utilisez les flèches. Entrée ou un double clic rétablit la largeur.",
+  "taskPanelClose": "Fermer la tâche",
+  "taskPanelResize": "Redimensionner le panneau de la tâche"
 }

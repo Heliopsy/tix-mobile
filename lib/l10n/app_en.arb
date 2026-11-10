@@ -5158,5 +5158,12 @@
         "type": "String"
       }
     }
-  }
+  },
+  "sidebarCollapse": "Collapse sidebar",
+  "sidebarExpand": "Expand sidebar",
+  "sidebarResize": "Resize sidebar",
+  "paneCollapsed": "Collapsed",
+  "paneResizeHint": "Drag, or use the arrow keys. Enter or a double click resets the width.",
+  "taskPanelClose": "Close task",
+  "taskPanelResize": "Resize task panel"
 }

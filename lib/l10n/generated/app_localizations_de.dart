@@ -8042,4 +8042,26 @@ class AppLocalizationsDe extends AppLocalizations {
   String boardTagged(String ref, String tag) {
     return '$ref mit $tag getaggt';
   }
+
+  @override
+  String get sidebarCollapse => 'Seitenleiste einklappen';
+
+  @override
+  String get sidebarExpand => 'Seitenleiste ausklappen';
+
+  @override
+  String get sidebarResize => 'Größe der Seitenleiste ändern';
+
+  @override
+  String get paneCollapsed => 'Eingeklappt';
+
+  @override
+  String get paneResizeHint =>
+      'Ziehen oder die Pfeiltasten verwenden. Eingabe oder ein Doppelklick setzt die Breite zurück.';
+
+  @override
+  String get taskPanelClose => 'Aufgabe schließen';
+
+  @override
+  String get taskPanelResize => 'Größe des Aufgabenbereichs ändern';
 }

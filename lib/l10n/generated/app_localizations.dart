@@ -13302,6 +13302,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{ref} tagged {tag}'**
   String boardTagged(String ref, String tag);
+
+  /// No description provided for @sidebarCollapse.
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse sidebar'**
+  String get sidebarCollapse;
+
+  /// No description provided for @sidebarExpand.
+  ///
+  /// In en, this message translates to:
+  /// **'Expand sidebar'**
+  String get sidebarExpand;
+
+  /// No description provided for @sidebarResize.
+  ///
+  /// In en, this message translates to:
+  /// **'Resize sidebar'**
+  String get sidebarResize;
+
+  /// No description provided for @paneCollapsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Collapsed'**
+  String get paneCollapsed;
+
+  /// No description provided for @paneResizeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag, or use the arrow keys. Enter or a double click resets the width.'**
+  String get paneResizeHint;
+
+  /// No description provided for @taskPanelClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close task'**
+  String get taskPanelClose;
+
+  /// No description provided for @taskPanelResize.
+  ///
+  /// In en, this message translates to:
+  /// **'Resize task panel'**
+  String get taskPanelResize;
 }
 
 class _AppLocalizationsDelegate
