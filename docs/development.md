@@ -55,7 +55,7 @@ icon (`tray_manager`). On Debian and Ubuntu:
 
 ```sh
 sudo apt install clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libsecret-1-dev \
-  libayatana-appindicator3-dev
+  libayatana-appindicator3-dev patchelf
 ```
 
 `just setup-linux` installs the same list. On Fedora the tray library is `libayatana-appindicator-gtk3-devel`, on
@@ -63,8 +63,15 @@ Arch `libayatana-appindicator`; the older `libappindicator3` works too.
 
 At run time the token store needs a Secret Service provider, such as GNOME Keyring or KWallet, unlocked in the
 session. Without one there is nowhere safe to keep the token, and the app does not fall back to a plain file. The
-tray needs the appindicator library at run time as well, and a desktop that shows StatusNotifierItem icons (KDE,
-Xfce, Cinnamon, Budgie, GNOME with the AppIndicator extension); see [Desktop integration](#desktop-integration).
+tray needs a desktop that shows StatusNotifierItem icons (KDE, Xfce, Cinnamon, Budgie, GNOME with the AppIndicator
+extension); see [Desktop integration](#desktop-integration).
+
+A `flutter run` build loads the appindicator library from the system. The release tarball does not:
+`just linux-libs copy DIR` (from `scripts/bundle-linux-libs.sh`, which needs `patchelf`) copies
+libayatana-appindicator3, libayatana-indicator3, libayatana-ido3 and libdbusmenu into the bundle's `lib/` and sets
+`$ORIGIN` as the runpath of the tray plugin and of those copies, because the binary's own `$ORIGIN/lib` runpath does
+not reach a plugin's dependencies. `just linux-libs check DIR` fails while any of them still loads from outside the
+bundle; CI and the release run both after `just build-linux`. glib, GTK and libc are never bundled.
 
 ### Windows
 
@@ -109,6 +116,7 @@ Xfce, Cinnamon, Budgie, GNOME with the AppIndicator extension); see [Desktop int
 | `just build-ios` | iOS app, unsigned unless signing is configured locally |
 | `just build-ipa` | iOS archive for distribution; needs signing |
 | `just build-linux` | Linux desktop bundle |
+| `just linux-libs MODE DIR` | `copy` the tray libraries into a Linux bundle, or `check` that they load from it |
 | `just build-macos` | macOS app |
 | `just build-windows` | Windows desktop bundle |
 | `just build-all` | Every target the current host can build |

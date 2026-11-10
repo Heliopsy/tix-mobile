@@ -63,7 +63,7 @@ setup:
 [group('setup')]
 setup-linux:
     sudo apt-get update -q
-    sudo apt-get install -y -q --no-install-recommends clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libsecret-1-dev libayatana-appindicator3-dev
+    sudo apt-get install -y -q --no-install-recommends clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libsecret-1-dev libayatana-appindicator3-dev patchelf
 
 # flutter doctor -v.
 [group('setup')]
@@ -331,6 +331,11 @@ build-ipa *ARGS:
 [group('build')]
 build-linux *ARGS:
     flutter build linux --release {{build_args}} {{ARGS}}
+
+# Copy the tray libraries into a Linux bundle (`copy`), or fail unless they load from it (`check`).
+[group('build')]
+linux-libs MODE DIR:
+    scripts/bundle-linux-libs.sh {{MODE}} {{DIR}}
 
 # macOS app (release, macOS only).
 [group('build')]

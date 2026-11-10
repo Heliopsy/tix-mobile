@@ -183,6 +183,17 @@ jobs:
           target: linux
       - run: just setup-linux
       - run: just build-linux
+      # The tray libraries ship in the bundle: distros other than Ubuntu and
+      # Debian mostly lack libayatana-appindicator3, and without it the
+      # binary does not start.
+      - name: Bundle the tray libraries
+        env:
+          ARCH: ${{ matrix.arch }}
+        run: just linux-libs copy "build/linux/$ARCH/release/bundle"
+      - name: The tray libraries load from the bundle
+        env:
+          ARCH: ${{ matrix.arch }}
+        run: just linux-libs check "build/linux/$ARCH/release/bundle"
       - env:
           ARCH: ${{ matrix.arch }}
         run: just engine-check bundle "build/linux/$ARCH/release/bundle"

@@ -244,6 +244,20 @@ jobs:
           RECIPE: ${{ matrix.recipe }}
         run: just "$RECIPE"
 
+      # As in release.yaml, so a pull request that breaks the bundled tray
+      # libraries fails here rather than at release time.
+      - name: Bundle the tray libraries
+        if: matrix.linux
+        env:
+          ARTIFACT: ${{ matrix.artifact }}
+        run: just linux-libs copy "$ARTIFACT"
+
+      - name: The tray libraries load from the bundle
+        if: matrix.linux
+        env:
+          ARTIFACT: ${{ matrix.artifact }}
+        run: just linux-libs check "$ARTIFACT"
+
       # A build without Go succeeds without the engine, by design; a CI build
       # never may.
       - name: The build carries the engine
