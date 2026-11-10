@@ -166,8 +166,8 @@ void main() {
     test('a prefix that is also a binding runs when the wait ends', () {
       fakeAsync((async) {
         final timedOut = <String>[];
-        final s = KeySequencer<String>(onTimeout: timedOut.add);
-        s.feed(_g, candidates);
+        final s = KeySequencer<String>(onTimeout: timedOut.add)
+          ..feed(_g, candidates);
         async.elapse(const Duration(milliseconds: 999));
         expect(timedOut, isEmpty);
         async.elapse(const Duration(milliseconds: 1));
@@ -178,8 +178,8 @@ void main() {
 
     test('after the timeout the second key starts afresh', () {
       fakeAsync((async) {
-        final s = KeySequencer<String>(onTimeout: (_) {});
-        s.feed(_g, [(projects, 'projects')]);
+        final s = KeySequencer<String>(onTimeout: (_) {})
+          ..feed(_g, [(projects, 'projects')]);
         async.elapse(KeySequencer.defaultTimeout);
         expect(
           s.feed(_p, [(projects, 'projects')]),
@@ -191,8 +191,8 @@ void main() {
     test('a key that breaks a sequence is tried on its own', () {
       fakeAsync((async) {
         final timedOut = <String>[];
-        final s = KeySequencer<String>(onTimeout: timedOut.add);
-        s.feed(_g, candidates);
+        final s = KeySequencer<String>(onTimeout: timedOut.add)
+          ..feed(_g, candidates);
         final then = s.feed(_j, candidates);
         expect((then as KeyMatched<String>).value, 'next');
         async.elapse(const Duration(seconds: 2));
@@ -201,8 +201,7 @@ void main() {
     });
 
     test('a modifier on its own keeps the sequence waiting', () {
-      final s = KeySequencer<String>(onTimeout: (_) {});
-      s.feed(_g, candidates);
+      final s = KeySequencer<String>(onTimeout: (_) {})..feed(_g, candidates);
       expect(s.feed(_shift, candidates), isA<KeyPending<String>>());
       expect(s.pending, [_g]);
       s.reset();
@@ -229,14 +228,13 @@ void main() {
     test('a timer factory replaces the clock', () {
       void Function()? fire;
       final timedOut = <String>[];
-      final s = KeySequencer<String>(
+      KeySequencer<String>(
         onTimeout: timedOut.add,
         startTimer: (_, run) {
           fire = run;
           return Timer(Duration.zero, () {});
         },
-      );
-      s.feed(_g, candidates);
+      )..feed(_g, candidates);
       fire!();
       expect(timedOut, ['top']);
     });
