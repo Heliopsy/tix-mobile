@@ -45,7 +45,7 @@ final class PanesProvider extends $NotifierProvider<Panes, PaneSizes> {
   }
 }
 
-String _$panesHash() => r'd8ecf0df5f156c95189bb6f43f554cd16396e103';
+String _$panesHash() => r'559510e149b3c075be05c4b4bd224d638064600d';
 
 /// The pane sizes, kept per device in the settings store.
 
