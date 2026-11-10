@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.11.1](https://github.com/Heliopsy/tix-mobile/compare/v0.11.0...v0.11.1) (2026-11-10)
+
+
+### Features
+
+* **watch:** follow the tenant's events live on a Watch screen ([a13569f](https://github.com/Heliopsy/tix-mobile/commit/a13569fdc812a34dd8f31592b8f42e907341b12a))
+
+
+### Bug Fixes
+
+* **shell:** open the context switcher as a dialog on wide screens ([262d808](https://github.com/Heliopsy/tix-mobile/commit/262d80834ccf6e6a8824d19c235e25583bc6b8de))
+
+
+### Tests
+
+* **events:** use a known task type in the poll test ([fd01404](https://github.com/Heliopsy/tix-mobile/commit/fd01404d29a6ac219e1e9e17ef29d8965c95a736))
+* **watch:** match the unsubscribe frame by value; poll test fits the filtering fake ([27421f9](https://github.com/Heliopsy/tix-mobile/commit/27421f9f48ad8a1c83c9b8a52ddb94c306af60cb))
+
 ## [0.11.0](https://github.com/Heliopsy/tix-mobile/compare/v0.10.0...v0.11.0) (2026-11-10)
 
 
