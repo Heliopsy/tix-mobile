@@ -260,9 +260,10 @@ class _Hold {
 }
 
 class _TaskListViewState extends ConsumerState<TaskListView> {
-  /// Tasks ticked done while this list was drawn. A task is kept here even
-  /// when it shows open again, since a refresh draws the cached page before
-  /// the server's and that briefly shows the tick undone.
+  /// Tasks ticked done while this list was drawn, so a ticked row that the
+  /// next listing leaves out still gets its hold and collapse. A refresh never
+  /// draws the cached page again (the cache answers each key once), so a tick
+  /// does not step back while the server's page is on its way.
   final _ticked = <String>{};
   final _held = <String, _Hold>{};
   List<ListEntry> _drawn = const [];
