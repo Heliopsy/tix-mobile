@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.12.0](https://github.com/Heliopsy/tix-mobile/compare/v0.11.1...v0.12.0) (2026-11-10)
+
+
+### Features
+
+* **desktop:** check GitHub for updates and install them on restart ([8d12ac0](https://github.com/Heliopsy/tix-mobile/commit/8d12ac05a2522e2f5ee38d0af54ff9749be082b8))
+* **desktop:** install updates checksum-only until a signing key is pinned ([4eea6ee](https://github.com/Heliopsy/tix-mobile/commit/4eea6eed3d906b5c2dee38182047cf7d8ffb464e))
+
 ## [0.11.1](https://github.com/Heliopsy/tix-mobile/compare/v0.11.0...v0.11.1) (2026-11-10)
 
 
