@@ -122,15 +122,22 @@ attestation are the way to check a download.
 
 ### Desktop update signing
 
-The Linux, Windows and macOS downloads update themselves (`docs/architecture.md`, Desktop updates). `SHA256SUMS`
-from the same release only proves a download is intact, so the apps also want `SHA256SUMS.sig`: a raw 64-byte
-Ed25519 signature over `SHA256SUMS`, made in the `publish` job by `scripts/update-sign.sh` with the
-`UPDATE_SIGNING_KEY` secret. The apps check it against the public key pinned in
-`lib/src/data/update/signing_key.dart` before they download anything else, and refuse to install without it.
+The Linux and Windows downloads update themselves (`docs/architecture.md`, Desktop updates; macOS offers the
+download, because the App Sandbox forbids replacing the app). How far an update is trusted depends on the key
+pinned in `lib/src/data/update/signing_key.dart`:
 
-Without the secret the release is published as before, without `SHA256SUMS.sig`, and the apps show the update
-with a link to the release page. An app with no key pinned (`updateSigningPublicKey` empty, as it ships until the
-steps below) does the same.
+| `updateSigningPublicKey` | Installs when | Trust |
+| --- | --- | --- |
+| Empty (as it ships until the steps below) | The archive's SHA-256 matches its line in `SHA256SUMS` | **Checksum-only**: the same as downloading the archive by hand from the release page. It proves the download is intact, not who made it. |
+| Set | `SHA256SUMS.sig` verifies with the pinned key, then the SHA-256 matches | Signed. A missing or bad `.sig` stops the install; there is no fallback to checksum-only. |
+
+Either way every file comes over HTTPS from `github.com` or a `*.githubusercontent.com` host, checked before and
+after redirects, and any failure leaves the app offering Download.
+
+`SHA256SUMS.sig` is a raw 64-byte Ed25519 signature over `SHA256SUMS`, made in the `publish` job by
+`scripts/update-sign.sh` with the `UPDATE_SIGNING_KEY` secret. Without the secret the release is published as
+before, without `SHA256SUMS.sig`; apps with no key pinned still install it checksum-only, and apps with a key
+pinned offer the download.
 
 Owner, once (OpenSSL 3; on macOS use Homebrew's `openssl@3`, the system LibreSSL has no Ed25519):
 
@@ -164,8 +171,9 @@ Owner, once (OpenSSL 3; on macOS use Homebrew's `openssl@3`, the system LibreSSL
 | --- | --- |
 | `UPDATE_SIGNING_KEY` | The whole Ed25519 private key file in PEM, its `BEGIN PRIVATE KEY` and `END PRIVATE KEY` lines included |
 
-The release that carries the pinned key is the first that can update itself; it installs the release after it.
-Copies from before keep offering Download, so people update to that release by hand once.
+Set the secret before pinning the key: from then on every release is signed, so copies that are still
+checksum-only keep updating, and the first release that pins the key requires signatures from the release after
+it.
 
 Verify: the `publish` job's log says `signed dist/SHA256SUMS with the update key ...` with the key from step 3 and
 no warning, the release lists `SHA256SUMS.sig`, and by hand:
@@ -180,8 +188,8 @@ the secret's.
 
 Rotating the key (lost, or leaked): create a new one, replace the secret and the pinned key in the same release.
 Copies pinning the old key cannot verify anything signed with the new one and fall back to Download, so after a
-rotation everyone updates by hand once. Losing the key without a leak is no emergency: releases go out unsigned
-and the apps offer the download until a new key is pinned.
+rotation everyone updates by hand once. Losing the key without a leak means the same: copies that pin it offer the
+download until people move to a release that pins a new one.
 
 Self-update is off, and nothing is checked, in Flatpak (Flathub updates it), in builds made with
 `--dart-define=TIX_SELF_UPDATE=false` (`flatpak/build.sh`, `just build-aab` for Google Play, the F-Droid recipe and
@@ -220,7 +228,7 @@ Secrets go in **Settings → Secrets and variables → Actions → Secrets**. To
 | [macOS notarisation](#macos-notarisation) | Ad-hoc signed zip | Developer ID Application certificate (same Apple account) |
 | [F-Droid](#f-droid) | Recipe in `fdroid/`, not submitted | A merge request to fdroiddata |
 | [Flathub](#flathub) | Manifest in `flatpak/`, not submitted | A submission pull request to Flathub |
-| [Desktop update signing](#desktop-update-signing) | No `SHA256SUMS.sig`; desktop apps offer the download | An Ed25519 key |
+| [Desktop update signing](#desktop-update-signing) | No `SHA256SUMS.sig`; desktop apps update checksum-only | An Ed25519 key |
 
 ### Store text
 

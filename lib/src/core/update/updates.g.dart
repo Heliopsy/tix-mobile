@@ -54,7 +54,7 @@ final class UpdateEnvironmentProvider
   }
 }
 
-String _$updateEnvironmentHash() => r'6ecbca2bba329f091243ada73cb051a24f72060f';
+String _$updateEnvironmentHash() => r'6a3afafee4ae0ec7d699272f99e030cb9091781a';
 
 /// Where releases come from.
 

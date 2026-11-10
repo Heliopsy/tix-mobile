@@ -134,9 +134,10 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   Mac) to open quick add from any app, where the desktop allows global shortcuts. A second launch or a `tix://`
   link brings the running window forward instead of starting another copy.
 - **Updates** for the desktop downloads from GitHub: tix looks for a new release at start and every few hours, and
-  shows it in Settings, About and the tray. It downloads the archive for your system, checks it against the
-  release's signed `SHA256SUMS`, and installs it when you pick Restart to update, or on quit if you turn that on.
-  Where it cannot write its own folder, it links to the release page instead. Flatpak, store builds and phones
+  shows it in Settings, About and the tray. On Linux and Windows it downloads the archive for your system from
+  GitHub, checks it against the release's `SHA256SUMS` (and its signature, once the release key is pinned), and
+  installs it when you pick Restart to update, or on quit if you turn that on. macOS, and any install in a folder
+  it cannot write, get a link to the release page instead. Flatpak, store builds and phones
   leave updates to their store; an APK installed from GitHub only says a new version is out.
 - **Command palette** (Ctrl+K or Cmd+K): every command, projects, recent tasks and any task by reference; `?` lists
   the shortcuts.

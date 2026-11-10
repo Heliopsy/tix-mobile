@@ -4,7 +4,9 @@
 // as docs/releasing.md#desktop-update-signing says.
 
 /// The Ed25519 public key that signs `SHA256SUMS` in every release, as the
-/// base64 of its 32 raw bytes. Empty means no key is pinned, and then no
-/// update is ever installed, only offered as a download. Changing it leaves
-/// every installed copy that pins the old key on manual downloads.
+/// base64 of its 32 raw bytes. Empty means checksum-only: an update is
+/// installed when it matches the release's `SHA256SUMS`, both fetched over
+/// HTTPS from GitHub. Once set, a missing or bad `SHA256SUMS.sig` stops
+/// every install. Changing it leaves copies that pin the old key on manual
+/// downloads.
 const updateSigningPublicKey = '';
