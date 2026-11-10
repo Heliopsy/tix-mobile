@@ -23,7 +23,7 @@ void main() {
     server
       ..addEvent(4, 'task.created')
       ..addEvent(5, 'task.updated')
-      ..addEvent(6, 'task.moved')
+      ..addEvent(6, 'task.transitioned')
       ..addEvent(7, 'task.deleted');
     final page = await poller.poll(sinceSeq: 4, types: ['task.*'], limit: 2);
     expect(page.events.map((e) => e.seq), [5, 6]);
