@@ -37,6 +37,12 @@ install Go, build it through `hook/build.dart` and fail unless `just engine-chec
 Android that also checks it is stored uncompressed and 16 KB aligned, which Google Play requires. To ship a newer
 tix, change `tix.lock`, run `just engine-notices`, and commit both.
 
+The Linux tarball also carries the tray icon's libraries (libayatana-appindicator3, libayatana-indicator3,
+libayatana-ido3, libdbusmenu-glib and libdbusmenu-gtk3) from the runner's Ubuntu packages, with their copyright
+files under `share/doc/`, so it starts on distros that do not package them. `just linux-libs check` fails the job if
+any of them would still load from the system. Flatpak does not take these copies; it builds them from Flathub's
+shared modules.
+
 Every release also carries `SHA256SUMS` over all of them, and each artifact has a GitHub build provenance
 attestation. With the [update signing key](#desktop-update-signing) set, `SHA256SUMS.sig` signs the checksums for
 the desktop apps' self-update. Users verify with:

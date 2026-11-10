@@ -69,7 +69,7 @@ for the CLI.
 | Android | 7.0, API 24 (Flutter's default `minSdk`) | APK per ABI, AAB | Android Keystore |
 | iOS | 15.0 | None yet, build from source | Keychain |
 | macOS | 12.0 | `.zip` | Keychain |
-| Linux | x64 and arm64 desktop with GTK 3 and libayatana-appindicator3 | `.tar.gz` | libsecret (GNOME Keyring, KWallet) |
+| Linux | x64 and arm64 desktop with GTK 3 | `.tar.gz` | libsecret (GNOME Keyring, KWallet) |
 | Windows | Windows 10, x64 | `.zip` | DPAPI |
 
 Every platform carries the embedded tix engine for local databases, which makes each artifact roughly 30 MB
@@ -201,9 +201,11 @@ and an AAB, Linux `.tar.gz` files for x64 and arm64, a macOS `.zip`, a Windows `
 
 On Linux, this downloads the latest release for your CPU, checks it against `SHA256SUMS`, installs or upgrades it
 in `~/.local/opt/tix-mobile` with a launcher entry and `~/.local/bin/tix-mobile`, and starts it. Paste it from any
-directory; a failed step stops it without touching what is installed. It needs curl, GTK 3, libayatana-appindicator3
-(`libayatana-appindicator3-1` on Debian and Ubuntu, `libayatana-appindicator-gtk3` on Fedora and Arch) and a Secret
-Service keyring (GNOME Keyring or KWallet). Once installed, tix updates itself from Settings or the tray menu.
+directory; a failed step stops it without touching what is installed. It needs curl, GTK 3 and a Secret Service
+keyring (GNOME Keyring or KWallet). The tray icon's libraries (libayatana-appindicator3 and the libdbusmenu and
+ayatana-ido libraries it loads) ship inside the tarball, so no extra package is needed. The icon itself shows only
+where a StatusNotifier host runs: KDE Plasma, Xfce, Cinnamon and Budgie have one, GNOME needs the AppIndicator
+extension. Once installed, tix updates itself from Settings or the tray menu.
 
 ```sh
 (
