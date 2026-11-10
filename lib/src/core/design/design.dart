@@ -4,6 +4,7 @@
 /// one file.
 library;
 
+export '../keyboard/keyboard_setting.dart';
 export 'accent.dart';
 export 'components/avatar.dart';
 export 'components/buttons.dart';
@@ -11,7 +12,9 @@ export 'components/commands.dart';
 export 'components/dialogs.dart';
 export 'components/fields.dart';
 export 'components/filters.dart';
+export 'components/focus_ring.dart';
 export 'components/inbox_row.dart';
+export 'components/list_keys.dart';
 export 'components/live.dart';
 export 'components/live_status.dart';
 export 'components/markdown.dart';

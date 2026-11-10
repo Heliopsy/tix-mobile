@@ -13344,6 +13344,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Resize task panel'**
   String get taskPanelResize;
+
+  /// No description provided for @keysNextRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Next row'**
+  String get keysNextRow;
+
+  /// No description provided for @keysPreviousRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous row'**
+  String get keysPreviousRow;
+
+  /// No description provided for @keysFirstRow.
+  ///
+  /// In en, this message translates to:
+  /// **'First row'**
+  String get keysFirstRow;
+
+  /// No description provided for @keysLastRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Last row'**
+  String get keysLastRow;
+
+  /// No description provided for @keysPageDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Page down'**
+  String get keysPageDown;
+
+  /// No description provided for @keysPageUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Page up'**
+  String get keysPageUp;
+
+  /// No description provided for @keysOpenRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the focused row'**
+  String get keysOpenRow;
+
+  /// No description provided for @keysBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back'**
+  String get keysBack;
+
+  /// No description provided for @keysLeaveField.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave the text field'**
+  String get keysLeaveField;
+
+  /// No description provided for @keysFirstTask.
+  ///
+  /// In en, this message translates to:
+  /// **'First task'**
+  String get keysFirstTask;
+
+  /// No description provided for @keysLastTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Last task'**
+  String get keysLastTask;
+
+  /// No description provided for @settingsKeyboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Keyboard'**
+  String get settingsKeyboard;
+
+  /// No description provided for @settingsKeyboardHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For a hardware keyboard, on any device. Keys typed into a text field always stay in the field.'**
+  String get settingsKeyboardHelp;
+
+  /// No description provided for @settingsShortcutsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Off turns every shortcut off, Ctrl K for the palette included. Tab, Enter and Esc keep working.'**
+  String get settingsShortcutsHelp;
+
+  /// No description provided for @settingsKeymap.
+  ///
+  /// In en, this message translates to:
+  /// **'Key preset'**
+  String get settingsKeymap;
+
+  /// No description provided for @keymapDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get keymapDefault;
+
+  /// No description provided for @keymapVim.
+  ///
+  /// In en, this message translates to:
+  /// **'Vim'**
+  String get keymapVim;
+
+  /// No description provided for @keymapEmacs.
+  ///
+  /// In en, this message translates to:
+  /// **'Emacs'**
+  String get keymapEmacs;
+
+  /// No description provided for @keymapOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get keymapOff;
+
+  /// No description provided for @keymapDefaultHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The app\'s keys and tix web\'s: j and k move, g p opens Projects, Ctrl 1 to 6 switch destinations.'**
+  String get keymapDefaultHelp;
+
+  /// No description provided for @keymapVimHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Vim reflexes: gg and G jump, o adds, i renames, dd deletes after asking, h goes back.'**
+  String get keymapVimHelp;
+
+  /// No description provided for @keymapEmacsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Emacs reflexes outside text fields: C-n and C-p move, C-s filters, C-g cancels, M-x opens the palette.'**
+  String get keymapEmacsHelp;
+
+  /// No description provided for @keymapOffHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'No single key runs anything. Chords held with Ctrl, Alt or ⌘ still work.'**
+  String get keymapOffHelp;
+
+  /// No description provided for @settingsKeyBindings.
+  ///
+  /// In en, this message translates to:
+  /// **'Active bindings'**
+  String get settingsKeyBindings;
+
+  /// No description provided for @settingsKeyBindingsOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Keyboard shortcuts are off.'**
+  String get settingsKeyBindingsOff;
 }
 
 class _AppLocalizationsDelegate

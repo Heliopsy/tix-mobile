@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -171,8 +170,13 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
     }
   }
 
+  static const _page = 10;
+
   void _step(List<Task> order, int by) {
     if (order.isEmpty) return;
+    if (controlFocused() && !typingInField()) {
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
     final at = order.indexWhere((t) => t.ref == _focused);
     final next = at < 0
         ? (by > 0 ? 0 : order.length - 1)
@@ -338,225 +342,253 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
     _order = order;
     final actions = TaskQuickActions(context, ref, query);
     final detailBeside = context.isTwoPane && selectedRef != null;
-    return CommandScope(
-      commands: [
-        if (projectKey != null)
+    return OwnListKeys(
+      child: CommandScope(
+        commands: [
+          if (projectKey != null)
+            TixCommand(
+              id: 'tasks.new',
+              label: l10n.newTask,
+              group: l10n.commandsTasks,
+              icon: Icons.add,
+              action: KeyActions.listNew,
+              run: add,
+            ),
           TixCommand(
-            id: 'tasks.new',
-            label: l10n.newTask,
+            id: 'tasks.refresh',
+            label: l10n.refresh,
             group: l10n.commandsTasks,
-            icon: Icons.add,
-            shortcut: const SingleActivator(LogicalKeyboardKey.keyN),
-            run: add,
-          ),
-        TixCommand(
-          id: 'tasks.refresh',
-          label: l10n.refresh,
-          group: l10n.commandsTasks,
-          icon: Icons.refresh,
-          shortcut: const SingleActivator(LogicalKeyboardKey.keyR),
-          run: () => ref.invalidate(taskListingProvider(query)),
-        ),
-        TixCommand(
-          id: 'tasks.next',
-          label: l10n.boardNext,
-          group: l10n.commandsTasks,
-          icon: Icons.arrow_downward,
-          shortcut: const SingleActivator(LogicalKeyboardKey.keyJ),
-          run: () => _step(_order, 1),
-        ),
-        TixCommand(
-          id: 'tasks.previous',
-          label: l10n.boardPrevious,
-          group: l10n.commandsTasks,
-          icon: Icons.arrow_upward,
-          shortcut: const SingleActivator(LogicalKeyboardKey.keyK),
-          run: () => _step(_order, -1),
-        ),
-        TixCommand(
-          id: 'tasks.open',
-          label: l10n.boardOpen,
-          group: l10n.commandsTasks,
-          icon: Icons.open_in_new,
-          shortcut: const SingleActivator(LogicalKeyboardKey.enter),
-          run: () {
-            final focused = _focusedTask(_order);
-            if (focused != null) _openTask(focused);
-          },
-        ),
-        TixCommand(
-          id: 'tasks.select',
-          label: l10n.bulkSelect,
-          group: l10n.commandsTasks,
-          icon: Icons.check_box_outlined,
-          shortcut: const SingleActivator(LogicalKeyboardKey.keyX),
-          run: () => _pickFocused(selector),
-        ),
-        TixCommand(
-          id: 'tasks.selectMode',
-          label: l10n.bulkSelectMode,
-          group: l10n.commandsTasks,
-          icon: Icons.checklist,
-          run: selector.enter,
-        ),
-        TixCommand(
-          id: 'tasks.extendDown',
-          label: l10n.bulkExtendDown,
-          group: l10n.commandsTasks,
-          icon: Icons.keyboard_double_arrow_down,
-          shortcut: const SingleActivator(
-            LogicalKeyboardKey.arrowDown,
-            shift: true,
-          ),
-          run: () => _extend(selector, 1),
-        ),
-        TixCommand(
-          id: 'tasks.extendUp',
-          label: l10n.bulkExtendUp,
-          group: l10n.commandsTasks,
-          icon: Icons.keyboard_double_arrow_up,
-          shortcut: const SingleActivator(
-            LogicalKeyboardKey.arrowUp,
-            shift: true,
-          ),
-          run: () => _extend(selector, -1),
-        ),
-        if (!detailBeside)
-          TixCommand(
-            id: 'tasks.done',
-            label: l10n.markDone,
-            group: l10n.commandsTasks,
-            icon: Icons.check_circle_outline,
-            shortcut: const SingleActivator(LogicalKeyboardKey.keyE),
-            run: () => _markFocusedDone(actions),
-          ),
-        if (!detailBeside) ...[
-          TixCommand(
-            id: 'tasks.move',
-            label: l10n.boardMoveTo,
-            group: l10n.commandsTasks,
-            icon: Icons.arrow_forward,
-            shortcut: const SingleActivator(LogicalKeyboardKey.keyM),
-            run: () => _editFocused(actions.pickMove),
+            icon: Icons.refresh,
+            action: KeyActions.listRefresh,
+            run: () => ref.invalidate(taskListingProvider(query)),
           ),
           TixCommand(
-            id: 'tasks.priority',
-            label: l10n.boardPriorityTo,
+            id: 'tasks.next',
+            label: l10n.boardNext,
             group: l10n.commandsTasks,
-            icon: Icons.flag_outlined,
-            shortcut: const SingleActivator(LogicalKeyboardKey.keyP),
-            run: () => _editFocused(actions.setPriority),
+            icon: Icons.arrow_downward,
+            action: KeyActions.listNext,
+            run: () => _step(_order, 1),
           ),
           TixCommand(
-            id: 'tasks.assign',
-            label: l10n.boardAssignTo,
+            id: 'tasks.previous',
+            label: l10n.boardPrevious,
             group: l10n.commandsTasks,
-            icon: Icons.people_outline,
-            shortcut: const SingleActivator(LogicalKeyboardKey.keyA),
-            run: () => _editFocused(actions.pickAssignee),
+            icon: Icons.arrow_upward,
+            action: KeyActions.listPrev,
+            run: () => _step(_order, -1),
           ),
           TixCommand(
-            id: 'tasks.due',
-            label: l10n.boardDueTo,
+            id: 'tasks.first',
+            label: l10n.keysFirstTask,
             group: l10n.commandsTasks,
-            icon: Icons.event_outlined,
-            shortcut: const SingleActivator(LogicalKeyboardKey.keyU),
-            run: () => _editFocused(actions.setDue),
+            icon: Icons.vertical_align_top,
+            action: KeyActions.listTop,
+            inPalette: false,
+            run: () => _step(_order, -_order.length),
           ),
           TixCommand(
-            id: 'tasks.tag',
-            label: l10n.boardTagAdd,
+            id: 'tasks.last',
+            label: l10n.keysLastTask,
             group: l10n.commandsTasks,
-            icon: Icons.sell_outlined,
-            shortcut: const SingleActivator(LogicalKeyboardKey.keyT),
-            run: () => _editFocused(actions.addTag),
+            icon: Icons.vertical_align_bottom,
+            action: KeyActions.listBottom,
+            inPalette: false,
+            run: () => _step(_order, _order.length),
           ),
-        ],
-        TixCommand(
-          id: 'tasks.selectAll',
-          label: l10n.bulkSelectAll,
-          group: l10n.commandsTasks,
-          icon: Icons.select_all,
-          shortcut: const SingleActivator(
-            LogicalKeyboardKey.keyA,
-            control: true,
-          ),
-          run: () => selector.selectAll([for (final t in _order) t.ref]),
-        ),
-        TixCommand(
-          id: 'tasks.clearSelection',
-          label: l10n.bulkExit,
-          group: l10n.commandsTasks,
-          icon: Icons.close,
-          shortcut: selection.active || !detailBeside
-              ? const SingleActivator(LogicalKeyboardKey.escape)
-              : null,
-          run: selector.exit,
-        ),
-        if (detailBeside)
           TixCommand(
-            id: 'tasks.closeDetail',
-            label: l10n.taskPanelClose,
+            id: 'tasks.pageDown',
+            label: l10n.keysPageDown,
             group: l10n.commandsTasks,
-            icon: Icons.close,
-            shortcut: selection.active
-                ? null
-                : const SingleActivator(LogicalKeyboardKey.escape),
-            run: _closeTask,
+            icon: Icons.keyboard_double_arrow_down,
+            action: KeyActions.listPageDown,
+            inPalette: false,
+            run: () => _step(_order, _page),
           ),
-        TixCommand(
-          id: 'tasks.filter',
-          label: l10n.filterFocus,
-          group: l10n.commandsTasks,
-          icon: Icons.search,
-          shortcut: const CharacterActivator('/'),
-          run: _filterFocus.requestFocus,
-        ),
-        if (viewsFor(scope).length > 1)
           TixCommand(
-            id: 'tasks.view',
-            label: l10n.viewSwitch,
+            id: 'tasks.pageUp',
+            label: l10n.keysPageUp,
             group: l10n.commandsTasks,
-            icon: Icons.view_column_outlined,
-            shortcut: const SingleActivator(LogicalKeyboardKey.keyV),
-            run: screen.cycleView,
+            icon: Icons.keyboard_double_arrow_up,
+            action: KeyActions.listPageUp,
+            inPalette: false,
+            run: () => _step(_order, -_page),
           ),
-      ],
-      child: PopScope(
-        canPop: !selection.active,
-        onPopInvokedWithResult: (didPop, _) {
-          if (!didPop) selector.exit();
-        },
-        child: TixPage(
-          title: _title(l10n, scope, taskContext),
-          titleWidget: projectKey == null
-              ? null
-              : _ProjectTitle(projectKey: projectKey),
-          subtitle: paged == null
-              ? null
-              : l10n.boardCount(paged.items.length, paged.hasMore ? '+' : ''),
-          actions: [
-            TixIconButton(
-              key: const Key('tasks.selectMode'),
-              icon: Icons.checklist,
-              tooltip: selection.active ? l10n.bulkExit : l10n.bulkSelectMode,
-              selected: selection.active,
-              onPressed: selection.active ? selector.exit : selector.enter,
+          TixCommand(
+            id: 'tasks.open',
+            label: l10n.boardOpen,
+            group: l10n.commandsTasks,
+            icon: Icons.open_in_new,
+            action: KeyActions.listOpen,
+            when: () => !controlFocused(),
+            run: () {
+              final focused = _focusedTask(_order);
+              if (focused != null) _openTask(focused);
+            },
+          ),
+          TixCommand(
+            id: 'tasks.select',
+            label: l10n.bulkSelect,
+            group: l10n.commandsTasks,
+            icon: Icons.check_box_outlined,
+            action: KeyActions.listSelect,
+            run: () => _pickFocused(selector),
+          ),
+          TixCommand(
+            id: 'tasks.selectMode',
+            label: l10n.bulkSelectMode,
+            group: l10n.commandsTasks,
+            icon: Icons.checklist,
+            run: selector.enter,
+          ),
+          TixCommand(
+            id: 'tasks.extendDown',
+            label: l10n.bulkExtendDown,
+            group: l10n.commandsTasks,
+            icon: Icons.keyboard_double_arrow_down,
+            action: KeyActions.listExtendDown,
+            run: () => _extend(selector, 1),
+          ),
+          TixCommand(
+            id: 'tasks.extendUp',
+            label: l10n.bulkExtendUp,
+            group: l10n.commandsTasks,
+            icon: Icons.keyboard_double_arrow_up,
+            action: KeyActions.listExtendUp,
+            run: () => _extend(selector, -1),
+          ),
+          if (!detailBeside)
+            TixCommand(
+              id: 'tasks.done',
+              label: l10n.markDone,
+              group: l10n.commandsTasks,
+              icon: Icons.check_circle_outline,
+              action: KeyActions.listDone,
+              run: () => _markFocusedDone(actions),
+            ),
+          if (!detailBeside) ...[
+            TixCommand(
+              id: 'tasks.move',
+              label: l10n.boardMoveTo,
+              group: l10n.commandsTasks,
+              icon: Icons.arrow_forward,
+              action: KeyActions.taskMove,
+              run: () => _editFocused(actions.pickMove),
+            ),
+            TixCommand(
+              id: 'tasks.priority',
+              label: l10n.boardPriorityTo,
+              group: l10n.commandsTasks,
+              icon: Icons.flag_outlined,
+              action: KeyActions.taskPriority,
+              run: () => _editFocused(actions.setPriority),
+            ),
+            TixCommand(
+              id: 'tasks.assign',
+              label: l10n.boardAssignTo,
+              group: l10n.commandsTasks,
+              icon: Icons.people_outline,
+              action: KeyActions.taskAssign,
+              run: () => _editFocused(actions.pickAssignee),
+            ),
+            TixCommand(
+              id: 'tasks.due',
+              label: l10n.boardDueTo,
+              group: l10n.commandsTasks,
+              icon: Icons.event_outlined,
+              action: KeyActions.taskDue,
+              run: () => _editFocused(actions.setDue),
+            ),
+            TixCommand(
+              id: 'tasks.tag',
+              label: l10n.boardTagAdd,
+              group: l10n.commandsTasks,
+              icon: Icons.sell_outlined,
+              action: KeyActions.taskTag,
+              run: () => _editFocused(actions.addTag),
             ),
           ],
-          primaryAction: projectKey == null || selection.active
-              ? null
-              : TixAction(
-                  key: const Key('tasks.quickAdd'),
-                  label: l10n.newTask,
-                  icon: Icons.add,
-                  onPressed: add,
-                ),
-          body: Column(
-            children: [
-              const SavedCopyMark(),
-              Expanded(child: framed),
+          TixCommand(
+            id: 'tasks.selectAll',
+            label: l10n.bulkSelectAll,
+            group: l10n.commandsTasks,
+            icon: Icons.select_all,
+            action: KeyActions.listSelectAll,
+            run: () => selector.selectAll([for (final t in _order) t.ref]),
+          ),
+          TixCommand(
+            id: 'tasks.clearSelection',
+            label: l10n.bulkExit,
+            group: l10n.commandsTasks,
+            icon: Icons.close,
+            action: KeyActions.listClear,
+            when: () => ref.read(taskSelectionProvider(scope)).active,
+            run: selector.exit,
+          ),
+          if (detailBeside)
+            TixCommand(
+              id: 'tasks.closeDetail',
+              label: l10n.taskPanelClose,
+              group: l10n.commandsTasks,
+              icon: Icons.close,
+              action: KeyActions.navBack,
+              when: () => !ref.read(taskSelectionProvider(scope)).active,
+              run: _closeTask,
+            ),
+          TixCommand(
+            id: 'tasks.filter',
+            label: l10n.filterFocus,
+            group: l10n.commandsTasks,
+            icon: Icons.search,
+            action: KeyActions.listFilter,
+            run: _filterFocus.requestFocus,
+          ),
+          if (viewsFor(scope).length > 1)
+            TixCommand(
+              id: 'tasks.view',
+              label: l10n.viewSwitch,
+              group: l10n.commandsTasks,
+              icon: Icons.view_column_outlined,
+              action: KeyActions.listView,
+              run: screen.cycleView,
+            ),
+        ],
+        child: PopScope(
+          canPop: !selection.active,
+          onPopInvokedWithResult: (didPop, _) {
+            if (!didPop) selector.exit();
+          },
+          child: TixPage(
+            title: _title(l10n, scope, taskContext),
+            titleWidget: projectKey == null
+                ? null
+                : _ProjectTitle(projectKey: projectKey),
+            subtitle: paged == null
+                ? null
+                : l10n.boardCount(paged.items.length, paged.hasMore ? '+' : ''),
+            actions: [
+              TixIconButton(
+                key: const Key('tasks.selectMode'),
+                icon: Icons.checklist,
+                tooltip: selection.active ? l10n.bulkExit : l10n.bulkSelectMode,
+                selected: selection.active,
+                onPressed: selection.active ? selector.exit : selector.enter,
+              ),
             ],
+            primaryAction: projectKey == null || selection.active
+                ? null
+                : TixAction(
+                    key: const Key('tasks.quickAdd'),
+                    label: l10n.newTask,
+                    icon: Icons.add,
+                    onPressed: add,
+                  ),
+            body: Column(
+              children: [
+                const SavedCopyMark(),
+                Expanded(child: framed),
+              ],
+            ),
           ),
         ),
       ),

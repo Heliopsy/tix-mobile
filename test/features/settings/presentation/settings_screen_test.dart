@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/desktop/desktop_state.dart';
 import 'package:tix_mobile/src/core/platform/adb_bridge.dart';
 import 'package:tix_mobile/src/core/platform/desktop.dart';
@@ -34,7 +35,7 @@ void main() {
 
   Future<ProviderContainer> pump(
     WidgetTester tester, {
-    Size size = const Size(500, 4000),
+    Size size = const Size(500, 6000),
     Locale locale = const Locale('en'),
     FakeTix? tix,
     String query = '',
@@ -574,6 +575,46 @@ void main() {
     expect(stores.settings.values['settings.start'], 'inbox');
   });
 
+  testWidgets('the keyboard preset is picked, kept and listed', (tester) async {
+    final c = await pump(tester);
+    Finder binding(String action, String label) => find.descendant(
+      of: find.byKey(Key('settings.keyBindings.$action')),
+      matching: find.text(label),
+    );
+    expect(find.byKey(const Key('settings.section.keyboard')), findsOneWidget);
+    expect(binding(KeyActions.listTop, 'g'), findsOneWidget);
+    await tester.tap(
+      find.descendant(
+        of: find.byKey(const Key('settings.keymap')),
+        matching: find.text('Vim'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(c.read(keyboardSettingProvider).preset, KeymapPreset.vim);
+    expect(stores.settings.values['settings.keymap'], 'vim');
+    expect(binding(KeyActions.listTop, 'g'), findsNWidgets(2));
+    expect(binding(KeyActions.listNew, 'o'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('settings.shortcuts')));
+    await tester.pumpAndSettle();
+    expect(c.read(activeKeymapProvider).enabled, isFalse);
+    expect(stores.settings.values['settings.shortcuts'], 'off');
+    expect(find.text('Keyboard shortcuts are off.'), findsOneWidget);
+    expect(
+      find.byKey(const Key('settings.keyBindings.${KeyActions.listNew}')),
+      findsNothing,
+    );
+  });
+
+  testWidgets('search finds the keyboard section by Emacs', (tester) async {
+    await pump(tester);
+    await tester.enterText(find.byKey(const Key('settings.search')), 'emacs');
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('settings.section.keyboard')), findsOneWidget);
+    expect(find.byKey(const Key('settings.keymap')), findsOneWidget);
+    expect(find.byKey(const Key('settings.theme')), findsNothing);
+  });
+
   testWidgets('the date format shows what is in force and where from', (
     tester,
   ) async {
@@ -661,7 +702,7 @@ void main() {
     await pumpScreen(
       tester,
       const SettingsScreen(),
-      size: const Size(500, 4000),
+      size: const Size(500, 6000),
       settle: false,
       overrides: fakeOverrides(tix, settings: s.settings, secrets: s.secrets),
     );

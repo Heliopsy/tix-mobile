@@ -114,6 +114,7 @@ class HomeShell extends StatelessWidget {
         commands: [
           TixCommand(
             id: 'go.projects',
+            action: KeyActions.navProjects,
             label: l10n.goProjects,
             group: l10n.commandsNavigate,
             icon: Icons.folder_outlined,
@@ -121,6 +122,7 @@ class HomeShell extends StatelessWidget {
           ),
           TixCommand(
             id: 'go.tasks',
+            action: KeyActions.navTasks,
             label: l10n.goTasks,
             group: l10n.commandsNavigate,
             icon: Icons.checklist,
@@ -128,6 +130,7 @@ class HomeShell extends StatelessWidget {
           ),
           TixCommand(
             id: 'go.myWork',
+            action: KeyActions.navMyWork,
             label: l10n.goMyWork,
             group: l10n.commandsNavigate,
             icon: Icons.person_outline,
@@ -135,6 +138,7 @@ class HomeShell extends StatelessWidget {
           ),
           TixCommand(
             id: 'go.inbox',
+            action: KeyActions.navInbox,
             label: l10n.goInbox,
             group: l10n.commandsNavigate,
             icon: Icons.inbox_outlined,
@@ -142,6 +146,7 @@ class HomeShell extends StatelessWidget {
           ),
           TixCommand(
             id: 'go.manage',
+            action: KeyActions.navManage,
             label: l10n.goManage,
             group: l10n.commandsNavigate,
             icon: Icons.admin_panel_settings_outlined,
@@ -149,6 +154,7 @@ class HomeShell extends StatelessWidget {
           ),
           TixCommand(
             id: 'go.settings',
+            action: KeyActions.navSettings,
             label: l10n.goSettings,
             group: l10n.commandsNavigate,
             icon: Icons.settings_outlined,
@@ -156,6 +162,7 @@ class HomeShell extends StatelessWidget {
           ),
           TixCommand(
             id: 'go.watch',
+            action: KeyActions.navWatch,
             label: l10n.goWatch,
             group: l10n.commandsNavigate,
             icon: Icons.stream,
@@ -174,6 +181,16 @@ class HomeShell extends StatelessWidget {
             group: l10n.commandsNavigate,
             icon: Icons.info_outline,
             run: () => context.go(Routes.about),
+          ),
+          TixCommand(
+            id: 'nav.back',
+            action: KeyActions.navBack,
+            label: l10n.keysBack,
+            group: l10n.commandsNavigate,
+            icon: Icons.arrow_back,
+            inPalette: false,
+            run: () =>
+                unawaited(GoRouter.of(context).routerDelegate.popRoute()),
           ),
           if (Routes.galleryEnabled)
             TixCommand(

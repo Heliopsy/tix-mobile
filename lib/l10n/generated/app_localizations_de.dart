@@ -8064,4 +8064,85 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get taskPanelResize => 'Größe des Aufgabenbereichs ändern';
+
+  @override
+  String get keysNextRow => 'Nächste Zeile';
+
+  @override
+  String get keysPreviousRow => 'Vorherige Zeile';
+
+  @override
+  String get keysFirstRow => 'Erste Zeile';
+
+  @override
+  String get keysLastRow => 'Letzte Zeile';
+
+  @override
+  String get keysPageDown => 'Seite nach unten';
+
+  @override
+  String get keysPageUp => 'Seite nach oben';
+
+  @override
+  String get keysOpenRow => 'Fokussierte Zeile öffnen';
+
+  @override
+  String get keysBack => 'Zurück';
+
+  @override
+  String get keysLeaveField => 'Textfeld verlassen';
+
+  @override
+  String get keysFirstTask => 'Erste Aufgabe';
+
+  @override
+  String get keysLastTask => 'Letzte Aufgabe';
+
+  @override
+  String get settingsKeyboard => 'Tastatur';
+
+  @override
+  String get settingsKeyboardHelp =>
+      'Für eine Hardwaretastatur, auf jedem Gerät. In ein Textfeld getippte Tasten bleiben immer im Feld.';
+
+  @override
+  String get settingsShortcutsHelp =>
+      'Aus schaltet jedes Tastenkürzel ab, auch Strg K für die Befehlspalette. Tab, Eingabe und Esc funktionieren weiter.';
+
+  @override
+  String get settingsKeymap => 'Tastenbelegung';
+
+  @override
+  String get keymapDefault => 'Standard';
+
+  @override
+  String get keymapVim => 'Vim';
+
+  @override
+  String get keymapEmacs => 'Emacs';
+
+  @override
+  String get keymapOff => 'Aus';
+
+  @override
+  String get keymapDefaultHelp =>
+      'Die Tasten der App und von tix web: j und k bewegen, g p öffnet Projekte, Strg 1 bis 6 wechseln den Bereich.';
+
+  @override
+  String get keymapVimHelp =>
+      'Vim-Reflexe: gg und G springen, o fügt hinzu, i benennt um, dd löscht nach Rückfrage, h geht zurück.';
+
+  @override
+  String get keymapEmacsHelp =>
+      'Emacs-Reflexe außerhalb von Textfeldern: C-n und C-p bewegen, C-s filtert, C-g bricht ab, M-x öffnet die Befehlspalette.';
+
+  @override
+  String get keymapOffHelp =>
+      'Keine einzelne Taste löst etwas aus. Kombinationen mit Strg, Alt oder ⌘ funktionieren weiter.';
+
+  @override
+  String get settingsKeyBindings => 'Aktive Belegung';
+
+  @override
+  String get settingsKeyBindingsOff => 'Tastenkürzel sind aus.';
 }

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +9,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/design/components/marks.dart';
 import 'package:tix_mobile/src/core/design/tokens.dart';
+import 'package:tix_mobile/src/core/keyboard/keyboard_setting.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 
 part 'commands.g.dart';
@@ -21,8 +24,11 @@ class TixCommand {
     required this.run,
     this.group = '',
     this.icon,
+    this.action,
     this.shortcut,
     this.keywords = '',
+    this.inPalette = true,
+    this.when,
   });
 
   /// Unique among the registered commands; a later registration with the
@@ -38,37 +44,36 @@ class TixCommand {
   /// An icon in the palette.
   final IconData? icon;
 
-  /// The key that runs it, or null for palette only.
+  /// The keymap action it answers to, from [KeyActions]; the active preset
+  /// decides the keys.
+  final String? action;
+
+  /// A key for a command with no [action], which no preset rebinds; null
+  /// for palette only.
   final ShortcutActivator? shortcut;
+
+  /// The keys that run it under [keymap].
+  List<KeyBinding> keysIn(Keymap keymap) {
+    final a = action;
+    return a == null ? keymap.forShortcut(shortcut) : keymap.bindingsFor(a);
+  }
 
   /// More words the palette matches it by, such as a project's key.
   final String keywords;
+
+  /// Whether the palette offers it; list movement is for keys only.
+  final bool inPalette;
+
+  /// Whether its keys apply right now; null for always. A command whose keys
+  /// do not apply lets the key go on to the next command or the platform.
+  final bool Function()? when;
 
   /// Does it.
   final VoidCallback run;
 }
 
-/// How [a] reads in the shortcut help: `Ctrl K`, `?`, `N`.
-String shortcutLabel(ShortcutActivator a) {
-  if (a is CharacterActivator) {
-    return [
-      if (a.control) 'Ctrl',
-      if (a.meta) '⌘',
-      if (a.alt) 'Alt',
-      a.character.toUpperCase(),
-    ].join(' ');
-  }
-  if (a is SingleActivator) {
-    return [
-      if (a.control) 'Ctrl',
-      if (a.meta) '⌘',
-      if (a.alt) 'Alt',
-      if (a.shift) 'Shift',
-      a.trigger.keyLabel.toUpperCase(),
-    ].join(' ');
-  }
-  return '';
-}
+/// How [a] reads in the shortcut help: `Ctrl K`, `?`, `n`.
+String shortcutLabel(ShortcutActivator a) => strokeOf(a)?.label ?? '';
 
 /// Commands for what the person typed into the palette: projects, tasks,
 /// anything too many to register one by one. Called on every keystroke, so
@@ -98,7 +103,9 @@ int? fuzzyScore(String query, String text) {
   return score;
 }
 
-/// Every command and source mounted widgets have registered, newest last.
+/// Every command and source mounted widgets have registered, in the order
+/// their scopes first registered. A scope registering again keeps its place,
+/// so a shell rebuilt on a resize does not jump ahead of the page in it.
 class CommandRegistry {
   final _scopes = <Object, List<TixCommand>>{};
   final _sources = <Object, List<CommandSource>>{};
@@ -116,7 +123,7 @@ class CommandRegistry {
 
   void _notify() => _changes.value++;
 
-  /// The commands, one per id, the most recently registered winning.
+  /// The commands, one per id, the latest scope winning.
   List<TixCommand> get commands {
     final byId = <String, TixCommand>{};
     for (final list in _scopes.values) {
@@ -135,12 +142,8 @@ class CommandRegistry {
     List<CommandSource> sources = const [],
   }) {
     if (_disposed) return;
-    _scopes
-      ..remove(owner)
-      ..[owner] = commands;
-    _sources
-      ..remove(owner)
-      ..[owner] = sources;
+    _scopes[owner] = commands;
+    _sources[owner] = sources;
     _notify();
   }
 
@@ -157,7 +160,7 @@ class CommandRegistry {
     final seen = <String>{};
     final all = [
       for (final c in commands)
-        if (seen.add(c.id)) c,
+        if (c.inPalette && seen.add(c.id)) c,
       for (final list in _sources.values)
         for (final source in list)
           for (final c in source(query))
@@ -217,26 +220,35 @@ class CommandScope extends ConsumerStatefulWidget {
 
 class _CommandScopeState extends ConsumerState<CommandScope> {
   late final CommandRegistry _registry = ref.read(commandRegistryProvider);
+  bool? _shown;
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _register();
-    });
-  }
-
-  void _register() =>
+  void _sync() => WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (!mounted) return;
+    if (_shown ?? true) {
       _registry.register(this, widget.commands, sources: widget.sources);
+    } else {
+      _registry.unregister(this);
+    }
+  });
+
+  // A page under a pushed page, or in a destination not on show, runs with
+  // tickers off. A dialog leaves them on, so the palette still lists the
+  // page's commands.
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final shown = TickerMode.valuesOf(context).enabled;
+    if (shown == _shown) return;
+    _shown = shown;
+    _sync();
+  }
 
   @override
   void didUpdateWidget(CommandScope old) {
     super.didUpdateWidget(old);
     if (!listEquals(old.commands, widget.commands) ||
         !listEquals(old.sources, widget.sources)) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _register();
-      });
+      _sync();
     }
   }
 
@@ -253,92 +265,177 @@ class _CommandScopeState extends ConsumerState<CommandScope> {
   Widget build(BuildContext context) => widget.child;
 }
 
-/// Listens for every registered shortcut below the navigator, plus `?` for
-/// the shortcut help and Ctrl+K or ⌘K for the command palette. Keys typed
-/// into a text field stay in the field.
-class TixShortcuts extends ConsumerWidget {
+/// Whether a text field has the keyboard focus.
+bool typingInField() {
+  final focused = FocusManager.instance.primaryFocus?.context;
+  if (focused == null) return false;
+  if (focused.widget is EditableText) return true;
+  return focused.findAncestorWidgetOfExactType<EditableText>() != null;
+}
+
+/// Listens for every registered command's keys below the navigator, in the
+/// active keymap preset, plus `?` for the shortcut help, the palette chord
+/// and leaving a text field. Keys typed into a text field stay in the field.
+class TixShortcuts extends ConsumerStatefulWidget {
   /// Handles shortcuts for [child].
   const TixShortcuts({required this.child, super.key});
 
   /// The screens.
   final Widget child;
 
-  static bool _typing() {
-    final focused = FocusManager.instance.primaryFocus?.context;
-    if (focused == null) return false;
-    if (focused.widget is EditableText) return true;
-    return focused.findAncestorWidgetOfExactType<EditableText>() != null;
+  @override
+  ConsumerState<TixShortcuts> createState() => _TixShortcutsState();
+}
+
+class _TixShortcutsState extends ConsumerState<TixShortcuts> {
+  late final _sequencer = KeySequencer<VoidCallback>(onTimeout: (run) => run());
+  final _node = FocusNode(debugLabel: 'shortcuts', skipTraversal: true);
+
+  @override
+  void dispose() {
+    _sequencer.reset();
+    _node.dispose();
+    super.dispose();
+  }
+
+  /// Moves focus from the field to its page, or to the shortcuts themselves
+  /// when the nearest scope is above them, so the next key reaches them.
+  void _leaveField() {
+    final field = FocusManager.instance.primaryFocus;
+    final scope = field?.enclosingScope;
+    if (scope != null && _node.ancestors.contains(scope)) {
+      _node.requestFocus();
+    } else {
+      field?.unfocus();
+    }
+  }
+
+  /// Every binding that could run now, the newest scope first.
+  List<(KeyBinding, VoidCallback)> _candidates(
+    Keymap keymap,
+    CommandRegistry registry, {
+    required bool typing,
+  }) {
+    bool applies(KeyBinding b) => switch (b.fields) {
+      FieldRule.outside => !typing,
+      FieldRule.also => true,
+      FieldRule.only => typing,
+    };
+    final builtIn = <String, VoidCallback>{
+      KeyActions.paletteOpen: () =>
+          unawaited(showCommandPalette(context, registry, keymap: keymap)),
+      KeyActions.helpShow: () => unawaited(
+        showShortcutHelp(context, registry.commands, keymap: keymap),
+      ),
+      KeyActions.fieldLeave: _leaveField,
+    };
+    return [
+      for (final MapEntry(key: action, value: run) in builtIn.entries)
+        for (final b in keymap.bindingsFor(action))
+          if (applies(b)) (b, run),
+      for (final c in registry.commands.reversed)
+        if (c.when?.call() ?? true)
+          for (final b in c.keysIn(keymap))
+            if (applies(b)) (b, c.run),
+    ];
+  }
+
+  /// Runs the binding [event] completes. A key typed into a text field that
+  /// no field binding wants is left unhandled, not swallowed: a handled key
+  /// never reaches the field on desktop, so `a` would assign instead of
+  /// typing an `a`.
+  KeyEventResult _dispatch(KeyEvent event) {
+    if (event is KeyUpEvent) return KeyEventResult.ignored;
+    final keymap = ref.read(activeKeymapProvider);
+    if (!keymap.enabled) return KeyEventResult.ignored;
+    final candidates = _candidates(
+      keymap,
+      ref.read(commandRegistryProvider),
+      typing: typingInField(),
+    );
+    final outcome = _sequencer.feed(
+      KeyPress.from(event, HardwareKeyboard.instance),
+      candidates,
+    );
+    switch (outcome) {
+      case KeyMatched(:final value):
+        value();
+        return KeyEventResult.handled;
+      case KeyPending():
+        return KeyEventResult.handled;
+      case KeyUnmatched():
+        return KeyEventResult.ignored;
+    }
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final registry = ref.watch(commandRegistryProvider);
-    return ListenableBuilder(
-      listenable: registry.changes,
-      builder: (context, child) {
-        final bindings = <ShortcutActivator, _Binding>{
-          const CharacterActivator('?'): _Binding(
-            () => showShortcutHelp(context, registry.commands),
-          ),
-          const SingleActivator(
-            LogicalKeyboardKey.keyK,
-            control: true,
-          ): _Binding(
-            () => showCommandPalette(context, registry),
-            always: true,
-          ),
-          const SingleActivator(LogicalKeyboardKey.keyK, meta: true): _Binding(
-            () => showCommandPalette(context, registry),
-            always: true,
-          ),
-          for (final c in registry.commands)
-            if (c.shortcut != null) c.shortcut!: _Binding(c.run),
-        };
-        return Focus(
-          autofocus: true,
-          onKeyEvent: (node, event) => _dispatch(bindings, event),
-          child: child!,
-        );
-      },
-      child: child,
+  Widget build(BuildContext context) {
+    ref.watch(activeKeymapProvider);
+    return Focus(
+      focusNode: _node,
+      autofocus: true,
+      onKeyEvent: (node, event) => _dispatch(event),
+      child: widget.child,
     );
   }
-
-  /// Runs the binding [event] matches. A key typed into a text field is left
-  /// unhandled, not swallowed: a handled key never reaches the field on
-  /// desktop, so `a` would assign instead of typing an `a`.
-  static KeyEventResult _dispatch(
-    Map<ShortcutActivator, _Binding> bindings,
-    KeyEvent event,
-  ) {
-    for (final MapEntry(key: activator, value: binding) in bindings.entries) {
-      if (!activator.accepts(event, HardwareKeyboard.instance)) continue;
-      if (!binding.always && _typing()) return KeyEventResult.ignored;
-      binding.run();
-      return KeyEventResult.handled;
-    }
-    return KeyEventResult.ignored;
-  }
 }
 
-/// A shortcut's action, and whether it also fires while typing.
-class _Binding {
-  const _Binding(this.run, {this.always = false});
+/// Draws [bindings] as key caps, a sequence's keys side by side and the
+/// alternatives apart.
+class KeyBindingKeys extends StatelessWidget {
+  /// Shows [bindings], at most [max] of them.
+  const KeyBindingKeys(this.bindings, {this.max = 3, super.key});
 
-  final VoidCallback run;
-  final bool always;
+  /// The keys.
+  final List<KeyBinding> bindings;
+
+  /// How many alternatives to show.
+  final int max;
+
+  @override
+  Widget build(BuildContext context) => Wrap(
+    spacing: TixSpace.s2,
+    runSpacing: TixSpace.s1,
+    crossAxisAlignment: WrapCrossAlignment.center,
+    children: [
+      for (final b in bindings.take(max))
+        Wrap(
+          spacing: TixSpace.s1,
+          runSpacing: TixSpace.s1,
+          children: [for (final label in b.labels) Kbd(label)],
+        ),
+    ],
+  );
 }
 
-/// tix's `?` overlay: every command that has a key, with the key.
-Future<void> showShortcutHelp(BuildContext context, List<TixCommand> commands) {
+/// What the `?` help lists: the palette and the help, then every command
+/// with a key under [keymap].
+List<({String label, List<KeyBinding> keys})> shortcutRows(
+  AppLocalizations l10n,
+  List<TixCommand> commands,
+  Keymap keymap,
+) => [
+  (
+    label: l10n.openCommandPalette,
+    keys: keymap.bindingsFor(KeyActions.paletteOpen),
+  ),
+  (label: l10n.showShortcuts, keys: keymap.bindingsFor(KeyActions.helpShow)),
+  for (final c in commands) (label: c.label, keys: c.keysIn(keymap)),
+].where((r) => r.keys.isNotEmpty).toList();
+
+/// tix's `?` overlay: every command that has a key in [keymap], with its
+/// keys.
+Future<void> showShortcutHelp(
+  BuildContext context,
+  List<TixCommand> commands, {
+  Keymap? keymap,
+}) {
   final l10n = context.l10n;
-  final keyed = [
-    (label: l10n.openCommandPalette, keys: 'Ctrl K'),
-    (label: l10n.showShortcuts, keys: '?'),
-    for (final c in commands)
-      if (c.shortcut != null)
-        (label: c.label, keys: shortcutLabel(c.shortcut!)),
-  ];
+  final rows = shortcutRows(
+    l10n,
+    commands,
+    keymap ?? Keymap.of(KeymapPreset.standard),
+  );
   return showDialog<void>(
     context: context,
     builder: (context) => AlertDialog(
@@ -350,16 +447,16 @@ Future<void> showShortcutHelp(BuildContext context, List<TixCommand> commands) {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              for (final k in keyed)
+              for (final k in rows)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: TixSpace.s1),
                   child: Row(
                     children: [
                       SizedBox(
-                        width: 96,
+                        width: 136,
                         child: Align(
                           alignment: AlignmentDirectional.centerStart,
-                          child: Kbd(k.keys),
+                          child: KeyBindingKeys(k.keys, max: 2),
                         ),
                       ),
                       const SizedBox(width: TixSpace.s4),
@@ -389,19 +486,24 @@ Future<void> showShortcutHelp(BuildContext context, List<TixCommand> commands) {
 /// The command palette: type to narrow, Enter or a tap to run.
 Future<void> showCommandPalette(
   BuildContext context,
-  CommandRegistry registry,
-) async {
+  CommandRegistry registry, {
+  Keymap? keymap,
+}) async {
   final picked = await showDialog<TixCommand>(
     context: context,
-    builder: (context) => _Palette(registry: registry),
+    builder: (context) => _Palette(
+      registry: registry,
+      keymap: keymap ?? Keymap.of(KeymapPreset.standard),
+    ),
   );
   picked?.run();
 }
 
 class _Palette extends StatefulWidget {
-  const _Palette({required this.registry});
+  const _Palette({required this.registry, required this.keymap});
 
   final CommandRegistry registry;
+  final Keymap keymap;
 
   @override
   State<_Palette> createState() => _PaletteState();
@@ -475,6 +577,7 @@ class _PaletteState extends State<_Palette> {
                         itemCount: matches.length,
                         itemBuilder: (context, i) {
                           final c = matches[i];
+                          final keys = c.keysIn(widget.keymap);
                           return ListTile(
                             key: Key('palette.${c.id}'),
                             dense: true,
@@ -489,9 +592,9 @@ class _PaletteState extends State<_Palette> {
                                 : Icon(c.icon, size: 18),
                             title: Text(c.label),
                             subtitle: c.group.isEmpty ? null : Text(c.group),
-                            trailing: c.shortcut == null
+                            trailing: keys.isEmpty
                                 ? null
-                                : Kbd(shortcutLabel(c.shortcut!)),
+                                : KeyBindingKeys(keys, max: 1),
                             onTap: () => Navigator.of(context).pop(c),
                           );
                         },

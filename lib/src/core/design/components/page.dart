@@ -2,6 +2,7 @@
 
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/components/buttons.dart';
+import 'package:tix_mobile/src/core/design/components/list_keys.dart';
 import 'package:tix_mobile/src/core/design/components/states.dart';
 import 'package:tix_mobile/src/core/design/tokens.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
@@ -94,7 +95,7 @@ class TixPage extends StatelessWidget {
                 icon: Icon(action.icon ?? Icons.add),
                 label: Text(action.label),
               ),
-        body: body,
+        body: TixListKeys(child: body),
       );
     }
     return Scaffold(
@@ -118,7 +119,7 @@ class TixPage extends StatelessWidget {
                   ),
               ],
             ),
-            Expanded(child: body),
+            Expanded(child: TixListKeys(child: body)),
           ],
         ),
       ),

@@ -8053,4 +8053,86 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get taskPanelResize => 'Redimensionner le panneau de la tâche';
+
+  @override
+  String get keysNextRow => 'Ligne suivante';
+
+  @override
+  String get keysPreviousRow => 'Ligne précédente';
+
+  @override
+  String get keysFirstRow => 'Première ligne';
+
+  @override
+  String get keysLastRow => 'Dernière ligne';
+
+  @override
+  String get keysPageDown => 'Page suivante';
+
+  @override
+  String get keysPageUp => 'Page précédente';
+
+  @override
+  String get keysOpenRow => 'Ouvrir la ligne active';
+
+  @override
+  String get keysBack => 'Revenir';
+
+  @override
+  String get keysLeaveField => 'Quitter le champ de texte';
+
+  @override
+  String get keysFirstTask => 'Première tâche';
+
+  @override
+  String get keysLastTask => 'Dernière tâche';
+
+  @override
+  String get settingsKeyboard => 'Clavier';
+
+  @override
+  String get settingsKeyboardHelp =>
+      'Pour un clavier physique, sur tout appareil. Les touches tapées dans un champ de texte y restent toujours.';
+
+  @override
+  String get settingsShortcutsHelp =>
+      'Désactivé coupe tous les raccourcis, y compris Ctrl K pour la palette. Tab, Entrée et Échap fonctionnent toujours.';
+
+  @override
+  String get settingsKeymap => 'Jeu de touches';
+
+  @override
+  String get keymapDefault => 'Par défaut';
+
+  @override
+  String get keymapVim => 'Vim';
+
+  @override
+  String get keymapEmacs => 'Emacs';
+
+  @override
+  String get keymapOff => 'Désactivé';
+
+  @override
+  String get keymapDefaultHelp =>
+      'Les touches de l\'app et de tix web : j et k déplacent, g p ouvre les projets, Ctrl 1 à 6 changent de section.';
+
+  @override
+  String get keymapVimHelp =>
+      'Réflexes Vim : gg et G sautent, o ajoute, i renomme, dd supprime après confirmation, h revient.';
+
+  @override
+  String get keymapEmacsHelp =>
+      'Réflexes Emacs hors des champs de texte : C-n et C-p déplacent, C-s filtre, C-g annule, M-x ouvre la palette.';
+
+  @override
+  String get keymapOffHelp =>
+      'Aucune touche seule ne déclenche rien. Les combinaisons avec Ctrl, Alt ou ⌘ fonctionnent toujours.';
+
+  @override
+  String get settingsKeyBindings => 'Raccourcis actifs';
+
+  @override
+  String get settingsKeyBindingsOff =>
+      'Les raccourcis clavier sont désactivés.';
 }

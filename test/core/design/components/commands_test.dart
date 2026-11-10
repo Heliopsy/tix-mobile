@@ -12,32 +12,87 @@ import '../../../helpers/design.dart';
 void main() {
   late List<String> ran;
 
-  Future<void> pump(WidgetTester tester) async {
+  Future<ProviderContainer> pump(
+    WidgetTester tester, {
+    KeymapPreset preset = KeymapPreset.standard,
+    bool enabled = true,
+    bool shown = true,
+  }) async {
     ran = [];
-    await pumpComponent(
+    final container = await pumpComponent(
       tester,
       TixShortcuts(
-        child: CommandScope(
-          commands: [
-            TixCommand(
-              id: 'tasks.new',
-              label: 'New task',
-              shortcut: const SingleActivator(LogicalKeyboardKey.keyN),
-              run: () => ran.add('new'),
-            ),
-            TixCommand(
-              id: 'go.settings',
-              label: 'Go to settings',
-              run: () => ran.add('settings'),
-            ),
-          ],
-          child: const TextField(key: Key('field')),
+        child: TickerMode(
+          enabled: shown,
+          child: CommandScope(
+            commands: [
+              TixCommand(
+                id: 'tasks.new',
+                label: 'New task',
+                shortcut: const SingleActivator(LogicalKeyboardKey.keyN),
+                run: () => ran.add('new'),
+              ),
+              TixCommand(
+                id: 'tasks.select',
+                label: 'Select a task',
+                action: KeyActions.listSelect,
+                run: () => ran.add('select'),
+              ),
+              TixCommand(
+                id: 'tasks.next',
+                label: 'Next task',
+                action: KeyActions.listNext,
+                run: () => ran.add('next'),
+              ),
+              TixCommand(
+                id: 'tasks.first',
+                label: 'First task',
+                action: KeyActions.listTop,
+                run: () => ran.add('top'),
+              ),
+              TixCommand(
+                id: 'go.projects',
+                label: 'Go to projects',
+                action: KeyActions.navProjects,
+                run: () => ran.add('projects'),
+              ),
+              TixCommand(
+                id: 'go.settings',
+                label: 'Go to settings',
+                run: () => ran.add('settings'),
+              ),
+            ],
+            child: const TextField(key: Key('field')),
+          ),
         ),
       ),
       size: desktop,
     );
+    final keyboard = container.read(keyboardSettingProvider.notifier);
+    await keyboard.setPreset(preset);
+    await keyboard.setEnabled(on: enabled);
     await tester.pump();
+    return container;
   }
+
+  Future<bool> chord(WidgetTester tester, LogicalKeyboardKey key) async {
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+    final handled = await tester.sendKeyEvent(key);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+    return handled;
+  }
+
+  Future<void> question(WidgetTester tester) async {
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
+    await tester.sendKeyEvent(LogicalKeyboardKey.slash, character: '?');
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
+    await tester.pumpAndSettle();
+  }
+
+  Finder inHelp(String text) => find.descendant(
+    of: find.byKey(const Key('shortcuts.help')),
+    matching: find.text(text),
+  );
 
   testWidgets('a registered key runs its command', (tester) async {
     await pump(tester);
@@ -98,6 +153,148 @@ void main() {
     await pumpComponent(tester, const SizedBox());
     await tester.pump();
     expect(registry.commands, isEmpty);
+  });
+
+  testWidgets('an action runs on the preset key', (tester) async {
+    await pump(tester);
+    expect(await tester.sendKeyEvent(LogicalKeyboardKey.keyJ), isTrue);
+    expect(ran, ['next']);
+  });
+
+  testWidgets('Emacs moves with Ctrl+N and leaves j alone', (tester) async {
+    await pump(tester, preset: KeymapPreset.emacs);
+    expect(await chord(tester, LogicalKeyboardKey.keyN), isTrue);
+    expect(await tester.sendKeyEvent(LogicalKeyboardKey.keyJ), isFalse);
+    expect(ran, ['next']);
+  });
+
+  testWidgets('g then p runs the sequence, not the first key', (tester) async {
+    await pump(tester);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyG);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyP);
+    await tester.pump(const Duration(seconds: 2));
+    expect(ran, ['projects']);
+  });
+
+  testWidgets('g alone runs when the wait ends', (tester) async {
+    await pump(tester);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyG);
+    expect(ran, isEmpty);
+    await tester.pump(KeySequencer.defaultTimeout);
+    expect(ran, ['top']);
+  });
+
+  testWidgets('Vim waits for the second g', (tester) async {
+    await pump(tester, preset: KeymapPreset.vim);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyG);
+    await tester.pump(KeySequencer.defaultTimeout);
+    expect(ran, isEmpty);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyG);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyG);
+    expect(ran, ['top']);
+  });
+
+  testWidgets('Off drops single keys and keeps the palette chord', (
+    tester,
+  ) async {
+    await pump(tester, preset: KeymapPreset.off);
+    expect(await tester.sendKeyEvent(LogicalKeyboardKey.keyN), isFalse);
+    expect(await tester.sendKeyEvent(LogicalKeyboardKey.keyJ), isFalse);
+    await question(tester);
+    expect(find.byKey(const Key('shortcuts.help')), findsNothing);
+    expect(ran, isEmpty);
+    expect(await chord(tester, LogicalKeyboardKey.keyK), isTrue);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('palette')), findsOneWidget);
+  });
+
+  testWidgets('switched off, even the palette chord does nothing', (
+    tester,
+  ) async {
+    await pump(tester, enabled: false);
+    expect(await chord(tester, LogicalKeyboardKey.keyK), isFalse);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('palette')), findsNothing);
+  });
+
+  for (final preset in KeymapPreset.values) {
+    testWidgets('${preset.name}: typing in a field triggers nothing', (
+      tester,
+    ) async {
+      await pump(tester, preset: preset);
+      await tester.tap(find.byKey(const Key('field')));
+      for (final key in [
+        LogicalKeyboardKey.keyN,
+        LogicalKeyboardKey.keyJ,
+        LogicalKeyboardKey.keyX,
+        LogicalKeyboardKey.keyG,
+        LogicalKeyboardKey.keyP,
+      ]) {
+        expect(await tester.sendKeyEvent(key), isFalse, reason: '$key');
+      }
+      expect(await chord(tester, LogicalKeyboardKey.keyN), isFalse);
+      await tester.pump(const Duration(seconds: 2));
+      expect(ran, isEmpty);
+    });
+  }
+
+  testWidgets('Esc leaves the field, then keys act again', (tester) async {
+    await pump(tester, preset: KeymapPreset.vim);
+    await tester.tap(find.byKey(const Key('field')));
+    expect(await tester.sendKeyEvent(LogicalKeyboardKey.escape), isTrue);
+    await tester.pump();
+    expect(typingInField(), isFalse);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyJ);
+    expect(ran, ['next']);
+  });
+
+  testWidgets('Emacs: Ctrl+G leaves the field', (tester) async {
+    await pump(tester, preset: KeymapPreset.emacs);
+    await tester.tap(find.byKey(const Key('field')));
+    expect(await chord(tester, LogicalKeyboardKey.keyG), isTrue);
+    await tester.pump();
+    expect(typingInField(), isFalse);
+  });
+
+  testWidgets('the help shows the active preset', (tester) async {
+    await pump(tester);
+    await question(tester);
+    expect(inHelp('Select a task'), findsOneWidget);
+    expect(inHelp('x'), findsOneWidget);
+    expect(inHelp('v'), findsNothing);
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('shortcuts.help')), findsNothing);
+
+    final container = ProviderScope.containerOf(
+      tester.element(find.byType(TixShortcuts)),
+    );
+    await container
+        .read(keyboardSettingProvider.notifier)
+        .setPreset(KeymapPreset.vim);
+    await question(tester);
+    expect(inHelp('v'), findsOneWidget);
+    expect(inHelp('x'), findsNothing);
+    expect(inHelp('g'), findsWidgets);
+  });
+
+  testWidgets('a scope that is not shown answers no keys', (tester) async {
+    await pump(tester, shown: false);
+    expect(await tester.sendKeyEvent(LogicalKeyboardKey.keyJ), isFalse);
+    expect(ProviderScopeHelper.registry(tester).commands, isEmpty);
+  });
+
+  test('a scope registering again keeps its place', () {
+    final registry = CommandRegistry();
+    final shell = Object();
+    final page = Object();
+    TixCommand c(String id) => TixCommand(id: id, label: id, run: () {});
+    registry
+      ..register(shell, [c('back')])
+      ..register(page, [c('clear')])
+      ..register(shell, [c('back')]);
+    expect(registry.commands.map((c) => c.id), ['back', 'clear']);
+    registry.dispose();
   });
 
   test('shortcut labels read like the keyboard', () {

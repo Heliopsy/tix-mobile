@@ -4,7 +4,8 @@ import 'package:tix_mobile/src/core/storage/stores.dart';
 
 /// The choices kept on this device: theme, language, motion, haptics, the
 /// screen the app opens on, the local engine's idle timeout and the desktop's
-/// tray, login and hotkey choices and the update choices, stored by name.
+/// tray, login and hotkey choices, the update choices and the keyboard
+/// shortcuts, stored by name.
 class SettingsRepository {
   /// Keeps the choices in [_store].
   SettingsRepository(this._store);
@@ -22,6 +23,8 @@ class SettingsRepository {
   static const _hotkeyKey = 'settings.quickAddHotkey';
   static const _updateCheckKey = 'settings.updateCheck';
   static const _updateAutoKey = 'settings.updateAutoInstall';
+  static const _shortcutsKey = 'settings.shortcuts';
+  static const _keymapKey = 'settings.keymap';
 
   final KeyValueStore _store;
 
@@ -126,4 +129,18 @@ class SettingsRepository {
   /// Saves whether a downloaded update is installed on quit.
   Future<void> setUpdateAutoInstall({required bool on}) =>
       on ? _store.write(_updateAutoKey, 'true') : _store.delete(_updateAutoKey);
+
+  /// Whether keyboard shortcuts are on; on until turned off.
+  bool shortcuts() => _store.read(_shortcutsKey) != 'off';
+
+  /// Saves whether keyboard shortcuts are on.
+  Future<void> setShortcuts({required bool on}) =>
+      on ? _store.delete(_shortcutsKey) : _store.write(_shortcutsKey, 'off');
+
+  /// The keymap preset's name, null when never chosen.
+  String? keymap() => _store.read(_keymapKey);
+
+  /// Saves the keymap preset named [name], or the default with null.
+  Future<void> setKeymap(String? name) =>
+      name == null ? _store.delete(_keymapKey) : _store.write(_keymapKey, name);
 }

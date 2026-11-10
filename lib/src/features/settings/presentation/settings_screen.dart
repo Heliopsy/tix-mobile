@@ -23,6 +23,7 @@ import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
 import 'package:tix_mobile/src/core/widgets/update_panel.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
 import 'package:tix_mobile/src/features/settings/presentation/date_settings.dart';
+import 'package:tix_mobile/src/features/settings/presentation/keyboard_settings.dart';
 import 'package:tix_mobile/src/features/settings/presentation/settings_catalogue.dart';
 
 export 'package:tix_mobile/src/features/settings/presentation/settings_catalogue.dart';
@@ -242,6 +243,7 @@ class _Section extends StatelessWidget {
       info: switch (section) {
         SettingsSection.language => l10n.settingsLanguageHelp,
         SettingsSection.start => l10n.settingsStartHelp,
+        SettingsSection.keyboard => l10n.settingsKeyboardHelp,
         SettingsSection.dates => l10n.settingsDatesHelp,
         SettingsSection.arrangement => l10n.settingsArrangementHelp,
         SettingsSection.localEngine => l10n.localInstanceIdleHelp,
@@ -288,6 +290,9 @@ class _Entry extends StatelessWidget {
       'appearance.haptics' => const _HapticsEntry(),
       'language.app' => const _LanguageEntry(),
       'start.screen' => const _StartEntry(),
+      'keyboard.shortcuts' => const KeyboardShortcutsEntry(),
+      'keyboard.preset' => const KeymapEntry(),
+      'keyboard.bindings' => const KeyBindingsEntry(),
       'desktop.closeToTray' => const _CloseToTrayEntry(),
       'desktop.autostart' => const _AutostartEntry(),
       'desktop.hotkey' => const _HotkeyEntry(),

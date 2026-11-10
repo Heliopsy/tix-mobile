@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -37,14 +36,6 @@ final taskRefPattern = RegExp(
   r'^\s*([a-z][a-z0-9_]*(?:-[a-z0-9_]+)*-\d+)\s*$',
   caseSensitive: false,
 );
-
-/// [key] then a primary modifier: Cmd on Apple platforms, Ctrl elsewhere.
-SingleActivator primaryKey(LogicalKeyboardKey key, {bool shift = false}) {
-  final apple =
-      defaultTargetPlatform == TargetPlatform.macOS ||
-      defaultTargetPlatform == TargetPlatform.iOS;
-  return SingleActivator(key, control: !apple, meta: apple, shift: shift);
-}
 
 /// Mounted around the signed-in screens by the router: opens quick add for
 /// every draft (the shell's button, Ctrl+N, shares, launcher shortcuts),
@@ -279,7 +270,7 @@ class _QuickActionsHostState extends ConsumerState<QuickActionsHost> {
           label: l10n.quickAddTitle,
           group: l10n.commandsTasks,
           icon: Icons.add_task,
-          shortcut: primaryKey(LogicalKeyboardKey.keyN),
+          action: KeyActions.quickAdd,
           run: drafts.open,
         ),
         TixCommand(
@@ -287,7 +278,7 @@ class _QuickActionsHostState extends ConsumerState<QuickActionsHost> {
           label: l10n.quickAddPaste,
           group: l10n.commandsTasks,
           icon: Icons.content_paste,
-          shortcut: primaryKey(LogicalKeyboardKey.keyV, shift: true),
+          action: KeyActions.quickPaste,
           run: () => unawaited(_paste()),
         ),
         TixCommand(
