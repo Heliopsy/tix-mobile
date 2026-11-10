@@ -73,13 +73,13 @@ is a no-op when that directory already holds the pinned version, and CI caches i
 the distro's 0.5 headers; the soname, `libayatana-appindicator3.so.1`, is the same.
 
 `just linux-libs copy DIR` (from `scripts/bundle-linux-libs.sh`, which needs `patchelf`) then copies that
-libayatana-appindicator3 and the system's libdbusmenu libraries into the bundle's `lib/`, with the upstream licence
-files under `share/doc/`, and sets `$ORIGIN` as the runpath of the tray plugin and of those copies, because the
-binary's own `$ORIGIN/lib` runpath does not reach a plugin's dependencies. 0.6.1 no longer loads
-libayatana-indicator3 or ayatana-ido3, so those are not bundled any more. `just linux-libs check DIR` fails while any
-of them still loads from outside the bundle, or when the bundled appindicator does not export
-`app_indicator_set_tooltip_title` and `app_indicator_set_tooltip_body`; CI and the release run both after
-`just build-linux`. glib, GTK and libc are never bundled.
+libayatana-appindicator3 and the system's libayatana-indicator3, libayatana-ido3 and libdbusmenu into the bundle's
+`lib/`, with the upstream licence files under `share/doc/`, and sets `$ORIGIN` as the runpath of the tray plugin and
+of those copies, because the binary's own `$ORIGIN/lib` runpath does not reach a plugin's dependencies. The tray
+plugin was linked against Ubuntu's 0.5 and so still loads libayatana-indicator3 and libayatana-ido3 itself, although
+0.6.1 needs neither. `just linux-libs check DIR` fails while any of them still loads from outside the bundle, or when
+the bundled appindicator does not export `app_indicator_set_tooltip_title` and `app_indicator_set_tooltip_body`; CI
+and the release run both after `just build-linux`. glib, GTK and libc are never bundled.
 
 To bump the library, change `version` and `sha256` in `scripts/build-ayatana.sh`; the cache key follows the script.
 

@@ -199,13 +199,14 @@ Every release attaches Android APKs (one per ABI: take `arm64-v8a` for any phone
 and an AAB, Linux `.tar.gz` files for x64 and arm64, a macOS `.zip`, a Windows `.zip`, and a `SHA256SUMS` file.
 [tix.red/en/apps](https://tix.red/en/apps/) has a one-paste install for Windows and macOS too.
 
-On Linux, this downloads the latest release for your CPU, checks it against `SHA256SUMS`, installs or upgrades it
-in `~/.local/opt/tix-mobile` with a launcher entry and `~/.local/bin/tix-mobile`, and starts it. Paste it from any
+On Linux, this downloads the latest release for your CPU, checks it against `SHA256SUMS`, installs or upgrades it in
+`~/.local/opt/tix-mobile` with a launcher entry and `~/.local/bin/tix-mobile`, and starts it. Paste it from any
 directory; a failed step stops it without touching what is installed. It needs curl, GTK 3 and a Secret Service
-keyring (GNOME Keyring or KWallet). The tray icon's libraries (libayatana-appindicator3 0.6, which gives the icon
-its status tooltip on KDE, and the libdbusmenu libraries it loads) ship inside the tarball, so no extra package is
-needed. The icon itself shows only where a StatusNotifier host runs: KDE Plasma, Xfce, Cinnamon and Budgie have
-one, GNOME needs the AppIndicator extension. Once installed, tix updates itself from Settings or the tray menu.
+keyring (GNOME Keyring or KWallet). The tray icon's libraries (libayatana-appindicator3 0.6, which gives the icon its
+status tooltip on KDE, and the ayatana-indicator, ayatana-ido and libdbusmenu libraries the tray plugin loads) ship
+inside the tarball, so no extra package is needed. The icon itself shows only where a StatusNotifier host runs: KDE
+Plasma, Xfce, Cinnamon and Budgie have one, GNOME needs the AppIndicator extension. Once installed, tix updates itself
+from Settings or the tray menu.
 
 ```sh
 (

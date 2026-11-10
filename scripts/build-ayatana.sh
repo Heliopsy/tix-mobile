@@ -11,9 +11,11 @@
 #   scripts/build-ayatana.sh version   print the pinned version
 #
 # Ubuntu 24.04 ships 0.5.x, which has no tooltip API, so KDE shows only the
-# title on hover. 0.6.0 added the tooltip, and 0.6.1 no longer needs
-# libayatana-indicator3 or ayatana-ido3. The soname is libayatana-appindicator3.so.1
-# in both, so the app still builds against the distro's 0.5 headers.
+# title on hover. 0.6.0 added the tooltip. 0.6.1 itself no longer needs
+# libayatana-indicator3 or ayatana-ido3, but the tray plugin, linked against
+# Ubuntu's 0.5, still does, so the bundle keeps the system's copies of those.
+# The soname is libayatana-appindicator3.so.1 in both, so the app still builds
+# against the distro's 0.5 headers.
 #
 # Only the library target is built: upstream's GObject introspection step has
 # no switch, and the .gir and typelib are of no use to the bundle.
