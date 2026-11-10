@@ -12,6 +12,8 @@ dependencies:
   # 7.1 and later read NWPath.isUltraConstrained, which needs Xcode 26; CI builds
   # Apple targets on macos-15. Lift this once the runners move.
   connectivity_plus: ">=7.0.0 <7.1.0"
+  crypto: ^3.0.8
+  cryptography: ^2.9.0
   dio: ^5.11.1
   ffi: ^2.2.0
   file_selector: ^1.1.0

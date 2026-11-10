@@ -55,6 +55,7 @@ Builds:
     build:
       - export PATH=$HOME/go/bin:$PATH
       - $$flutter$$/bin/flutter build apk --release --split-per-abi --target-platform=android-arm
+        --dart-define=TIX_SELF_UPDATE=false
     ndk: r28c
 
   - versionName: 0.4.0
@@ -68,6 +69,7 @@ Builds:
     build:
       - export PATH=$HOME/go/bin:$PATH
       - $$flutter$$/bin/flutter build apk --release --split-per-abi --target-platform=android-arm64
+        --dart-define=TIX_SELF_UPDATE=false
     ndk: r28c
 
   - versionName: 0.4.0
@@ -81,6 +83,7 @@ Builds:
     build:
       - export PATH=$HOME/go/bin:$PATH
       - $$flutter$$/bin/flutter build apk --release --split-per-abi --target-platform=android-x64
+        --dart-define=TIX_SELF_UPDATE=false
     ndk: r28c
 
 AutoUpdateMode: Version

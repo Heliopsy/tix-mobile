@@ -17,6 +17,7 @@ const runtimePackages = <String>{
   'connectivity_plus_platform_interface',
   'cross_file',
   'crypto',
+  'cryptography',
   'cupertino_ui',
   'dbus',
   'dio',

@@ -7777,4 +7777,97 @@ class AppLocalizationsDe extends AppLocalizations {
   String watchSyncedFrom(String system) {
     return 'synchronisiert von $system';
   }
+
+  @override
+  String get settingsUpdates => 'Updates';
+
+  @override
+  String get settingsUpdatesHelp =>
+      'tix sucht auf GitHub nach neuen Versionen. Updates werden vor der Installation geprüft: Der Download muss zu den signierten Prüfsummen der Version passen.';
+
+  @override
+  String get settingsUpdateCheck => 'Nach Updates suchen';
+
+  @override
+  String get settingsUpdateCheckHelp =>
+      'Beim Start von tix und alle paar Stunden.';
+
+  @override
+  String get settingsUpdateAuto => 'Updates automatisch installieren';
+
+  @override
+  String get settingsUpdateAutoHelp =>
+      'Ein heruntergeladenes Update wird installiert, wenn Sie tix beenden.';
+
+  @override
+  String get updateCheckNow => 'Jetzt prüfen';
+
+  @override
+  String get updateIdle => 'Noch nicht geprüft.';
+
+  @override
+  String get updateChecking => 'Suche nach Updates…';
+
+  @override
+  String updateCurrent(String version) {
+    return 'tix $version ist die neueste Version.';
+  }
+
+  @override
+  String updateAvailable(String version) {
+    return 'Update verfügbar: tix $version';
+  }
+
+  @override
+  String get updateAvailableHelp =>
+      'Laden Sie es von der Release-Seite herunter.';
+
+  @override
+  String updateDownloading(String version, int percent) {
+    return 'tix $version wird heruntergeladen… $percent %';
+  }
+
+  @override
+  String updateReady(String version) {
+    return 'tix $version ist bereit zur Installation.';
+  }
+
+  @override
+  String get updateReadyAuto =>
+      'Es wird beim Beenden von tix installiert, oder jetzt mit einem Neustart.';
+
+  @override
+  String get updateRestart => 'Neu starten und aktualisieren';
+
+  @override
+  String get updateDownload => 'Herunterladen';
+
+  @override
+  String get updateWhatsNew => 'Neuigkeiten';
+
+  @override
+  String get updateFailedNetwork =>
+      'GitHub war nicht erreichbar, um nach Updates zu suchen.';
+
+  @override
+  String get updateFailedVerify =>
+      'Das Update konnte nicht geprüft werden und wurde daher nicht installiert.';
+
+  @override
+  String get updateFailedInstall =>
+      'Das Update konnte nicht installiert werden.';
+
+  @override
+  String get updateNoAsset =>
+      'Das Release enthält keinen Download für dieses System.';
+
+  @override
+  String trayUpdateAvailable(String version) {
+    return 'Update verfügbar ($version)';
+  }
+
+  @override
+  String trayRestartToUpdate(String version) {
+    return 'Neu starten für Update ($version)';
+  }
 }

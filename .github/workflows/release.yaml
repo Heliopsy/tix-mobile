@@ -425,6 +425,21 @@ jobs:
       - name: Checksums
         run: just checksums
 
+      # The desktop apps install an update only when SHA256SUMS carries an
+      # Ed25519 signature by the key they pin. Without the secret the release
+      # goes out unsigned and installed apps offer the download instead.
+      - name: Check for the update signing key
+        id: update_key
+        env:
+          UPDATE_SIGNING_KEY: ${{ secrets.UPDATE_SIGNING_KEY }}
+        run: scripts/release-secrets.sh update_signing UPDATE_SIGNING_KEY
+
+      - name: Sign the checksums for desktop updates
+        if: steps.update_key.outputs.update_signing == 'true'
+        env:
+          UPDATE_SIGNING_KEY: ${{ secrets.UPDATE_SIGNING_KEY }}
+        run: scripts/update-sign.sh dist/SHA256SUMS lib/src/data/update/signing_key.dart
+
       - name: Sign the checksums
         working-directory: dist
         run: cosign sign-blob --yes --bundle SHA256SUMS.sigstore.json SHA256SUMS

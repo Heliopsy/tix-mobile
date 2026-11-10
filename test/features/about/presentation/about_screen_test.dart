@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/platform/app_info.dart';
+import 'package:tix_mobile/src/core/update/updates.dart';
 import 'package:tix_mobile/src/data/local/local_engine.dart';
 import 'package:tix_mobile/src/features/about/application/about.dart';
 import 'package:tix_mobile/src/features/about/presentation/about_screen.dart';
@@ -13,6 +14,7 @@ import '../../../helpers/app.dart';
 import '../../../helpers/attachments.dart';
 import '../../../helpers/design.dart';
 import '../../../helpers/fake_tix.dart';
+import '../../../helpers/fixed_updates.dart';
 
 const _token = 'tok-do-not-leak-7f3a';
 const _app = AppInfo(
@@ -37,6 +39,7 @@ void main() {
     bool signedIn = true,
     LocalTixEngine? engine,
     Locale locale = const Locale('en'),
+    UpdateMode updates = UpdateMode.off,
   }) async {
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
       SystemChannels.platform,
@@ -66,6 +69,12 @@ void main() {
           settings: stores?.settings,
           secrets: stores?.secrets,
           engine: engine,
+          updates: updates,
+        ),
+        fixedUpdates(
+          FixedUpdates(
+            UpdateState(phase: UpdatePhase.available, offer: offerOf('0.5.0')),
+          ),
         ),
         appInfoProvider.overrideWithValue(const AsyncData(_app)),
         links.asOverride,
@@ -198,5 +207,16 @@ void main() {
           .first,
     );
     expect(find.byKey(const Key('about.connection')), findsNothing);
+  });
+
+  testWidgets('an available update shows where updates are on', (tester) async {
+    await pump(tester, updates: UpdateMode.notify, size: const Size(500, 3000));
+    expect(find.byKey(const Key('about.updates')), findsOneWidget);
+    expect(find.text('Update available: tix 0.5.0'), findsOneWidget);
+  });
+
+  testWidgets('no Updates section where updates are off', (tester) async {
+    await pump(tester, size: const Size(500, 3000));
+    expect(find.byKey(const Key('about.updates')), findsNothing);
   });
 }

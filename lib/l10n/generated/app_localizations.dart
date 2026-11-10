@@ -12900,6 +12900,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'synced from {system}'**
   String watchSyncedFrom(String system);
+
+  /// Settings and About section for app updates
+  ///
+  /// In en, this message translates to:
+  /// **'Updates'**
+  String get settingsUpdates;
+
+  /// Explanation at the top of the updates settings section
+  ///
+  /// In en, this message translates to:
+  /// **'tix looks for new releases on GitHub. Updates are checked before they are installed: the download has to match the checksums the release signed.'**
+  String get settingsUpdatesHelp;
+
+  /// Switch: look for new releases automatically
+  ///
+  /// In en, this message translates to:
+  /// **'Check for updates'**
+  String get settingsUpdateCheck;
+
+  /// Help under the check for updates switch
+  ///
+  /// In en, this message translates to:
+  /// **'When tix starts and every few hours.'**
+  String get settingsUpdateCheckHelp;
+
+  /// Switch: install a downloaded update when the app quits
+  ///
+  /// In en, this message translates to:
+  /// **'Install updates automatically'**
+  String get settingsUpdateAuto;
+
+  /// Help under the install updates automatically switch
+  ///
+  /// In en, this message translates to:
+  /// **'A downloaded update is installed when you quit tix.'**
+  String get settingsUpdateAutoHelp;
+
+  /// Button: check for updates right away
+  ///
+  /// In en, this message translates to:
+  /// **'Check now'**
+  String get updateCheckNow;
+
+  /// Update status before the first check
+  ///
+  /// In en, this message translates to:
+  /// **'Not checked yet.'**
+  String get updateIdle;
+
+  /// Update status while checking
+  ///
+  /// In en, this message translates to:
+  /// **'Checking for updates…'**
+  String get updateChecking;
+
+  /// Update status when no newer release exists
+  ///
+  /// In en, this message translates to:
+  /// **'tix {version} is the latest version.'**
+  String updateCurrent(String version);
+
+  /// Update status when a newer release exists
+  ///
+  /// In en, this message translates to:
+  /// **'Update available: tix {version}'**
+  String updateAvailable(String version);
+
+  /// Under an available update that the app does not install itself
+  ///
+  /// In en, this message translates to:
+  /// **'Download it from the release page.'**
+  String get updateAvailableHelp;
+
+  /// Update status while downloading
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading tix {version}… {percent}%'**
+  String updateDownloading(String version, int percent);
+
+  /// Update status when an update is downloaded and verified
+  ///
+  /// In en, this message translates to:
+  /// **'tix {version} is ready to install.'**
+  String updateReady(String version);
+
+  /// Under a ready update when install automatically is on
+  ///
+  /// In en, this message translates to:
+  /// **'It installs when you quit tix, or now with a restart.'**
+  String get updateReadyAuto;
+
+  /// Button: install the downloaded update and restart
+  ///
+  /// In en, this message translates to:
+  /// **'Restart to update'**
+  String get updateRestart;
+
+  /// Button: open the release page to download the update by hand
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get updateDownload;
+
+  /// Button: open the release notes
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s new'**
+  String get updateWhatsNew;
+
+  /// Update status when the check or download failed on the network
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach GitHub to check for updates.'**
+  String get updateFailedNetwork;
+
+  /// Update status when the signature or checksum did not match
+  ///
+  /// In en, this message translates to:
+  /// **'The update couldn\'t be verified, so it wasn\'t installed.'**
+  String get updateFailedVerify;
+
+  /// Update status when unpacking or replacing the app failed
+  ///
+  /// In en, this message translates to:
+  /// **'The update couldn\'t be installed.'**
+  String get updateFailedInstall;
+
+  /// Under an available update when the release has no archive for this OS or CPU
+  ///
+  /// In en, this message translates to:
+  /// **'There is no download for this system in the release.'**
+  String get updateNoAsset;
+
+  /// Tray menu entry while a newer release exists
+  ///
+  /// In en, this message translates to:
+  /// **'Update available ({version})'**
+  String trayUpdateAvailable(String version);
+
+  /// Tray menu entry once an update is ready to install
+  ///
+  /// In en, this message translates to:
+  /// **'Restart to update ({version})'**
+  String trayRestartToUpdate(String version);
 }
 
 class _AppLocalizationsDelegate

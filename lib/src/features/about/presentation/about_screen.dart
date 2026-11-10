@@ -8,8 +8,10 @@ import 'package:tix_mobile/src/core/events/events.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/app_info.dart';
 import 'package:tix_mobile/src/core/platform/attachments.dart';
+import 'package:tix_mobile/src/core/update/updates.dart';
 import 'package:tix_mobile/src/core/widgets/live_details.dart';
 import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
+import 'package:tix_mobile/src/core/widgets/update_panel.dart';
 import 'package:tix_mobile/src/features/about/application/about.dart';
 
 /// What the app is, which versions run, where the project lives and how to
@@ -34,6 +36,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
     final server = ref.watch(serverVersionProvider);
     final address = ref.watch(serverAddressProvider);
     final live = ref.watch(liveDiagnosticsProvider).value != null;
+    final updates = ref.watch(updateModeProvider).value ?? UpdateMode.off;
     final diagnostics = switch (app.value) {
       final a? => Diagnostics(
         app: a,
@@ -144,6 +147,12 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
               ),
             ],
           ),
+          if (updates != UpdateMode.off)
+            TixSection(
+              key: const Key('about.updates'),
+              title: l10n.settingsUpdates,
+              children: const [UpdatePanel()],
+            ),
           TixSection(
             title: l10n.aboutHelp,
             children: [

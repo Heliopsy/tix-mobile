@@ -35,7 +35,8 @@ flutter pub get --offline
 python3 scripts/metainfo-releases.py CHANGELOG.md linux/packaging/red.tix.tix_mobile.metainfo.xml
 
 version=$(sed -nE 's/^version: ([0-9]+\.[0-9]+\.[0-9]+).*/\1/p' pubspec.yaml)
-flutter build linux --release --build-name="$version"
+# Flathub updates the app, so it never looks for releases on GitHub.
+flutter build linux --release --build-name="$version" --dart-define=TIX_SELF_UPDATE=false
 
 case "$(uname -m)" in
   x86_64) arch=x64 ;;
