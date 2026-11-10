@@ -724,8 +724,8 @@ class _ProjectTitle extends ConsumerWidget {
   }
 }
 
-/// An open task beside the list on a wide window, under a header with its
-/// reference and a button that closes it.
+/// An open task beside the list on a wide window, with a button among its
+/// header's actions that closes it.
 class TaskPanel extends StatelessWidget {
   /// Shows [taskRef]; [onClose] closes the panel.
   const TaskPanel({required this.taskRef, required this.onClose, super.key});
@@ -737,30 +737,8 @@ class TaskPanel extends StatelessWidget {
   final VoidCallback onClose;
 
   @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      Padding(
-        padding: const EdgeInsetsDirectional.only(
-          start: TixSpace.s5,
-          end: TixSpace.s2,
-          top: TixSpace.s1,
-        ),
-        child: Row(
-          children: [
-            Expanded(child: RefText(taskRef, size: TixText.sm)),
-            TixIconButton(
-              key: const Key('tasks.detail.close'),
-              icon: Icons.close,
-              tooltip: context.l10n.taskPanelClose,
-              onPressed: onClose,
-            ),
-          ],
-        ),
-      ),
-      Expanded(child: TaskDetailView(taskRef: taskRef, showRef: false)),
-    ],
-  );
+  Widget build(BuildContext context) =>
+      TaskDetailView(taskRef: taskRef, onClose: onClose);
 }
 
 /// [list] beside [panel], which has a handle on its left edge that resizes
