@@ -53,7 +53,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
 
   // Held until the process ends; only its existence matters.
   CreateMutexW(nullptr, FALSE, L"Local\\red.tix.tix_mobile");
-  if (GetLastError() == ERROR_ALREADY_EXISTS && HandedToRunningTix(link)) {
+  if (GetLastError() == ERROR_ALREADY_EXISTS &&
+      ((background && link.empty()) || HandedToRunningTix(link))) {
     return EXIT_SUCCESS;
   }
 
