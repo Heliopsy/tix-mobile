@@ -6,10 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
+import 'package:tix_mobile/src/core/desktop/desktop_state.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/offline/outbox.dart';
 import 'package:tix_mobile/src/core/offline/unsent_warning.dart';
 import 'package:tix_mobile/src/core/platform/adb_bridge.dart';
+import 'package:tix_mobile/src/core/platform/desktop.dart';
 import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
@@ -58,6 +60,7 @@ List<SettingsItem> currentSettings(WidgetRef ref, AppLocalizations l10n) {
     localEngines: ref.watch(localInstancesEnabledProvider),
     widgets: ref.watch(widgetBridgeProvider).supported,
     adb: ref.watch(adbControlOfferedProvider),
+    desktop: ref.watch(desktopCapsProvider).value ?? DesktopCaps.none,
     tenant: session?.connection.tenantLabel ?? '',
   );
 }
@@ -240,6 +243,7 @@ class _Section extends StatelessWidget {
         SettingsSection.arrangement => l10n.settingsArrangementHelp,
         SettingsSection.localEngine => l10n.localInstanceIdleHelp,
         SettingsSection.widgets => l10n.settingsWidgetsHelp,
+        SettingsSection.desktop => l10n.settingsDesktopHelp,
         _ => null,
       },
       children: [
@@ -280,6 +284,9 @@ class _Entry extends StatelessWidget {
       'appearance.haptics' => const _HapticsEntry(),
       'language.app' => const _LanguageEntry(),
       'start.screen' => const _StartEntry(),
+      'desktop.closeToTray' => const _CloseToTrayEntry(),
+      'desktop.autostart' => const _AutostartEntry(),
+      'desktop.hotkey' => const _HotkeyEntry(),
       'deviceNotifications.open' => _LinkEntry(
         item: item,
         subtitle: l10n.settingsDeviceNotifSubtitle,
@@ -505,6 +512,83 @@ class _StartEntry extends ConsumerWidget {
       ),
     );
   }
+}
+
+class _CloseToTrayEntry extends ConsumerWidget {
+  const _CloseToTrayEntry();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final tray = ref.watch(desktopCapsProvider).value?.tray ?? false;
+    return TixSwitchRow(
+      key: const Key('settings.closeToTray'),
+      title: l10n.settingsCloseToTray,
+      subtitle: tray
+          ? l10n.settingsCloseToTrayHelp
+          : l10n.settingsCloseToTrayNone,
+      value: ref.watch(closeToTraySettingProvider),
+      onChanged: tray
+          ? (on) => ref.read(closeToTraySettingProvider.notifier).set(on: on)
+          : null,
+    );
+  }
+}
+
+class _AutostartEntry extends ConsumerWidget {
+  const _AutostartEntry();
+
+  Future<void> _set(BuildContext context, WidgetRef ref, bool on) async {
+    final l10n = context.l10n;
+    final ok = await ref.read(autostartSettingProvider.notifier).set(on: on);
+    if (!ok && context.mounted) {
+      showTixToast(context, l10n.settingsAutostartFailed, tone: TixTone.danger);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(autostartSettingProvider);
+    return TixSwitchRow(
+      key: const Key('settings.autostart'),
+      title: context.l10n.settingsAutostart,
+      subtitle: context.l10n.settingsAutostartHelp,
+      value: state.value ?? false,
+      onChanged: state.hasValue
+          ? (on) => unawaited(_set(context, ref, on))
+          : null,
+    );
+  }
+}
+
+class _HotkeyEntry extends ConsumerWidget {
+  const _HotkeyEntry();
+
+  Future<void> _set(BuildContext context, WidgetRef ref, bool on) async {
+    final l10n = context.l10n;
+    final keys = quickAddHotkeyLabel(Theme.of(context).platform);
+    final ok = await ref
+        .read(quickAddHotkeySettingProvider.notifier)
+        .set(on: on);
+    if (!ok && context.mounted) {
+      showTixToast(
+        context,
+        l10n.settingsHotkeyTaken(keys),
+        tone: TixTone.danger,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => TixSwitchRow(
+    key: const Key('settings.hotkey'),
+    title: context.l10n.settingsHotkey,
+    subtitle: context.l10n.settingsHotkeyHelp(
+      quickAddHotkeyLabel(Theme.of(context).platform),
+    ),
+    value: ref.watch(quickAddHotkeySettingProvider),
+    onChanged: (on) => unawaited(_set(context, ref, on)),
+  );
 }
 
 class _InstancesEntry extends ConsumerWidget {

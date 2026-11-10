@@ -24,6 +24,7 @@
 #                       visible area, so the glyph sits well inside the 66 dp
 #                       safe circle
 #   splash-*            the mark small enough for Android 12's 768 px circle
+#   tray/menubar        the glyph alone for the macOS menu bar
 
 set -euo pipefail
 
@@ -105,6 +106,12 @@ masters() {
   # square has a 735 px diagonal, so its corners stay inside.
   svg splash-12 "0 0 1152 1152" "<svg x=\"316\" y=\"316\" width=\"520\" height=\"520\" viewBox=\"0 0 64 64\"><defs>$gradient</defs>$mark$(glyph '#fff')</svg>"
   render splash-12 1152 "$brand/splash-android12-1152.png"
+
+  # The macOS menu bar icon: the glyph alone, black on transparent, which
+  # macOS takes as a template and tints for the menu bar. 18 pt at 2x.
+  mkdir -p "$brand/tray"
+  svg menubar "8 6 48 48" "$(glyph '#000')"
+  render menubar 36 "$brand/tray/menubar.png"
 
   # The in-app mark, at 1x, 2x and 3x of its 64 dp default size.
   mkdir -p "$brand/app/2.0x" "$brand/app/3.0x"

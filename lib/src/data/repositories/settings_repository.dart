@@ -3,8 +3,8 @@
 import 'package:tix_mobile/src/core/storage/stores.dart';
 
 /// The choices kept on this device: theme, language, motion, haptics, the
-/// screen the app opens on and the local engine's idle timeout, stored by
-/// name.
+/// screen the app opens on, the local engine's idle timeout and the desktop's
+/// tray, login and hotkey choices, stored by name.
 class SettingsRepository {
   /// Keeps the choices in [_store].
   SettingsRepository(this._store);
@@ -17,6 +17,9 @@ class SettingsRepository {
   static const _hapticsKey = 'settings.haptics';
   static const _reduceMotionKey = 'settings.reduceMotion';
   static const _startKey = 'settings.start';
+  static const _closeToTrayKey = 'settings.closeToTray';
+  static const _autostartKey = 'settings.autostart';
+  static const _hotkeyKey = 'settings.quickAddHotkey';
 
   final KeyValueStore _store;
 
@@ -79,4 +82,31 @@ class SettingsRepository {
   /// Saves the screen named [name] to open on, or the default with null.
   Future<void> setStartScreen(String? name) =>
       name == null ? _store.delete(_startKey) : _store.write(_startKey, name);
+
+  /// Whether closing the window hides it to the tray, null when never
+  /// chosen.
+  bool? closeToTray() => switch (_store.read(_closeToTrayKey)) {
+    'true' => true,
+    'false' => false,
+    _ => null,
+  };
+
+  /// Saves whether closing the window hides it to the tray.
+  Future<void> setCloseToTray({required bool on}) =>
+      _store.write(_closeToTrayKey, '$on');
+
+  /// Whether start at login was turned on here, for platforms that cannot
+  /// be asked.
+  bool autostart() => _store.read(_autostartKey) == 'true';
+
+  /// Saves whether start at login is on.
+  Future<void> setAutostart({required bool on}) =>
+      on ? _store.write(_autostartKey, 'true') : _store.delete(_autostartKey);
+
+  /// Whether the global quick-add hotkey is on.
+  bool quickAddHotkey() => _store.read(_hotkeyKey) == 'true';
+
+  /// Saves whether the global quick-add hotkey is on.
+  Future<void> setQuickAddHotkey({required bool on}) =>
+      on ? _store.write(_hotkeyKey, 'true') : _store.delete(_hotkeyKey);
 }

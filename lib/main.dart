@@ -10,6 +10,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tix_mobile/src/app.dart';
 import 'package:tix_mobile/src/core/config/config.dart';
+import 'package:tix_mobile/src/core/desktop/desktop_state.dart';
 import 'package:tix_mobile/src/core/licences/binding.dart';
 import 'package:tix_mobile/src/core/offline/outbox_owner.dart';
 import 'package:tix_mobile/src/core/platform/adb_bridge.dart';
@@ -17,6 +18,7 @@ import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/core/storage/stores.dart';
 import 'package:tix_mobile/src/data/local/ffi_local_engine.dart';
+import 'package:tix_mobile/src/features/inbox/application/inbox.dart';
 import 'package:tix_mobile/src/features/inbox/application/note_actions.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
 import 'package:tix_mobile/src/features/widgets/application/headless.dart';
@@ -42,6 +44,9 @@ Future<void> main() async {
       ),
       adbAppearanceProvider.overrideWith(LiveAppearance.new),
       outboxOwnershipProvider.overrideWithValue(outboxes),
+      trayUnreadProvider.overrideWith(
+        (ref) => ref.watch(inboxUnreadProvider).value,
+      ),
     ],
   );
   if (Platform.isAndroid) {

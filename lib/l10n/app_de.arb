@@ -2058,5 +2058,20 @@
   "notifActionFailedReply": "Ihre Antwort konnte nicht gesendet werden",
   "notifActionFailedBody": "Öffnen Sie tix, um es erneut zu versuchen.",
   "pinToHome": "Zum Startbildschirm hinzufügen",
-  "pinFailed": "Konnte nicht zum Startbildschirm hinzugefügt werden"
+  "pinFailed": "Konnte nicht zum Startbildschirm hinzugefügt werden",
+  "trayOpen": "tix öffnen",
+  "trayInbox": "{count, plural, =0{Posteingang} =1{Posteingang (1 ungelesen)} other{Posteingang ({count} ungelesen)}}",
+  "trayQuit": "tix beenden",
+  "trayTooltip": "{count, plural, =0{tix} =1{tix: 1 ungelesen} other{tix: {count} ungelesen}}",
+  "settingsDesktop": "Desktop",
+  "settingsDesktopHelp": "Wie sich tix auf diesem Computer verhält: das Symbol im Infobereich, der Start bei der Anmeldung und ein Tastenkürzel, das in jeder App funktioniert.",
+  "settingsCloseToTray": "Im Infobereich weiterlaufen",
+  "settingsCloseToTrayHelp": "Das Schließen blendet das Fenster nur aus, Synchronisierung und Benachrichtigungen laufen weiter. Beenden über das Menü des Symbols.",
+  "settingsCloseToTrayNone": "Dieser Desktop zeigt keine Symbole im Infobereich, daher beendet das Schließen des Fensters tix.",
+  "settingsAutostart": "Bei der Anmeldung starten",
+  "settingsAutostartHelp": "tix startet, wenn Sie sich an diesem Computer anmelden.",
+  "settingsAutostartFailed": "Start bei der Anmeldung konnte nicht geändert werden",
+  "settingsHotkey": "Schnell hinzufügen aus jeder App",
+  "settingsHotkeyHelp": "{keys} öffnet „Schnell hinzufügen“, auch wenn tix im Hintergrund läuft.",
+  "settingsHotkeyTaken": "{keys} wird bereits von einer anderen App verwendet"
 }

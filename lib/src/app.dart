@@ -10,9 +10,11 @@ import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/time/reader_time.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
+import 'package:tix_mobile/src/core/widgets/desktop_host.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
 
-/// The tix app: router, theme, localisation and the reader's date style.
+/// The tix app: router, theme, localisation, the reader's date style and,
+/// on a desktop, the tray.
 class App extends ConsumerWidget {
   /// Creates the app.
   const App({super.key});
@@ -46,7 +48,9 @@ class App extends ConsumerWidget {
       localeListResolutionCallback: resolveLocale,
       routerConfig: router,
       builder: (context, child) {
-        final body = TixTimeScope(style: time, child: child!);
+        final body = DesktopHost(
+          child: TixTimeScope(style: time, child: child!),
+        );
         if (!still) return body;
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(disableAnimations: true),

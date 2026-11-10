@@ -15,6 +15,10 @@
 #   generated/tix-go-modules.json
 #       the Go modules of tix at the tix.lock commit, unpacked as tix-src/vendor
 #
+# The tray's appindicator library comes from Flathub's shared modules, which
+# the flathub repository carries as the shared-modules submodule
+# (https://github.com/flathub/shared-modules).
+#
 # The tag, the tix commit (tix.lock) and the Flutter tag (.tool-versions) move
 # together on every release.
 
@@ -35,10 +39,19 @@ finish-args:
   - --talk-name=org.freedesktop.secrets
   # flutter_local_notifications talks to the notification service directly.
   - --talk-name=org.freedesktop.Notifications
+  # The tray icon (tray_manager over libayatana-appindicator) registers with
+  # the desktop's StatusNotifierWatcher, and the app asks whether one runs
+  # before offering close to tray. Start at login goes through the Background
+  # portal, which needs no permission here.
+  - --talk-name=org.kde.StatusNotifierWatcher
   # Opening and saving files and links goes through the portals, so no
   # filesystem access is requested.
 
 modules:
+  # The tray icon's library and what it needs (libdbusmenu, ayatana-ido,
+  # libayatana-indicator); the GNOME runtime ships none of them.
+  - shared-modules/libayatana-appindicator/libayatana-appindicator-gtk3.json
+
   # Go only for the build: the hook compiles libtix with it, then it is
   # removed from the app. Downloaded rather than taken from the golang SDK
   # extension, because tix's go.mod asks for a newer Go than the extension

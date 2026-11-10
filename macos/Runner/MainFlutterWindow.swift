@@ -1,5 +1,7 @@
+import Carbon.HIToolbox
 import Cocoa
 import FlutterMacOS
+import ServiceManagement
 
 class MainFlutterWindow: NSWindow {
   private var localAccess: LocalAccess?
@@ -13,6 +15,7 @@ class MainFlutterWindow: NSWindow {
     RegisterGeneratedPlugins(registry: flutterViewController)
     localAccess = LocalAccess(messenger: flutterViewController.engine.binaryMessenger)
     WidgetChannel.shared.attach(to: flutterViewController.engine.binaryMessenger)
+    DesktopChannel.shared.attach(to: flutterViewController.engine.binaryMessenger)
 
     super.awakeFromNib()
   }
@@ -134,5 +137,124 @@ final class LocalAccess: NSObject {
     if values.ubiquitousItemDownloadingStatus == .current { return true }
     try? FileManager.default.startDownloadingUbiquitousItem(at: url)
     return false
+  }
+}
+
+/// tix/links and tix/desktop on macOS: `tix://` links for Dart to take, what
+/// the Mac offers, start at login (SMAppService, macOS 13 and later) and the
+/// ⌃⇧Space quick-add hotkey (Carbon, which needs no accessibility grant).
+/// See lib/src/core/platform/deep_links.dart and desktop.dart.
+final class DesktopChannel: NSObject, FlutterAppLifecycleDelegate {
+  static let shared = DesktopChannel()
+  static let scheme = "tix"
+
+  private var links: FlutterMethodChannel?
+  private var desktop: FlutterMethodChannel?
+  private var pendingLink: String?
+  private var listening = false
+  private var hotkey: EventHotKeyRef?
+  private var hotkeyHandler: EventHandlerRef?
+
+  func attach(to messenger: FlutterBinaryMessenger) {
+    let links = FlutterMethodChannel(name: "tix/links", binaryMessenger: messenger)
+    links.setMethodCallHandler { [weak self] call, result in
+      guard let self, call.method == "take" else {
+        result(FlutterMethodNotImplemented)
+        return
+      }
+      self.listening = true
+      result(self.pendingLink)
+      self.pendingLink = nil
+    }
+    self.links = links
+    let desktop = FlutterMethodChannel(name: "tix/desktop", binaryMessenger: messenger)
+    desktop.setMethodCallHandler { [weak self] call, result in
+      self?.handle(call, result: result)
+    }
+    self.desktop = desktop
+  }
+
+  // FlutterAppDelegate forwards application(_:open:) to lifecycle delegates under this selector.
+  @objc(handleOpenURLs:)
+  func handleOpen(_ urls: [URL]) -> Bool {
+    guard let url = urls.last(where: { $0.scheme == Self.scheme }) else { return false }
+    showWindow()
+    pendingLink = url.absoluteString
+    if listening { links?.invokeMethod("opened", arguments: nil) }
+    return true
+  }
+
+  /// Brings the main window back, hidden or not, and the app to the front.
+  func showWindow() {
+    let window = (NSApp.delegate as? FlutterAppDelegate)?.mainFlutterWindow
+    window?.setIsVisible(true)
+    window?.makeKeyAndOrderFront(nil)
+    NSApp.activate(ignoringOtherApps: true)
+  }
+
+  private func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    let on = call.arguments as? Bool ?? false
+    switch call.method {
+    case "capabilities":
+      var autostart = false
+      if #available(macOS 13.0, *) { autostart = true }
+      result(["tray": true, "autostart": autostart, "hotkey": true, "background": false])
+    case "autostart":
+      if #available(macOS 13.0, *) {
+        result(SMAppService.mainApp.status == .enabled)
+      } else {
+        result(false)
+      }
+    case "setAutostart":
+      result(setAutostart(on))
+    case "setHotkey":
+      result(setHotkey(on))
+    default:
+      result(FlutterMethodNotImplemented)
+    }
+  }
+
+  private func setAutostart(_ on: Bool) -> Bool {
+    guard #available(macOS 13.0, *) else { return false }
+    do {
+      if on {
+        try SMAppService.mainApp.register()
+      } else {
+        try SMAppService.mainApp.unregister()
+      }
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  private func setHotkey(_ on: Bool) -> Bool {
+    if !on {
+      if let hotkey { UnregisterEventHotKey(hotkey) }
+      hotkey = nil
+      return true
+    }
+    if hotkey != nil { return true }
+    if hotkeyHandler == nil {
+      var pressed = EventTypeSpec(
+        eventClass: OSType(kEventClassKeyboard), eventKind: UInt32(kEventHotKeyPressed))
+      let status = InstallEventHandler(
+        GetApplicationEventTarget(),
+        { _, _, context in
+          guard let context else { return noErr }
+          let channel = Unmanaged<DesktopChannel>.fromOpaque(context).takeUnretainedValue()
+          DispatchQueue.main.async { channel.desktop?.invokeMethod("hotkey", arguments: nil) }
+          return noErr
+        }, 1, &pressed, Unmanaged.passUnretained(self).toOpaque(), &hotkeyHandler)
+      guard status == noErr else { return false }
+    }
+    // 'tix!' as the signature.
+    let id = EventHotKeyID(signature: OSType(0x7469_7821), id: 1)
+    var ref: EventHotKeyRef?
+    let status = RegisterEventHotKey(
+      UInt32(kVK_Space), UInt32(controlKey | shiftKey), id, GetApplicationEventTarget(), 0, &ref)
+    guard status == noErr, let ref else { return false }
+    hotkey = ref
+    return true
   }
 }

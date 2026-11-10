@@ -5,9 +5,11 @@ Type=Application
 Name=tix
 GenericName=Task tracker
 Comment=Mobile and desktop client for tix
-Exec=tix_mobile
+Exec=tix_mobile %u
 Icon=red.tix.tix_mobile
 Terminal=false
 Categories=Office;ProjectManagement;
 Keywords=tasks;todo;tickets;
 StartupWMClass=red.tix.tix_mobile
+# tix:// links (tix://inbox, tix://quick-add) open in the running app.
+MimeType=x-scheme-handler/tix;

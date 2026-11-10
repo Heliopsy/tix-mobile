@@ -6,7 +6,9 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/desktop/desktop_state.dart';
 import 'package:tix_mobile/src/core/platform/adb_bridge.dart';
+import 'package:tix_mobile/src/core/platform/desktop.dart';
 import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
@@ -19,6 +21,7 @@ import 'package:tix_mobile/src/features/settings/presentation/settings_screen.da
 
 import '../../../helpers/app.dart';
 import '../../../helpers/design.dart';
+import '../../../helpers/fake_desktop.dart';
 import '../../../helpers/fake_tix.dart';
 import '../../../helpers/fake_widgets.dart';
 import '../../../helpers/stores.dart';
@@ -37,6 +40,7 @@ void main() {
     FakeWidgetBridge? widgets,
     CacheStore? cache,
     bool adb = false,
+    FakeDesktop? desktop,
   }) async {
     server = tix ?? FakeTix();
     final s = signedInStores();
@@ -66,6 +70,9 @@ void main() {
           cache: cache,
         ),
         adbControlOfferedProvider.overrideWithValue(adb),
+        desktopShellProvider.overrideWithValue(
+          desktop ?? FakeDesktop(caps: DesktopCaps.none),
+        ),
       ],
     );
     // The date settings are read in the background; let that request land
@@ -74,6 +81,109 @@ void main() {
     await tester.pumpAndSettle();
     return c;
   }
+
+  group('desktop', () {
+    Finder section() => find.byKey(const Key('settings.section.desktop'));
+
+    testWidgets('no Desktop section off the desktop', (tester) async {
+      await pump(tester);
+      expect(section(), findsNothing);
+      expect(find.byKey(const Key('settings.closeToTray')), findsNothing);
+    });
+
+    testWidgets('close to tray is on and is turned off and kept', (
+      tester,
+    ) async {
+      final c = await pump(tester, desktop: FakeDesktop());
+      expect(section(), findsOneWidget);
+      expect(find.text('Keep running in the tray'), findsOneWidget);
+      expect(c.read(closeToTraySettingProvider), isTrue);
+      await tester.tap(find.byKey(const Key('settings.closeToTray')));
+      await tester.pumpAndSettle();
+      expect(c.read(closeToTraySettingProvider), isFalse);
+      expect(stores.settings.values['settings.closeToTray'], 'false');
+    });
+
+    testWidgets('without a tray close to tray is off and says why', (
+      tester,
+    ) async {
+      final c = await pump(
+        tester,
+        desktop: FakeDesktop(caps: const DesktopCaps(autostart: true)),
+      );
+      expect(
+        find.text(
+          'This desktop shows no tray icons, so closing the window quits '
+          'tix.',
+        ),
+        findsOneWidget,
+      );
+      await tester.tap(find.byKey(const Key('settings.closeToTray')));
+      await tester.pumpAndSettle();
+      expect(c.read(closeToTraySettingProvider), isFalse);
+      expect(stores.settings.values, isNot(contains('settings.closeToTray')));
+    });
+
+    testWidgets('start at login is turned on through the platform', (
+      tester,
+    ) async {
+      final desktop = FakeDesktop();
+      await pump(tester, desktop: desktop);
+      await tester.tap(find.byKey(const Key('settings.autostart')));
+      await tester.pumpAndSettle();
+      expect(desktop.autostarts, [true]);
+      expect(stores.settings.values['settings.autostart'], 'true');
+    });
+
+    testWidgets('a refused start at login says so', (tester) async {
+      final desktop = FakeDesktop()..accept = false;
+      final c = await pump(tester, desktop: desktop);
+      await tester.tap(find.byKey(const Key('settings.autostart')));
+      await tester.pumpAndSettle();
+      expect(find.text('Could not change start at login'), findsOneWidget);
+      expect(c.read(autostartSettingProvider).value, isFalse);
+    });
+
+    testWidgets('the hotkey names its keys and is turned on', (tester) async {
+      final desktop = FakeDesktop();
+      final c = await pump(tester, desktop: desktop);
+      expect(
+        find.text(
+          'Ctrl+Shift+Space opens quick add, even while tix is in the '
+          'background.',
+        ),
+        findsOneWidget,
+      );
+      await tester.tap(find.byKey(const Key('settings.hotkey')));
+      await tester.pumpAndSettle();
+      expect(desktop.hotkeys, [true]);
+      expect(c.read(quickAddHotkeySettingProvider), isTrue);
+    });
+
+    testWidgets('a taken hotkey says so and stays off', (tester) async {
+      final desktop = FakeDesktop()..accept = false;
+      final c = await pump(tester, desktop: desktop);
+      await tester.tap(find.byKey(const Key('settings.hotkey')));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('Ctrl+Shift+Space is taken by another app'),
+        findsOneWidget,
+      );
+      expect(c.read(quickAddHotkeySettingProvider), isFalse);
+    });
+
+    testWidgets('no hotkey or login switch where the desktop has none', (
+      tester,
+    ) async {
+      await pump(
+        tester,
+        desktop: FakeDesktop(caps: const DesktopCaps(tray: true)),
+      );
+      expect(section(), findsOneWidget);
+      expect(find.byKey(const Key('settings.hotkey')), findsNothing);
+      expect(find.byKey(const Key('settings.autostart')), findsNothing);
+    });
+  });
 
   testWidgets('ADB control is offered only where there is ADB', (tester) async {
     await pump(tester);
@@ -610,6 +720,7 @@ void main() {
           local: true,
           widgets: FakeWidgetBridge(),
           adb: true,
+          desktop: FakeDesktop(),
         );
         await tester.pumpAndSettle();
         final list = find

@@ -7468,4 +7468,77 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get pinFailed => 'Impossible de l\'ajouter à l\'écran d\'accueil';
+
+  @override
+  String get trayOpen => 'Ouvrir tix';
+
+  @override
+  String trayInbox(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Boîte de réception ($count non lus)',
+      one: 'Boîte de réception (1 non lu)',
+      zero: 'Boîte de réception',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get trayQuit => 'Quitter tix';
+
+  @override
+  String trayTooltip(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'tix : $count non lus',
+      one: 'tix : 1 non lu',
+      zero: 'tix',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsDesktop => 'Bureau';
+
+  @override
+  String get settingsDesktopHelp =>
+      'Le comportement de tix sur cet ordinateur : l’icône dans la zone de notification, le lancement à l’ouverture de session et un raccourci qui fonctionne dans toutes les applications.';
+
+  @override
+  String get settingsCloseToTray => 'Rester dans la zone de notification';
+
+  @override
+  String get settingsCloseToTrayHelp =>
+      'Fermer la fenêtre la masque, et la synchronisation et les notifications continuent. Quittez depuis le menu de l’icône.';
+
+  @override
+  String get settingsCloseToTrayNone =>
+      'Ce bureau n’affiche pas d’icônes de notification, donc fermer la fenêtre quitte tix.';
+
+  @override
+  String get settingsAutostart => 'Lancer à l’ouverture de session';
+
+  @override
+  String get settingsAutostartHelp =>
+      'tix démarre quand vous ouvrez une session sur cet ordinateur.';
+
+  @override
+  String get settingsAutostartFailed =>
+      'Impossible de modifier le lancement à l’ouverture de session';
+
+  @override
+  String get settingsHotkey =>
+      'Ajout rapide depuis n’importe quelle application';
+
+  @override
+  String settingsHotkeyHelp(String keys) {
+    return '$keys ouvre l’ajout rapide, même quand tix est en arrière-plan.';
+  }
+
+  @override
+  String settingsHotkeyTaken(String keys) {
+    return '$keys est déjà utilisé par une autre application';
+  }
 }

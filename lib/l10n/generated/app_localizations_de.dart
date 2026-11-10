@@ -7479,4 +7479,76 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get pinFailed => 'Konnte nicht zum Startbildschirm hinzugefügt werden';
+
+  @override
+  String get trayOpen => 'tix öffnen';
+
+  @override
+  String trayInbox(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Posteingang ($count ungelesen)',
+      one: 'Posteingang (1 ungelesen)',
+      zero: 'Posteingang',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get trayQuit => 'tix beenden';
+
+  @override
+  String trayTooltip(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'tix: $count ungelesen',
+      one: 'tix: 1 ungelesen',
+      zero: 'tix',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsDesktop => 'Desktop';
+
+  @override
+  String get settingsDesktopHelp =>
+      'Wie sich tix auf diesem Computer verhält: das Symbol im Infobereich, der Start bei der Anmeldung und ein Tastenkürzel, das in jeder App funktioniert.';
+
+  @override
+  String get settingsCloseToTray => 'Im Infobereich weiterlaufen';
+
+  @override
+  String get settingsCloseToTrayHelp =>
+      'Das Schließen blendet das Fenster nur aus, Synchronisierung und Benachrichtigungen laufen weiter. Beenden über das Menü des Symbols.';
+
+  @override
+  String get settingsCloseToTrayNone =>
+      'Dieser Desktop zeigt keine Symbole im Infobereich, daher beendet das Schließen des Fensters tix.';
+
+  @override
+  String get settingsAutostart => 'Bei der Anmeldung starten';
+
+  @override
+  String get settingsAutostartHelp =>
+      'tix startet, wenn Sie sich an diesem Computer anmelden.';
+
+  @override
+  String get settingsAutostartFailed =>
+      'Start bei der Anmeldung konnte nicht geändert werden';
+
+  @override
+  String get settingsHotkey => 'Schnell hinzufügen aus jeder App';
+
+  @override
+  String settingsHotkeyHelp(String keys) {
+    return '$keys öffnet „Schnell hinzufügen“, auch wenn tix im Hintergrund läuft.';
+  }
+
+  @override
+  String settingsHotkeyTaken(String keys) {
+    return '$keys wird bereits von einer anderen App verwendet';
+  }
 }
