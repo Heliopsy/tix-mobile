@@ -41,14 +41,16 @@ void main() {
 
   testWidgets('a registered key runs its command', (tester) async {
     await pump(tester);
-    await tester.sendKeyEvent(LogicalKeyboardKey.keyN);
+    expect(await tester.sendKeyEvent(LogicalKeyboardKey.keyN), isTrue);
     expect(ran, ['new']);
   });
 
   testWidgets('keys typed into a field stay in the field', (tester) async {
     await pump(tester);
     await tester.tap(find.byKey(const Key('field')));
-    await tester.sendKeyEvent(LogicalKeyboardKey.keyN);
+    // Unhandled, so the platform hands the key to the field's text input. A
+    // handled key would be swallowed and never typed.
+    expect(await tester.sendKeyEvent(LogicalKeyboardKey.keyN), isFalse);
     await tester.pumpAndSettle();
     expect(ran, isEmpty);
     expect(find.byKey(const Key('shortcuts.help')), findsNothing);

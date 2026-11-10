@@ -276,35 +276,57 @@ class TixShortcuts extends ConsumerWidget {
     return ListenableBuilder(
       listenable: registry.changes,
       builder: (context, child) {
-        VoidCallback guarded(VoidCallback run, {bool always = false}) => () {
-          if (always || !_typing()) run();
-        };
-        final bindings = <ShortcutActivator, VoidCallback>{
-          const CharacterActivator('?'): guarded(
+        final bindings = <ShortcutActivator, _Binding>{
+          const CharacterActivator('?'): _Binding(
             () => showShortcutHelp(context, registry.commands),
           ),
           const SingleActivator(
             LogicalKeyboardKey.keyK,
             control: true,
-          ): guarded(
+          ): _Binding(
             () => showCommandPalette(context, registry),
             always: true,
           ),
-          const SingleActivator(LogicalKeyboardKey.keyK, meta: true): guarded(
+          const SingleActivator(LogicalKeyboardKey.keyK, meta: true): _Binding(
             () => showCommandPalette(context, registry),
             always: true,
           ),
           for (final c in registry.commands)
-            if (c.shortcut != null) c.shortcut!: guarded(c.run),
+            if (c.shortcut != null) c.shortcut!: _Binding(c.run),
         };
-        return CallbackShortcuts(
-          bindings: bindings,
-          child: Focus(autofocus: true, child: child!),
+        return Focus(
+          autofocus: true,
+          onKeyEvent: (node, event) => _dispatch(bindings, event),
+          child: child!,
         );
       },
       child: child,
     );
   }
+
+  /// Runs the binding [event] matches. A key typed into a text field is left
+  /// unhandled, not swallowed: a handled key never reaches the field on
+  /// desktop, so `a` would assign instead of typing an `a`.
+  static KeyEventResult _dispatch(
+    Map<ShortcutActivator, _Binding> bindings,
+    KeyEvent event,
+  ) {
+    for (final MapEntry(key: activator, value: binding) in bindings.entries) {
+      if (!activator.accepts(event, HardwareKeyboard.instance)) continue;
+      if (!binding.always && _typing()) return KeyEventResult.ignored;
+      binding.run();
+      return KeyEventResult.handled;
+    }
+    return KeyEventResult.ignored;
+  }
+}
+
+/// A shortcut's action, and whether it also fires while typing.
+class _Binding {
+  const _Binding(this.run, {this.always = false});
+
+  final VoidCallback run;
+  final bool always;
 }
 
 /// tix's `?` overlay: every command that has a key, with the key.
