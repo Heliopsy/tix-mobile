@@ -7937,4 +7937,33 @@ class AppLocalizationsFr extends AppLocalizations {
   String watchCommentBy(String author, String text) {
     return '$author : $text';
   }
+
+  @override
+  String get boardPriorityTo => 'Priorité…';
+
+  @override
+  String get boardDueTo => 'Échéance…';
+
+  @override
+  String get boardTagAdd => 'Ajouter un tag…';
+
+  @override
+  String boardPrioritySet(String ref) {
+    return 'Priorité de $ref modifiée';
+  }
+
+  @override
+  String boardDueSet(String ref) {
+    return 'Échéance de $ref définie';
+  }
+
+  @override
+  String boardDueCleared(String ref) {
+    return 'Échéance de $ref retirée';
+  }
+
+  @override
+  String boardTagged(String ref, String tag) {
+    return 'Tag $tag ajouté à $ref';
+  }
 }

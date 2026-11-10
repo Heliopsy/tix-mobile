@@ -173,6 +173,12 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
     unawaited(actions.toggleDone(focused));
   }
 
+  void _editFocused(Future<void> Function(Task) edit) {
+    if (!(ModalRoute.isCurrentOf(context) ?? true)) return;
+    final focused = _focusedTask(_order);
+    if (focused != null) unawaited(edit(focused));
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -395,6 +401,48 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
             shortcut: const SingleActivator(LogicalKeyboardKey.keyE),
             run: () => _markFocusedDone(actions),
           ),
+        if (!detailBeside) ...[
+          TixCommand(
+            id: 'tasks.move',
+            label: l10n.boardMoveTo,
+            group: l10n.commandsTasks,
+            icon: Icons.arrow_forward,
+            shortcut: const SingleActivator(LogicalKeyboardKey.keyM),
+            run: () => _editFocused(actions.pickMove),
+          ),
+          TixCommand(
+            id: 'tasks.priority',
+            label: l10n.boardPriorityTo,
+            group: l10n.commandsTasks,
+            icon: Icons.flag_outlined,
+            shortcut: const SingleActivator(LogicalKeyboardKey.keyP),
+            run: () => _editFocused(actions.setPriority),
+          ),
+          TixCommand(
+            id: 'tasks.assign',
+            label: l10n.boardAssignTo,
+            group: l10n.commandsTasks,
+            icon: Icons.people_outline,
+            shortcut: const SingleActivator(LogicalKeyboardKey.keyA),
+            run: () => _editFocused(actions.pickAssignee),
+          ),
+          TixCommand(
+            id: 'tasks.due',
+            label: l10n.boardDueTo,
+            group: l10n.commandsTasks,
+            icon: Icons.event_outlined,
+            shortcut: const SingleActivator(LogicalKeyboardKey.keyU),
+            run: () => _editFocused(actions.setDue),
+          ),
+          TixCommand(
+            id: 'tasks.tag',
+            label: l10n.boardTagAdd,
+            group: l10n.commandsTasks,
+            icon: Icons.sell_outlined,
+            shortcut: const SingleActivator(LogicalKeyboardKey.keyT),
+            run: () => _editFocused(actions.addTag),
+          ),
+        ],
         TixCommand(
           id: 'tasks.selectAll',
           label: l10n.bulkSelectAll,

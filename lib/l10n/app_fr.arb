@@ -2179,5 +2179,12 @@
   "watchFieldCustom": "champs personnalisés",
   "watchFieldParent": "tâche parente",
   "watchCommentEdited": "modifié",
-  "watchCommentBy": "{author} : {text}"
+  "watchCommentBy": "{author} : {text}",
+  "boardPriorityTo": "Priorité…",
+  "boardDueTo": "Échéance…",
+  "boardTagAdd": "Ajouter un tag…",
+  "boardPrioritySet": "Priorité de {ref} modifiée",
+  "boardDueSet": "Échéance de {ref} définie",
+  "boardDueCleared": "Échéance de {ref} retirée",
+  "boardTagged": "Tag {tag} ajouté à {ref}"
 }

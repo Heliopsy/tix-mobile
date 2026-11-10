@@ -2179,5 +2179,12 @@
   "watchFieldCustom": "потребителски полета",
   "watchFieldParent": "родителска задача",
   "watchCommentEdited": "редактиран",
-  "watchCommentBy": "{author}: {text}"
+  "watchCommentBy": "{author}: {text}",
+  "boardPriorityTo": "Приоритет…",
+  "boardDueTo": "Краен срок…",
+  "boardTagAdd": "Добави етикет…",
+  "boardPrioritySet": "Приоритетът на {ref} е променен",
+  "boardDueSet": "Крайният срок на {ref} е зададен",
+  "boardDueCleared": "Крайният срок на {ref} е премахнат",
+  "boardTagged": "{ref} получи етикет {tag}"
 }

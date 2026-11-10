@@ -144,6 +144,10 @@ abstract final class TixMotion {
   /// The default curve, CSS `ease`.
   static const ease = Cubic(0.25, 0.1, 0.25, 1);
 
+  /// How long a row just ticked keeps its place, so the tick and the
+  /// strike-through finish before the row moves or leaves the list.
+  static const settle = Duration(milliseconds: 440);
+
   /// The completion tick's overshoot.
   static const pop = Cubic(0.34, 1.56, 0.64, 1);
 

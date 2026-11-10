@@ -13188,6 +13188,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{author}: {text}'**
   String watchCommentBy(String author, String text);
+
+  /// No description provided for @boardPriorityTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority…'**
+  String get boardPriorityTo;
+
+  /// No description provided for @boardDueTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date…'**
+  String get boardDueTo;
+
+  /// No description provided for @boardTagAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add tag…'**
+  String get boardTagAdd;
+
+  /// No description provided for @boardPrioritySet.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref} priority changed'**
+  String boardPrioritySet(String ref);
+
+  /// No description provided for @boardDueSet.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref} due date set'**
+  String boardDueSet(String ref);
+
+  /// No description provided for @boardDueCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref} due date cleared'**
+  String boardDueCleared(String ref);
+
+  /// No description provided for @boardTagged.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref} tagged {tag}'**
+  String boardTagged(String ref, String tag);
 }
 
 class _AppLocalizationsDelegate

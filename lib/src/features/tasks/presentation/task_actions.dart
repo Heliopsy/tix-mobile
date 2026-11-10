@@ -9,6 +9,7 @@ import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/offline/outbox.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
+import 'package:tix_mobile/src/data/models/task_patch.dart';
 import 'package:tix_mobile/src/data/models/workflow.dart';
 import 'package:tix_mobile/src/features/tasks/application/listing.dart';
 import 'package:tix_mobile/src/features/tasks/application/tasks.dart';
@@ -231,6 +232,72 @@ class TaskQuickActions {
     );
   }
 
+  /// Asks for a priority and gives it to [task].
+  Future<void> setPriority(Task task) async {
+    final p = await pickPriority(context, task.priority);
+    if (p == null || p == task.priority || !context.mounted) return;
+    await _patch(
+      task,
+      TaskPatch.priority(p),
+      context.l10n.boardPrioritySet(task.ref),
+    );
+  }
+
+  /// Asks for a due date and sets it on [task], or clears it.
+  Future<void> setDue(Task task) async {
+    final picked = await pickDue(context, ref, current: task.dueAt);
+    if (picked == null || picked.value == task.dueAt || !context.mounted) {
+      return;
+    }
+    final l10n = context.l10n;
+    await _patch(
+      task,
+      TaskPatch.due(picked.value),
+      picked.value == null
+          ? l10n.boardDueCleared(task.ref)
+          : l10n.boardDueSet(task.ref),
+    );
+  }
+
+  /// Asks for a tag and puts it on [task].
+  Future<void> addTag(Task task) async {
+    final name = await pickTag(context, task);
+    if (name == null || !context.mounted) return;
+    final has = task.tags.any((t) => t.toLowerCase() == name.toLowerCase());
+    if (has) return;
+    final change = _listing.change(
+      task.copyWith(tags: [...task.tags, name]),
+      send: () => _listing.sendTag(task.ref, name, add: true),
+      reverse: () => _listing.sendTag(task.ref, name, add: false),
+    );
+    await runOptimistic(
+      context,
+      apply: change.apply,
+      rollback: change.rollback,
+      commit: change.commit,
+      describe: _describe,
+      success: context.l10n.boardTagged(task.ref, name),
+      undo: change.undo,
+    );
+  }
+
+  Future<void> _patch(Task task, TaskPatch patch, String success) async {
+    final change = _listing.change(
+      patch.applyTo(task),
+      send: () => _listing.sendPatch(task, patch),
+      reverse: () => _listing.sendPatch(task, patch.inverseFor(task)),
+    );
+    await runOptimistic(
+      context,
+      apply: change.apply,
+      rollback: change.rollback,
+      commit: change.commit,
+      describe: _describe,
+      success: success,
+      undo: change.undo,
+    );
+  }
+
   /// Asks which state to move [task] to, among those its workflow reaches.
   Future<void> pickMove(Task task) async {
     final workflow = _context?.workflowOf(task);
@@ -322,6 +389,15 @@ enum TaskMenuItem {
   /// Assign to anyone.
   assign,
 
+  /// Change the priority.
+  priority,
+
+  /// Set or clear the due date.
+  due,
+
+  /// Add a tag.
+  tag,
+
   /// Pick for a bulk action.
   select,
 }
@@ -383,6 +459,24 @@ Future<void> showTaskMenu(
         label: l10n.boardAssignTo,
         icon: Icons.people_outline,
       ),
+      TixSheetAction(
+        key: const Key('menu.priority'),
+        value: TaskMenuItem.priority,
+        label: l10n.boardPriorityTo,
+        icon: Icons.flag_outlined,
+      ),
+      TixSheetAction(
+        key: const Key('menu.due'),
+        value: TaskMenuItem.due,
+        label: l10n.boardDueTo,
+        icon: Icons.event_outlined,
+      ),
+      TixSheetAction(
+        key: const Key('menu.tag'),
+        value: TaskMenuItem.tag,
+        label: l10n.boardTagAdd,
+        icon: Icons.sell_outlined,
+      ),
       if (onSelect != null)
         TixSheetAction(
           key: const Key('menu.select'),
@@ -408,6 +502,12 @@ Future<void> showTaskMenu(
       await actions.assignToMe(task);
     case TaskMenuItem.assign:
       await actions.pickAssignee(task);
+    case TaskMenuItem.priority:
+      await actions.setPriority(task);
+    case TaskMenuItem.due:
+      await actions.setDue(task);
+    case TaskMenuItem.tag:
+      await actions.addTag(task);
     case TaskMenuItem.select:
       onSelect?.call();
   }
