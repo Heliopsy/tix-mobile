@@ -159,14 +159,14 @@ static gboolean my_application_local_command_line(GApplication* application,
     return TRUE;
   }
 
-  // Another tix already runs: hand it the link, or ask it to show itself,
-  // and leave.
+  // Another tix already runs: hand it the link, or ask it to show itself
+  // (unless this is the login item starting it again), and leave.
   if (g_application_get_is_remote(application)) {
     if (link != nullptr) {
       g_autoptr(GFile) file = g_file_new_for_uri(link);
       GFile* files[] = {file};
       g_application_open(application, files, 1, "");
-    } else {
+    } else if (!self->background) {
       g_application_activate(application);
     }
     *exit_status = 0;
