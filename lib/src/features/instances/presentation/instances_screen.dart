@@ -94,7 +94,6 @@ class InstanceCard extends ConsumerWidget {
       case _InstanceAction.addConnection:
         context.go(Routes.addConnection(instance.id));
       case _InstanceAction.export:
-        final messenger = ScaffoldMessenger.of(context);
         final box = context.findRenderObject() as RenderBox?;
         final origin = box == null
             ? null
@@ -102,10 +101,8 @@ class InstanceCard extends ConsumerWidget {
         final done = await ref
             .read(sessionControllerProvider.notifier)
             .exportLocal(instance.id, origin: origin);
-        if (done) {
-          messenger.showSnackBar(
-            SnackBar(content: Text(l10n.databaseExported)),
-          );
+        if (done && context.mounted) {
+          showTixToast(context, l10n.databaseExported);
         }
       case _InstanceAction.remove:
         final unsent = await ref
