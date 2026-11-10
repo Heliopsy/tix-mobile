@@ -13044,6 +13044,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Restart to update ({version})'**
   String trayRestartToUpdate(String version);
+
+  /// Tray menu entry that opens the Watch screen
+  ///
+  /// In en, this message translates to:
+  /// **'Watch'**
+  String get trayWatch;
+
+  /// Tooltip of the shell button that opens Watch
+  ///
+  /// In en, this message translates to:
+  /// **'Watch live events'**
+  String get watchShortcut;
+
+  /// Watch row: the channel an event came through
+  ///
+  /// In en, this message translates to:
+  /// **'via {channel}'**
+  String watchVia(String channel);
+
+  /// Watch row: the channel and the token or job that made the change
+  ///
+  /// In en, this message translates to:
+  /// **'via {channel} ({name})'**
+  String watchViaNamed(String channel, String name);
+
+  /// Access channel: the web interface
+  ///
+  /// In en, this message translates to:
+  /// **'web'**
+  String get watchChannelWeb;
+
+  /// Access channel: an API token
+  ///
+  /// In en, this message translates to:
+  /// **'API'**
+  String get watchChannelApi;
+
+  /// Access channel: the command line
+  ///
+  /// In en, this message translates to:
+  /// **'CLI'**
+  String get watchChannelCli;
+
+  /// Access channel: the terminal interface over SSH
+  ///
+  /// In en, this message translates to:
+  /// **'SSH'**
+  String get watchChannelSsh;
+
+  /// Access channel: an MCP client
+  ///
+  /// In en, this message translates to:
+  /// **'MCP'**
+  String get watchChannelMcp;
+
+  /// Access channel: external sync
+  ///
+  /// In en, this message translates to:
+  /// **'sync'**
+  String get watchChannelSync;
+
+  /// Access channel: an import
+  ///
+  /// In en, this message translates to:
+  /// **'import'**
+  String get watchChannelImport;
+
+  /// Access channel: background work of the server
+  ///
+  /// In en, this message translates to:
+  /// **'system'**
+  String get watchChannelSystem;
+
+  /// Access channel of an entry recorded before channels were
+  ///
+  /// In en, this message translates to:
+  /// **'an unknown channel'**
+  String get watchChannelUnknown;
+
+  /// Changed task field in a Watch row
+  ///
+  /// In en, this message translates to:
+  /// **'title'**
+  String get watchFieldTitle;
+
+  /// Changed task field in a Watch row
+  ///
+  /// In en, this message translates to:
+  /// **'description'**
+  String get watchFieldBody;
+
+  /// Changed task field in a Watch row
+  ///
+  /// In en, this message translates to:
+  /// **'priority'**
+  String get watchFieldPriority;
+
+  /// Changed task field in a Watch row
+  ///
+  /// In en, this message translates to:
+  /// **'assignee'**
+  String get watchFieldAssignee;
+
+  /// Changed task field in a Watch row
+  ///
+  /// In en, this message translates to:
+  /// **'tags'**
+  String get watchFieldTags;
+
+  /// Changed task field in a Watch row
+  ///
+  /// In en, this message translates to:
+  /// **'due date'**
+  String get watchFieldDue;
+
+  /// Changed task field in a Watch row
+  ///
+  /// In en, this message translates to:
+  /// **'repeat rule'**
+  String get watchFieldRecurrence;
+
+  /// Changed task field in a Watch row
+  ///
+  /// In en, this message translates to:
+  /// **'custom fields'**
+  String get watchFieldCustom;
+
+  /// Changed task field in a Watch row
+  ///
+  /// In en, this message translates to:
+  /// **'parent'**
+  String get watchFieldParent;
+
+  /// Watch row: the comment was edited, not added
+  ///
+  /// In en, this message translates to:
+  /// **'edited'**
+  String get watchCommentEdited;
+
+  /// Watch row: a comment's text after its author, when someone else posted it
+  ///
+  /// In en, this message translates to:
+  /// **'{author}: {text}'**
+  String watchCommentBy(String author, String text);
 }
 
 class _AppLocalizationsDelegate

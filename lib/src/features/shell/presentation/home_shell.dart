@@ -13,6 +13,7 @@ import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/features/shell/presentation/context_switcher.dart';
+import 'package:tix_mobile/src/features/shell/presentation/watch_shortcut.dart';
 
 /// One top-level destination: the shell branch it opens, in branch order.
 @immutable
@@ -200,6 +201,7 @@ class HomeShell extends StatelessWidget {
               child: const Row(
                 children: [
                   Expanded(child: ContextSwitcherButton()),
+                  WatchShortcutButton(),
                   SyncBadgeButton(),
                   Padding(
                     padding: EdgeInsets.only(right: TixSpace.s2),
@@ -231,6 +233,7 @@ class HomeShell extends StatelessWidget {
                 children: [
                   ContextSwitcherButton(rail: true, extended: extended),
                   const SyncBadgeButton(),
+                  const WatchShortcutButton(),
                   const SizedBox(height: TixSpace.s2),
                   QuickAddButton(extended: extended),
                 ],

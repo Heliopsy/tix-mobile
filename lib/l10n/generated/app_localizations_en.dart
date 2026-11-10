@@ -7796,4 +7796,82 @@ class AppLocalizationsEn extends AppLocalizations {
   String trayRestartToUpdate(String version) {
     return 'Restart to update ($version)';
   }
+
+  @override
+  String get trayWatch => 'Watch';
+
+  @override
+  String get watchShortcut => 'Watch live events';
+
+  @override
+  String watchVia(String channel) {
+    return 'via $channel';
+  }
+
+  @override
+  String watchViaNamed(String channel, String name) {
+    return 'via $channel ($name)';
+  }
+
+  @override
+  String get watchChannelWeb => 'web';
+
+  @override
+  String get watchChannelApi => 'API';
+
+  @override
+  String get watchChannelCli => 'CLI';
+
+  @override
+  String get watchChannelSsh => 'SSH';
+
+  @override
+  String get watchChannelMcp => 'MCP';
+
+  @override
+  String get watchChannelSync => 'sync';
+
+  @override
+  String get watchChannelImport => 'import';
+
+  @override
+  String get watchChannelSystem => 'system';
+
+  @override
+  String get watchChannelUnknown => 'an unknown channel';
+
+  @override
+  String get watchFieldTitle => 'title';
+
+  @override
+  String get watchFieldBody => 'description';
+
+  @override
+  String get watchFieldPriority => 'priority';
+
+  @override
+  String get watchFieldAssignee => 'assignee';
+
+  @override
+  String get watchFieldTags => 'tags';
+
+  @override
+  String get watchFieldDue => 'due date';
+
+  @override
+  String get watchFieldRecurrence => 'repeat rule';
+
+  @override
+  String get watchFieldCustom => 'custom fields';
+
+  @override
+  String get watchFieldParent => 'parent';
+
+  @override
+  String get watchCommentEdited => 'edited';
+
+  @override
+  String watchCommentBy(String author, String text) {
+    return '$author: $text';
+  }
 }

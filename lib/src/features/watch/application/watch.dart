@@ -7,8 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'
 import 'package:meta/meta.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/events/events.dart';
+import 'package:tix_mobile/src/core/session/people.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
+import 'package:tix_mobile/src/data/models/task_detail.dart' show Comment;
 
 part 'watch.g.dart';
 
@@ -215,6 +218,7 @@ class WatchFeed extends _$WatchFeed {
 
   void _on(TailUpdate update) {
     if (!ref.mounted) return;
+    if (update case TailEvent(:final event)) _refreshComments(event);
     final s = state;
     state = switch (update) {
       TailEvent(:final event) when s.paused => s.copyWith(
@@ -232,6 +236,13 @@ class WatchFeed extends _$WatchFeed {
       ),
       TailUnsupported() => s.copyWith(phase: WatchPhase.unsupported),
     };
+  }
+
+  void _refreshComments(TixEvent event) {
+    final task = event.payload['ref'];
+    if (event.type == 'comment.added' && task is String && task.isNotEmpty) {
+      ref.invalidate(watchTaskCommentsProvider(task));
+    }
   }
 
   static List<TixEvent> _capped(List<TixEvent> events) =>
@@ -288,4 +299,28 @@ Future<List<Project>> watchProjects(Ref ref) async {
     cursor = page.nextCursor;
   } while (cursor != null && cursor.isNotEmpty);
   return out;
+}
+
+/// The tenant's actors by id, to put a name to who caused an event. The
+/// event itself carries only the actor's id and handle.
+@riverpod
+Future<Map<String, Actor>> watchActors(Ref ref) async {
+  final actors = await ref.watch(peopleRepositoryProvider).actors();
+  return {for (final a in actors) a.id: a};
+}
+
+/// The comments on the task [taskRef], read when Watch shows a comment on
+/// it, since a `comment.added` event carries no text.
+@riverpod
+Future<List<Comment>> watchTaskComments(Ref ref, String taskRef) =>
+    ref.watch(taskDetailRepositoryProvider).comments(taskRef);
+
+/// The comment [commentId] on [taskRef], null once it is gone.
+@riverpod
+Future<Comment?> watchComment(Ref ref, String taskRef, String commentId) async {
+  final comments = await ref.watch(watchTaskCommentsProvider(taskRef).future);
+  for (final c in comments) {
+    if (c.id == commentId) return c;
+  }
+  return null;
 }

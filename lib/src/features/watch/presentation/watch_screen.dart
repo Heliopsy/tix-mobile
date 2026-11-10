@@ -13,6 +13,7 @@ import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/live_status.dart';
+import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/features/watch/application/watch.dart';
 import 'package:tix_mobile/src/features/watch/presentation/watch_summary.dart';
@@ -52,7 +53,7 @@ class WatchScreen extends ConsumerWidget {
         title: l10n.watchTitle,
         subtitle: l10n.watchSubtitle,
         actions: [
-          const LiveStatusIndicator(),
+          const LiveStatusIndicator(pulse: true),
           TixIconButton(
             key: const Key('watch.pause'),
             icon: feed.paused ? Icons.play_arrow : Icons.pause,
@@ -121,6 +122,7 @@ class _Feed extends ConsumerWidget {
       for (final p in ref.watch(watchProjectsProvider).value ?? <Project>[])
         p.id: p,
     };
+    final actors = ref.watch(watchActorsProvider).value ?? const {};
     void clearFilters() => ref
         .read(watchFilterProvider.notifier)
         .change((_) => const WatchQuery());
@@ -237,16 +239,18 @@ class _Feed extends ConsumerWidget {
           final event = shown[i];
           return WatchRow(
             event: event,
+            project: projects[event.projectId],
+            actor: actors[event.actorId],
             onTap: () {
               final route = watchRoute(event);
               if (route == null) {
-                unawaited(showWatchDetails(context, event, projects));
+                unawaited(showWatchDetails(context, event, projects, actors));
               } else {
-                context.go(route);
+                unawaited(context.push(route));
               }
             },
             onDetails: () =>
-                unawaited(showWatchDetails(context, event, projects)),
+                unawaited(showWatchDetails(context, event, projects, actors)),
           );
         },
       );
@@ -520,19 +524,29 @@ class _WatchFilterFormState extends ConsumerState<WatchFilterForm> {
   }
 }
 
-/// One event in the tail: its sequence number, time, actor and type, and a
-/// line on what it did to what, as `tix watch` writes it.
+/// One event in the tail, as the web's activity feed draws a change: who
+/// did it (avatar, name, handle), a coloured badge for what happened, the
+/// project and subject, what the payload adds (states as status pills, a
+/// comment's text), and its sequence number, when and through what.
 class WatchRow extends StatelessWidget {
-  /// Draws [event].
+  /// Draws [event], naming [project] and [actor] when they are known.
   const WatchRow({
     required this.event,
     required this.onTap,
     required this.onDetails,
+    this.project,
+    this.actor,
     super.key,
   });
 
   /// The event.
   final TixEvent event;
+
+  /// The event's project, when known.
+  final Project? project;
+
+  /// Who caused it, from the tenant's directory, when known.
+  final Actor? actor;
 
   /// Opens what it is about, or its details.
   final VoidCallback onTap;
@@ -545,51 +559,215 @@ class WatchRow extends StatelessWidget {
     final l10n = context.l10n;
     final t = context.tix;
     final at = event.occurredAt;
-    final detail = watchDetail(l10n, event);
-    final muted = tixMono(context, size: TixText.xs, color: t.muted);
+    final who = watchWho(l10n, event, actor);
+    final channel = watchChannel(l10n, event.via);
+    final muted = TextStyle(fontSize: TixText.xs, color: t.muted);
+    final seq = event.seq;
     return ListTile(
-      key: Key('watch.${event.seq}'),
+      key: Key('watch.$seq'),
       onTap: onTap,
+      leading: TixAvatar(
+        key: Key('watch.$seq.avatar'),
+        label: who.name,
+        seed: who.handle ?? who.name,
+        hued: true,
+        icon: event.actorId.isEmpty ? Icons.settings_outlined : null,
+      ),
       title: Wrap(
         spacing: TixSpace.s2,
         runSpacing: TixSpace.s1,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          Text('#${event.seq.toString().padLeft(6, '0')}', style: muted),
-          if (at != null) Text(context.times.style.clock(at), style: muted),
           Text(
-            watchActor(event) ?? l10n.auditSystem,
+            who.name,
+            key: Key('watch.$seq.actor'),
             style: TextStyle(
               fontSize: TixText.sm,
               fontWeight: FontWeight.w600,
               color: t.ink,
             ),
           ),
-          TixBadge(event.type),
+          if (who.handle case final handle?)
+            Text(handle, key: Key('watch.$seq.handle'), style: muted),
+          TixBadge(
+            event.type,
+            key: Key('watch.$seq.type'),
+            tone: watchTone(event.type),
+          ),
         ],
       ),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: TixSpace.s1),
-        child: Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(
-                text: watchSubject(event),
-                style: tixMono(context, size: TixText.sm, color: t.ink),
-              ),
-              if (detail.isNotEmpty) TextSpan(text: '  $detail'),
-            ],
-          ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Wrap(
+              spacing: TixSpace.s2,
+              runSpacing: TixSpace.s1,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                if (project case final p?)
+                  ProjectChip(projectKey: p.key, colour: p.color, icon: p.icon),
+                Text(
+                  watchSubject(event),
+                  style: tixMono(context, size: TixText.sm, color: t.ink),
+                ),
+                ..._WatchWhat.of(context, event),
+              ],
+            ),
+            _CommentPreview(event: event),
+            const SizedBox(height: TixSpace.s1),
+            Wrap(
+              key: Key('watch.$seq.meta'),
+              spacing: TixSpace.s2,
+              runSpacing: TixSpace.s1,
+              children: [
+                Text(
+                  '#${seq.toString().padLeft(6, '0')}',
+                  style: tixMono(context, size: TixText.xs, color: t.muted),
+                ),
+                if (at != null) _Ago(at: at, style: muted),
+                if (channel != null)
+                  Text(channel, key: Key('watch.$seq.via'), style: muted),
+              ],
+            ),
+          ],
         ),
       ),
       trailing: TixIconButton(
-        key: Key('watch.details.${event.seq}'),
+        key: Key('watch.details.$seq'),
         icon: Icons.data_object,
         tooltip: l10n.watchDetails,
         onPressed: onDetails,
       ),
+    );
+  }
+}
+
+/// What a row says happened beyond its subject: states as status pills,
+/// else the one-line detail `tix watch` prints.
+abstract final class _WatchWhat {
+  static List<Widget> of(BuildContext context, TixEvent event) {
+    final l10n = context.l10n;
+    final p = event.payload;
+    String text(String key) {
+      final v = p[key];
+      return v is String ? v.trim() : '';
+    }
+
+    final arrow = Text('→', style: TextStyle(color: context.tix.muted));
+    switch (event.type) {
+      case 'task.transitioned'
+          when text('from').isNotEmpty && text('to').isNotEmpty:
+        return [
+          StatusPill(label: text('from')),
+          arrow,
+          StatusPill(label: text('to')),
+        ];
+      case 'task.created' when text('status').isNotEmpty:
+        return [
+          if (text('title').isNotEmpty) _detail(context, text('title')),
+          StatusPill(label: text('status')),
+        ];
+      case 'task.released' when text('final_status').isNotEmpty:
+        return [arrow, StatusPill(label: text('final_status'))];
+      case 'comment.added' when p['edited'] == true:
+        return [_detail(context, l10n.watchCommentEdited)];
+    }
+    final detail = watchDetail(l10n, event);
+    return [if (detail.isNotEmpty) _detail(context, detail)];
+  }
+
+  static Widget _detail(BuildContext context, String text) => Text(
+    text,
+    maxLines: 2,
+    overflow: TextOverflow.ellipsis,
+    style: TextStyle(fontSize: TixText.sm, color: context.tix.ink),
+  );
+}
+
+/// A comment's first lines, fetched from its task since the event carries
+/// no text, with its author when someone other than the actor wrote it.
+class _CommentPreview extends ConsumerWidget {
+  const _CommentPreview({required this.event});
+
+  final TixEvent event;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final task = event.payload['ref'];
+    if (event.type != 'comment.added' ||
+        task is! String ||
+        task.isEmpty ||
+        event.subjectId.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    final comment = ref
+        .watch(watchCommentProvider(task, event.subjectId))
+        .value;
+    final body = watchExcerpt(comment?.body ?? '');
+    if (comment == null || body.isEmpty) return const SizedBox.shrink();
+    final t = context.tix;
+    final author = comment.authorActorId;
+    final String text;
+    if (author.isEmpty || author == event.actorId) {
+      text = body;
+    } else {
+      final actors = ref.watch(watchActorsProvider).value ?? const {};
+      text = context.l10n.watchCommentBy(actors[author]?.label ?? author, body);
+    }
+    return Container(
+      key: Key('watch.${event.seq}.comment'),
+      margin: const EdgeInsets.only(top: TixSpace.s1),
+      padding: const EdgeInsetsDirectional.only(start: TixSpace.s2),
+      decoration: BoxDecoration(
+        border: BorderDirectional(
+          start: BorderSide(color: t.line, width: TixSpace.s1 / 2),
+        ),
+      ),
+      child: Text(
+        text,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(fontSize: TixText.sm, color: t.ink),
+      ),
+    );
+  }
+}
+
+/// How long ago [at] was, kept current while it shows, with the full time
+/// on hover or long press.
+class _Ago extends StatefulWidget {
+  const _Ago({required this.at, required this.style});
+
+  final DateTime at;
+  final TextStyle style;
+
+  @override
+  State<_Ago> createState() => _AgoState();
+}
+
+class _AgoState extends State<_Ago> {
+  late final Timer _tick;
+
+  @override
+  void initState() {
+    super.initState();
+    _tick = Timer.periodic(const Duration(seconds: 30), (_) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _tick.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final times = context.times;
+    return Tooltip(
+      message: times.stamp(widget.at),
+      child: Text(times.ago(widget.at), style: widget.style),
     );
   }
 }
@@ -599,6 +777,7 @@ Future<void> showWatchDetails(
   BuildContext context,
   TixEvent event,
   Map<String, Project> projects,
+  Map<String, Actor> actors,
 ) {
   final route = watchRoute(event);
   return showTixSheet<void>(
@@ -616,25 +795,37 @@ Future<void> showWatchDetails(
             label: context.l10n.watchOpen,
             onPressed: () {
               Navigator.of(sheet).pop();
-              context.go(route);
+              unawaited(context.push(route));
             },
           ),
       ],
-      child: WatchEventDetail(event: event, project: projects[event.projectId]),
+      child: WatchEventDetail(
+        event: event,
+        project: projects[event.projectId],
+        actor: actors[event.actorId],
+      ),
     ),
   );
 }
 
 /// Every field of one event and its full payload.
 class WatchEventDetail extends StatelessWidget {
-  /// Shows [event], naming [project] when it is known.
-  const WatchEventDetail({required this.event, this.project, super.key});
+  /// Shows [event], naming [project] and [actor] when they are known.
+  const WatchEventDetail({
+    required this.event,
+    this.project,
+    this.actor,
+    super.key,
+  });
 
   /// The event.
   final TixEvent event;
 
   /// The event's project, when known.
   final Project? project;
+
+  /// Who caused it, when the directory knows them.
+  final Actor? actor;
 
   static const _pretty = JsonEncoder.withIndent('  ');
 
@@ -645,16 +836,18 @@ class WatchEventDetail extends StatelessWidget {
     final t = context.tix;
     final at = event.occurredAt;
     final via = event.via;
+    final who = watchWho(l10n, event, actor);
     final facts = <(String, String)>[
       (l10n.watchSeq, '${event.seq}'),
       if (at != null) (l10n.auditWhen, context.times.stamp(at)),
       (
         l10n.auditActor,
         [
-          ?watchActor(event),
-          if (event.actorId.isNotEmpty && watchActor(event) != event.actorId)
+          who.name,
+          ?who.handle,
+          if (event.actorId.isNotEmpty && who.name != event.actorId)
             event.actorId,
-        ].join(' ').trim().ifEmpty(l10n.auditSystem),
+        ].join(' '),
       ),
       (l10n.watchType, event.type),
       (
@@ -668,7 +861,7 @@ class WatchEventDetail extends StatelessWidget {
               ? event.projectId
               : '${project!.name} (${project!.key})  ${event.projectId}',
         ),
-      if (via != null && via.kind.isNotEmpty) (l10n.auditVia, via.kind),
+      if (watchChannel(l10n, via) case final channel?) (l10n.auditVia, channel),
       if (via != null && via.tokenName.isNotEmpty)
         (l10n.auditToken, via.tokenName),
       if (event.id.isNotEmpty) (l10n.watchEventId, event.id),
@@ -707,8 +900,4 @@ class WatchEventDetail extends StatelessWidget {
       ],
     );
   }
-}
-
-extension on String {
-  String ifEmpty(String other) => isEmpty ? other : this;
 }

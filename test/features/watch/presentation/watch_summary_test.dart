@@ -2,8 +2,11 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/data/api/gen/models.gen.dart' show Via;
 import 'package:tix_mobile/src/data/events/tix_event.dart';
+import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/features/watch/presentation/watch_summary.dart';
 
 void main() {
@@ -70,7 +73,7 @@ void main() {
           'fields': ['title', 'due_at'],
         }),
       ),
-      'changed title, due at',
+      'changed title, due date',
     );
     expect(
       watchDetail(l10n, event('task.updated', {'restored': true})),
@@ -117,5 +120,50 @@ void main() {
       '/projects/web',
     );
     expect(watchRoute(event('filter.saved', {'name': 'Mine'})), isNull);
+  });
+
+  test('who names the person, then the handle, then the id', () {
+    final e = event('task.updated', {'actor_handle': 'pax'});
+    const pax = Actor(id: '01ACTOR', handle: 'pax', displayName: 'Pax Ito');
+    expect(watchWho(l10n, e, pax), (name: 'Pax Ito', handle: '@pax'));
+    expect(watchWho(l10n, e, null), (name: '@pax', handle: null));
+    expect(watchWho(l10n, event('task.updated'), null), (
+      name: '01ACTOR',
+      handle: null,
+    ));
+    expect(watchWho(l10n, const TixEvent(seq: 1, type: 'task.woke'), null), (
+      name: 'the system',
+      handle: null,
+    ));
+  });
+
+  test('the channel names the token or the job', () {
+    expect(watchChannel(l10n, null), isNull);
+    expect(
+      watchChannel(l10n, const Via(kind: 'mcp', tokenName: 'claude')),
+      'via MCP (claude)',
+    );
+    expect(
+      watchChannel(l10n, const Via(kind: 'system', job: 'lease-sweep')),
+      'via system (lease-sweep)',
+    );
+    expect(watchChannel(l10n, const Via(kind: 'cli-local')), 'via CLI');
+    expect(
+      watchChannel(l10n, const Via(kind: 'unknown')),
+      'via an unknown channel',
+    );
+  });
+
+  test('tones follow what happened', () {
+    expect(watchTone('project.created'), TixTone.ok);
+    expect(watchTone('task.deleted'), TixTone.danger);
+    expect(watchTone('task.lease_expired'), TixTone.warn);
+    expect(watchTone('workflow.updated'), TixTone.accent);
+    expect(watchTone('webhook.ping'), TixTone.neutral);
+  });
+
+  test('an excerpt keeps the first non-blank lines', () {
+    expect(watchExcerpt('  one \n\n two\nthree'), 'one\ntwo');
+    expect(watchExcerpt('\n  \n'), '');
   });
 }

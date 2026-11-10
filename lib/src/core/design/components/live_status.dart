@@ -35,6 +35,9 @@ enum LiveState {
 /// [leading] puts the dot at the start of its target instead of its
 /// middle, for an indicator that follows a line of text. With [onTap] the
 /// target is a button of its own, and says it opens the connection details.
+/// With [pulse] the dot breathes while live or connecting, so a screen that
+/// is about the live stream shows it moving; it holds still when the
+/// platform or the app asks for reduced motion, and while offstage.
 class LiveIndicator extends StatelessWidget {
   /// Draws [state]; [refreshSeconds] goes into the refreshing explanation.
   const LiveIndicator({
@@ -42,9 +45,14 @@ class LiveIndicator extends StatelessWidget {
     this.refreshSeconds = 45,
     this.compact = false,
     this.leading = false,
+    this.pulse = false,
     this.onTap,
     super.key,
   });
+
+  /// Whether the dot breathes while [LiveState.live] or
+  /// [LiveState.connecting].
+  final bool pulse;
 
   /// The state.
   final LiveState state;
@@ -90,7 +98,7 @@ class LiveIndicator extends StatelessWidget {
       LiveState.offline => (t.danger, false),
       LiveState.unavailable => (t.muted, true),
     };
-    final dot = Container(
+    final still = Container(
       width: TixSpace.s2,
       height: TixSpace.s2,
       decoration: BoxDecoration(
@@ -99,6 +107,10 @@ class LiveIndicator extends StatelessWidget {
         border: filled ? null : Border.all(color: colour, width: 1.5),
       ),
     );
+    final dot =
+        pulse && (state == LiveState.live || state == LiveState.connecting)
+        ? _Pulse(child: still)
+        : still;
     final semantics = '${l10n.liveStatusLabel(label)}. $info';
     final tap = compact ? null : onTap;
     if (compact) {
@@ -162,6 +174,50 @@ class LiveIndicator extends StatelessWidget {
       ),
     );
   }
+}
+
+class _Pulse extends StatefulWidget {
+  const _Pulse({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_Pulse> createState() => _PulseState();
+}
+
+class _PulseState extends State<_Pulse> with SingleTickerProviderStateMixin {
+  late final _beat = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1100),
+    lowerBound: 0.3,
+    value: 1,
+  );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final still = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+    if (still || !TickerMode.valuesOf(context).enabled) {
+      _beat
+        ..stop()
+        ..value = 1;
+    } else if (!_beat.isAnimating) {
+      _beat.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _beat.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => FadeTransition(
+    key: const Key('live.pulse'),
+    opacity: _beat,
+    child: widget.child,
+  );
 }
 
 class _Target extends StatelessWidget {

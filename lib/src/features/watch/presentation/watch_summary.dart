@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
+import 'package:tix_mobile/src/data/api/gen/models.gen.dart' show Via;
 import 'package:tix_mobile/src/data/events/tix_event.dart';
+import 'package:tix_mobile/src/data/models/actor.dart';
 
 /// Who caused [event]: the handle tix put in the payload, else the actor's
 /// id, else null for an event with no actor.
@@ -10,6 +13,68 @@ String? watchActor(TixEvent event) {
   final handle = event.payload['actor_handle'];
   if (handle is String && handle.isNotEmpty) return '@$handle';
   return event.actorId.isEmpty ? null : event.actorId;
+}
+
+/// Who caused [event] as a row names them: [actor]'s display name with the
+/// handle beside it when the directory knows one, else the handle or id
+/// alone, else the system.
+({String name, String? handle}) watchWho(
+  AppLocalizations l10n,
+  TixEvent event,
+  Actor? actor,
+) {
+  final payloadHandle = event.payload['actor_handle'];
+  final handle = payloadHandle is String && payloadHandle.isNotEmpty
+      ? payloadHandle
+      : actor?.handle ?? '';
+  final name = actor?.displayName.trim() ?? '';
+  if (name.isNotEmpty) {
+    return (name: name, handle: handle.isEmpty ? null : '@$handle');
+  }
+  if (handle.isNotEmpty) return (name: '@$handle', handle: null);
+  if (event.actorId.isNotEmpty) return (name: event.actorId, handle: null);
+  return (name: l10n.auditSystem, handle: null);
+}
+
+/// The channel [via] names, as tix's web activity writes it: "via API
+/// (deploy-bot)", with the token or the job that made the change; null
+/// when the event records none.
+String? watchChannel(AppLocalizations l10n, Via? via) {
+  if (via == null || via.kind.isEmpty) return null;
+  final channel = switch (via.kind) {
+    'web' => l10n.watchChannelWeb,
+    'api' => l10n.watchChannelApi,
+    'cli-local' || 'cli-remote' => l10n.watchChannelCli,
+    'ssh' => l10n.watchChannelSsh,
+    'mcp' => l10n.watchChannelMcp,
+    'sync' => l10n.watchChannelSync,
+    'import' => l10n.watchChannelImport,
+    'system' => l10n.watchChannelSystem,
+    _ => l10n.watchChannelUnknown,
+  };
+  final name = via.tokenName.isNotEmpty ? via.tokenName : via.job;
+  return name.isEmpty
+      ? l10n.watchVia(channel)
+      : l10n.watchViaNamed(channel, name);
+}
+
+/// The colour a row's type badge wears, as the web's activity badges pick
+/// it: green for what was made, the accent for a change, red for a
+/// deletion, amber for a lease running out, neutral for the rest.
+TixTone watchTone(String type) {
+  final verb = type.substring(type.indexOf('.') + 1);
+  return switch (verb) {
+    'created' || 'added' || 'saved' || 'completed' => TixTone.ok,
+    'deleted' => TixTone.danger,
+    'lease_expired' => TixTone.warn,
+    'updated' ||
+    'transitioned' ||
+    'claimed' ||
+    'released' ||
+    'reclaimed' ||
+    'arranged' => TixTone.accent,
+    _ => TixTone.neutral,
+  };
 }
 
 /// The subject [event] is about, as a person names it: a task's ref, a
@@ -97,7 +162,7 @@ String _updated(AppLocalizations l10n, Map<String, Object?> p) {
   final fields = p['fields'];
   if (fields is List && fields.isNotEmpty) {
     return l10n.watchChanged(
-      fields.map((f) => '$f'.replaceAll('_', ' ')).join(', '),
+      fields.map((f) => watchFieldLabel(l10n, '$f')).join(', '),
     );
   }
   if (p['restored'] == true) return l10n.watchRestored;
@@ -117,6 +182,28 @@ String _updated(AppLocalizations l10n, Map<String, Object?> p) {
   }
   return '';
 }
+
+/// A changed task field as a person names it, tix's `output.FieldLabel`.
+String watchFieldLabel(AppLocalizations l10n, String key) => switch (key) {
+  'title' => l10n.watchFieldTitle,
+  'body' => l10n.watchFieldBody,
+  'priority' => l10n.watchFieldPriority,
+  'assignee_actor_id' || 'assignee' => l10n.watchFieldAssignee,
+  'tags' => l10n.watchFieldTags,
+  'due_at' => l10n.watchFieldDue,
+  'recurrence' => l10n.watchFieldRecurrence,
+  'custom_fields' => l10n.watchFieldCustom,
+  'parent_ref' => l10n.watchFieldParent,
+  _ => key.replaceAll('_', ' '),
+};
+
+/// The first [lines] non-blank lines of [text], trimmed, for a preview.
+String watchExcerpt(String text, {int lines = 2}) => text
+    .split('\n')
+    .map((l) => l.trim())
+    .where((l) => l.isNotEmpty)
+    .take(lines)
+    .join('\n');
 
 /// How long the lease a claim granted runs, as "30m" or "1h30m".
 String? _lease(TixEvent event) {

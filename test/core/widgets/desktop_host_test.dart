@@ -57,6 +57,7 @@ void main() {
     await pump(tester, unread: 4);
     final menu = desktop.menus.last!;
     expect(menu.labels[TrayAction.inbox], 'Inbox (4 unread)');
+    expect(menu.labels[TrayAction.watch], 'Watch');
     expect(menu.tooltip, 'tix: 4 unread');
     expect(menu.badge, '4');
     expect(menu.context, startsWith('Work · '));
@@ -70,6 +71,7 @@ void main() {
     final menu = desktop.menus.last!;
     expect(menu.context, isNull);
     expect(menu.labels[TrayAction.inbox], 'Inbox');
+    expect(menu.labels, isNot(contains(TrayAction.watch)));
     expect(menu.badge, isNull);
   });
 
@@ -129,6 +131,7 @@ void main() {
     (const TrayPicked(TrayAction.quickAdd), 'tix://quick-add'),
     (const HotkeyPressed(), 'tix://quick-add'),
     (const TrayPicked(TrayAction.inbox), 'tix://inbox'),
+    (const TrayPicked(TrayAction.watch), 'tix://watch'),
   ]) {
     testWidgets('$event shows the window and opens $link', (tester) async {
       final c = await pump(tester);

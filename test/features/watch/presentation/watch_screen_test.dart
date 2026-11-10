@@ -3,6 +3,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/data/events/event_stream.dart';
 import 'package:tix_mobile/src/features/watch/application/watch.dart';
 import 'package:tix_mobile/src/features/watch/presentation/watch_screen.dart';
@@ -20,16 +22,27 @@ void main() {
     sockets = FakeEventSockets();
   });
 
+  /// Pumps Watch; with [motion] false, as by default, the platform asks
+  /// for reduced motion so the live dot holds still and lists settle.
   Future<ProviderContainer> pump(
     WidgetTester tester, {
     Size size = phone,
     EventSocketConnector? events,
+    bool motion = false,
   }) {
+    if (!motion) {
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          FakeAccessibilityFeatures(disableAnimations: true);
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+      );
+    }
     final stores = signedInStores();
     return pumpScreen(
       tester,
       const WatchScreen(),
       size: size,
+      settle: !motion,
       overrides: fakeOverrides(
         server,
         settings: stores.settings,
@@ -53,12 +66,16 @@ void main() {
     String id = 'w1',
     String actor = 'pax',
     Map<String, Object?> payload = const {},
+    Map<String, Object?>? via,
+    String subjectId = 'id-infra-1',
   }) => sockets.last.event(
     seq,
     type,
     id: id,
     actorId: '01${actor.toUpperCase()}',
+    subjectId: subjectId,
     payload: {'actor_handle': actor, ...payload},
+    via: via,
   );
 
   Finder inRow(int seq, Finder f) =>
@@ -93,10 +110,14 @@ void main() {
         expect(inRow(42, find.text('#000042')), findsOneWidget);
         expect(inRow(42, find.text('@pax')), findsOneWidget);
         expect(inRow(42, find.text('task.transitioned')), findsOneWidget);
+        expect(inRow(42, find.text('infra-1')), findsOneWidget);
         expect(
-          inRow(42, find.textContaining('infra-1  todo → doing')),
-          findsOneWidget,
+          tester
+              .widgetList<StatusPill>(inRow(42, find.byType(StatusPill)))
+              .map((p) => p.label),
+          ['todo', 'doing'],
         );
+        expect(inRow(41, find.text('Fix')), findsOneWidget);
       });
 
       testWidgets('a server refusal explains the scope and leaves a way back', (
@@ -119,6 +140,188 @@ void main() {
     await tester.tap(find.byKey(const Key('watch.5')));
     await tester.pumpAndSettle();
     expect(find.text('route:/projects/infra/tasks/infra-1'), findsOneWidget);
+  });
+
+  testWidgets('back from the task returns to Watch as it was', (tester) async {
+    final container = await pump(tester);
+    await live(tester);
+    await tester.tap(find.byKey(const Key('watch.type.comment.*')));
+    await tester.pumpAndSettle();
+    sockets.last.ack('w2');
+    emit(5, 'comment.added', id: 'w2', payload: {'ref': 'infra-1'});
+    emit(6, 'comment.added', id: 'w2', payload: {'ref': 'infra-1'});
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('watch.5')));
+    await tester.pumpAndSettle();
+    final task = find.text('route:/projects/infra/tasks/infra-1');
+    expect(task, findsOneWidget);
+    final router = GoRouter.of(tester.element(task));
+    expect(router.canPop(), isTrue);
+    router.pop();
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('watch.list')), findsOneWidget);
+    expect(find.byKey(const Key('watch.5')), findsOneWidget);
+    expect(find.byKey(const Key('watch.6')), findsOneWidget);
+    expect(container.read(watchFilterProvider).types, ['comment.*']);
+    expect(find.byKey(const Key('watch.filtering')), findsOneWidget);
+    expect(sockets.last.subscribes('w3'), isEmpty);
+  });
+
+  testWidgets('a row names the person, the token and the channel', (
+    tester,
+  ) async {
+    server.actors['01PAX'] = {
+      'id': '01PAX',
+      'handle': 'pax',
+      'display_name': 'Pax Ito',
+      'kind': 'user',
+    };
+    await pump(tester);
+    await live(tester);
+    emit(
+      7,
+      'task.claimed',
+      payload: {'ref': 'infra-1'},
+      via: {'kind': 'api', 'token_name': 'deploy-bot'},
+    );
+    emit(8, 'task.updated', payload: {'ref': 'infra-1'}, via: {'kind': 'web'});
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<Text>(find.byKey(const Key('watch.7.actor'))).data,
+      'Pax Ito',
+    );
+    expect(
+      tester.widget<Text>(find.byKey(const Key('watch.7.handle'))).data,
+      '@pax',
+    );
+    expect(
+      tester.widget<Text>(find.byKey(const Key('watch.7.via'))).data,
+      'via API (deploy-bot)',
+    );
+    expect(
+      tester.widget<Text>(find.byKey(const Key('watch.8.via'))).data,
+      'via web',
+    );
+    expect(
+      tester.widget<TixAvatar>(find.byKey(const Key('watch.7.avatar'))).label,
+      'Pax Ito',
+    );
+  });
+
+  testWidgets('a comment row shows the start of the comment', (tester) async {
+    server.comments['infra-1'] = [
+      {
+        'id': 'c1',
+        'task_id': 'id-infra-1',
+        'author_actor_id': '01PAX',
+        'body': 'Deployed to staging.\n\nLooks fine so far.\nMore later.',
+      },
+      {
+        'id': 'c2',
+        'task_id': 'id-infra-1',
+        'author_actor_id': 'a1',
+        'body': 'Imported note',
+      },
+    ];
+    await pump(tester);
+    await live(tester);
+    emit(9, 'comment.added', subjectId: 'c1', payload: {'ref': 'infra-1'});
+    emit(10, 'comment.added', subjectId: 'c2', payload: {'ref': 'infra-1'});
+    await tester.pumpAndSettle();
+    Text comment(int seq) => tester.widget<Text>(
+      find.descendant(
+        of: find.byKey(Key('watch.$seq.comment')),
+        matching: find.byType(Text),
+      ),
+    );
+    expect(comment(9).data, 'Deployed to staging.\nLooks fine so far.');
+    expect(comment(10).data, 'Raj: Imported note');
+  });
+
+  testWidgets('a field change names the fields', (tester) async {
+    await pump(tester);
+    await live(tester);
+    emit(
+      11,
+      'task.updated',
+      payload: {
+        'ref': 'infra-1',
+        'fields': ['body', 'due_at'],
+      },
+    );
+    await tester.pumpAndSettle();
+    expect(
+      inRow(11, find.text('changed description, due date')),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('type badges take the colour of what happened', (tester) async {
+    await pump(tester, size: const Size(1280, 2400));
+    await live(tester);
+    final tones = {
+      'task.created': TixTone.ok,
+      'comment.added': TixTone.ok,
+      'task.updated': TixTone.accent,
+      'task.transitioned': TixTone.accent,
+      'task.deleted': TixTone.danger,
+      'task.lease_expired': TixTone.warn,
+      'task.starred': TixTone.neutral,
+    };
+    var seq = 20;
+    for (final type in tones.keys) {
+      emit(seq++, type, payload: {'ref': 'infra-1'});
+    }
+    await tester.pumpAndSettle();
+    seq = 20;
+    for (final MapEntry(key: type, value: tone) in tones.entries) {
+      final at = seq++;
+      final badge = tester.widget<TixBadge>(find.byKey(Key('watch.$at.type')));
+      expect((badge.label, badge.tone), (type, tone));
+    }
+  });
+
+  testWidgets('a row says how long ago it happened', (tester) async {
+    await pump(tester);
+    await live(tester);
+    emit(12, 'task.created', payload: {'ref': 'infra-1'});
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('watch.12.meta')),
+        matching: find.textContaining(RegExp(r'ago|just now|In a moment')),
+      ),
+      findsOneWidget,
+    );
+  });
+
+  group('the live dot', () {
+    double opacity(WidgetTester tester) => tester
+        .widget<FadeTransition>(find.byKey(const Key('live.pulse')))
+        .opacity
+        .value;
+
+    testWidgets('breathes while live', (tester) async {
+      await pump(tester, motion: true);
+      sockets.last
+        ..ack('s1')
+        ..ack('w1');
+      await tester.pump();
+      await tester.pump();
+      expect(find.byKey(const Key('live.pulse')), findsOneWidget);
+      final first = opacity(tester);
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(opacity(tester), isNot(closeTo(first, 0.01)));
+    });
+
+    testWidgets('holds still when motion is reduced', (tester) async {
+      await pump(tester);
+      await live(tester);
+      expect(find.byKey(const Key('live.pulse')), findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(opacity(tester), 1);
+      expect(tester.binding.hasScheduledFrame, isFalse);
+    });
   });
 
   testWidgets('a row with no screen opens its details and payload', (

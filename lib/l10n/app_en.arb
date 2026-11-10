@@ -4916,5 +4916,122 @@
         "type": "String"
       }
     }
+  },
+  "trayWatch": "Watch",
+  "@trayWatch": {
+    "description": "Tray menu entry that opens the Watch screen"
+  },
+  "watchShortcut": "Watch live events",
+  "@watchShortcut": {
+    "description": "Tooltip of the shell button that opens Watch"
+  },
+  "watchVia": "via {channel}",
+  "@watchVia": {
+    "description": "Watch row: the channel an event came through",
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      }
+    }
+  },
+  "watchViaNamed": "via {channel} ({name})",
+  "@watchViaNamed": {
+    "description": "Watch row: the channel and the token or job that made the change",
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "watchChannelWeb": "web",
+  "@watchChannelWeb": {
+    "description": "Access channel: the web interface"
+  },
+  "watchChannelApi": "API",
+  "@watchChannelApi": {
+    "description": "Access channel: an API token"
+  },
+  "watchChannelCli": "CLI",
+  "@watchChannelCli": {
+    "description": "Access channel: the command line"
+  },
+  "watchChannelSsh": "SSH",
+  "@watchChannelSsh": {
+    "description": "Access channel: the terminal interface over SSH"
+  },
+  "watchChannelMcp": "MCP",
+  "@watchChannelMcp": {
+    "description": "Access channel: an MCP client"
+  },
+  "watchChannelSync": "sync",
+  "@watchChannelSync": {
+    "description": "Access channel: external sync"
+  },
+  "watchChannelImport": "import",
+  "@watchChannelImport": {
+    "description": "Access channel: an import"
+  },
+  "watchChannelSystem": "system",
+  "@watchChannelSystem": {
+    "description": "Access channel: background work of the server"
+  },
+  "watchChannelUnknown": "an unknown channel",
+  "@watchChannelUnknown": {
+    "description": "Access channel of an entry recorded before channels were"
+  },
+  "watchFieldTitle": "title",
+  "@watchFieldTitle": {
+    "description": "Changed task field in a Watch row"
+  },
+  "watchFieldBody": "description",
+  "@watchFieldBody": {
+    "description": "Changed task field in a Watch row"
+  },
+  "watchFieldPriority": "priority",
+  "@watchFieldPriority": {
+    "description": "Changed task field in a Watch row"
+  },
+  "watchFieldAssignee": "assignee",
+  "@watchFieldAssignee": {
+    "description": "Changed task field in a Watch row"
+  },
+  "watchFieldTags": "tags",
+  "@watchFieldTags": {
+    "description": "Changed task field in a Watch row"
+  },
+  "watchFieldDue": "due date",
+  "@watchFieldDue": {
+    "description": "Changed task field in a Watch row"
+  },
+  "watchFieldRecurrence": "repeat rule",
+  "@watchFieldRecurrence": {
+    "description": "Changed task field in a Watch row"
+  },
+  "watchFieldCustom": "custom fields",
+  "@watchFieldCustom": {
+    "description": "Changed task field in a Watch row"
+  },
+  "watchFieldParent": "parent",
+  "@watchFieldParent": {
+    "description": "Changed task field in a Watch row"
+  },
+  "watchCommentEdited": "edited",
+  "@watchCommentEdited": {
+    "description": "Watch row: the comment was edited, not added"
+  },
+  "watchCommentBy": "{author}: {text}",
+  "@watchCommentBy": {
+    "description": "Watch row: a comment's text after its author, when someone else posted it",
+    "placeholders": {
+      "author": {
+        "type": "String"
+      },
+      "text": {
+        "type": "String"
+      }
+    }
   }
 }
