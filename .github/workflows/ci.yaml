@@ -239,6 +239,29 @@ jobs:
         if: matrix.linux
         run: just setup-linux
 
+      # The bundle ships libayatana-appindicator 0.6 for the tray tooltip,
+      # built from source since Ubuntu 24.04 has 0.5. Cached like libtix:
+      # restored here, saved on a push to main only.
+      - name: libayatana-appindicator cache key
+        id: ayatana
+        if: matrix.linux
+        env:
+          IMAGE: ${{ matrix.os }}
+          SCRIPT: ${{ hashFiles('scripts/build-ayatana.sh') }}
+        run: echo "key=ayatana-$(scripts/build-ayatana.sh version)-$IMAGE-$RUNNER_ARCH-$SCRIPT" >> "$GITHUB_OUTPUT"
+
+      - name: Restore libayatana-appindicator
+        id: ayatana-cache
+        if: matrix.linux
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
+        with:
+          path: build/ayatana
+          key: ${{ steps.ayatana.outputs.key }}
+
+      - name: Build libayatana-appindicator
+        if: matrix.linux
+        run: just linux-ayatana
+
       - name: Build
         env:
           RECIPE: ${{ matrix.recipe }}
@@ -294,6 +317,13 @@ jobs:
         with:
           path: ${{ steps.libtix.outputs.paths }}
           key: ${{ steps.libtix.outputs.key }}
+
+      - name: Save the libayatana-appindicator cache
+        if: matrix.linux && github.event_name == 'push' && steps.ayatana-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
+        with:
+          path: build/ayatana
+          key: ${{ steps.ayatana.outputs.key }}
 
       - name: Upload the build
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2

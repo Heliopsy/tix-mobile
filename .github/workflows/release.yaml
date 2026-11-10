@@ -182,6 +182,19 @@ jobs:
         with:
           target: linux
       - run: just setup-linux
+      # libayatana-appindicator 0.6, for the tray tooltip; Ubuntu 24.04 has
+      # 0.5. Main's CI saves the cache this restores; a miss builds it.
+      - name: libayatana-appindicator cache key
+        id: ayatana
+        env:
+          IMAGE: ${{ matrix.os }}
+          SCRIPT: ${{ hashFiles('scripts/build-ayatana.sh') }}
+        run: echo "key=ayatana-$(scripts/build-ayatana.sh version)-$IMAGE-$RUNNER_ARCH-$SCRIPT" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
+        with:
+          path: build/ayatana
+          key: ${{ steps.ayatana.outputs.key }}
+      - run: just linux-ayatana
       - run: just build-linux
       # The tray libraries ship in the bundle: distros other than Ubuntu and
       # Debian mostly lack libayatana-appindicator3, and without it the

@@ -37,11 +37,12 @@ install Go, build it through `hook/build.dart` and fail unless `just engine-chec
 Android that also checks it is stored uncompressed and 16 KB aligned, which Google Play requires. To ship a newer
 tix, change `tix.lock`, run `just engine-notices`, and commit both.
 
-The Linux tarball also carries the tray icon's libraries (libayatana-appindicator3, libayatana-indicator3,
-libayatana-ido3, libdbusmenu-glib and libdbusmenu-gtk3) from the runner's Ubuntu packages, with their copyright
-files under `share/doc/`, so it starts on distros that do not package them. `just linux-libs check` fails the job if
-any of them would still load from the system. Flatpak does not take these copies; it builds them from Flathub's
-shared modules.
+The Linux tarball also carries the tray icon's libraries, so it starts on distros that do not package them:
+libayatana-appindicator3 0.6, built from upstream's release by `just linux-ayatana` because Ubuntu 24.04's 0.5 has no
+tooltip, with upstream's licence files, and libdbusmenu-glib and libdbusmenu-gtk3 from the runner's Ubuntu packages,
+with their copyright files, all under `share/doc/`. `just linux-libs check` fails the job if any of them would still
+load from the system, or if the bundled appindicator lacks the tooltip API. Flatpak does not take these copies; it
+builds them from Flathub's shared modules.
 
 Every release also carries `SHA256SUMS` over all of them, and each artifact has a GitHub build provenance
 attestation. With the [update signing key](#desktop-update-signing) set, `SHA256SUMS.sig` signs the checksums for

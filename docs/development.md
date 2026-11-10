@@ -55,7 +55,7 @@ icon (`tray_manager`). On Debian and Ubuntu:
 
 ```sh
 sudo apt install clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libsecret-1-dev \
-  libayatana-appindicator3-dev patchelf
+  libayatana-appindicator3-dev libdbusmenu-gtk3-dev curl patchelf
 ```
 
 `just setup-linux` installs the same list. On Fedora the tray library is `libayatana-appindicator-gtk3-devel`, on
@@ -66,12 +66,22 @@ session. Without one there is nowhere safe to keep the token, and the app does n
 tray needs a desktop that shows StatusNotifierItem icons (KDE, Xfce, Cinnamon, Budgie, GNOME with the AppIndicator
 extension); see [Desktop integration](#desktop-integration).
 
-A `flutter run` build loads the appindicator library from the system. The release tarball does not:
-`just linux-libs copy DIR` (from `scripts/bundle-linux-libs.sh`, which needs `patchelf`) copies
-libayatana-appindicator3, libayatana-indicator3, libayatana-ido3 and libdbusmenu into the bundle's `lib/` and sets
-`$ORIGIN` as the runpath of the tray plugin and of those copies, because the binary's own `$ORIGIN/lib` runpath does
-not reach a plugin's dependencies. `just linux-libs check DIR` fails while any of them still loads from outside the
-bundle; CI and the release run both after `just build-linux`. glib, GTK and libc are never bundled.
+A `flutter run` build loads the appindicator library from the system. The release tarball does not. Ubuntu 24.04
+packages libayatana-appindicator 0.5, which has no tooltip API, so `just linux-ayatana` (`scripts/build-ayatana.sh`)
+downloads the 0.6 release the script pins, checks its SHA-256, and builds only the library into `build/ayatana`. It
+is a no-op when that directory already holds the pinned version, and CI caches it. The app still compiles against
+the distro's 0.5 headers; the soname, `libayatana-appindicator3.so.1`, is the same.
+
+`just linux-libs copy DIR` (from `scripts/bundle-linux-libs.sh`, which needs `patchelf`) then copies that
+libayatana-appindicator3 and the system's libdbusmenu libraries into the bundle's `lib/`, with the upstream licence
+files under `share/doc/`, and sets `$ORIGIN` as the runpath of the tray plugin and of those copies, because the
+binary's own `$ORIGIN/lib` runpath does not reach a plugin's dependencies. 0.6.1 no longer loads
+libayatana-indicator3 or ayatana-ido3, so those are not bundled any more. `just linux-libs check DIR` fails while any
+of them still loads from outside the bundle, or when the bundled appindicator does not export
+`app_indicator_set_tooltip_title` and `app_indicator_set_tooltip_body`; CI and the release run both after
+`just build-linux`. glib, GTK and libc are never bundled.
+
+To bump the library, change `version` and `sha256` in `scripts/build-ayatana.sh`; the cache key follows the script.
 
 ### Windows
 
