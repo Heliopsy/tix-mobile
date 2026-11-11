@@ -2228,5 +2228,13 @@
   "keymapEmacsHelp": "Emacs-Reflexe außerhalb von Textfeldern: C-n und C-p bewegen, C-s filtert, C-g bricht ab, M-x öffnet die Befehlspalette.",
   "keymapOffHelp": "Keine einzelne Taste löst etwas aus. Kombinationen mit Strg, Alt oder ⌘ funktionieren weiter.",
   "settingsKeyBindings": "Aktive Belegung",
-  "settingsKeyBindingsOff": "Tastenkürzel sind aus."
+  "settingsKeyBindingsOff": "Tastenkürzel sind aus.",
+  "taskHandoff": "An einen Agenten übergeben",
+  "taskHandoffNote": "Der Agent muss zuerst mit tix verbunden sein: über die tix-CLI oder die tix-MCP-Werkzeuge, mit einem eigenen Token. Nichts hier enthält ein Token. Einrichtung: docs/agents.md",
+  "taskHandoffPrompt": "Prompt",
+  "taskHandoffClient": "Aus Ihrem Client starten",
+  "taskHandoffRunHere": "Führen Sie das im Repository aus, in dem die Arbeit liegt. Es ist für sh, bash und zsh gequotet.",
+  "taskHandoffPasteInto": "{client} hat keinen Befehl, der ihn mit einem Prompt startet. Fügen Sie das in seinen Chat ein; es nutzt die tix-MCP-Werkzeuge:",
+  "taskHandoffMcp": "Mit den tix-MCP-Werkzeugen",
+  "taskHandoffKeywords": "agent ki übergeben delegieren ai claude codex prompt mcp"
 }

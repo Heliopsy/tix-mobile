@@ -8075,4 +8075,33 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get settingsKeyBindingsOff => 'Клавишните комбинации са изключени.';
+
+  @override
+  String get taskHandoff => 'Предай на агент';
+
+  @override
+  String get taskHandoffNote =>
+      'Агентът трябва първо да е свързан с tix: чрез tix CLI или MCP инструментите на tix, със собствен токен. Нищо тук не съдържа токен. Настройка: docs/agents.md';
+
+  @override
+  String get taskHandoffPrompt => 'Подкана';
+
+  @override
+  String get taskHandoffClient => 'Стартирай го от своя клиент';
+
+  @override
+  String get taskHandoffRunHere =>
+      'Изпълнете това в хранилището, в което е работата. Кавичките са за sh, bash и zsh.';
+
+  @override
+  String taskHandoffPasteInto(String client) {
+    return '$client няма команда, която да го стартира с подкана. Поставете това в чата му; то използва MCP инструментите на tix:';
+  }
+
+  @override
+  String get taskHandoffMcp => 'С MCP инструментите на tix';
+
+  @override
+  String get taskHandoffKeywords =>
+      'агент ии подкана делегирай agent ai claude codex prompt mcp';
 }
