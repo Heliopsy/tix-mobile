@@ -430,6 +430,25 @@ class _GalleryFormsState extends State<GalleryForms> {
           ),
         ],
       ),
+      Wrap(
+        spacing: TixSpace.s1,
+        children: [
+          ReactionChip(
+            emoji: '👍',
+            count: 2,
+            mine: true,
+            semanticLabel: '👍 2',
+            onTap: () {},
+          ),
+          ReactionChip(
+            emoji: '🚀',
+            count: 1,
+            mine: false,
+            semanticLabel: '🚀 1',
+            onTap: () {},
+          ),
+        ],
+      ),
       QuickAddField(
         controller: _line,
         help: context.l10n.quickAddHelp,

@@ -1030,6 +1030,9 @@ class FakeTix {
   /// Audit entries per task reference, newest first.
   final audit = <String, List<Map<String, Object?>>>{};
 
+  /// Whether the server predates comment reactions and answers 404.
+  bool reactionsMissing = false;
+
   /// The tenant's tags.
   final tagNames = <String>['auth', 'ops', 'backend'];
 
@@ -1129,6 +1132,37 @@ class FakeTix {
               c['updated_at'] = '2026-11-08T12:00:00Z';
               return FakeResponse(200, c);
             }
+          }
+        }
+        return FakeResponse(404, envelope('not_found', 'comment'));
+      case (final m, ['comments', final id, 'reactions', final raw])
+          when m == 'PUT' || m == 'DELETE':
+        if (reactionsMissing) {
+          return FakeResponse(404, envelope('not_found', 'no route'));
+        }
+        final emoji = Uri.decodeComponent(raw);
+        for (final list in comments.values) {
+          for (final c in list) {
+            if (c['id'] != id) continue;
+            final reactions = [
+              for (final r in (c['reactions'] as List?) ?? const [])
+                Map<String, Object?>.of(r as Map<String, Object?>),
+            ];
+            var r = reactions.where((r) => r['emoji'] == emoji).firstOrNull;
+            if (r == null) {
+              r = {'emoji': emoji, 'count': 0, 'actor_ids': <String>[]};
+              reactions.add(r);
+            }
+            final ids = [...(r['actor_ids']! as List).cast<String>()]
+              ..remove('me');
+            if (m == 'PUT') ids.add('me');
+            r['actor_ids'] = ids;
+            r['count'] = ids.length;
+            c['reactions'] = [
+              for (final x in reactions)
+                if ((x['count']! as int) > 0) x,
+            ];
+            return FakeResponse(200, c);
           }
         }
         return FakeResponse(404, envelope('not_found', 'comment'));
@@ -1277,7 +1311,11 @@ class FakeTix {
           ],
         });
       case ('GET', ['audit']):
-        final rows = audit[tref] ?? const [];
+        final actions = o.uri.queryParametersAll['action'];
+        final rows = [
+          for (final r in audit[tref] ?? const <Map<String, Object?>>[])
+            if (actions == null || actions.contains(r['action'])) r,
+        ];
         return FakeResponse(200, _page(rows, o.uri.queryParameters['cursor']));
       case ('POST', ['tags']):
         final tags = [...(t['tags']! as List).cast<String>()];

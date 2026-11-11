@@ -191,7 +191,7 @@ final class TaskCommentsProvider
   }
 }
 
-String _$taskCommentsHash() => r'62767d25a6681393945f96a73bb89eb6d0d0d07e';
+String _$taskCommentsHash() => r'cd315b3edac85b019f4d174043978167b717151b';
 
 /// A task's comments, oldest first.
 
@@ -238,6 +238,181 @@ abstract class _$TaskComments extends $AsyncNotifier<List<Comment>> {
             as $ClassProviderElement<
               AnyNotifier<AsyncValue<List<Comment>>, List<Comment>>,
               AsyncValue<List<Comment>>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, () => build(_$args));
+  }
+}
+
+/// Whether the server takes comment reactions: true until one answers 404,
+/// as a tix older than reactions does.
+
+@ProviderFor(ReactionSupport)
+final reactionSupportProvider = ReactionSupportProvider._();
+
+/// Whether the server takes comment reactions: true until one answers 404,
+/// as a tix older than reactions does.
+final class ReactionSupportProvider
+    extends $NotifierProvider<ReactionSupport, bool> {
+  /// Whether the server takes comment reactions: true until one answers 404,
+  /// as a tix older than reactions does.
+  ReactionSupportProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'reactionSupportProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$reactionSupportHash();
+
+  @$internal
+  @override
+  ReactionSupport create() => ReactionSupport();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$reactionSupportHash() => r'be6ce02349fa72cdb2329379b32e2afa541895ab';
+
+/// Whether the server takes comment reactions: true until one answers 404,
+/// as a tix older than reactions does.
+
+abstract class _$ReactionSupport extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
+/// The channel each comment on a task came through, by comment id, from
+/// the task's `comment.add` audit entries. Empty when the audit log is out
+/// of reach, so comments still show without it.
+
+@ProviderFor(TaskCommentChannels)
+final taskCommentChannelsProvider = TaskCommentChannelsFamily._();
+
+/// The channel each comment on a task came through, by comment id, from
+/// the task's `comment.add` audit entries. Empty when the audit log is out
+/// of reach, so comments still show without it.
+final class TaskCommentChannelsProvider
+    extends $AsyncNotifierProvider<TaskCommentChannels, Map<String, Via>> {
+  /// The channel each comment on a task came through, by comment id, from
+  /// the task's `comment.add` audit entries. Empty when the audit log is out
+  /// of reach, so comments still show without it.
+  TaskCommentChannelsProvider._({
+    required TaskCommentChannelsFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'taskCommentChannelsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$taskCommentChannelsHash();
+
+  @override
+  String toString() {
+    return r'taskCommentChannelsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  TaskCommentChannels create() => TaskCommentChannels();
+
+  @override
+  bool operator ==(Object other) {
+    return other is TaskCommentChannelsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$taskCommentChannelsHash() =>
+    r'2cb62133503d002437383e79722b307885a0b206';
+
+/// The channel each comment on a task came through, by comment id, from
+/// the task's `comment.add` audit entries. Empty when the audit log is out
+/// of reach, so comments still show without it.
+
+final class TaskCommentChannelsFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          TaskCommentChannels,
+          AsyncValue<Map<String, Via>>,
+          Map<String, Via>,
+          FutureOr<Map<String, Via>>,
+          String
+        > {
+  TaskCommentChannelsFamily._()
+    : super(
+        retry: null,
+        name: r'taskCommentChannelsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// The channel each comment on a task came through, by comment id, from
+  /// the task's `comment.add` audit entries. Empty when the audit log is out
+  /// of reach, so comments still show without it.
+
+  TaskCommentChannelsProvider call(String taskRef) =>
+      TaskCommentChannelsProvider._(argument: taskRef, from: this);
+
+  @override
+  String toString() => r'taskCommentChannelsProvider';
+}
+
+/// The channel each comment on a task came through, by comment id, from
+/// the task's `comment.add` audit entries. Empty when the audit log is out
+/// of reach, so comments still show without it.
+
+abstract class _$TaskCommentChannels extends $AsyncNotifier<Map<String, Via>> {
+  late final _$args = ref.$arg as String;
+  String get taskRef => _$args;
+
+  FutureOr<Map<String, Via>> build(String taskRef);
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref =
+        this.ref as $Ref<AsyncValue<Map<String, Via>>, Map<String, Via>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<Map<String, Via>>, Map<String, Via>>,
+              AsyncValue<Map<String, Via>>,
               Object?,
               Object?
             >;

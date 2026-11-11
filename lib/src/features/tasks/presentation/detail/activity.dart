@@ -9,6 +9,7 @@ import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/l10n/via_label.dart';
 import 'package:tix_mobile/src/core/platform/attachments.dart';
+import 'package:tix_mobile/src/core/session/access.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
@@ -285,6 +286,10 @@ class _CommentTile extends ConsumerWidget {
     }
 
     final created = comment.createdAt;
+    final channel = viaLabel(
+      l10n,
+      ref.watch(taskCommentChannelsProvider(task.ref)).value?[comment.id],
+    );
     return Padding(
       key: Key('comment.${comment.id}'),
       padding: const EdgeInsets.only(bottom: TixSpace.s3),
@@ -321,6 +326,20 @@ class _CommentTile extends ConsumerWidget {
                         style: TextStyle(fontSize: TixText.xs, color: t.muted),
                       ),
                     ],
+                    if (channel != null) ...[
+                      const SizedBox(width: TixSpace.s2),
+                      Flexible(
+                        child: Text(
+                          channel,
+                          key: Key('comment.via.${comment.id}'),
+                          style: TextStyle(
+                            fontSize: TixText.xs,
+                            color: t.muted,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                     if (comment.edited) ...[
                       const SizedBox(width: TixSpace.s1),
                       Text(
@@ -341,9 +360,155 @@ class _CommentTile extends ConsumerWidget {
                   data: comment.body,
                   onLink: (uri) => openLink(ref, uri),
                 ),
+                CommentReactions(task: task, comment: comment),
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The emoji the reaction picker offers, in tix's order.
+const quickReactions = ['👍', '👎', '❤️', '🎉', '😄', '😕', '👀', '🚀'];
+
+/// A comment's reactions as chips, and the button that adds one. The
+/// button stays away on a server that answered a reaction with 404.
+class CommentReactions extends ConsumerWidget {
+  /// The reactions on [comment], a comment of [task].
+  const CommentReactions({
+    required this.task,
+    required this.comment,
+    super.key,
+  });
+
+  /// The task.
+  final Task task;
+
+  /// The comment.
+  final Comment comment;
+
+  Future<void> _toggle(
+    BuildContext context,
+    WidgetRef ref,
+    String emoji, {
+    required bool mine,
+  }) => tryAction(
+    context,
+    () => ref
+        .read(taskCommentsProvider(task.ref).notifier)
+        .toggleReaction(comment.id, emoji, mine: mine),
+  );
+
+  Future<void> _pick(BuildContext context, WidgetRef ref, String me) async {
+    final l10n = context.l10n;
+    final emoji = await showTixSheet<String>(
+      context,
+      builder: (context) => TixSheetBody(
+        title: l10n.taskDetailReactionPick,
+        child: Wrap(
+          spacing: TixSpace.s1,
+          runSpacing: TixSpace.s1,
+          children: [
+            for (final e in quickReactions)
+              SizedBox.square(
+                dimension: TixSize.target,
+                child: TextButton(
+                  key: Key('reaction.pick.$e'),
+                  onPressed: () => Navigator.of(context).pop(e),
+                  child: Text(e, style: const TextStyle(fontSize: TixText.lg)),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (emoji == null || !context.mounted) return;
+    final mine = comment.reactions.any(
+      (r) => r.emoji == emoji && r.actorIds.contains(me),
+    );
+    await _toggle(context, ref, emoji, mine: mine);
+  }
+
+  Future<void> _who(BuildContext context, Reaction reaction) =>
+      showTixSheet<void>(
+        context,
+        builder: (context) => TixSheetBody(
+          title: context.l10n.taskDetailReactionWho(reaction.emoji),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              for (final id in reaction.actorIds) _Reactor(actorId: id),
+            ],
+          ),
+        ),
+      );
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final supported = ref.watch(reactionSupportProvider);
+    final me = ref.watch(currentAccessProvider).value?.actor.id ?? '';
+    final reactions = comment.reactions;
+    if (!comment.sent || (reactions.isEmpty && !supported)) {
+      return const SizedBox.shrink();
+    }
+    return Wrap(
+      key: Key('comment.reactions.${comment.id}'),
+      spacing: TixSpace.s1,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        for (final r in reactions)
+          ReactionChip(
+            key: Key('reaction.${comment.id}.${r.emoji}'),
+            emoji: r.emoji,
+            count: r.count,
+            mine: r.actorIds.contains(me),
+            semanticLabel: l10n.taskDetailReactionLabel(r.emoji, '${r.count}'),
+            onTap: supported
+                ? () => _toggle(
+                    context,
+                    ref,
+                    r.emoji,
+                    mine: r.actorIds.contains(me),
+                  )
+                : null,
+            onLongPress: () => _who(context, r),
+          ),
+        if (supported)
+          TixIconButton(
+            key: Key('reaction.add.${comment.id}'),
+            icon: Icons.add_reaction_outlined,
+            tooltip: l10n.taskDetailReactionAdd,
+            onPressed: () => _pick(context, ref, me),
+          ),
+      ],
+    );
+  }
+}
+
+class _Reactor extends ConsumerWidget {
+  const _Reactor({required this.actorId});
+
+  final String actorId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final actor = ref.watch(actorProvider(actorId)).value;
+    final name = actor?.label ?? actorId;
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: TixSize.target),
+      child: Row(
+        children: [
+          TixAvatar(
+            label: name,
+            seed: actor?.handle ?? actorId,
+            size: 24,
+            hued: true,
+          ),
+          const SizedBox(width: TixSpace.s3),
+          Expanded(child: Text(name, overflow: TextOverflow.ellipsis)),
         ],
       ),
     );

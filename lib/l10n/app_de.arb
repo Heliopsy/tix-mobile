@@ -2241,5 +2241,9 @@
   "taskHandoffRunHere": "Führen Sie das im Repository aus, in dem die Arbeit liegt. Es ist für sh, bash und zsh gequotet.",
   "taskHandoffPasteInto": "{client} hat keinen Befehl, der ihn mit einem Prompt startet. Fügen Sie das in seinen Chat ein; es nutzt die tix-MCP-Werkzeuge:",
   "taskHandoffMcp": "Mit den tix-MCP-Werkzeugen",
-  "taskHandoffKeywords": "agent ki übergeben delegieren ai claude codex prompt mcp"
+  "taskHandoffKeywords": "agent ki übergeben delegieren ai claude codex prompt mcp",
+  "taskDetailReactionAdd": "Reaktion hinzufügen",
+  "taskDetailReactionPick": "Reagieren",
+  "taskDetailReactionLabel": "Reaktion {emoji}, {count}",
+  "taskDetailReactionWho": "Reagiert mit {emoji}"
 }

@@ -5238,5 +5238,34 @@
     }
   },
   "taskHandoffMcp": "With the tix MCP tools",
-  "taskHandoffKeywords": "agent ai claude codex prompt mcp delegate"
+  "taskHandoffKeywords": "agent ai claude codex prompt mcp delegate",
+  "taskDetailReactionAdd": "Add reaction",
+  "@taskDetailReactionAdd": {
+    "description": "Button under a comment that opens the emoji picker"
+  },
+  "taskDetailReactionPick": "React",
+  "@taskDetailReactionPick": {
+    "description": "Title of the sheet that picks an emoji reaction"
+  },
+  "taskDetailReactionLabel": "{emoji} reaction, {count}",
+  "@taskDetailReactionLabel": {
+    "description": "Screen reader label of a reaction chip",
+    "placeholders": {
+      "emoji": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailReactionWho": "Reacted with {emoji}",
+  "@taskDetailReactionWho": {
+    "description": "Title of the sheet listing who reacted with an emoji",
+    "placeholders": {
+      "emoji": {
+        "type": "String"
+      }
+    }
+  }
 }

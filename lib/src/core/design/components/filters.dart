@@ -325,3 +325,92 @@ class QuickAddField extends StatelessWidget {
     );
   }
 }
+
+/// One emoji reaction under a comment: the emoji and how many chose it,
+/// filled when the viewer is one of them. A tap toggles it, a long press
+/// says who.
+class ReactionChip extends StatelessWidget {
+  /// A chip for [emoji] chosen [count] times.
+  const ReactionChip({
+    required this.emoji,
+    required this.count,
+    required this.mine,
+    required this.semanticLabel,
+    this.onTap,
+    this.onLongPress,
+    super.key,
+  });
+
+  /// The emoji.
+  final String emoji;
+
+  /// How many reacted with it.
+  final int count;
+
+  /// Whether the viewer is among them.
+  final bool mine;
+
+  /// What a screen reader says for it.
+  final String semanticLabel;
+
+  /// Toggles the viewer's reaction; null disables it.
+  final VoidCallback? onTap;
+
+  /// Shows who reacted.
+  final VoidCallback? onLongPress;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tix;
+    final shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(TixRadius.pill),
+      side: BorderSide(color: mine ? t.accent : t.line),
+    );
+    return Semantics(
+      button: true,
+      toggled: mine,
+      label: semanticLabel,
+      excludeSemantics: true,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: TixSize.target),
+        child: Center(
+          widthFactor: 1,
+          child: Material(
+            color: mine ? t.accentSoft : t.bg,
+            shape: shape,
+            child: InkWell(
+              customBorder: shape,
+              onTap: onTap,
+              onLongPress: onLongPress,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: TixSize.controlSmall,
+                  minWidth: TixSize.target,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: TixSpace.s2),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(emoji),
+                      const SizedBox(width: TixSpace.s1),
+                      Text(
+                        '$count',
+                        style: TextStyle(
+                          fontSize: TixText.xs,
+                          fontWeight: mine ? FontWeight.w600 : FontWeight.w500,
+                          color: mine ? t.accent : t.ink,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/cache/cached.dart';
+import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/events/invalidation.dart';
 import 'package:tix_mobile/src/core/markdown/checklist.dart';
 import 'package:tix_mobile/src/core/paging/paged.dart';
@@ -266,6 +267,75 @@ class TaskComments extends _$TaskComments {
       for (final x in _now)
         if (x.id != id) x,
     ]);
+  }
+
+  /// Adds the caller's [emoji] to the comment [id], or takes it off when
+  /// [mine] says it is already there. A server without reactions answers
+  /// 404, which switches [ReactionSupport] off before the error goes on.
+  Future<void> toggleReaction(
+    String id,
+    String emoji, {
+    required bool mine,
+  }) async {
+    final Comment c;
+    try {
+      c = mine ? await _repo.unreact(id, emoji) : await _repo.react(id, emoji);
+    } on TixException catch (e) {
+      if (e.kind == TixErrorKind.notFound) {
+        ref.read(reactionSupportProvider.notifier).unsupported();
+      }
+      rethrow;
+    }
+    state = AsyncData([
+      for (final x in _now)
+        if (x.id == id) c else x,
+    ]);
+  }
+}
+
+/// Whether the server takes comment reactions: true until one answers 404,
+/// as a tix older than reactions does.
+@Riverpod(keepAlive: true)
+class ReactionSupport extends _$ReactionSupport {
+  @override
+  bool build() {
+    ref.watch(sessionApiProvider);
+    return true;
+  }
+
+  /// Records that the server has no reaction routes.
+  void unsupported() => state = false;
+}
+
+/// The channel each comment on a task came through, by comment id, from
+/// the task's `comment.add` audit entries. Empty when the audit log is out
+/// of reach, so comments still show without it.
+@riverpod
+class TaskCommentChannels extends _$TaskCommentChannels {
+  @override
+  Future<Map<String, Via>> build(String taskRef) async {
+    final repo = ref.watch(taskDetailRepositoryProvider);
+    if (isDraftRef(taskRef)) return const {};
+    final task = ref.read(taskDetailControllerProvider(taskRef)).value;
+    if (task != null) {
+      onEvents(
+        ref,
+        const {'comment.added'},
+        where: (e) => _about(e, task) && e.via != null,
+        debounce: Duration.zero,
+        (events) => events.isEmpty
+            ? ref.invalidateSelf()
+            : state = AsyncData({
+                ...?state.value,
+                for (final e in events) e.subjectId: e.via!,
+              }),
+      );
+    }
+    try {
+      return await repo.commentChannels(taskRef);
+    } on TixException {
+      return const {};
+    }
   }
 }
 

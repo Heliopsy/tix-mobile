@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/l10n/via_label.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
@@ -429,8 +430,7 @@ class AuditRow extends StatelessWidget {
         [
           '${entry.subjectType} ${entry.subjectId}',
           if (at != null) _when(context, at),
-          if (via != null && via.kind.isNotEmpty) via.kind,
-          if (via != null && via.tokenName.isNotEmpty) via.tokenName,
+          ?viaLabel(context.l10n, via),
         ].join(' · '),
         maxLines: 2,
         overflow: TextOverflow.ellipsis,

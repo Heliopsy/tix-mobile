@@ -8188,4 +8188,20 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get taskHandoffKeywords =>
       'agent ki übergeben delegieren ai claude codex prompt mcp';
+
+  @override
+  String get taskDetailReactionAdd => 'Reaktion hinzufügen';
+
+  @override
+  String get taskDetailReactionPick => 'Reagieren';
+
+  @override
+  String taskDetailReactionLabel(String emoji, String count) {
+    return 'Reaktion $emoji, $count';
+  }
+
+  @override
+  String taskDetailReactionWho(String emoji) {
+    return 'Reagiert mit $emoji';
+  }
 }

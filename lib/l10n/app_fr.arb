@@ -2241,5 +2241,9 @@
   "taskHandoffRunHere": "Lancez ceci dans le dépôt où se trouve le travail. Les guillemets conviennent à sh, bash et zsh.",
   "taskHandoffPasteInto": "{client} n’a pas de commande qui le lance avec un prompt. Collez ceci dans sa discussion ; il utilise les outils MCP de tix :",
   "taskHandoffMcp": "Avec les outils MCP de tix",
-  "taskHandoffKeywords": "agent ia confier déléguer ai claude codex prompt mcp"
+  "taskHandoffKeywords": "agent ia confier déléguer ai claude codex prompt mcp",
+  "taskDetailReactionAdd": "Ajouter une réaction",
+  "taskDetailReactionPick": "Réagir",
+  "taskDetailReactionLabel": "Réaction {emoji}, {count}",
+  "taskDetailReactionWho": "Réactions {emoji}"
 }
