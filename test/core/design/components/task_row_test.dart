@@ -226,6 +226,69 @@ void main() {
       expect(decoration(tester), TextDecoration.lineThrough);
     });
 
+    Color? wash(WidgetTester tester) => tester
+        .widget<Material>(
+          find
+              .descendant(
+                of: find.byType(TaskRow),
+                matching: find.byType(Material),
+              )
+              .first,
+        )
+        .color;
+
+    testWidgets('the wash always fades, whatever arrives mid-tick', (
+      tester,
+    ) async {
+      var shown = task;
+      late StateSetter set;
+      await pumpComponent(
+        tester,
+        StatefulBuilder(
+          builder: (context, setState) {
+            set = setState;
+            return TaskRow(task: shown, onTap: () {});
+          },
+        ),
+      );
+      set(() => shown = task.copyWith(status: 'done'));
+      await tester.pump();
+      await tester.pump(TixMotion.settle * 0.3);
+      expect(wash(tester), isNot(Colors.transparent));
+      set(() => shown = task.copyWith(status: 'done', title: 'Server copy'));
+      await tester.pump(TixMotion.settle * 0.3);
+      set(() => shown = task);
+      await tester.pump(TixMotion.settle * 0.2);
+      set(() => shown = task.copyWith(status: 'done'));
+      await tester.pumpAndSettle();
+      expect(tester.hasRunningAnimations, isFalse);
+      expect(wash(tester), Colors.transparent);
+    });
+
+    testWidgets('a done status learned late does not wash the row', (
+      tester,
+    ) async {
+      final shipped = task.copyWith(status: 'shipped');
+      var facts = const TaskFacts();
+      late StateSetter set;
+      await pumpComponent(
+        tester,
+        StatefulBuilder(
+          builder: (context, setState) {
+            set = setState;
+            return TaskRow(task: shipped, facts: facts, onTap: () {});
+          },
+        ),
+      );
+      expect(decoration(tester), isNull);
+      set(() => facts = const TaskFacts(statusCategory: StatusCategory.done));
+      await tester.pump();
+      await tester.pump(TixMotion.settle * 0.5);
+      expect(strike(), findsNothing);
+      expect(wash(tester), Colors.transparent);
+      expect(decoration(tester), TextDecoration.lineThrough);
+    });
+
     testWidgets('a row drawn done does not animate', (tester) async {
       await pumpComponent(tester, toggling(reduced: false, startDone: true));
       expect(tester.hasRunningAnimations, isFalse);

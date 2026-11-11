@@ -216,6 +216,60 @@ void main() {
     });
   });
 
+  group('no mark is left on a row', () {
+    TaskRow row(WidgetTester tester, String title) => tester.widget<TaskRow>(
+      find.ancestor(of: find.text(title), matching: find.byType(TaskRow)),
+    );
+
+    testWidgets('once the task opened with a click is closed', (tester) async {
+      await pump(tester, const TasksScreen());
+      await open(tester, 'Fix login');
+      expect(row(tester, 'Fix login').selected, isTrue);
+      expect(row(tester, 'Fix login').focused, isFalse);
+      await tester.tap(close);
+      await tester.pumpAndSettle();
+      expect(row(tester, 'Fix login').selected, isFalse);
+      expect(row(tester, 'Fix login').focused, isFalse);
+    });
+
+    testWidgets('when the window narrows and the panel goes', (tester) async {
+      await pump(tester, const TasksScreen());
+      await open(tester, 'Fix login');
+      await setSize(tester, phone);
+      await tester.pumpAndSettle();
+      expect(panel, findsNothing);
+      expect(row(tester, 'Fix login').selected, isFalse);
+    });
+
+    testWidgets('by the keyboard cursor after a click', (tester) async {
+      await pump(tester, const TasksScreen());
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyJ);
+      await tester.pump();
+      expect(row(tester, 'Fix login').focused, isTrue);
+      await tester.tap(find.text('Rotate keys'));
+      await tester.pumpAndSettle();
+      await tester.tap(close);
+      await tester.pumpAndSettle();
+      expect(row(tester, 'Fix login').focused, isFalse);
+      expect(row(tester, 'Rotate keys').focused, isFalse);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyJ);
+      await tester.pump();
+      expect(row(tester, 'Fix login').focused, isTrue);
+    });
+
+    testWidgets('of a board card opened with a click', (tester) async {
+      await pump(tester, const TasksScreen());
+      await tester.tap(find.byKey(const Key('view.board')));
+      await tester.pumpAndSettle();
+      final card = find.byKey(const Key('card.infra-1'));
+      await tester.tap(card);
+      await tester.pumpAndSettle();
+      await tester.tap(close);
+      await tester.pumpAndSettle();
+      expect(tester.widget<TaskCard>(card).selected, isFalse);
+    });
+  });
+
   testWidgets('a phone opens the task on its own screen, with no panel', (
     tester,
   ) async {
