@@ -7615,10 +7615,10 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get goWatch => 'Zu Beobachten';
+  String get goWatch => 'Zu Aktivität';
 
   @override
-  String get watchTitle => 'Beobachten';
+  String get watchTitle => 'Aktivität';
 
   @override
   String get watchSubtitle =>
@@ -7754,14 +7754,13 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get watchOfflineBody =>
-      'Der Server ist nicht erreichbar. Beobachten macht dort weiter, wo es aufgehört hat, sobald er wieder erreichbar ist.';
+      'Der Server ist nicht erreichbar. Aktivität macht dort weiter, wo sie aufgehört hat, sobald er wieder erreichbar ist.';
 
   @override
   String get watchNoContext => 'Kein Kontext aktiv';
 
   @override
-  String get watchRefused =>
-      'Diese Verbindung kann keine Ereignisse beobachten';
+  String get watchRefused => 'Diese Verbindung kann keine Ereignisse verfolgen';
 
   @override
   String get watchRefusedBody =>
@@ -7772,7 +7771,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get watchUnsupported =>
-      'Dieser Server kann gerade keine Ereignisse an die App senden, daher bleibt Beobachten leer. Es setzt wieder ein, sobald Live-Updates funktionieren.';
+      'Dieser Server kann gerade keine Ereignisse an die App senden, daher bleibt Aktivität leer. Sie setzt wieder ein, sobald Live-Updates funktionieren.';
 
   @override
   String watchExpired(int seq) {
@@ -7934,7 +7933,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get trayWatch => 'Beobachten';
+  String get trayWatch => 'Aktivität';
 
   @override
   String watchVia(String channel) {

@@ -98,8 +98,11 @@ abstract final class Routes {
   /// The tenant's audit log.
   static const audit = '/manage/audit';
 
-  /// The tenant's events as they happen.
-  static const watch = '/watch';
+  /// The tenant's events as they happen, named Activity as on the web.
+  static const activity = '/activity';
+
+  /// Where Activity used to be; redirects to [activity].
+  static const legacyWatch = '/watch';
 
   /// What stays available offline, its storage and sync.
   static const offline = '/settings/offline';

@@ -39,7 +39,7 @@ abstract final class KeyActions {
   /// Opens Settings.
   static const navSettings = 'nav.settings';
 
-  /// Opens Watch.
+  /// Opens Activity.
   static const navWatch = 'nav.watch';
 
   /// Opens quick add.

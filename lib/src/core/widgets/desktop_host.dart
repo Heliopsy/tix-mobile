@@ -95,8 +95,8 @@ class _DesktopHostState extends ConsumerState<DesktopHost> {
         await _follow('quick-add');
       case TrayPicked(action: TrayAction.inbox):
         await _follow('inbox');
-      case TrayPicked(action: TrayAction.watch):
-        await _follow('watch');
+      case TrayPicked(action: TrayAction.activity):
+        await _follow('activity');
       case TrayPicked(action: TrayAction.update):
         if (ref.read(updatesProvider).phase == UpdatePhase.ready) {
           await ref.read(updatesProvider.notifier).restart();
@@ -148,7 +148,7 @@ class _DesktopHostState extends ConsumerState<DesktopHost> {
       unread: session == null ? null : ref.watch(trayUnreadProvider),
       context: trayContextLabel(session),
       update: trayUpdateLabel(context.l10n, update),
-      watch: session != null,
+      activity: session != null,
     );
     if (menu != _menu) {
       _menu = menu;

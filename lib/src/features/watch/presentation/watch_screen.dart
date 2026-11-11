@@ -21,8 +21,8 @@ import 'package:tix_mobile/src/features/watch/presentation/watch_summary.dart';
 /// The type prefixes offered as one-tap filters.
 const _quickTypes = ['task.*', 'comment.*', 'project.*'];
 
-/// The tenant's domain events as they happen, newest first, as `tix watch`
-/// and the terminal interface's Watch view show them.
+/// Activity: the tenant's domain events as they happen, newest first, as
+/// `tix watch` and the terminal interface's Watch view show them.
 class WatchScreen extends ConsumerWidget {
   /// Creates the screen.
   const WatchScreen({super.key});
@@ -216,7 +216,7 @@ class _Feed extends ConsumerWidget {
         ),
         _ => EmptyState(
           key: const Key('watch.empty'),
-          icon: Icons.sensors,
+          icon: Icons.show_chart,
           title: l10n.watchEmpty,
           body: l10n.watchEmptyBody,
         ),

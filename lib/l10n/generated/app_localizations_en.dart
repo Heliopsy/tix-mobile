@@ -7546,10 +7546,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get goWatch => 'Go to Watch';
+  String get goWatch => 'Go to Activity';
 
   @override
-  String get watchTitle => 'Watch';
+  String get watchTitle => 'Activity';
 
   @override
   String get watchSubtitle =>
@@ -7684,13 +7684,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get watchOfflineBody =>
-      'The server cannot be reached. Watch carries on from where it stopped once it can.';
+      'The server cannot be reached. Activity carries on from where it stopped once it can.';
 
   @override
   String get watchNoContext => 'No context is active';
 
   @override
-  String get watchRefused => 'This connection cannot watch events';
+  String get watchRefused => 'This connection cannot follow events';
 
   @override
   String get watchRefusedBody =>
@@ -7701,7 +7701,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get watchUnsupported =>
-      'This server cannot stream events to the app right now, so Watch stays empty. It picks up again once live updates work.';
+      'This server cannot stream events to the app right now, so Activity stays empty. It picks up again once live updates work.';
 
   @override
   String watchExpired(int seq) {
@@ -7860,7 +7860,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get trayWatch => 'Watch';
+  String get trayWatch => 'Activity';
 
   @override
   String watchVia(String channel) {

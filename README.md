@@ -130,7 +130,7 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   opens the inbox.
 - **Add to home screen** on a project or a saved filter, on Android launchers that pin shortcuts. The shortcut
   opens it in the context it was made in.
-- **Tray and menu bar** on Linux, Windows and macOS: Open tix, Quick add, Inbox with the unread count, Watch, the
+- **Tray and menu bar** on Linux, Windows and macOS: Open tix, Quick add, Inbox with the unread count, Activity, the
   active context and Quit. Closing the window keeps tix running there (a setting, on wherever a tray shows), with the
   unread count in the tooltip and on the macOS Dock. Optional start at login, and Ctrl+Shift+Space (⌃⇧Space on a
   Mac) to open quick add from any app, where the desktop allows global shortcuts. A second launch or a `tix://`
@@ -176,7 +176,7 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   Redeliver, external sync sources from Jira, OpenProject or a file (check, run, preview, history), retention and
   pruning, housekeeping, the trash with restore and delete for good, and the audit log filtered by channel,
   surface, actor, action, token and time.
-- **Watch**: the tenant's events as they happen, as `tix watch` shows them, newest first with the sequence number,
+- **Activity**: the tenant's events as they happen, as `tix watch` shows them, newest first with the sequence number,
   how long ago, who (name, handle, and the channel and token it came through), a coloured type badge and what
   changed: states, field names, the start of a comment. Filter by project, type (`task.*`) and actor, pause with a
   count of what arrived, replay from a sequence number, open the task or project and come back, or read the whole

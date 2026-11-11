@@ -40,16 +40,16 @@ void main() {
       expect(menu.context, isNull);
     });
 
-    test('Watch follows Inbox when it is offered', () {
-      final menu = trayMenu(en, watch: true);
+    test('Activity follows Inbox when it is offered', () {
+      final menu = trayMenu(en, activity: true);
       expect(menu.labels.keys, [
         TrayAction.open,
         TrayAction.quickAdd,
         TrayAction.inbox,
-        TrayAction.watch,
+        TrayAction.activity,
         TrayAction.quit,
       ]);
-      expect(menu.labels[TrayAction.watch], 'Watch');
+      expect(menu.labels[TrayAction.activity], 'Activity');
     });
 
     test('the badge stops at 99+', () {

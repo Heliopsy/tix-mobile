@@ -82,9 +82,9 @@ class HomeShell extends StatelessWidget {
       label: l10n.inboxTitle,
     ),
     ShellDestination(
-      id: 'watch',
-      icon: Icons.sensors_outlined,
-      selectedIcon: Icons.sensors,
+      id: 'activity',
+      icon: Icons.show_chart,
+      selectedIcon: Icons.show_chart,
       label: l10n.watchTitle,
     ),
     ShellDestination(
@@ -150,12 +150,12 @@ class HomeShell extends StatelessWidget {
             run: () => _select(at('inbox')),
           ),
           TixCommand(
-            id: 'go.watch',
+            id: 'go.activity',
             action: KeyActions.navWatch,
             label: l10n.goWatch,
             group: l10n.commandsNavigate,
-            icon: Icons.sensors_outlined,
-            run: () => _select(at('watch')),
+            icon: Icons.show_chart,
+            run: () => _select(at('activity')),
           ),
           TixCommand(
             id: 'go.manage',

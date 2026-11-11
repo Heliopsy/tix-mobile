@@ -4557,11 +4557,11 @@
       }
     }
   },
-  "goWatch": "Go to Watch",
+  "goWatch": "Go to Activity",
   "@goWatch": {
-    "description": "Palette command opening the Watch screen"
+    "description": "Palette command opening the Activity screen"
   },
-  "watchTitle": "Watch",
+  "watchTitle": "Activity",
   "@watchTitle": {
     "description": "Title of the screen that shows the tenant's events live"
   },
@@ -4740,7 +4740,7 @@
   "@watchOffline": {
     "description": "Watch cannot reach the server"
   },
-  "watchOfflineBody": "The server cannot be reached. Watch carries on from where it stopped once it can.",
+  "watchOfflineBody": "The server cannot be reached. Activity carries on from where it stopped once it can.",
   "@watchOfflineBody": {
     "description": "Body when Watch is offline"
   },
@@ -4748,7 +4748,7 @@
   "@watchNoContext": {
     "description": "Watch has no server to follow"
   },
-  "watchRefused": "This connection cannot watch events",
+  "watchRefused": "This connection cannot follow events",
   "@watchRefused": {
     "description": "Title when the credential may not follow events"
   },
@@ -4760,7 +4760,7 @@
   "@watchFilterRefused": {
     "description": "Title of the notice when a Watch filter is refused"
   },
-  "watchUnsupported": "This server cannot stream events to the app right now, so Watch stays empty. It picks up again once live updates work.",
+  "watchUnsupported": "This server cannot stream events to the app right now, so Activity stays empty. It picks up again once live updates work.",
   "@watchUnsupported": {
     "description": "Notice when live updates only refresh on a timer"
   },
@@ -5003,9 +5003,9 @@
       }
     }
   },
-  "trayWatch": "Watch",
+  "trayWatch": "Activity",
   "@trayWatch": {
-    "description": "Tray menu entry that opens the Watch screen"
+    "description": "Tray menu entry that opens the Activity screen"
   },
   "watchVia": "via {channel}",
   "@watchVia": {

@@ -58,7 +58,8 @@ final _name = RegExp(r'^[A-Za-z0-9][A-Za-z0-9_.-]*$');
 ///
 /// `tix://inbox`, `tix://mine`, `tix://tasks`, `tix://projects`,
 /// `tix://projects/<KEY>`, `tix://projects/<KEY>/tasks/<ref>`,
-/// `tix://settings`, `tix://about`, `tix://watch`, `tix://connection`,
+/// `tix://settings`, `tix://about`, `tix://activity` (or the older
+/// `tix://watch`), `tix://connection`,
 /// `tix://tasks?filter=<name or id>` and `tix://quick-add?project=<KEY>`,
 /// each with an optional `?context=<connection or name>`.
 TixLink? parseTixLink(Uri uri) {
@@ -100,7 +101,7 @@ TixLink? parseTixLink(Uri uri) {
       Routes.task(key, ref),
     ['settings'] => Routes.settings,
     ['about'] => Routes.about,
-    ['watch'] => Routes.watch,
+    ['activity'] || ['watch'] => Routes.activity,
     ['connection'] => '',
     _ => null,
   };

@@ -138,7 +138,7 @@ void main() {
     });
   }
 
-  testWidgets('the shell lists Watch after Inbox, Manage before Settings', (
+  testWidgets('the shell lists Activity after Inbox, Manage before Settings', (
     tester,
   ) async {
     final stores = signedInStores();
@@ -161,7 +161,7 @@ void main() {
       ),
     );
     expect(
-      find.text('projects,tasks,myWork,inbox,watch,manage,settings'),
+      find.text('projects,tasks,myWork,inbox,activity,manage,settings'),
       findsOneWidget,
     );
   });
