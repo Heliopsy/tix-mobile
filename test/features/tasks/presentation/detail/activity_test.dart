@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/platform/attachments.dart';
 
 import '../../../../helpers/attachments.dart';
@@ -155,6 +156,160 @@ void main() {
       await press(tester, find.byKey(const Key('confirm.ok')));
       expect(count(server, 'DELETE', '/comments/c1'), 1);
       expect(find.byKey(const Key('comment.c1')), findsNothing);
+    });
+  });
+
+  group('comment channel', () {
+    testWidgets('names the token a comment came through', (tester) async {
+      server.comments['infra-1'] = [
+        comment('c1', 'From CI'),
+        comment('c2', 'By hand'),
+      ];
+      server.audit['infra-1'] = [
+        {
+          'seq': 9,
+          'action': 'comment.add',
+          'actor_id': 'a1',
+          'subject_type': 'comment',
+          'subject_id': 'c1',
+          'via': {'kind': 'api', 'token_name': 'ci-agent', 'token_id': 't1'},
+        },
+        {
+          'seq': 8,
+          'action': 'task.update',
+          'actor_id': 'a1',
+          'subject_type': 'task',
+          'subject_id': 'c2',
+          'via': {'kind': 'web'},
+        },
+      ];
+      await pumpTask(tester, server);
+      expect(
+        tester.widget<Text>(find.byKey(const Key('comment.via.c1'))).data,
+        'via token ci-agent',
+      );
+      expect(find.textContaining('t1'), findsNothing);
+      expect(find.byKey(const Key('comment.via.c2')), findsNothing);
+      expect(
+        server.requestsTo('/api/v1/tasks/infra-1/audit').last.uri.query,
+        contains('action=comment.add'),
+      );
+    });
+
+    testWidgets('a refused audit log leaves comments without one', (
+      tester,
+    ) async {
+      server.comments['infra-1'] = [comment('c1', 'Hi')];
+      server.failures['GET /api/v1/tasks/infra-1/audit'] = FakeResponse(
+        403,
+        envelope('forbidden', 'audit:read'),
+      );
+      await pumpTask(tester, server);
+      expect(find.byKey(const Key('comment.c1')), findsOneWidget);
+      expect(find.byKey(const Key('comment.via.c1')), findsNothing);
+    });
+  });
+
+  group('reactions', () {
+    Map<String, Object?> reacted(String id) => {
+      ...comment(id, 'Ship it'),
+      'reactions': [
+        {
+          'emoji': '👍',
+          'count': 2,
+          'actor_ids': ['a1', 'me'],
+        },
+        {
+          'emoji': '🚀',
+          'count': 1,
+          'actor_ids': ['a1'],
+        },
+      ],
+    };
+
+    ReactionChip chip(WidgetTester tester, String key) =>
+        tester.widget<ReactionChip>(find.byKey(Key(key)));
+
+    List<Map<String, Object?>> reactionsOf(String id) => [
+      for (final r
+          in (server.comments['infra-1']!.firstWhere(
+                    (c) => c['id'] == id,
+                  )['reactions']
+                  as List?) ??
+              const [])
+        r as Map<String, Object?>,
+    ];
+
+    testWidgets('show each emoji with its count, mine marked', (tester) async {
+      server.comments['infra-1'] = [reacted('c1')];
+      await pumpTask(tester, server);
+      final up = chip(tester, 'reaction.c1.👍');
+      expect((up.count, up.mine), (2, true));
+      final rocket = chip(tester, 'reaction.c1.🚀');
+      expect((rocket.count, rocket.mine), (1, false));
+    });
+
+    testWidgets('a tap on mine takes it off, on another adds it', (
+      tester,
+    ) async {
+      server.comments['infra-1'] = [reacted('c1')];
+      await pumpTask(tester, server);
+      await press(tester, find.byKey(const Key('reaction.c1.👍')));
+      expect(chip(tester, 'reaction.c1.👍').count, 1);
+      expect(chip(tester, 'reaction.c1.👍').mine, isFalse);
+      await press(tester, find.byKey(const Key('reaction.c1.🚀')));
+      expect(chip(tester, 'reaction.c1.🚀').mine, isTrue);
+      expect(reactionsOf('c1').map((r) => r['count']), [1, 2]);
+      expect(
+        [
+          for (final r in server.requests)
+            if (r.path.contains('/reactions/')) r.method,
+        ],
+        ['DELETE', 'PUT'],
+      );
+    });
+
+    testWidgets('the picker adds a new one', (tester) async {
+      server.comments['infra-1'] = [comment('c1', 'Plain')];
+      await pumpTask(tester, server);
+      expect(find.byKey(const Key('reaction.c1.🎉')), findsNothing);
+      await press(tester, find.byKey(const Key('reaction.add.c1')));
+      for (final e in ['👍', '👎', '❤️', '🎉', '😄', '😕', '👀', '🚀']) {
+        expect(find.byKey(Key('reaction.pick.$e')), findsOneWidget);
+      }
+      await press(tester, find.byKey(const Key('reaction.pick.🎉')));
+      expect(chip(tester, 'reaction.c1.🎉').mine, isTrue);
+      expect(reactionsOf('c1').single['emoji'], '🎉');
+    });
+
+    testWidgets('a long press says who reacted', (tester) async {
+      server.comments['infra-1'] = [reacted('c1')];
+      await pumpTask(tester, server);
+      await tester.longPress(find.byKey(const Key('reaction.c1.🚀')));
+      await tester.pumpAndSettle();
+      expect(find.text('Reacted with 🚀'), findsOneWidget);
+      expect(find.text('Raj'), findsWidgets);
+    });
+
+    testWidgets('a server without reactions hides the add button on 404', (
+      tester,
+    ) async {
+      server
+        ..comments['infra-1'] = [comment('c1', 'Old server')]
+        ..reactionsMissing = true;
+      await pumpTask(tester, server);
+      await press(tester, find.byKey(const Key('reaction.add.c1')));
+      await press(tester, find.byKey(const Key('reaction.pick.👍')));
+      expect(find.byKey(const Key('reaction.add.c1')), findsNothing);
+      expect(find.byKey(const Key('comment.c1')), findsOneWidget);
+    });
+
+    testWidgets('a comment still in the outbox offers none', (tester) async {
+      server.comments['infra-1'] = [
+        {...comment('c1', 'Queued'), 'task_id': ''},
+      ];
+      await pumpTask(tester, server);
+      expect(find.byKey(const Key('reaction.add.c1')), findsNothing);
     });
   });
 

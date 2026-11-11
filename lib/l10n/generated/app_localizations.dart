@@ -13554,6 +13554,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'agent ai claude codex prompt mcp delegate'**
   String get taskHandoffKeywords;
+
+  /// Button under a comment that opens the emoji picker
+  ///
+  /// In en, this message translates to:
+  /// **'Add reaction'**
+  String get taskDetailReactionAdd;
+
+  /// Title of the sheet that picks an emoji reaction
+  ///
+  /// In en, this message translates to:
+  /// **'React'**
+  String get taskDetailReactionPick;
+
+  /// Screen reader label of a reaction chip
+  ///
+  /// In en, this message translates to:
+  /// **'{emoji} reaction, {count}'**
+  String taskDetailReactionLabel(String emoji, String count);
+
+  /// Title of the sheet listing who reacted with an emoji
+  ///
+  /// In en, this message translates to:
+  /// **'Reacted with {emoji}'**
+  String taskDetailReactionWho(String emoji);
 }
 
 class _AppLocalizationsDelegate

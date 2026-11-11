@@ -121,4 +121,57 @@ void main() {
     final now = await c.read(taskCommentsProvider('infra-1').future);
     expect(now.single.body, 'from the web');
   });
+
+  test('a reaction made elsewhere shows', () async {
+    final (c, s) = await live();
+    final task = c.listen(taskDetailControllerProvider('infra-1'), (_, _) {});
+    addTearDown(task.close);
+    await c.read(taskDetailControllerProvider('infra-1').future);
+    server.comments['infra-1'] = [
+      {'id': 'c9', 'task_id': 'id-infra-1', 'body': 'ship it'},
+    ];
+    final sub = c.listen(taskCommentsProvider('infra-1'), (_, _) {});
+    addTearDown(sub.close);
+    final first = await c.read(taskCommentsProvider('infra-1').future);
+    expect(first.single.reactions, isEmpty);
+    server.comments['infra-1']!.single['reactions'] = [
+      {
+        'emoji': '🚀',
+        'count': 1,
+        'actor_ids': ['a1'],
+      },
+    ];
+    s.event(
+      1,
+      'comment.reacted',
+      subjectId: 'c9',
+      payload: {'task_id': 'id-infra-1', 'emoji': '🚀', 'reacted': true},
+    );
+    await settle(400);
+    final now = await c.read(taskCommentsProvider('infra-1').future);
+    expect(now.single.reactions.single.emoji, '🚀');
+  });
+
+  test("a new comment's channel comes from its event", () async {
+    final (c, s) = await live();
+    final task = c.listen(taskDetailControllerProvider('infra-1'), (_, _) {});
+    addTearDown(task.close);
+    await c.read(taskDetailControllerProvider('infra-1').future);
+    final sub = c.listen(taskCommentChannelsProvider('infra-1'), (_, _) {});
+    addTearDown(sub.close);
+    expect(
+      await c.read(taskCommentChannelsProvider('infra-1').future),
+      isEmpty,
+    );
+    s.event(
+      1,
+      'comment.added',
+      subjectId: 'c9',
+      payload: {'task_id': 'id-infra-1'},
+      via: {'kind': 'api', 'token_name': 'ci-agent'},
+    );
+    await settle(100);
+    final now = await c.read(taskCommentChannelsProvider('infra-1').future);
+    expect(now['c9']?.tokenName, 'ci-agent');
+  });
 }

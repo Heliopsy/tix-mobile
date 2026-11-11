@@ -82,6 +82,13 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byKey(const Key('audit.3')), findsOneWidget);
         expect(find.byKey(const Key('audit.2')), findsOneWidget);
+        expect(
+          find.descendant(
+            of: find.byKey(const Key('audit.3')),
+            matching: find.textContaining('via token ci-bot'),
+          ),
+          findsOneWidget,
+        );
       });
 
       testWidgets('empty', (tester) async {

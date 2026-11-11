@@ -25,6 +25,7 @@ export 'package:tix_mobile/src/data/api/gen/models.gen.dart'
         FieldType,
         LeaseGrant,
         LeaseSource,
+        Reaction,
         RouteInput,
         RouteResult,
         SnoozeInput,
@@ -142,6 +143,10 @@ extension CommentEdits on Comment {
       updatedAt != null &&
       createdAt != null &&
       updatedAt!.difference(createdAt!).inSeconds.abs() > 1;
+
+  /// True once the server holds it; a comment still in the outbox has no
+  /// task id.
+  bool get sent => taskId.isNotEmpty;
 }
 
 /// The name to show for a custom field.

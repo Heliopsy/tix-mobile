@@ -310,6 +310,36 @@ class TaskDetailRepository {
   /// Deletes the comment [id] (`comment.delete`).
   Future<void> deleteComment(String id) => _api.comment.delete(id);
 
+  /// Adds the caller's [emoji] reaction to the comment [id] (`comment.react`).
+  Future<Comment> react(String id, String emoji) =>
+      _api.comment.react(id, emoji);
+
+  /// Takes the caller's [emoji] reaction off the comment [id]
+  /// (`comment.unreact`).
+  Future<Comment> unreact(String id, String emoji) =>
+      _api.comment.unreact(id, emoji);
+
+  /// The channel each comment on [ref] was added through, by comment id,
+  /// read from its `comment.add` audit entries (`task.audit`).
+  Future<Map<String, Via>> commentChannels(String ref) async {
+    final channels = <String, Via>{};
+    String? cursor;
+    do {
+      final page = await _api.task.audit(
+        ref,
+        action: const ['comment.add'],
+        cursor: cursor,
+        limit: pageSize,
+      );
+      for (final e in page.items) {
+        final via = e.via;
+        if (via != null && e.subjectId.isNotEmpty) channels[e.subjectId] = via;
+      }
+      cursor = page.nextCursor;
+    } while (cursor != null);
+    return channels;
+  }
+
   /// The edges from [ref] to the tasks it waits for (`dependency.list`).
   Future<List<Dependency>> dependencies(String ref) async =>
       (await _api.dependency.list(ref)).items;

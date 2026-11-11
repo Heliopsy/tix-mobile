@@ -2240,5 +2240,9 @@
   "taskHandoffRunHere": "Изпълнете това в хранилището, в което е работата. Кавичките са за sh, bash и zsh.",
   "taskHandoffPasteInto": "{client} няма команда, която да го стартира с подкана. Поставете това в чата му; то използва MCP инструментите на tix:",
   "taskHandoffMcp": "С MCP инструментите на tix",
-  "taskHandoffKeywords": "агент ии подкана делегирай agent ai claude codex prompt mcp"
+  "taskHandoffKeywords": "агент ии подкана делегирай agent ai claude codex prompt mcp",
+  "taskDetailReactionAdd": "Добави реакция",
+  "taskDetailReactionPick": "Реагирай",
+  "taskDetailReactionLabel": "Реакция {emoji}, {count}",
+  "taskDetailReactionWho": "Реагирали с {emoji}"
 }
