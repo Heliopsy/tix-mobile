@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -7,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/offline/outbox.dart' show isDraftRef;
 import 'package:tix_mobile/src/core/platform/attachments.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
@@ -176,7 +178,16 @@ class _CommentsPanelState extends ConsumerState<CommentsPanel> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               for (final c in value)
-                _CommentTile(task: widget.task, comment: c),
+                _CommentTile(
+                  task: widget.task,
+                  reacted: c,
+                  react:
+                      !isDraftRef(widget.task.ref) &&
+                      offerReactions(
+                        ref.watch(reactionCapabilityProvider),
+                        value,
+                      ),
+                ),
             ],
           ),
           AsyncError(:final error) => ErrorState(
@@ -217,10 +228,19 @@ class _CommentsPanelState extends ConsumerState<CommentsPanel> {
 }
 
 class _CommentTile extends ConsumerWidget {
-  const _CommentTile({required this.task, required this.comment});
+  const _CommentTile({
+    required this.task,
+    required this.reacted,
+    required this.react,
+  });
 
   final Task task;
-  final Comment comment;
+  final ReactedComment reacted;
+
+  /// Whether the reader can add a reaction here.
+  final bool react;
+
+  Comment get comment => reacted.comment;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -283,71 +303,168 @@ class _CommentTile extends ConsumerWidget {
       }
     }
 
+    Future<void> toggle(Reaction r) =>
+        toggleReaction(context, ref, task.ref, comment.id, r);
+
+    Future<void> pick() async {
+      final r = await pickReaction(context, reacted);
+      if (r != null && context.mounted) await toggle(r);
+    }
+
     final created = comment.createdAt;
-    return Padding(
+    final chips = [
+      for (final s in reacted.shown)
+        if (s.reaction case final r?)
+          ReactionChip(
+            key: Key('comment.${comment.id}.reaction.${r.wire}'),
+            emoji: r.emoji,
+            count: s.count,
+            mine: s.reacted,
+            label: s.reacted
+                ? l10n.commentReactionChipMine(
+                    l10n.commentReactionName(r.wire),
+                    s.count,
+                  )
+                : l10n.commentReactionChip(
+                    l10n.commentReactionName(r.wire),
+                    s.count,
+                  ),
+            onTap: react ? () => toggle(r) : null,
+          ),
+    ];
+    return GestureDetector(
       key: Key('comment.${comment.id}'),
-      padding: const EdgeInsets.only(bottom: TixSpace.s3),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: TixSpace.s2),
-            child: TixAvatar(
-              label: name,
-              seed: author?.handle ?? comment.authorActorId,
-              size: 28,
-              hued: true,
+      onLongPress: react ? pick : null,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: TixSpace.s3),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: TixSpace.s2),
+              child: TixAvatar(
+                label: name,
+                seed: author?.handle ?? comment.authorActorId,
+                size: 28,
+                hued: true,
+              ),
             ),
-          ),
-          const SizedBox(width: TixSpace.s3),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        name,
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                        overflow: TextOverflow.ellipsis,
+            const SizedBox(width: TixSpace.s3),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          name,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                    if (created != null) ...[
-                      const SizedBox(width: TixSpace.s2),
-                      Text(
-                        times.shortStamp(created),
-                        style: TextStyle(fontSize: TixText.xs, color: t.muted),
+                      if (created != null) ...[
+                        const SizedBox(width: TixSpace.s2),
+                        Text(
+                          times.shortStamp(created),
+                          style: TextStyle(
+                            fontSize: TixText.xs,
+                            color: t.muted,
+                          ),
+                        ),
+                      ],
+                      if (comment.edited) ...[
+                        const SizedBox(width: TixSpace.s1),
+                        Text(
+                          l10n.taskDetailEdited,
+                          style: TextStyle(
+                            fontSize: TixText.xs,
+                            color: t.muted,
+                          ),
+                        ),
+                      ],
+                      const Spacer(),
+                      TixIconButton(
+                        key: Key('comment.menu.${comment.id}'),
+                        icon: Icons.more_horiz,
+                        tooltip: l10n.taskDetailCommentActions,
+                        onPressed: act,
                       ),
                     ],
-                    if (comment.edited) ...[
-                      const SizedBox(width: TixSpace.s1),
-                      Text(
-                        l10n.taskDetailEdited,
-                        style: TextStyle(fontSize: TixText.xs, color: t.muted),
-                      ),
-                    ],
-                    const Spacer(),
-                    TixIconButton(
-                      key: Key('comment.menu.${comment.id}'),
-                      icon: Icons.more_horiz,
-                      tooltip: l10n.taskDetailCommentActions,
-                      onPressed: act,
-                    ),
-                  ],
-                ),
-                TixMarkdown(
-                  data: comment.body,
-                  onLink: (uri) => openLink(ref, uri),
-                ),
-              ],
+                  ),
+                  TixMarkdown(
+                    data: comment.body,
+                    onLink: (uri) => openLink(ref, uri),
+                  ),
+                  ReactionBar(
+                    chips: chips,
+                    addLabel: l10n.commentReactionAdd,
+                    addKey: Key('comment.${comment.id}.react'),
+                    onAdd: react ? pick : null,
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
+
+/// Toggles the reader's [reaction] on the comment [id] of [taskRef], saying
+/// why when the server refuses.
+Future<void> toggleReaction(
+  BuildContext context,
+  WidgetRef ref,
+  String taskRef,
+  String id,
+  Reaction reaction,
+) async {
+  final notifier = ref.read(taskCommentsProvider(taskRef).notifier);
+  final l10n = context.l10n;
+  try {
+    await notifier.toggleReaction(id, reaction);
+  } on ReactionsUnsupported {
+    unawaited(TixHaptics.refuse());
+    if (context.mounted) {
+      showTixToast(context, l10n.commentReactionsUnsupported);
+    }
+  } on Object catch (e) {
+    unawaited(TixHaptics.refuse());
+    if (context.mounted) {
+      showTixToast(context, errorMessage(l10n, e), tone: TixTone.danger);
+    }
+  }
+}
+
+/// Opens the picker of tix's reactions for [comment] and answers the one
+/// picked.
+Future<Reaction?> pickReaction(BuildContext context, ReactedComment comment) =>
+    showTixSheet<Reaction>(
+      context,
+      builder: (context) {
+        final l10n = context.l10n;
+        return TixSheetBody(
+          title: l10n.commentReactionPicker,
+          child: Wrap(
+            key: const Key('reaction.picker'),
+            spacing: TixSpace.s1,
+            runSpacing: TixSpace.s1,
+            children: [
+              for (final r in Reaction.values)
+                ReactionOption(
+                  key: Key('reaction.pick.${r.wire}'),
+                  emoji: r.emoji,
+                  label: l10n.commentReactionName(r.wire),
+                  mine: comment.reacted(r),
+                  onTap: () => Navigator.of(context).pop(r),
+                ),
+            ],
+          ),
+        );
+      },
+    );
 
 /// The task's audit trail, newest first.
 class HistoryPanel extends ConsumerWidget {

@@ -2228,5 +2228,11 @@
   "keymapEmacsHelp": "Emacs-Reflexe außerhalb von Textfeldern: C-n und C-p bewegen, C-s filtert, C-g bricht ab, M-x öffnet die Befehlspalette.",
   "keymapOffHelp": "Keine einzelne Taste löst etwas aus. Kombinationen mit Strg, Alt oder ⌘ funktionieren weiter.",
   "settingsKeyBindings": "Aktive Belegung",
-  "settingsKeyBindingsOff": "Tastenkürzel sind aus."
+  "settingsKeyBindingsOff": "Tastenkürzel sind aus.",
+  "commentReactionName": "{reaction, select, thumbs_up{Daumen hoch} thumbs_down{Daumen runter} laugh{Lachen} hooray{Hurra} confused{Verwirrt} heart{Herz} rocket{Rakete} eyes{Augen} other{Reaktion}}",
+  "commentReactionAdd": "Reaktion hinzufügen",
+  "commentReactionPicker": "Reagieren",
+  "commentReactionChip": "{name}, {count}",
+  "commentReactionChipMine": "{name}, {count}, du hast reagiert",
+  "commentReactionsUnsupported": "Dieser Server unterstützt keine Reaktionen."
 }

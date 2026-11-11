@@ -425,6 +425,10 @@ class FakeTix {
   /// than it does.
   bool pollSupported = true;
 
+  /// Whether the comment reaction routes exist; false answers 404 as a tix
+  /// older than them does.
+  bool reactionsSupported = true;
+
   /// Answers every poll with this when set, for refusals.
   FakeResponse? pollAnswer;
 
@@ -462,6 +466,66 @@ class FakeTix {
   }
 
   /// Requests to the poll endpoint, in order.
+  static const _reactionOrder = [
+    'thumbs_up',
+    'thumbs_down',
+    'laugh',
+    'hooray',
+    'confused',
+    'heart',
+    'rocket',
+    'eyes',
+  ];
+
+  static const _reactionEmoji = {
+    'thumbs_up': '👍',
+    'thumbs_down': '👎',
+    'laugh': '😄',
+    'hooray': '🎉',
+    'confused': '😕',
+    'heart': '❤️',
+    'rocket': '🚀',
+    'eyes': '👀',
+  };
+
+  /// Adds or removes the caller's (`me`) [name] on the comment [c], keeping
+  /// tix's shape: only counts above zero, in the fixed order, the field
+  /// left out when none is left.
+  void _react(Map<String, Object?> c, String name, {required bool add}) {
+    final byName = {
+      for (final r in (c['reactions'] as List<Object?>? ?? const []))
+        (r! as Map<String, Object?>)['reaction']! as String:
+            Map<String, Object?>.of(r as Map<String, Object?>),
+    };
+    final r =
+        byName[name] ??
+        {
+          'reaction': name,
+          'emoji': _reactionEmoji[name],
+          'count': 0,
+          'reacted': false,
+          'actor_ids': <String>[],
+        };
+    final ids = [...(r['actor_ids']! as List<Object?>).cast<String>()];
+    if (add && !ids.contains('me')) ids.add('me');
+    if (!add) ids.remove('me');
+    byName[name] = {
+      ...r,
+      'count': ids.length,
+      'reacted': add,
+      'actor_ids': ids,
+    };
+    final list = [
+      for (final n in _reactionOrder)
+        if (byName[n] case final x? when (x['count']! as int) > 0) x,
+    ];
+    if (list.isEmpty) {
+      c.remove('reactions');
+    } else {
+      c['reactions'] = list;
+    }
+  }
+
   List<RequestOptions> get polls => requestsTo('/api/v1/events/poll');
 
   Future<FakeResponse> _poll(
@@ -1125,6 +1189,20 @@ class FakeTix {
           }
         }
         return FakeResponse(404, envelope('not_found', 'comment'));
+      case (final m, ['comments', final id, 'reactions', final name])
+          when m == 'PUT' || m == 'DELETE':
+        if (!reactionsSupported) {
+          return FakeResponse(404, envelope('not_found', 'no such route'));
+        }
+        for (final list in comments.values) {
+          for (final c in list) {
+            if (c['id'] == id) {
+              _react(c, name, add: m == 'PUT');
+              return FakeResponse(200, c);
+            }
+          }
+        }
+        return FakeResponse(404, envelope('not_found', 'comment "$id"'));
       case ('DELETE', ['comments', final id]):
         for (final list in comments.values) {
           list.removeWhere((c) => c['id'] == id);

@@ -10,11 +10,15 @@ import 'package:tix_mobile/src/data/cache/response_cache.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/page.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
+import 'package:tix_mobile/src/data/models/reaction.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/models/task_detail.dart';
 import 'package:tix_mobile/src/data/models/task_patch.dart';
 import 'package:tix_mobile/src/data/offline/outbox.dart';
 
+export 'package:tix_mobile/src/data/api/reactions.dart'
+    show ReactionsUnsupported;
+export 'package:tix_mobile/src/data/models/reaction.dart';
 export 'package:tix_mobile/src/data/models/task_detail.dart';
 export 'package:tix_mobile/src/data/models/task_patch.dart';
 
@@ -272,16 +276,33 @@ class TaskDetailRepository {
   static const tagsKey = 'tags';
 
   /// [ref]'s comments, oldest first (`comment.list`).
-  Future<List<Comment>> comments(String ref) => _cache.remember(
+  Future<List<Comment>> comments(String ref) =>
+      reactedComments(ref).then((v) => [for (final c in v) c.comment]);
+
+  /// [ref]'s comments with their reactions, oldest first (`comment.list`).
+  Future<List<ReactedComment>> reactedComments(String ref) => _cache.remember(
     'task/$ref/comments',
-    _api.comment.list(ref).then((p) => p.items),
+    _api.reaction.comments(ref).then((p) => p.items),
     (v) => _encode(v, (c) => c.toJson()),
-    decode: (j) => _list(j, Comment.fromJson),
+    decode: (j) => _list(j, ReactedComment.fromJson),
   );
 
   /// [ref]'s comments as last read.
-  Future<List<Comment>?> cachedComments(String ref) =>
-      _cache.peek('task/$ref/comments', (j) => _list(j, Comment.fromJson));
+  Future<List<ReactedComment>?> cachedComments(String ref) => _cache.peek(
+    'task/$ref/comments',
+    (j) => _list(j, ReactedComment.fromJson),
+  );
+
+  /// Adds the reader's [reaction] to the comment [id], or removes it when
+  /// [add] is false, and returns the comment as the server now has it.
+  /// Throws [ReactionsUnsupported] on a server without reactions.
+  Future<ReactedComment> react(
+    String id,
+    Reaction reaction, {
+    required bool add,
+  }) => add
+      ? _api.reaction.add(id, reaction)
+      : _api.reaction.remove(id, reaction);
 
   /// Adds a comment to [ref] (`comment.add`).
   Future<Comment> addComment(String ref, String body) => _write(

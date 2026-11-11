@@ -8139,4 +8139,40 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsKeyBindingsOff => 'Tastenkürzel sind aus.';
+
+  @override
+  String commentReactionName(String reaction) {
+    String _temp0 = intl.Intl.selectLogic(reaction, {
+      'thumbs_up': 'Daumen hoch',
+      'thumbs_down': 'Daumen runter',
+      'laugh': 'Lachen',
+      'hooray': 'Hurra',
+      'confused': 'Verwirrt',
+      'heart': 'Herz',
+      'rocket': 'Rakete',
+      'eyes': 'Augen',
+      'other': 'Reaktion',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get commentReactionAdd => 'Reaktion hinzufügen';
+
+  @override
+  String get commentReactionPicker => 'Reagieren';
+
+  @override
+  String commentReactionChip(String name, int count) {
+    return '$name, $count';
+  }
+
+  @override
+  String commentReactionChipMine(String name, int count) {
+    return '$name, $count, du hast reagiert';
+  }
+
+  @override
+  String get commentReactionsUnsupported =>
+      'Dieser Server unterstützt keine Reaktionen.';
 }

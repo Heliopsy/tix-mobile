@@ -8065,4 +8065,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsKeyBindingsOff => 'Keyboard shortcuts are off.';
+
+  @override
+  String commentReactionName(String reaction) {
+    String _temp0 = intl.Intl.selectLogic(reaction, {
+      'thumbs_up': 'thumbs up',
+      'thumbs_down': 'thumbs down',
+      'laugh': 'laugh',
+      'hooray': 'hooray',
+      'confused': 'confused',
+      'heart': 'heart',
+      'rocket': 'rocket',
+      'eyes': 'eyes',
+      'other': 'reaction',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get commentReactionAdd => 'Add reaction';
+
+  @override
+  String get commentReactionPicker => 'React';
+
+  @override
+  String commentReactionChip(String name, int count) {
+    return '$name, $count';
+  }
+
+  @override
+  String commentReactionChipMine(String name, int count) {
+    return '$name, $count, you reacted';
+  }
+
+  @override
+  String get commentReactionsUnsupported =>
+      'This server does not support reactions.';
 }

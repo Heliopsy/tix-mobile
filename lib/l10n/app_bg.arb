@@ -2228,5 +2228,11 @@
   "keymapEmacsHelp": "Рефлекси от Emacs извън текстовите полета: C-n и C-p местят, C-s филтрира, C-g отказва, M-x отваря палитрата.",
   "keymapOffHelp": "Нито един самостоятелен клавиш не прави нищо. Комбинациите с Ctrl, Alt или ⌘ продължават да работят.",
   "settingsKeyBindings": "Активни клавиши",
-  "settingsKeyBindingsOff": "Клавишните комбинации са изключени."
+  "settingsKeyBindingsOff": "Клавишните комбинации са изключени.",
+  "commentReactionName": "{reaction, select, thumbs_up{палец нагоре} thumbs_down{палец надолу} laugh{смях} hooray{ура} confused{объркване} heart{сърце} rocket{ракета} eyes{очи} other{реакция}}",
+  "commentReactionAdd": "Добави реакция",
+  "commentReactionPicker": "Реагирай",
+  "commentReactionChip": "{name}, {count}",
+  "commentReactionChipMine": "{name}, {count}, вие реагирахте",
+  "commentReactionsUnsupported": "Този сървър не поддържа реакции."
 }

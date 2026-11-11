@@ -8075,4 +8075,39 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get settingsKeyBindingsOff => 'Клавишните комбинации са изключени.';
+
+  @override
+  String commentReactionName(String reaction) {
+    String _temp0 = intl.Intl.selectLogic(reaction, {
+      'thumbs_up': 'палец нагоре',
+      'thumbs_down': 'палец надолу',
+      'laugh': 'смях',
+      'hooray': 'ура',
+      'confused': 'объркване',
+      'heart': 'сърце',
+      'rocket': 'ракета',
+      'eyes': 'очи',
+      'other': 'реакция',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get commentReactionAdd => 'Добави реакция';
+
+  @override
+  String get commentReactionPicker => 'Реагирай';
+
+  @override
+  String commentReactionChip(String name, int count) {
+    return '$name, $count';
+  }
+
+  @override
+  String commentReactionChipMine(String name, int count) {
+    return '$name, $count, вие реагирахте';
+  }
+
+  @override
+  String get commentReactionsUnsupported => 'Този сървър не поддържа реакции.';
 }

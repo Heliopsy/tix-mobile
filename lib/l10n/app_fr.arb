@@ -2228,5 +2228,11 @@
   "keymapEmacsHelp": "Réflexes Emacs hors des champs de texte : C-n et C-p déplacent, C-s filtre, C-g annule, M-x ouvre la palette.",
   "keymapOffHelp": "Aucune touche seule ne déclenche rien. Les combinaisons avec Ctrl, Alt ou ⌘ fonctionnent toujours.",
   "settingsKeyBindings": "Raccourcis actifs",
-  "settingsKeyBindingsOff": "Les raccourcis clavier sont désactivés."
+  "settingsKeyBindingsOff": "Les raccourcis clavier sont désactivés.",
+  "commentReactionName": "{reaction, select, thumbs_up{pouce levé} thumbs_down{pouce baissé} laugh{rire} hooray{hourra} confused{perplexe} heart{cœur} rocket{fusée} eyes{yeux} other{réaction}}",
+  "commentReactionAdd": "Ajouter une réaction",
+  "commentReactionPicker": "Réagir",
+  "commentReactionChip": "{name}, {count}",
+  "commentReactionChipMine": "{name}, {count}, vous avez réagi",
+  "commentReactionsUnsupported": "Ce serveur ne prend pas en charge les réactions."
 }

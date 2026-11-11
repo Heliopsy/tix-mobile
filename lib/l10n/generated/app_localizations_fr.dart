@@ -8129,4 +8129,40 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get settingsKeyBindingsOff =>
       'Les raccourcis clavier sont désactivés.';
+
+  @override
+  String commentReactionName(String reaction) {
+    String _temp0 = intl.Intl.selectLogic(reaction, {
+      'thumbs_up': 'pouce levé',
+      'thumbs_down': 'pouce baissé',
+      'laugh': 'rire',
+      'hooray': 'hourra',
+      'confused': 'perplexe',
+      'heart': 'cœur',
+      'rocket': 'fusée',
+      'eyes': 'yeux',
+      'other': 'réaction',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get commentReactionAdd => 'Ajouter une réaction';
+
+  @override
+  String get commentReactionPicker => 'Réagir';
+
+  @override
+  String commentReactionChip(String name, int count) {
+    return '$name, $count';
+  }
+
+  @override
+  String commentReactionChipMine(String name, int count) {
+    return '$name, $count, vous avez réagi';
+  }
+
+  @override
+  String get commentReactionsUnsupported =>
+      'Ce serveur ne prend pas en charge les réactions.';
 }

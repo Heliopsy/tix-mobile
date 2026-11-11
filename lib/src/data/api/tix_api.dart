@@ -5,10 +5,12 @@ import 'package:tix_mobile/src/core/config/config.dart';
 import 'package:tix_mobile/src/core/logging/log.dart';
 import 'package:tix_mobile/src/data/api/credential.dart';
 import 'package:tix_mobile/src/data/api/gen/client.gen.dart';
+import 'package:tix_mobile/src/data/api/reactions.dart';
 import 'package:tix_mobile/src/data/api/transport.dart';
 
 export 'package:tix_mobile/src/data/api/credential.dart';
 export 'package:tix_mobile/src/data/api/gen/client.gen.dart';
+export 'package:tix_mobile/src/data/api/reactions.dart';
 export 'package:tix_mobile/src/data/api/transport.dart';
 
 /// Builds a client for a server and the credential it presents. [tenant]
@@ -39,6 +41,9 @@ class TixApi extends TixClient {
            ),
          ),
        );
+
+  /// Comment reactions, ahead of the pinned API description.
+  late final reaction = ReactionOps(transport);
 
   /// The Dio every request of one connection goes through.
   ///

@@ -2,6 +2,8 @@
 
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart'
+    show ProviderListenableSelect;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/cache/cached.dart';
 import 'package:tix_mobile/src/core/events/invalidation.dart';
@@ -11,10 +13,13 @@ import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/time/time_style.dart';
 import 'package:tix_mobile/src/data/events/tix_event.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
+import 'package:tix_mobile/src/data/models/instance.dart' show InstanceKind;
 import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/offline/sync_store.dart' show isDraftRef;
 import 'package:tix_mobile/src/data/repositories/task_detail_repository.dart';
+import 'package:tix_mobile/src/features/tasks/application/listing.dart'
+    show meProvider;
 
 export 'package:tix_mobile/src/data/repositories/task_detail_repository.dart';
 
@@ -213,22 +218,22 @@ class TaskDetailController extends _$TaskDetailController {
   }
 }
 
-/// A task's comments, oldest first.
+/// A task's comments with their reactions, oldest first.
 @riverpod
 class TaskComments extends _$TaskComments {
   @override
-  Future<List<Comment>> build(String taskRef) async {
+  Future<List<ReactedComment>> build(String taskRef) async {
     final repo = ref.watch(taskDetailRepositoryProvider);
-    if (isDraftRef(taskRef)) return repo.queuedComments(taskRef);
-    List<Comment> shown(List<Comment> v) => [
-      ...v,
-      ...repo.queuedComments(taskRef),
+    List<ReactedComment> queued() => [
+      for (final c in repo.queuedComments(taskRef)) ReactedComment(c),
     ];
+    if (isDraftRef(taskRef)) return queued();
+    List<ReactedComment> shown(List<ReactedComment> v) => [...v, ...queued()];
     final comments = shown(
       await cachedFirst(
         ref: ref,
         cached: repo.cachedComments(taskRef),
-        fresh: () => repo.comments(taskRef),
+        fresh: () => repo.reactedComments(taskRef),
         onFresh: (v) => state = AsyncData(shown(v)),
       ),
     );
@@ -241,21 +246,26 @@ class TaskComments extends _$TaskComments {
 
   TaskDetailRepository get _repo => ref.read(taskDetailRepositoryProvider);
 
-  List<Comment> get _now => state.value ?? const [];
+  List<ReactedComment> get _now => state.value ?? const [];
+
+  void _put(ReactedComment c) => state = AsyncData([
+    for (final x in _now)
+      if (x.id == c.id) c else x,
+  ]);
 
   /// Adds a comment saying [body].
   Future<Comment> add(String body) async {
     final c = await _repo.addComment(taskRef, body);
-    state = AsyncData([..._now, c]);
+    state = AsyncData([..._now, ReactedComment(c)]);
     return c;
   }
 
-  /// Rewrites the comment [id] to [body].
+  /// Rewrites the comment [id] to [body], keeping its reactions.
   Future<void> edit(String id, String body) async {
     final c = await _repo.editComment(id, body);
     state = AsyncData([
       for (final x in _now)
-        if (x.id == id) c else x,
+        if (x.id == id) ReactedComment(c, reactions: x.reactions) else x,
     ]);
   }
 
@@ -267,7 +277,79 @@ class TaskComments extends _$TaskComments {
         if (x.id != id) x,
     ]);
   }
+
+  /// Adds the reader's [reaction] to the comment [id], or takes it away when
+  /// they had made it. Drawn at once; a refusal puts the comment back and
+  /// rethrows, and a server without reactions is remembered as such.
+  Future<void> toggleReaction(String id, Reaction reaction) async {
+    final before = _now.where((c) => c.id == id).firstOrNull;
+    if (before == null) return;
+    final add = !before.reacted(reaction);
+    final me = ref.read(meProvider).value?.id;
+    _put(before.toggled(reaction, add: add, actorId: me));
+    final ReactedComment after;
+    try {
+      after = await _repo.react(id, reaction, add: add);
+    } on ReactionsUnsupported {
+      if (ref.mounted) {
+        _put(before);
+        ref.read(reactionCapabilityProvider.notifier).refused();
+      }
+      rethrow;
+    } on Object {
+      if (ref.mounted) _put(before);
+      rethrow;
+    }
+    if (!ref.mounted) return;
+    ref.read(reactionCapabilityProvider.notifier).seen();
+    _put(after);
+  }
 }
+
+/// Whether the active connection takes reactions.
+enum ReactionSupport {
+  /// Not known yet: offered until refused.
+  unknown,
+
+  /// The server sent or took a reaction.
+  supported,
+
+  /// The server has no reaction routes, or the local engine predates them.
+  unsupported,
+}
+
+/// What the active connection is known to do with reactions, kept for the
+/// session. A comment carrying `reactions` proves support on its own; a
+/// comment without proves nothing, since one nobody reacted to omits it.
+@Riverpod(keepAlive: true)
+class ReactionCapability extends _$ReactionCapability {
+  @override
+  ReactionSupport build() {
+    ref.watch(activeCacheScopeProvider);
+    // The engine is libtix at tix.lock's v0.53.0, which has no reactions.
+    final local = ref.watch(
+      sessionControllerProvider.select(
+        (s) => s.value?.instance.kind == InstanceKind.local,
+      ),
+    );
+    return local ? ReactionSupport.unsupported : ReactionSupport.unknown;
+  }
+
+  /// The server sent or took a reaction.
+  void seen() => state = ReactionSupport.supported;
+
+  /// The server answered a reaction as an unknown route.
+  void refused() => state = ReactionSupport.unsupported;
+}
+
+/// Whether to offer reactions on the comments [comments] of the active
+/// connection.
+bool offerReactions(ReactionSupport support, List<ReactedComment> comments) =>
+    switch (support) {
+      ReactionSupport.supported => true,
+      ReactionSupport.unknown => true,
+      ReactionSupport.unsupported => comments.any((c) => c.reactions != null),
+    };
 
 /// The tasks a task waits for, each read in full.
 @riverpod

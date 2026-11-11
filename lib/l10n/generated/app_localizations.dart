@@ -13482,6 +13482,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Keyboard shortcuts are off.'**
   String get settingsKeyBindingsOff;
+
+  /// Spoken name of a comment reaction, by its tix name.
+  ///
+  /// In en, this message translates to:
+  /// **'{reaction, select, thumbs_up{thumbs up} thumbs_down{thumbs down} laugh{laugh} hooray{hooray} confused{confused} heart{heart} rocket{rocket} eyes{eyes} other{reaction}}'**
+  String commentReactionName(String reaction);
+
+  /// Tooltip of the button that opens the reaction picker under a comment.
+  ///
+  /// In en, this message translates to:
+  /// **'Add reaction'**
+  String get commentReactionAdd;
+
+  /// Title of the sheet listing the eight reactions.
+  ///
+  /// In en, this message translates to:
+  /// **'React'**
+  String get commentReactionPicker;
+
+  /// Spoken label of a reaction chip: the reaction name and how many reacted.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, {count}'**
+  String commentReactionChip(String name, int count);
+
+  /// Spoken label of a reaction chip the reader reacted with.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, {count}, you reacted'**
+  String commentReactionChipMine(String name, int count);
+
+  /// Shown when the server refuses a reaction because it predates reactions.
+  ///
+  /// In en, this message translates to:
+  /// **'This server does not support reactions.'**
+  String get commentReactionsUnsupported;
 }
 
 class _AppLocalizationsDelegate

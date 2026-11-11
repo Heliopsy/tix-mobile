@@ -26,6 +26,7 @@ export 'components/pane_resizer.dart';
 export 'components/pickers.dart';
 export 'components/project_option.dart';
 export 'components/property.dart';
+export 'components/reactions.dart';
 export 'components/secret.dart';
 export 'components/section.dart';
 export 'components/states.dart';

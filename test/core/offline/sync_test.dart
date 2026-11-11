@@ -138,7 +138,7 @@ void main() {
     final task = await read(taskDetailProvider('infra-2').future);
     expect(task.title, 'Rotate keys');
     final comments = await read(taskCommentsProvider('infra-2').future);
-    expect(comments.single.body, 'Before Friday');
+    expect(comments.single.comment.body, 'Before Friday');
     expect(await read(taskSubtasksProvider('infra-2').future), isEmpty);
     expect(await read(projectFieldsProvider('p1').future), isNotEmpty);
     expect((await read(projectWorkflowProvider('p1').future)).id, 'wf1');

@@ -5185,5 +5185,50 @@
   "keymapEmacsHelp": "Emacs reflexes outside text fields: C-n and C-p move, C-s filters, C-g cancels, M-x opens the palette.",
   "keymapOffHelp": "No single key runs anything. Chords held with Ctrl, Alt or ⌘ still work.",
   "settingsKeyBindings": "Active bindings",
-  "settingsKeyBindingsOff": "Keyboard shortcuts are off."
+  "settingsKeyBindingsOff": "Keyboard shortcuts are off.",
+  "commentReactionName": "{reaction, select, thumbs_up{thumbs up} thumbs_down{thumbs down} laugh{laugh} hooray{hooray} confused{confused} heart{heart} rocket{rocket} eyes{eyes} other{reaction}}",
+  "@commentReactionName": {
+    "description": "Spoken name of a comment reaction, by its tix name.",
+    "placeholders": {
+      "reaction": {
+        "type": "String"
+      }
+    }
+  },
+  "commentReactionAdd": "Add reaction",
+  "@commentReactionAdd": {
+    "description": "Tooltip of the button that opens the reaction picker under a comment."
+  },
+  "commentReactionPicker": "React",
+  "@commentReactionPicker": {
+    "description": "Title of the sheet listing the eight reactions."
+  },
+  "commentReactionChip": "{name}, {count}",
+  "@commentReactionChip": {
+    "description": "Spoken label of a reaction chip: the reaction name and how many reacted.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commentReactionChipMine": "{name}, {count}, you reacted",
+  "@commentReactionChipMine": {
+    "description": "Spoken label of a reaction chip the reader reacted with.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commentReactionsUnsupported": "This server does not support reactions.",
+  "@commentReactionsUnsupported": {
+    "description": "Shown when the server refuses a reaction because it predates reactions."
+  }
 }

@@ -146,15 +146,15 @@ abstract class _$TaskDetailController extends $AsyncNotifier<Task> {
   }
 }
 
-/// A task's comments, oldest first.
+/// A task's comments with their reactions, oldest first.
 
 @ProviderFor(TaskComments)
 final taskCommentsProvider = TaskCommentsFamily._();
 
-/// A task's comments, oldest first.
+/// A task's comments with their reactions, oldest first.
 final class TaskCommentsProvider
-    extends $AsyncNotifierProvider<TaskComments, List<Comment>> {
-  /// A task's comments, oldest first.
+    extends $AsyncNotifierProvider<TaskComments, List<ReactedComment>> {
+  /// A task's comments with their reactions, oldest first.
   TaskCommentsProvider._({
     required TaskCommentsFamily super.from,
     required String super.argument,
@@ -191,17 +191,17 @@ final class TaskCommentsProvider
   }
 }
 
-String _$taskCommentsHash() => r'62767d25a6681393945f96a73bb89eb6d0d0d07e';
+String _$taskCommentsHash() => r'1b094219bdca3ba74596e69b1a7aafc866f4cdc7';
 
-/// A task's comments, oldest first.
+/// A task's comments with their reactions, oldest first.
 
 final class TaskCommentsFamily extends $Family
     with
         $ClassFamilyOverride<
           TaskComments,
-          AsyncValue<List<Comment>>,
-          List<Comment>,
-          FutureOr<List<Comment>>,
+          AsyncValue<List<ReactedComment>>,
+          List<ReactedComment>,
+          FutureOr<List<ReactedComment>>,
           String
         > {
   TaskCommentsFamily._()
@@ -213,7 +213,7 @@ final class TaskCommentsFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// A task's comments, oldest first.
+  /// A task's comments with their reactions, oldest first.
 
   TaskCommentsProvider call(String taskRef) =>
       TaskCommentsProvider._(argument: taskRef, from: this);
@@ -222,26 +222,98 @@ final class TaskCommentsFamily extends $Family
   String toString() => r'taskCommentsProvider';
 }
 
-/// A task's comments, oldest first.
+/// A task's comments with their reactions, oldest first.
 
-abstract class _$TaskComments extends $AsyncNotifier<List<Comment>> {
+abstract class _$TaskComments extends $AsyncNotifier<List<ReactedComment>> {
   late final _$args = ref.$arg as String;
   String get taskRef => _$args;
 
-  FutureOr<List<Comment>> build(String taskRef);
+  FutureOr<List<ReactedComment>> build(String taskRef);
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<AsyncValue<List<Comment>>, List<Comment>>;
+    final ref =
+        this.ref
+            as $Ref<AsyncValue<List<ReactedComment>>, List<ReactedComment>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<Comment>>, List<Comment>>,
-              AsyncValue<List<Comment>>,
+              AnyNotifier<
+                AsyncValue<List<ReactedComment>>,
+                List<ReactedComment>
+              >,
+              AsyncValue<List<ReactedComment>>,
               Object?,
               Object?
             >;
     return element.handleCreate(ref, () => build(_$args));
+  }
+}
+
+/// What the active connection is known to do with reactions, kept for the
+/// session. A comment carrying `reactions` proves support on its own; a
+/// comment without proves nothing, since one nobody reacted to omits it.
+
+@ProviderFor(ReactionCapability)
+final reactionCapabilityProvider = ReactionCapabilityProvider._();
+
+/// What the active connection is known to do with reactions, kept for the
+/// session. A comment carrying `reactions` proves support on its own; a
+/// comment without proves nothing, since one nobody reacted to omits it.
+final class ReactionCapabilityProvider
+    extends $NotifierProvider<ReactionCapability, ReactionSupport> {
+  /// What the active connection is known to do with reactions, kept for the
+  /// session. A comment carrying `reactions` proves support on its own; a
+  /// comment without proves nothing, since one nobody reacted to omits it.
+  ReactionCapabilityProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'reactionCapabilityProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$reactionCapabilityHash();
+
+  @$internal
+  @override
+  ReactionCapability create() => ReactionCapability();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ReactionSupport value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ReactionSupport>(value),
+    );
+  }
+}
+
+String _$reactionCapabilityHash() =>
+    r'cb263219f806dd2fd8b74c9bc5e35f8e49cef52f';
+
+/// What the active connection is known to do with reactions, kept for the
+/// session. A comment carrying `reactions` proves support on its own; a
+/// comment without proves nothing, since one nobody reacted to omits it.
+
+abstract class _$ReactionCapability extends $Notifier<ReactionSupport> {
+  ReactionSupport build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<ReactionSupport, ReactionSupport>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<ReactionSupport, ReactionSupport>,
+              ReactionSupport,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
   }
 }
 

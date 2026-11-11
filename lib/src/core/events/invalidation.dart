@@ -31,7 +31,11 @@ abstract final class EventTopics {
   };
 
   /// Comments on a task.
-  static const comments = {'comment.added'};
+  static const comments = {
+    'comment.added',
+    'comment.reacted',
+    'comment.unreacted',
+  };
 
   /// Artifacts on a task.
   static const artifacts = {'artifact.added'};

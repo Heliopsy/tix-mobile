@@ -211,12 +211,21 @@ void main() {
       {'id': 'c0', 'body': 'first', 'author_actor_id': 'a1'},
     ];
     final provider = taskCommentsProvider('infra-1');
-    expect((await c.read(keep(c, provider).future)).single.body, 'first');
+    expect(
+      (await c.read(keep(c, provider).future)).single.comment.body,
+      'first',
+    );
     final added = await c.read(provider.notifier).add('second');
     expect(server.requests.last.body, {'body': 'second'});
-    expect(c.read(provider).value!.map((x) => x.body), ['first', 'second']);
+    expect(c.read(provider).value!.map((x) => x.comment.body), [
+      'first',
+      'second',
+    ]);
     await c.read(provider.notifier).edit(added.id, 'changed');
-    expect(c.read(provider).value!.map((x) => x.body), ['first', 'changed']);
+    expect(c.read(provider).value!.map((x) => x.comment.body), [
+      'first',
+      'changed',
+    ]);
     await c.read(provider.notifier).delete('c0');
     expect(server.requests.last.method, 'DELETE');
     expect(c.read(provider).value!.map((x) => x.id), [added.id]);
