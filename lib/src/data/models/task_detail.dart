@@ -150,7 +150,7 @@ extension CommentEdits on Comment {
 }
 
 /// A comment's emoji reactions, read for one reader.
-extension CommentReactions on Comment {
+extension CommentReactionReads on Comment {
   /// Whether the actor [me] reacted with [emoji].
   bool reactedBy(String emoji, String? me) =>
       me != null &&
