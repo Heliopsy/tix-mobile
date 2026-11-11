@@ -344,6 +344,11 @@ SHALL be instant.
 - **WHEN** a person who asked for reduced motion ticks a row
 - **THEN** the filled tick and the struck-through title show in the next frame, with no sweep
 
+#### Scenario: Done status learned late
+
+- **WHEN** a row in a custom done status is drawn before the workflows load, and they then load
+- **THEN** it shows struck through at once, with no wash
+
 ### Requirement: A ticked row settles before it moves
 
 A row just ticked SHALL keep its place while its tick plays, then move to where the listing puts it, or collapse
@@ -359,3 +364,18 @@ SHALL work as before. With reduced motion the row SHALL move or go at once.
 
 - **WHEN** the same happens with reduced motion
 - **THEN** the row is gone as soon as the refresh arrives
+
+### Requirement: The keyboard cursor belongs to the keyboard
+
+The cursor on a list, board or lanes SHALL show only after a key moves it. A pointer press on the list SHALL hide
+it, and opening a task with a tap or a click SHALL NOT place it, so no row or card stays marked after pointer use.
+
+#### Scenario: Opened with a tap
+
+- **WHEN** a person taps a task open and comes back to the list
+- **THEN** no row or card is marked
+
+#### Scenario: Keyboard then mouse
+
+- **WHEN** a person presses `j`, then clicks another task
+- **THEN** the cursor is gone, and the next `j` starts again from the first task
