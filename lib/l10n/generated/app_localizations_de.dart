@@ -1091,6 +1091,11 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String tasksHeldByAgent(int count) {
+    return '$count von einem Agenten gehalten';
+  }
+
+  @override
   String boardCount(int count, String more) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

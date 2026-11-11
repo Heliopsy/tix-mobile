@@ -61,8 +61,45 @@ void main() {
   Finder row(String title) =>
       find.ancestor(of: find.text(title), matching: find.byType(TaskRow));
 
+  TextSpan? heldNote(WidgetTester tester) {
+    for (final text in tester.widgetList<Text>(find.byType(Text))) {
+      final span = text.textSpan;
+      if (span is! TextSpan) continue;
+      for (final child in span.children ?? const <InlineSpan>[]) {
+        if (child is TextSpan && (child.text ?? '').contains('held by')) {
+          return child;
+        }
+      }
+    }
+    return null;
+  }
+
   for (final MapEntry(key: width, value: size) in widths.entries) {
     group(width, () {
+      testWidgets('says how many tasks an agent holds, in the accent', (
+        tester,
+      ) async {
+        final soon = fixedNow.add(const Duration(minutes: 20));
+        server.tasks['infra']![0].addAll(heldJson(soon));
+        server.tasks['infra']![1].addAll(heldJson(soon));
+        server.tasks['web']![0].addAll(
+          heldJson(fixedNow.subtract(const Duration(minutes: 1))),
+        );
+        await pump(tester, const TasksScreen(), size: size);
+        final note = heldNote(tester);
+        expect(note?.text, '2 held by an agent');
+        final accent = tester.element(find.byType(TasksScreen)).tix.accent;
+        expect(note?.style?.color, accent);
+      });
+
+      testWidgets('says nothing about agents when none holds a task', (
+        tester,
+      ) async {
+        await pump(tester, const TasksScreen(), size: size);
+        expect(find.text('Fix login'), findsOneWidget);
+        expect(heldNote(tester), isNull);
+      });
+
       testWidgets('loading, then open work', (tester) async {
         server.gate = Completer<void>();
         await pump(tester, const TasksScreen(), size: size, settle: false);

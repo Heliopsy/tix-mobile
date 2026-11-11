@@ -311,6 +311,7 @@
   "boardCollapse": "Einklappen",
   "boardColumnEmpty": "Hier ist nichts",
   "boardCompleted": "{ref} erledigt",
+  "tasksHeldByAgent": "{count} von einem Agenten gehalten",
   "boardCount": "{count, plural, =1{1{more} Aufgabe} other{{count}{more} Aufgaben}}",
   "boardExpand": "Ausklappen",
   "boardGroupMenu": "{group} anordnen",

@@ -1969,6 +1969,12 @@ abstract class AppLocalizations {
   /// **'{ref} completed'**
   String boardCompleted(String ref);
 
+  /// After the task count under the task screen's title: how many loaded tasks an agent holds right now, as tix's web summary says it.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} held by an agent'**
+  String tasksHeldByAgent(int count);
+
   /// No description provided for @boardCount.
   ///
   /// In en, this message translates to:
