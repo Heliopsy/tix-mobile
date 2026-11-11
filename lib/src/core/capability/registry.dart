@@ -80,6 +80,8 @@ const bindings = <String, Binding>{
   'tag.list': Binding(feature: 'tasks', action: 'tag-picker', wave: 1),
   'comment.list': Binding(feature: 'tasks', action: 'comments', wave: 1),
   'comment.add': Binding(feature: 'tasks', action: 'comment', wave: 1),
+  'comment.react': Binding(feature: 'tasks', action: 'react', wave: 1),
+  'comment.unreact': Binding(feature: 'tasks', action: 'react', wave: 1),
   'comment.edit': Binding(feature: 'tasks', action: 'edit-comment', wave: 1),
   'comment.delete': Binding(
     feature: 'tasks',
