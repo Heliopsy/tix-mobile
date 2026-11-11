@@ -110,13 +110,13 @@ String? trayUpdateLabel(AppLocalizations l10n, UpdateState update) {
 }
 
 /// The tray's menu and dock badge for [unread] items in [context], with an
-/// [update] entry when one is given and a Watch entry with [watch].
+/// [update] entry when one is given and an Activity entry with [activity].
 TrayMenu trayMenu(
   AppLocalizations l10n, {
   int? unread,
   String? context,
   String? update,
-  bool watch = false,
+  bool activity = false,
 }) {
   final count = unread ?? 0;
   return TrayMenu(
@@ -124,7 +124,7 @@ TrayMenu trayMenu(
       TrayAction.open: l10n.trayOpen,
       TrayAction.quickAdd: l10n.quickAddTitle,
       TrayAction.inbox: l10n.trayInbox(count),
-      if (watch) TrayAction.watch: l10n.trayWatch,
+      if (activity) TrayAction.activity: l10n.trayWatch,
       TrayAction.update: ?update,
       TrayAction.quit: l10n.trayQuit,
     },

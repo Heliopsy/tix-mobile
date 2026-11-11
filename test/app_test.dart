@@ -328,7 +328,7 @@ void main() {
     expect(find.byType(InboxScreen), findsOneWidget);
   });
 
-  group('Watch is a destination of its own', () {
+  group('Activity is a destination of its own', () {
     void stillMotion(WidgetTester tester) {
       tester.platformDispatcher.accessibilityFeaturesTestValue =
           const FakeAccessibilityFeatures(disableAnimations: true);
@@ -354,28 +354,25 @@ void main() {
       expect(find.byKey(const Key('nav.inbox')), findsOneWidget);
       await tester.tap(find.byKey(const Key('nav.more')));
       await tester.pumpAndSettle();
-      final watch = find.byKey(const Key('nav.more.watch'));
+      final activity = find.byKey(const Key('nav.more.activity'));
       expect(
-        tester.getTopLeft(watch).dy,
+        tester.getTopLeft(activity).dy,
         lessThan(
           tester.getTopLeft(find.byKey(const Key('nav.more.manage'))).dy,
         ),
       );
       expect(
-        find.descendant(of: watch, matching: find.byIcon(Icons.sensors)),
-        findsNothing,
-      );
-      expect(
-        find.descendant(
-          of: watch,
-          matching: find.byIcon(Icons.sensors_outlined),
-        ),
+        find.descendant(of: activity, matching: find.text('Activity')),
         findsOneWidget,
       );
-      await tester.tap(watch);
+      expect(
+        find.descendant(of: activity, matching: find.byIcon(Icons.show_chart)),
+        findsOneWidget,
+      );
+      await tester.tap(activity);
       await tester.pumpAndSettle();
       expect(find.byType(WatchScreen), findsOneWidget);
-      expect(location(tester), Routes.watch);
+      expect(location(tester), Routes.activity);
       expect(
         tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
         maxBarDestinations - 1,
@@ -402,7 +399,7 @@ void main() {
           'Tasks',
           'My work',
           'Inbox',
-          'Watch',
+          'Activity',
           'Manage',
           'Settings',
         ],
@@ -411,7 +408,9 @@ void main() {
         find.descendant(of: rail, matching: find.byIcon(Icons.stream)),
         findsNothing,
       );
-      await tester.tap(find.descendant(of: rail, matching: find.text('Watch')));
+      await tester.tap(
+        find.descendant(of: rail, matching: find.text('Activity')),
+      );
       await tester.pumpAndSettle();
       expect(find.byType(WatchScreen), findsOneWidget);
       expect(tester.widget<NavigationRail>(rail).selectedIndex, 4);
@@ -422,19 +421,25 @@ void main() {
       await tester.sendKeyEvent(LogicalKeyboardKey.keyW);
       await tester.pumpAndSettle();
       expect(find.byType(WatchScreen), findsOneWidget);
-      expect(location(tester), Routes.watch);
+      expect(location(tester), Routes.activity);
     });
 
-    testWidgets('an old /manage/watch link lands on it', (tester) async {
-      stillMotion(tester);
-      final stores = signedInStores();
-      await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
-      ProviderScope.containerOf(tester.element(find.byType(App)))
-          .read(routerProvider)
-          .go('/manage/watch');
-      await tester.pumpAndSettle();
-      expect(find.byType(WatchScreen), findsOneWidget);
-      expect(location(tester), Routes.watch);
-    });
+    for (final old in ['/watch', '/manage/watch']) {
+      testWidgets('an old $old link lands on it', (tester) async {
+        stillMotion(tester);
+        final stores = signedInStores();
+        await pumpApp(
+          tester,
+          settings: stores.settings,
+          secrets: stores.secrets,
+        );
+        ProviderScope.containerOf(tester.element(find.byType(App)))
+            .read(routerProvider)
+            .go(old);
+        await tester.pumpAndSettle();
+        expect(find.byType(WatchScreen), findsOneWidget);
+        expect(location(tester), Routes.activity);
+      });
+    }
   });
 }

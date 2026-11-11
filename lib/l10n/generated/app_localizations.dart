@@ -12619,16 +12619,16 @@ abstract class AppLocalizations {
   /// **'{keys} is taken by another app'**
   String settingsHotkeyTaken(String keys);
 
-  /// Palette command opening the Watch screen
+  /// Palette command opening the Activity screen
   ///
   /// In en, this message translates to:
-  /// **'Go to Watch'**
+  /// **'Go to Activity'**
   String get goWatch;
 
   /// Title of the screen that shows the tenant's events live
   ///
   /// In en, this message translates to:
-  /// **'Watch'**
+  /// **'Activity'**
   String get watchTitle;
 
   /// Subtitle of the Watch screen and its Manage entry
@@ -12844,7 +12844,7 @@ abstract class AppLocalizations {
   /// Body when Watch is offline
   ///
   /// In en, this message translates to:
-  /// **'The server cannot be reached. Watch carries on from where it stopped once it can.'**
+  /// **'The server cannot be reached. Activity carries on from where it stopped once it can.'**
   String get watchOfflineBody;
 
   /// Watch has no server to follow
@@ -12856,7 +12856,7 @@ abstract class AppLocalizations {
   /// Title when the credential may not follow events
   ///
   /// In en, this message translates to:
-  /// **'This connection cannot watch events'**
+  /// **'This connection cannot follow events'**
   String get watchRefused;
 
   /// Why the credential may not follow events
@@ -12874,7 +12874,7 @@ abstract class AppLocalizations {
   /// Notice when live updates only refresh on a timer
   ///
   /// In en, this message translates to:
-  /// **'This server cannot stream events to the app right now, so Watch stays empty. It picks up again once live updates work.'**
+  /// **'This server cannot stream events to the app right now, so Activity stays empty. It picks up again once live updates work.'**
   String get watchUnsupported;
 
   /// Notice when the server refused an expired cursor
@@ -13111,10 +13111,10 @@ abstract class AppLocalizations {
   /// **'Restart to update ({version})'**
   String trayRestartToUpdate(String version);
 
-  /// Tray menu entry that opens the Watch screen
+  /// Tray menu entry that opens the Activity screen
   ///
   /// In en, this message translates to:
-  /// **'Watch'**
+  /// **'Activity'**
   String get trayWatch;
 
   /// Watch row: the channel an event came through

@@ -7555,10 +7555,10 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
-  String get goWatch => 'Към Наблюдение';
+  String get goWatch => 'Към Активност';
 
   @override
-  String get watchTitle => 'Наблюдение';
+  String get watchTitle => 'Активност';
 
   @override
   String get watchSubtitle =>
@@ -7694,13 +7694,13 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get watchOfflineBody =>
-      'Сървърът не е достъпен. Наблюдението продължава оттам, докъдето е стигнало, щом връзката се възстанови.';
+      'Сървърът не е достъпен. Активността продължава оттам, докъдето е стигнала, щом връзката се възстанови.';
 
   @override
   String get watchNoContext => 'Няма активен контекст';
 
   @override
-  String get watchRefused => 'Тази връзка не може да наблюдава събития';
+  String get watchRefused => 'Тази връзка не може да следи събития';
 
   @override
   String get watchRefusedBody =>
@@ -7711,7 +7711,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get watchUnsupported =>
-      'Сървърът в момента не може да изпраща събития към приложението, затова Наблюдението остава празно. Ще продължи, щом обновяването на живо заработи.';
+      'Сървърът в момента не може да изпраща събития към приложението, затова Активността остава празна. Ще продължи, щом обновяването на живо заработи.';
 
   @override
   String watchExpired(int seq) {
@@ -7870,7 +7870,7 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
-  String get trayWatch => 'Наблюдение';
+  String get trayWatch => 'Активност';
 
   @override
   String watchVia(String channel) {

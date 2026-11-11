@@ -91,7 +91,7 @@ void main() {
     );
     expect(audit, findsOneWidget);
     expect(find.byKey(const Key('manage.tenant.watch')), findsNothing);
-    expect(find.text('Watch'), findsNothing);
+    expect(find.text('Activity'), findsNothing);
   });
 
   testWidgets('a member sees what its role reads', (tester) async {

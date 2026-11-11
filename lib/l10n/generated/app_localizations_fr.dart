@@ -7605,10 +7605,10 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get goWatch => 'Aller à Suivi';
+  String get goWatch => 'Aller à Activité';
 
   @override
-  String get watchTitle => 'Suivi';
+  String get watchTitle => 'Activité';
 
   @override
   String get watchSubtitle =>
@@ -7744,7 +7744,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get watchOfflineBody =>
-      'Le serveur est injoignable. Le suivi reprend là où il s\'était arrêté dès qu\'il le redevient.';
+      'Le serveur est injoignable. L\'activité reprend là où elle s\'était arrêtée dès qu\'il le redevient.';
 
   @override
   String get watchNoContext => 'Aucun contexte actif';
@@ -7762,7 +7762,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get watchUnsupported =>
-      'Ce serveur ne peut pas envoyer d\'événements à l\'application pour l\'instant, le suivi reste donc vide. Il reprendra quand les mises à jour en direct fonctionneront.';
+      'Ce serveur ne peut pas envoyer d\'événements à l\'application pour l\'instant, l\'activité reste donc vide. Elle reprendra quand les mises à jour en direct fonctionneront.';
 
   @override
   String watchExpired(int seq) {
@@ -7923,7 +7923,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get trayWatch => 'Suivi';
+  String get trayWatch => 'Activité';
 
   @override
   String watchVia(String channel) {

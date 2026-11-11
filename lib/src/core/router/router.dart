@@ -112,7 +112,7 @@ const Set<String> _tabRoots = {
   Routes.tasks,
   Routes.myWork,
   Routes.inbox,
-  Routes.watch,
+  Routes.activity,
   Routes.manage,
   Routes.settings,
 };
@@ -238,6 +238,10 @@ GoRouter router(Ref ref) {
             pageBuilder: (_, _) =>
                 const NoTransitionPage(child: SplashScreen()),
           ),
+          GoRoute(
+            path: Routes.legacyWatch,
+            redirect: (_, _) => Routes.activity,
+          ),
           StatefulShellRoute.indexedStack(
             key: mover.shell,
             builder: (_, _, shell) => HomeShell(
@@ -313,7 +317,7 @@ GoRouter router(Ref ref) {
               StatefulShellBranch(
                 routes: [
                   GoRoute(
-                    path: Routes.watch,
+                    path: Routes.activity,
                     builder: (_, _) => const WatchScreen(),
                   ),
                 ],
@@ -504,8 +508,8 @@ final upkeepRoutes = <RouteBase>[
   GoRoute(path: 'housekeeping', builder: (_, _) => const HousekeepingScreen()),
   GoRoute(path: 'trash', builder: (_, _) => const TrashScreen()),
   GoRoute(path: 'audit', builder: (_, _) => const AuditScreen()),
-  // Watch moved to its own destination; old /manage/watch links still land.
-  GoRoute(path: 'watch', redirect: (_, _) => Routes.watch),
+  // Activity, once Watch, moved to its own destination; old links still land.
+  GoRoute(path: 'watch', redirect: (_, _) => Routes.activity),
 ];
 
 /// Tenant and server administration (wave 3), under Manage.

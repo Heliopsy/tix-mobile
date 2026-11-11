@@ -36,9 +36,9 @@ void main() {
     expect(routes.intersection(upkeep), {Routes.webhooks});
   });
 
-  test('Watch is a destination of its own, not listed under Manage', () {
+  test('Activity is a destination of its own, not listed under Manage', () {
     final all = Actor(scopes: [for (final s in Scope.values) s.value]);
-    expect(visible(all), isNot(contains(Routes.watch)));
+    expect(visible(all), isNot(contains(Routes.activity)));
     expect(visible(all), isNot(contains('/manage/watch')));
     expect(manageSections.map((e) => e.id), isNot(contains('tenant.watch')));
   });

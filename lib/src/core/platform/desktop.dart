@@ -66,8 +66,8 @@ enum TrayAction {
   /// Shows the window on the inbox.
   inbox,
 
-  /// Shows the window on Watch, the live event tail.
-  watch,
+  /// Shows the window on Activity, the live event tail.
+  activity,
 
   /// Installs a staged update, or shows where one is offered; only in the
   /// menu while an update is known.
@@ -308,7 +308,8 @@ class PluginDesktopShell
           item(TrayAction.open),
           item(TrayAction.quickAdd),
           item(TrayAction.inbox),
-          if (menu.labels.containsKey(TrayAction.watch)) item(TrayAction.watch),
+          if (menu.labels.containsKey(TrayAction.activity))
+            item(TrayAction.activity),
           if (menu.labels.containsKey(TrayAction.update))
             item(TrayAction.update),
           MenuItem.separator(),
