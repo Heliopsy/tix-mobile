@@ -175,12 +175,13 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 - **Integrations and upkeep** for tenant admins: webhook endpoints with a test event and their delivery log with
   Redeliver, external sync sources from Jira, OpenProject or a file (check, run, preview, history), retention and
   pruning, housekeeping, the trash with restore and delete for good, and the audit log filtered by channel,
-  surface, actor, action, token and time.
+  surface, actor, action, token and time, with Copy JSON for the entry exactly as tix returned it.
 - **Activity**: the tenant's events as they happen, as `tix watch` shows them, newest first with the sequence number,
   how long ago, who (name, handle, and the channel and token it came through), a coloured type badge and what
   changed: states, field names, the start of a comment. Filter by project, type (`task.*`) and actor, pause with a
-  count of what arrived, replay from a sequence number, open the task or project and come back, or read the whole
-  payload. It has its own place in the navigation, between Inbox and Manage, and the desktop tray opens it.
+  count of what arrived, replay from a sequence number, open the task or project and come back, read the whole
+  payload or copy the event as JSON. It has its own place in the navigation, between Inbox and Manage, and the
+  desktop tray opens it.
 - **Adaptive layout**: a bottom navigation bar on phones, a navigation rail and a two-pane list and detail on tablets
   and desktops.
 

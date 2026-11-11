@@ -12,9 +12,11 @@ import 'package:tix_mobile/src/core/events/events.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
+import 'package:tix_mobile/src/core/widgets/copy_json.dart';
 import 'package:tix_mobile/src/core/widgets/live_status.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
+import 'package:tix_mobile/src/data/models/wire.dart';
 import 'package:tix_mobile/src/features/watch/application/watch.dart';
 import 'package:tix_mobile/src/features/watch/presentation/watch_summary.dart';
 
@@ -548,7 +550,7 @@ class WatchRow extends StatelessWidget {
   /// Who caused it, from the tenant's directory, when known.
   final Actor? actor;
 
-  /// Opens what it is about, or its details.
+  /// Opens what it is about, or its details. A long press copies its JSON.
   final VoidCallback onTap;
 
   /// Opens its details.
@@ -563,9 +565,13 @@ class WatchRow extends StatelessWidget {
     final channel = watchChannel(l10n, event.via);
     final muted = TextStyle(fontSize: TixText.xs, color: t.muted);
     final seq = event.seq;
+    final json = wireJson(event);
     return ListTile(
       key: Key('watch.$seq'),
       onTap: onTap,
+      onLongPress: json == null
+          ? null
+          : () => unawaited(copyJson(context, json)),
       leading: TixAvatar(
         key: Key('watch.$seq.avatar'),
         label: who.name,
@@ -785,6 +791,8 @@ Future<void> showWatchDetails(
     builder: (sheet) => TixSheetBody(
       title: event.type,
       actions: [
+        if (wireJson(event) case final json?)
+          CopyJsonButton(key: const Key('watch.detail.copyJson'), json: json),
         TixButton.quiet(
           label: context.l10n.close,
           onPressed: () => Navigator.of(sheet).pop(),

@@ -2,6 +2,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
+import 'package:tix_mobile/src/data/models/wire.dart';
 import 'package:tix_mobile/src/data/repositories/audit_repository.dart';
 
 import '../../helpers/fake_integrations.dart';
@@ -34,6 +35,18 @@ void main() {
       'direction': ['desc'],
     });
   });
+
+  test(
+    'each entry keeps the object tix sent, nothing added or dropped',
+    () async {
+      fake.audit.insert(0, {...auditJson(4, via: 'ssh'), 'novel': true});
+      final page = await repo.list(const AuditQuery());
+      final first = page.items.first;
+      expect(wireJson(first), {...auditJson(4, via: 'ssh'), 'novel': true});
+      expect((wireJson(first)!['via']! as Map).keys, ['kind']);
+      expect(wireJson(page.items.last), auditJson(1, actor: 'a1'));
+    },
+  );
 
   test('every filter reaches the server', () async {
     final since = DateTime.utc(2026, 10);

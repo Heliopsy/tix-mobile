@@ -2048,6 +2048,14 @@
   "aboutConnectionDetailsHelp": "How live updates reach this context, and what failed last",
   "copyToClipboard": "Copy",
   "copiedToClipboard": "Copied.",
+  "copyJson": "Copy JSON",
+  "@copyJson": {
+    "description": "Button that copies a record as tix sent it, as pretty-printed JSON"
+  },
+  "copyJsonDone": "JSON copied.",
+  "@copyJsonDone": {
+    "description": "Toast after a record's JSON was copied"
+  },
   "secretShare": "Share",
   "secretDone": "I have kept it",
   "roleViewer": "viewer",

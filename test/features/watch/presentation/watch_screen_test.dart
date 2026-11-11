@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -77,6 +80,41 @@ void main() {
     payload: {'actor_handle': actor, ...payload},
     via: via,
   );
+
+  List<String> clipboard(WidgetTester tester) {
+    final copied = <String>[];
+    final messenger = tester.binding.defaultBinaryMessenger
+      ..setMockMethodCallHandler(SystemChannels.platform, (call) async {
+        if (call.method == 'Clipboard.setData') {
+          copied.add((call.arguments as Map)['text'] as String);
+        }
+        return null;
+      });
+    addTearDown(
+      () => messenger.setMockMethodCallHandler(SystemChannels.platform, null),
+    );
+    return copied;
+  }
+
+  const pretty = JsonEncoder.withIndent('  ');
+
+  /// The event object [emit] sends for [seq] and [type], with [payload].
+  Map<String, Object?> sent(
+    int seq,
+    String type, {
+    Map<String, Object?> payload = const {},
+    Map<String, Object?>? via,
+  }) => {
+    'seq': seq,
+    'type': type,
+    'subject_type': type.split('.').first,
+    'subject_id': 'id-infra-1',
+    'project_id': 'p1',
+    'actor_id': '01PAX',
+    'payload': {'actor_handle': 'pax', ...payload},
+    'via': ?via,
+    'occurred_at': '2026-11-08T10:00:00Z',
+  };
 
   Finder inRow(int seq, Finder f) =>
       find.descendant(of: find.byKey(Key('watch.$seq')), matching: f);
@@ -347,6 +385,59 @@ void main() {
       findsOneWidget,
     );
     expect(find.byKey(const Key('watch.detail.open')), findsNothing);
+  });
+
+  for (final MapEntry(key: width, value: size) in widths.entries) {
+    testWidgets('$width: Copy JSON in the details copies the event', (
+      tester,
+    ) async {
+      final copied = clipboard(tester);
+      await pump(tester, size: size);
+      await live(tester);
+      emit(6, 'filter.saved', payload: {'name': 'Mine'}, via: {'kind': 'ssh'});
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('watch.details.6')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('watch.detail.copyJson')));
+      await tester.pumpAndSettle();
+      expect(copied, [
+        pretty.convert(
+          sent(
+            6,
+            'filter.saved',
+            payload: {'name': 'Mine'},
+            via: {'kind': 'ssh'},
+          ),
+        ),
+      ]);
+      expect(
+        find.descendant(
+          of: find.byType(SnackBar),
+          matching: find.text('JSON copied.'),
+        ),
+        findsOneWidget,
+      );
+    });
+  }
+
+  testWidgets('a long press on a row copies its JSON', (tester) async {
+    final copied = clipboard(tester);
+    await pump(tester);
+    await live(tester);
+    emit(7, 'task.created', payload: {'ref': 'infra-1'});
+    await tester.pumpAndSettle();
+    await tester.longPress(find.byKey(const Key('watch.7')));
+    await tester.pumpAndSettle();
+    expect(copied, [
+      pretty.convert(sent(7, 'task.created', payload: {'ref': 'infra-1'})),
+    ]);
+    expect(
+      find.descendant(
+        of: find.byType(SnackBar),
+        matching: find.text('JSON copied.'),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('pausing holds new events and counts them', (tester) async {

@@ -3539,6 +3539,12 @@ class AppLocalizationsBg extends AppLocalizations {
   String get copiedToClipboard => 'Копирано.';
 
   @override
+  String get copyJson => 'Копирай JSON';
+
+  @override
+  String get copyJsonDone => 'JSON е копиран.';
+
+  @override
   String get secretShare => 'Сподели';
 
   @override

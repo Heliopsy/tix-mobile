@@ -992,6 +992,8 @@
   "aboutConnectionDetailsHelp": "Wie Live-Aktualisierungen diesen Kontext erreichen und was zuletzt fehlschlug",
   "copyToClipboard": "Kopieren",
   "copiedToClipboard": "Kopiert.",
+  "copyJson": "JSON kopieren",
+  "copyJsonDone": "JSON kopiert.",
   "secretShare": "Teilen",
   "secretDone": "Ich habe es gesichert",
   "roleViewer": "Betrachter",

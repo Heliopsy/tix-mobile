@@ -992,6 +992,8 @@
   "aboutConnectionDetailsHelp": "Comment les mises à jour en direct arrivent dans ce contexte, et ce qui a échoué en dernier",
   "copyToClipboard": "Copier",
   "copiedToClipboard": "Copié.",
+  "copyJson": "Copier le JSON",
+  "copyJsonDone": "JSON copié.",
   "secretShare": "Partager",
   "secretDone": "Je l’ai conservé",
   "roleViewer": "lecteur",

@@ -3,9 +3,11 @@
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
+import 'package:tix_mobile/src/data/api/answer.dart';
 import 'package:tix_mobile/src/data/api/gen/client.gen.dart';
 import 'package:tix_mobile/src/data/api/gen/models.gen.dart' show Event;
 import 'package:tix_mobile/src/data/events/tix_event.dart';
+import 'package:tix_mobile/src/data/models/wire.dart';
 
 /// One answer of `GET /api/v1/events/poll`.
 @immutable
@@ -78,17 +80,22 @@ class TixEventPoller implements EventPoller {
   }) async {
     _canceller.token = cancel;
     try {
-      final page = await api.event.poll(
-        sinceSeq: sinceSeq > 0 ? sinceSeq : null,
-        types: types.isEmpty ? null : types,
-        projectIds: projectIds.isEmpty ? null : projectIds,
-        limit: limit,
-        wait: wait > Duration.zero ? '${wait.inSeconds}s' : null,
+      final (page, answer) = await withAnswer(
+        api.transport,
+        (t) => EventOps(t).poll(
+          sinceSeq: sinceSeq > 0 ? sinceSeq : null,
+          types: types.isEmpty ? null : types,
+          projectIds: projectIds.isEmpty ? null : projectIds,
+          limit: limit,
+          wait: wait > Duration.zero ? '${wait.inSeconds}s' : null,
+        ),
       );
+      final sent = answer?['events'];
+      final paired = sent is List && sent.length == page.events.length;
       return EventPollPage(
         events: [
-          for (final e in page.events)
-            if (e.type != null) _event(e),
+          for (final (i, e) in page.events.indexed)
+            if (e.type != null) _event(e, paired ? sent[i] : null),
         ],
         nextSeq: page.nextSeq,
       );
@@ -102,19 +109,22 @@ class TixEventPoller implements EventPoller {
     }
   }
 
-  static TixEvent _event(Event e) => TixEvent(
-    seq: e.seq,
-    type: e.type!.value,
-    id: e.id,
-    tenantId: e.tenantId,
-    projectId: e.projectId,
-    subjectType: e.subjectType,
-    subjectId: e.subjectId,
-    actorId: e.actorId,
-    payload: e.payload,
-    via: e.via,
-    occurredAt: e.occurredAt,
-  );
+  static TixEvent _event(Event e, Object? sent) {
+    final event = TixEvent(
+      seq: e.seq,
+      type: e.type!.value,
+      id: e.id,
+      tenantId: e.tenantId,
+      projectId: e.projectId,
+      subjectType: e.subjectType,
+      subjectId: e.subjectId,
+      actorId: e.actorId,
+      payload: e.payload,
+      via: e.via,
+      occurredAt: e.occurredAt,
+    );
+    return sent is Map<String, Object?> ? keepWire(event, sent) : event;
+  }
 }
 
 /// Whether [options] is a request to tix's event poll.
