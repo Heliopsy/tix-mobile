@@ -112,7 +112,8 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   phone, the properties beside the description on a wide screen.
 - **Task lists** with pull to refresh and keyset pagination, so a long list loads a page at a time and stays stable
   while tasks are being added. Sort, group by status or project, swipe to complete or snooze, star in place, and
-  pick many tasks for one bulk move, priority, tag, assignee, star, copy or delete with a single Undo.
+  pick many tasks for one bulk move, priority, tag, assignee, star, copy or delete with a single Undo. Move one
+  task or many into another project, where each takes a new reference and the old one keeps leading to it.
 - **Board and lanes**: a workflow's columns with drag and drop, or one lane per project, each column and lane
   starred, collapsed, moved or hidden the way tix keeps it for your account.
 - **Filters and search** in tix's filter language, one-tap chips (mine, starred, snoozed, blocked, due windows,

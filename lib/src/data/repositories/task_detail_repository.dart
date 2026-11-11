@@ -4,7 +4,7 @@ import 'package:tix_mobile/src/core/config/config.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/markdown/checklist.dart';
 import 'package:tix_mobile/src/data/api/gen/models.gen.dart'
-    show ForceReclaimInput;
+    show ForceReclaimInput, MoveTaskInput, TaskMove;
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/cache/response_cache.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
@@ -15,8 +15,21 @@ import 'package:tix_mobile/src/data/models/task_detail.dart';
 import 'package:tix_mobile/src/data/models/task_patch.dart';
 import 'package:tix_mobile/src/data/offline/outbox.dart';
 
+export 'package:tix_mobile/src/data/api/gen/models.gen.dart' show TaskMove;
 export 'package:tix_mobile/src/data/models/task_detail.dart';
 export 'package:tix_mobile/src/data/models/task_patch.dart';
+
+/// The server cannot move a task to another project: it predates that.
+final class TaskMoveUnsupported implements Exception {
+  /// Reports a server that answered [cause] to a move.
+  const TaskMoveUnsupported(this.cause);
+
+  /// The server's answer.
+  final TixException cause;
+
+  @override
+  String toString() => 'the server cannot move tasks between projects ($cause)';
+}
 
 /// Everything the task screen reads and changes about one task.
 ///
@@ -191,6 +204,18 @@ class TaskDetailRepository {
   /// Copies [ref] (`task.copy`).
   Future<Task> copy(String ref, CopyTaskInput request) =>
       _api.task.copy(ref, body: request);
+
+  /// Moves [ref] into the project [projectRef], by key or id, and answers
+  /// what the move did (`task.move`). Throws [TaskMoveUnsupported] on a
+  /// server without the route.
+  Future<TaskMove> moveToProject(String ref, String projectRef) async {
+    try {
+      return await _api.task.move(ref, MoveTaskInput(projectRef: projectRef));
+    } on TixException catch (e) {
+      if (e.missingRoute) throw TaskMoveUnsupported(e);
+      rethrow;
+    }
+  }
 
   /// Deletes [ref] (`task.delete`).
   Future<void> delete(String ref, {bool hard = false, bool cascade = false}) =>

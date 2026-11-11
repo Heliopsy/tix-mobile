@@ -713,6 +713,66 @@ class AppLocalizationsFr extends AppLocalizations {
   String get taskDetailCopyTo => 'Copier vers…';
 
   @override
+  String get taskMoveToProject => 'Déplacer vers un projet…';
+
+  @override
+  String taskMoveToProjectTitle(String ref) {
+    return 'Déplacer $ref vers un autre projet';
+  }
+
+  @override
+  String taskMoveToProjectBody(String ref, String project) {
+    return '$ref prend le numéro suivant dans $project, et $ref continue d\'y mener. Les commentaires, l\'historique, les liens, les tags et la personne assignée suivent. Le statut est gardé si le workflow de $project en a un du même nom, sinon la tâche démarre au premier statut. Les champs personnalisés que $project ne définit pas restent en arrière.';
+  }
+
+  @override
+  String get taskMoveToProjectPick => 'Choisissez le projet de destination.';
+
+  @override
+  String get taskMoveToProjectAction => 'Déplacer';
+
+  @override
+  String get taskMoveToProjectNone =>
+      'Il n\'y a pas d\'autre projet vers lequel déplacer.';
+
+  @override
+  String taskMovedToProject(String from, String to) {
+    return '$from est désormais $to.';
+  }
+
+  @override
+  String get taskMovedToProjectStatus =>
+      'Elle démarre au premier statut du projet.';
+
+  @override
+  String taskMovedToProjectDropped(String fields) {
+    return 'Laissés en arrière : $fields.';
+  }
+
+  @override
+  String get taskMoveUnsupported =>
+      'Ce serveur ne peut pas déplacer de tâches vers un autre projet.';
+
+  @override
+  String get taskMoveKeywords => 'déplacer projet transférer move project';
+
+  @override
+  String bulkMoveProjectTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Déplacer $count tâches vers un autre projet',
+      one: 'Déplacer 1 tâche vers un autre projet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bulkMoveProjectBody(String project) {
+    return 'Chaque tâche prend le numéro suivant dans $project, et son ancienne référence continue d\'y mener. Un statut absent du workflow de $project repart du premier statut, et les champs que $project ne définit pas restent en arrière. Pas d\'annulation.';
+  }
+
+  @override
   String taskDetailCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

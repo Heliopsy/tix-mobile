@@ -9,6 +9,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/session/project_stars.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
@@ -704,6 +705,114 @@ class _CopySheetState extends ConsumerState<_CopySheet> {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Asks which project to move tasks into, saying what the move does once
+/// one is picked: [explain] words it for the picked project's key. The
+/// project keyed [from], in any case, is left out. Answers the key, or null.
+Future<String?> askMoveProject(
+  BuildContext context, {
+  required String title,
+  required String Function(String project) explain,
+  String? from,
+}) => showTixSheet<String>(
+  context,
+  builder: (context) =>
+      _MoveProjectSheet(title: title, explain: explain, from: from),
+);
+
+class _MoveProjectSheet extends ConsumerStatefulWidget {
+  const _MoveProjectSheet({
+    required this.title,
+    required this.explain,
+    this.from,
+  });
+
+  final String title;
+  final String Function(String project) explain;
+  final String? from;
+
+  @override
+  ConsumerState<_MoveProjectSheet> createState() => _MoveProjectSheetState();
+}
+
+class _MoveProjectSheetState extends ConsumerState<_MoveProjectSheet> {
+  String? _picked;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final starred = ref.watch(projectStarsProvider).value?.keys ?? const {};
+    final picked = _picked;
+    final targets = ref
+        .watch(copyTargetsProvider)
+        .whenData(
+          (all) => [
+            for (final p in starredFirst(all, (p) => starred.contains(p.key)))
+              if (p.key.toLowerCase() != widget.from?.toLowerCase()) p,
+          ],
+        );
+    final some = targets.value?.isNotEmpty ?? false;
+    return TixSheetBody(
+      title: widget.title,
+      actions: [
+        _cancel(context),
+        if (some)
+          TixButton.primary(
+            key: const Key('moveProject.confirm'),
+            label: l10n.taskMoveToProjectAction,
+            icon: Icons.drive_file_move_outline,
+            onPressed: picked == null
+                ? null
+                : () => Navigator.of(context).pop(picked),
+          ),
+      ],
+      child: switch (targets) {
+        AsyncData(:final value) when value.isEmpty => Text(
+          l10n.taskMoveToProjectNone,
+          key: const Key('moveProject.none'),
+        ),
+        AsyncData(:final value) => Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            for (final p in value)
+              ListTile(
+                key: Key('moveProject.${p.key}'),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: TixSpace.s2,
+                ),
+                minTileHeight: TixSize.target,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(TixRadius.md)),
+                ),
+                selected: p.key == picked,
+                title: ProjectOption(
+                  project: p,
+                  selected: p.key == picked,
+                  starred: starred.contains(p.key),
+                ),
+                onTap: () => setState(() => _picked = p.key),
+              ),
+            const SizedBox(height: TixSpace.s3),
+            Text(
+              picked == null
+                  ? l10n.taskMoveToProjectPick
+                  : widget.explain(picked),
+              key: const Key('moveProject.explain'),
+              style: TextStyle(color: context.tix.muted),
+            ),
+          ],
+        ),
+        AsyncError(:final error) => ErrorState(
+          error: error,
+          compact: true,
+          onRetry: () => ref.invalidate(copyTargetsProvider),
+        ),
+        _ => const SkeletonList(rows: 3, inline: true),
+      },
     );
   }
 }

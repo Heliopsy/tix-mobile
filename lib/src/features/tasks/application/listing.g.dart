@@ -153,7 +153,7 @@ final class TaskListingProvider
   }
 }
 
-String _$taskListingHash() => r'3ced84028eea822966c777f21ea4b82061bfd075';
+String _$taskListingHash() => r'e51f09145aac22a71541dfb35288b5af2adf70da';
 
 /// The tasks one query selects, a page at a time: the cached first page at
 /// once, then the server's, again whenever a task changes, and kept for a

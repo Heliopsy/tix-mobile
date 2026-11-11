@@ -363,6 +363,22 @@ void main() {
     });
   });
 
+  test('a bulk move to another project reloads the rows', () async {
+    final (c, q) = await listing(const TaskQuery());
+    final n = c.read(taskListingProvider(q).notifier);
+    final run = await n.bulk(
+      const BulkTaskInput(
+        action: BulkAction.moveProject,
+        refs: ['infra-1'],
+        projectRef: 'web',
+      ),
+    );
+    expect(run.result.outcomes.single.movedRef, 'web-51');
+    await c.read(taskListingProvider(q).future);
+    expect(refs(c, q), containsAll(['web-1', 'web-51']));
+    expect(refs(c, q), isNot(contains('infra-1')));
+  });
+
   test('quick actions call their own routes', () async {
     final (c, q) = await listing(const TaskQuery());
     final n = c.read(taskListingProvider(q).notifier);

@@ -1345,6 +1345,84 @@ abstract class AppLocalizations {
   /// **'Copy to…'**
   String get taskDetailCopyTo;
 
+  /// Menu item, palette command and bulk button that move tasks into another project.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to project…'**
+  String get taskMoveToProject;
+
+  /// Title of the sheet that moves one task into another project.
+  ///
+  /// In en, this message translates to:
+  /// **'Move {ref} to another project'**
+  String taskMoveToProjectTitle(String ref);
+
+  /// What moving one task does, shown once a target project is picked.
+  ///
+  /// In en, this message translates to:
+  /// **'{ref} takes the next number in {project}, and {ref} keeps leading to it. Comments, history, links, tags and the assignee go with it. It keeps its status when {project}\'s workflow has one of that name, else it starts in the first status. Custom fields {project} does not define are left behind.'**
+  String taskMoveToProjectBody(String ref, String project);
+
+  /// Shown in the move sheet before a project is picked.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the project it moves to.'**
+  String get taskMoveToProjectPick;
+
+  /// Button that confirms moving tasks to the picked project.
+  ///
+  /// In en, this message translates to:
+  /// **'Move'**
+  String get taskMoveToProjectAction;
+
+  /// Shown in the move sheet when no other project can take the task.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no other project to move this to.'**
+  String get taskMoveToProjectNone;
+
+  /// Toast after a task moved to another project: its old and new reference.
+  ///
+  /// In en, this message translates to:
+  /// **'{from} is now {to}.'**
+  String taskMovedToProject(String from, String to);
+
+  /// Added to the moved toast when the target workflow lacked the task's status.
+  ///
+  /// In en, this message translates to:
+  /// **'It starts in the project\'s first status.'**
+  String get taskMovedToProjectStatus;
+
+  /// Added to the moved toast: the custom fields the target project does not define.
+  ///
+  /// In en, this message translates to:
+  /// **'Left behind: {fields}.'**
+  String taskMovedToProjectDropped(String fields);
+
+  /// Shown when the server refuses a move because it predates moving tasks between projects.
+  ///
+  /// In en, this message translates to:
+  /// **'This server cannot move tasks to another project.'**
+  String get taskMoveUnsupported;
+
+  /// Extra words the command palette matches for moving a task to another project.
+  ///
+  /// In en, this message translates to:
+  /// **'move project transfer relocate'**
+  String get taskMoveKeywords;
+
+  /// Title of the sheet that moves the selected tasks into another project.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Move 1 task to another project} other{Move {count} tasks to another project}}'**
+  String bulkMoveProjectTitle(int count);
+
+  /// What moving the selected tasks does, shown once a target project is picked.
+  ///
+  /// In en, this message translates to:
+  /// **'Each task takes the next number in {project}, and its old reference keeps leading to it. A status {project}\'s workflow lacks starts over in its first status, and custom fields {project} does not define are left behind. There is no Undo.'**
+  String bulkMoveProjectBody(String project);
+
   /// No description provided for @taskDetailCount.
   ///
   /// In en, this message translates to:

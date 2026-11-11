@@ -13,6 +13,8 @@ import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/models/workflow.dart';
 import 'package:tix_mobile/src/features/tasks/application/listing.dart';
 import 'package:tix_mobile/src/features/tasks/application/screen.dart';
+import 'package:tix_mobile/src/features/tasks/application/task_detail.dart'
+    show projectKeyOf, taskMoveSupportProvider;
 import 'package:tix_mobile/src/features/tasks/presentation/detail/editors.dart';
 
 /// The bulk actions, in the order the bar offers them.
@@ -40,6 +42,9 @@ enum BulkChoice {
 
   /// Copy to a project.
   copy,
+
+  /// Move to another project.
+  moveProject,
 
   /// Delete.
   delete,
@@ -129,6 +134,7 @@ class BulkBar extends ConsumerWidget {
     final t = context.tix;
     final selection = ref.watch(taskSelectionProvider(query.scope));
     final compact = context.isCompact;
+    final movable = ref.watch(taskMoveSupportProvider);
     Widget button(BulkChoice c, IconData icon, String label) => TixIconButton(
       key: Key('bulk.${c.name}'),
       icon: icon,
@@ -152,6 +158,12 @@ class BulkBar extends ConsumerWidget {
         ),
         button(BulkChoice.unstar, Icons.star_outline, l10n.unstar),
         button(BulkChoice.copy, Icons.copy_all_outlined, l10n.bulkCopy),
+        if (movable)
+          button(
+            BulkChoice.moveProject,
+            Icons.drive_file_move_outline,
+            l10n.taskMoveToProject,
+          ),
       ],
       button(BulkChoice.delete, Icons.delete_outline, l10n.bulkDelete),
     ];
@@ -203,6 +215,8 @@ class BulkBar extends ConsumerWidget {
                       (BulkChoice.tagRemove, l10n.bulkTagRemove),
                       (BulkChoice.unstar, l10n.unstar),
                       (BulkChoice.copy, l10n.bulkCopy),
+                      if (movable)
+                        (BulkChoice.moveProject, l10n.taskMoveToProject),
                     ])
                       PopupMenuItem(
                         key: Key('bulk.menu.${c.name}'),
@@ -345,6 +359,21 @@ Future<void> runBulkChoice(
           projectRef: to,
         );
       }
+    case BulkChoice.moveProject:
+      final from = {for (final r in refs) projectKeyOf(r).toLowerCase()};
+      final to = await askMoveProject(
+        context,
+        title: l10n.bulkMoveProjectTitle(refs.length),
+        explain: l10n.bulkMoveProjectBody,
+        from: from.length == 1 ? from.single : null,
+      );
+      if (to != null) {
+        request = BulkTaskInput(
+          action: BulkAction.moveProject,
+          refs: refs,
+          projectRef: to,
+        );
+      }
     case BulkChoice.delete:
       final ok = await confirmDestructive(
         context,
@@ -393,7 +422,7 @@ Future<void> runBulk(
     context,
     message,
     tone: applied == 0 ? TixTone.danger : TixTone.accent,
-    onUndo: applied == 0
+    onUndo: applied == 0 || request.action == BulkAction.moveProject
         ? null
         : () async {
             try {
