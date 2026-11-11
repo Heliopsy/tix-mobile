@@ -710,6 +710,66 @@ class AppLocalizationsEn extends AppLocalizations {
   String get taskDetailCopyTo => 'Copy to…';
 
   @override
+  String get taskMoveToProject => 'Move to project…';
+
+  @override
+  String taskMoveToProjectTitle(String ref) {
+    return 'Move $ref to another project';
+  }
+
+  @override
+  String taskMoveToProjectBody(String ref, String project) {
+    return '$ref takes the next number in $project, and $ref keeps leading to it. Comments, history, links, tags and the assignee go with it. It keeps its status when $project\'s workflow has one of that name, else it starts in the first status. Custom fields $project does not define are left behind.';
+  }
+
+  @override
+  String get taskMoveToProjectPick => 'Pick the project it moves to.';
+
+  @override
+  String get taskMoveToProjectAction => 'Move';
+
+  @override
+  String get taskMoveToProjectNone =>
+      'There is no other project to move this to.';
+
+  @override
+  String taskMovedToProject(String from, String to) {
+    return '$from is now $to.';
+  }
+
+  @override
+  String get taskMovedToProjectStatus =>
+      'It starts in the project\'s first status.';
+
+  @override
+  String taskMovedToProjectDropped(String fields) {
+    return 'Left behind: $fields.';
+  }
+
+  @override
+  String get taskMoveUnsupported =>
+      'This server cannot move tasks to another project.';
+
+  @override
+  String get taskMoveKeywords => 'move project transfer relocate';
+
+  @override
+  String bulkMoveProjectTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Move $count tasks to another project',
+      one: 'Move 1 task to another project',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bulkMoveProjectBody(String project) {
+    return 'Each task takes the next number in $project, and its old reference keeps leading to it. A status $project\'s workflow lacks starts over in its first status, and custom fields $project does not define are left behind. There is no Undo.';
+  }
+
+  @override
   String taskDetailCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

@@ -331,6 +331,32 @@ void main() {
     expect(find.text('1 changed. Refused: web-1: not yours'), findsOneWidget);
   });
 
+  testWidgets('picked rows move to another project with no Undo', (
+    tester,
+  ) async {
+    await pump(tester, const TasksScreen(), size: desktop);
+    await tester.longPress(row('Fix login'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('bulk.moveProject')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('moveProject.infra')), findsNothing);
+    await tester.tap(find.byKey(const Key('moveProject.web')));
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('its old reference keeps leading to it'),
+      findsOneWidget,
+    );
+    await tester.tap(find.byKey(const Key('moveProject.confirm')));
+    await tester.pumpAndSettle();
+    expect(server.requestsTo('/tasks/bulk').single.body, {
+      'action': 'move_project',
+      'refs': ['infra-1'],
+      'project_ref': 'web',
+    });
+    expect(find.text('1 task changed'), findsOneWidget);
+    expect(find.byKey(const Key('toast.action')), findsNothing);
+  });
+
   testWidgets('j, j and Enter open the second task', (tester) async {
     await pump(tester, const TixShortcuts(child: TasksScreen()));
     await tester.sendKeyEvent(LogicalKeyboardKey.keyJ);

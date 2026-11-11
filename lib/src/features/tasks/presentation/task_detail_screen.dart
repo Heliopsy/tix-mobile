@@ -208,6 +208,50 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
     }
   }
 
+  bool _canMoveProject(bool supported) => !isDraftRef(task.ref) && supported;
+
+  Future<void> _moveProject() async {
+    final l10n = context.l10n;
+    final router = GoRouter.of(context);
+    final root = Navigator.of(context, rootNavigator: true).context;
+    final from = task.ref;
+    final to = await askMoveProject(
+      context,
+      title: l10n.taskMoveToProjectTitle(from),
+      explain: (project) => l10n.taskMoveToProjectBody(from, project),
+      from: projectKeyOf(from),
+    );
+    if (to == null || !mounted) return;
+    final controller = ref.read(taskDetailControllerProvider(from).notifier);
+    final TaskMove moved;
+    try {
+      moved = await controller.moveToProject(to);
+    } on TaskMoveUnsupported {
+      unawaited(TixHaptics.refuse());
+      if (mounted) showTixToast(context, l10n.taskMoveUnsupported);
+      return;
+    } on Object catch (e) {
+      unawaited(TixHaptics.refuse());
+      if (mounted) {
+        showTixToast(context, errorDetail(l10n, e), tone: TixTone.danger);
+      }
+      return;
+    }
+    unawaited(TixHaptics.confirm());
+    final now = moved.task?.ref ?? from;
+    router.go(Routes.task(projectKeyOf(now), now));
+    if (!root.mounted) return;
+    showTixToast(
+      root,
+      [
+        l10n.taskMovedToProject(from, now),
+        if (!moved.statusKept) l10n.taskMovedToProjectStatus,
+        if (moved.droppedFields.isNotEmpty)
+          l10n.taskMovedToProjectDropped(moved.droppedFields.join(', ')),
+      ].join(' '),
+    );
+  }
+
   Future<void> _delete({bool hard = false}) async {
     final l10n = context.l10n;
     final container = ProviderScope.containerOf(context);
@@ -335,6 +379,13 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
           label: l10n.taskDetailCopyTo,
           icon: Icons.copy_all_outlined,
         ),
+        if (_canMoveProject(ref.read(taskMoveSupportProvider)))
+          TixSheetAction(
+            key: const Key('menu.moveProject'),
+            value: 'moveProject',
+            label: l10n.taskMoveToProject,
+            icon: Icons.drive_file_move_outline,
+          ),
         TixSheetAction(
           key: const Key('menu.ref'),
           value: 'ref',
@@ -386,6 +437,8 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
         _comment();
       case 'copy':
         await _copy();
+      case 'moveProject':
+        await _moveProject();
       case 'ref':
         await _copyRef();
       case 'handoff':
@@ -404,7 +457,10 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
     return until != null && until.isAfter(ref.read(clockProvider)());
   }
 
-  List<TixCommand> _commands(AppLocalizations l10n) {
+  List<TixCommand> _commands(
+    AppLocalizations l10n, {
+    required bool moveSupported,
+  }) {
     final group = l10n.taskDetailCommands;
     TixCommand cmd(
       String id,
@@ -498,6 +554,15 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
         KeyActions.taskCopy,
         _copy,
       ),
+      if (_canMoveProject(moveSupported))
+        TixCommand(
+          id: 'taskDetail.moveProject',
+          label: l10n.taskMoveToProject,
+          group: group,
+          icon: Icons.drive_file_move_outline,
+          keywords: l10n.taskMoveKeywords,
+          run: () => unawaited(_moveProject()),
+        ),
       if (!isDraftRef(task.ref))
         TixCommand(
           id: 'taskDetail.handoff',
@@ -548,7 +613,10 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
       ],
     );
     return CommandScope(
-      commands: _commands(l10n),
+      commands: _commands(
+        l10n,
+        moveSupported: ref.watch(taskMoveSupportProvider),
+      ),
       child: RefreshIndicator(
         onRefresh: () async {
           ref

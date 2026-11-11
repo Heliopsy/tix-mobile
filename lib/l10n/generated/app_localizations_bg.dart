@@ -713,6 +713,66 @@ class AppLocalizationsBg extends AppLocalizations {
   String get taskDetailCopyTo => 'Копирай в…';
 
   @override
+  String get taskMoveToProject => 'Премести в проект…';
+
+  @override
+  String taskMoveToProjectTitle(String ref) {
+    return 'Преместване на $ref в друг проект';
+  }
+
+  @override
+  String taskMoveToProjectBody(String ref, String project) {
+    return '$ref получава следващия номер в $project, а $ref продължава да води до нея. Коментарите, историята, връзките, етикетите и изпълнителят се местят с нея. Статусът се запазва, ако работният процес на $project има такъв, иначе задачата започва от първия статус. Персонализираните полета, които $project не определя, остават.';
+  }
+
+  @override
+  String get taskMoveToProjectPick =>
+      'Изберете проекта, в който да се премести.';
+
+  @override
+  String get taskMoveToProjectAction => 'Премести';
+
+  @override
+  String get taskMoveToProjectNone =>
+      'Няма друг проект, в който да се премести.';
+
+  @override
+  String taskMovedToProject(String from, String to) {
+    return '$from вече е $to.';
+  }
+
+  @override
+  String get taskMovedToProjectStatus => 'Започва от първия статус на проекта.';
+
+  @override
+  String taskMovedToProjectDropped(String fields) {
+    return 'Останаха: $fields.';
+  }
+
+  @override
+  String get taskMoveUnsupported =>
+      'Този сървър не може да мести задачи в друг проект.';
+
+  @override
+  String get taskMoveKeywords => 'премести проект прехвърли move project';
+
+  @override
+  String bulkMoveProjectTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Преместване на $count задачи в друг проект',
+      one: 'Преместване на 1 задача в друг проект',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bulkMoveProjectBody(String project) {
+    return 'Всяка задача получава следващия номер в $project, а старият ѝ номер продължава да води до нея. Статус, който работният процес на $project няма, започва от първия му статус, а полетата, които $project не определя, остават. Няма отмяна.';
+  }
+
+  @override
   String taskDetailCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

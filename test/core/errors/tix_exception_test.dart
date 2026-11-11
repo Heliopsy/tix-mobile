@@ -131,4 +131,14 @@ void main() {
     );
     expect(TixException.fromEngine(const {}).message, '');
   });
+
+  test('a missing route is told from a missing record', () {
+    TixException e(int status, [String message = '']) =>
+        TixException(TixErrorKind.notFound, status: status, message: message);
+    expect(e(405).missingRoute, isTrue);
+    expect(e(404).missingRoute, isTrue);
+    expect(e(404, 'no such route').missingRoute, isTrue);
+    expect(e(404, 'comment "c1"').missingRoute, isFalse);
+    expect(e(403).missingRoute, isFalse);
+  });
 }

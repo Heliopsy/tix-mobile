@@ -8,6 +8,8 @@ import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/events/invalidation.dart';
 import 'package:tix_mobile/src/core/markdown/checklist.dart';
 import 'package:tix_mobile/src/core/paging/paged.dart';
+import 'package:tix_mobile/src/core/quick/quick_add.dart'
+    show tasksChangedProvider;
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/time/time_style.dart';
 import 'package:tix_mobile/src/data/events/tix_event.dart';
@@ -202,6 +204,21 @@ class TaskDetailController extends _$TaskDetailController {
   /// Copies the task as [request] says and returns the copy.
   Future<Task> copy(CopyTaskInput request) => _repo.copy(taskRef, request);
 
+  /// Moves the task into the project [projectRef] and answers what the move
+  /// did. Every list reloads, since the task left one project for another;
+  /// a server without moves is remembered as such.
+  Future<TaskMove> moveToProject(String projectRef) => _serial(() async {
+    final TaskMove moved;
+    try {
+      moved = await _repo.moveToProject(taskRef, projectRef);
+    } on TaskMoveUnsupported {
+      if (ref.mounted) ref.read(taskMoveSupportProvider.notifier).refused();
+      rethrow;
+    }
+    if (ref.mounted) ref.read(tasksChangedProvider.notifier).touch();
+    return moved;
+  });
+
   /// Reloads the task from the server, dropping nothing in flight.
   Future<void> reload() async {
     accept(await _repo.task(taskRef));
@@ -212,6 +229,20 @@ class TaskDetailController extends _$TaskDetailController {
     _queue = next.then<void>((_) {}, onError: (Object _) {});
     return next;
   }
+}
+
+/// Whether the active connection can move a task to another project: true
+/// until the server answers a move as an unknown route, for the session.
+@Riverpod(keepAlive: true)
+class TaskMoveSupport extends _$TaskMoveSupport {
+  @override
+  bool build() {
+    ref.watch(activeCacheScopeProvider);
+    return true;
+  }
+
+  /// The server has no move route.
+  void refused() => state = false;
 }
 
 /// A task's comments, oldest first.

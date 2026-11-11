@@ -716,6 +716,66 @@ class AppLocalizationsDe extends AppLocalizations {
   String get taskDetailCopyTo => 'Kopieren nach…';
 
   @override
+  String get taskMoveToProject => 'In Projekt verschieben…';
+
+  @override
+  String taskMoveToProjectTitle(String ref) {
+    return '$ref in ein anderes Projekt verschieben';
+  }
+
+  @override
+  String taskMoveToProjectBody(String ref, String project) {
+    return '$ref bekommt die nächste Nummer in $project, und $ref führt weiterhin zu ihr. Kommentare, Verlauf, Verknüpfungen, Tags und die Zuweisung gehen mit. Der Status bleibt, wenn der Workflow von $project einen gleichnamigen hat, sonst beginnt sie im ersten Status. Benutzerdefinierte Felder, die $project nicht kennt, bleiben zurück.';
+  }
+
+  @override
+  String get taskMoveToProjectPick => 'Wähle das Projekt, in das sie wandert.';
+
+  @override
+  String get taskMoveToProjectAction => 'Verschieben';
+
+  @override
+  String get taskMoveToProjectNone =>
+      'Es gibt kein anderes Projekt, in das verschoben werden kann.';
+
+  @override
+  String taskMovedToProject(String from, String to) {
+    return '$from ist jetzt $to.';
+  }
+
+  @override
+  String get taskMovedToProjectStatus =>
+      'Sie beginnt im ersten Status des Projekts.';
+
+  @override
+  String taskMovedToProjectDropped(String fields) {
+    return 'Zurückgelassen: $fields.';
+  }
+
+  @override
+  String get taskMoveUnsupported =>
+      'Dieser Server kann Aufgaben nicht in ein anderes Projekt verschieben.';
+
+  @override
+  String get taskMoveKeywords => 'verschieben projekt übertragen move project';
+
+  @override
+  String bulkMoveProjectTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Aufgaben in ein anderes Projekt verschieben',
+      one: '1 Aufgabe in ein anderes Projekt verschieben',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bulkMoveProjectBody(String project) {
+    return 'Jede Aufgabe bekommt die nächste Nummer in $project, und ihre alte Referenz führt weiterhin zu ihr. Ein Status, den der Workflow von $project nicht kennt, beginnt im ersten Status, und Felder, die $project nicht kennt, bleiben zurück. Rückgängig gibt es nicht.';
+  }
+
+  @override
   String taskDetailCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

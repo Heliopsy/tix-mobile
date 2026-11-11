@@ -343,6 +343,94 @@
     }
   },
   "taskDetailCopyTo": "Copy to…",
+  "taskMoveToProject": "Move to project…",
+  "@taskMoveToProject": {
+    "description": "Menu item, palette command and bulk button that move tasks into another project."
+  },
+  "taskMoveToProjectTitle": "Move {ref} to another project",
+  "@taskMoveToProjectTitle": {
+    "description": "Title of the sheet that moves one task into another project.",
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "taskMoveToProjectBody": "{ref} takes the next number in {project}, and {ref} keeps leading to it. Comments, history, links, tags and the assignee go with it. It keeps its status when {project}'s workflow has one of that name, else it starts in the first status. Custom fields {project} does not define are left behind.",
+  "@taskMoveToProjectBody": {
+    "description": "What moving one task does, shown once a target project is picked.",
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      },
+      "project": {
+        "type": "String"
+      }
+    }
+  },
+  "taskMoveToProjectPick": "Pick the project it moves to.",
+  "@taskMoveToProjectPick": {
+    "description": "Shown in the move sheet before a project is picked."
+  },
+  "taskMoveToProjectAction": "Move",
+  "@taskMoveToProjectAction": {
+    "description": "Button that confirms moving tasks to the picked project."
+  },
+  "taskMoveToProjectNone": "There is no other project to move this to.",
+  "@taskMoveToProjectNone": {
+    "description": "Shown in the move sheet when no other project can take the task."
+  },
+  "taskMovedToProject": "{from} is now {to}.",
+  "@taskMovedToProject": {
+    "description": "Toast after a task moved to another project: its old and new reference.",
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "taskMovedToProjectStatus": "It starts in the project's first status.",
+  "@taskMovedToProjectStatus": {
+    "description": "Added to the moved toast when the target workflow lacked the task's status."
+  },
+  "taskMovedToProjectDropped": "Left behind: {fields}.",
+  "@taskMovedToProjectDropped": {
+    "description": "Added to the moved toast: the custom fields the target project does not define.",
+    "placeholders": {
+      "fields": {
+        "type": "String"
+      }
+    }
+  },
+  "taskMoveUnsupported": "This server cannot move tasks to another project.",
+  "@taskMoveUnsupported": {
+    "description": "Shown when the server refuses a move because it predates moving tasks between projects."
+  },
+  "taskMoveKeywords": "move project transfer relocate",
+  "@taskMoveKeywords": {
+    "description": "Extra words the command palette matches for moving a task to another project."
+  },
+  "bulkMoveProjectTitle": "{count, plural, =1{Move 1 task to another project} other{Move {count} tasks to another project}}",
+  "@bulkMoveProjectTitle": {
+    "description": "Title of the sheet that moves the selected tasks into another project.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkMoveProjectBody": "Each task takes the next number in {project}, and its old reference keeps leading to it. A status {project}'s workflow lacks starts over in its first status, and custom fields {project} does not define are left behind. There is no Undo.",
+  "@bulkMoveProjectBody": {
+    "description": "What moving the selected tasks does, shown once a target project is picked.",
+    "placeholders": {
+      "project": {
+        "type": "String"
+      }
+    }
+  },
   "taskDetailCount": "{count, plural, =1{1 task} other{{count} tasks}}",
   "@taskDetailCount": {
     "placeholders": {

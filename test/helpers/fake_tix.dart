@@ -250,6 +250,14 @@ class FakeTix {
 
   /// The default API token, in the tenant `default`.
   final String token;
+
+  /// Whether `POST /tasks/{ref}/move` exists; false answers 404 as a tix
+  /// older than it does.
+  bool moveSupported = true;
+
+  /// The references tasks had before they moved to another project, each
+  /// to the reference it has now: tix keeps the old one resolving.
+  final movedRefs = <String, String>{};
   final List<Map<String, Object?>> projects;
   final Map<String, List<Map<String, Object?>>> tasks;
   final actors = <String, Map<String, Object?>>{
@@ -1180,7 +1188,7 @@ class FakeTix {
     }
     if (s.length < 2 || s[0] != 'tasks') return null;
     final ref = s[1];
-    final t = task(ref);
+    final t = task(movedRefs[ref] ?? ref);
     if (t == null) return null;
     final id = t['id']! as String;
     final tref = t['ref']! as String;
@@ -1289,6 +1297,30 @@ class FakeTix {
         t.remove('snoozed_until');
         bump();
         return FakeResponse(200, t);
+      case ('POST', ['move']):
+        if (!moveSupported) {
+          return FakeResponse(404, envelope('not_found', 'no such route'));
+        }
+        final to = (body['project_ref'] as String?) ?? '';
+        final from = _projectKeyOf(t);
+        if (to == from) {
+          return FakeResponse(
+            400,
+            envelope('invalid', 'task "$tref" is already in project "$to"'),
+          );
+        }
+        final moved = _moveProject(t, to);
+        if (moved == null) {
+          return FakeResponse(404, envelope('not_found', 'project "$to"'));
+        }
+        return FakeResponse(200, {
+          'task': _withProject(moved),
+          'from_ref': tref,
+          'from_project': from,
+          'project': _projectKeyOf(moved),
+          'from_status': t['status'],
+          'status_kept': true,
+        });
       case ('POST', ['copy']):
         final project = (body['project_ref'] as String?) ?? t['project_id'];
         final list = tasks.putIfAbsent(project! as String, () => []);
@@ -1459,6 +1491,25 @@ class FakeTix {
     return [for (final t in rows) _withProject(t)];
   }
 
+  /// Moves [t] into the project [to], by key or id, as tix does: the next
+  /// number there, the old reference kept resolving. Null when [to] is not a
+  /// project.
+  Map<String, Object?>? _moveProject(Map<String, Object?> t, String to) {
+    final project = projects
+        .where((p) => p['key'] == to || p['id'] == to)
+        .firstOrNull;
+    if (project == null) return null;
+    final key = project['key']! as String;
+    final from = _projectKeyOf(t);
+    tasks[from]?.remove(t);
+    final list = tasks.putIfAbsent(key, () => []);
+    final ref = '$key-${list.length + 50}';
+    final moved = {...t, 'ref': ref, 'project_id': project['id']};
+    list.add(moved);
+    movedRefs[t['ref']! as String] = ref;
+    return moved;
+  }
+
   Map<String, Object?> _bulk(Map<String, dynamic> body) {
     final action = body['action'] as String;
     final outcomes = <Map<String, Object?>>[];
@@ -1475,6 +1526,7 @@ class FakeTix {
         continue;
       }
       var copy = '';
+      var moved = '';
       switch (action) {
         case 'move':
           task!['status'] = body['to'];
@@ -1501,6 +1553,10 @@ class FakeTix {
           final list = tasks.putIfAbsent(to, () => []);
           copy = '$to-${list.length + 100}';
           list.add({...task!, 'id': 'id-$copy', 'ref': copy});
+        case 'move_project':
+          moved =
+              _moveProject(task!, body['project_ref'] as String)!['ref']!
+                  as String;
         case 'delete':
           tasks[_projectKeyOf(task!)]!.remove(task);
           trash[ref] = task;
@@ -1516,6 +1572,7 @@ class FakeTix {
         'ref': ref,
         'applied': true,
         'copy_ref': ?(copy.isEmpty ? null : copy),
+        'moved_ref': ?(moved.isEmpty ? null : moved),
       });
     }
     final applied = outcomes.where((o) => o['applied'] == true).length;

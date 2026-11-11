@@ -70,6 +70,7 @@ const bindings = <String, Binding>{
   'task.snooze': Binding(feature: 'tasks', action: 'snooze', wave: 1),
   'task.unsnooze': Binding(feature: 'tasks', action: 'wake', wave: 1),
   'task.copy': Binding(feature: 'tasks', action: 'copy', wave: 1),
+  'task.move': Binding(feature: 'tasks', action: 'move-project', wave: 1),
   'task.delete': Binding(feature: 'tasks', action: 'delete', wave: 1),
   'task.restore': Binding(feature: 'tasks', action: 'undo-delete', wave: 1),
   'task.purge': Binding(feature: 'maintenance', action: 'purge', wave: 1),

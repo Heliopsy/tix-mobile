@@ -74,7 +74,7 @@ final class TaskDetailControllerProvider
 }
 
 String _$taskDetailControllerHash() =>
-    r'e50ae27ef636e59ba509c69a1f5cd1d91912be03';
+    r'e5f813326c1988d112d885323012665edd118eaa';
 
 /// One task, as the task screen edits it.
 ///
@@ -143,6 +143,68 @@ abstract class _$TaskDetailController extends $AsyncNotifier<Task> {
               Object?
             >;
     return element.handleCreate(ref, () => build(_$args));
+  }
+}
+
+/// Whether the active connection can move a task to another project: true
+/// until the server answers a move as an unknown route, for the session.
+
+@ProviderFor(TaskMoveSupport)
+final taskMoveSupportProvider = TaskMoveSupportProvider._();
+
+/// Whether the active connection can move a task to another project: true
+/// until the server answers a move as an unknown route, for the session.
+final class TaskMoveSupportProvider
+    extends $NotifierProvider<TaskMoveSupport, bool> {
+  /// Whether the active connection can move a task to another project: true
+  /// until the server answers a move as an unknown route, for the session.
+  TaskMoveSupportProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'taskMoveSupportProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$taskMoveSupportHash();
+
+  @$internal
+  @override
+  TaskMoveSupport create() => TaskMoveSupport();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$taskMoveSupportHash() => r'88bc541105e67d839255cab2798a8357c2a0a6a6';
+
+/// Whether the active connection can move a task to another project: true
+/// until the server answers a move as an unknown route, for the session.
+
+abstract class _$TaskMoveSupport extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
   }
 }
 

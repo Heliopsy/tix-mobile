@@ -263,6 +263,9 @@ class TaskListing extends _$TaskListing {
       }
     }
     if (request.action == BulkAction.copy) ref.invalidateSelf();
+    if (request.action == BulkAction.moveProject) {
+      ref.read(tasksChangedProvider.notifier).touch();
+    }
     return BulkRun(request: request, before: before, result: result);
   }
 
