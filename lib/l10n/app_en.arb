@@ -5185,5 +5185,20 @@
   "keymapEmacsHelp": "Emacs reflexes outside text fields: C-n and C-p move, C-s filters, C-g cancels, M-x opens the palette.",
   "keymapOffHelp": "No single key runs anything. Chords held with Ctrl, Alt or ⌘ still work.",
   "settingsKeyBindings": "Active bindings",
-  "settingsKeyBindingsOff": "Keyboard shortcuts are off."
+  "settingsKeyBindingsOff": "Keyboard shortcuts are off.",
+  "taskHandoff": "Hand to an agent",
+  "taskHandoffNote": "The agent needs tix connected first: the tix CLI or the tix MCP tools, with a token of its own. Nothing here carries a token. Setting it up: docs/agents.md",
+  "taskHandoffPrompt": "Prompt",
+  "taskHandoffClient": "Start it from your client",
+  "taskHandoffRunHere": "Run this in the repository the work is in. It is quoted for sh, bash and zsh.",
+  "taskHandoffPasteInto": "{client} has no command that starts it with a prompt. Paste this into its chat; it uses the tix MCP tools:",
+  "@taskHandoffPasteInto": {
+    "placeholders": {
+      "client": {
+        "type": "String"
+      }
+    }
+  },
+  "taskHandoffMcp": "With the tix MCP tools",
+  "taskHandoffKeywords": "agent ai claude codex prompt mcp delegate"
 }

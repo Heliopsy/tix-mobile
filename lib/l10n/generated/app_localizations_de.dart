@@ -8139,4 +8139,33 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsKeyBindingsOff => 'Tastenkürzel sind aus.';
+
+  @override
+  String get taskHandoff => 'An einen Agenten übergeben';
+
+  @override
+  String get taskHandoffNote =>
+      'Der Agent muss zuerst mit tix verbunden sein: über die tix-CLI oder die tix-MCP-Werkzeuge, mit einem eigenen Token. Nichts hier enthält ein Token. Einrichtung: docs/agents.md';
+
+  @override
+  String get taskHandoffPrompt => 'Prompt';
+
+  @override
+  String get taskHandoffClient => 'Aus Ihrem Client starten';
+
+  @override
+  String get taskHandoffRunHere =>
+      'Führen Sie das im Repository aus, in dem die Arbeit liegt. Es ist für sh, bash und zsh gequotet.';
+
+  @override
+  String taskHandoffPasteInto(String client) {
+    return '$client hat keinen Befehl, der ihn mit einem Prompt startet. Fügen Sie das in seinen Chat ein; es nutzt die tix-MCP-Werkzeuge:';
+  }
+
+  @override
+  String get taskHandoffMcp => 'Mit den tix-MCP-Werkzeugen';
+
+  @override
+  String get taskHandoffKeywords =>
+      'agent ki übergeben delegieren ai claude codex prompt mcp';
 }

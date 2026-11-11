@@ -107,7 +107,8 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 - **Task detail** where every attribute the web edits is edited in place: title, Markdown description with a
   checklist you tick, workflow moves, priority, assignee, due date, tags, custom fields and the repeat rule;
   subtasks, dependencies, comments with `@` mentions, history and attached files; star, snooze, copy and delete
-  with Undo. How long a claim on the task lasts, and which level decides it. Keys on a keyboard, haptics on a
+  with Undo. How long a claim on the task lasts, and which level decides it. Hand a task to a coding agent with
+  the same copy-ready prompt and client commands the web gives. Keys on a keyboard, haptics on a
   phone, the properties beside the description on a wide screen.
 - **Task lists** with pull to refresh and keyset pagination, so a long list loads a page at a time and stays stable
   while tasks are being added. Sort, group by status or project, swipe to complete or snooze, star in place, and

@@ -13482,6 +13482,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Keyboard shortcuts are off.'**
   String get settingsKeyBindingsOff;
+
+  /// No description provided for @taskHandoff.
+  ///
+  /// In en, this message translates to:
+  /// **'Hand to an agent'**
+  String get taskHandoff;
+
+  /// No description provided for @taskHandoffNote.
+  ///
+  /// In en, this message translates to:
+  /// **'The agent needs tix connected first: the tix CLI or the tix MCP tools, with a token of its own. Nothing here carries a token. Setting it up: docs/agents.md'**
+  String get taskHandoffNote;
+
+  /// No description provided for @taskHandoffPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Prompt'**
+  String get taskHandoffPrompt;
+
+  /// No description provided for @taskHandoffClient.
+  ///
+  /// In en, this message translates to:
+  /// **'Start it from your client'**
+  String get taskHandoffClient;
+
+  /// No description provided for @taskHandoffRunHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Run this in the repository the work is in. It is quoted for sh, bash and zsh.'**
+  String get taskHandoffRunHere;
+
+  /// No description provided for @taskHandoffPasteInto.
+  ///
+  /// In en, this message translates to:
+  /// **'{client} has no command that starts it with a prompt. Paste this into its chat; it uses the tix MCP tools:'**
+  String taskHandoffPasteInto(String client);
+
+  /// No description provided for @taskHandoffMcp.
+  ///
+  /// In en, this message translates to:
+  /// **'With the tix MCP tools'**
+  String get taskHandoffMcp;
+
+  /// No description provided for @taskHandoffKeywords.
+  ///
+  /// In en, this message translates to:
+  /// **'agent ai claude codex prompt mcp delegate'**
+  String get taskHandoffKeywords;
 }
 
 class _AppLocalizationsDelegate

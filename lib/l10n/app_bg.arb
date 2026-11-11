@@ -2228,5 +2228,13 @@
   "keymapEmacsHelp": "Рефлекси от Emacs извън текстовите полета: C-n и C-p местят, C-s филтрира, C-g отказва, M-x отваря палитрата.",
   "keymapOffHelp": "Нито един самостоятелен клавиш не прави нищо. Комбинациите с Ctrl, Alt или ⌘ продължават да работят.",
   "settingsKeyBindings": "Активни клавиши",
-  "settingsKeyBindingsOff": "Клавишните комбинации са изключени."
+  "settingsKeyBindingsOff": "Клавишните комбинации са изключени.",
+  "taskHandoff": "Предай на агент",
+  "taskHandoffNote": "Агентът трябва първо да е свързан с tix: чрез tix CLI или MCP инструментите на tix, със собствен токен. Нищо тук не съдържа токен. Настройка: docs/agents.md",
+  "taskHandoffPrompt": "Подкана",
+  "taskHandoffClient": "Стартирай го от своя клиент",
+  "taskHandoffRunHere": "Изпълнете това в хранилището, в което е работата. Кавичките са за sh, bash и zsh.",
+  "taskHandoffPasteInto": "{client} няма команда, която да го стартира с подкана. Поставете това в чата му; то използва MCP инструментите на tix:",
+  "taskHandoffMcp": "С MCP инструментите на tix",
+  "taskHandoffKeywords": "агент ии подкана делегирай agent ai claude codex prompt mcp"
 }

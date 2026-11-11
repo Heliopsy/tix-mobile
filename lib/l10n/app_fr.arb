@@ -2228,5 +2228,13 @@
   "keymapEmacsHelp": "Réflexes Emacs hors des champs de texte : C-n et C-p déplacent, C-s filtre, C-g annule, M-x ouvre la palette.",
   "keymapOffHelp": "Aucune touche seule ne déclenche rien. Les combinaisons avec Ctrl, Alt ou ⌘ fonctionnent toujours.",
   "settingsKeyBindings": "Raccourcis actifs",
-  "settingsKeyBindingsOff": "Les raccourcis clavier sont désactivés."
+  "settingsKeyBindingsOff": "Les raccourcis clavier sont désactivés.",
+  "taskHandoff": "Confier à un agent",
+  "taskHandoffNote": "L’agent doit d’abord être connecté à tix : par la CLI tix ou les outils MCP de tix, avec son propre jeton. Rien ici ne contient de jeton. Mise en place : docs/agents.md",
+  "taskHandoffPrompt": "Prompt",
+  "taskHandoffClient": "Le lancer depuis votre client",
+  "taskHandoffRunHere": "Lancez ceci dans le dépôt où se trouve le travail. Les guillemets conviennent à sh, bash et zsh.",
+  "taskHandoffPasteInto": "{client} n’a pas de commande qui le lance avec un prompt. Collez ceci dans sa discussion ; il utilise les outils MCP de tix :",
+  "taskHandoffMcp": "Avec les outils MCP de tix",
+  "taskHandoffKeywords": "agent ia confier déléguer ai claude codex prompt mcp"
 }

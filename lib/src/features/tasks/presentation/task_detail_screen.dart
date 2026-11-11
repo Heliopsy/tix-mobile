@@ -18,6 +18,7 @@ import 'package:tix_mobile/src/features/tasks/application/task_detail.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/detail/actions.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/detail/activity.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/detail/editors.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/detail/handoff.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/detail/properties.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/detail/reclaim.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/detail/sections.dart';
@@ -340,6 +341,13 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
           label: l10n.taskDetailCopyRef,
           icon: Icons.tag,
         ),
+        if (!isDraftRef(task.ref))
+          TixSheetAction(
+            key: const Key('menu.handoff'),
+            value: 'handoff',
+            label: l10n.taskHandoff,
+            icon: Icons.smart_toy_outlined,
+          ),
         if (task.claimedByActorId.isNotEmpty)
           TixSheetAction(
             key: const Key('menu.reclaim'),
@@ -380,6 +388,8 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
         await _copy();
       case 'ref':
         await _copyRef();
+      case 'handoff':
+        await showHandoff(context, task);
       case 'reclaim':
         await _reclaim();
       case 'delete':
@@ -488,6 +498,15 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
         KeyActions.taskCopy,
         _copy,
       ),
+      if (!isDraftRef(task.ref))
+        TixCommand(
+          id: 'taskDetail.handoff',
+          label: l10n.taskHandoff,
+          group: group,
+          icon: Icons.smart_toy_outlined,
+          keywords: l10n.taskHandoffKeywords,
+          run: () => unawaited(showHandoff(context, task)),
+        ),
       cmd(
         'delete',
         l10n.taskDetailDelete,
@@ -667,26 +686,35 @@ class _Header extends ConsumerWidget {
       children: [
         Row(
           children: [
-            if (showRef) RefText(task.ref, size: TixText.sm),
-            if (_markOf(ref.watch(pendingWritesProvider(task.ref)), task.ref)
-                case final SyncMarkKind kind) ...[
-              const SizedBox(width: TixSpace.s2),
-              SyncMark(kind, key: const Key('task.syncMark')),
-            ],
-            if (task.recurrence.isNotEmpty) ...[
-              const SizedBox(width: TixSpace.s2),
-              Icon(
-                Icons.repeat,
-                size: 14,
-                color: t.muted,
-                semanticLabel: l10n.taskDetailRepeats,
+            Expanded(
+              child: Row(
+                children: [
+                  if (showRef)
+                    Flexible(child: RefText(task.ref, size: TixText.sm)),
+                  if (_markOf(
+                        ref.watch(pendingWritesProvider(task.ref)),
+                        task.ref,
+                      )
+                      case final SyncMarkKind kind) ...[
+                    const SizedBox(width: TixSpace.s2),
+                    SyncMark(kind, key: const Key('task.syncMark')),
+                  ],
+                  if (task.recurrence.isNotEmpty) ...[
+                    const SizedBox(width: TixSpace.s2),
+                    Icon(
+                      Icons.repeat,
+                      size: 14,
+                      color: t.muted,
+                      semanticLabel: l10n.taskDetailRepeats,
+                    ),
+                  ],
+                  if (snoozed && until != null) ...[
+                    const SizedBox(width: TixSpace.s2),
+                    Flexible(child: SnoozeMark(until: until)),
+                  ],
+                ],
               ),
-            ],
-            if (snoozed && until != null) ...[
-              const SizedBox(width: TixSpace.s2),
-              Flexible(child: SnoozeMark(until: until)),
-            ],
-            const Spacer(),
+            ),
             TixIconButton(
               key: const Key('task.star'),
               icon: task.starred
@@ -705,6 +733,13 @@ class _Header extends ConsumerWidget {
               tooltip: snoozed ? l10n.taskDetailWake : l10n.taskDetailSnooze,
               onPressed: () => ref.snooze(context, task),
             ),
+            if (!isDraftRef(task.ref))
+              TixIconButton(
+                key: const Key('task.handoff'),
+                icon: Icons.smart_toy_outlined,
+                tooltip: l10n.taskHandoff,
+                onPressed: () => showHandoff(context, task),
+              ),
             TixIconButton(
               key: const Key('task.menu'),
               icon: Icons.more_vert,

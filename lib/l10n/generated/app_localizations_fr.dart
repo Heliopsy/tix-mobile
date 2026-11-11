@@ -8129,4 +8129,33 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get settingsKeyBindingsOff =>
       'Les raccourcis clavier sont désactivés.';
+
+  @override
+  String get taskHandoff => 'Confier à un agent';
+
+  @override
+  String get taskHandoffNote =>
+      'L’agent doit d’abord être connecté à tix : par la CLI tix ou les outils MCP de tix, avec son propre jeton. Rien ici ne contient de jeton. Mise en place : docs/agents.md';
+
+  @override
+  String get taskHandoffPrompt => 'Prompt';
+
+  @override
+  String get taskHandoffClient => 'Le lancer depuis votre client';
+
+  @override
+  String get taskHandoffRunHere =>
+      'Lancez ceci dans le dépôt où se trouve le travail. Les guillemets conviennent à sh, bash et zsh.';
+
+  @override
+  String taskHandoffPasteInto(String client) {
+    return '$client n’a pas de commande qui le lance avec un prompt. Collez ceci dans sa discussion ; il utilise les outils MCP de tix :';
+  }
+
+  @override
+  String get taskHandoffMcp => 'Avec les outils MCP de tix';
+
+  @override
+  String get taskHandoffKeywords =>
+      'agent ia confier déléguer ai claude codex prompt mcp';
 }

@@ -8065,4 +8065,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsKeyBindingsOff => 'Keyboard shortcuts are off.';
+
+  @override
+  String get taskHandoff => 'Hand to an agent';
+
+  @override
+  String get taskHandoffNote =>
+      'The agent needs tix connected first: the tix CLI or the tix MCP tools, with a token of its own. Nothing here carries a token. Setting it up: docs/agents.md';
+
+  @override
+  String get taskHandoffPrompt => 'Prompt';
+
+  @override
+  String get taskHandoffClient => 'Start it from your client';
+
+  @override
+  String get taskHandoffRunHere =>
+      'Run this in the repository the work is in. It is quoted for sh, bash and zsh.';
+
+  @override
+  String taskHandoffPasteInto(String client) {
+    return '$client has no command that starts it with a prompt. Paste this into its chat; it uses the tix MCP tools:';
+  }
+
+  @override
+  String get taskHandoffMcp => 'With the tix MCP tools';
+
+  @override
+  String get taskHandoffKeywords => 'agent ai claude codex prompt mcp delegate';
 }
