@@ -52,7 +52,8 @@ class GlobalQuickAddSheet extends ConsumerStatefulWidget {
   /// The line to start from: a share, the clipboard, or nothing.
   final String initialText;
 
-  /// The project to start in, or null for the last one used.
+  /// The project to start in, kept even when the loaded list lacks it, or
+  /// null for the last one used.
   final String? initialProject;
 
   /// Opens the templates screen.
@@ -92,11 +93,13 @@ class _GlobalQuickAddSheetState extends ConsumerState<GlobalQuickAddSheet> {
   }
 
   String? _resolvedProject(List<Project> projects, RecentValues recent) {
+    final asked = _project;
+    if (asked != null && asked.isNotEmpty) return asked;
     final keys = {for (final p in projects) p.key};
-    for (final k in [_project, ...recent.projects]) {
-      if (k != null && (keys.isEmpty || keys.contains(k))) return k;
+    for (final k in recent.projects) {
+      if (keys.isEmpty || keys.contains(k)) return k;
     }
-    return projects.isEmpty ? _project : projects.first.key;
+    return projects.firstOrNull?.key;
   }
 
   String? get _currentProject => _resolvedProject(
@@ -508,10 +511,14 @@ class _ProjectPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final t = context.tix;
-    final current = projects.where((p) => p.key == selected).firstOrNull;
+    final key = selected;
+    final options = key == null || projects.any((p) => p.key == key)
+        ? projects
+        : [Project(key: key), ...projects];
+    final current = options.where((p) => p.key == key).firstOrNull;
     final ordered = starredFirst([
-      for (final k in recent) ...projects.where((p) => p.key == k),
-      ...projects.where((p) => !recent.contains(p.key)),
+      for (final k in recent) ...options.where((p) => p.key == k),
+      ...options.where((p) => !recent.contains(p.key)),
     ], (p) => starred.contains(p.key));
     return Row(
       children: [
@@ -524,7 +531,7 @@ class _ProjectPicker extends StatelessWidget {
           child: PopupMenuButton<String>(
             key: const Key('quickAdd.project'),
             tooltip: l10n.quickAddPickProject,
-            enabled: onPick != null && projects.isNotEmpty,
+            enabled: onPick != null && options.isNotEmpty,
             onSelected: onPick,
             itemBuilder: (_) => [
               for (final p in ordered)
@@ -543,15 +550,13 @@ class _ProjectPicker extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (selected == null)
+                  if (current == null)
                     Flexible(
                       child: Text(
                         l10n.quickAddPickProject,
                         overflow: TextOverflow.ellipsis,
                       ),
                     )
-                  else if (current == null)
-                    ProjectChip(projectKey: selected!)
                   else
                     Flexible(child: ProjectOption(project: current)),
                   Icon(Icons.expand_more, size: 18, color: t.muted),

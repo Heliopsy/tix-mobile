@@ -117,6 +117,28 @@ void main() {
     expect(find.text('route:/projects/web/tasks/web-1'), findsOneWidget);
   });
 
+  testWidgets('a project the loaded list lacks reloads the list and stays '
+      'chosen', (tester) async {
+    await pump(tester, size: phone);
+    expect(await container.read(quickProjectsProvider.future), hasLength(2));
+    server.projects.add({
+      'id': 'p3',
+      'key': 'mobile',
+      'name': 'Mobile app',
+      'color': 'green',
+      'workflow_id': 'wf1',
+    });
+    container.read(quickAddDraftsProvider.notifier).open(project: 'mobile');
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('quickAdd.project')),
+        matching: find.text('Mobile app'),
+      ),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('a share that started the app opens quick add', (tester) async {
     pending = {'text': 'https://example.com/bug', 'subject': 'Login fails'};
     await pump(tester, size: phone);

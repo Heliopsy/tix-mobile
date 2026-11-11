@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
@@ -16,6 +17,7 @@ import '../../../helpers/fake_tix.dart';
 void main() {
   late FakeTix server;
   late List<Task?> closed;
+  late ProviderContainer container;
 
   setUp(() {
     server = FakeTix()..previews.addAll(realRows);
@@ -29,7 +31,7 @@ void main() {
     String? project,
   }) async {
     final stores = signedInStores();
-    await pumpScreen(
+    container = await pumpScreen(
       tester,
       Scaffold(
         body: Builder(
@@ -131,6 +133,62 @@ void main() {
     });
     expect(closed.single!.ref, 'web-1');
     expect(line(), findsNothing);
+  });
+
+  Finder picked(String text) => find.descendant(
+    of: find.byKey(const Key('quickAdd.project')),
+    matching: find.text(text),
+  );
+
+  testWidgets('a project asked for stays chosen over the last one used, even '
+      'when the loaded list lacks it', (tester) async {
+    await pump(tester, project: 'mobile');
+    await container
+        .read(recentQuickValuesProvider.notifier)
+        .remember(project: 'web');
+    await tester.pumpAndSettle();
+    expect(picked('mobile'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('quickAdd.project')));
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('quickAdd.project.mobile')),
+        matching: find.byWidgetPredicate(
+          (w) => w is ProjectOption && w.selected,
+        ),
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(find.byKey(const Key('quickAdd.project.mobile')).last);
+    await tester.pumpAndSettle();
+    await type(tester, 'Ship it');
+    await tester.tap(find.byKey(const Key('quickAdd.submit')));
+    await tester.pumpAndSettle();
+    expect(
+      server.requestsTo('/api/v1/tasks').single.body['project_ref'],
+      'mobile',
+    );
+  });
+
+  testWidgets('with no project asked for it starts in the last one used, and '
+      'the picker changes it', (tester) async {
+    await pump(tester);
+    await container
+        .read(recentQuickValuesProvider.notifier)
+        .remember(project: 'web');
+    await tester.pumpAndSettle();
+    expect(picked('Web'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('quickAdd.project')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('quickAdd.project.infra')).last);
+    await tester.pumpAndSettle();
+    await type(tester, 'Ship it');
+    await tester.tap(find.byKey(const Key('quickAdd.submit')));
+    await tester.pumpAndSettle();
+    expect(
+      server.requestsTo('/api/v1/tasks').single.body['project_ref'],
+      'infra',
+    );
   });
 
   testWidgets('the picker offers starred projects first', (tester) async {

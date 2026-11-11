@@ -140,10 +140,17 @@ class _QuickActionsHostState extends ConsumerState<QuickActionsHost> {
     final draft = ref.read(quickAddDraftsProvider.notifier).take();
     if (draft == null) return;
     _sheetOpen = true;
+    final project = draft.project ?? _projectOnShow;
+    final known = ref.read(quickProjectsProvider).value;
+    if (project != null &&
+        known != null &&
+        !known.any((p) => p.key == project)) {
+      ref.invalidate(quickProjectsProvider);
+    }
     final task = await showGlobalQuickAdd(
       context,
       draft: draft,
-      project: _projectOnShow,
+      project: project,
       onManageTemplates: () => _router?.go(Routes.templates),
     );
     _sheetOpen = false;
