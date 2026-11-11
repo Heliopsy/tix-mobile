@@ -8204,4 +8204,22 @@ class AppLocalizationsDe extends AppLocalizations {
   String taskDetailReactionWho(String emoji) {
     return 'Reagiert mit $emoji';
   }
+
+  @override
+  String taskDetailReactionLabelMine(String emoji, String count) {
+    return 'Reaktion $emoji, $count, Sie haben reagiert';
+  }
+
+  @override
+  String get taskDetailReactionUnsupported =>
+      'Dieser Server unterstützt keine Reaktionen.';
+
+  @override
+  String get taskDetailReactionOther => 'Beliebiges Emoji';
+
+  @override
+  String get taskDetailReactionOtherHelp => 'Ein Emoji eingeben oder einfügen.';
+
+  @override
+  String get taskDetailReactionOneEmoji => 'Geben Sie genau ein Emoji ein.';
 }

@@ -191,7 +191,7 @@ final class TaskCommentsProvider
   }
 }
 
-String _$taskCommentsHash() => r'cd315b3edac85b019f4d174043978167b717151b';
+String _$taskCommentsHash() => r'b4be638ebe0e5420c633d881a16c7de14548c836';
 
 /// A task's comments, oldest first.
 
@@ -245,18 +245,18 @@ abstract class _$TaskComments extends $AsyncNotifier<List<Comment>> {
   }
 }
 
-/// Whether the server takes comment reactions: true until one answers 404,
-/// as a tix older than reactions does.
+/// Whether the server takes comment reactions: true until a reaction meets
+/// a missing route, as on a tix older than reactions.
 
 @ProviderFor(ReactionSupport)
 final reactionSupportProvider = ReactionSupportProvider._();
 
-/// Whether the server takes comment reactions: true until one answers 404,
-/// as a tix older than reactions does.
+/// Whether the server takes comment reactions: true until a reaction meets
+/// a missing route, as on a tix older than reactions.
 final class ReactionSupportProvider
     extends $NotifierProvider<ReactionSupport, bool> {
-  /// Whether the server takes comment reactions: true until one answers 404,
-  /// as a tix older than reactions does.
+  /// Whether the server takes comment reactions: true until a reaction meets
+  /// a missing route, as on a tix older than reactions.
   ReactionSupportProvider._()
     : super(
         from: null,
@@ -286,8 +286,8 @@ final class ReactionSupportProvider
 
 String _$reactionSupportHash() => r'be6ce02349fa72cdb2329379b32e2afa541895ab';
 
-/// Whether the server takes comment reactions: true until one answers 404,
-/// as a tix older than reactions does.
+/// Whether the server takes comment reactions: true until a reaction meets
+/// a missing route, as on a tix older than reactions.
 
 abstract class _$ReactionSupport extends $Notifier<bool> {
   bool build();

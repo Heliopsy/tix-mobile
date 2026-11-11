@@ -2245,5 +2245,10 @@
   "taskDetailReactionAdd": "Добави реакция",
   "taskDetailReactionPick": "Реагирай",
   "taskDetailReactionLabel": "Реакция {emoji}, {count}",
-  "taskDetailReactionWho": "Реагирали с {emoji}"
+  "taskDetailReactionWho": "Реагирали с {emoji}",
+  "taskDetailReactionLabelMine": "Реакция {emoji}, {count}, реагирали сте",
+  "taskDetailReactionUnsupported": "Този сървър не поддържа реакции.",
+  "taskDetailReactionOther": "Друго емоджи",
+  "taskDetailReactionOtherHelp": "Напишете или поставете едно емоджи.",
+  "taskDetailReactionOneEmoji": "Въведете само едно емоджи."
 }

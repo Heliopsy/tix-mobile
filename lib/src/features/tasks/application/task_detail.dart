@@ -253,11 +253,7 @@ class TaskComments extends _$TaskComments {
 
   /// Rewrites the comment [id] to [body].
   Future<void> edit(String id, String body) async {
-    final c = await _repo.editComment(id, body);
-    state = AsyncData([
-      for (final x in _now)
-        if (x.id == id) c else x,
-    ]);
+    _put(await _repo.editComment(id, body));
   }
 
   /// Deletes the comment [id].
@@ -269,32 +265,65 @@ class TaskComments extends _$TaskComments {
     ]);
   }
 
-  /// Adds the caller's [emoji] to the comment [id], or takes it off when
-  /// [mine] says it is already there. A server without reactions answers
-  /// 404, which switches [ReactionSupport] off before the error goes on.
-  Future<void> toggleReaction(
-    String id,
-    String emoji, {
-    required bool mine,
-  }) async {
-    final Comment c;
+  /// The reaction toggles still out, by comment and emoji.
+  final _reacting = <(String, String)>{};
+
+  /// The last toggle sent on each comment, which every later one waits for.
+  final _reactionTail = <String, Future<void>>{};
+
+  /// How many toggles each comment has had, so only the newest answer lands.
+  final _reactionSeq = <String, int>{};
+
+  /// Toggles [emoji] from the reader, the actor [me], on the comment [id]:
+  /// added unless they had reacted with it. Drawn at once in tix's order and
+  /// sent after any toggle still out on the comment. A refusal puts the chip
+  /// back and rethrows; a missing route is remembered as a server without
+  /// reactions, and any other 404 reloads the comments. Answers false, doing
+  /// nothing, while a toggle of the same emoji on the comment is still out.
+  Future<bool> toggleReaction(String id, String emoji, {String? me}) async {
+    final key = (id, emoji);
+    final shown = _now.where((c) => c.id == id).firstOrNull;
+    if (shown == null || _reacting.contains(key)) return false;
+    final add = !shown.reactedBy(emoji, me);
+    _reacting.add(key);
+    _put(shown.withReaction(emoji, add: add, me: me));
+    final seq = (_reactionSeq[id] ?? 0) + 1;
+    _reactionSeq[id] = seq;
+    final send = (_reactionTail[id] ?? Future<void>.value()).then(
+      (_) => _repo.react(id, emoji, add: add),
+    );
+    _reactionTail[id] = send.then<void>((_) {}, onError: (Object _) {});
     try {
-      c = mine ? await _repo.unreact(id, emoji) : await _repo.react(id, emoji);
-    } on TixException catch (e) {
-      if (e.kind == TixErrorKind.notFound) {
-        ref.read(reactionSupportProvider.notifier).unsupported();
+      final after = await send;
+      if (ref.mounted && _reactionSeq[id] == seq) _put(after);
+    } on Object catch (e) {
+      if (ref.mounted) {
+        final now = _now.where((c) => c.id == id).firstOrNull;
+        if (now != null) _put(now.withReaction(emoji, add: !add, me: me));
+        if (e is ReactionsUnsupported) {
+          ref.read(reactionSupportProvider.notifier).unsupported();
+        } else if (e is TixException && e.kind == TixErrorKind.notFound) {
+          ref.invalidateSelf();
+        }
       }
       rethrow;
+    } finally {
+      _reacting.remove(key);
     }
+    return true;
+  }
+
+  void _put(Comment c) {
+    if (!_now.any((x) => x.id == c.id)) return;
     state = AsyncData([
       for (final x in _now)
-        if (x.id == id) c else x,
+        if (x.id == c.id) c else x,
     ]);
   }
 }
 
-/// Whether the server takes comment reactions: true until one answers 404,
-/// as a tix older than reactions does.
+/// Whether the server takes comment reactions: true until a reaction meets
+/// a missing route, as on a tix older than reactions.
 @Riverpod(keepAlive: true)
 class ReactionSupport extends _$ReactionSupport {
   @override

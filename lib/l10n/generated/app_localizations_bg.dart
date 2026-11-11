@@ -8141,4 +8141,23 @@ class AppLocalizationsBg extends AppLocalizations {
   String taskDetailReactionWho(String emoji) {
     return 'Реагирали с $emoji';
   }
+
+  @override
+  String taskDetailReactionLabelMine(String emoji, String count) {
+    return 'Реакция $emoji, $count, реагирали сте';
+  }
+
+  @override
+  String get taskDetailReactionUnsupported =>
+      'Този сървър не поддържа реакции.';
+
+  @override
+  String get taskDetailReactionOther => 'Друго емоджи';
+
+  @override
+  String get taskDetailReactionOtherHelp =>
+      'Напишете или поставете едно емоджи.';
+
+  @override
+  String get taskDetailReactionOneEmoji => 'Въведете само едно емоджи.';
 }

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -290,7 +291,7 @@ class _CommentTile extends ConsumerWidget {
       l10n,
       ref.watch(taskCommentChannelsProvider(task.ref)).value?[comment.id],
     );
-    return Padding(
+    final tile = Padding(
       key: Key('comment.${comment.id}'),
       padding: const EdgeInsets.only(bottom: TixSpace.s3),
       child: Row(
@@ -367,14 +368,65 @@ class _CommentTile extends ConsumerWidget {
         ],
       ),
     );
+    if (!comment.sent || !ref.watch(reactionSupportProvider)) return tile;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      excludeFromSemantics: true,
+      onLongPress: () => _pickReaction(context, ref, task, comment),
+      child: tile,
+    );
   }
 }
 
 /// The emoji the reaction picker offers, in tix's order.
 const quickReactions = ['👍', '👎', '❤️', '🎉', '😄', '😕', '👀', '🚀'];
 
+/// The viewer's actor id, null until it is known.
+String? _me(WidgetRef ref) => ref.read(currentAccessProvider).value?.actor.id;
+
+/// Toggles the viewer's [emoji] on [comment] of [task], with a toast and a
+/// haptic when the server refuses.
+Future<void> _toggleReaction(
+  BuildContext context,
+  WidgetRef ref,
+  Task task,
+  Comment comment,
+  String emoji,
+) async {
+  final l10n = context.l10n;
+  String? refusal;
+  try {
+    await ref
+        .read(taskCommentsProvider(task.ref).notifier)
+        .toggleReaction(comment.id, emoji, me: _me(ref));
+  } on ReactionsUnsupported {
+    refusal = l10n.taskDetailReactionUnsupported;
+  } on Object catch (e) {
+    refusal = errorMessage(l10n, e);
+  }
+  if (refusal == null) return;
+  unawaited(TixHaptics.refuse());
+  if (context.mounted) showTixToast(context, refusal, tone: TixTone.danger);
+}
+
+/// Opens the reaction picker for [comment] of [task] and toggles what the
+/// viewer picks.
+Future<void> _pickReaction(
+  BuildContext context,
+  WidgetRef ref,
+  Task task,
+  Comment comment,
+) async {
+  final emoji = await showTixSheet<String>(
+    context,
+    builder: (context) => const _ReactionPicker(),
+  );
+  if (emoji == null || !context.mounted) return;
+  await _toggleReaction(context, ref, task, comment, emoji);
+}
+
 /// A comment's reactions as chips, and the button that adds one. The
-/// button stays away on a server that answered a reaction with 404.
+/// button stays away on a server without reaction routes.
 class CommentReactions extends ConsumerWidget {
   /// The reactions on [comment], a comment of [task].
   const CommentReactions({
@@ -388,48 +440,6 @@ class CommentReactions extends ConsumerWidget {
 
   /// The comment.
   final Comment comment;
-
-  Future<void> _toggle(
-    BuildContext context,
-    WidgetRef ref,
-    String emoji, {
-    required bool mine,
-  }) => tryAction(
-    context,
-    () => ref
-        .read(taskCommentsProvider(task.ref).notifier)
-        .toggleReaction(comment.id, emoji, mine: mine),
-  );
-
-  Future<void> _pick(BuildContext context, WidgetRef ref, String me) async {
-    final l10n = context.l10n;
-    final emoji = await showTixSheet<String>(
-      context,
-      builder: (context) => TixSheetBody(
-        title: l10n.taskDetailReactionPick,
-        child: Wrap(
-          spacing: TixSpace.s1,
-          runSpacing: TixSpace.s1,
-          children: [
-            for (final e in quickReactions)
-              SizedBox.square(
-                dimension: TixSize.target,
-                child: TextButton(
-                  key: Key('reaction.pick.$e'),
-                  onPressed: () => Navigator.of(context).pop(e),
-                  child: Text(e, style: const TextStyle(fontSize: TixText.lg)),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-    if (emoji == null || !context.mounted) return;
-    final mine = comment.reactions.any(
-      (r) => r.emoji == emoji && r.actorIds.contains(me),
-    );
-    await _toggle(context, ref, emoji, mine: mine);
-  }
 
   Future<void> _who(BuildContext context, Reaction reaction) =>
       showTixSheet<void>(
@@ -449,7 +459,7 @@ class CommentReactions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final supported = ref.watch(reactionSupportProvider);
-    final me = ref.watch(currentAccessProvider).value?.actor.id ?? '';
+    final me = ref.watch(currentAccessProvider).value?.actor.id;
     final reactions = comment.reactions;
     if (!comment.sent || (reactions.isEmpty && !supported)) {
       return const SizedBox.shrink();
@@ -464,15 +474,12 @@ class CommentReactions extends ConsumerWidget {
             key: Key('reaction.${comment.id}.${r.emoji}'),
             emoji: r.emoji,
             count: r.count,
-            mine: r.actorIds.contains(me),
-            semanticLabel: l10n.taskDetailReactionLabel(r.emoji, '${r.count}'),
+            mine: comment.reactedBy(r.emoji, me),
+            semanticLabel: comment.reactedBy(r.emoji, me)
+                ? l10n.taskDetailReactionLabelMine(r.emoji, '${r.count}')
+                : l10n.taskDetailReactionLabel(r.emoji, '${r.count}'),
             onTap: supported
-                ? () => _toggle(
-                    context,
-                    ref,
-                    r.emoji,
-                    mine: r.actorIds.contains(me),
-                  )
+                ? () => _toggleReaction(context, ref, task, comment, r.emoji)
                 : null,
             onLongPress: () => _who(context, r),
           ),
@@ -481,9 +488,89 @@ class CommentReactions extends ConsumerWidget {
             key: Key('reaction.add.${comment.id}'),
             icon: Icons.add_reaction_outlined,
             tooltip: l10n.taskDetailReactionAdd,
-            onPressed: () => _pick(context, ref, me),
+            onPressed: () => _pickReaction(context, ref, task, comment),
           ),
       ],
+    );
+  }
+}
+
+/// The quick emoji and a field for any one emoji; pops with the choice.
+class _ReactionPicker extends StatefulWidget {
+  const _ReactionPicker();
+
+  @override
+  State<_ReactionPicker> createState() => _ReactionPickerState();
+}
+
+class _ReactionPickerState extends State<_ReactionPicker> {
+  final _other = TextEditingController();
+  String? _error;
+
+  @override
+  void dispose() {
+    _other.dispose();
+    super.dispose();
+  }
+
+  void _send() {
+    final emoji = _other.text.trim();
+    if (emoji.characters.length != 1) {
+      setState(() => _error = context.l10n.taskDetailReactionOneEmoji);
+      return;
+    }
+    Navigator.of(context).pop(emoji);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return TixSheetBody(
+      title: l10n.taskDetailReactionPick,
+      actions: [
+        TixButton.primary(
+          key: const Key('reaction.other.send'),
+          label: l10n.taskDetailReactionPick,
+          onPressed: _send,
+        ),
+      ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Wrap(
+            spacing: TixSpace.s1,
+            runSpacing: TixSpace.s1,
+            children: [
+              for (final e in quickReactions)
+                SizedBox.square(
+                  dimension: TixSize.target,
+                  child: TextButton(
+                    key: Key('reaction.pick.$e'),
+                    onPressed: () => Navigator.of(context).pop(e),
+                    child: Text(
+                      e,
+                      style: const TextStyle(fontSize: TixText.lg),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: TixSpace.s4),
+          TixTextField(
+            fieldKey: const Key('reaction.other'),
+            label: l10n.taskDetailReactionOther,
+            help: l10n.taskDetailReactionOtherHelp,
+            error: _error,
+            controller: _other,
+            textInputAction: TextInputAction.send,
+            onChanged: (_) {
+              if (_error != null) setState(() => _error = null);
+            },
+            onSubmitted: (_) => _send(),
+          ),
+        ],
+      ),
     );
   }
 }

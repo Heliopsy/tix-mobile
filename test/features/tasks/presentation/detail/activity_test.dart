@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
@@ -302,6 +303,156 @@ void main() {
       await press(tester, find.byKey(const Key('reaction.pick.👍')));
       expect(find.byKey(const Key('reaction.add.c1')), findsNothing);
       expect(find.byKey(const Key('comment.c1')), findsOneWidget);
+    });
+
+    testWidgets('a server without reactions says so', (tester) async {
+      server
+        ..comments['infra-1'] = [comment('c1', 'Old server')]
+        ..reactionsMissing = true;
+      await pumpTask(tester, server);
+      await press(tester, find.byKey(const Key('reaction.add.c1')));
+      await press(tester, find.byKey(const Key('reaction.pick.👍')));
+      expect(toast('This server does not support reactions.'), findsOneWidget);
+    });
+
+    testWidgets('a 404 for a deleted comment shows the error and keeps '
+        'reactions', (tester) async {
+      server
+        ..comments['infra-1'] = [reacted('c1')]
+        ..failures['PUT /api/v1/comments/c1/reactions/%F0%9F%9A%80'] =
+            FakeResponse(404, envelope('not_found', 'comment "c1"'));
+      await pumpTask(tester, server);
+      final reads = server.requestsTo('/api/v1/tasks/infra-1/comments').length;
+      await press(tester, find.byKey(const Key('reaction.c1.🚀')));
+      expect(toast('Not found. comment "c1"'), findsOneWidget);
+      expect(find.byKey(const Key('reaction.add.c1')), findsOneWidget);
+      expect(
+        server.requestsTo('/api/v1/tasks/infra-1/comments').length,
+        greaterThan(reads),
+      );
+    });
+
+    testWidgets('a tap draws at once and a refusal puts it back', (
+      tester,
+    ) async {
+      server
+        ..comments['infra-1'] = [reacted('c1')]
+        ..failures['PUT /api/v1/comments/c1/reactions/%F0%9F%9A%80'] =
+            FakeResponse(403, envelope('forbidden', 'no'));
+      await pumpTask(tester, server);
+      final gate = server.gate = Completer<void>();
+      await tester.tap(find.byKey(const Key('reaction.c1.🚀')));
+      await tester.pump();
+      expect(chip(tester, 'reaction.c1.🚀').count, 2);
+      expect(chip(tester, 'reaction.c1.🚀').mine, isTrue);
+      gate.complete();
+      server.gate = null;
+      await tester.pumpAndSettle();
+      expect(chip(tester, 'reaction.c1.🚀').count, 1);
+      expect(chip(tester, 'reaction.c1.🚀').mine, isFalse);
+      expect(find.byType(SnackBar), findsOneWidget);
+    });
+
+    testWidgets('the picker takes any one emoji', (tester) async {
+      server.comments['infra-1'] = [comment('c1', 'Plain')];
+      await pumpTask(tester, server);
+      await press(tester, find.byKey(const Key('reaction.add.c1')));
+      await tester.enterText(find.byKey(const Key('reaction.other')), '🦀🦀');
+      await press(tester, find.byKey(const Key('reaction.other.send')));
+      expect(find.text('Enter a single emoji.'), findsOneWidget);
+      await tester.enterText(find.byKey(const Key('reaction.other')), '👩‍🚀');
+      await press(tester, find.byKey(const Key('reaction.other.send')));
+      expect(chip(tester, 'reaction.c1.👩‍🚀').mine, isTrue);
+      expect(reactionsOf('c1').single['emoji'], '👩‍🚀');
+    });
+
+    testWidgets("the server's reason shows when it refuses an emoji", (
+      tester,
+    ) async {
+      server
+        ..comments['infra-1'] = [comment('c1', 'Plain')]
+        ..failures['PUT /api/v1/comments/c1/reactions/x'] = FakeResponse(
+          400,
+          envelope('invalid', 'emoji "x" is not an emoji'),
+        );
+      await pumpTask(tester, server);
+      await press(tester, find.byKey(const Key('reaction.add.c1')));
+      await tester.enterText(find.byKey(const Key('reaction.other')), 'x');
+      await press(tester, find.byKey(const Key('reaction.other.send')));
+      expect(
+        find.descendant(
+          of: find.byType(SnackBar),
+          matching: find.textContaining('emoji "x" is not an emoji'),
+        ),
+        findsOneWidget,
+      );
+      expect(find.byKey(const Key('reaction.c1.x')), findsNothing);
+    });
+
+    testWidgets('a chip says when the reader reacted', (tester) async {
+      server.comments['infra-1'] = [reacted('c1')];
+      await pumpTask(tester, server);
+      expect(
+        tester.getSemantics(find.byKey(const Key('reaction.c1.👍'))).label,
+        '👍 reaction, 2, you reacted',
+      );
+      expect(
+        tester.getSemantics(find.byKey(const Key('reaction.c1.🚀'))).label,
+        '🚀 reaction, 1',
+      );
+    });
+
+    testWidgets('a chip takes a tap anywhere in its 48 dp target', (
+      tester,
+    ) async {
+      server.comments['infra-1'] = [reacted('c1')];
+      await pumpTask(tester, server);
+      final at = find.byKey(const Key('reaction.c1.🚀'));
+      final size = tester.getSize(at);
+      expect(size.height, greaterThanOrEqualTo(48));
+      expect(size.width, greaterThanOrEqualTo(48));
+      await tester.ensureVisible(at);
+      await tester.pumpAndSettle();
+      await tester.tapAt(tester.getTopLeft(at) + const Offset(2, 2));
+      await tester.pumpAndSettle();
+      expect(chip(tester, 'reaction.c1.🚀').mine, isTrue);
+      expect(reactionsOf('c1').last['count'], 2);
+    });
+
+    testWidgets('a long press on a comment opens the picker', (tester) async {
+      server.comments['infra-1'] = [comment('c1', 'Plain')];
+      await pumpTask(tester, server);
+      final tile = find.byKey(const Key('comment.c1'));
+      await tester.ensureVisible(tile);
+      await tester.pumpAndSettle();
+      await tester.longPress(
+        find.descendant(of: tile, matching: find.byType(TixAvatar)),
+      );
+      await tester.pumpAndSettle();
+      await press(tester, find.byKey(const Key('reaction.pick.🎉')));
+      expect(chip(tester, 'reaction.c1.🎉').mine, isTrue);
+    });
+
+    testWidgets('a long press on the text selects it rather than reacting', (
+      tester,
+    ) async {
+      server.comments['infra-1'] = [comment('c1', 'Plain')];
+      await pumpTask(tester, server);
+      final tile = find.byKey(const Key('comment.c1'));
+      await tester.ensureVisible(tile);
+      await tester.pumpAndSettle();
+      final text = find
+          .descendant(
+            of: find.descendant(of: tile, matching: find.byType(TixMarkdown)),
+            matching: find.byType(EditableText),
+          )
+          .first;
+      await tester.longPressAt(tester.getTopLeft(text) + const Offset(4, 4));
+      await tester.pumpAndSettle();
+      // The harness lacks the Material localizations the selection toolbar
+      // asks for; the toolbar opening is what proves selection won.
+      tester.takeException();
+      expect(find.byKey(const Key('reaction.other')), findsNothing);
     });
 
     testWidgets('a comment still in the outbox offers none', (tester) async {

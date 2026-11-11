@@ -149,6 +149,36 @@ extension CommentEdits on Comment {
   bool get sent => taskId.isNotEmpty;
 }
 
+/// A comment's emoji reactions, read for one reader.
+extension CommentReactions on Comment {
+  /// Whether the actor [me] reacted with [emoji].
+  bool reactedBy(String emoji, String? me) =>
+      me != null &&
+      reactions.any((r) => r.emoji == emoji && r.actorIds.contains(me));
+
+  /// This comment with [me]'s [emoji] added, or removed when [add] is false,
+  /// the way tix would answer: a new emoji goes last, and one nobody is left
+  /// reacting with goes.
+  Comment withReaction(String emoji, {required bool add, String? me}) {
+    final at = reactions.indexWhere((r) => r.emoji == emoji);
+    final was = at < 0 ? Reaction(emoji: emoji) : reactions[at];
+    final ids = [
+      for (final id in was.actorIds)
+        if (id != me) id,
+      if (add && me != null) me,
+    ];
+    final count = me == null ? was.count + (add ? 1 : -1) : ids.length;
+    final now = was.copyWith(count: count, actorIds: ids);
+    return copyWith(
+      reactions: [
+        for (final r in reactions)
+          if (r.emoji != emoji) r else if (count > 0) now,
+        if (at < 0 && count > 0) now,
+      ],
+    );
+  }
+}
+
 /// The name to show for a custom field.
 extension FieldDefNames on FieldDef {
   /// The label, or the key when the field has none.

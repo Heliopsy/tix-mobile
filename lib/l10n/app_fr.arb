@@ -2245,5 +2245,10 @@
   "taskDetailReactionAdd": "Ajouter une réaction",
   "taskDetailReactionPick": "Réagir",
   "taskDetailReactionLabel": "Réaction {emoji}, {count}",
-  "taskDetailReactionWho": "Réactions {emoji}"
+  "taskDetailReactionWho": "Réactions {emoji}",
+  "taskDetailReactionLabelMine": "Réaction {emoji}, {count}, vous avez réagi",
+  "taskDetailReactionUnsupported": "Ce serveur ne prend pas en charge les réactions.",
+  "taskDetailReactionOther": "N’importe quel emoji",
+  "taskDetailReactionOtherHelp": "Saisissez ou collez un emoji.",
+  "taskDetailReactionOneEmoji": "Saisissez un seul emoji."
 }
