@@ -51,7 +51,7 @@ then the links; the destination open from More SHALL mark More as selected. The 
 #### Scenario: The app's destinations
 
 - **WHEN** a signed-in person opens the app on a 400 pixel wide window
-- **THEN** the bar shows Projects, Tasks, My work, Inbox and More, and More lists Watch, Manage, Settings, then About
+- **THEN** the bar shows Projects, Tasks, My work, Inbox and More, and More lists Activity, Manage, Settings, then About
 
 ### Requirement: The rail can be resized
 
