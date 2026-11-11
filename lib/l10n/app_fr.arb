@@ -311,6 +311,7 @@
   "boardCollapse": "Réduire",
   "boardColumnEmpty": "Rien ici",
   "boardCompleted": "{ref} terminée",
+  "tasksHeldByAgent": "{count, plural, =1{1 tenue par un agent} other{{count} tenues par un agent}}",
   "boardCount": "{count, plural, =1{1{more} tâche} other{{count}{more} tâches}}",
   "boardExpand": "Développer",
   "boardGroupMenu": "Disposer {group}",

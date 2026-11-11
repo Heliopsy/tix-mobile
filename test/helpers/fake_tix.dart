@@ -63,6 +63,13 @@ Map<String, Object?> envelope(String code, String message) => {
   'error': {'code': code, 'message': message},
 };
 
+/// The fields of a task an agent `bot` has claimed until [until].
+Map<String, Object?> heldJson(DateTime until) => {
+  'claimed_by_actor_id': 'bot',
+  'claimed_at': until.subtract(const Duration(hours: 1)).toIso8601String(),
+  'lease_expires_at': until.toIso8601String(),
+};
+
 Map<String, Object?> taskJson(
   String ref, {
   String title = 'A task',

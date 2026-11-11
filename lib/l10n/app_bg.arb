@@ -311,6 +311,7 @@
   "boardCollapse": "Свий",
   "boardColumnEmpty": "Няма нищо",
   "boardCompleted": "{ref} е завършена",
+  "tasksHeldByAgent": "заети от агент: {count}",
   "boardCount": "{count, plural, =1{1{more} задача} other{{count}{more} задачи}}",
   "boardExpand": "Разгъни",
   "boardGroupMenu": "Подреди {group}",

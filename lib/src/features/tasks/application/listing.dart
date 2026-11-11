@@ -31,6 +31,17 @@ part 'listing.g.dart';
 /// draws at once.
 const listingCacheFor = Duration(minutes: 5);
 
+/// How many of [tasks] an agent holds at [now]: claimed, with a lease that
+/// has not run out. tix's web summary counts its page the same way, so a
+/// claim with no lease is not counted.
+int heldByAgent(Iterable<Task> tasks, DateTime now) => tasks
+    .where(
+      (t) =>
+          t.claimedByActorId.isNotEmpty &&
+          (t.leaseExpiresAt?.isAfter(now) ?? false),
+    )
+    .length;
+
 void _keepFor(Ref ref, Duration duration) {
   final link = ref.keepAlive();
   Timer? timer;

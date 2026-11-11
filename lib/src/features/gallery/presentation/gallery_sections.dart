@@ -310,6 +310,12 @@ class GalleryTasks extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        TixPageHeader(
+          key: const Key('gallery.tasks.header'),
+          title: 'Infra',
+          subtitle: l10n.boardCount(galleryTasks.length, ''),
+          subtitleNote: l10n.tasksHeldByAgent(2),
+        ),
         DecoratedBox(
           decoration: BoxDecoration(
             color: t.surface,

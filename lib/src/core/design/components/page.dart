@@ -21,6 +21,7 @@ class TixPage extends StatelessWidget {
     required this.title,
     required this.body,
     this.subtitle,
+    this.subtitleNote,
     this.primaryAction,
     this.actions = const [],
     this.titleWidget,
@@ -36,6 +37,10 @@ class TixPage extends StatelessWidget {
 
   /// What the page shows, in a line: a count, a scope.
   final String? subtitle;
+
+  /// A highlight after [subtitle], in the accent, such as how many tasks an
+  /// agent holds; drawn only with a [subtitle].
+  final String? subtitleNote;
 
   /// The create action: a primary button with [Icons.add] and a label.
   final TixAction? primaryAction;
@@ -77,8 +82,8 @@ class TixPage extends StatelessWidget {
                       TixSpace.s4,
                       TixSpace.s2,
                     ),
-                    child: Text(
-                      subtitle!,
+                    child: Text.rich(
+                      _lede(context, subtitle!, subtitleNote),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.bodySmall,
@@ -108,6 +113,7 @@ class TixPage extends StatelessWidget {
               title: title,
               titleWidget: titleWidget,
               subtitle: subtitle,
+              subtitleNote: subtitleNote,
               actions: [
                 ...actions,
                 if (action != null)
@@ -136,6 +142,7 @@ class TixPageHeader extends StatelessWidget {
     required this.title,
     this.titleWidget,
     this.subtitle,
+    this.subtitleNote,
     this.actions = const [],
     super.key,
   });
@@ -148,6 +155,9 @@ class TixPageHeader extends StatelessWidget {
 
   /// The line under it.
   final String? subtitle;
+
+  /// A highlight after [subtitle], in the accent.
+  final String? subtitleNote;
 
   /// Tools, primary action last.
   final List<Widget> actions;
@@ -191,8 +201,8 @@ class TixPageHeader extends StatelessWidget {
                   ),
                   if (subtitle != null) ...[
                     const SizedBox(height: TixSpace.headSub),
-                    Text(
-                      subtitle!,
+                    Text.rich(
+                      _lede(context, subtitle!, subtitleNote),
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: context.tix.muted,
                       ),
@@ -216,3 +226,18 @@ class TixPageHeader extends StatelessWidget {
     );
   }
 }
+
+/// [subtitle], then [note] after a middle dot in the accent, as tix's lede
+/// marks the tasks an agent holds.
+TextSpan _lede(BuildContext context, String subtitle, String? note) => TextSpan(
+  text: subtitle,
+  children: [
+    if (note != null) ...[
+      const TextSpan(text: ' · '),
+      TextSpan(
+        text: note,
+        style: TextStyle(color: context.tix.accent),
+      ),
+    ],
+  ],
+);

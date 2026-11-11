@@ -413,6 +413,77 @@ void main() {
     expect(c.read(taskListingProvider(q)).value!.items.first.title, 'Renamed');
   });
 
+  test('a claim event reloads the listing and its held count', () async {
+    final sockets = FakeEventSockets();
+    final stores = signedInStores();
+    final c = makeContainer(
+      fakeOverrides(
+        server,
+        settings: stores.settings,
+        secrets: stores.secrets,
+        events: sockets.connect,
+      ),
+    );
+    await c.read(sessionControllerProvider.future);
+    const q = TaskQuery();
+    final sub = c.listen(taskListingProvider(q), (_, _) {});
+    addTearDown(sub.close);
+    await c.read(taskListingProvider(q).future);
+    expect(
+      heldByAgent(c.read(taskListingProvider(q)).value!.items, fixedNow),
+      0,
+    );
+    await Future<void>.delayed(Duration.zero);
+    sockets.last.ack();
+    await Future<void>.delayed(Duration.zero);
+    server.tasks['infra']!.first.addAll(
+      heldJson(fixedNow.add(const Duration(minutes: 30))),
+    );
+    sockets.last.event(1, 'task.claimed');
+    await Future<void>.delayed(const Duration(milliseconds: 400));
+    await c.read(taskListingProvider(q).future);
+    expect(
+      heldByAgent(c.read(taskListingProvider(q)).value!.items, fixedNow),
+      1,
+    );
+  });
+
+  group('heldByAgent', () {
+    Task task(String ref, [Map<String, Object?> extra = const {}]) =>
+        Task.fromJson({...taskJson(ref), ...extra});
+
+    test('counts claims whose lease has not run out', () {
+      final soon = fixedNow.add(const Duration(minutes: 5));
+      expect(
+        heldByAgent([
+          task('infra-1', heldJson(soon)),
+          task('infra-2', heldJson(soon)),
+          task('infra-3'),
+        ], fixedNow),
+        2,
+      );
+    });
+
+    test('a lapsed lease and a claim without one are not held', () {
+      expect(
+        heldByAgent([
+          task(
+            'infra-1',
+            heldJson(fixedNow.subtract(const Duration(minutes: 1))),
+          ),
+          task('infra-2', heldJson(fixedNow)),
+          task('infra-3', {'claimed_by_actor_id': 'bot'}),
+          task('infra-4', {
+            'lease_expires_at': fixedNow
+                .add(const Duration(hours: 1))
+                .toIso8601String(),
+          }),
+        ], fixedNow),
+        0,
+      );
+    });
+  });
+
   test('a cached first page draws before the server answers', () async {
     final cache = MemoryCacheStore();
     Future<ProviderContainer> open() async {

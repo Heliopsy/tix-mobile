@@ -48,6 +48,36 @@ void main() {
     expect(added, 1);
   });
 
+  for (final MapEntry(key: width, value: size) in widths.entries) {
+    testWidgets('$width: a subtitle note follows the line in the accent', (
+      tester,
+    ) async {
+      await pumpComponent(
+        tester,
+        const TixPage(
+          title: 'Infra',
+          subtitle: '12 tasks',
+          subtitleNote: '3 held by an agent',
+          body: SizedBox.expand(),
+        ),
+        size: size,
+      );
+      final text = tester.widget<Text>(
+        find.byWidgetPredicate(
+          (w) =>
+              w is Text &&
+              w.textSpan?.toPlainText() == '12 tasks · 3 held by an agent',
+        ),
+      );
+      final note = (text.textSpan! as TextSpan).children!.last as TextSpan;
+      expect(note.text, '3 held by an agent');
+      expect(
+        note.style?.color,
+        tester.element(find.byType(TixPage)).tix.accent,
+      );
+    });
+  }
+
   for (final locale in textLocales) {
     for (final MapEntry(key: width, value: size) in widths.entries) {
       testWidgets('$width, $locale: the header survives twice the text size', (

@@ -596,6 +596,15 @@
       }
     }
   },
+  "tasksHeldByAgent": "{count} held by an agent",
+  "@tasksHeldByAgent": {
+    "description": "After the task count under the task screen's title: how many loaded tasks an agent holds right now, as tix's web summary says it.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "boardCount": "{count, plural, =1{1{more} task} other{{count}{more} tasks}}",
   "@boardCount": {
     "placeholders": {
