@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.2](https://github.com/Heliopsy/tix-mobile/compare/v0.13.1...v0.13.2) (2026-11-11)
+
+
+### Bug Fixes
+
+* **quick:** open quick add on the project on show ([88e2206](https://github.com/Heliopsy/tix-mobile/commit/88e22064fec4a96db6756f137cb154cc93b649a3))
+
 ## [0.13.1](https://github.com/Heliopsy/tix-mobile/compare/v0.13.0...v0.13.1) (2026-11-11)
 
 
