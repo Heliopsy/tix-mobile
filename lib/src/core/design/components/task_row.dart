@@ -154,7 +154,9 @@ class _TaskRowState extends State<TaskRow> with SingleTickerProviderStateMixin {
     final done = _done(widget);
     if (done == _done(old)) return;
     _motion.duration = TixMotion.of(context, TixMotion.settle);
-    if (old.task.id != widget.task.id || _motion.duration == Duration.zero) {
+    if (old.task.id != widget.task.id ||
+        identical(old.task, widget.task) ||
+        _motion.duration == Duration.zero) {
       _motion.value = done ? 1 : 0;
     } else if (done) {
       _motion.forward(from: 0);

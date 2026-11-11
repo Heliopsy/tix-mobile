@@ -150,7 +150,6 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
   void _openTask(Task task) {
     final scope = _scope;
     final context = this.context;
-    setState(() => _focused = task.ref);
     if (scope is ProjectScope) {
       context.go(Routes.task(scope.key, task.ref));
       return;
@@ -179,6 +178,12 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
         ? (by > 0 ? 0 : order.length - 1)
         : (at + by).clamp(0, order.length - 1);
     setState(() => _focused = order[next].ref);
+  }
+
+  /// The cursor is the keyboard's: a pointer on the list takes it away, so a
+  /// task opened or ticked with a tap or a click is not left marked.
+  void _dropCursor(PointerDownEvent _) {
+    if (_focused != null) setState(() => _focused = null);
   }
 
   Task? _focusedTask(List<Task> order) {
@@ -279,7 +284,7 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
           paged: paged,
           entries: entries,
           onOpen: _openTask,
-          selectedRef: selectedRef,
+          selectedRef: context.isTwoPane ? selectedRef : null,
           focusedRef: _focused,
           empty: _Empty(scope: scope, filtered: state.expression.isNotEmpty),
         ),
@@ -291,7 +296,9 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
       children: [
         TaskFilterPanel(scope: scope, focusNode: _filterFocus),
         if (layout is BoardRefused) BoardRefusedNotice(layout: layout),
-        Expanded(child: content),
+        Expanded(
+          child: Listener(onPointerDown: _dropCursor, child: content),
+        ),
         if (selection.active) BulkBar(query: query),
       ],
     );

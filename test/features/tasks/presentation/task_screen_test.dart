@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
@@ -308,6 +309,19 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.pumpAndSettle();
     expect(find.text('route:/projects/infra/tasks/infra-2'), findsOneWidget);
+  });
+
+  testWidgets('a task tapped open is not left marked on the way back', (
+    tester,
+  ) async {
+    await pump(tester, const TixShortcuts(child: TasksScreen()));
+    await tester.tap(find.text('Rotate keys'));
+    await tester.pumpAndSettle();
+    expect(find.text('route:/projects/infra/tasks/infra-2'), findsOneWidget);
+    GoRouter.of(tester.element(find.textContaining('route:'))).pop();
+    await tester.pumpAndSettle();
+    expect(tester.widget<TaskRow>(row('Rotate keys')).focused, isFalse);
+    expect(tester.widget<TaskRow>(row('Rotate keys')).selected, isFalse);
   });
 
   group('quick edits on a row', () {
