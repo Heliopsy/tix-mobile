@@ -43,6 +43,17 @@ void main() {
     expect(inRow(find.text('+3')), findsOneWidget);
   });
 
+  testWidgets('a task blocked by a dependency is marked in danger red', (
+    tester,
+  ) async {
+    await pumpComponent(
+      tester,
+      TaskRow(task: task.copyWith(blocked: true), onTap: () {}),
+    );
+    final icon = tester.widget<Icon>(inRow(find.byIcon(Icons.block)));
+    expect(icon.color, TixTokens.light.danger);
+  });
+
   testWidgets('a narrow row leaves the tags off', (tester) async {
     await pumpComponent(
       tester,

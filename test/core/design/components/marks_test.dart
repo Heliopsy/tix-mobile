@@ -26,7 +26,7 @@ void main() {
     );
     const t = TixTokens.light;
     expect(colourOf(tester, 'doing'), t.brand);
-    expect(colourOf(tester, 'blocked'), t.warn);
+    expect(colourOf(tester, 'blocked'), t.danger);
     expect(colourOf(tester, 'review'), t.projects[ProjectColour.violet]);
   });
 

@@ -33,8 +33,8 @@ with `context.tix`. Never write a colour literal in a screen.
 | `accentSoft` | `--accent-soft` | `#e6f4f1` | `#123b36` | What the accent sits on |
 | `onAccent` | `--on-accent` | `#ffffff` | `#08231a` | Text on the accent |
 | `brand` | | `#0f766e` | `#2dd4bf` | tix's teal, kept by the in-progress status whatever the tenant picks |
-| `danger`, `dangerSoft` | `--danger` | `#b42318` | `#f87171` | Destructive actions, highest priorities, errors |
-| `warn`, `warnSoft` | `--warn` | `#b54708` | `#fbbf24` | Blocked, due soon |
+| `danger`, `dangerSoft` | `--danger` | `#b42318` | `#f87171` | Destructive actions, blocked, highest priorities, errors |
+| `warn`, `warnSoft` | `--warn` | `#b54708` | `#fbbf24` | Warnings, due soon |
 | `ok`, `okSoft`, `onOk` | `--ok` | `#067647` | `#34d399` | Done, success |
 | `scrim` | `--scrim` | 45% `#101828` | same | Behind a modal |
 | `projects[...]` | `--proj-*` | eight shades | eight shades | Project colours: slate, red, amber, green, teal, blue, violet, pink |
@@ -68,7 +68,7 @@ Status colours key off the category, never the state's name and never the accent
 | --- | --- |
 | todo, unknown | `muted` |
 | in progress | `brand` (tix's teal, not the tenant accent) |
-| blocked | `warn` |
+| blocked | `danger` |
 | waiting | `projects[violet]` |
 | done | `ok` |
 | cancelled | `lineStrong`, text in `muted` |
