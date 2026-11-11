@@ -3562,6 +3562,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get copiedToClipboard => 'Kopiert.';
 
   @override
+  String get copyJson => 'JSON kopieren';
+
+  @override
+  String get copyJsonDone => 'JSON kopiert.';
+
+  @override
   String get secretShare => 'Teilen';
 
   @override

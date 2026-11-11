@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'dart:async';
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -38,6 +41,23 @@ void main() {
       ),
     );
   }
+
+  List<String> clipboard(WidgetTester tester) {
+    final copied = <String>[];
+    final messenger = tester.binding.defaultBinaryMessenger
+      ..setMockMethodCallHandler(SystemChannels.platform, (call) async {
+        if (call.method == 'Clipboard.setData') {
+          copied.add((call.arguments as Map)['text'] as String);
+        }
+        return null;
+      });
+    addTearDown(
+      () => messenger.setMockMethodCallHandler(SystemChannels.platform, null),
+    );
+    return copied;
+  }
+
+  const pretty = JsonEncoder.withIndent('  ');
 
   void seed() => fake.audit.addAll([
     auditJson(
@@ -105,8 +125,46 @@ void main() {
           findsOneWidget,
         );
       });
+
+      testWidgets('Copy JSON copies the entry as tix sent it', (tester) async {
+        final copied = clipboard(tester);
+        fake.audit.add({...auditJson(2, via: 'ssh'), 'novel': 1});
+        await pump(tester, size: size);
+        await tester.tap(find.byKey(const Key('audit.2')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('audit.copyJson')));
+        await tester.pumpAndSettle();
+        expect(copied, [
+          pretty.convert({...auditJson(2, via: 'ssh'), 'novel': 1}),
+        ]);
+        expect(copied.single, contains('\n  "seq": 2,'));
+        expect(
+          find.descendant(
+            of: find.byType(SnackBar),
+            matching: find.text('JSON copied.'),
+          ),
+          findsOneWidget,
+        );
+      });
     });
   }
+
+  testWidgets('a long press on a row copies its JSON', (tester) async {
+    final copied = clipboard(tester);
+    seed();
+    await pump(tester);
+    await tester.longPress(find.byKey(const Key('audit.2')));
+    await tester.pumpAndSettle();
+    expect(copied, [pretty.convert(auditJson(2, via: 'ssh', source: 'tui'))]);
+    expect(find.byKey(const Key('audit.detail.2')), findsNothing);
+    expect(
+      find.descendant(
+        of: find.byType(SnackBar),
+        matching: find.text('JSON copied.'),
+      ),
+      findsOneWidget,
+    );
+  });
 
   testWidgets('channel chips narrow the log', (tester) async {
     seed();

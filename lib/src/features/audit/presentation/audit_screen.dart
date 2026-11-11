@@ -10,8 +10,10 @@ import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
+import 'package:tix_mobile/src/core/widgets/copy_json.dart';
 import 'package:tix_mobile/src/core/widgets/paged_list_view.dart';
 import 'package:tix_mobile/src/data/models/integrations.dart';
+import 'package:tix_mobile/src/data/models/wire.dart';
 import 'package:tix_mobile/src/features/audit/application/audit.dart';
 
 String _when(BuildContext context, DateTime at) => context.times.stamp(at);
@@ -56,6 +58,11 @@ class AuditScreen extends ConsumerWidget {
                   builder: (context) => TixSheetBody(
                     title: entry.action,
                     actions: [
+                      if (wireJson(entry) case final json?)
+                        CopyJsonButton(
+                          key: const Key('audit.copyJson'),
+                          json: json,
+                        ),
                       TixButton.quiet(
                         label: l10n.close,
                         onPressed: () => Navigator.of(context).pop(),
@@ -105,6 +112,17 @@ class AuditScreen extends ConsumerWidget {
                             entry.action,
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
+                          if (wireJson(entry) case final json?) ...[
+                            const SizedBox(height: TixSpace.s2),
+                            Align(
+                              alignment: AlignmentDirectional.centerStart,
+                              child: CopyJsonButton(
+                                key: const Key('audit.copyJson'),
+                                json: json,
+                                size: TixButtonSize.small,
+                              ),
+                            ),
+                          ],
                           const SizedBox(height: TixSpace.s3),
                           AuditEntryDetail(entry: entry),
                         ],
@@ -389,7 +407,7 @@ class AuditRow extends StatelessWidget {
   /// The entry.
   final AuditEntry entry;
 
-  /// Opens its detail.
+  /// Opens its detail. A long press copies its JSON.
   final VoidCallback onTap;
 
   /// Whether its detail is shown beside the list.
@@ -399,6 +417,7 @@ class AuditRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final at = entry.occurredAt;
     final via = entry.via;
+    final json = wireJson(entry);
     return ListTile(
       key: Key('audit.${entry.seq}'),
       selected: selected,
@@ -417,6 +436,9 @@ class AuditRow extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       onTap: onTap,
+      onLongPress: json == null
+          ? null
+          : () => unawaited(copyJson(context, json)),
     );
   }
 }

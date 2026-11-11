@@ -992,6 +992,8 @@
   "aboutConnectionDetailsHelp": "Как обновяванията на живо достигат този контекст и какво се провали последно",
   "copyToClipboard": "Копирай",
   "copiedToClipboard": "Копирано.",
+  "copyJson": "Копирай JSON",
+  "copyJsonDone": "JSON е копиран.",
   "secretShare": "Сподели",
   "secretDone": "Запазих го",
   "roleViewer": "наблюдател",

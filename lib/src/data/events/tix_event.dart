@@ -3,6 +3,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tix_mobile/src/data/api/gen/models.gen.dart';
 import 'package:tix_mobile/src/data/api/json.dart';
+import 'package:tix_mobile/src/data/models/wire.dart';
 
 part 'tix_event.freezed.dart';
 part 'tix_event.g.dart';
@@ -29,9 +30,9 @@ abstract class TixEvent with _$TixEvent {
     @TixDateTime() DateTime? occurredAt,
   }) = _TixEvent;
 
-  /// Reads an event object.
+  /// Reads an event object, keeping it as what tix sent ([wireJson]).
   factory TixEvent.fromJson(Map<String, dynamic> json) =>
-      _$TixEventFromJson(json);
+      keepWire(_$TixEventFromJson(json), json);
 }
 
 /// tix's closed vocabulary of event types. A subscription pattern outside it

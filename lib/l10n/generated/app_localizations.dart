@@ -6055,6 +6055,18 @@ abstract class AppLocalizations {
   /// **'Copied.'**
   String get copiedToClipboard;
 
+  /// Button that copies a record as tix sent it, as pretty-printed JSON
+  ///
+  /// In en, this message translates to:
+  /// **'Copy JSON'**
+  String get copyJson;
+
+  /// Toast after a record's JSON was copied
+  ///
+  /// In en, this message translates to:
+  /// **'JSON copied.'**
+  String get copyJsonDone;
+
   /// No description provided for @secretShare.
   ///
   /// In en, this message translates to:

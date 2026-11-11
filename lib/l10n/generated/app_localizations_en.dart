@@ -3535,6 +3535,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get copiedToClipboard => 'Copied.';
 
   @override
+  String get copyJson => 'Copy JSON';
+
+  @override
+  String get copyJsonDone => 'JSON copied.';
+
+  @override
   String get secretShare => 'Share';
 
   @override

@@ -2,9 +2,11 @@
 
 import 'package:meta/meta.dart';
 import 'package:tix_mobile/src/core/config/config.dart';
+import 'package:tix_mobile/src/data/api/answer.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/models/integrations.dart';
 import 'package:tix_mobile/src/data/models/page.dart';
+import 'package:tix_mobile/src/data/models/wire.dart';
 
 export 'package:tix_mobile/src/data/models/integrations.dart';
 
@@ -134,9 +136,12 @@ class AuditRepository {
 
   static List<String>? _one(String v) => v.trim().isEmpty ? null : [v.trim()];
 
-  /// One page of entries matching [query], newest first (`audit.list`).
-  Future<Page<AuditEntry>> list(AuditQuery query, {String? cursor}) =>
-      _api.audit.list(
+  /// One page of entries matching [query], newest first (`audit.list`),
+  /// each keeping the JSON object tix sent for it ([wireJson]).
+  Future<Page<AuditEntry>> list(AuditQuery query, {String? cursor}) async {
+    final (page, answer) = await withAnswer(
+      _api.transport,
+      (t) => AuditOps(t).list(
         cursor: cursor,
         limit: pageSize,
         sort: 'seq',
@@ -151,5 +156,9 @@ class AuditRepository {
             : [for (final s in query.sources) s.value],
         since: query.since,
         until: query.until,
-      );
+      ),
+    );
+    keepWireAll(page.items, answer?['items']);
+    return page;
+  }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/events/event_poll.dart';
+import 'package:tix_mobile/src/data/models/wire.dart';
 
 import '../../helpers/fake_tix.dart';
 
@@ -30,6 +31,20 @@ void main() {
     expect(page.nextSeq, 6);
     final q = server.polls.single.uri.queryParameters;
     expect(q, {'since_seq': '4', 'types': 'task.*', 'limit': '2'});
+  });
+
+  test('each event keeps the object tix sent, past one it skips', () async {
+    server
+      ..addEvent(4, 'task.created')
+      ..addEvent(5, 'thing.unknown')
+      ..addEvent(6, 'task.updated');
+    server.eventLog.last['novel'] = true;
+    final page = await poller.poll(sinceSeq: 3);
+    expect(page.events.map((e) => e.seq), [4, 6]);
+    expect(wireJson(page.events.first), server.eventLog[0]);
+    expect(wireJson(page.events.last), server.eventLog[2]);
+    expect(wireJson(page.events.last), containsPair('novel', true));
+    expect(wireJson(page.events.last), isNot(contains('payload')));
   });
 
   test('without a cursor it starts at the newest event', () async {
