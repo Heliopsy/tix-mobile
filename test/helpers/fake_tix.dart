@@ -432,6 +432,10 @@ class FakeTix {
   /// than it does.
   bool pollSupported = true;
 
+  /// Whether the comment reaction routes exist; false answers 404 as a tix
+  /// older than them does.
+  bool reactionsSupported = true;
+
   /// Answers every poll with this when set, for refusals.
   FakeResponse? pollAnswer;
 
@@ -1071,6 +1075,33 @@ class FakeTix {
     return null;
   }
 
+  /// Adds or removes the caller's (`me`) [emoji] on the comment [c], the way
+  /// tix answers: grouped by emoji in the order each was first used, an emoji
+  /// nobody is left reacting with dropped, the field left out when none is.
+  void _react(Map<String, Object?> c, String emoji, {required bool add}) {
+    final list = [
+      for (final r in (c['reactions'] as List<Object?>? ?? const []))
+        Map<String, Object?>.of(r! as Map<String, Object?>),
+    ];
+    var r = list.where((x) => x['emoji'] == emoji).firstOrNull;
+    if (r == null) {
+      if (!add) return;
+      r = {'emoji': emoji, 'count': 0, 'actor_ids': <String>[]};
+      list.add(r);
+    }
+    final ids = [...(r['actor_ids']! as List<Object?>).cast<String>()];
+    if (add && !ids.contains('me')) ids.add('me');
+    if (!add) ids.remove('me');
+    r['actor_ids'] = ids;
+    r['count'] = ids.length;
+    list.removeWhere((x) => x['count'] == 0);
+    if (list.isEmpty) {
+      c.remove('reactions');
+    } else {
+      c['reactions'] = list;
+    }
+  }
+
   FakeResponse _missing(String ref) =>
       FakeResponse(404, envelope('not_found', 'task "$ref"'));
 
@@ -1132,6 +1163,20 @@ class FakeTix {
           }
         }
         return FakeResponse(404, envelope('not_found', 'comment'));
+      case (final m, ['comments', final id, 'reactions', final encoded])
+          when m == 'PUT' || m == 'DELETE':
+        if (!reactionsSupported) {
+          return FakeResponse(404, envelope('not_found', 'no such route'));
+        }
+        for (final list in comments.values) {
+          for (final c in list) {
+            if (c['id'] == id) {
+              _react(c, Uri.decodeComponent(encoded), add: m == 'PUT');
+              return FakeResponse(200, c);
+            }
+          }
+        }
+        return FakeResponse(404, envelope('not_found', 'comment "$id"'));
       case ('DELETE', ['comments', final id]):
         for (final list in comments.values) {
           list.removeWhere((c) => c['id'] == id);

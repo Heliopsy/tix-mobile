@@ -51,8 +51,6 @@ pending:
   # time, views, filters, inbox, search, stars, snooze, templates, bulk.
   wave1:
     - artifact.limits
-    - comment.react
-    - comment.unreact
     - task.move
   # Wave 2, team: projects, workflows, fields, users, members, invites, tokens, calendar, export.
   wave2:

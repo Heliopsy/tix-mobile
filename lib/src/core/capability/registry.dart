@@ -86,6 +86,8 @@ const bindings = <String, Binding>{
     action: 'delete-comment',
     wave: 1,
   ),
+  'comment.react': Binding(feature: 'tasks', action: 'react', wave: 1),
+  'comment.unreact': Binding(feature: 'tasks', action: 'unreact', wave: 1),
   'dependency.list': Binding(feature: 'tasks', action: 'dependencies', wave: 1),
   'dependency.add': Binding(
     feature: 'tasks',

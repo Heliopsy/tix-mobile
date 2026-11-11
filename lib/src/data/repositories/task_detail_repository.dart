@@ -310,6 +310,21 @@ class TaskDetailRepository {
   /// Deletes the comment [id] (`comment.delete`).
   Future<void> deleteComment(String id) => _api.comment.delete(id);
 
+  /// Adds the reader's [emoji] to the comment [id], or takes it away when
+  /// [add] is false, and answers the comment as the server now has it
+  /// (`comment.react`, `comment.unreact`). Throws [ReactionsUnsupported] on
+  /// a server without the routes.
+  Future<Comment> react(String id, String emoji, {required bool add}) async {
+    try {
+      return add
+          ? await _api.comment.react(id, emoji)
+          : await _api.comment.unreact(id, emoji);
+    } on TixException catch (e) {
+      if (e.missingRoute) throw ReactionsUnsupported(e);
+      rethrow;
+    }
+  }
+
   /// The edges from [ref] to the tasks it waits for (`dependency.list`).
   Future<List<Dependency>> dependencies(String ref) async =>
       (await _api.dependency.list(ref)).items;
@@ -413,4 +428,16 @@ class TaskDetailRepository {
 
   /// Whether the tenant keeps a trash (`trash.status`).
   Future<TrashStatus> trash() => _api.trash.status();
+}
+
+/// The server has no reaction routes: it predates them.
+final class ReactionsUnsupported implements Exception {
+  /// Reports a server that answered [cause] to a reaction.
+  const ReactionsUnsupported(this.cause);
+
+  /// The server's answer.
+  final TixException cause;
+
+  @override
+  String toString() => 'the server does not support reactions ($cause)';
 }

@@ -8125,4 +8125,33 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String get taskHandoffKeywords =>
       'агент ии подкана делегирай agent ai claude codex prompt mcp';
+
+  @override
+  String get commentReactionAdd => 'Добави реакция';
+
+  @override
+  String get commentReactionPicker => 'Реагирай';
+
+  @override
+  String commentReactionChip(String emoji, int count) {
+    return '$emoji, $count';
+  }
+
+  @override
+  String commentReactionChipMine(String emoji, int count) {
+    return '$emoji, $count, вие реагирахте';
+  }
+
+  @override
+  String get commentReactionOther => 'Друг емоджи';
+
+  @override
+  String get commentReactionOtherHelp =>
+      'Един емоджи, написан или избран от клавиатурата.';
+
+  @override
+  String get commentReactionOtherSend => 'Реагирай';
+
+  @override
+  String get commentReactionsUnsupported => 'Този сървър не поддържа реакции.';
 }

@@ -121,4 +121,41 @@ void main() {
     final now = await c.read(taskCommentsProvider('infra-1').future);
     expect(now.single.body, 'from the web');
   });
+
+  test('a reaction made elsewhere appears', () async {
+    final (c, s) = await live();
+    final task = c.listen(taskDetailControllerProvider('infra-1'), (_, _) {});
+    addTearDown(task.close);
+    await c.read(taskDetailControllerProvider('infra-1').future);
+    server.comments['infra-1'] = [
+      {'id': 'c9', 'author_actor_id': 'a1', 'body': 'ship it'},
+    ];
+    final sub = c.listen(taskCommentsProvider('infra-1'), (_, _) {});
+    addTearDown(sub.close);
+    expect(
+      (await c.read(taskCommentsProvider('infra-1').future)).single.reactions,
+      isEmpty,
+    );
+    server.comments['infra-1']!.single['reactions'] = [
+      {
+        'emoji': '🚀',
+        'count': 1,
+        'actor_ids': ['a1'],
+      },
+    ];
+    s.event(
+      1,
+      'comment.reacted',
+      subjectId: 'c9',
+      payload: {
+        'ref': 'infra-1',
+        'task_id': 'id-infra-1',
+        'emoji': '🚀',
+        'reacted': true,
+      },
+    );
+    await settle(400);
+    final now = await c.read(taskCommentsProvider('infra-1').future);
+    expect(now.single.reactions.single.emoji, '🚀');
+  });
 }

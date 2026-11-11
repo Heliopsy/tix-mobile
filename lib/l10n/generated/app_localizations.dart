@@ -13560,6 +13560,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'agent ai claude codex prompt mcp delegate'**
   String get taskHandoffKeywords;
+
+  /// Tooltip of the button that opens the reaction picker under a comment.
+  ///
+  /// In en, this message translates to:
+  /// **'Add reaction'**
+  String get commentReactionAdd;
+
+  /// Title of the sheet that picks an emoji reaction for a comment.
+  ///
+  /// In en, this message translates to:
+  /// **'React'**
+  String get commentReactionPicker;
+
+  /// Spoken label of a reaction chip: the emoji and how many reacted with it.
+  ///
+  /// In en, this message translates to:
+  /// **'{emoji}, {count}'**
+  String commentReactionChip(String emoji, int count);
+
+  /// Spoken label of a reaction chip the reader reacted with.
+  ///
+  /// In en, this message translates to:
+  /// **'{emoji}, {count}, you reacted'**
+  String commentReactionChipMine(String emoji, int count);
+
+  /// Label of the field in the reaction picker that takes any one emoji.
+  ///
+  /// In en, this message translates to:
+  /// **'Any emoji'**
+  String get commentReactionOther;
+
+  /// Help under the any-emoji field of the reaction picker.
+  ///
+  /// In en, this message translates to:
+  /// **'One emoji, typed or picked from the keyboard.'**
+  String get commentReactionOtherHelp;
+
+  /// Button that reacts with the emoji typed in the reaction picker.
+  ///
+  /// In en, this message translates to:
+  /// **'React'**
+  String get commentReactionOtherSend;
+
+  /// Shown when the server refuses a reaction because it predates reactions.
+  ///
+  /// In en, this message translates to:
+  /// **'This server does not support reactions.'**
+  String get commentReactionsUnsupported;
 }
 
 class _AppLocalizationsDelegate

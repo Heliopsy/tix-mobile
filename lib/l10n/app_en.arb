@@ -5238,5 +5238,53 @@
     }
   },
   "taskHandoffMcp": "With the tix MCP tools",
-  "taskHandoffKeywords": "agent ai claude codex prompt mcp delegate"
+  "taskHandoffKeywords": "agent ai claude codex prompt mcp delegate",
+  "commentReactionAdd": "Add reaction",
+  "@commentReactionAdd": {
+    "description": "Tooltip of the button that opens the reaction picker under a comment."
+  },
+  "commentReactionPicker": "React",
+  "@commentReactionPicker": {
+    "description": "Title of the sheet that picks an emoji reaction for a comment."
+  },
+  "commentReactionChip": "{emoji}, {count}",
+  "@commentReactionChip": {
+    "description": "Spoken label of a reaction chip: the emoji and how many reacted with it.",
+    "placeholders": {
+      "emoji": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commentReactionChipMine": "{emoji}, {count}, you reacted",
+  "@commentReactionChipMine": {
+    "description": "Spoken label of a reaction chip the reader reacted with.",
+    "placeholders": {
+      "emoji": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commentReactionOther": "Any emoji",
+  "@commentReactionOther": {
+    "description": "Label of the field in the reaction picker that takes any one emoji."
+  },
+  "commentReactionOtherHelp": "One emoji, typed or picked from the keyboard.",
+  "@commentReactionOtherHelp": {
+    "description": "Help under the any-emoji field of the reaction picker."
+  },
+  "commentReactionOtherSend": "React",
+  "@commentReactionOtherSend": {
+    "description": "Button that reacts with the emoji typed in the reaction picker."
+  },
+  "commentReactionsUnsupported": "This server does not support reactions.",
+  "@commentReactionsUnsupported": {
+    "description": "Shown when the server refuses a reaction because it predates reactions."
+  }
 }

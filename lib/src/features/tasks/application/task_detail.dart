@@ -250,13 +250,14 @@ class TaskComments extends _$TaskComments {
     return c;
   }
 
+  void _put(Comment c) => state = AsyncData([
+    for (final x in _now)
+      if (x.id == c.id) c else x,
+  ]);
+
   /// Rewrites the comment [id] to [body].
   Future<void> edit(String id, String body) async {
-    final c = await _repo.editComment(id, body);
-    state = AsyncData([
-      for (final x in _now)
-        if (x.id == id) c else x,
-    ]);
+    _put(await _repo.editComment(id, body));
   }
 
   /// Deletes the comment [id].
@@ -267,7 +268,78 @@ class TaskComments extends _$TaskComments {
         if (x.id != id) x,
     ]);
   }
+
+  /// Adds [emoji] from the reader, the actor [me], to the comment [id], or
+  /// takes it away when they had reacted with it. Drawn at once; a refusal
+  /// puts the comment back and rethrows, and a server without reactions is
+  /// remembered as such.
+  Future<void> toggleReaction(String id, String emoji, {String? me}) async {
+    final before = _now.where((c) => c.id == id).firstOrNull;
+    if (before == null) return;
+    final add = !before.reactedBy(emoji, me);
+    _put(before.withReaction(emoji, add: add, me: me));
+    final Comment after;
+    try {
+      after = await _repo.react(id, emoji, add: add);
+    } on ReactionsUnsupported {
+      if (ref.mounted) {
+        _put(before);
+        ref.read(reactionCapabilityProvider.notifier).refused();
+      }
+      rethrow;
+    } on Object {
+      if (ref.mounted) _put(before);
+      rethrow;
+    }
+    if (!ref.mounted) return;
+    ref.read(reactionCapabilityProvider.notifier).seen();
+    _put(after);
+  }
 }
+
+/// The emoji the reaction picker offers in one tap, as tix's web does.
+const quickReactions = ['👍', '👎', '❤️', '🎉', '😄', '😕', '👀', '🚀'];
+
+/// Whether the active connection takes reactions.
+enum ReactionSupport {
+  /// Not known yet: offered until refused.
+  unknown,
+
+  /// The server sent or took a reaction.
+  supported,
+
+  /// The server has no reaction routes.
+  unsupported,
+}
+
+/// What the active connection is known to do with reactions, kept for the
+/// session. A comment carrying reactions proves support on its own; one
+/// without proves nothing, since tix leaves the field out when nobody
+/// reacted.
+@Riverpod(keepAlive: true)
+class ReactionCapability extends _$ReactionCapability {
+  @override
+  ReactionSupport build() {
+    ref.watch(activeCacheScopeProvider);
+    return ReactionSupport.unknown;
+  }
+
+  /// The server sent or took a reaction.
+  void seen() => state = ReactionSupport.supported;
+
+  /// The server answered a reaction as an unknown route.
+  void refused() => state = ReactionSupport.unsupported;
+}
+
+/// Whether to offer reactions on [comments] given what the connection is
+/// known to [support].
+bool offerReactions(ReactionSupport support, List<Comment> comments) =>
+    switch (support) {
+      ReactionSupport.supported || ReactionSupport.unknown => true,
+      ReactionSupport.unsupported => comments.any(
+        (c) => c.reactions.isNotEmpty,
+      ),
+    };
 
 /// The tasks a task waits for, each read in full.
 @riverpod

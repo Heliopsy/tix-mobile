@@ -8114,4 +8114,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get taskHandoffKeywords => 'agent ai claude codex prompt mcp delegate';
+
+  @override
+  String get commentReactionAdd => 'Add reaction';
+
+  @override
+  String get commentReactionPicker => 'React';
+
+  @override
+  String commentReactionChip(String emoji, int count) {
+    return '$emoji, $count';
+  }
+
+  @override
+  String commentReactionChipMine(String emoji, int count) {
+    return '$emoji, $count, you reacted';
+  }
+
+  @override
+  String get commentReactionOther => 'Any emoji';
+
+  @override
+  String get commentReactionOtherHelp =>
+      'One emoji, typed or picked from the keyboard.';
+
+  @override
+  String get commentReactionOtherSend => 'React';
+
+  @override
+  String get commentReactionsUnsupported =>
+      'This server does not support reactions.';
 }

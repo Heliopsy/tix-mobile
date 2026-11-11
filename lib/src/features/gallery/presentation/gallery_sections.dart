@@ -904,6 +904,55 @@ class GalleryLive extends StatelessWidget {
   );
 }
 
+/// Reactions under a comment: one the reader made, two they did not, and
+/// the add button.
+class GalleryReactions extends StatelessWidget {
+  /// Creates the samples.
+  const GalleryReactions({super.key});
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      ReactionBar(
+        addLabel: 'Add reaction',
+        onAdd: () {},
+        chips: [
+          ReactionChip(
+            emoji: '👍',
+            count: 2,
+            mine: true,
+            label: '👍, 2, you reacted',
+            onTap: () {},
+          ),
+          ReactionChip(
+            emoji: '🚀',
+            count: 1,
+            mine: false,
+            label: '🚀, 1',
+            onTap: () {},
+          ),
+          ReactionChip(
+            emoji: '👀',
+            count: 12,
+            mine: false,
+            label: '👀, 12',
+            onTap: () {},
+          ),
+        ],
+      ),
+      const SizedBox(height: TixSpace.s3),
+      Wrap(
+        children: [
+          ReactionOption(emoji: '👍', label: '👍', mine: true, onTap: () {}),
+          ReactionOption(emoji: '🎉', label: '🎉', onTap: () {}),
+          ReactionOption(emoji: '❤️', label: '❤️', onTap: () {}),
+        ],
+      ),
+    ],
+  );
+}
+
 /// The marks and banners that say a change has not synced yet.
 class GallerySync extends StatelessWidget {
   /// Creates the samples.

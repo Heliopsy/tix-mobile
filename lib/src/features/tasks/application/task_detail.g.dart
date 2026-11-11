@@ -191,7 +191,7 @@ final class TaskCommentsProvider
   }
 }
 
-String _$taskCommentsHash() => r'62767d25a6681393945f96a73bb89eb6d0d0d07e';
+String _$taskCommentsHash() => r'09a790145bddd6b204e30fe4a74513affcf4aa20';
 
 /// A task's comments, oldest first.
 
@@ -242,6 +242,77 @@ abstract class _$TaskComments extends $AsyncNotifier<List<Comment>> {
               Object?
             >;
     return element.handleCreate(ref, () => build(_$args));
+  }
+}
+
+/// What the active connection is known to do with reactions, kept for the
+/// session. A comment carrying reactions proves support on its own; one
+/// without proves nothing, since tix leaves the field out when nobody
+/// reacted.
+
+@ProviderFor(ReactionCapability)
+final reactionCapabilityProvider = ReactionCapabilityProvider._();
+
+/// What the active connection is known to do with reactions, kept for the
+/// session. A comment carrying reactions proves support on its own; one
+/// without proves nothing, since tix leaves the field out when nobody
+/// reacted.
+final class ReactionCapabilityProvider
+    extends $NotifierProvider<ReactionCapability, ReactionSupport> {
+  /// What the active connection is known to do with reactions, kept for the
+  /// session. A comment carrying reactions proves support on its own; one
+  /// without proves nothing, since tix leaves the field out when nobody
+  /// reacted.
+  ReactionCapabilityProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'reactionCapabilityProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$reactionCapabilityHash();
+
+  @$internal
+  @override
+  ReactionCapability create() => ReactionCapability();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ReactionSupport value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ReactionSupport>(value),
+    );
+  }
+}
+
+String _$reactionCapabilityHash() =>
+    r'153afc433f80138a664ea47e46e94d2ca7fee8ed';
+
+/// What the active connection is known to do with reactions, kept for the
+/// session. A comment carrying reactions proves support on its own; one
+/// without proves nothing, since tix leaves the field out when nobody
+/// reacted.
+
+abstract class _$ReactionCapability extends $Notifier<ReactionSupport> {
+  ReactionSupport build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<ReactionSupport, ReactionSupport>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<ReactionSupport, ReactionSupport>,
+              ReactionSupport,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
   }
 }
 

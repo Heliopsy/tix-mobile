@@ -150,4 +150,61 @@ void main() {
     expect(r.stopped, 'done');
     expect(r.task!.status, 'doing');
   });
+
+  group('CommentReactions', () {
+    final c = Comment.fromJson({
+      'id': 'c1',
+      'reactions': [
+        {
+          'emoji': '👍',
+          'count': 2,
+          'actor_ids': ['a1', 'me'],
+        },
+        {
+          'emoji': '🚀',
+          'count': 1,
+          'actor_ids': ['a1'],
+        },
+      ],
+    });
+
+    String shape(Comment c) =>
+        [for (final r in c.reactions) '${r.emoji}${r.count}'].join(' ');
+
+    test('mine is read from the actor ids', () {
+      expect(c.reactedBy('👍', 'me'), isTrue);
+      expect(c.reactedBy('🚀', 'me'), isFalse);
+      expect(c.reactedBy('👍', null), isFalse);
+      expect(Comment.fromJson({'id': 'x'}).reactions, isEmpty);
+    });
+
+    test('a new emoji goes last and an empty one goes', () {
+      expect(shape(c.withReaction('🎉', add: true, me: 'me')), '👍2 🚀1 🎉1');
+      expect(shape(c.withReaction('👍', add: false, me: 'me')), '👍1 🚀1');
+      expect(
+        shape(
+          c
+              .withReaction('🚀', add: true, me: 'me')
+              .withReaction('🚀', add: false, me: 'a1'),
+        ),
+        '👍2 🚀1',
+      );
+      expect(
+        shape(
+          c
+              .withReaction('👍', add: false, me: 'me')
+              .withReaction('👍', add: false, me: 'a1'),
+        ),
+        '🚀1',
+      );
+    });
+
+    test('adding twice changes nothing', () {
+      expect(shape(c.withReaction('👍', add: true, me: 'me')), '👍2 🚀1');
+    });
+
+    test('an unknown reader still moves the count', () {
+      expect(shape(c.withReaction('🚀', add: true)), '👍2 🚀2');
+    });
+  });
 }
