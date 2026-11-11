@@ -1,23 +1,5 @@
 # task-detail
 
-## MODIFIED Requirements
-
-### Requirement: History reads the audit trail
-
-The task view SHALL show the task's audit entries from `GET /tasks/{ref}/audit`, newest first and paged, naming
-who changed what and through which channel, with the API token's or job's name when the entry has one, and SHALL
-say so when the credential cannot read the audit.
-
-#### Scenario: A change in history
-
-- **WHEN** the audit holds a task.update changing priority from 3 to 2
-- **THEN** history shows the actor, the time and that priority changed
-
-#### Scenario: A change made with a token
-
-- **WHEN** an entry's `via` has kind `api` and token name `ci-agent`
-- **THEN** history shows "via API (ci-agent)" and never the token's id
-
 ## ADDED Requirements
 
 ### Requirement: A comment names the channel it came through
@@ -28,7 +10,7 @@ that announced it, beside its author. Without either, or when the audit cannot b
 #### Scenario: A comment posted by an agent
 
 - **WHEN** a comment's `comment.add` entry has kind `api` and token name `ci-agent`
-- **THEN** the comment shows "via API (ci-agent)" beside its author
+- **THEN** the comment shows "via token ci-agent" beside its author
 
 ### Requirement: Comments carry emoji reactions
 
