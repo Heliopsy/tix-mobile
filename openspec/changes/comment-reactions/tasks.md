@@ -10,7 +10,7 @@
 
 ## 3. Channel and token
 
-- [x] 3.1 One channel label in `core/l10n`, used by Watch, task history and the audit log
+- [x] 3.1 Audit log rows use the shared channel label
 - [x] 3.2 Comment channels from the task's `comment.add` audit entries and `comment.added` events
 
 ## 4. Reactions
