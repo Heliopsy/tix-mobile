@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.13.1](https://github.com/Heliopsy/tix-mobile/compare/v0.13.0...v0.13.1) (2026-11-11)
+
+
+### Bug Fixes
+
+* **shell:** make Watch a normal destination instead of a bare icon ([87275db](https://github.com/Heliopsy/tix-mobile/commit/87275dbd737ca284e9c8e152212bd03e5fe56976))
+* **tasks:** let the list take the whole window until a task opens ([266163f](https://github.com/Heliopsy/tix-mobile/commit/266163fe42687c8f8ca9f38b4d96050a9c68c18a))
+
 ## [0.13.0](https://github.com/Heliopsy/tix-mobile/compare/v0.12.0...v0.13.0) (2026-11-10)
 
 
