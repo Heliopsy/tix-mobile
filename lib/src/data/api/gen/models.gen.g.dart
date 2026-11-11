@@ -3648,6 +3648,11 @@ _Task _$TaskFromJson(Map<String, dynamic> json) => _Task(
     const TixDateTime().fromJson,
   ),
   version: (json['version'] as num?)?.toInt() ?? 0,
+  waitingOn:
+      (json['waiting_on'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const <String>[],
   webUrl: json['web_url'] as String? ?? '',
 );
 
@@ -3719,6 +3724,7 @@ Map<String, dynamic> _$TaskToJson(_Task instance) => <String, dynamic>{
     const TixDateTime().toJson,
   ),
   'version': instance.version,
+  'waiting_on': instance.waitingOn,
   'web_url': instance.webUrl,
 };
 

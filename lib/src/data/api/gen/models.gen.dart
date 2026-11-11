@@ -5036,6 +5036,10 @@ abstract class Task with _$Task {
     /// a stale write refused with a conflict.
     @JsonKey(name: 'version') @Default(0) int version,
 
+    /// WaitingOn names, by reference, the unfinished tasks that make this one
+    /// Blocked, in reference order. Empty when Blocked is false.
+    @JsonKey(name: 'waiting_on') @Default(<String>[]) List<String> waitingOn,
+
     /// WebURL is the address of the task's screen in the browser interface, set
     /// when the server is configured with the address it is reached at
     /// (server.public_url). Only a read sets it, so it is absent from audit
