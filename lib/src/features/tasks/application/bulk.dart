@@ -48,6 +48,7 @@ Task localBulkChange(BulkTaskInput request, Task task) =>
       BulkAction.star => task.copyWith(starred: true),
       BulkAction.unstar => task.copyWith(starred: false),
       BulkAction.copy ||
+      BulkAction.moveProject ||
       BulkAction.delete ||
       BulkAction.restore ||
       null => task,
@@ -122,6 +123,6 @@ List<BulkTaskInput> undoRequests(
     ]),
     BulkAction.delete => one(BulkAction.restore, refs),
     BulkAction.restore => one(BulkAction.delete, refs),
-    null => const [],
+    BulkAction.moveProject || null => const [],
   };
 }

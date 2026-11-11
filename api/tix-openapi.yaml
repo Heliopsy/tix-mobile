@@ -526,6 +526,49 @@ paths:
         - actor
       x-tix-openspec:
         - http-api
+  /api/v1/artifact-limits:
+    get:
+      description: |-
+        ArtifactLimits reports the size and media types a new artifact blob is held to on the current tenant: the server's artifacts.max_bytes and artifacts.allowed_types, narrowed by the tenant's own settings.
+
+        Command line: `tix artifact limits`.
+      operationId: artifact.limits
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtifactLimits'
+          description: ArtifactLimits are the bounds a new artifact blob is held to
+            on a tenant.
+        "400":
+          $ref: '#/components/responses/Error400'
+        "401":
+          $ref: '#/components/responses/Error401'
+        "403":
+          $ref: '#/components/responses/Error403'
+        "404":
+          $ref: '#/components/responses/Error404'
+        "409":
+          $ref: '#/components/responses/Error409'
+        "422":
+          $ref: '#/components/responses/Error422'
+        "500":
+          $ref: '#/components/responses/Error500'
+        "502":
+          $ref: '#/components/responses/Error502'
+        "504":
+          $ref: '#/components/responses/Error504'
+      security:
+        - bearer:
+            - task:read
+        - session:
+            - task:read
+      summary: 'ArtifactLimits reports the size and media types a new artifact blob
+        is held to on the current tenant: the server''s artifacts.max_bytes and artifacts.allowed_types,
+        narrowed by the tenant''s own settings'
+      tags:
+        - artifact
   /api/v1/audit:
     get:
       description: |-
@@ -2609,6 +2652,141 @@ paths:
         - session:
             - comment:write
       summary: EditComment replaces a comment's body and marks it edited
+      tags:
+        - comment
+  /api/v1/comments/{id}/reactions/{emoji}:
+    delete:
+      description: |-
+        RemoveReaction removes the caller's emoji reaction from a comment and returns the comment with its reactions. A reaction not there is no error.
+
+        Command line: `tix comment react`.
+      operationId: comment.unreact
+      parameters:
+        - description: Comment ID.
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - description: 'The reaction: one emoji grapheme, percent-encoded, such as
+            %F0%9F%91%8D for a thumbs up.'
+          in: path
+          name: emoji
+          required: true
+          schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+          description: Comment is a message on a task.
+        "400":
+          $ref: '#/components/responses/Error400'
+        "401":
+          $ref: '#/components/responses/Error401'
+        "403":
+          $ref: '#/components/responses/Error403'
+        "404":
+          $ref: '#/components/responses/Error404'
+        "409":
+          $ref: '#/components/responses/Error409'
+        "422":
+          $ref: '#/components/responses/Error422'
+        "500":
+          $ref: '#/components/responses/Error500'
+        "502":
+          $ref: '#/components/responses/Error502'
+        "504":
+          $ref: '#/components/responses/Error504'
+      security:
+        - bearer:
+            - comment:write
+        - session:
+            - comment:write
+      summary: RemoveReaction removes the caller's emoji reaction from a comment and
+        returns the comment with its reactions
+      tags:
+        - comment
+    put:
+      description: |-
+        AddReaction adds the caller's emoji reaction to a comment and returns the comment with its reactions. The emoji is one emoji grapheme; reacting again with the same emoji changes nothing.
+
+        Command line: `tix comment react`.
+      operationId: comment.react
+      parameters:
+        - description: Comment ID.
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - description: 'The reaction: one emoji grapheme, percent-encoded, such as
+            %F0%9F%91%8D for a thumbs up.'
+          in: path
+          name: emoji
+          required: true
+          schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+          description: Comment is a message on a task.
+        "400":
+          $ref: '#/components/responses/Error400'
+        "401":
+          $ref: '#/components/responses/Error401'
+        "403":
+          $ref: '#/components/responses/Error403'
+        "404":
+          $ref: '#/components/responses/Error404'
+        "409":
+          $ref: '#/components/responses/Error409'
+        "413":
+          $ref: '#/components/responses/Error413'
+        "415":
+          $ref: '#/components/responses/Error415'
+        "422":
+          $ref: '#/components/responses/Error422'
+        "500":
+          $ref: '#/components/responses/Error500'
+        "502":
+          $ref: '#/components/responses/Error502'
+        "504":
+          $ref: '#/components/responses/Error504'
+      security:
+        - bearer:
+            - comment:write
+        - session:
+            - comment:write
+      summary: AddReaction adds the caller's emoji reaction to a comment and returns
+        the comment with its reactions
       tags:
         - comment
   /api/v1/connections:
@@ -8764,6 +8942,76 @@ paths:
         - task
       x-tix-openspec:
         - http-api
+  /api/v1/tasks/{ref}/move:
+    post:
+      description: |-
+        MoveTask moves a task into another project. It keeps its identifier, comments, artifacts, history, links, tags and assignee, takes the target's next number, and its old reference keeps resolving to it. The status is kept when the target's workflow has it, else the target's initial state; custom fields the target does not define are dropped. Needs edit rights on the task and create rights in the target; a task claimed by somebody else is refused.
+
+        Command line: `tix task move`.
+      operationId: task.move
+      parameters:
+        - description: 'Task reference: the project key and number, such as INFRA-42,
+            with the key not case sensitive, or the task''s ID.'
+          in: path
+          name: ref
+          required: true
+          schema:
+            type: string
+        - description: 'Client-chosen key, such as a UUID, that makes retrying this
+            write safe: a repeat of the same request replays the first answer. See
+            Retrying safely in docs/api.md.'
+          in: header
+          name: Idempotency-Key
+          required: false
+          schema:
+            maxLength: 200
+            minLength: 1
+            pattern: ^[ -~]+$
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MoveTaskInput'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskMove'
+          description: 'TaskMove is what moving a task did: the task as it landed
+            and what changed on the way.'
+        "400":
+          $ref: '#/components/responses/Error400'
+        "401":
+          $ref: '#/components/responses/Error401'
+        "403":
+          $ref: '#/components/responses/Error403'
+        "404":
+          $ref: '#/components/responses/Error404'
+        "409":
+          $ref: '#/components/responses/Error409'
+        "413":
+          $ref: '#/components/responses/Error413'
+        "415":
+          $ref: '#/components/responses/Error415'
+        "422":
+          $ref: '#/components/responses/Error422'
+        "500":
+          $ref: '#/components/responses/Error500'
+        "502":
+          $ref: '#/components/responses/Error502'
+        "504":
+          $ref: '#/components/responses/Error504'
+      security:
+        - bearer:
+            - task:write
+        - session:
+            - task:write
+      summary: MoveTask moves a task into another project
+      tags:
+        - task
   /api/v1/tasks/{ref}/restore:
     post:
       description: |-
@@ -13105,8 +13353,8 @@ components:
             claim holder.
           type: string
         blob:
-          description: Blob is inline content, base64 in JSON, at most 1 MiB. Larger
-            content belongs elsewhere, referenced from Payload.
+          description: Blob is inline content, base64 in JSON, within the tenant's
+            artifact limits. Larger content belongs elsewhere, referenced from Payload.
           format: base64
           type: string
         content_type:
@@ -13142,8 +13390,9 @@ components:
         token.
       properties:
         blob:
-          description: Blob is inline content, base64 in JSON, at most 1 MiB; larger
-            content belongs elsewhere, referenced from Payload.
+          description: Blob is inline content, base64 in JSON, held to the tenant's
+            artifact limits on size and media type; larger content belongs elsewhere,
+            referenced from Payload.
           format: base64
           type: string
         content_type:
@@ -13172,6 +13421,37 @@ components:
         - file
         - metric
       type: string
+    ArtifactLimits:
+      description: ArtifactLimits are the bounds a new artifact blob is held to on
+        a tenant.
+      properties:
+        allowed_types:
+          description: AllowedTypes are the media types and patterns such as "image/*"
+            a blob may carry, the tenant's own list where it set one.
+          items:
+            type: string
+          type:
+            - array
+            - "null"
+        max_bytes:
+          description: MaxBytes is the largest blob accepted, the lower of the tenant's
+            own limit and the server's.
+          format: int64
+          type: integer
+        server_allowed_types:
+          description: ServerAllowedTypes is the server's list, which a tenant may
+            only narrow.
+          items:
+            type: string
+          type:
+            - array
+            - "null"
+        server_max_bytes:
+          description: ServerMaxBytes is the server's limit, which a tenant may only
+            lower.
+          format: int64
+          type: integer
+      type: object
     AuditEntry:
       description: AuditEntry is one append-only record of a change.
       properties:
@@ -13226,6 +13506,7 @@ components:
         - star
         - unstar
         - copy
+        - move_project
         - delete
         - restore
       type: string
@@ -13243,6 +13524,10 @@ components:
           type: string
         error:
           description: Error is the refusal's message.
+          type: string
+        moved_ref:
+          description: MovedRef is the reference a task moved to another project now
+            has.
           type: string
         ref:
           description: Ref is the task reference as given.
@@ -13274,7 +13559,7 @@ components:
       description: 'BulkTaskInput is one action applied to many tasks. Only the argument
         the action needs is read: To for a move, Priority for priority, Tag for the
         tag actions, AssigneeActorID for assign (empty clears), ProjectRef for a copy
-        and Cascade for a delete.'
+        or a move to another project, and Cascade for a delete.'
       properties:
         action:
           $ref: '#/components/schemas/BulkAction'
@@ -13289,7 +13574,8 @@ components:
           description: Priority orders tasks in a queue.
           type: integer
         project_ref:
-          description: ProjectRef is the project a copy goes to, by key or id.
+          description: ProjectRef is the project a copy or a move_project goes to,
+            by key or id.
           type: string
         refs:
           description: 'Refs are the tasks to act on, by reference such as OPS-12
@@ -13575,6 +13861,12 @@ components:
         id:
           description: ID is the comment's unique identifier.
           type: string
+        reactions:
+          description: Reactions are the emoji people reacted with, in the order each
+            emoji was first used. Absent when nobody reacted.
+          items:
+            $ref: '#/components/schemas/Reaction'
+          type: array
         task_id:
           description: TaskID is the ID of the task commented on.
           type: string
@@ -13970,6 +14262,19 @@ components:
           items:
             $ref: '#/components/schemas/CreatedAdmin'
           type: array
+        artifact_max_bytes:
+          description: ArtifactMaxBytes is the largest artifact blob this tenant accepts.
+            It can lower the server's artifacts.max_bytes but never raise it; zero
+            inherits.
+          format: int64
+          type: integer
+        artifact_types:
+          description: ArtifactTypes are the media types and patterns an artifact
+            blob may carry on this tenant, within the server's artifacts.allowed_types;
+            empty inherits.
+          items:
+            type: string
+          type: array
         created_at:
           description: CreatedAt is when the tenant was created, RFC 3339.
           format: date-time
@@ -14251,6 +14556,8 @@ components:
         - task.unsnoozed
         - task.woke
         - comment.added
+        - comment.reacted
+        - comment.unreacted
         - artifact.added
         - dependency.added
         - tag.added
@@ -15326,6 +15633,14 @@ components:
           description: TenantID is the tenant the membership belongs to.
           type: string
       type: object
+    MoveTaskInput:
+      description: MoveTaskInput names the project a task moves to.
+      properties:
+        project_ref:
+          description: ProjectRef is the key or identifier of the project to move
+            into.
+          type: string
+      type: object
     NumberingLag:
       description: NumberingLag is one project whose task number counter is behind
         its tasks.
@@ -15505,6 +15820,24 @@ components:
           description: WebhookDeliveries counts the webhook delivery records removed.
           format: int64
           type: integer
+      type: object
+    Reaction:
+      description: Reaction is one emoji on a comment and everyone who reacted with
+        it.
+      properties:
+        actor_ids:
+          description: ActorIDs are the actors who reacted, earliest first.
+          items:
+            type: string
+          type:
+            - array
+            - "null"
+        count:
+          description: Count is how many actors reacted with this emoji.
+          type: integer
+        emoji:
+          description: Emoji is the reaction, a single emoji grapheme.
+          type: string
       type: object
     ReadyBody:
       description: ReadyBody reports whether the server can serve traffic.
@@ -17205,6 +17538,37 @@ components:
           description: Value is the value as the file spells it.
           type: string
       type: object
+    TaskMove:
+      description: 'TaskMove is what moving a task did: the task as it landed and
+        what changed on the way.'
+      properties:
+        dropped_fields:
+          description: DroppedFields names the custom fields the target does not define
+            or would not accept, whose values were left behind.
+          items:
+            type: string
+          type: array
+        from_project:
+          description: FromProject is the key of the project the task left.
+          type: string
+        from_ref:
+          description: FromRef is the reference the task had, which keeps resolving
+            to it.
+          type: string
+        from_status:
+          description: FromStatus is the status the task had before the move.
+          type: string
+        project:
+          description: Project is the key of the project the task moved into.
+          type: string
+        status_kept:
+          description: StatusKept reports that the target's workflow had the same
+            state; when false the task starts in the target's initial state.
+          type: boolean
+        task:
+          $ref: '#/components/schemas/Task'
+          description: Task is the moved task under its new reference.
+      type: object
     TaskTemplate:
       description: 'TaskTemplate is a named shape of a task that is not itself work:
         it never appears where tasks do, and using it creates tasks.'
@@ -17287,6 +17651,19 @@ components:
     Tenant:
       description: Tenant is the top-level isolation boundary.
       properties:
+        artifact_max_bytes:
+          description: ArtifactMaxBytes is the largest artifact blob this tenant accepts.
+            It can lower the server's artifacts.max_bytes but never raise it; zero
+            inherits.
+          format: int64
+          type: integer
+        artifact_types:
+          description: ArtifactTypes are the media types and patterns an artifact
+            blob may carry on this tenant, within the server's artifacts.allowed_types;
+            empty inherits.
+          items:
+            type: string
+          type: array
         created_at:
           description: CreatedAt is when the tenant was created, RFC 3339.
           format: date-time
@@ -17805,6 +18182,23 @@ components:
     UpdateTenantInput:
       description: UpdateTenantInput changes a tenant.
       properties:
+        artifact_max_bytes:
+          description: ArtifactMaxBytes lowers the largest artifact blob this tenant
+            accepts below the server's limit. Zero inherits the server's and omitted
+            leaves it; a value above the server's is refused.
+          type:
+            - "null"
+            - integer
+        artifact_types:
+          description: ArtifactTypes narrows the media types an artifact blob may
+            carry, such as ["image/*", "application/pdf"]. An empty list inherits
+            the server's and omitted leaves it; a type the server does not accept
+            is refused.
+          items:
+            type: string
+          type:
+            - "null"
+            - array
         lease_default:
           description: LeaseDefault is the lease a claim on this tenant gets when
             nothing more specific names one, a duration such as "30m". Zero clears
