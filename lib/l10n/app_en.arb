@@ -5267,5 +5267,33 @@
         "type": "String"
       }
     }
+  },
+  "taskDetailReactionLabelMine": "{emoji} reaction, {count}, you reacted",
+  "@taskDetailReactionLabelMine": {
+    "description": "Screen reader label of a reaction chip the viewer reacted with",
+    "placeholders": {
+      "emoji": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailReactionUnsupported": "This server does not support reactions.",
+  "@taskDetailReactionUnsupported": {
+    "description": "Toast when the server has no reaction routes, as a tix older than reactions"
+  },
+  "taskDetailReactionOther": "Any emoji",
+  "@taskDetailReactionOther": {
+    "description": "Label of the reaction picker's field that takes any one emoji"
+  },
+  "taskDetailReactionOtherHelp": "Type or paste one emoji.",
+  "@taskDetailReactionOtherHelp": {
+    "description": "Help under the reaction picker's any-emoji field"
+  },
+  "taskDetailReactionOneEmoji": "Enter a single emoji.",
+  "@taskDetailReactionOneEmoji": {
+    "description": "Error under the reaction picker's field when it holds more than one character"
   }
 }

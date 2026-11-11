@@ -157,6 +157,13 @@ class TixException implements Exception {
   /// the Dio failure type when it threw nothing: for diagnostics only.
   final Object? cause;
 
+  /// Whether this is how a server without the route answers: 405, or 404 with
+  /// no envelope or tix's `no such route`. A missing record is a 404 that
+  /// names it.
+  bool get missingRoute =>
+      status == 405 ||
+      (status == 404 && (message.isEmpty || message == 'no such route'));
+
   @override
   String toString() =>
       'TixException(${kind.name}${status == null ? '' : ', $status'}'

@@ -1030,7 +1030,8 @@ class FakeTix {
   /// Audit entries per task reference, newest first.
   final audit = <String, List<Map<String, Object?>>>{};
 
-  /// Whether the server predates comment reactions and answers 404.
+  /// Whether the server predates comment reactions and answers 404 `no such
+  /// route`.
   bool reactionsMissing = false;
 
   /// The tenant's tags.
@@ -1138,7 +1139,7 @@ class FakeTix {
       case (final m, ['comments', final id, 'reactions', final raw])
           when m == 'PUT' || m == 'DELETE':
         if (reactionsMissing) {
-          return FakeResponse(404, envelope('not_found', 'no route'));
+          return FakeResponse(404, envelope('not_found', 'no such route'));
         }
         final emoji = Uri.decodeComponent(raw);
         for (final list in comments.values) {

@@ -368,42 +368,58 @@ class ReactionChip extends StatelessWidget {
     );
     return Semantics(
       button: true,
+      enabled: onTap != null,
       toggled: mine,
       label: semanticLabel,
       excludeSemantics: true,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: TixSize.target),
-        child: Center(
-          widthFactor: 1,
-          child: Material(
-            color: mine ? t.accentSoft : t.bg,
-            shape: shape,
-            child: InkWell(
-              customBorder: shape,
-              onTap: onTap,
-              onLongPress: onLongPress,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minHeight: TixSize.controlSmall,
-                  minWidth: TixSize.target,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: TixSpace.s2),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(emoji),
-                      const SizedBox(width: TixSpace.s1),
-                      Text(
-                        '$count',
-                        style: TextStyle(
-                          fontSize: TixText.xs,
-                          fontWeight: mine ? FontWeight.w600 : FontWeight.w500,
-                          color: mine ? t.accent : t.ink,
+      onTap: onTap,
+      onLongPress: onLongPress,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        excludeFromSemantics: true,
+        onTap: onTap,
+        onLongPress: onLongPress,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            minHeight: TixSize.target,
+            minWidth: TixSize.target,
+          ),
+          child: Center(
+            widthFactor: 1,
+            child: Material(
+              color: mine ? t.accentSoft : t.bg,
+              shape: shape,
+              child: InkWell(
+                customBorder: shape,
+                onTap: onTap,
+                onLongPress: onLongPress,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minHeight: TixSize.controlSmall,
+                    minWidth: TixSize.target,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: TixSpace.s2,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(emoji),
+                        const SizedBox(width: TixSpace.s1),
+                        Text(
+                          '$count',
+                          style: TextStyle(
+                            fontSize: TixText.xs,
+                            fontWeight: mine
+                                ? FontWeight.w600
+                                : FontWeight.w500,
+                            color: mine ? t.accent : t.ink,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

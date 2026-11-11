@@ -13584,6 +13584,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reacted with {emoji}'**
   String taskDetailReactionWho(String emoji);
+
+  /// Screen reader label of a reaction chip the viewer reacted with
+  ///
+  /// In en, this message translates to:
+  /// **'{emoji} reaction, {count}, you reacted'**
+  String taskDetailReactionLabelMine(String emoji, String count);
+
+  /// Toast when the server has no reaction routes, as a tix older than reactions
+  ///
+  /// In en, this message translates to:
+  /// **'This server does not support reactions.'**
+  String get taskDetailReactionUnsupported;
+
+  /// Label of the reaction picker's field that takes any one emoji
+  ///
+  /// In en, this message translates to:
+  /// **'Any emoji'**
+  String get taskDetailReactionOther;
+
+  /// Help under the reaction picker's any-emoji field
+  ///
+  /// In en, this message translates to:
+  /// **'Type or paste one emoji.'**
+  String get taskDetailReactionOtherHelp;
+
+  /// Error under the reaction picker's field when it holds more than one character
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a single emoji.'**
+  String get taskDetailReactionOneEmoji;
 }
 
 class _AppLocalizationsDelegate
