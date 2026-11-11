@@ -44,3 +44,13 @@ spaces, with no field added or dropped, and SHALL confirm with a toast.
 
 - **WHEN** tix sent an entry whose `via` carries only `kind`
 - **THEN** the copied `via` carries only `kind`
+
+### Requirement: A row names its channel and token
+
+Each audit log row SHALL name the channel the change arrived through with the API token's or job's name, as
+"via token ci-bot", and SHALL never show a secret.
+
+#### Scenario: A token's change
+
+- **WHEN** an entry's `via` has kind `api` and token name `ci-bot`
+- **THEN** its row reads "via token ci-bot"
