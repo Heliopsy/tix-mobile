@@ -10,6 +10,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/events/events.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/l10n/via_label.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/copy_json.dart';
@@ -562,7 +563,7 @@ class WatchRow extends StatelessWidget {
     final t = context.tix;
     final at = event.occurredAt;
     final who = watchWho(l10n, event, actor);
-    final channel = watchChannel(l10n, event.via);
+    final channel = viaLabel(l10n, event.via);
     final muted = TextStyle(fontSize: TixText.xs, color: t.muted);
     final seq = event.seq;
     final json = wireJson(event);
@@ -869,7 +870,7 @@ class WatchEventDetail extends StatelessWidget {
               ? event.projectId
               : '${project!.name} (${project!.key})  ${event.projectId}',
         ),
-      if (watchChannel(l10n, via) case final channel?) (l10n.auditVia, channel),
+      if (viaLabel(l10n, via) case final channel?) (l10n.auditVia, channel),
       if (via != null && via.tokenName.isNotEmpty)
         (l10n.auditToken, via.tokenName),
       if (event.id.isNotEmpty) (l10n.watchEventId, event.id),

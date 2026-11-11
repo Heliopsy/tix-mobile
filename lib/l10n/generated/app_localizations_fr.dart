@@ -7942,6 +7942,16 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String viaToken(String name) {
+    return 'via le jeton $name';
+  }
+
+  @override
+  String viaChannelToken(String channel, String name) {
+    return 'via $channel (jeton $name)';
+  }
+
+  @override
   String get watchChannelWeb => 'le web';
 
   @override

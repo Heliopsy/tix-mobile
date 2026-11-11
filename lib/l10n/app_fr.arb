@@ -2172,6 +2172,8 @@
   "trayWatch": "Activité",
   "watchVia": "via {channel}",
   "watchViaNamed": "via {channel} ({name})",
+  "viaToken": "via le jeton {name}",
+  "viaChannelToken": "via {channel} (jeton {name})",
   "watchChannelWeb": "le web",
   "watchChannelApi": "API",
   "watchChannelCli": "CLI",

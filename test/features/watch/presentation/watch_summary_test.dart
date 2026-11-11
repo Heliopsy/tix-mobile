@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
-import 'package:tix_mobile/src/data/api/gen/models.gen.dart' show Via;
 import 'package:tix_mobile/src/data/events/tix_event.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/features/watch/presentation/watch_summary.dart';
@@ -135,23 +134,6 @@ void main() {
       name: 'the system',
       handle: null,
     ));
-  });
-
-  test('the channel names the token or the job', () {
-    expect(watchChannel(l10n, null), isNull);
-    expect(
-      watchChannel(l10n, const Via(kind: 'mcp', tokenName: 'claude')),
-      'via MCP (claude)',
-    );
-    expect(
-      watchChannel(l10n, const Via(kind: 'system', job: 'lease-sweep')),
-      'via system (lease-sweep)',
-    );
-    expect(watchChannel(l10n, const Via(kind: 'cli-local')), 'via CLI');
-    expect(
-      watchChannel(l10n, const Via(kind: 'unknown')),
-      'via an unknown channel',
-    );
   });
 
   test('tones follow what happened', () {

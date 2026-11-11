@@ -7889,6 +7889,16 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
+  String viaToken(String name) {
+    return 'с токен $name';
+  }
+
+  @override
+  String viaChannelToken(String channel, String name) {
+    return 'през $channel (токен $name)';
+  }
+
+  @override
   String get watchChannelWeb => 'уеб';
 
   @override

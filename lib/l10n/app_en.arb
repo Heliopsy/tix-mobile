@@ -5036,6 +5036,27 @@
       }
     }
   },
+  "viaToken": "via token {name}",
+  "@viaToken": {
+    "description": "The channel of a change made with an API token, naming the token",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "viaChannelToken": "via {channel} (token {name})",
+  "@viaChannelToken": {
+    "description": "The channel of a change a client such as the CLI or MCP made with an API token, naming the token",
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "watchChannelWeb": "web",
   "@watchChannelWeb": {
     "description": "Access channel: the web interface"
