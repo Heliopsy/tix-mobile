@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.14.0](https://github.com/Heliopsy/tix-mobile/compare/v0.13.2...v0.14.0) (2026-11-11)
+
+
+### Features
+
+* **audit:** copy an audit entry or a Watch event as the JSON tix sent ([08a145e](https://github.com/Heliopsy/tix-mobile/commit/08a145eeaf34907a37f07959687dcbe2aff97d52))
+* **shell:** call Watch Activity, as the web does ([dde076b](https://github.com/Heliopsy/tix-mobile/commit/dde076bb0b17ff281e5844561700fefead0f2510))
+* **tasks:** hand a task to a coding agent, as the web does ([366a66f](https://github.com/Heliopsy/tix-mobile/commit/366a66f36e609e3a3fa255734b93163869fc3a49))
+* **tasks:** name the API token a change was made with in history and Watch ([894bd0a](https://github.com/Heliopsy/tix-mobile/commit/894bd0a3dc15811177571213e787760d79bc0b5c))
+* **tasks:** say how many tasks an agent holds, as the web does ([bb4cc33](https://github.com/Heliopsy/tix-mobile/commit/bb4cc337510d32ba5a74501dce05e83fdf16c159))
+
+
+### Bug Fixes
+
+* **design:** draw the blocked state in red, as tix does everywhere else ([0c6ebbb](https://github.com/Heliopsy/tix-mobile/commit/0c6ebbb8f4026a1f02751107d74c1c480d784bca))
+* **l10n:** keep the French held-by-agent string free of plurals like the template ([9be5ddd](https://github.com/Heliopsy/tix-mobile/commit/9be5ddddcaf8ea4228f78f5c3f65263815ebd090))
+* **tasks:** stop rows and cards staying highlighted after they were opened ([2589114](https://github.com/Heliopsy/tix-mobile/commit/258911493aaefbd808527aab88508674115e7890))
+
 ## [0.13.2](https://github.com/Heliopsy/tix-mobile/compare/v0.13.1...v0.13.2) (2026-11-11)
 
 
