@@ -428,7 +428,7 @@ class TixTokens extends ThemeExtension<TixTokens> {
   /// The tint [brand] sits on.
   final Color brandSoft;
 
-  /// Destructive actions and the highest priorities, `--danger`.
+  /// Destructive actions, blocked work and the highest priorities, `--danger`.
   final Color danger;
 
   /// The tint [danger] sits on.
@@ -437,7 +437,7 @@ class TixTokens extends ThemeExtension<TixTokens> {
   /// Text on [danger].
   final Color onDanger;
 
-  /// Blocked work and warnings, `--warn`.
+  /// Warnings and due soon, `--warn`.
   final Color warn;
 
   /// The tint [warn] sits on.
@@ -509,7 +509,7 @@ class TixTokens extends ThemeExtension<TixTokens> {
   Color status(StatusCategory c) => switch (c) {
     StatusCategory.todo || StatusCategory.unknown => muted,
     StatusCategory.inProgress => brand,
-    StatusCategory.blocked => warn,
+    StatusCategory.blocked => danger,
     StatusCategory.waiting => projects[ProjectColour.violet]!,
     StatusCategory.done => ok,
     StatusCategory.cancelled => lineStrong,

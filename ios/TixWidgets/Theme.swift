@@ -75,7 +75,7 @@ struct Palette {
   func status(_ category: String?) -> Color {
     switch (category ?? "").lowercased() {
     case "doing", "inprogress", "in_progress", "in-progress": return brand
-    case "blocked": return warn
+    case "blocked": return danger
     case "waiting": return violet
     case "done": return ok
     case "cancelled", "canceled": return lineStrong

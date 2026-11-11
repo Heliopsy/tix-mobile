@@ -88,7 +88,7 @@ class Palette(theme: String, systemBlack: Boolean) {
     fun status(category: String) = pick {
         when (category) {
             "doing" -> it.brand
-            "blocked" -> it.warn
+            "blocked" -> it.danger
             "waiting" -> it.violet
             "done" -> it.ok
             "cancelled" -> it.lineStrong

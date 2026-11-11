@@ -249,7 +249,7 @@ router as paths. The app's own `tix://` links come in over a channel of their ow
 ### Colours
 
 Native code holds the fixed tokens from [design.md](design.md#colours) for light, dark and OLED black: `bg`,
-`surface`, `ink`, `muted`, `line`, and the status colours by category (todo `muted`, doing `brand`, blocked `warn`,
+`surface`, `ink`, `muted`, `line`, and the status colours by category (todo `muted`, doing `brand`, blocked `danger`,
 waiting violet, done `ok`, cancelled `lineStrong`) and `danger` for overdue and high priorities. Only the accent
 (the header mark and the Quick add button) and project colours come from the snapshot. Status and priority never
 follow the tenant.

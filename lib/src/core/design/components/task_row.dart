@@ -340,7 +340,7 @@ class _Title extends StatelessWidget {
             padding: const EdgeInsets.only(top: 3),
             child: Tooltip(
               message: context.l10n.blockedByOther,
-              child: Icon(Icons.block, size: 14, color: t.warn),
+              child: Icon(Icons.block, size: 14, color: t.danger),
             ),
           ),
           const SizedBox(width: TixSpace.s1),
