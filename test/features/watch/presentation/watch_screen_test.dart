@@ -200,7 +200,7 @@ void main() {
     );
     expect(
       tester.widget<Text>(find.byKey(const Key('watch.7.via'))).data,
-      'via API (deploy-bot)',
+      'via token deploy-bot',
     );
     expect(
       tester.widget<Text>(find.byKey(const Key('watch.8.via'))).data,

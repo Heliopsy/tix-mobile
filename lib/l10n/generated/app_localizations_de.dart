@@ -7947,6 +7947,16 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String viaToken(String name) {
+    return 'über Token $name';
+  }
+
+  @override
+  String viaChannelToken(String channel, String name) {
+    return 'über $channel (Token $name)';
+  }
+
+  @override
   String get watchChannelWeb => 'Web';
 
   @override

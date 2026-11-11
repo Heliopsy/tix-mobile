@@ -3,7 +3,6 @@
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
-import 'package:tix_mobile/src/data/api/gen/models.gen.dart' show Via;
 import 'package:tix_mobile/src/data/events/tix_event.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 
@@ -34,28 +33,6 @@ String? watchActor(TixEvent event) {
   if (handle.isNotEmpty) return (name: '@$handle', handle: null);
   if (event.actorId.isNotEmpty) return (name: event.actorId, handle: null);
   return (name: l10n.auditSystem, handle: null);
-}
-
-/// The channel [via] names, as tix's web activity writes it: "via API
-/// (deploy-bot)", with the token or the job that made the change; null
-/// when the event records none.
-String? watchChannel(AppLocalizations l10n, Via? via) {
-  if (via == null || via.kind.isEmpty) return null;
-  final channel = switch (via.kind) {
-    'web' => l10n.watchChannelWeb,
-    'api' => l10n.watchChannelApi,
-    'cli-local' || 'cli-remote' => l10n.watchChannelCli,
-    'ssh' => l10n.watchChannelSsh,
-    'mcp' => l10n.watchChannelMcp,
-    'sync' => l10n.watchChannelSync,
-    'import' => l10n.watchChannelImport,
-    'system' => l10n.watchChannelSystem,
-    _ => l10n.watchChannelUnknown,
-  };
-  final name = via.tokenName.isNotEmpty ? via.tokenName : via.job;
-  return name.isEmpty
-      ? l10n.watchVia(channel)
-      : l10n.watchViaNamed(channel, name);
 }
 
 /// The colour a row's type badge wears, as the web's activity badges pick

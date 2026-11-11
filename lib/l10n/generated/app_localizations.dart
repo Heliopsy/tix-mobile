@@ -13129,6 +13129,18 @@ abstract class AppLocalizations {
   /// **'via {channel} ({name})'**
   String watchViaNamed(String channel, String name);
 
+  /// The channel of a change made with an API token, naming the token
+  ///
+  /// In en, this message translates to:
+  /// **'via token {name}'**
+  String viaToken(String name);
+
+  /// The channel of a change a client such as the CLI or MCP made with an API token, naming the token
+  ///
+  /// In en, this message translates to:
+  /// **'via {channel} (token {name})'**
+  String viaChannelToken(String channel, String name);
+
   /// Access channel: the web interface
   ///
   /// In en, this message translates to:

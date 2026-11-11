@@ -2170,6 +2170,8 @@
   "trayWatch": "Наблюдение",
   "watchVia": "през {channel}",
   "watchViaNamed": "през {channel} ({name})",
+  "viaToken": "с токен {name}",
+  "viaChannelToken": "през {channel} (токен {name})",
   "watchChannelWeb": "уеб",
   "watchChannelApi": "API",
   "watchChannelCli": "CLI",

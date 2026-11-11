@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/l10n/via_label.dart';
 import 'package:tix_mobile/src/core/platform/attachments.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
@@ -428,9 +429,7 @@ class _HistoryTile extends ConsumerWidget {
       ),
       _ => entry.action,
     };
-    final channel = entry.via?.kind.isNotEmpty ?? false
-        ? entry.via!.kind
-        : entry.source?.value ?? '';
+    final channel = viaLabel(l10n, entry.via) ?? entry.source?.value ?? '';
     final when = entry.occurredAt;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: TixSpace.s2),
@@ -458,6 +457,7 @@ class _HistoryTile extends ConsumerWidget {
                   ),
                 ),
                 Text(
+                  key: Key('history.${entry.seq}.meta'),
                   [
                     if (when != null) times.stamp(when),
                     if (channel.isNotEmpty) channel,

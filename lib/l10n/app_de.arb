@@ -2170,6 +2170,8 @@
   "trayWatch": "Beobachten",
   "watchVia": "über {channel}",
   "watchViaNamed": "über {channel} ({name})",
+  "viaToken": "über Token {name}",
+  "viaChannelToken": "über {channel} (Token {name})",
   "watchChannelWeb": "Web",
   "watchChannelApi": "API",
   "watchChannelCli": "CLI",

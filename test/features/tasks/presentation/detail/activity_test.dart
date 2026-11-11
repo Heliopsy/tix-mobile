@@ -159,6 +159,9 @@ void main() {
   });
 
   group('history', () {
+    String? meta(WidgetTester tester, int seq) =>
+        tester.widget<Text>(find.byKey(Key('history.$seq.meta'))).data;
+
     setUp(() {
       server.audit['infra-1'] = [
         {
@@ -204,11 +207,42 @@ void main() {
         ),
         findsOneWidget,
       );
-      expect(find.textContaining('· web'), findsOneWidget);
-      expect(find.textContaining('· cli'), findsOneWidget);
+      expect(meta(tester, 3), endsWith(' · via web'));
+      expect(meta(tester, 2), endsWith(' · cli'));
       expect(
         find.textContaining('tix created the task', findRichText: true),
         findsOneWidget,
+      );
+    });
+
+    testWidgets('names the API token a change was made with', (tester) async {
+      server.audit['infra-1'] = [
+        {
+          'seq': 5,
+          'action': 'task.update',
+          'actor_id': 'a1',
+          'before': {'priority': 3},
+          'after': {'priority': 2},
+          'occurred_at': '2026-10-31T10:00:00Z',
+          'via': {'kind': 'api', 'token_id': 't9', 'token_name': 'ci-runner'},
+        },
+        {
+          'seq': 4,
+          'action': 'task.update',
+          'actor_id': 'a1',
+          'before': {'priority': 2},
+          'after': {'priority': 1},
+          'occurred_at': '2026-10-31T11:00:00Z',
+          'via': {'kind': 'mcp', 'token_name': 'claude'},
+        },
+      ];
+      await pumpTask(tester, server);
+      await tab(tester, 'History');
+      expect(meta(tester, 5), endsWith(' · via token ci-runner'));
+      expect(meta(tester, 4), endsWith(' · via MCP (token claude)'));
+      expect(
+        find.textContaining('Raj changed priority', findRichText: true),
+        findsNWidgets(2),
       );
     });
 
