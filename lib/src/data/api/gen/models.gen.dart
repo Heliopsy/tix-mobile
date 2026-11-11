@@ -364,8 +364,8 @@ abstract class Artifact with _$Artifact {
     /// ActorID is the actor that wrote the artifact, normally the claim holder.
     @JsonKey(name: 'actor_id') @Default('') String actorId,
 
-    /// Blob is inline content, base64 in JSON, at most 1 MiB. Larger content
-    /// belongs elsewhere, referenced from Payload.
+    /// Blob is inline content, base64 in JSON, within the tenant's artifact limits.
+    /// Larger content belongs elsewhere, referenced from Payload.
     @JsonKey(name: 'blob') @Default('') String blob,
 
     /// ContentType is the media type of Blob, such as "text/plain".
@@ -407,8 +407,9 @@ abstract class Artifact with _$Artifact {
 abstract class ArtifactInput with _$ArtifactInput {
   /// Creates a [ArtifactInput].
   const factory ArtifactInput({
-    /// Blob is inline content, base64 in JSON, at most 1 MiB; larger content
-    /// belongs elsewhere, referenced from Payload.
+    /// Blob is inline content, base64 in JSON, held to the tenant's artifact limits
+    /// on size and media type; larger content belongs elsewhere, referenced from
+    /// Payload.
     @JsonKey(name: 'blob') String? blob,
 
     /// ContentType is the media type of Blob.
@@ -448,6 +449,35 @@ enum ArtifactKind {
 
   /// The value on the wire.
   final String value;
+}
+
+/// ArtifactLimits are the bounds a new artifact blob is held to on a tenant.
+@freezed
+abstract class ArtifactLimits with _$ArtifactLimits {
+  /// Creates a [ArtifactLimits].
+  const factory ArtifactLimits({
+    /// AllowedTypes are the media types and patterns such as "image/*" a blob may
+    /// carry, the tenant's own list where it set one.
+    @JsonKey(name: 'allowed_types')
+    @Default(<String>[])
+    List<String> allowedTypes,
+
+    /// MaxBytes is the largest blob accepted, the lower of the tenant's own limit
+    /// and the server's.
+    @JsonKey(name: 'max_bytes') @Default(0) int maxBytes,
+
+    /// ServerAllowedTypes is the server's list, which a tenant may only narrow.
+    @JsonKey(name: 'server_allowed_types')
+    @Default(<String>[])
+    List<String> serverAllowedTypes,
+
+    /// ServerMaxBytes is the server's limit, which a tenant may only lower.
+    @JsonKey(name: 'server_max_bytes') @Default(0) int serverMaxBytes,
+  }) = _ArtifactLimits;
+
+  /// Reads a [ArtifactLimits] from its JSON object.
+  factory ArtifactLimits.fromJson(Map<String, dynamic> json) =>
+      _$ArtifactLimitsFromJson(json);
 }
 
 /// AuditEntry is one append-only record of a change.
@@ -517,6 +547,8 @@ enum BulkAction {
   unstar('unstar'),
   @JsonValue('copy')
   copy('copy'),
+  @JsonValue('move_project')
+  moveProject('move_project'),
   @JsonValue('delete')
   delete('delete'),
   @JsonValue('restore')
@@ -544,6 +576,9 @@ abstract class BulkOutcome with _$BulkOutcome {
 
     /// Error is the refusal's message.
     @JsonKey(name: 'error') @Default('') String error,
+
+    /// MovedRef is the reference a task moved to another project now has.
+    @JsonKey(name: 'moved_ref') @Default('') String movedRef,
 
     /// Ref is the task reference as given.
     @JsonKey(name: 'ref') @Default('') String ref,
@@ -586,8 +621,8 @@ abstract class BulkResult with _$BulkResult {
 
 /// BulkTaskInput is one action applied to many tasks. Only the argument the
 /// action needs is read: To for a move, Priority for priority, Tag for the tag
-/// actions, AssigneeActorID for assign (empty clears), ProjectRef for a copy
-/// and Cascade for a delete.
+/// actions, AssigneeActorID for assign (empty clears), ProjectRef for a copy or
+/// a move to another project, and Cascade for a delete.
 @freezed
 abstract class BulkTaskInput with _$BulkTaskInput {
   /// Creates a [BulkTaskInput].
@@ -608,7 +643,7 @@ abstract class BulkTaskInput with _$BulkTaskInput {
     /// Priority orders tasks in a queue.
     @JsonKey(name: 'priority') int? priority,
 
-    /// ProjectRef is the project a copy goes to, by key or id.
+    /// ProjectRef is the project a copy or a move_project goes to, by key or id.
     @JsonKey(name: 'project_ref') String? projectRef,
 
     /// Refs are the tasks to act on, by reference such as OPS-12 or by id: 1 to
@@ -958,6 +993,10 @@ abstract class Comment with _$Comment {
 
     /// ID is the comment's unique identifier.
     @JsonKey(name: 'id') @Default('') String id,
+
+    /// Reactions are the emoji people reacted with, in the order each emoji was
+    /// first used. Absent when nobody reacted.
+    @JsonKey(name: 'reactions') @Default(<Reaction>[]) List<Reaction> reactions,
 
     /// TaskID is the ID of the task commented on.
     @JsonKey(name: 'task_id') @Default('') String taskId,
@@ -1454,6 +1493,16 @@ abstract class CreatedTenant with _$CreatedTenant {
     @Default(<CreatedAdmin>[])
     List<CreatedAdmin> admins,
 
+    /// ArtifactMaxBytes is the largest artifact blob this tenant accepts. It can
+    /// lower the server's artifacts.max_bytes but never raise it; zero inherits.
+    @JsonKey(name: 'artifact_max_bytes') @Default(0) int artifactMaxBytes,
+
+    /// ArtifactTypes are the media types and patterns an artifact blob may carry on
+    /// this tenant, within the server's artifacts.allowed_types; empty inherits.
+    @JsonKey(name: 'artifact_types')
+    @Default(<String>[])
+    List<String> artifactTypes,
+
     /// CreatedAt is when the tenant was created, RFC 3339.
     @JsonKey(name: 'created_at') @TixDateTime() DateTime? createdAt,
 
@@ -1790,6 +1839,10 @@ enum EventType {
   taskWoke('task.woke'),
   @JsonValue('comment.added')
   commentAdded('comment.added'),
+  @JsonValue('comment.reacted')
+  commentReacted('comment.reacted'),
+  @JsonValue('comment.unreacted')
+  commentUnreacted('comment.unreacted'),
   @JsonValue('artifact.added')
   artifactAdded('artifact.added'),
   @JsonValue('dependency.added')
@@ -3064,6 +3117,20 @@ abstract class TenantMembership with _$TenantMembership {
       _$TenantMembershipFromJson(json);
 }
 
+/// MoveTaskInput names the project a task moves to.
+@freezed
+abstract class MoveTaskInput with _$MoveTaskInput {
+  /// Creates a [MoveTaskInput].
+  const factory MoveTaskInput({
+    /// ProjectRef is the key or identifier of the project to move into.
+    @JsonKey(name: 'project_ref') String? projectRef,
+  }) = _MoveTaskInput;
+
+  /// Reads a [MoveTaskInput] from its JSON object.
+  factory MoveTaskInput.fromJson(Map<String, dynamic> json) =>
+      _$MoveTaskInputFromJson(json);
+}
+
 /// NumberingLag is one project whose task number counter is behind its tasks.
 @freezed
 abstract class NumberingLag with _$NumberingLag {
@@ -3263,6 +3330,26 @@ abstract class PruneResult with _$PruneResult {
   /// Reads a [PruneResult] from its JSON object.
   factory PruneResult.fromJson(Map<String, dynamic> json) =>
       _$PruneResultFromJson(json);
+}
+
+/// Reaction is one emoji on a comment and everyone who reacted with it.
+@freezed
+abstract class Reaction with _$Reaction {
+  /// Creates a [Reaction].
+  const factory Reaction({
+    /// ActorIDs are the actors who reacted, earliest first.
+    @JsonKey(name: 'actor_ids') @Default(<String>[]) List<String> actorIds,
+
+    /// Count is how many actors reacted with this emoji.
+    @JsonKey(name: 'count') @Default(0) int count,
+
+    /// Emoji is the reaction, a single emoji grapheme.
+    @JsonKey(name: 'emoji') @Default('') String emoji,
+  }) = _Reaction;
+
+  /// Reads a [Reaction] from its JSON object.
+  factory Reaction.fromJson(Map<String, dynamic> json) =>
+      _$ReactionFromJson(json);
 }
 
 /// ReadyBody reports whether the server can serve traffic.
@@ -4949,6 +5036,10 @@ abstract class Task with _$Task {
     /// a stale write refused with a conflict.
     @JsonKey(name: 'version') @Default(0) int version,
 
+    /// WaitingOn names, by reference, the unfinished tasks that make this one
+    /// Blocked, in reference order. Empty when Blocked is false.
+    @JsonKey(name: 'waiting_on') @Default(<String>[]) List<String> waitingOn,
+
     /// WebURL is the address of the task's screen in the browser interface, set
     /// when the server is configured with the address it is reached at
     /// (server.public_url). Only a read sets it, so it is absent from audit
@@ -5225,6 +5316,43 @@ abstract class TaskImportValue with _$TaskImportValue {
       _$TaskImportValueFromJson(json);
 }
 
+/// TaskMove is what moving a task did: the task as it landed and what changed
+/// on the way.
+@freezed
+abstract class TaskMove with _$TaskMove {
+  /// Creates a [TaskMove].
+  const factory TaskMove({
+    /// DroppedFields names the custom fields the target does not define or would
+    /// not accept, whose values were left behind.
+    @JsonKey(name: 'dropped_fields')
+    @Default(<String>[])
+    List<String> droppedFields,
+
+    /// FromProject is the key of the project the task left.
+    @JsonKey(name: 'from_project') @Default('') String fromProject,
+
+    /// FromRef is the reference the task had, which keeps resolving to it.
+    @JsonKey(name: 'from_ref') @Default('') String fromRef,
+
+    /// FromStatus is the status the task had before the move.
+    @JsonKey(name: 'from_status') @Default('') String fromStatus,
+
+    /// Project is the key of the project the task moved into.
+    @JsonKey(name: 'project') @Default('') String project,
+
+    /// StatusKept reports that the target's workflow had the same state; when false
+    /// the task starts in the target's initial state.
+    @JsonKey(name: 'status_kept') @Default(false) bool statusKept,
+
+    /// Task is the moved task under its new reference.
+    @JsonKey(name: 'task') Task? task,
+  }) = _TaskMove;
+
+  /// Reads a [TaskMove] from its JSON object.
+  factory TaskMove.fromJson(Map<String, dynamic> json) =>
+      _$TaskMoveFromJson(json);
+}
+
 /// TaskTemplate is a named shape of a task that is not itself work: it never
 /// appears where tasks do, and using it creates tasks.
 @freezed
@@ -5319,6 +5447,16 @@ abstract class TemplateTask with _$TemplateTask {
 abstract class Tenant with _$Tenant {
   /// Creates a [Tenant].
   const factory Tenant({
+    /// ArtifactMaxBytes is the largest artifact blob this tenant accepts. It can
+    /// lower the server's artifacts.max_bytes but never raise it; zero inherits.
+    @JsonKey(name: 'artifact_max_bytes') @Default(0) int artifactMaxBytes,
+
+    /// ArtifactTypes are the media types and patterns an artifact blob may carry on
+    /// this tenant, within the server's artifacts.allowed_types; empty inherits.
+    @JsonKey(name: 'artifact_types')
+    @Default(<String>[])
+    List<String> artifactTypes,
+
     /// CreatedAt is when the tenant was created, RFC 3339.
     @JsonKey(name: 'created_at') @TixDateTime() DateTime? createdAt,
 
@@ -5856,6 +5994,16 @@ abstract class UpdateTemplateInput with _$UpdateTemplateInput {
 abstract class UpdateTenantInput with _$UpdateTenantInput {
   /// Creates a [UpdateTenantInput].
   const factory UpdateTenantInput({
+    /// ArtifactMaxBytes lowers the largest artifact blob this tenant accepts below
+    /// the server's limit. Zero inherits the server's and omitted leaves it; a
+    /// value above the server's is refused.
+    @JsonKey(name: 'artifact_max_bytes') int? artifactMaxBytes,
+
+    /// ArtifactTypes narrows the media types an artifact blob may carry, such as
+    /// ["image/*", "application/pdf"]. An empty list inherits the server's and
+    /// omitted leaves it; a type the server does not accept is refused.
+    @JsonKey(name: 'artifact_types') List<String>? artifactTypes,
+
     /// LeaseDefault is the lease a claim on this tenant gets when nothing more
     /// specific names one, a duration such as "30m". Zero clears it back to the
     /// deployment configuration and omitted leaves it alone. A default longer than

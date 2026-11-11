@@ -348,6 +348,18 @@ void main() {
           const BulkTaskInput(action: BulkAction.delete, refs: ['x-1']),
         ],
       );
+      expect(
+        undoRequests(
+          const BulkTaskInput(
+            action: BulkAction.moveProject,
+            refs: ['x-1'],
+            projectRef: 'ops',
+          ),
+          before,
+          ok(['x-1']),
+        ),
+        isEmpty,
+      );
     });
   });
 

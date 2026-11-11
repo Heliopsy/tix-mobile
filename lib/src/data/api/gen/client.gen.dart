@@ -315,6 +315,17 @@ class ArtifactOps {
 
   final TixTransport _t;
 
+  /// ArtifactLimits reports the size and media types a new artifact blob is held
+  /// to on the current tenant: the server's artifacts.max_bytes and
+  /// artifacts.allowed_types, narrowed by the tenant's own settings.
+  ///
+  /// `GET /api/v1/artifact-limits` (`artifact.limits`), scope `task:read`.
+  Future<ArtifactLimits> limits() async {
+    return ArtifactLimits.fromJson(
+      await _t.json('GET', '/api/v1/artifact-limits'),
+    );
+  }
+
   /// ListArtifacts lists a task's artifacts, oldest first.
   ///
   /// `GET /api/v1/tasks/{ref}/artifacts` (`artifact.list`), scope `task:read`.
@@ -765,6 +776,42 @@ class CommentOps {
   Stream<Comment> listStream(String ref) => _t
       .ndjson('GET', '/api/v1/tasks/${_t.segment(ref)}/comments')
       .map((e) => Comment.fromJson(e! as Map<String, dynamic>));
+
+  /// AddReaction adds the caller's emoji reaction to a comment and returns the
+  /// comment with its reactions.
+  ///
+  /// `PUT /api/v1/comments/{id}/reactions/{emoji}` (`comment.react`), scope `comment:write`.
+  Future<Comment> react(
+    String id,
+    String emoji, {
+    String? idempotencyKey,
+  }) async {
+    return Comment.fromJson(
+      await _t.json(
+        'PUT',
+        '/api/v1/comments/${_t.segment(id)}/reactions/${_t.segment(emoji)}',
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
+    );
+  }
+
+  /// RemoveReaction removes the caller's emoji reaction from a comment and
+  /// returns the comment with its reactions.
+  ///
+  /// `DELETE /api/v1/comments/{id}/reactions/{emoji}` (`comment.unreact`), scope `comment:write`.
+  Future<Comment> unreact(
+    String id,
+    String emoji, {
+    String? idempotencyKey,
+  }) async {
+    return Comment.fromJson(
+      await _t.json(
+        'DELETE',
+        '/api/v1/comments/${_t.segment(id)}/reactions/${_t.segment(emoji)}',
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
+    );
+  }
 }
 
 /// The `connection` operations.
@@ -2813,6 +2860,24 @@ class TaskOps {
         if (fieldFilters != null)
           for (final e in fieldFilters.entries) 'field.${e.key}': e.value,
       },
+    );
+  }
+
+  /// MoveTask moves a task into another project.
+  ///
+  /// `POST /api/v1/tasks/{ref}/move` (`task.move`), scope `task:write`.
+  Future<TaskMove> move(
+    String ref,
+    MoveTaskInput body, {
+    String? idempotencyKey,
+  }) async {
+    return TaskMove.fromJson(
+      await _t.json(
+        'POST',
+        '/api/v1/tasks/${_t.segment(ref)}/move',
+        body: body.toJson(),
+        headers: {'Idempotency-Key': idempotencyKey},
+      ),
     );
   }
 

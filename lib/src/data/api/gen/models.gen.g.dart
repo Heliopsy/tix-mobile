@@ -378,6 +378,30 @@ Map<String, dynamic> _$ArtifactInputToJson(_ArtifactInput instance) =>
       'payload': ?instance.payload,
     };
 
+_ArtifactLimits _$ArtifactLimitsFromJson(Map<String, dynamic> json) =>
+    _ArtifactLimits(
+      allowedTypes:
+          (json['allowed_types'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const <String>[],
+      maxBytes: (json['max_bytes'] as num?)?.toInt() ?? 0,
+      serverAllowedTypes:
+          (json['server_allowed_types'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const <String>[],
+      serverMaxBytes: (json['server_max_bytes'] as num?)?.toInt() ?? 0,
+    );
+
+Map<String, dynamic> _$ArtifactLimitsToJson(_ArtifactLimits instance) =>
+    <String, dynamic>{
+      'allowed_types': instance.allowedTypes,
+      'max_bytes': instance.maxBytes,
+      'server_allowed_types': instance.serverAllowedTypes,
+      'server_max_bytes': instance.serverMaxBytes,
+    };
+
 _AuditEntry _$AuditEntryFromJson(Map<String, dynamic> json) => _AuditEntry(
   action: json['action'] as String? ?? '',
   actorId: json['actor_id'] as String? ?? '',
@@ -432,6 +456,7 @@ _BulkOutcome _$BulkOutcomeFromJson(Map<String, dynamic> json) => _BulkOutcome(
   code: json['code'] as String? ?? '',
   copyRef: json['copy_ref'] as String? ?? '',
   error: json['error'] as String? ?? '',
+  movedRef: json['moved_ref'] as String? ?? '',
   ref: json['ref'] as String? ?? '',
 );
 
@@ -441,6 +466,7 @@ Map<String, dynamic> _$BulkOutcomeToJson(_BulkOutcome instance) =>
       'code': instance.code,
       'copy_ref': instance.copyRef,
       'error': instance.error,
+      'moved_ref': instance.movedRef,
       'ref': instance.ref,
     };
 
@@ -476,6 +502,7 @@ const _$BulkActionEnumMap = {
   BulkAction.star: 'star',
   BulkAction.unstar: 'unstar',
   BulkAction.copy: 'copy',
+  BulkAction.moveProject: 'move_project',
   BulkAction.delete: 'delete',
   BulkAction.restore: 'restore',
 };
@@ -746,6 +773,11 @@ _Comment _$CommentFromJson(Map<String, dynamic> json) => _Comment(
     const TixDateTime().fromJson,
   ),
   id: json['id'] as String? ?? '',
+  reactions:
+      (json['reactions'] as List<dynamic>?)
+          ?.map((e) => Reaction.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const <Reaction>[],
   taskId: json['task_id'] as String? ?? '',
   tenantId: json['tenant_id'] as String? ?? '',
   updatedAt: _$JsonConverterFromJson<String, DateTime>(
@@ -766,6 +798,7 @@ Map<String, dynamic> _$CommentToJson(_Comment instance) => <String, dynamic>{
     const TixDateTime().toJson,
   ),
   'id': instance.id,
+  'reactions': instance.reactions.map((e) => e.toJson()).toList(),
   'task_id': instance.taskId,
   'tenant_id': instance.tenantId,
   'updated_at': ?_$JsonConverterToJson<String, DateTime>(
@@ -1101,6 +1134,12 @@ _CreatedTenant _$CreatedTenantFromJson(Map<String, dynamic> json) =>
               ?.map((e) => CreatedAdmin.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const <CreatedAdmin>[],
+      artifactMaxBytes: (json['artifact_max_bytes'] as num?)?.toInt() ?? 0,
+      artifactTypes:
+          (json['artifact_types'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const <String>[],
       createdAt: _$JsonConverterFromJson<String, DateTime>(
         json['created_at'],
         const TixDateTime().fromJson,
@@ -1143,6 +1182,8 @@ _CreatedTenant _$CreatedTenantFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$CreatedTenantToJson(_CreatedTenant instance) =>
     <String, dynamic>{
       'admins': instance.admins.map((e) => e.toJson()).toList(),
+      'artifact_max_bytes': instance.artifactMaxBytes,
+      'artifact_types': instance.artifactTypes,
       'created_at': ?_$JsonConverterToJson<String, DateTime>(
         instance.createdAt,
         const TixDateTime().toJson,
@@ -1354,6 +1395,8 @@ const _$EventTypeEnumMap = {
   EventType.taskUnsnoozed: 'task.unsnoozed',
   EventType.taskWoke: 'task.woke',
   EventType.commentAdded: 'comment.added',
+  EventType.commentReacted: 'comment.reacted',
+  EventType.commentUnreacted: 'comment.unreacted',
   EventType.artifactAdded: 'artifact.added',
   EventType.dependencyAdded: 'dependency.added',
   EventType.tagAdded: 'tag.added',
@@ -2332,6 +2375,12 @@ Map<String, dynamic> _$TenantMembershipToJson(_TenantMembership instance) =>
       'tenant_id': instance.tenantId,
     };
 
+_MoveTaskInput _$MoveTaskInputFromJson(Map<String, dynamic> json) =>
+    _MoveTaskInput(projectRef: json['project_ref'] as String?);
+
+Map<String, dynamic> _$MoveTaskInputToJson(_MoveTaskInput instance) =>
+    <String, dynamic>{'project_ref': ?instance.projectRef};
+
 _NumberingLag _$NumberingLagFromJson(Map<String, dynamic> json) =>
     _NumberingLag(
       counter: (json['counter'] as num?)?.toInt() ?? 0,
@@ -2471,6 +2520,20 @@ Map<String, dynamic> _$PruneResultToJson(_PruneResult instance) =>
       'retained_for_subscribers': instance.retainedForSubscribers,
       'webhook_deliveries': instance.webhookDeliveries,
     };
+
+_Reaction _$ReactionFromJson(Map<String, dynamic> json) => _Reaction(
+  actorIds:
+      (json['actor_ids'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      const <String>[],
+  count: (json['count'] as num?)?.toInt() ?? 0,
+  emoji: json['emoji'] as String? ?? '',
+);
+
+Map<String, dynamic> _$ReactionToJson(_Reaction instance) => <String, dynamic>{
+  'actor_ids': instance.actorIds,
+  'count': instance.count,
+  'emoji': instance.emoji,
+};
 
 _ReadyBody _$ReadyBodyFromJson(Map<String, dynamic> json) => _ReadyBody(
   checks:
@@ -3585,6 +3648,11 @@ _Task _$TaskFromJson(Map<String, dynamic> json) => _Task(
     const TixDateTime().fromJson,
   ),
   version: (json['version'] as num?)?.toInt() ?? 0,
+  waitingOn:
+      (json['waiting_on'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const <String>[],
   webUrl: json['web_url'] as String? ?? '',
 );
 
@@ -3656,6 +3724,7 @@ Map<String, dynamic> _$TaskToJson(_Task instance) => <String, dynamic>{
     const TixDateTime().toJson,
   ),
   'version': instance.version,
+  'waiting_on': instance.waitingOn,
   'web_url': instance.webUrl,
 };
 
@@ -3871,6 +3940,32 @@ Map<String, dynamic> _$TaskImportValueToJson(_TaskImportValue instance) =>
       'value': instance.value,
     };
 
+_TaskMove _$TaskMoveFromJson(Map<String, dynamic> json) => _TaskMove(
+  droppedFields:
+      (json['dropped_fields'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const <String>[],
+  fromProject: json['from_project'] as String? ?? '',
+  fromRef: json['from_ref'] as String? ?? '',
+  fromStatus: json['from_status'] as String? ?? '',
+  project: json['project'] as String? ?? '',
+  statusKept: json['status_kept'] as bool? ?? false,
+  task: json['task'] == null
+      ? null
+      : Task.fromJson(json['task'] as Map<String, dynamic>),
+);
+
+Map<String, dynamic> _$TaskMoveToJson(_TaskMove instance) => <String, dynamic>{
+  'dropped_fields': instance.droppedFields,
+  'from_project': instance.fromProject,
+  'from_ref': instance.fromRef,
+  'from_status': instance.fromStatus,
+  'project': instance.project,
+  'status_kept': instance.statusKept,
+  'task': ?instance.task?.toJson(),
+};
+
 _TaskTemplate _$TaskTemplateFromJson(Map<String, dynamic> json) =>
     _TaskTemplate(
       createdAt: _$JsonConverterFromJson<String, DateTime>(
@@ -3948,6 +4043,12 @@ Map<String, dynamic> _$TemplateTaskToJson(_TemplateTask instance) =>
     };
 
 _Tenant _$TenantFromJson(Map<String, dynamic> json) => _Tenant(
+  artifactMaxBytes: (json['artifact_max_bytes'] as num?)?.toInt() ?? 0,
+  artifactTypes:
+      (json['artifact_types'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const <String>[],
   createdAt: _$JsonConverterFromJson<String, DateTime>(
     json['created_at'],
     const TixDateTime().fromJson,
@@ -3981,6 +4082,8 @@ _Tenant _$TenantFromJson(Map<String, dynamic> json) => _Tenant(
 );
 
 Map<String, dynamic> _$TenantToJson(_Tenant instance) => <String, dynamic>{
+  'artifact_max_bytes': instance.artifactMaxBytes,
+  'artifact_types': instance.artifactTypes,
   'created_at': ?_$JsonConverterToJson<String, DateTime>(
     instance.createdAt,
     const TixDateTime().toJson,
@@ -4322,6 +4425,10 @@ Map<String, dynamic> _$UpdateTemplateInputToJson(
 
 _UpdateTenantInput _$UpdateTenantInputFromJson(Map<String, dynamic> json) =>
     _UpdateTenantInput(
+      artifactMaxBytes: (json['artifact_max_bytes'] as num?)?.toInt(),
+      artifactTypes: (json['artifact_types'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       leaseDefault: json['lease_default'] as String?,
       leaseMax: json['lease_max'] as String?,
       mfaGrace: json['mfa_grace'] as String?,
@@ -4338,6 +4445,8 @@ _UpdateTenantInput _$UpdateTenantInputFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$UpdateTenantInputToJson(_UpdateTenantInput instance) =>
     <String, dynamic>{
+      'artifact_max_bytes': ?instance.artifactMaxBytes,
+      'artifact_types': ?instance.artifactTypes,
       'lease_default': ?instance.leaseDefault,
       'lease_max': ?instance.leaseMax,
       'mfa_grace': ?instance.mfaGrace,

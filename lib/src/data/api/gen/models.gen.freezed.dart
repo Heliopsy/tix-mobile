@@ -2837,8 +2837,8 @@ as CollisionPolicy?,
 mixin _$Artifact {
 
 /// ActorID is the actor that wrote the artifact, normally the claim holder.
-@JsonKey(name: 'actor_id') String get actorId;/// Blob is inline content, base64 in JSON, at most 1 MiB. Larger content
-/// belongs elsewhere, referenced from Payload.
+@JsonKey(name: 'actor_id') String get actorId;/// Blob is inline content, base64 in JSON, within the tenant's artifact limits.
+/// Larger content belongs elsewhere, referenced from Payload.
 @JsonKey(name: 'blob') String get blob;/// ContentType is the media type of Blob, such as "text/plain".
 @JsonKey(name: 'content_type') String get contentType;/// CreatedAt is when the artifact was written, RFC 3339.
 @JsonKey(name: 'created_at')@TixDateTime() DateTime? get createdAt;/// ID is the artifact's unique identifier.
@@ -3060,8 +3060,8 @@ class _Artifact implements Artifact {
 
 /// ActorID is the actor that wrote the artifact, normally the claim holder.
 @override@JsonKey(name: 'actor_id') final  String actorId;
-/// Blob is inline content, base64 in JSON, at most 1 MiB. Larger content
-/// belongs elsewhere, referenced from Payload.
+/// Blob is inline content, base64 in JSON, within the tenant's artifact limits.
+/// Larger content belongs elsewhere, referenced from Payload.
 @override@JsonKey(name: 'blob') final  String blob;
 /// ContentType is the media type of Blob, such as "text/plain".
 @override@JsonKey(name: 'content_type') final  String contentType;
@@ -3162,8 +3162,9 @@ as String,
 /// @nodoc
 mixin _$ArtifactInput {
 
-/// Blob is inline content, base64 in JSON, at most 1 MiB; larger content
-/// belongs elsewhere, referenced from Payload.
+/// Blob is inline content, base64 in JSON, held to the tenant's artifact limits
+/// on size and media type; larger content belongs elsewhere, referenced from
+/// Payload.
 @JsonKey(name: 'blob') String? get blob;/// ContentType is the media type of Blob.
 @JsonKey(name: 'content_type') String? get contentType;/// Kind classifies the output. Required.
 @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) ArtifactKind? get kind;/// LeaseToken is the claim's token, required while the task is claimed.
@@ -3376,8 +3377,9 @@ class _ArtifactInput implements ArtifactInput {
   const _ArtifactInput({@JsonKey(name: 'blob') this.blob, @JsonKey(name: 'content_type') this.contentType, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.kind, @JsonKey(name: 'lease_token') this.leaseToken, @JsonKey(name: 'name') this.name, @JsonKey(name: 'payload')  Map<String, Object?>? payload}): _payload = payload;
   factory _ArtifactInput.fromJson(Map<String, dynamic> json) => _$ArtifactInputFromJson(json);
 
-/// Blob is inline content, base64 in JSON, at most 1 MiB; larger content
-/// belongs elsewhere, referenced from Payload.
+/// Blob is inline content, base64 in JSON, held to the tenant's artifact limits
+/// on size and media type; larger content belongs elsewhere, referenced from
+/// Payload.
 @override@JsonKey(name: 'blob') final  String? blob;
 /// ContentType is the media type of Blob.
 @override@JsonKey(name: 'content_type') final  String? contentType;
@@ -3460,6 +3462,312 @@ as ArtifactKind?,leaseToken: freezed == leaseToken ? _self.leaseToken : leaseTok
 as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,payload: freezed == payload ? _self._payload : payload // ignore: cast_nullable_to_non_nullable
 as Map<String, Object?>?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$ArtifactLimits {
+
+/// AllowedTypes are the media types and patterns such as "image/*" a blob may
+/// carry, the tenant's own list where it set one.
+@JsonKey(name: 'allowed_types') List<String> get allowedTypes;/// MaxBytes is the largest blob accepted, the lower of the tenant's own limit
+/// and the server's.
+@JsonKey(name: 'max_bytes') int get maxBytes;/// ServerAllowedTypes is the server's list, which a tenant may only narrow.
+@JsonKey(name: 'server_allowed_types') List<String> get serverAllowedTypes;/// ServerMaxBytes is the server's limit, which a tenant may only lower.
+@JsonKey(name: 'server_max_bytes') int get serverMaxBytes;
+/// Create a copy of ArtifactLimits
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ArtifactLimitsCopyWith<ArtifactLimits> get copyWith => _$ArtifactLimitsCopyWithImpl<ArtifactLimits>(this as ArtifactLimits, _$identity);
+
+  /// Serializes this ArtifactLimits to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as ArtifactLimits;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ArtifactLimits&&const DeepCollectionEquality().equals(other.allowedTypes, _this.allowedTypes)&&(identical(other.maxBytes, _this.maxBytes) || other.maxBytes == _this.maxBytes)&&const DeepCollectionEquality().equals(other.serverAllowedTypes, _this.serverAllowedTypes)&&(identical(other.serverMaxBytes, _this.serverMaxBytes) || other.serverMaxBytes == _this.serverMaxBytes));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as ArtifactLimits;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.allowedTypes),_this.maxBytes,const DeepCollectionEquality().hash(_this.serverAllowedTypes),_this.serverMaxBytes);
+}
+
+@override
+String toString() {
+  final _this = this as ArtifactLimits;
+  return 'ArtifactLimits(allowedTypes: ${_this.allowedTypes}, maxBytes: ${_this.maxBytes}, serverAllowedTypes: ${_this.serverAllowedTypes}, serverMaxBytes: ${_this.serverMaxBytes})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ArtifactLimitsCopyWith<$Res>  {
+  factory $ArtifactLimitsCopyWith(ArtifactLimits value, $Res Function(ArtifactLimits) _then) = _$ArtifactLimitsCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'allowed_types') List<String> allowedTypes,@JsonKey(name: 'max_bytes') int maxBytes,@JsonKey(name: 'server_allowed_types') List<String> serverAllowedTypes,@JsonKey(name: 'server_max_bytes') int serverMaxBytes
+});
+
+
+
+
+}
+/// @nodoc
+class _$ArtifactLimitsCopyWithImpl<$Res>
+    implements $ArtifactLimitsCopyWith<$Res> {
+  _$ArtifactLimitsCopyWithImpl(this._self, this._then);
+
+  final ArtifactLimits _self;
+  final $Res Function(ArtifactLimits) _then;
+
+/// Create a copy of ArtifactLimits
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? allowedTypes = null,Object? maxBytes = null,Object? serverAllowedTypes = null,Object? serverMaxBytes = null,}) {
+  return _then(ArtifactLimits(
+allowedTypes: null == allowedTypes ? _self.allowedTypes : allowedTypes // ignore: cast_nullable_to_non_nullable
+as List<String>,maxBytes: null == maxBytes ? _self.maxBytes : maxBytes // ignore: cast_nullable_to_non_nullable
+as int,serverAllowedTypes: null == serverAllowedTypes ? _self.serverAllowedTypes : serverAllowedTypes // ignore: cast_nullable_to_non_nullable
+as List<String>,serverMaxBytes: null == serverMaxBytes ? _self.serverMaxBytes : serverMaxBytes // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [ArtifactLimits].
+extension ArtifactLimitsPatterns on ArtifactLimits {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ArtifactLimits value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ArtifactLimits() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ArtifactLimits value)  $default,){
+final _that = this;
+switch (_that) {
+case _ArtifactLimits():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ArtifactLimits value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ArtifactLimits() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'allowed_types')  List<String> allowedTypes, @JsonKey(name: 'max_bytes')  int maxBytes, @JsonKey(name: 'server_allowed_types')  List<String> serverAllowedTypes, @JsonKey(name: 'server_max_bytes')  int serverMaxBytes)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ArtifactLimits() when $default != null:
+return $default(_that.allowedTypes,_that.maxBytes,_that.serverAllowedTypes,_that.serverMaxBytes);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'allowed_types')  List<String> allowedTypes, @JsonKey(name: 'max_bytes')  int maxBytes, @JsonKey(name: 'server_allowed_types')  List<String> serverAllowedTypes, @JsonKey(name: 'server_max_bytes')  int serverMaxBytes)  $default,) {final _that = this;
+switch (_that) {
+case _ArtifactLimits():
+return $default(_that.allowedTypes,_that.maxBytes,_that.serverAllowedTypes,_that.serverMaxBytes);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'allowed_types')  List<String> allowedTypes, @JsonKey(name: 'max_bytes')  int maxBytes, @JsonKey(name: 'server_allowed_types')  List<String> serverAllowedTypes, @JsonKey(name: 'server_max_bytes')  int serverMaxBytes)?  $default,) {final _that = this;
+switch (_that) {
+case _ArtifactLimits() when $default != null:
+return $default(_that.allowedTypes,_that.maxBytes,_that.serverAllowedTypes,_that.serverMaxBytes);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _ArtifactLimits implements ArtifactLimits {
+  const _ArtifactLimits({@JsonKey(name: 'allowed_types')  List<String> allowedTypes = const <String>[], @JsonKey(name: 'max_bytes') this.maxBytes = 0, @JsonKey(name: 'server_allowed_types')  List<String> serverAllowedTypes = const <String>[], @JsonKey(name: 'server_max_bytes') this.serverMaxBytes = 0}): _allowedTypes = allowedTypes,_serverAllowedTypes = serverAllowedTypes;
+  factory _ArtifactLimits.fromJson(Map<String, dynamic> json) => _$ArtifactLimitsFromJson(json);
+
+/// AllowedTypes are the media types and patterns such as "image/*" a blob may
+/// carry, the tenant's own list where it set one.
+ final  List<String> _allowedTypes;
+/// AllowedTypes are the media types and patterns such as "image/*" a blob may
+/// carry, the tenant's own list where it set one.
+@override@JsonKey(name: 'allowed_types') List<String> get allowedTypes {
+  if (_allowedTypes is EqualUnmodifiableListView) return _allowedTypes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_allowedTypes);
+}
+
+/// MaxBytes is the largest blob accepted, the lower of the tenant's own limit
+/// and the server's.
+@override@JsonKey(name: 'max_bytes') final  int maxBytes;
+/// ServerAllowedTypes is the server's list, which a tenant may only narrow.
+ final  List<String> _serverAllowedTypes;
+/// ServerAllowedTypes is the server's list, which a tenant may only narrow.
+@override@JsonKey(name: 'server_allowed_types') List<String> get serverAllowedTypes {
+  if (_serverAllowedTypes is EqualUnmodifiableListView) return _serverAllowedTypes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_serverAllowedTypes);
+}
+
+/// ServerMaxBytes is the server's limit, which a tenant may only lower.
+@override@JsonKey(name: 'server_max_bytes') final  int serverMaxBytes;
+
+/// Create a copy of ArtifactLimits
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ArtifactLimitsCopyWith<_ArtifactLimits> get copyWith => __$ArtifactLimitsCopyWithImpl<_ArtifactLimits>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$ArtifactLimitsToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ArtifactLimits&&const DeepCollectionEquality().equals(other.allowedTypes, _allowedTypes)&&(identical(other.maxBytes, maxBytes) || other.maxBytes == maxBytes)&&const DeepCollectionEquality().equals(other.serverAllowedTypes, _serverAllowedTypes)&&(identical(other.serverMaxBytes, serverMaxBytes) || other.serverMaxBytes == serverMaxBytes));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_allowedTypes),maxBytes,const DeepCollectionEquality().hash(_serverAllowedTypes),serverMaxBytes);
+}
+
+@override
+String toString() {
+    return 'ArtifactLimits(allowedTypes: $allowedTypes, maxBytes: $maxBytes, serverAllowedTypes: $serverAllowedTypes, serverMaxBytes: $serverMaxBytes)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ArtifactLimitsCopyWith<$Res> implements $ArtifactLimitsCopyWith<$Res> {
+  factory _$ArtifactLimitsCopyWith(_ArtifactLimits value, $Res Function(_ArtifactLimits) _then) = __$ArtifactLimitsCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'allowed_types') List<String> allowedTypes,@JsonKey(name: 'max_bytes') int maxBytes,@JsonKey(name: 'server_allowed_types') List<String> serverAllowedTypes,@JsonKey(name: 'server_max_bytes') int serverMaxBytes
+});
+
+
+
+
+}
+/// @nodoc
+class __$ArtifactLimitsCopyWithImpl<$Res>
+    implements _$ArtifactLimitsCopyWith<$Res> {
+  __$ArtifactLimitsCopyWithImpl(this._self, this._then);
+
+  final _ArtifactLimits _self;
+  final $Res Function(_ArtifactLimits) _then;
+
+/// Create a copy of ArtifactLimits
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? allowedTypes = null,Object? maxBytes = null,Object? serverAllowedTypes = null,Object? serverMaxBytes = null,}) {
+  return _then(_ArtifactLimits(
+allowedTypes: null == allowedTypes ? _self._allowedTypes : allowedTypes // ignore: cast_nullable_to_non_nullable
+as List<String>,maxBytes: null == maxBytes ? _self.maxBytes : maxBytes // ignore: cast_nullable_to_non_nullable
+as int,serverAllowedTypes: null == serverAllowedTypes ? _self._serverAllowedTypes : serverAllowedTypes // ignore: cast_nullable_to_non_nullable
+as List<String>,serverMaxBytes: null == serverMaxBytes ? _self.serverMaxBytes : serverMaxBytes // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
@@ -3818,7 +4126,8 @@ mixin _$BulkOutcome {
 @JsonKey(name: 'applied') bool get applied;/// Code is the error kind of a refusal, such as not_found or conflict.
 @JsonKey(name: 'code') String get code;/// CopyRef names the new task a copy created.
 @JsonKey(name: 'copy_ref') String get copyRef;/// Error is the refusal's message.
-@JsonKey(name: 'error') String get error;/// Ref is the task reference as given.
+@JsonKey(name: 'error') String get error;/// MovedRef is the reference a task moved to another project now has.
+@JsonKey(name: 'moved_ref') String get movedRef;/// Ref is the task reference as given.
 @JsonKey(name: 'ref') String get ref;
 /// Create a copy of BulkOutcome
 /// with the given fields replaced by the non-null parameter values.
@@ -3833,20 +4142,20 @@ $BulkOutcomeCopyWith<BulkOutcome> get copyWith => _$BulkOutcomeCopyWithImpl<Bulk
 @override
 bool operator ==(Object other) {
   final _this = this as BulkOutcome;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BulkOutcome&&(identical(other.applied, _this.applied) || other.applied == _this.applied)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.copyRef, _this.copyRef) || other.copyRef == _this.copyRef)&&(identical(other.error, _this.error) || other.error == _this.error)&&(identical(other.ref, _this.ref) || other.ref == _this.ref));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BulkOutcome&&(identical(other.applied, _this.applied) || other.applied == _this.applied)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.copyRef, _this.copyRef) || other.copyRef == _this.copyRef)&&(identical(other.error, _this.error) || other.error == _this.error)&&(identical(other.movedRef, _this.movedRef) || other.movedRef == _this.movedRef)&&(identical(other.ref, _this.ref) || other.ref == _this.ref));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as BulkOutcome;
-  return Object.hash(runtimeType,_this.applied,_this.code,_this.copyRef,_this.error,_this.ref);
+  return Object.hash(runtimeType,_this.applied,_this.code,_this.copyRef,_this.error,_this.movedRef,_this.ref);
 }
 
 @override
 String toString() {
   final _this = this as BulkOutcome;
-  return 'BulkOutcome(applied: ${_this.applied}, code: ${_this.code}, copyRef: ${_this.copyRef}, error: ${_this.error}, ref: ${_this.ref})';
+  return 'BulkOutcome(applied: ${_this.applied}, code: ${_this.code}, copyRef: ${_this.copyRef}, error: ${_this.error}, movedRef: ${_this.movedRef}, ref: ${_this.ref})';
 }
 
 
@@ -3857,7 +4166,7 @@ abstract mixin class $BulkOutcomeCopyWith<$Res>  {
   factory $BulkOutcomeCopyWith(BulkOutcome value, $Res Function(BulkOutcome) _then) = _$BulkOutcomeCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'applied') bool applied,@JsonKey(name: 'code') String code,@JsonKey(name: 'copy_ref') String copyRef,@JsonKey(name: 'error') String error,@JsonKey(name: 'ref') String ref
+@JsonKey(name: 'applied') bool applied,@JsonKey(name: 'code') String code,@JsonKey(name: 'copy_ref') String copyRef,@JsonKey(name: 'error') String error,@JsonKey(name: 'moved_ref') String movedRef,@JsonKey(name: 'ref') String ref
 });
 
 
@@ -3874,12 +4183,13 @@ class _$BulkOutcomeCopyWithImpl<$Res>
 
 /// Create a copy of BulkOutcome
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? applied = null,Object? code = null,Object? copyRef = null,Object? error = null,Object? ref = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? applied = null,Object? code = null,Object? copyRef = null,Object? error = null,Object? movedRef = null,Object? ref = null,}) {
   return _then(BulkOutcome(
 applied: null == applied ? _self.applied : applied // ignore: cast_nullable_to_non_nullable
 as bool,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,copyRef: null == copyRef ? _self.copyRef : copyRef // ignore: cast_nullable_to_non_nullable
 as String,error: null == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as String,movedRef: null == movedRef ? _self.movedRef : movedRef // ignore: cast_nullable_to_non_nullable
 as String,ref: null == ref ? _self.ref : ref // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -3966,10 +4276,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'applied')  bool applied, @JsonKey(name: 'code')  String code, @JsonKey(name: 'copy_ref')  String copyRef, @JsonKey(name: 'error')  String error, @JsonKey(name: 'ref')  String ref)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'applied')  bool applied, @JsonKey(name: 'code')  String code, @JsonKey(name: 'copy_ref')  String copyRef, @JsonKey(name: 'error')  String error, @JsonKey(name: 'moved_ref')  String movedRef, @JsonKey(name: 'ref')  String ref)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BulkOutcome() when $default != null:
-return $default(_that.applied,_that.code,_that.copyRef,_that.error,_that.ref);case _:
+return $default(_that.applied,_that.code,_that.copyRef,_that.error,_that.movedRef,_that.ref);case _:
   return orElse();
 
 }
@@ -3987,10 +4297,10 @@ return $default(_that.applied,_that.code,_that.copyRef,_that.error,_that.ref);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'applied')  bool applied, @JsonKey(name: 'code')  String code, @JsonKey(name: 'copy_ref')  String copyRef, @JsonKey(name: 'error')  String error, @JsonKey(name: 'ref')  String ref)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'applied')  bool applied, @JsonKey(name: 'code')  String code, @JsonKey(name: 'copy_ref')  String copyRef, @JsonKey(name: 'error')  String error, @JsonKey(name: 'moved_ref')  String movedRef, @JsonKey(name: 'ref')  String ref)  $default,) {final _that = this;
 switch (_that) {
 case _BulkOutcome():
-return $default(_that.applied,_that.code,_that.copyRef,_that.error,_that.ref);case _:
+return $default(_that.applied,_that.code,_that.copyRef,_that.error,_that.movedRef,_that.ref);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -4007,10 +4317,10 @@ return $default(_that.applied,_that.code,_that.copyRef,_that.error,_that.ref);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'applied')  bool applied, @JsonKey(name: 'code')  String code, @JsonKey(name: 'copy_ref')  String copyRef, @JsonKey(name: 'error')  String error, @JsonKey(name: 'ref')  String ref)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'applied')  bool applied, @JsonKey(name: 'code')  String code, @JsonKey(name: 'copy_ref')  String copyRef, @JsonKey(name: 'error')  String error, @JsonKey(name: 'moved_ref')  String movedRef, @JsonKey(name: 'ref')  String ref)?  $default,) {final _that = this;
 switch (_that) {
 case _BulkOutcome() when $default != null:
-return $default(_that.applied,_that.code,_that.copyRef,_that.error,_that.ref);case _:
+return $default(_that.applied,_that.code,_that.copyRef,_that.error,_that.movedRef,_that.ref);case _:
   return null;
 
 }
@@ -4022,7 +4332,7 @@ return $default(_that.applied,_that.code,_that.copyRef,_that.error,_that.ref);ca
 @JsonSerializable()
 
 class _BulkOutcome implements BulkOutcome {
-  const _BulkOutcome({@JsonKey(name: 'applied') this.applied = false, @JsonKey(name: 'code') this.code = '', @JsonKey(name: 'copy_ref') this.copyRef = '', @JsonKey(name: 'error') this.error = '', @JsonKey(name: 'ref') this.ref = ''});
+  const _BulkOutcome({@JsonKey(name: 'applied') this.applied = false, @JsonKey(name: 'code') this.code = '', @JsonKey(name: 'copy_ref') this.copyRef = '', @JsonKey(name: 'error') this.error = '', @JsonKey(name: 'moved_ref') this.movedRef = '', @JsonKey(name: 'ref') this.ref = ''});
   factory _BulkOutcome.fromJson(Map<String, dynamic> json) => _$BulkOutcomeFromJson(json);
 
 /// Applied reports whether the action landed on the task.
@@ -4033,6 +4343,8 @@ class _BulkOutcome implements BulkOutcome {
 @override@JsonKey(name: 'copy_ref') final  String copyRef;
 /// Error is the refusal's message.
 @override@JsonKey(name: 'error') final  String error;
+/// MovedRef is the reference a task moved to another project now has.
+@override@JsonKey(name: 'moved_ref') final  String movedRef;
 /// Ref is the task reference as given.
 @override@JsonKey(name: 'ref') final  String ref;
 
@@ -4049,18 +4361,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _BulkOutcome&&(identical(other.applied, applied) || other.applied == applied)&&(identical(other.code, code) || other.code == code)&&(identical(other.copyRef, copyRef) || other.copyRef == copyRef)&&(identical(other.error, error) || other.error == error)&&(identical(other.ref, ref) || other.ref == ref));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _BulkOutcome&&(identical(other.applied, applied) || other.applied == applied)&&(identical(other.code, code) || other.code == code)&&(identical(other.copyRef, copyRef) || other.copyRef == copyRef)&&(identical(other.error, error) || other.error == error)&&(identical(other.movedRef, movedRef) || other.movedRef == movedRef)&&(identical(other.ref, ref) || other.ref == ref));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,applied,code,copyRef,error,ref);
+    return Object.hash(runtimeType,applied,code,copyRef,error,movedRef,ref);
 }
 
 @override
 String toString() {
-    return 'BulkOutcome(applied: $applied, code: $code, copyRef: $copyRef, error: $error, ref: $ref)';
+    return 'BulkOutcome(applied: $applied, code: $code, copyRef: $copyRef, error: $error, movedRef: $movedRef, ref: $ref)';
 }
 
 
@@ -4071,7 +4383,7 @@ abstract mixin class _$BulkOutcomeCopyWith<$Res> implements $BulkOutcomeCopyWith
   factory _$BulkOutcomeCopyWith(_BulkOutcome value, $Res Function(_BulkOutcome) _then) = __$BulkOutcomeCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'applied') bool applied,@JsonKey(name: 'code') String code,@JsonKey(name: 'copy_ref') String copyRef,@JsonKey(name: 'error') String error,@JsonKey(name: 'ref') String ref
+@JsonKey(name: 'applied') bool applied,@JsonKey(name: 'code') String code,@JsonKey(name: 'copy_ref') String copyRef,@JsonKey(name: 'error') String error,@JsonKey(name: 'moved_ref') String movedRef,@JsonKey(name: 'ref') String ref
 });
 
 
@@ -4088,12 +4400,13 @@ class __$BulkOutcomeCopyWithImpl<$Res>
 
 /// Create a copy of BulkOutcome
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? applied = null,Object? code = null,Object? copyRef = null,Object? error = null,Object? ref = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? applied = null,Object? code = null,Object? copyRef = null,Object? error = null,Object? movedRef = null,Object? ref = null,}) {
   return _then(_BulkOutcome(
 applied: null == applied ? _self.applied : applied // ignore: cast_nullable_to_non_nullable
 as bool,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,copyRef: null == copyRef ? _self.copyRef : copyRef // ignore: cast_nullable_to_non_nullable
 as String,error: null == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as String,movedRef: null == movedRef ? _self.movedRef : movedRef // ignore: cast_nullable_to_non_nullable
 as String,ref: null == ref ? _self.ref : ref // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -4404,7 +4717,7 @@ mixin _$BulkTaskInput {
 @JsonKey(name: 'action', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) BulkAction? get action;/// AssigneeActorID is the actor to assign; empty clears the assignee.
 @JsonKey(name: 'assignee_actor_id') String? get assigneeActorId;/// Cascade lets a delete take a task's subtasks with it.
 @JsonKey(name: 'cascade') bool? get cascade;/// Priority orders tasks in a queue.
-@JsonKey(name: 'priority') int? get priority;/// ProjectRef is the project a copy goes to, by key or id.
+@JsonKey(name: 'priority') int? get priority;/// ProjectRef is the project a copy or a move_project goes to, by key or id.
 @JsonKey(name: 'project_ref') String? get projectRef;/// Refs are the tasks to act on, by reference such as OPS-12 or by id: 1 to
 /// 500, repeats folded.
 @JsonKey(name: 'refs') List<String>? get refs;/// Tag is the tag name to add or remove.
@@ -4627,7 +4940,7 @@ class _BulkTaskInput implements BulkTaskInput {
 @override@JsonKey(name: 'cascade') final  bool? cascade;
 /// Priority orders tasks in a queue.
 @override@JsonKey(name: 'priority') final  int? priority;
-/// ProjectRef is the project a copy goes to, by key or id.
+/// ProjectRef is the project a copy or a move_project goes to, by key or id.
 @override@JsonKey(name: 'project_ref') final  String? projectRef;
 /// Refs are the tasks to act on, by reference such as OPS-12 or by id: 1 to
 /// 500, repeats folded.
@@ -8046,7 +8359,9 @@ mixin _$Comment {
 @JsonKey(name: 'created_at')@TixDateTime() DateTime? get createdAt;/// DeletedAt is when the comment was deleted, RFC 3339. Absent on a live
 /// comment.
 @JsonKey(name: 'deleted_at')@TixDateTime() DateTime? get deletedAt;/// ID is the comment's unique identifier.
-@JsonKey(name: 'id') String get id;/// TaskID is the ID of the task commented on.
+@JsonKey(name: 'id') String get id;/// Reactions are the emoji people reacted with, in the order each emoji was
+/// first used. Absent when nobody reacted.
+@JsonKey(name: 'reactions') List<Reaction> get reactions;/// TaskID is the ID of the task commented on.
 @JsonKey(name: 'task_id') String get taskId;/// TenantID is the tenant that owns the comment.
 @JsonKey(name: 'tenant_id') String get tenantId;/// UpdatedAt is when the comment was last edited, RFC 3339.
 @JsonKey(name: 'updated_at')@TixDateTime() DateTime? get updatedAt;
@@ -8063,20 +8378,20 @@ $CommentCopyWith<Comment> get copyWith => _$CommentCopyWithImpl<Comment>(this as
 @override
 bool operator ==(Object other) {
   final _this = this as Comment;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Comment&&(identical(other.authorActorId, _this.authorActorId) || other.authorActorId == _this.authorActorId)&&(identical(other.body, _this.body) || other.body == _this.body)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.taskId, _this.taskId) || other.taskId == _this.taskId)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Comment&&(identical(other.authorActorId, _this.authorActorId) || other.authorActorId == _this.authorActorId)&&(identical(other.body, _this.body) || other.body == _this.body)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&const DeepCollectionEquality().equals(other.reactions, _this.reactions)&&(identical(other.taskId, _this.taskId) || other.taskId == _this.taskId)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Comment;
-  return Object.hash(runtimeType,_this.authorActorId,_this.body,_this.createdAt,_this.deletedAt,_this.id,_this.taskId,_this.tenantId,_this.updatedAt);
+  return Object.hash(runtimeType,_this.authorActorId,_this.body,_this.createdAt,_this.deletedAt,_this.id,const DeepCollectionEquality().hash(_this.reactions),_this.taskId,_this.tenantId,_this.updatedAt);
 }
 
 @override
 String toString() {
   final _this = this as Comment;
-  return 'Comment(authorActorId: ${_this.authorActorId}, body: ${_this.body}, createdAt: ${_this.createdAt}, deletedAt: ${_this.deletedAt}, id: ${_this.id}, taskId: ${_this.taskId}, tenantId: ${_this.tenantId}, updatedAt: ${_this.updatedAt})';
+  return 'Comment(authorActorId: ${_this.authorActorId}, body: ${_this.body}, createdAt: ${_this.createdAt}, deletedAt: ${_this.deletedAt}, id: ${_this.id}, reactions: ${_this.reactions}, taskId: ${_this.taskId}, tenantId: ${_this.tenantId}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -8087,7 +8402,7 @@ abstract mixin class $CommentCopyWith<$Res>  {
   factory $CommentCopyWith(Comment value, $Res Function(Comment) _then) = _$CommentCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'author_actor_id') String authorActorId,@JsonKey(name: 'body') String body,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'task_id') String taskId,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'author_actor_id') String authorActorId,@JsonKey(name: 'body') String body,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'reactions') List<Reaction> reactions,@JsonKey(name: 'task_id') String taskId,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -8104,14 +8419,15 @@ class _$CommentCopyWithImpl<$Res>
 
 /// Create a copy of Comment
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? authorActorId = null,Object? body = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? taskId = null,Object? tenantId = null,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? authorActorId = null,Object? body = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? reactions = null,Object? taskId = null,Object? tenantId = null,Object? updatedAt = freezed,}) {
   return _then(Comment(
 authorActorId: null == authorActorId ? _self.authorActorId : authorActorId // ignore: cast_nullable_to_non_nullable
 as String,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
 as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,taskId: null == taskId ? _self.taskId : taskId // ignore: cast_nullable_to_non_nullable
+as String,reactions: null == reactions ? _self.reactions : reactions // ignore: cast_nullable_to_non_nullable
+as List<Reaction>,taskId: null == taskId ? _self.taskId : taskId // ignore: cast_nullable_to_non_nullable
 as String,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
@@ -8199,10 +8515,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'author_actor_id')  String authorActorId, @JsonKey(name: 'body')  String body, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'task_id')  String taskId, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'author_actor_id')  String authorActorId, @JsonKey(name: 'body')  String body, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'reactions')  List<Reaction> reactions, @JsonKey(name: 'task_id')  String taskId, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Comment() when $default != null:
-return $default(_that.authorActorId,_that.body,_that.createdAt,_that.deletedAt,_that.id,_that.taskId,_that.tenantId,_that.updatedAt);case _:
+return $default(_that.authorActorId,_that.body,_that.createdAt,_that.deletedAt,_that.id,_that.reactions,_that.taskId,_that.tenantId,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -8220,10 +8536,10 @@ return $default(_that.authorActorId,_that.body,_that.createdAt,_that.deletedAt,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'author_actor_id')  String authorActorId, @JsonKey(name: 'body')  String body, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'task_id')  String taskId, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'author_actor_id')  String authorActorId, @JsonKey(name: 'body')  String body, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'reactions')  List<Reaction> reactions, @JsonKey(name: 'task_id')  String taskId, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Comment():
-return $default(_that.authorActorId,_that.body,_that.createdAt,_that.deletedAt,_that.id,_that.taskId,_that.tenantId,_that.updatedAt);case _:
+return $default(_that.authorActorId,_that.body,_that.createdAt,_that.deletedAt,_that.id,_that.reactions,_that.taskId,_that.tenantId,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -8240,10 +8556,10 @@ return $default(_that.authorActorId,_that.body,_that.createdAt,_that.deletedAt,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'author_actor_id')  String authorActorId, @JsonKey(name: 'body')  String body, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'task_id')  String taskId, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'author_actor_id')  String authorActorId, @JsonKey(name: 'body')  String body, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'reactions')  List<Reaction> reactions, @JsonKey(name: 'task_id')  String taskId, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Comment() when $default != null:
-return $default(_that.authorActorId,_that.body,_that.createdAt,_that.deletedAt,_that.id,_that.taskId,_that.tenantId,_that.updatedAt);case _:
+return $default(_that.authorActorId,_that.body,_that.createdAt,_that.deletedAt,_that.id,_that.reactions,_that.taskId,_that.tenantId,_that.updatedAt);case _:
   return null;
 
 }
@@ -8255,7 +8571,7 @@ return $default(_that.authorActorId,_that.body,_that.createdAt,_that.deletedAt,_
 @JsonSerializable()
 
 class _Comment implements Comment {
-  const _Comment({@JsonKey(name: 'author_actor_id') this.authorActorId = '', @JsonKey(name: 'body') this.body = '', @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'task_id') this.taskId = '', @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt});
+  const _Comment({@JsonKey(name: 'author_actor_id') this.authorActorId = '', @JsonKey(name: 'body') this.body = '', @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'reactions')  List<Reaction> reactions = const <Reaction>[], @JsonKey(name: 'task_id') this.taskId = '', @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt}): _reactions = reactions;
   factory _Comment.fromJson(Map<String, dynamic> json) => _$CommentFromJson(json);
 
 /// AuthorActorID is the actor who wrote the comment.
@@ -8269,6 +8585,17 @@ class _Comment implements Comment {
 @override@JsonKey(name: 'deleted_at')@TixDateTime() final  DateTime? deletedAt;
 /// ID is the comment's unique identifier.
 @override@JsonKey(name: 'id') final  String id;
+/// Reactions are the emoji people reacted with, in the order each emoji was
+/// first used. Absent when nobody reacted.
+ final  List<Reaction> _reactions;
+/// Reactions are the emoji people reacted with, in the order each emoji was
+/// first used. Absent when nobody reacted.
+@override@JsonKey(name: 'reactions') List<Reaction> get reactions {
+  if (_reactions is EqualUnmodifiableListView) return _reactions;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_reactions);
+}
+
 /// TaskID is the ID of the task commented on.
 @override@JsonKey(name: 'task_id') final  String taskId;
 /// TenantID is the tenant that owns the comment.
@@ -8289,18 +8616,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Comment&&(identical(other.authorActorId, authorActorId) || other.authorActorId == authorActorId)&&(identical(other.body, body) || other.body == body)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.id, id) || other.id == id)&&(identical(other.taskId, taskId) || other.taskId == taskId)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Comment&&(identical(other.authorActorId, authorActorId) || other.authorActorId == authorActorId)&&(identical(other.body, body) || other.body == body)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.reactions, _reactions)&&(identical(other.taskId, taskId) || other.taskId == taskId)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,authorActorId,body,createdAt,deletedAt,id,taskId,tenantId,updatedAt);
+    return Object.hash(runtimeType,authorActorId,body,createdAt,deletedAt,id,const DeepCollectionEquality().hash(_reactions),taskId,tenantId,updatedAt);
 }
 
 @override
 String toString() {
-    return 'Comment(authorActorId: $authorActorId, body: $body, createdAt: $createdAt, deletedAt: $deletedAt, id: $id, taskId: $taskId, tenantId: $tenantId, updatedAt: $updatedAt)';
+    return 'Comment(authorActorId: $authorActorId, body: $body, createdAt: $createdAt, deletedAt: $deletedAt, id: $id, reactions: $reactions, taskId: $taskId, tenantId: $tenantId, updatedAt: $updatedAt)';
 }
 
 
@@ -8311,7 +8638,7 @@ abstract mixin class _$CommentCopyWith<$Res> implements $CommentCopyWith<$Res> {
   factory _$CommentCopyWith(_Comment value, $Res Function(_Comment) _then) = __$CommentCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'author_actor_id') String authorActorId,@JsonKey(name: 'body') String body,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'task_id') String taskId,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'author_actor_id') String authorActorId,@JsonKey(name: 'body') String body,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'reactions') List<Reaction> reactions,@JsonKey(name: 'task_id') String taskId,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -8328,14 +8655,15 @@ class __$CommentCopyWithImpl<$Res>
 
 /// Create a copy of Comment
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? authorActorId = null,Object? body = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? taskId = null,Object? tenantId = null,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? authorActorId = null,Object? body = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? reactions = null,Object? taskId = null,Object? tenantId = null,Object? updatedAt = freezed,}) {
   return _then(_Comment(
 authorActorId: null == authorActorId ? _self.authorActorId : authorActorId // ignore: cast_nullable_to_non_nullable
 as String,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
 as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,taskId: null == taskId ? _self.taskId : taskId // ignore: cast_nullable_to_non_nullable
+as String,reactions: null == reactions ? _self._reactions : reactions // ignore: cast_nullable_to_non_nullable
+as List<Reaction>,taskId: null == taskId ? _self.taskId : taskId // ignore: cast_nullable_to_non_nullable
 as String,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
@@ -12362,7 +12690,11 @@ mixin _$CreatedTenant {
 
 /// Admins are the administrators created with the tenant, in the order they
 /// were named.
-@JsonKey(name: 'admins') List<CreatedAdmin> get admins;/// CreatedAt is when the tenant was created, RFC 3339.
+@JsonKey(name: 'admins') List<CreatedAdmin> get admins;/// ArtifactMaxBytes is the largest artifact blob this tenant accepts. It can
+/// lower the server's artifacts.max_bytes but never raise it; zero inherits.
+@JsonKey(name: 'artifact_max_bytes') int get artifactMaxBytes;/// ArtifactTypes are the media types and patterns an artifact blob may carry on
+/// this tenant, within the server's artifacts.allowed_types; empty inherits.
+@JsonKey(name: 'artifact_types') List<String> get artifactTypes;/// CreatedAt is when the tenant was created, RFC 3339.
 @JsonKey(name: 'created_at')@TixDateTime() DateTime? get createdAt;/// DeletedAt is when the tenant was deleted, RFC 3339. Absent on a live tenant.
 @JsonKey(name: 'deleted_at')@TixDateTime() DateTime? get deletedAt;/// ID is the tenant's unique identifier.
 @JsonKey(name: 'id') String get id;/// InitialCredentials carries every password the server generated, in plain
@@ -12413,20 +12745,20 @@ $CreatedTenantCopyWith<CreatedTenant> get copyWith => _$CreatedTenantCopyWithImp
 @override
 bool operator ==(Object other) {
   final _this = this as CreatedTenant;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreatedTenant&&const DeepCollectionEquality().equals(other.admins, _this.admins)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&const DeepCollectionEquality().equals(other.initialCredentials, _this.initialCredentials)&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.mfaRequiredAt, _this.mfaRequiredAt) || other.mfaRequiredAt == _this.mfaRequiredAt)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreatedTenant&&const DeepCollectionEquality().equals(other.admins, _this.admins)&&(identical(other.artifactMaxBytes, _this.artifactMaxBytes) || other.artifactMaxBytes == _this.artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _this.artifactTypes)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&const DeepCollectionEquality().equals(other.initialCredentials, _this.initialCredentials)&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.mfaRequiredAt, _this.mfaRequiredAt) || other.mfaRequiredAt == _this.mfaRequiredAt)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as CreatedTenant;
-  return Object.hashAll([runtimeType,const DeepCollectionEquality().hash(_this.admins),_this.createdAt,_this.deletedAt,_this.id,const DeepCollectionEquality().hash(_this.initialCredentials),_this.key,_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.mfaRequiredAt,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff,_this.updatedAt]);
+  return Object.hashAll([runtimeType,const DeepCollectionEquality().hash(_this.admins),_this.artifactMaxBytes,const DeepCollectionEquality().hash(_this.artifactTypes),_this.createdAt,_this.deletedAt,_this.id,const DeepCollectionEquality().hash(_this.initialCredentials),_this.key,_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.mfaRequiredAt,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff,_this.updatedAt]);
 }
 
 @override
 String toString() {
   final _this = this as CreatedTenant;
-  return 'CreatedTenant(admins: ${_this.admins}, createdAt: ${_this.createdAt}, deletedAt: ${_this.deletedAt}, id: ${_this.id}, initialCredentials: ${_this.initialCredentials}, key: ${_this.key}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, mfaRequiredAt: ${_this.mfaRequiredAt}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff}, updatedAt: ${_this.updatedAt})';
+  return 'CreatedTenant(admins: ${_this.admins}, artifactMaxBytes: ${_this.artifactMaxBytes}, artifactTypes: ${_this.artifactTypes}, createdAt: ${_this.createdAt}, deletedAt: ${_this.deletedAt}, id: ${_this.id}, initialCredentials: ${_this.initialCredentials}, key: ${_this.key}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, mfaRequiredAt: ${_this.mfaRequiredAt}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -12437,7 +12769,7 @@ abstract mixin class $CreatedTenantCopyWith<$Res>  {
   factory $CreatedTenantCopyWith(CreatedTenant value, $Res Function(CreatedTenant) _then) = _$CreatedTenantCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'admins') List<CreatedAdmin> admins,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'initial_credentials') List<InitialCredential> initialCredentials,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'admins') List<CreatedAdmin> admins,@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'initial_credentials') List<InitialCredential> initialCredentials,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -12454,10 +12786,12 @@ class _$CreatedTenantCopyWithImpl<$Res>
 
 /// Create a copy of CreatedTenant
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? admins = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? initialCredentials = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? admins = null,Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? initialCredentials = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
   return _then(CreatedTenant(
 admins: null == admins ? _self.admins : admins // ignore: cast_nullable_to_non_nullable
-as List<CreatedAdmin>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as List<CreatedAdmin>,artifactMaxBytes: null == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
+as int,artifactTypes: null == artifactTypes ? _self.artifactTypes : artifactTypes // ignore: cast_nullable_to_non_nullable
+as List<String>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,initialCredentials: null == initialCredentials ? _self.initialCredentials : initialCredentials // ignore: cast_nullable_to_non_nullable
@@ -12561,10 +12895,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CreatedTenant() when $default != null:
-return $default(_that.admins,_that.createdAt,_that.deletedAt,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -12582,10 +12916,10 @@ return $default(_that.admins,_that.createdAt,_that.deletedAt,_that.id,_that.init
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _CreatedTenant():
-return $default(_that.admins,_that.createdAt,_that.deletedAt,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -12602,10 +12936,10 @@ return $default(_that.admins,_that.createdAt,_that.deletedAt,_that.id,_that.init
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _CreatedTenant() when $default != null:
-return $default(_that.admins,_that.createdAt,_that.deletedAt,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   return null;
 
 }
@@ -12617,7 +12951,7 @@ return $default(_that.admins,_that.createdAt,_that.deletedAt,_that.id,_that.init
 @JsonSerializable()
 
 class _CreatedTenant implements CreatedTenant {
-  const _CreatedTenant({@JsonKey(name: 'admins')  List<CreatedAdmin> admins = const <CreatedAdmin>[], @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials = const <InitialCredential>[], @JsonKey(name: 'key') this.key = '', @JsonKey(name: 'lease_default') this.leaseDefault = '', @JsonKey(name: 'lease_max') this.leaseMax = '', @JsonKey(name: 'mfa_grace') this.mfaGrace = '', @JsonKey(name: 'mfa_policy') this.mfaPolicy = '', @JsonKey(name: 'mfa_required_at')@TixDateTime() this.mfaRequiredAt, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'require_totp_cli') this.requireTotpCli = false, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh = false, @JsonKey(name: 'require_totp_web') this.requireTotpWeb = false, @JsonKey(name: 'theme') this.theme = '', @JsonKey(name: 'time_format') this.timeFormat = '', @JsonKey(name: 'timezone') this.timezone = '', @JsonKey(name: 'trash_off') this.trashOff = false, @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt}): _admins = admins,_initialCredentials = initialCredentials;
+  const _CreatedTenant({@JsonKey(name: 'admins')  List<CreatedAdmin> admins = const <CreatedAdmin>[], @JsonKey(name: 'artifact_max_bytes') this.artifactMaxBytes = 0, @JsonKey(name: 'artifact_types')  List<String> artifactTypes = const <String>[], @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials = const <InitialCredential>[], @JsonKey(name: 'key') this.key = '', @JsonKey(name: 'lease_default') this.leaseDefault = '', @JsonKey(name: 'lease_max') this.leaseMax = '', @JsonKey(name: 'mfa_grace') this.mfaGrace = '', @JsonKey(name: 'mfa_policy') this.mfaPolicy = '', @JsonKey(name: 'mfa_required_at')@TixDateTime() this.mfaRequiredAt, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'require_totp_cli') this.requireTotpCli = false, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh = false, @JsonKey(name: 'require_totp_web') this.requireTotpWeb = false, @JsonKey(name: 'theme') this.theme = '', @JsonKey(name: 'time_format') this.timeFormat = '', @JsonKey(name: 'timezone') this.timezone = '', @JsonKey(name: 'trash_off') this.trashOff = false, @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt}): _admins = admins,_artifactTypes = artifactTypes,_initialCredentials = initialCredentials;
   factory _CreatedTenant.fromJson(Map<String, dynamic> json) => _$CreatedTenantFromJson(json);
 
 /// Admins are the administrators created with the tenant, in the order they
@@ -12629,6 +12963,20 @@ class _CreatedTenant implements CreatedTenant {
   if (_admins is EqualUnmodifiableListView) return _admins;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_admins);
+}
+
+/// ArtifactMaxBytes is the largest artifact blob this tenant accepts. It can
+/// lower the server's artifacts.max_bytes but never raise it; zero inherits.
+@override@JsonKey(name: 'artifact_max_bytes') final  int artifactMaxBytes;
+/// ArtifactTypes are the media types and patterns an artifact blob may carry on
+/// this tenant, within the server's artifacts.allowed_types; empty inherits.
+ final  List<String> _artifactTypes;
+/// ArtifactTypes are the media types and patterns an artifact blob may carry on
+/// this tenant, within the server's artifacts.allowed_types; empty inherits.
+@override@JsonKey(name: 'artifact_types') List<String> get artifactTypes {
+  if (_artifactTypes is EqualUnmodifiableListView) return _artifactTypes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_artifactTypes);
 }
 
 /// CreatedAt is when the tenant was created, RFC 3339.
@@ -12710,18 +13058,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreatedTenant&&const DeepCollectionEquality().equals(other.admins, _admins)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.initialCredentials, _initialCredentials)&&(identical(other.key, key) || other.key == key)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.mfaRequiredAt, mfaRequiredAt) || other.mfaRequiredAt == mfaRequiredAt)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreatedTenant&&const DeepCollectionEquality().equals(other.admins, _admins)&&(identical(other.artifactMaxBytes, artifactMaxBytes) || other.artifactMaxBytes == artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _artifactTypes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.initialCredentials, _initialCredentials)&&(identical(other.key, key) || other.key == key)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.mfaRequiredAt, mfaRequiredAt) || other.mfaRequiredAt == mfaRequiredAt)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hashAll([runtimeType,const DeepCollectionEquality().hash(_admins),createdAt,deletedAt,id,const DeepCollectionEquality().hash(_initialCredentials),key,leaseDefault,leaseMax,mfaGrace,mfaPolicy,mfaRequiredAt,name,requireTotpCli,requireTotpSsh,requireTotpWeb,theme,timeFormat,timezone,trashOff,updatedAt]);
+    return Object.hashAll([runtimeType,const DeepCollectionEquality().hash(_admins),artifactMaxBytes,const DeepCollectionEquality().hash(_artifactTypes),createdAt,deletedAt,id,const DeepCollectionEquality().hash(_initialCredentials),key,leaseDefault,leaseMax,mfaGrace,mfaPolicy,mfaRequiredAt,name,requireTotpCli,requireTotpSsh,requireTotpWeb,theme,timeFormat,timezone,trashOff,updatedAt]);
 }
 
 @override
 String toString() {
-    return 'CreatedTenant(admins: $admins, createdAt: $createdAt, deletedAt: $deletedAt, id: $id, initialCredentials: $initialCredentials, key: $key, leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, mfaRequiredAt: $mfaRequiredAt, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff, updatedAt: $updatedAt)';
+    return 'CreatedTenant(admins: $admins, artifactMaxBytes: $artifactMaxBytes, artifactTypes: $artifactTypes, createdAt: $createdAt, deletedAt: $deletedAt, id: $id, initialCredentials: $initialCredentials, key: $key, leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, mfaRequiredAt: $mfaRequiredAt, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff, updatedAt: $updatedAt)';
 }
 
 
@@ -12732,7 +13080,7 @@ abstract mixin class _$CreatedTenantCopyWith<$Res> implements $CreatedTenantCopy
   factory _$CreatedTenantCopyWith(_CreatedTenant value, $Res Function(_CreatedTenant) _then) = __$CreatedTenantCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'admins') List<CreatedAdmin> admins,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'initial_credentials') List<InitialCredential> initialCredentials,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'admins') List<CreatedAdmin> admins,@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'initial_credentials') List<InitialCredential> initialCredentials,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -12749,10 +13097,12 @@ class __$CreatedTenantCopyWithImpl<$Res>
 
 /// Create a copy of CreatedTenant
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? admins = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? initialCredentials = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? admins = null,Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? initialCredentials = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
   return _then(_CreatedTenant(
 admins: null == admins ? _self._admins : admins // ignore: cast_nullable_to_non_nullable
-as List<CreatedAdmin>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as List<CreatedAdmin>,artifactMaxBytes: null == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
+as int,artifactTypes: null == artifactTypes ? _self._artifactTypes : artifactTypes // ignore: cast_nullable_to_non_nullable
+as List<String>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,initialCredentials: null == initialCredentials ? _self._initialCredentials : initialCredentials // ignore: cast_nullable_to_non_nullable
@@ -26472,6 +26822,278 @@ as String,
 
 
 /// @nodoc
+mixin _$MoveTaskInput {
+
+/// ProjectRef is the key or identifier of the project to move into.
+@JsonKey(name: 'project_ref') String? get projectRef;
+/// Create a copy of MoveTaskInput
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$MoveTaskInputCopyWith<MoveTaskInput> get copyWith => _$MoveTaskInputCopyWithImpl<MoveTaskInput>(this as MoveTaskInput, _$identity);
+
+  /// Serializes this MoveTaskInput to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as MoveTaskInput;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MoveTaskInput&&(identical(other.projectRef, _this.projectRef) || other.projectRef == _this.projectRef));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as MoveTaskInput;
+  return Object.hash(runtimeType,_this.projectRef);
+}
+
+@override
+String toString() {
+  final _this = this as MoveTaskInput;
+  return 'MoveTaskInput(projectRef: ${_this.projectRef})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $MoveTaskInputCopyWith<$Res>  {
+  factory $MoveTaskInputCopyWith(MoveTaskInput value, $Res Function(MoveTaskInput) _then) = _$MoveTaskInputCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'project_ref') String? projectRef
+});
+
+
+
+
+}
+/// @nodoc
+class _$MoveTaskInputCopyWithImpl<$Res>
+    implements $MoveTaskInputCopyWith<$Res> {
+  _$MoveTaskInputCopyWithImpl(this._self, this._then);
+
+  final MoveTaskInput _self;
+  final $Res Function(MoveTaskInput) _then;
+
+/// Create a copy of MoveTaskInput
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? projectRef = freezed,}) {
+  return _then(MoveTaskInput(
+projectRef: freezed == projectRef ? _self.projectRef : projectRef // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [MoveTaskInput].
+extension MoveTaskInputPatterns on MoveTaskInput {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MoveTaskInput value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _MoveTaskInput() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MoveTaskInput value)  $default,){
+final _that = this;
+switch (_that) {
+case _MoveTaskInput():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MoveTaskInput value)?  $default,){
+final _that = this;
+switch (_that) {
+case _MoveTaskInput() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'project_ref')  String? projectRef)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _MoveTaskInput() when $default != null:
+return $default(_that.projectRef);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'project_ref')  String? projectRef)  $default,) {final _that = this;
+switch (_that) {
+case _MoveTaskInput():
+return $default(_that.projectRef);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'project_ref')  String? projectRef)?  $default,) {final _that = this;
+switch (_that) {
+case _MoveTaskInput() when $default != null:
+return $default(_that.projectRef);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _MoveTaskInput implements MoveTaskInput {
+  const _MoveTaskInput({@JsonKey(name: 'project_ref') this.projectRef});
+  factory _MoveTaskInput.fromJson(Map<String, dynamic> json) => _$MoveTaskInputFromJson(json);
+
+/// ProjectRef is the key or identifier of the project to move into.
+@override@JsonKey(name: 'project_ref') final  String? projectRef;
+
+/// Create a copy of MoveTaskInput
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$MoveTaskInputCopyWith<_MoveTaskInput> get copyWith => __$MoveTaskInputCopyWithImpl<_MoveTaskInput>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$MoveTaskInputToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MoveTaskInput&&(identical(other.projectRef, projectRef) || other.projectRef == projectRef));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,projectRef);
+}
+
+@override
+String toString() {
+    return 'MoveTaskInput(projectRef: $projectRef)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$MoveTaskInputCopyWith<$Res> implements $MoveTaskInputCopyWith<$Res> {
+  factory _$MoveTaskInputCopyWith(_MoveTaskInput value, $Res Function(_MoveTaskInput) _then) = __$MoveTaskInputCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'project_ref') String? projectRef
+});
+
+
+
+
+}
+/// @nodoc
+class __$MoveTaskInputCopyWithImpl<$Res>
+    implements _$MoveTaskInputCopyWith<$Res> {
+  __$MoveTaskInputCopyWithImpl(this._self, this._then);
+
+  final _MoveTaskInput _self;
+  final $Res Function(_MoveTaskInput) _then;
+
+/// Create a copy of MoveTaskInput
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? projectRef = freezed,}) {
+  return _then(_MoveTaskInput(
+projectRef: freezed == projectRef ? _self.projectRef : projectRef // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$NumberingLag {
 
 /// Counter is the last number the project's counter issued.
@@ -28295,6 +28917,295 @@ as int,idempotencyKeys: null == idempotencyKeys ? _self.idempotencyKeys : idempo
 as int,retainedForSubscribers: null == retainedForSubscribers ? _self.retainedForSubscribers : retainedForSubscribers // ignore: cast_nullable_to_non_nullable
 as int,webhookDeliveries: null == webhookDeliveries ? _self.webhookDeliveries : webhookDeliveries // ignore: cast_nullable_to_non_nullable
 as int,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$Reaction {
+
+/// ActorIDs are the actors who reacted, earliest first.
+@JsonKey(name: 'actor_ids') List<String> get actorIds;/// Count is how many actors reacted with this emoji.
+@JsonKey(name: 'count') int get count;/// Emoji is the reaction, a single emoji grapheme.
+@JsonKey(name: 'emoji') String get emoji;
+/// Create a copy of Reaction
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ReactionCopyWith<Reaction> get copyWith => _$ReactionCopyWithImpl<Reaction>(this as Reaction, _$identity);
+
+  /// Serializes this Reaction to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as Reaction;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Reaction&&const DeepCollectionEquality().equals(other.actorIds, _this.actorIds)&&(identical(other.count, _this.count) || other.count == _this.count)&&(identical(other.emoji, _this.emoji) || other.emoji == _this.emoji));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as Reaction;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.actorIds),_this.count,_this.emoji);
+}
+
+@override
+String toString() {
+  final _this = this as Reaction;
+  return 'Reaction(actorIds: ${_this.actorIds}, count: ${_this.count}, emoji: ${_this.emoji})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ReactionCopyWith<$Res>  {
+  factory $ReactionCopyWith(Reaction value, $Res Function(Reaction) _then) = _$ReactionCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'actor_ids') List<String> actorIds,@JsonKey(name: 'count') int count,@JsonKey(name: 'emoji') String emoji
+});
+
+
+
+
+}
+/// @nodoc
+class _$ReactionCopyWithImpl<$Res>
+    implements $ReactionCopyWith<$Res> {
+  _$ReactionCopyWithImpl(this._self, this._then);
+
+  final Reaction _self;
+  final $Res Function(Reaction) _then;
+
+/// Create a copy of Reaction
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? actorIds = null,Object? count = null,Object? emoji = null,}) {
+  return _then(Reaction(
+actorIds: null == actorIds ? _self.actorIds : actorIds // ignore: cast_nullable_to_non_nullable
+as List<String>,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,emoji: null == emoji ? _self.emoji : emoji // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [Reaction].
+extension ReactionPatterns on Reaction {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Reaction value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Reaction() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Reaction value)  $default,){
+final _that = this;
+switch (_that) {
+case _Reaction():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Reaction value)?  $default,){
+final _that = this;
+switch (_that) {
+case _Reaction() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_ids')  List<String> actorIds, @JsonKey(name: 'count')  int count, @JsonKey(name: 'emoji')  String emoji)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Reaction() when $default != null:
+return $default(_that.actorIds,_that.count,_that.emoji);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_ids')  List<String> actorIds, @JsonKey(name: 'count')  int count, @JsonKey(name: 'emoji')  String emoji)  $default,) {final _that = this;
+switch (_that) {
+case _Reaction():
+return $default(_that.actorIds,_that.count,_that.emoji);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'actor_ids')  List<String> actorIds, @JsonKey(name: 'count')  int count, @JsonKey(name: 'emoji')  String emoji)?  $default,) {final _that = this;
+switch (_that) {
+case _Reaction() when $default != null:
+return $default(_that.actorIds,_that.count,_that.emoji);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _Reaction implements Reaction {
+  const _Reaction({@JsonKey(name: 'actor_ids')  List<String> actorIds = const <String>[], @JsonKey(name: 'count') this.count = 0, @JsonKey(name: 'emoji') this.emoji = ''}): _actorIds = actorIds;
+  factory _Reaction.fromJson(Map<String, dynamic> json) => _$ReactionFromJson(json);
+
+/// ActorIDs are the actors who reacted, earliest first.
+ final  List<String> _actorIds;
+/// ActorIDs are the actors who reacted, earliest first.
+@override@JsonKey(name: 'actor_ids') List<String> get actorIds {
+  if (_actorIds is EqualUnmodifiableListView) return _actorIds;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_actorIds);
+}
+
+/// Count is how many actors reacted with this emoji.
+@override@JsonKey(name: 'count') final  int count;
+/// Emoji is the reaction, a single emoji grapheme.
+@override@JsonKey(name: 'emoji') final  String emoji;
+
+/// Create a copy of Reaction
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ReactionCopyWith<_Reaction> get copyWith => __$ReactionCopyWithImpl<_Reaction>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$ReactionToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Reaction&&const DeepCollectionEquality().equals(other.actorIds, _actorIds)&&(identical(other.count, count) || other.count == count)&&(identical(other.emoji, emoji) || other.emoji == emoji));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_actorIds),count,emoji);
+}
+
+@override
+String toString() {
+    return 'Reaction(actorIds: $actorIds, count: $count, emoji: $emoji)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ReactionCopyWith<$Res> implements $ReactionCopyWith<$Res> {
+  factory _$ReactionCopyWith(_Reaction value, $Res Function(_Reaction) _then) = __$ReactionCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'actor_ids') List<String> actorIds,@JsonKey(name: 'count') int count,@JsonKey(name: 'emoji') String emoji
+});
+
+
+
+
+}
+/// @nodoc
+class __$ReactionCopyWithImpl<$Res>
+    implements _$ReactionCopyWith<$Res> {
+  __$ReactionCopyWithImpl(this._self, this._then);
+
+  final _Reaction _self;
+  final $Res Function(_Reaction) _then;
+
+/// Create a copy of Reaction
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? actorIds = null,Object? count = null,Object? emoji = null,}) {
+  return _then(_Reaction(
+actorIds: null == actorIds ? _self._actorIds : actorIds // ignore: cast_nullable_to_non_nullable
+as List<String>,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,emoji: null == emoji ? _self.emoji : emoji // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -42963,7 +43874,9 @@ mixin _$Task {
 @JsonKey(name: 'title') String get title;/// UpdatedAt is when the task was last changed, RFC 3339.
 @JsonKey(name: 'updated_at')@TixDateTime() DateTime? get updatedAt;/// Version increases by one on every change. Pass it back on an update to have
 /// a stale write refused with a conflict.
-@JsonKey(name: 'version') int get version;/// WebURL is the address of the task's screen in the browser interface, set
+@JsonKey(name: 'version') int get version;/// WaitingOn names, by reference, the unfinished tasks that make this one
+/// Blocked, in reference order. Empty when Blocked is false.
+@JsonKey(name: 'waiting_on') List<String> get waitingOn;/// WebURL is the address of the task's screen in the browser interface, set
 /// when the server is configured with the address it is reached at
 /// (server.public_url). Only a read sets it, so it is absent from audit
 /// snapshots, events and exports.
@@ -42981,20 +43894,20 @@ $TaskCopyWith<Task> get copyWith => _$TaskCopyWithImpl<Task>(this as Task, _$ide
 @override
 bool operator ==(Object other) {
   final _this = this as Task;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Task&&(identical(other.assigneeActorId, _this.assigneeActorId) || other.assigneeActorId == _this.assigneeActorId)&&(identical(other.blocked, _this.blocked) || other.blocked == _this.blocked)&&(identical(other.body, _this.body) || other.body == _this.body)&&(identical(other.checklist, _this.checklist) || other.checklist == _this.checklist)&&(identical(other.claimCount, _this.claimCount) || other.claimCount == _this.claimCount)&&(identical(other.claimedAt, _this.claimedAt) || other.claimedAt == _this.claimedAt)&&(identical(other.claimedByActorId, _this.claimedByActorId) || other.claimedByActorId == _this.claimedByActorId)&&(identical(other.completedAt, _this.completedAt) || other.completedAt == _this.completedAt)&&(identical(other.copiedFromId, _this.copiedFromId) || other.copiedFromId == _this.copiedFromId)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.creatorActorId, _this.creatorActorId) || other.creatorActorId == _this.creatorActorId)&&const DeepCollectionEquality().equals(other.customFields, _this.customFields)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&const DeepCollectionEquality().equals(other.dependsOn, _this.dependsOn)&&(identical(other.dueAt, _this.dueAt) || other.dueAt == _this.dueAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.lease, _this.lease) || other.lease == _this.lease)&&(identical(other.leaseExpiredAt, _this.leaseExpiredAt) || other.leaseExpiredAt == _this.leaseExpiredAt)&&(identical(other.leaseExpiredByActorId, _this.leaseExpiredByActorId) || other.leaseExpiredByActorId == _this.leaseExpiredByActorId)&&(identical(other.leaseExpiresAt, _this.leaseExpiresAt) || other.leaseExpiresAt == _this.leaseExpiresAt)&&(identical(other.parentId, _this.parentId) || other.parentId == _this.parentId)&&(identical(other.priority, _this.priority) || other.priority == _this.priority)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.recurrence, _this.recurrence) || other.recurrence == _this.recurrence)&&(identical(other.recurrenceNextId, _this.recurrenceNextId) || other.recurrenceNextId == _this.recurrenceNextId)&&(identical(other.ref, _this.ref) || other.ref == _this.ref)&&(identical(other.seq, _this.seq) || other.seq == _this.seq)&&(identical(other.snoozedByActorId, _this.snoozedByActorId) || other.snoozedByActorId == _this.snoozedByActorId)&&(identical(other.snoozedUntil, _this.snoozedUntil) || other.snoozedUntil == _this.snoozedUntil)&&(identical(other.starred, _this.starred) || other.starred == _this.starred)&&(identical(other.startedAt, _this.startedAt) || other.startedAt == _this.startedAt)&&(identical(other.status, _this.status) || other.status == _this.status)&&const DeepCollectionEquality().equals(other.tags, _this.tags)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.version, _this.version) || other.version == _this.version)&&(identical(other.webUrl, _this.webUrl) || other.webUrl == _this.webUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Task&&(identical(other.assigneeActorId, _this.assigneeActorId) || other.assigneeActorId == _this.assigneeActorId)&&(identical(other.blocked, _this.blocked) || other.blocked == _this.blocked)&&(identical(other.body, _this.body) || other.body == _this.body)&&(identical(other.checklist, _this.checklist) || other.checklist == _this.checklist)&&(identical(other.claimCount, _this.claimCount) || other.claimCount == _this.claimCount)&&(identical(other.claimedAt, _this.claimedAt) || other.claimedAt == _this.claimedAt)&&(identical(other.claimedByActorId, _this.claimedByActorId) || other.claimedByActorId == _this.claimedByActorId)&&(identical(other.completedAt, _this.completedAt) || other.completedAt == _this.completedAt)&&(identical(other.copiedFromId, _this.copiedFromId) || other.copiedFromId == _this.copiedFromId)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.creatorActorId, _this.creatorActorId) || other.creatorActorId == _this.creatorActorId)&&const DeepCollectionEquality().equals(other.customFields, _this.customFields)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&const DeepCollectionEquality().equals(other.dependsOn, _this.dependsOn)&&(identical(other.dueAt, _this.dueAt) || other.dueAt == _this.dueAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.lease, _this.lease) || other.lease == _this.lease)&&(identical(other.leaseExpiredAt, _this.leaseExpiredAt) || other.leaseExpiredAt == _this.leaseExpiredAt)&&(identical(other.leaseExpiredByActorId, _this.leaseExpiredByActorId) || other.leaseExpiredByActorId == _this.leaseExpiredByActorId)&&(identical(other.leaseExpiresAt, _this.leaseExpiresAt) || other.leaseExpiresAt == _this.leaseExpiresAt)&&(identical(other.parentId, _this.parentId) || other.parentId == _this.parentId)&&(identical(other.priority, _this.priority) || other.priority == _this.priority)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.recurrence, _this.recurrence) || other.recurrence == _this.recurrence)&&(identical(other.recurrenceNextId, _this.recurrenceNextId) || other.recurrenceNextId == _this.recurrenceNextId)&&(identical(other.ref, _this.ref) || other.ref == _this.ref)&&(identical(other.seq, _this.seq) || other.seq == _this.seq)&&(identical(other.snoozedByActorId, _this.snoozedByActorId) || other.snoozedByActorId == _this.snoozedByActorId)&&(identical(other.snoozedUntil, _this.snoozedUntil) || other.snoozedUntil == _this.snoozedUntil)&&(identical(other.starred, _this.starred) || other.starred == _this.starred)&&(identical(other.startedAt, _this.startedAt) || other.startedAt == _this.startedAt)&&(identical(other.status, _this.status) || other.status == _this.status)&&const DeepCollectionEquality().equals(other.tags, _this.tags)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.version, _this.version) || other.version == _this.version)&&const DeepCollectionEquality().equals(other.waitingOn, _this.waitingOn)&&(identical(other.webUrl, _this.webUrl) || other.webUrl == _this.webUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Task;
-  return Object.hashAll([runtimeType,_this.assigneeActorId,_this.blocked,_this.body,_this.checklist,_this.claimCount,_this.claimedAt,_this.claimedByActorId,_this.completedAt,_this.copiedFromId,_this.createdAt,_this.creatorActorId,const DeepCollectionEquality().hash(_this.customFields),_this.deletedAt,const DeepCollectionEquality().hash(_this.dependsOn),_this.dueAt,_this.id,_this.lease,_this.leaseExpiredAt,_this.leaseExpiredByActorId,_this.leaseExpiresAt,_this.parentId,_this.priority,_this.projectId,_this.recurrence,_this.recurrenceNextId,_this.ref,_this.seq,_this.snoozedByActorId,_this.snoozedUntil,_this.starred,_this.startedAt,_this.status,const DeepCollectionEquality().hash(_this.tags),_this.tenantId,_this.title,_this.updatedAt,_this.version,_this.webUrl]);
+  return Object.hashAll([runtimeType,_this.assigneeActorId,_this.blocked,_this.body,_this.checklist,_this.claimCount,_this.claimedAt,_this.claimedByActorId,_this.completedAt,_this.copiedFromId,_this.createdAt,_this.creatorActorId,const DeepCollectionEquality().hash(_this.customFields),_this.deletedAt,const DeepCollectionEquality().hash(_this.dependsOn),_this.dueAt,_this.id,_this.lease,_this.leaseExpiredAt,_this.leaseExpiredByActorId,_this.leaseExpiresAt,_this.parentId,_this.priority,_this.projectId,_this.recurrence,_this.recurrenceNextId,_this.ref,_this.seq,_this.snoozedByActorId,_this.snoozedUntil,_this.starred,_this.startedAt,_this.status,const DeepCollectionEquality().hash(_this.tags),_this.tenantId,_this.title,_this.updatedAt,_this.version,const DeepCollectionEquality().hash(_this.waitingOn),_this.webUrl]);
 }
 
 @override
 String toString() {
   final _this = this as Task;
-  return 'Task(assigneeActorId: ${_this.assigneeActorId}, blocked: ${_this.blocked}, body: ${_this.body}, checklist: ${_this.checklist}, claimCount: ${_this.claimCount}, claimedAt: ${_this.claimedAt}, claimedByActorId: ${_this.claimedByActorId}, completedAt: ${_this.completedAt}, copiedFromId: ${_this.copiedFromId}, createdAt: ${_this.createdAt}, creatorActorId: ${_this.creatorActorId}, customFields: ${_this.customFields}, deletedAt: ${_this.deletedAt}, dependsOn: ${_this.dependsOn}, dueAt: ${_this.dueAt}, id: ${_this.id}, lease: ${_this.lease}, leaseExpiredAt: ${_this.leaseExpiredAt}, leaseExpiredByActorId: ${_this.leaseExpiredByActorId}, leaseExpiresAt: ${_this.leaseExpiresAt}, parentId: ${_this.parentId}, priority: ${_this.priority}, projectId: ${_this.projectId}, recurrence: ${_this.recurrence}, recurrenceNextId: ${_this.recurrenceNextId}, ref: ${_this.ref}, seq: ${_this.seq}, snoozedByActorId: ${_this.snoozedByActorId}, snoozedUntil: ${_this.snoozedUntil}, starred: ${_this.starred}, startedAt: ${_this.startedAt}, status: ${_this.status}, tags: ${_this.tags}, tenantId: ${_this.tenantId}, title: ${_this.title}, updatedAt: ${_this.updatedAt}, version: ${_this.version}, webUrl: ${_this.webUrl})';
+  return 'Task(assigneeActorId: ${_this.assigneeActorId}, blocked: ${_this.blocked}, body: ${_this.body}, checklist: ${_this.checklist}, claimCount: ${_this.claimCount}, claimedAt: ${_this.claimedAt}, claimedByActorId: ${_this.claimedByActorId}, completedAt: ${_this.completedAt}, copiedFromId: ${_this.copiedFromId}, createdAt: ${_this.createdAt}, creatorActorId: ${_this.creatorActorId}, customFields: ${_this.customFields}, deletedAt: ${_this.deletedAt}, dependsOn: ${_this.dependsOn}, dueAt: ${_this.dueAt}, id: ${_this.id}, lease: ${_this.lease}, leaseExpiredAt: ${_this.leaseExpiredAt}, leaseExpiredByActorId: ${_this.leaseExpiredByActorId}, leaseExpiresAt: ${_this.leaseExpiresAt}, parentId: ${_this.parentId}, priority: ${_this.priority}, projectId: ${_this.projectId}, recurrence: ${_this.recurrence}, recurrenceNextId: ${_this.recurrenceNextId}, ref: ${_this.ref}, seq: ${_this.seq}, snoozedByActorId: ${_this.snoozedByActorId}, snoozedUntil: ${_this.snoozedUntil}, starred: ${_this.starred}, startedAt: ${_this.startedAt}, status: ${_this.status}, tags: ${_this.tags}, tenantId: ${_this.tenantId}, title: ${_this.title}, updatedAt: ${_this.updatedAt}, version: ${_this.version}, waitingOn: ${_this.waitingOn}, webUrl: ${_this.webUrl})';
 }
 
 
@@ -43005,7 +43918,7 @@ abstract mixin class $TaskCopyWith<$Res>  {
   factory $TaskCopyWith(Task value, $Res Function(Task) _then) = _$TaskCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'assignee_actor_id') String assigneeActorId,@JsonKey(name: 'blocked') bool blocked,@JsonKey(name: 'body') String body,@JsonKey(name: 'checklist') Checklist? checklist,@JsonKey(name: 'claim_count') int claimCount,@JsonKey(name: 'claimed_at')@TixDateTime() DateTime? claimedAt,@JsonKey(name: 'claimed_by_actor_id') String claimedByActorId,@JsonKey(name: 'completed_at')@TixDateTime() DateTime? completedAt,@JsonKey(name: 'copied_from_id') String copiedFromId,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'creator_actor_id') String creatorActorId,@JsonKey(name: 'custom_fields') Map<String, Object?> customFields,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'depends_on') List<String> dependsOn,@JsonKey(name: 'due_at')@TixDateTime() DateTime? dueAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'lease') String lease,@JsonKey(name: 'lease_expired_at')@TixDateTime() DateTime? leaseExpiredAt,@JsonKey(name: 'lease_expired_by_actor_id') String leaseExpiredByActorId,@JsonKey(name: 'lease_expires_at')@TixDateTime() DateTime? leaseExpiresAt,@JsonKey(name: 'parent_id') String parentId,@JsonKey(name: 'priority') int priority,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'recurrence') String recurrence,@JsonKey(name: 'recurrence_next_id') String recurrenceNextId,@JsonKey(name: 'ref') String ref,@JsonKey(name: 'seq') int seq,@JsonKey(name: 'snoozed_by_actor_id') String snoozedByActorId,@JsonKey(name: 'snoozed_until')@TixDateTime() DateTime? snoozedUntil,@JsonKey(name: 'starred') bool starred,@JsonKey(name: 'started_at')@TixDateTime() DateTime? startedAt,@JsonKey(name: 'status') String status,@JsonKey(name: 'tags') List<String> tags,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'title') String title,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt,@JsonKey(name: 'version') int version,@JsonKey(name: 'web_url') String webUrl
+@JsonKey(name: 'assignee_actor_id') String assigneeActorId,@JsonKey(name: 'blocked') bool blocked,@JsonKey(name: 'body') String body,@JsonKey(name: 'checklist') Checklist? checklist,@JsonKey(name: 'claim_count') int claimCount,@JsonKey(name: 'claimed_at')@TixDateTime() DateTime? claimedAt,@JsonKey(name: 'claimed_by_actor_id') String claimedByActorId,@JsonKey(name: 'completed_at')@TixDateTime() DateTime? completedAt,@JsonKey(name: 'copied_from_id') String copiedFromId,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'creator_actor_id') String creatorActorId,@JsonKey(name: 'custom_fields') Map<String, Object?> customFields,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'depends_on') List<String> dependsOn,@JsonKey(name: 'due_at')@TixDateTime() DateTime? dueAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'lease') String lease,@JsonKey(name: 'lease_expired_at')@TixDateTime() DateTime? leaseExpiredAt,@JsonKey(name: 'lease_expired_by_actor_id') String leaseExpiredByActorId,@JsonKey(name: 'lease_expires_at')@TixDateTime() DateTime? leaseExpiresAt,@JsonKey(name: 'parent_id') String parentId,@JsonKey(name: 'priority') int priority,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'recurrence') String recurrence,@JsonKey(name: 'recurrence_next_id') String recurrenceNextId,@JsonKey(name: 'ref') String ref,@JsonKey(name: 'seq') int seq,@JsonKey(name: 'snoozed_by_actor_id') String snoozedByActorId,@JsonKey(name: 'snoozed_until')@TixDateTime() DateTime? snoozedUntil,@JsonKey(name: 'starred') bool starred,@JsonKey(name: 'started_at')@TixDateTime() DateTime? startedAt,@JsonKey(name: 'status') String status,@JsonKey(name: 'tags') List<String> tags,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'title') String title,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt,@JsonKey(name: 'version') int version,@JsonKey(name: 'waiting_on') List<String> waitingOn,@JsonKey(name: 'web_url') String webUrl
 });
 
 
@@ -43022,7 +43935,7 @@ class _$TaskCopyWithImpl<$Res>
 
 /// Create a copy of Task
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? assigneeActorId = null,Object? blocked = null,Object? body = null,Object? checklist = freezed,Object? claimCount = null,Object? claimedAt = freezed,Object? claimedByActorId = null,Object? completedAt = freezed,Object? copiedFromId = null,Object? createdAt = freezed,Object? creatorActorId = null,Object? customFields = null,Object? deletedAt = freezed,Object? dependsOn = null,Object? dueAt = freezed,Object? id = null,Object? lease = null,Object? leaseExpiredAt = freezed,Object? leaseExpiredByActorId = null,Object? leaseExpiresAt = freezed,Object? parentId = null,Object? priority = null,Object? projectId = null,Object? recurrence = null,Object? recurrenceNextId = null,Object? ref = null,Object? seq = null,Object? snoozedByActorId = null,Object? snoozedUntil = freezed,Object? starred = null,Object? startedAt = freezed,Object? status = null,Object? tags = null,Object? tenantId = null,Object? title = null,Object? updatedAt = freezed,Object? version = null,Object? webUrl = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? assigneeActorId = null,Object? blocked = null,Object? body = null,Object? checklist = freezed,Object? claimCount = null,Object? claimedAt = freezed,Object? claimedByActorId = null,Object? completedAt = freezed,Object? copiedFromId = null,Object? createdAt = freezed,Object? creatorActorId = null,Object? customFields = null,Object? deletedAt = freezed,Object? dependsOn = null,Object? dueAt = freezed,Object? id = null,Object? lease = null,Object? leaseExpiredAt = freezed,Object? leaseExpiredByActorId = null,Object? leaseExpiresAt = freezed,Object? parentId = null,Object? priority = null,Object? projectId = null,Object? recurrence = null,Object? recurrenceNextId = null,Object? ref = null,Object? seq = null,Object? snoozedByActorId = null,Object? snoozedUntil = freezed,Object? starred = null,Object? startedAt = freezed,Object? status = null,Object? tags = null,Object? tenantId = null,Object? title = null,Object? updatedAt = freezed,Object? version = null,Object? waitingOn = null,Object? webUrl = null,}) {
   return _then(Task(
 assigneeActorId: null == assigneeActorId ? _self.assigneeActorId : assigneeActorId // ignore: cast_nullable_to_non_nullable
 as String,blocked: null == blocked ? _self.blocked : blocked // ignore: cast_nullable_to_non_nullable
@@ -43061,7 +43974,8 @@ as List<String>,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
-as int,webUrl: null == webUrl ? _self.webUrl : webUrl // ignore: cast_nullable_to_non_nullable
+as int,waitingOn: null == waitingOn ? _self.waitingOn : waitingOn // ignore: cast_nullable_to_non_nullable
+as List<String>,webUrl: null == webUrl ? _self.webUrl : webUrl // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -43159,10 +44073,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'assignee_actor_id')  String assigneeActorId, @JsonKey(name: 'blocked')  bool blocked, @JsonKey(name: 'body')  String body, @JsonKey(name: 'checklist')  Checklist? checklist, @JsonKey(name: 'claim_count')  int claimCount, @JsonKey(name: 'claimed_at')@TixDateTime()  DateTime? claimedAt, @JsonKey(name: 'claimed_by_actor_id')  String claimedByActorId, @JsonKey(name: 'completed_at')@TixDateTime()  DateTime? completedAt, @JsonKey(name: 'copied_from_id')  String copiedFromId, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'creator_actor_id')  String creatorActorId, @JsonKey(name: 'custom_fields')  Map<String, Object?> customFields, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'depends_on')  List<String> dependsOn, @JsonKey(name: 'due_at')@TixDateTime()  DateTime? dueAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'lease')  String lease, @JsonKey(name: 'lease_expired_at')@TixDateTime()  DateTime? leaseExpiredAt, @JsonKey(name: 'lease_expired_by_actor_id')  String leaseExpiredByActorId, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'parent_id')  String parentId, @JsonKey(name: 'priority')  int priority, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'recurrence')  String recurrence, @JsonKey(name: 'recurrence_next_id')  String recurrenceNextId, @JsonKey(name: 'ref')  String ref, @JsonKey(name: 'seq')  int seq, @JsonKey(name: 'snoozed_by_actor_id')  String snoozedByActorId, @JsonKey(name: 'snoozed_until')@TixDateTime()  DateTime? snoozedUntil, @JsonKey(name: 'starred')  bool starred, @JsonKey(name: 'started_at')@TixDateTime()  DateTime? startedAt, @JsonKey(name: 'status')  String status, @JsonKey(name: 'tags')  List<String> tags, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'title')  String title, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'version')  int version, @JsonKey(name: 'web_url')  String webUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'assignee_actor_id')  String assigneeActorId, @JsonKey(name: 'blocked')  bool blocked, @JsonKey(name: 'body')  String body, @JsonKey(name: 'checklist')  Checklist? checklist, @JsonKey(name: 'claim_count')  int claimCount, @JsonKey(name: 'claimed_at')@TixDateTime()  DateTime? claimedAt, @JsonKey(name: 'claimed_by_actor_id')  String claimedByActorId, @JsonKey(name: 'completed_at')@TixDateTime()  DateTime? completedAt, @JsonKey(name: 'copied_from_id')  String copiedFromId, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'creator_actor_id')  String creatorActorId, @JsonKey(name: 'custom_fields')  Map<String, Object?> customFields, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'depends_on')  List<String> dependsOn, @JsonKey(name: 'due_at')@TixDateTime()  DateTime? dueAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'lease')  String lease, @JsonKey(name: 'lease_expired_at')@TixDateTime()  DateTime? leaseExpiredAt, @JsonKey(name: 'lease_expired_by_actor_id')  String leaseExpiredByActorId, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'parent_id')  String parentId, @JsonKey(name: 'priority')  int priority, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'recurrence')  String recurrence, @JsonKey(name: 'recurrence_next_id')  String recurrenceNextId, @JsonKey(name: 'ref')  String ref, @JsonKey(name: 'seq')  int seq, @JsonKey(name: 'snoozed_by_actor_id')  String snoozedByActorId, @JsonKey(name: 'snoozed_until')@TixDateTime()  DateTime? snoozedUntil, @JsonKey(name: 'starred')  bool starred, @JsonKey(name: 'started_at')@TixDateTime()  DateTime? startedAt, @JsonKey(name: 'status')  String status, @JsonKey(name: 'tags')  List<String> tags, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'title')  String title, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'version')  int version, @JsonKey(name: 'waiting_on')  List<String> waitingOn, @JsonKey(name: 'web_url')  String webUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Task() when $default != null:
-return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_that.claimCount,_that.claimedAt,_that.claimedByActorId,_that.completedAt,_that.copiedFromId,_that.createdAt,_that.creatorActorId,_that.customFields,_that.deletedAt,_that.dependsOn,_that.dueAt,_that.id,_that.lease,_that.leaseExpiredAt,_that.leaseExpiredByActorId,_that.leaseExpiresAt,_that.parentId,_that.priority,_that.projectId,_that.recurrence,_that.recurrenceNextId,_that.ref,_that.seq,_that.snoozedByActorId,_that.snoozedUntil,_that.starred,_that.startedAt,_that.status,_that.tags,_that.tenantId,_that.title,_that.updatedAt,_that.version,_that.webUrl);case _:
+return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_that.claimCount,_that.claimedAt,_that.claimedByActorId,_that.completedAt,_that.copiedFromId,_that.createdAt,_that.creatorActorId,_that.customFields,_that.deletedAt,_that.dependsOn,_that.dueAt,_that.id,_that.lease,_that.leaseExpiredAt,_that.leaseExpiredByActorId,_that.leaseExpiresAt,_that.parentId,_that.priority,_that.projectId,_that.recurrence,_that.recurrenceNextId,_that.ref,_that.seq,_that.snoozedByActorId,_that.snoozedUntil,_that.starred,_that.startedAt,_that.status,_that.tags,_that.tenantId,_that.title,_that.updatedAt,_that.version,_that.waitingOn,_that.webUrl);case _:
   return orElse();
 
 }
@@ -43180,10 +44094,10 @@ return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'assignee_actor_id')  String assigneeActorId, @JsonKey(name: 'blocked')  bool blocked, @JsonKey(name: 'body')  String body, @JsonKey(name: 'checklist')  Checklist? checklist, @JsonKey(name: 'claim_count')  int claimCount, @JsonKey(name: 'claimed_at')@TixDateTime()  DateTime? claimedAt, @JsonKey(name: 'claimed_by_actor_id')  String claimedByActorId, @JsonKey(name: 'completed_at')@TixDateTime()  DateTime? completedAt, @JsonKey(name: 'copied_from_id')  String copiedFromId, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'creator_actor_id')  String creatorActorId, @JsonKey(name: 'custom_fields')  Map<String, Object?> customFields, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'depends_on')  List<String> dependsOn, @JsonKey(name: 'due_at')@TixDateTime()  DateTime? dueAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'lease')  String lease, @JsonKey(name: 'lease_expired_at')@TixDateTime()  DateTime? leaseExpiredAt, @JsonKey(name: 'lease_expired_by_actor_id')  String leaseExpiredByActorId, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'parent_id')  String parentId, @JsonKey(name: 'priority')  int priority, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'recurrence')  String recurrence, @JsonKey(name: 'recurrence_next_id')  String recurrenceNextId, @JsonKey(name: 'ref')  String ref, @JsonKey(name: 'seq')  int seq, @JsonKey(name: 'snoozed_by_actor_id')  String snoozedByActorId, @JsonKey(name: 'snoozed_until')@TixDateTime()  DateTime? snoozedUntil, @JsonKey(name: 'starred')  bool starred, @JsonKey(name: 'started_at')@TixDateTime()  DateTime? startedAt, @JsonKey(name: 'status')  String status, @JsonKey(name: 'tags')  List<String> tags, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'title')  String title, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'version')  int version, @JsonKey(name: 'web_url')  String webUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'assignee_actor_id')  String assigneeActorId, @JsonKey(name: 'blocked')  bool blocked, @JsonKey(name: 'body')  String body, @JsonKey(name: 'checklist')  Checklist? checklist, @JsonKey(name: 'claim_count')  int claimCount, @JsonKey(name: 'claimed_at')@TixDateTime()  DateTime? claimedAt, @JsonKey(name: 'claimed_by_actor_id')  String claimedByActorId, @JsonKey(name: 'completed_at')@TixDateTime()  DateTime? completedAt, @JsonKey(name: 'copied_from_id')  String copiedFromId, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'creator_actor_id')  String creatorActorId, @JsonKey(name: 'custom_fields')  Map<String, Object?> customFields, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'depends_on')  List<String> dependsOn, @JsonKey(name: 'due_at')@TixDateTime()  DateTime? dueAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'lease')  String lease, @JsonKey(name: 'lease_expired_at')@TixDateTime()  DateTime? leaseExpiredAt, @JsonKey(name: 'lease_expired_by_actor_id')  String leaseExpiredByActorId, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'parent_id')  String parentId, @JsonKey(name: 'priority')  int priority, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'recurrence')  String recurrence, @JsonKey(name: 'recurrence_next_id')  String recurrenceNextId, @JsonKey(name: 'ref')  String ref, @JsonKey(name: 'seq')  int seq, @JsonKey(name: 'snoozed_by_actor_id')  String snoozedByActorId, @JsonKey(name: 'snoozed_until')@TixDateTime()  DateTime? snoozedUntil, @JsonKey(name: 'starred')  bool starred, @JsonKey(name: 'started_at')@TixDateTime()  DateTime? startedAt, @JsonKey(name: 'status')  String status, @JsonKey(name: 'tags')  List<String> tags, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'title')  String title, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'version')  int version, @JsonKey(name: 'waiting_on')  List<String> waitingOn, @JsonKey(name: 'web_url')  String webUrl)  $default,) {final _that = this;
 switch (_that) {
 case _Task():
-return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_that.claimCount,_that.claimedAt,_that.claimedByActorId,_that.completedAt,_that.copiedFromId,_that.createdAt,_that.creatorActorId,_that.customFields,_that.deletedAt,_that.dependsOn,_that.dueAt,_that.id,_that.lease,_that.leaseExpiredAt,_that.leaseExpiredByActorId,_that.leaseExpiresAt,_that.parentId,_that.priority,_that.projectId,_that.recurrence,_that.recurrenceNextId,_that.ref,_that.seq,_that.snoozedByActorId,_that.snoozedUntil,_that.starred,_that.startedAt,_that.status,_that.tags,_that.tenantId,_that.title,_that.updatedAt,_that.version,_that.webUrl);case _:
+return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_that.claimCount,_that.claimedAt,_that.claimedByActorId,_that.completedAt,_that.copiedFromId,_that.createdAt,_that.creatorActorId,_that.customFields,_that.deletedAt,_that.dependsOn,_that.dueAt,_that.id,_that.lease,_that.leaseExpiredAt,_that.leaseExpiredByActorId,_that.leaseExpiresAt,_that.parentId,_that.priority,_that.projectId,_that.recurrence,_that.recurrenceNextId,_that.ref,_that.seq,_that.snoozedByActorId,_that.snoozedUntil,_that.starred,_that.startedAt,_that.status,_that.tags,_that.tenantId,_that.title,_that.updatedAt,_that.version,_that.waitingOn,_that.webUrl);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -43200,10 +44114,10 @@ return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'assignee_actor_id')  String assigneeActorId, @JsonKey(name: 'blocked')  bool blocked, @JsonKey(name: 'body')  String body, @JsonKey(name: 'checklist')  Checklist? checklist, @JsonKey(name: 'claim_count')  int claimCount, @JsonKey(name: 'claimed_at')@TixDateTime()  DateTime? claimedAt, @JsonKey(name: 'claimed_by_actor_id')  String claimedByActorId, @JsonKey(name: 'completed_at')@TixDateTime()  DateTime? completedAt, @JsonKey(name: 'copied_from_id')  String copiedFromId, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'creator_actor_id')  String creatorActorId, @JsonKey(name: 'custom_fields')  Map<String, Object?> customFields, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'depends_on')  List<String> dependsOn, @JsonKey(name: 'due_at')@TixDateTime()  DateTime? dueAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'lease')  String lease, @JsonKey(name: 'lease_expired_at')@TixDateTime()  DateTime? leaseExpiredAt, @JsonKey(name: 'lease_expired_by_actor_id')  String leaseExpiredByActorId, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'parent_id')  String parentId, @JsonKey(name: 'priority')  int priority, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'recurrence')  String recurrence, @JsonKey(name: 'recurrence_next_id')  String recurrenceNextId, @JsonKey(name: 'ref')  String ref, @JsonKey(name: 'seq')  int seq, @JsonKey(name: 'snoozed_by_actor_id')  String snoozedByActorId, @JsonKey(name: 'snoozed_until')@TixDateTime()  DateTime? snoozedUntil, @JsonKey(name: 'starred')  bool starred, @JsonKey(name: 'started_at')@TixDateTime()  DateTime? startedAt, @JsonKey(name: 'status')  String status, @JsonKey(name: 'tags')  List<String> tags, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'title')  String title, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'version')  int version, @JsonKey(name: 'web_url')  String webUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'assignee_actor_id')  String assigneeActorId, @JsonKey(name: 'blocked')  bool blocked, @JsonKey(name: 'body')  String body, @JsonKey(name: 'checklist')  Checklist? checklist, @JsonKey(name: 'claim_count')  int claimCount, @JsonKey(name: 'claimed_at')@TixDateTime()  DateTime? claimedAt, @JsonKey(name: 'claimed_by_actor_id')  String claimedByActorId, @JsonKey(name: 'completed_at')@TixDateTime()  DateTime? completedAt, @JsonKey(name: 'copied_from_id')  String copiedFromId, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'creator_actor_id')  String creatorActorId, @JsonKey(name: 'custom_fields')  Map<String, Object?> customFields, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'depends_on')  List<String> dependsOn, @JsonKey(name: 'due_at')@TixDateTime()  DateTime? dueAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'lease')  String lease, @JsonKey(name: 'lease_expired_at')@TixDateTime()  DateTime? leaseExpiredAt, @JsonKey(name: 'lease_expired_by_actor_id')  String leaseExpiredByActorId, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'parent_id')  String parentId, @JsonKey(name: 'priority')  int priority, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'recurrence')  String recurrence, @JsonKey(name: 'recurrence_next_id')  String recurrenceNextId, @JsonKey(name: 'ref')  String ref, @JsonKey(name: 'seq')  int seq, @JsonKey(name: 'snoozed_by_actor_id')  String snoozedByActorId, @JsonKey(name: 'snoozed_until')@TixDateTime()  DateTime? snoozedUntil, @JsonKey(name: 'starred')  bool starred, @JsonKey(name: 'started_at')@TixDateTime()  DateTime? startedAt, @JsonKey(name: 'status')  String status, @JsonKey(name: 'tags')  List<String> tags, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'title')  String title, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt, @JsonKey(name: 'version')  int version, @JsonKey(name: 'waiting_on')  List<String> waitingOn, @JsonKey(name: 'web_url')  String webUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _Task() when $default != null:
-return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_that.claimCount,_that.claimedAt,_that.claimedByActorId,_that.completedAt,_that.copiedFromId,_that.createdAt,_that.creatorActorId,_that.customFields,_that.deletedAt,_that.dependsOn,_that.dueAt,_that.id,_that.lease,_that.leaseExpiredAt,_that.leaseExpiredByActorId,_that.leaseExpiresAt,_that.parentId,_that.priority,_that.projectId,_that.recurrence,_that.recurrenceNextId,_that.ref,_that.seq,_that.snoozedByActorId,_that.snoozedUntil,_that.starred,_that.startedAt,_that.status,_that.tags,_that.tenantId,_that.title,_that.updatedAt,_that.version,_that.webUrl);case _:
+return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_that.claimCount,_that.claimedAt,_that.claimedByActorId,_that.completedAt,_that.copiedFromId,_that.createdAt,_that.creatorActorId,_that.customFields,_that.deletedAt,_that.dependsOn,_that.dueAt,_that.id,_that.lease,_that.leaseExpiredAt,_that.leaseExpiredByActorId,_that.leaseExpiresAt,_that.parentId,_that.priority,_that.projectId,_that.recurrence,_that.recurrenceNextId,_that.ref,_that.seq,_that.snoozedByActorId,_that.snoozedUntil,_that.starred,_that.startedAt,_that.status,_that.tags,_that.tenantId,_that.title,_that.updatedAt,_that.version,_that.waitingOn,_that.webUrl);case _:
   return null;
 
 }
@@ -43215,7 +44129,7 @@ return $default(_that.assigneeActorId,_that.blocked,_that.body,_that.checklist,_
 @JsonSerializable()
 
 class _Task implements Task {
-  const _Task({@JsonKey(name: 'assignee_actor_id') this.assigneeActorId = '', @JsonKey(name: 'blocked') this.blocked = false, @JsonKey(name: 'body') this.body = '', @JsonKey(name: 'checklist') this.checklist, @JsonKey(name: 'claim_count') this.claimCount = 0, @JsonKey(name: 'claimed_at')@TixDateTime() this.claimedAt, @JsonKey(name: 'claimed_by_actor_id') this.claimedByActorId = '', @JsonKey(name: 'completed_at')@TixDateTime() this.completedAt, @JsonKey(name: 'copied_from_id') this.copiedFromId = '', @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'creator_actor_id') this.creatorActorId = '', @JsonKey(name: 'custom_fields')  Map<String, Object?> customFields = const <String, Object?>{}, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'depends_on')  List<String> dependsOn = const <String>[], @JsonKey(name: 'due_at')@TixDateTime() this.dueAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'lease') this.lease = '', @JsonKey(name: 'lease_expired_at')@TixDateTime() this.leaseExpiredAt, @JsonKey(name: 'lease_expired_by_actor_id') this.leaseExpiredByActorId = '', @JsonKey(name: 'lease_expires_at')@TixDateTime() this.leaseExpiresAt, @JsonKey(name: 'parent_id') this.parentId = '', @JsonKey(name: 'priority') this.priority = 0, @JsonKey(name: 'project_id') this.projectId = '', @JsonKey(name: 'recurrence') this.recurrence = '', @JsonKey(name: 'recurrence_next_id') this.recurrenceNextId = '', @JsonKey(name: 'ref') this.ref = '', @JsonKey(name: 'seq') this.seq = 0, @JsonKey(name: 'snoozed_by_actor_id') this.snoozedByActorId = '', @JsonKey(name: 'snoozed_until')@TixDateTime() this.snoozedUntil, @JsonKey(name: 'starred') this.starred = false, @JsonKey(name: 'started_at')@TixDateTime() this.startedAt, @JsonKey(name: 'status') this.status = '', @JsonKey(name: 'tags')  List<String> tags = const <String>[], @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'title') this.title = '', @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt, @JsonKey(name: 'version') this.version = 0, @JsonKey(name: 'web_url') this.webUrl = ''}): _customFields = customFields,_dependsOn = dependsOn,_tags = tags;
+  const _Task({@JsonKey(name: 'assignee_actor_id') this.assigneeActorId = '', @JsonKey(name: 'blocked') this.blocked = false, @JsonKey(name: 'body') this.body = '', @JsonKey(name: 'checklist') this.checklist, @JsonKey(name: 'claim_count') this.claimCount = 0, @JsonKey(name: 'claimed_at')@TixDateTime() this.claimedAt, @JsonKey(name: 'claimed_by_actor_id') this.claimedByActorId = '', @JsonKey(name: 'completed_at')@TixDateTime() this.completedAt, @JsonKey(name: 'copied_from_id') this.copiedFromId = '', @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'creator_actor_id') this.creatorActorId = '', @JsonKey(name: 'custom_fields')  Map<String, Object?> customFields = const <String, Object?>{}, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'depends_on')  List<String> dependsOn = const <String>[], @JsonKey(name: 'due_at')@TixDateTime() this.dueAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'lease') this.lease = '', @JsonKey(name: 'lease_expired_at')@TixDateTime() this.leaseExpiredAt, @JsonKey(name: 'lease_expired_by_actor_id') this.leaseExpiredByActorId = '', @JsonKey(name: 'lease_expires_at')@TixDateTime() this.leaseExpiresAt, @JsonKey(name: 'parent_id') this.parentId = '', @JsonKey(name: 'priority') this.priority = 0, @JsonKey(name: 'project_id') this.projectId = '', @JsonKey(name: 'recurrence') this.recurrence = '', @JsonKey(name: 'recurrence_next_id') this.recurrenceNextId = '', @JsonKey(name: 'ref') this.ref = '', @JsonKey(name: 'seq') this.seq = 0, @JsonKey(name: 'snoozed_by_actor_id') this.snoozedByActorId = '', @JsonKey(name: 'snoozed_until')@TixDateTime() this.snoozedUntil, @JsonKey(name: 'starred') this.starred = false, @JsonKey(name: 'started_at')@TixDateTime() this.startedAt, @JsonKey(name: 'status') this.status = '', @JsonKey(name: 'tags')  List<String> tags = const <String>[], @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'title') this.title = '', @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt, @JsonKey(name: 'version') this.version = 0, @JsonKey(name: 'waiting_on')  List<String> waitingOn = const <String>[], @JsonKey(name: 'web_url') this.webUrl = ''}): _customFields = customFields,_dependsOn = dependsOn,_tags = tags,_waitingOn = waitingOn;
   factory _Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
 
 /// AssigneeActorID is the actor the task is assigned to. Empty when unassigned.
@@ -43336,6 +44250,17 @@ class _Task implements Task {
 /// Version increases by one on every change. Pass it back on an update to have
 /// a stale write refused with a conflict.
 @override@JsonKey(name: 'version') final  int version;
+/// WaitingOn names, by reference, the unfinished tasks that make this one
+/// Blocked, in reference order. Empty when Blocked is false.
+ final  List<String> _waitingOn;
+/// WaitingOn names, by reference, the unfinished tasks that make this one
+/// Blocked, in reference order. Empty when Blocked is false.
+@override@JsonKey(name: 'waiting_on') List<String> get waitingOn {
+  if (_waitingOn is EqualUnmodifiableListView) return _waitingOn;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_waitingOn);
+}
+
 /// WebURL is the address of the task's screen in the browser interface, set
 /// when the server is configured with the address it is reached at
 /// (server.public_url). Only a read sets it, so it is absent from audit
@@ -43355,18 +44280,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Task&&(identical(other.assigneeActorId, assigneeActorId) || other.assigneeActorId == assigneeActorId)&&(identical(other.blocked, blocked) || other.blocked == blocked)&&(identical(other.body, body) || other.body == body)&&(identical(other.checklist, checklist) || other.checklist == checklist)&&(identical(other.claimCount, claimCount) || other.claimCount == claimCount)&&(identical(other.claimedAt, claimedAt) || other.claimedAt == claimedAt)&&(identical(other.claimedByActorId, claimedByActorId) || other.claimedByActorId == claimedByActorId)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.copiedFromId, copiedFromId) || other.copiedFromId == copiedFromId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.creatorActorId, creatorActorId) || other.creatorActorId == creatorActorId)&&const DeepCollectionEquality().equals(other.customFields, _customFields)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&const DeepCollectionEquality().equals(other.dependsOn, _dependsOn)&&(identical(other.dueAt, dueAt) || other.dueAt == dueAt)&&(identical(other.id, id) || other.id == id)&&(identical(other.lease, lease) || other.lease == lease)&&(identical(other.leaseExpiredAt, leaseExpiredAt) || other.leaseExpiredAt == leaseExpiredAt)&&(identical(other.leaseExpiredByActorId, leaseExpiredByActorId) || other.leaseExpiredByActorId == leaseExpiredByActorId)&&(identical(other.leaseExpiresAt, leaseExpiresAt) || other.leaseExpiresAt == leaseExpiresAt)&&(identical(other.parentId, parentId) || other.parentId == parentId)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.recurrence, recurrence) || other.recurrence == recurrence)&&(identical(other.recurrenceNextId, recurrenceNextId) || other.recurrenceNextId == recurrenceNextId)&&(identical(other.ref, ref) || other.ref == ref)&&(identical(other.seq, seq) || other.seq == seq)&&(identical(other.snoozedByActorId, snoozedByActorId) || other.snoozedByActorId == snoozedByActorId)&&(identical(other.snoozedUntil, snoozedUntil) || other.snoozedUntil == snoozedUntil)&&(identical(other.starred, starred) || other.starred == starred)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.tags, _tags)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.title, title) || other.title == title)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.version, version) || other.version == version)&&(identical(other.webUrl, webUrl) || other.webUrl == webUrl));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Task&&(identical(other.assigneeActorId, assigneeActorId) || other.assigneeActorId == assigneeActorId)&&(identical(other.blocked, blocked) || other.blocked == blocked)&&(identical(other.body, body) || other.body == body)&&(identical(other.checklist, checklist) || other.checklist == checklist)&&(identical(other.claimCount, claimCount) || other.claimCount == claimCount)&&(identical(other.claimedAt, claimedAt) || other.claimedAt == claimedAt)&&(identical(other.claimedByActorId, claimedByActorId) || other.claimedByActorId == claimedByActorId)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.copiedFromId, copiedFromId) || other.copiedFromId == copiedFromId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.creatorActorId, creatorActorId) || other.creatorActorId == creatorActorId)&&const DeepCollectionEquality().equals(other.customFields, _customFields)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&const DeepCollectionEquality().equals(other.dependsOn, _dependsOn)&&(identical(other.dueAt, dueAt) || other.dueAt == dueAt)&&(identical(other.id, id) || other.id == id)&&(identical(other.lease, lease) || other.lease == lease)&&(identical(other.leaseExpiredAt, leaseExpiredAt) || other.leaseExpiredAt == leaseExpiredAt)&&(identical(other.leaseExpiredByActorId, leaseExpiredByActorId) || other.leaseExpiredByActorId == leaseExpiredByActorId)&&(identical(other.leaseExpiresAt, leaseExpiresAt) || other.leaseExpiresAt == leaseExpiresAt)&&(identical(other.parentId, parentId) || other.parentId == parentId)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.recurrence, recurrence) || other.recurrence == recurrence)&&(identical(other.recurrenceNextId, recurrenceNextId) || other.recurrenceNextId == recurrenceNextId)&&(identical(other.ref, ref) || other.ref == ref)&&(identical(other.seq, seq) || other.seq == seq)&&(identical(other.snoozedByActorId, snoozedByActorId) || other.snoozedByActorId == snoozedByActorId)&&(identical(other.snoozedUntil, snoozedUntil) || other.snoozedUntil == snoozedUntil)&&(identical(other.starred, starred) || other.starred == starred)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.tags, _tags)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.title, title) || other.title == title)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.version, version) || other.version == version)&&const DeepCollectionEquality().equals(other.waitingOn, _waitingOn)&&(identical(other.webUrl, webUrl) || other.webUrl == webUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hashAll([runtimeType,assigneeActorId,blocked,body,checklist,claimCount,claimedAt,claimedByActorId,completedAt,copiedFromId,createdAt,creatorActorId,const DeepCollectionEquality().hash(_customFields),deletedAt,const DeepCollectionEquality().hash(_dependsOn),dueAt,id,lease,leaseExpiredAt,leaseExpiredByActorId,leaseExpiresAt,parentId,priority,projectId,recurrence,recurrenceNextId,ref,seq,snoozedByActorId,snoozedUntil,starred,startedAt,status,const DeepCollectionEquality().hash(_tags),tenantId,title,updatedAt,version,webUrl]);
+    return Object.hashAll([runtimeType,assigneeActorId,blocked,body,checklist,claimCount,claimedAt,claimedByActorId,completedAt,copiedFromId,createdAt,creatorActorId,const DeepCollectionEquality().hash(_customFields),deletedAt,const DeepCollectionEquality().hash(_dependsOn),dueAt,id,lease,leaseExpiredAt,leaseExpiredByActorId,leaseExpiresAt,parentId,priority,projectId,recurrence,recurrenceNextId,ref,seq,snoozedByActorId,snoozedUntil,starred,startedAt,status,const DeepCollectionEquality().hash(_tags),tenantId,title,updatedAt,version,const DeepCollectionEquality().hash(_waitingOn),webUrl]);
 }
 
 @override
 String toString() {
-    return 'Task(assigneeActorId: $assigneeActorId, blocked: $blocked, body: $body, checklist: $checklist, claimCount: $claimCount, claimedAt: $claimedAt, claimedByActorId: $claimedByActorId, completedAt: $completedAt, copiedFromId: $copiedFromId, createdAt: $createdAt, creatorActorId: $creatorActorId, customFields: $customFields, deletedAt: $deletedAt, dependsOn: $dependsOn, dueAt: $dueAt, id: $id, lease: $lease, leaseExpiredAt: $leaseExpiredAt, leaseExpiredByActorId: $leaseExpiredByActorId, leaseExpiresAt: $leaseExpiresAt, parentId: $parentId, priority: $priority, projectId: $projectId, recurrence: $recurrence, recurrenceNextId: $recurrenceNextId, ref: $ref, seq: $seq, snoozedByActorId: $snoozedByActorId, snoozedUntil: $snoozedUntil, starred: $starred, startedAt: $startedAt, status: $status, tags: $tags, tenantId: $tenantId, title: $title, updatedAt: $updatedAt, version: $version, webUrl: $webUrl)';
+    return 'Task(assigneeActorId: $assigneeActorId, blocked: $blocked, body: $body, checklist: $checklist, claimCount: $claimCount, claimedAt: $claimedAt, claimedByActorId: $claimedByActorId, completedAt: $completedAt, copiedFromId: $copiedFromId, createdAt: $createdAt, creatorActorId: $creatorActorId, customFields: $customFields, deletedAt: $deletedAt, dependsOn: $dependsOn, dueAt: $dueAt, id: $id, lease: $lease, leaseExpiredAt: $leaseExpiredAt, leaseExpiredByActorId: $leaseExpiredByActorId, leaseExpiresAt: $leaseExpiresAt, parentId: $parentId, priority: $priority, projectId: $projectId, recurrence: $recurrence, recurrenceNextId: $recurrenceNextId, ref: $ref, seq: $seq, snoozedByActorId: $snoozedByActorId, snoozedUntil: $snoozedUntil, starred: $starred, startedAt: $startedAt, status: $status, tags: $tags, tenantId: $tenantId, title: $title, updatedAt: $updatedAt, version: $version, waitingOn: $waitingOn, webUrl: $webUrl)';
 }
 
 
@@ -43377,7 +44302,7 @@ abstract mixin class _$TaskCopyWith<$Res> implements $TaskCopyWith<$Res> {
   factory _$TaskCopyWith(_Task value, $Res Function(_Task) _then) = __$TaskCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'assignee_actor_id') String assigneeActorId,@JsonKey(name: 'blocked') bool blocked,@JsonKey(name: 'body') String body,@JsonKey(name: 'checklist') Checklist? checklist,@JsonKey(name: 'claim_count') int claimCount,@JsonKey(name: 'claimed_at')@TixDateTime() DateTime? claimedAt,@JsonKey(name: 'claimed_by_actor_id') String claimedByActorId,@JsonKey(name: 'completed_at')@TixDateTime() DateTime? completedAt,@JsonKey(name: 'copied_from_id') String copiedFromId,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'creator_actor_id') String creatorActorId,@JsonKey(name: 'custom_fields') Map<String, Object?> customFields,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'depends_on') List<String> dependsOn,@JsonKey(name: 'due_at')@TixDateTime() DateTime? dueAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'lease') String lease,@JsonKey(name: 'lease_expired_at')@TixDateTime() DateTime? leaseExpiredAt,@JsonKey(name: 'lease_expired_by_actor_id') String leaseExpiredByActorId,@JsonKey(name: 'lease_expires_at')@TixDateTime() DateTime? leaseExpiresAt,@JsonKey(name: 'parent_id') String parentId,@JsonKey(name: 'priority') int priority,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'recurrence') String recurrence,@JsonKey(name: 'recurrence_next_id') String recurrenceNextId,@JsonKey(name: 'ref') String ref,@JsonKey(name: 'seq') int seq,@JsonKey(name: 'snoozed_by_actor_id') String snoozedByActorId,@JsonKey(name: 'snoozed_until')@TixDateTime() DateTime? snoozedUntil,@JsonKey(name: 'starred') bool starred,@JsonKey(name: 'started_at')@TixDateTime() DateTime? startedAt,@JsonKey(name: 'status') String status,@JsonKey(name: 'tags') List<String> tags,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'title') String title,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt,@JsonKey(name: 'version') int version,@JsonKey(name: 'web_url') String webUrl
+@JsonKey(name: 'assignee_actor_id') String assigneeActorId,@JsonKey(name: 'blocked') bool blocked,@JsonKey(name: 'body') String body,@JsonKey(name: 'checklist') Checklist? checklist,@JsonKey(name: 'claim_count') int claimCount,@JsonKey(name: 'claimed_at')@TixDateTime() DateTime? claimedAt,@JsonKey(name: 'claimed_by_actor_id') String claimedByActorId,@JsonKey(name: 'completed_at')@TixDateTime() DateTime? completedAt,@JsonKey(name: 'copied_from_id') String copiedFromId,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'creator_actor_id') String creatorActorId,@JsonKey(name: 'custom_fields') Map<String, Object?> customFields,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'depends_on') List<String> dependsOn,@JsonKey(name: 'due_at')@TixDateTime() DateTime? dueAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'lease') String lease,@JsonKey(name: 'lease_expired_at')@TixDateTime() DateTime? leaseExpiredAt,@JsonKey(name: 'lease_expired_by_actor_id') String leaseExpiredByActorId,@JsonKey(name: 'lease_expires_at')@TixDateTime() DateTime? leaseExpiresAt,@JsonKey(name: 'parent_id') String parentId,@JsonKey(name: 'priority') int priority,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'recurrence') String recurrence,@JsonKey(name: 'recurrence_next_id') String recurrenceNextId,@JsonKey(name: 'ref') String ref,@JsonKey(name: 'seq') int seq,@JsonKey(name: 'snoozed_by_actor_id') String snoozedByActorId,@JsonKey(name: 'snoozed_until')@TixDateTime() DateTime? snoozedUntil,@JsonKey(name: 'starred') bool starred,@JsonKey(name: 'started_at')@TixDateTime() DateTime? startedAt,@JsonKey(name: 'status') String status,@JsonKey(name: 'tags') List<String> tags,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'title') String title,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt,@JsonKey(name: 'version') int version,@JsonKey(name: 'waiting_on') List<String> waitingOn,@JsonKey(name: 'web_url') String webUrl
 });
 
 
@@ -43394,7 +44319,7 @@ class __$TaskCopyWithImpl<$Res>
 
 /// Create a copy of Task
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? assigneeActorId = null,Object? blocked = null,Object? body = null,Object? checklist = freezed,Object? claimCount = null,Object? claimedAt = freezed,Object? claimedByActorId = null,Object? completedAt = freezed,Object? copiedFromId = null,Object? createdAt = freezed,Object? creatorActorId = null,Object? customFields = null,Object? deletedAt = freezed,Object? dependsOn = null,Object? dueAt = freezed,Object? id = null,Object? lease = null,Object? leaseExpiredAt = freezed,Object? leaseExpiredByActorId = null,Object? leaseExpiresAt = freezed,Object? parentId = null,Object? priority = null,Object? projectId = null,Object? recurrence = null,Object? recurrenceNextId = null,Object? ref = null,Object? seq = null,Object? snoozedByActorId = null,Object? snoozedUntil = freezed,Object? starred = null,Object? startedAt = freezed,Object? status = null,Object? tags = null,Object? tenantId = null,Object? title = null,Object? updatedAt = freezed,Object? version = null,Object? webUrl = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? assigneeActorId = null,Object? blocked = null,Object? body = null,Object? checklist = freezed,Object? claimCount = null,Object? claimedAt = freezed,Object? claimedByActorId = null,Object? completedAt = freezed,Object? copiedFromId = null,Object? createdAt = freezed,Object? creatorActorId = null,Object? customFields = null,Object? deletedAt = freezed,Object? dependsOn = null,Object? dueAt = freezed,Object? id = null,Object? lease = null,Object? leaseExpiredAt = freezed,Object? leaseExpiredByActorId = null,Object? leaseExpiresAt = freezed,Object? parentId = null,Object? priority = null,Object? projectId = null,Object? recurrence = null,Object? recurrenceNextId = null,Object? ref = null,Object? seq = null,Object? snoozedByActorId = null,Object? snoozedUntil = freezed,Object? starred = null,Object? startedAt = freezed,Object? status = null,Object? tags = null,Object? tenantId = null,Object? title = null,Object? updatedAt = freezed,Object? version = null,Object? waitingOn = null,Object? webUrl = null,}) {
   return _then(_Task(
 assigneeActorId: null == assigneeActorId ? _self.assigneeActorId : assigneeActorId // ignore: cast_nullable_to_non_nullable
 as String,blocked: null == blocked ? _self.blocked : blocked // ignore: cast_nullable_to_non_nullable
@@ -43433,7 +44358,8 @@ as List<String>,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
-as int,webUrl: null == webUrl ? _self.webUrl : webUrl // ignore: cast_nullable_to_non_nullable
+as int,waitingOn: null == waitingOn ? _self._waitingOn : waitingOn // ignore: cast_nullable_to_non_nullable
+as List<String>,webUrl: null == webUrl ? _self.webUrl : webUrl // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -45704,6 +46630,344 @@ as String,
 
 
 /// @nodoc
+mixin _$TaskMove {
+
+/// DroppedFields names the custom fields the target does not define or would
+/// not accept, whose values were left behind.
+@JsonKey(name: 'dropped_fields') List<String> get droppedFields;/// FromProject is the key of the project the task left.
+@JsonKey(name: 'from_project') String get fromProject;/// FromRef is the reference the task had, which keeps resolving to it.
+@JsonKey(name: 'from_ref') String get fromRef;/// FromStatus is the status the task had before the move.
+@JsonKey(name: 'from_status') String get fromStatus;/// Project is the key of the project the task moved into.
+@JsonKey(name: 'project') String get project;/// StatusKept reports that the target's workflow had the same state; when false
+/// the task starts in the target's initial state.
+@JsonKey(name: 'status_kept') bool get statusKept;/// Task is the moved task under its new reference.
+@JsonKey(name: 'task') Task? get task;
+/// Create a copy of TaskMove
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TaskMoveCopyWith<TaskMove> get copyWith => _$TaskMoveCopyWithImpl<TaskMove>(this as TaskMove, _$identity);
+
+  /// Serializes this TaskMove to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as TaskMove;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TaskMove&&const DeepCollectionEquality().equals(other.droppedFields, _this.droppedFields)&&(identical(other.fromProject, _this.fromProject) || other.fromProject == _this.fromProject)&&(identical(other.fromRef, _this.fromRef) || other.fromRef == _this.fromRef)&&(identical(other.fromStatus, _this.fromStatus) || other.fromStatus == _this.fromStatus)&&(identical(other.project, _this.project) || other.project == _this.project)&&(identical(other.statusKept, _this.statusKept) || other.statusKept == _this.statusKept)&&(identical(other.task, _this.task) || other.task == _this.task));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as TaskMove;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.droppedFields),_this.fromProject,_this.fromRef,_this.fromStatus,_this.project,_this.statusKept,_this.task);
+}
+
+@override
+String toString() {
+  final _this = this as TaskMove;
+  return 'TaskMove(droppedFields: ${_this.droppedFields}, fromProject: ${_this.fromProject}, fromRef: ${_this.fromRef}, fromStatus: ${_this.fromStatus}, project: ${_this.project}, statusKept: ${_this.statusKept}, task: ${_this.task})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TaskMoveCopyWith<$Res>  {
+  factory $TaskMoveCopyWith(TaskMove value, $Res Function(TaskMove) _then) = _$TaskMoveCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'dropped_fields') List<String> droppedFields,@JsonKey(name: 'from_project') String fromProject,@JsonKey(name: 'from_ref') String fromRef,@JsonKey(name: 'from_status') String fromStatus,@JsonKey(name: 'project') String project,@JsonKey(name: 'status_kept') bool statusKept,@JsonKey(name: 'task') Task? task
+});
+
+
+$TaskCopyWith<$Res>? get task;
+
+}
+/// @nodoc
+class _$TaskMoveCopyWithImpl<$Res>
+    implements $TaskMoveCopyWith<$Res> {
+  _$TaskMoveCopyWithImpl(this._self, this._then);
+
+  final TaskMove _self;
+  final $Res Function(TaskMove) _then;
+
+/// Create a copy of TaskMove
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? droppedFields = null,Object? fromProject = null,Object? fromRef = null,Object? fromStatus = null,Object? project = null,Object? statusKept = null,Object? task = freezed,}) {
+  return _then(TaskMove(
+droppedFields: null == droppedFields ? _self.droppedFields : droppedFields // ignore: cast_nullable_to_non_nullable
+as List<String>,fromProject: null == fromProject ? _self.fromProject : fromProject // ignore: cast_nullable_to_non_nullable
+as String,fromRef: null == fromRef ? _self.fromRef : fromRef // ignore: cast_nullable_to_non_nullable
+as String,fromStatus: null == fromStatus ? _self.fromStatus : fromStatus // ignore: cast_nullable_to_non_nullable
+as String,project: null == project ? _self.project : project // ignore: cast_nullable_to_non_nullable
+as String,statusKept: null == statusKept ? _self.statusKept : statusKept // ignore: cast_nullable_to_non_nullable
+as bool,task: freezed == task ? _self.task : task // ignore: cast_nullable_to_non_nullable
+as Task?,
+  ));
+}
+/// Create a copy of TaskMove
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$TaskCopyWith<$Res>? get task {
+    if (_self.task == null) {
+    return null;
+  }
+
+  return $TaskCopyWith<$Res>(_self.task!, (value) {
+    return _then(_self.copyWith(task: value));
+  });
+}
+}
+
+
+/// Adds pattern-matching-related methods to [TaskMove].
+extension TaskMovePatterns on TaskMove {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TaskMove value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TaskMove() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TaskMove value)  $default,){
+final _that = this;
+switch (_that) {
+case _TaskMove():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TaskMove value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TaskMove() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'dropped_fields')  List<String> droppedFields, @JsonKey(name: 'from_project')  String fromProject, @JsonKey(name: 'from_ref')  String fromRef, @JsonKey(name: 'from_status')  String fromStatus, @JsonKey(name: 'project')  String project, @JsonKey(name: 'status_kept')  bool statusKept, @JsonKey(name: 'task')  Task? task)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TaskMove() when $default != null:
+return $default(_that.droppedFields,_that.fromProject,_that.fromRef,_that.fromStatus,_that.project,_that.statusKept,_that.task);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'dropped_fields')  List<String> droppedFields, @JsonKey(name: 'from_project')  String fromProject, @JsonKey(name: 'from_ref')  String fromRef, @JsonKey(name: 'from_status')  String fromStatus, @JsonKey(name: 'project')  String project, @JsonKey(name: 'status_kept')  bool statusKept, @JsonKey(name: 'task')  Task? task)  $default,) {final _that = this;
+switch (_that) {
+case _TaskMove():
+return $default(_that.droppedFields,_that.fromProject,_that.fromRef,_that.fromStatus,_that.project,_that.statusKept,_that.task);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'dropped_fields')  List<String> droppedFields, @JsonKey(name: 'from_project')  String fromProject, @JsonKey(name: 'from_ref')  String fromRef, @JsonKey(name: 'from_status')  String fromStatus, @JsonKey(name: 'project')  String project, @JsonKey(name: 'status_kept')  bool statusKept, @JsonKey(name: 'task')  Task? task)?  $default,) {final _that = this;
+switch (_that) {
+case _TaskMove() when $default != null:
+return $default(_that.droppedFields,_that.fromProject,_that.fromRef,_that.fromStatus,_that.project,_that.statusKept,_that.task);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _TaskMove implements TaskMove {
+  const _TaskMove({@JsonKey(name: 'dropped_fields')  List<String> droppedFields = const <String>[], @JsonKey(name: 'from_project') this.fromProject = '', @JsonKey(name: 'from_ref') this.fromRef = '', @JsonKey(name: 'from_status') this.fromStatus = '', @JsonKey(name: 'project') this.project = '', @JsonKey(name: 'status_kept') this.statusKept = false, @JsonKey(name: 'task') this.task}): _droppedFields = droppedFields;
+  factory _TaskMove.fromJson(Map<String, dynamic> json) => _$TaskMoveFromJson(json);
+
+/// DroppedFields names the custom fields the target does not define or would
+/// not accept, whose values were left behind.
+ final  List<String> _droppedFields;
+/// DroppedFields names the custom fields the target does not define or would
+/// not accept, whose values were left behind.
+@override@JsonKey(name: 'dropped_fields') List<String> get droppedFields {
+  if (_droppedFields is EqualUnmodifiableListView) return _droppedFields;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_droppedFields);
+}
+
+/// FromProject is the key of the project the task left.
+@override@JsonKey(name: 'from_project') final  String fromProject;
+/// FromRef is the reference the task had, which keeps resolving to it.
+@override@JsonKey(name: 'from_ref') final  String fromRef;
+/// FromStatus is the status the task had before the move.
+@override@JsonKey(name: 'from_status') final  String fromStatus;
+/// Project is the key of the project the task moved into.
+@override@JsonKey(name: 'project') final  String project;
+/// StatusKept reports that the target's workflow had the same state; when false
+/// the task starts in the target's initial state.
+@override@JsonKey(name: 'status_kept') final  bool statusKept;
+/// Task is the moved task under its new reference.
+@override@JsonKey(name: 'task') final  Task? task;
+
+/// Create a copy of TaskMove
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TaskMoveCopyWith<_TaskMove> get copyWith => __$TaskMoveCopyWithImpl<_TaskMove>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$TaskMoveToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TaskMove&&const DeepCollectionEquality().equals(other.droppedFields, _droppedFields)&&(identical(other.fromProject, fromProject) || other.fromProject == fromProject)&&(identical(other.fromRef, fromRef) || other.fromRef == fromRef)&&(identical(other.fromStatus, fromStatus) || other.fromStatus == fromStatus)&&(identical(other.project, project) || other.project == project)&&(identical(other.statusKept, statusKept) || other.statusKept == statusKept)&&(identical(other.task, task) || other.task == task));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_droppedFields),fromProject,fromRef,fromStatus,project,statusKept,task);
+}
+
+@override
+String toString() {
+    return 'TaskMove(droppedFields: $droppedFields, fromProject: $fromProject, fromRef: $fromRef, fromStatus: $fromStatus, project: $project, statusKept: $statusKept, task: $task)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TaskMoveCopyWith<$Res> implements $TaskMoveCopyWith<$Res> {
+  factory _$TaskMoveCopyWith(_TaskMove value, $Res Function(_TaskMove) _then) = __$TaskMoveCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'dropped_fields') List<String> droppedFields,@JsonKey(name: 'from_project') String fromProject,@JsonKey(name: 'from_ref') String fromRef,@JsonKey(name: 'from_status') String fromStatus,@JsonKey(name: 'project') String project,@JsonKey(name: 'status_kept') bool statusKept,@JsonKey(name: 'task') Task? task
+});
+
+
+@override $TaskCopyWith<$Res>? get task;
+
+}
+/// @nodoc
+class __$TaskMoveCopyWithImpl<$Res>
+    implements _$TaskMoveCopyWith<$Res> {
+  __$TaskMoveCopyWithImpl(this._self, this._then);
+
+  final _TaskMove _self;
+  final $Res Function(_TaskMove) _then;
+
+/// Create a copy of TaskMove
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? droppedFields = null,Object? fromProject = null,Object? fromRef = null,Object? fromStatus = null,Object? project = null,Object? statusKept = null,Object? task = freezed,}) {
+  return _then(_TaskMove(
+droppedFields: null == droppedFields ? _self._droppedFields : droppedFields // ignore: cast_nullable_to_non_nullable
+as List<String>,fromProject: null == fromProject ? _self.fromProject : fromProject // ignore: cast_nullable_to_non_nullable
+as String,fromRef: null == fromRef ? _self.fromRef : fromRef // ignore: cast_nullable_to_non_nullable
+as String,fromStatus: null == fromStatus ? _self.fromStatus : fromStatus // ignore: cast_nullable_to_non_nullable
+as String,project: null == project ? _self.project : project // ignore: cast_nullable_to_non_nullable
+as String,statusKept: null == statusKept ? _self.statusKept : statusKept // ignore: cast_nullable_to_non_nullable
+as bool,task: freezed == task ? _self.task : task // ignore: cast_nullable_to_non_nullable
+as Task?,
+  ));
+}
+
+/// Create a copy of TaskMove
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$TaskCopyWith<$Res>? get task {
+    if (_self.task == null) {
+    return null;
+  }
+
+  return $TaskCopyWith<$Res>(_self.task!, (value) {
+    return _then(_self.copyWith(task: value));
+  });
+}
+}
+
+
+/// @nodoc
 mixin _$TaskTemplate {
 
 /// CreatedAt is when the template was saved, RFC 3339.
@@ -46390,7 +47654,11 @@ as String,
 /// @nodoc
 mixin _$Tenant {
 
-/// CreatedAt is when the tenant was created, RFC 3339.
+/// ArtifactMaxBytes is the largest artifact blob this tenant accepts. It can
+/// lower the server's artifacts.max_bytes but never raise it; zero inherits.
+@JsonKey(name: 'artifact_max_bytes') int get artifactMaxBytes;/// ArtifactTypes are the media types and patterns an artifact blob may carry on
+/// this tenant, within the server's artifacts.allowed_types; empty inherits.
+@JsonKey(name: 'artifact_types') List<String> get artifactTypes;/// CreatedAt is when the tenant was created, RFC 3339.
 @JsonKey(name: 'created_at')@TixDateTime() DateTime? get createdAt;/// DeletedAt is when the tenant was deleted, RFC 3339. Absent on a live tenant.
 @JsonKey(name: 'deleted_at')@TixDateTime() DateTime? get deletedAt;/// ID is the tenant's unique identifier.
 @JsonKey(name: 'id') String get id;/// Key is the tenant's short, unique, human-readable key, used to refer to it
@@ -46438,20 +47706,20 @@ $TenantCopyWith<Tenant> get copyWith => _$TenantCopyWithImpl<Tenant>(this as Ten
 @override
 bool operator ==(Object other) {
   final _this = this as Tenant;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Tenant&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.mfaRequiredAt, _this.mfaRequiredAt) || other.mfaRequiredAt == _this.mfaRequiredAt)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Tenant&&(identical(other.artifactMaxBytes, _this.artifactMaxBytes) || other.artifactMaxBytes == _this.artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _this.artifactTypes)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.mfaRequiredAt, _this.mfaRequiredAt) || other.mfaRequiredAt == _this.mfaRequiredAt)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Tenant;
-  return Object.hash(runtimeType,_this.createdAt,_this.deletedAt,_this.id,_this.key,_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.mfaRequiredAt,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff,_this.updatedAt);
+  return Object.hashAll([runtimeType,_this.artifactMaxBytes,const DeepCollectionEquality().hash(_this.artifactTypes),_this.createdAt,_this.deletedAt,_this.id,_this.key,_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.mfaRequiredAt,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff,_this.updatedAt]);
 }
 
 @override
 String toString() {
   final _this = this as Tenant;
-  return 'Tenant(createdAt: ${_this.createdAt}, deletedAt: ${_this.deletedAt}, id: ${_this.id}, key: ${_this.key}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, mfaRequiredAt: ${_this.mfaRequiredAt}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff}, updatedAt: ${_this.updatedAt})';
+  return 'Tenant(artifactMaxBytes: ${_this.artifactMaxBytes}, artifactTypes: ${_this.artifactTypes}, createdAt: ${_this.createdAt}, deletedAt: ${_this.deletedAt}, id: ${_this.id}, key: ${_this.key}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, mfaRequiredAt: ${_this.mfaRequiredAt}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -46462,7 +47730,7 @@ abstract mixin class $TenantCopyWith<$Res>  {
   factory $TenantCopyWith(Tenant value, $Res Function(Tenant) _then) = _$TenantCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -46479,9 +47747,11 @@ class _$TenantCopyWithImpl<$Res>
 
 /// Create a copy of Tenant
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
   return _then(Tenant(
-createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+artifactMaxBytes: null == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
+as int,artifactTypes: null == artifactTypes ? _self.artifactTypes : artifactTypes // ignore: cast_nullable_to_non_nullable
+as List<String>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
@@ -46584,10 +47854,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Tenant() when $default != null:
-return $default(_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -46605,10 +47875,10 @@ return $default(_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDe
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Tenant():
-return $default(_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -46625,10 +47895,10 @@ return $default(_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDe
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Tenant() when $default != null:
-return $default(_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   return null;
 
 }
@@ -46640,8 +47910,22 @@ return $default(_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDe
 @JsonSerializable()
 
 class _Tenant implements Tenant {
-  const _Tenant({@JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'key') this.key = '', @JsonKey(name: 'lease_default') this.leaseDefault = '', @JsonKey(name: 'lease_max') this.leaseMax = '', @JsonKey(name: 'mfa_grace') this.mfaGrace = '', @JsonKey(name: 'mfa_policy') this.mfaPolicy = '', @JsonKey(name: 'mfa_required_at')@TixDateTime() this.mfaRequiredAt, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'require_totp_cli') this.requireTotpCli = false, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh = false, @JsonKey(name: 'require_totp_web') this.requireTotpWeb = false, @JsonKey(name: 'theme') this.theme = '', @JsonKey(name: 'time_format') this.timeFormat = '', @JsonKey(name: 'timezone') this.timezone = '', @JsonKey(name: 'trash_off') this.trashOff = false, @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt});
+  const _Tenant({@JsonKey(name: 'artifact_max_bytes') this.artifactMaxBytes = 0, @JsonKey(name: 'artifact_types')  List<String> artifactTypes = const <String>[], @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'key') this.key = '', @JsonKey(name: 'lease_default') this.leaseDefault = '', @JsonKey(name: 'lease_max') this.leaseMax = '', @JsonKey(name: 'mfa_grace') this.mfaGrace = '', @JsonKey(name: 'mfa_policy') this.mfaPolicy = '', @JsonKey(name: 'mfa_required_at')@TixDateTime() this.mfaRequiredAt, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'require_totp_cli') this.requireTotpCli = false, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh = false, @JsonKey(name: 'require_totp_web') this.requireTotpWeb = false, @JsonKey(name: 'theme') this.theme = '', @JsonKey(name: 'time_format') this.timeFormat = '', @JsonKey(name: 'timezone') this.timezone = '', @JsonKey(name: 'trash_off') this.trashOff = false, @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt}): _artifactTypes = artifactTypes;
   factory _Tenant.fromJson(Map<String, dynamic> json) => _$TenantFromJson(json);
+
+/// ArtifactMaxBytes is the largest artifact blob this tenant accepts. It can
+/// lower the server's artifacts.max_bytes but never raise it; zero inherits.
+@override@JsonKey(name: 'artifact_max_bytes') final  int artifactMaxBytes;
+/// ArtifactTypes are the media types and patterns an artifact blob may carry on
+/// this tenant, within the server's artifacts.allowed_types; empty inherits.
+ final  List<String> _artifactTypes;
+/// ArtifactTypes are the media types and patterns an artifact blob may carry on
+/// this tenant, within the server's artifacts.allowed_types; empty inherits.
+@override@JsonKey(name: 'artifact_types') List<String> get artifactTypes {
+  if (_artifactTypes is EqualUnmodifiableListView) return _artifactTypes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_artifactTypes);
+}
 
 /// CreatedAt is when the tenant was created, RFC 3339.
 @override@JsonKey(name: 'created_at')@TixDateTime() final  DateTime? createdAt;
@@ -46709,18 +47993,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Tenant&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.id, id) || other.id == id)&&(identical(other.key, key) || other.key == key)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.mfaRequiredAt, mfaRequiredAt) || other.mfaRequiredAt == mfaRequiredAt)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Tenant&&(identical(other.artifactMaxBytes, artifactMaxBytes) || other.artifactMaxBytes == artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _artifactTypes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.id, id) || other.id == id)&&(identical(other.key, key) || other.key == key)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.mfaRequiredAt, mfaRequiredAt) || other.mfaRequiredAt == mfaRequiredAt)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,createdAt,deletedAt,id,key,leaseDefault,leaseMax,mfaGrace,mfaPolicy,mfaRequiredAt,name,requireTotpCli,requireTotpSsh,requireTotpWeb,theme,timeFormat,timezone,trashOff,updatedAt);
+    return Object.hashAll([runtimeType,artifactMaxBytes,const DeepCollectionEquality().hash(_artifactTypes),createdAt,deletedAt,id,key,leaseDefault,leaseMax,mfaGrace,mfaPolicy,mfaRequiredAt,name,requireTotpCli,requireTotpSsh,requireTotpWeb,theme,timeFormat,timezone,trashOff,updatedAt]);
 }
 
 @override
 String toString() {
-    return 'Tenant(createdAt: $createdAt, deletedAt: $deletedAt, id: $id, key: $key, leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, mfaRequiredAt: $mfaRequiredAt, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff, updatedAt: $updatedAt)';
+    return 'Tenant(artifactMaxBytes: $artifactMaxBytes, artifactTypes: $artifactTypes, createdAt: $createdAt, deletedAt: $deletedAt, id: $id, key: $key, leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, mfaRequiredAt: $mfaRequiredAt, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff, updatedAt: $updatedAt)';
 }
 
 
@@ -46731,7 +48015,7 @@ abstract mixin class _$TenantCopyWith<$Res> implements $TenantCopyWith<$Res> {
   factory _$TenantCopyWith(_Tenant value, $Res Function(_Tenant) _then) = __$TenantCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -46748,9 +48032,11 @@ class __$TenantCopyWithImpl<$Res>
 
 /// Create a copy of Tenant
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
   return _then(_Tenant(
-createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+artifactMaxBytes: null == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
+as int,artifactTypes: null == artifactTypes ? _self._artifactTypes : artifactTypes // ignore: cast_nullable_to_non_nullable
+as List<String>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
@@ -50906,7 +52192,13 @@ as String?,
 /// @nodoc
 mixin _$UpdateTenantInput {
 
-/// LeaseDefault is the lease a claim on this tenant gets when nothing more
+/// ArtifactMaxBytes lowers the largest artifact blob this tenant accepts below
+/// the server's limit. Zero inherits the server's and omitted leaves it; a
+/// value above the server's is refused.
+@JsonKey(name: 'artifact_max_bytes') int? get artifactMaxBytes;/// ArtifactTypes narrows the media types an artifact blob may carry, such as
+/// ["image/*", "application/pdf"]. An empty list inherits the server's and
+/// omitted leaves it; a type the server does not accept is refused.
+@JsonKey(name: 'artifact_types') List<String>? get artifactTypes;/// LeaseDefault is the lease a claim on this tenant gets when nothing more
 /// specific names one, a duration such as "30m". Zero clears it back to the
 /// deployment configuration and omitted leaves it alone. A default longer than
 /// the maximum the tenant would hold, sent or stored, is refused.
@@ -50952,20 +52244,20 @@ $UpdateTenantInputCopyWith<UpdateTenantInput> get copyWith => _$UpdateTenantInpu
 @override
 bool operator ==(Object other) {
   final _this = this as UpdateTenantInput;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateTenantInput&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateTenantInput&&(identical(other.artifactMaxBytes, _this.artifactMaxBytes) || other.artifactMaxBytes == _this.artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _this.artifactTypes)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as UpdateTenantInput;
-  return Object.hash(runtimeType,_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff);
+  return Object.hash(runtimeType,_this.artifactMaxBytes,const DeepCollectionEquality().hash(_this.artifactTypes),_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff);
 }
 
 @override
 String toString() {
   final _this = this as UpdateTenantInput;
-  return 'UpdateTenantInput(leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff})';
+  return 'UpdateTenantInput(artifactMaxBytes: ${_this.artifactMaxBytes}, artifactTypes: ${_this.artifactTypes}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff})';
 }
 
 
@@ -50976,7 +52268,7 @@ abstract mixin class $UpdateTenantInputCopyWith<$Res>  {
   factory $UpdateTenantInputCopyWith(UpdateTenantInput value, $Res Function(UpdateTenantInput) _then) = _$UpdateTenantInputCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'lease_default') String? leaseDefault,@JsonKey(name: 'lease_max') String? leaseMax,@JsonKey(name: 'mfa_grace') String? mfaGrace,@JsonKey(name: 'mfa_policy') String? mfaPolicy,@JsonKey(name: 'name') String? name,@JsonKey(name: 'require_totp_cli') bool? requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool? requireTotpSsh,@JsonKey(name: 'require_totp_web') bool? requireTotpWeb,@JsonKey(name: 'theme') String? theme,@JsonKey(name: 'time_format') String? timeFormat,@JsonKey(name: 'timezone') String? timezone,@JsonKey(name: 'trash_off') bool? trashOff
+@JsonKey(name: 'artifact_max_bytes') int? artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String>? artifactTypes,@JsonKey(name: 'lease_default') String? leaseDefault,@JsonKey(name: 'lease_max') String? leaseMax,@JsonKey(name: 'mfa_grace') String? mfaGrace,@JsonKey(name: 'mfa_policy') String? mfaPolicy,@JsonKey(name: 'name') String? name,@JsonKey(name: 'require_totp_cli') bool? requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool? requireTotpSsh,@JsonKey(name: 'require_totp_web') bool? requireTotpWeb,@JsonKey(name: 'theme') String? theme,@JsonKey(name: 'time_format') String? timeFormat,@JsonKey(name: 'timezone') String? timezone,@JsonKey(name: 'trash_off') bool? trashOff
 });
 
 
@@ -50993,9 +52285,11 @@ class _$UpdateTenantInputCopyWithImpl<$Res>
 
 /// Create a copy of UpdateTenantInput
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? leaseDefault = freezed,Object? leaseMax = freezed,Object? mfaGrace = freezed,Object? mfaPolicy = freezed,Object? name = freezed,Object? requireTotpCli = freezed,Object? requireTotpSsh = freezed,Object? requireTotpWeb = freezed,Object? theme = freezed,Object? timeFormat = freezed,Object? timezone = freezed,Object? trashOff = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? artifactMaxBytes = freezed,Object? artifactTypes = freezed,Object? leaseDefault = freezed,Object? leaseMax = freezed,Object? mfaGrace = freezed,Object? mfaPolicy = freezed,Object? name = freezed,Object? requireTotpCli = freezed,Object? requireTotpSsh = freezed,Object? requireTotpWeb = freezed,Object? theme = freezed,Object? timeFormat = freezed,Object? timezone = freezed,Object? trashOff = freezed,}) {
   return _then(UpdateTenantInput(
-leaseDefault: freezed == leaseDefault ? _self.leaseDefault : leaseDefault // ignore: cast_nullable_to_non_nullable
+artifactMaxBytes: freezed == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
+as int?,artifactTypes: freezed == artifactTypes ? _self.artifactTypes : artifactTypes // ignore: cast_nullable_to_non_nullable
+as List<String>?,leaseDefault: freezed == leaseDefault ? _self.leaseDefault : leaseDefault // ignore: cast_nullable_to_non_nullable
 as String?,leaseMax: freezed == leaseMax ? _self.leaseMax : leaseMax // ignore: cast_nullable_to_non_nullable
 as String?,mfaGrace: freezed == mfaGrace ? _self.mfaGrace : mfaGrace // ignore: cast_nullable_to_non_nullable
 as String?,mfaPolicy: freezed == mfaPolicy ? _self.mfaPolicy : mfaPolicy // ignore: cast_nullable_to_non_nullable
@@ -51092,10 +52386,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int? artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UpdateTenantInput() when $default != null:
-return $default(_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
   return orElse();
 
 }
@@ -51113,10 +52407,10 @@ return $default(_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int? artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)  $default,) {final _that = this;
 switch (_that) {
 case _UpdateTenantInput():
-return $default(_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -51133,10 +52427,10 @@ return $default(_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'artifact_max_bytes')  int? artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)?  $default,) {final _that = this;
 switch (_that) {
 case _UpdateTenantInput() when $default != null:
-return $default(_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
   return null;
 
 }
@@ -51148,8 +52442,27 @@ return $default(_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy
 @JsonSerializable()
 
 class _UpdateTenantInput implements UpdateTenantInput {
-  const _UpdateTenantInput({@JsonKey(name: 'lease_default') this.leaseDefault, @JsonKey(name: 'lease_max') this.leaseMax, @JsonKey(name: 'mfa_grace') this.mfaGrace, @JsonKey(name: 'mfa_policy') this.mfaPolicy, @JsonKey(name: 'name') this.name, @JsonKey(name: 'require_totp_cli') this.requireTotpCli, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh, @JsonKey(name: 'require_totp_web') this.requireTotpWeb, @JsonKey(name: 'theme') this.theme, @JsonKey(name: 'time_format') this.timeFormat, @JsonKey(name: 'timezone') this.timezone, @JsonKey(name: 'trash_off') this.trashOff});
+  const _UpdateTenantInput({@JsonKey(name: 'artifact_max_bytes') this.artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'lease_default') this.leaseDefault, @JsonKey(name: 'lease_max') this.leaseMax, @JsonKey(name: 'mfa_grace') this.mfaGrace, @JsonKey(name: 'mfa_policy') this.mfaPolicy, @JsonKey(name: 'name') this.name, @JsonKey(name: 'require_totp_cli') this.requireTotpCli, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh, @JsonKey(name: 'require_totp_web') this.requireTotpWeb, @JsonKey(name: 'theme') this.theme, @JsonKey(name: 'time_format') this.timeFormat, @JsonKey(name: 'timezone') this.timezone, @JsonKey(name: 'trash_off') this.trashOff}): _artifactTypes = artifactTypes;
   factory _UpdateTenantInput.fromJson(Map<String, dynamic> json) => _$UpdateTenantInputFromJson(json);
+
+/// ArtifactMaxBytes lowers the largest artifact blob this tenant accepts below
+/// the server's limit. Zero inherits the server's and omitted leaves it; a
+/// value above the server's is refused.
+@override@JsonKey(name: 'artifact_max_bytes') final  int? artifactMaxBytes;
+/// ArtifactTypes narrows the media types an artifact blob may carry, such as
+/// ["image/*", "application/pdf"]. An empty list inherits the server's and
+/// omitted leaves it; a type the server does not accept is refused.
+ final  List<String>? _artifactTypes;
+/// ArtifactTypes narrows the media types an artifact blob may carry, such as
+/// ["image/*", "application/pdf"]. An empty list inherits the server's and
+/// omitted leaves it; a type the server does not accept is refused.
+@override@JsonKey(name: 'artifact_types') List<String>? get artifactTypes {
+  final value = _artifactTypes;
+  if (value == null) return null;
+  if (_artifactTypes is EqualUnmodifiableListView) return _artifactTypes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
 
 /// LeaseDefault is the lease a claim on this tenant gets when nothing more
 /// specific names one, a duration such as "30m". Zero clears it back to the
@@ -51209,18 +52522,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateTenantInput&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateTenantInput&&(identical(other.artifactMaxBytes, artifactMaxBytes) || other.artifactMaxBytes == artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _artifactTypes)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,leaseDefault,leaseMax,mfaGrace,mfaPolicy,name,requireTotpCli,requireTotpSsh,requireTotpWeb,theme,timeFormat,timezone,trashOff);
+    return Object.hash(runtimeType,artifactMaxBytes,const DeepCollectionEquality().hash(_artifactTypes),leaseDefault,leaseMax,mfaGrace,mfaPolicy,name,requireTotpCli,requireTotpSsh,requireTotpWeb,theme,timeFormat,timezone,trashOff);
 }
 
 @override
 String toString() {
-    return 'UpdateTenantInput(leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff)';
+    return 'UpdateTenantInput(artifactMaxBytes: $artifactMaxBytes, artifactTypes: $artifactTypes, leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff)';
 }
 
 
@@ -51231,7 +52544,7 @@ abstract mixin class _$UpdateTenantInputCopyWith<$Res> implements $UpdateTenantI
   factory _$UpdateTenantInputCopyWith(_UpdateTenantInput value, $Res Function(_UpdateTenantInput) _then) = __$UpdateTenantInputCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'lease_default') String? leaseDefault,@JsonKey(name: 'lease_max') String? leaseMax,@JsonKey(name: 'mfa_grace') String? mfaGrace,@JsonKey(name: 'mfa_policy') String? mfaPolicy,@JsonKey(name: 'name') String? name,@JsonKey(name: 'require_totp_cli') bool? requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool? requireTotpSsh,@JsonKey(name: 'require_totp_web') bool? requireTotpWeb,@JsonKey(name: 'theme') String? theme,@JsonKey(name: 'time_format') String? timeFormat,@JsonKey(name: 'timezone') String? timezone,@JsonKey(name: 'trash_off') bool? trashOff
+@JsonKey(name: 'artifact_max_bytes') int? artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String>? artifactTypes,@JsonKey(name: 'lease_default') String? leaseDefault,@JsonKey(name: 'lease_max') String? leaseMax,@JsonKey(name: 'mfa_grace') String? mfaGrace,@JsonKey(name: 'mfa_policy') String? mfaPolicy,@JsonKey(name: 'name') String? name,@JsonKey(name: 'require_totp_cli') bool? requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool? requireTotpSsh,@JsonKey(name: 'require_totp_web') bool? requireTotpWeb,@JsonKey(name: 'theme') String? theme,@JsonKey(name: 'time_format') String? timeFormat,@JsonKey(name: 'timezone') String? timezone,@JsonKey(name: 'trash_off') bool? trashOff
 });
 
 
@@ -51248,9 +52561,11 @@ class __$UpdateTenantInputCopyWithImpl<$Res>
 
 /// Create a copy of UpdateTenantInput
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? leaseDefault = freezed,Object? leaseMax = freezed,Object? mfaGrace = freezed,Object? mfaPolicy = freezed,Object? name = freezed,Object? requireTotpCli = freezed,Object? requireTotpSsh = freezed,Object? requireTotpWeb = freezed,Object? theme = freezed,Object? timeFormat = freezed,Object? timezone = freezed,Object? trashOff = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? artifactMaxBytes = freezed,Object? artifactTypes = freezed,Object? leaseDefault = freezed,Object? leaseMax = freezed,Object? mfaGrace = freezed,Object? mfaPolicy = freezed,Object? name = freezed,Object? requireTotpCli = freezed,Object? requireTotpSsh = freezed,Object? requireTotpWeb = freezed,Object? theme = freezed,Object? timeFormat = freezed,Object? timezone = freezed,Object? trashOff = freezed,}) {
   return _then(_UpdateTenantInput(
-leaseDefault: freezed == leaseDefault ? _self.leaseDefault : leaseDefault // ignore: cast_nullable_to_non_nullable
+artifactMaxBytes: freezed == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
+as int?,artifactTypes: freezed == artifactTypes ? _self._artifactTypes : artifactTypes // ignore: cast_nullable_to_non_nullable
+as List<String>?,leaseDefault: freezed == leaseDefault ? _self.leaseDefault : leaseDefault // ignore: cast_nullable_to_non_nullable
 as String?,leaseMax: freezed == leaseMax ? _self.leaseMax : leaseMax // ignore: cast_nullable_to_non_nullable
 as String?,mfaGrace: freezed == mfaGrace ? _self.mfaGrace : mfaGrace // ignore: cast_nullable_to_non_nullable
 as String?,mfaPolicy: freezed == mfaPolicy ? _self.mfaPolicy : mfaPolicy // ignore: cast_nullable_to_non_nullable
