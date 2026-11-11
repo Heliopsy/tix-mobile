@@ -1089,13 +1089,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String tasksHeldByAgent(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count tenues par un agent',
-      one: '1 tenue par un agent',
-    );
-    return '$_temp0';
+    return 'tenues par un agent : $count';
   }
 
   @override
