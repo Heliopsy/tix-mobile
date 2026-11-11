@@ -41,8 +41,8 @@ Builds:
       - tix@b66e8b4456251a2086d50e07514f30b724d51d72
     prebuild: &prebuild
       # Go at the version .tool-versions pins, checked against go.dev's sum.
-      - curl -fsSLo $HOME/go.tgz https://go.dev/dl/go1.27.3.linux-amd64.tar.gz
-      - echo "65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40  $HOME/go.tgz"
+      - curl -fsSLo $HOME/go.tgz https://go.dev/dl/go1.27.4.linux-amd64.tar.gz
+      - echo "7226736c2339719cda28fbf3a54d71aa63bcefe376e98cef00034268dab24840  $HOME/go.tgz"
         | sha256sum -c -
       - tar -C $HOME -xzf $HOME/go.tgz
       # hook/build.dart builds libtix from a tix checkout in its cache when
