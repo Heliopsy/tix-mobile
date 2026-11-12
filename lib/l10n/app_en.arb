@@ -860,6 +860,70 @@
     }
   },
   "boardWake": "Wake now",
+  "tickLockedWhy": "Why this cannot be ticked",
+  "@tickLockedWhy": {
+    "description": "Accessible name of a dashed tick that offers no route"
+  },
+  "tickCompleteTitle": "Complete {ref}",
+  "@tickCompleteTitle": {
+    "placeholders": {
+      "ref": {
+        "type": "String",
+        "example": "INFRA-12"
+      }
+    }
+  },
+  "tickReopenTitle": "Reopen {ref}",
+  "@tickReopenTitle": {
+    "placeholders": {
+      "ref": {
+        "type": "String",
+        "example": "INFRA-12"
+      }
+    }
+  },
+  "tickLockedBody": "Not from here: {why}.",
+  "@tickLockedBody": {
+    "description": "Why a tick offers nothing; why is one of the tickLock strings",
+    "placeholders": {
+      "why": {
+        "type": "String",
+        "example": "finishing it needs a comment"
+      }
+    }
+  },
+  "tickLockCannotMove": "you cannot move tasks",
+  "tickLockNoWorkflow": "its workflow could not be read",
+  "tickLockNoRouteDone": "no route leads to done from here",
+  "tickLockNoRouteBack": "no route leads back to an open state",
+  "tickLockFinishComment": "finishing it needs a comment",
+  "tickLockReopenComment": "reopening it needs a comment",
+  "tickLockFinishScope": "finishing it needs the {scope} scope",
+  "@tickLockFinishScope": {
+    "placeholders": {
+      "scope": {
+        "type": "String",
+        "example": "task:admin"
+      }
+    }
+  },
+  "tickLockReopenScope": "reopening it needs the {scope} scope",
+  "@tickLockReopenScope": {
+    "placeholders": {
+      "scope": {
+        "type": "String",
+        "example": "task:admin"
+      }
+    }
+  },
+  "tickSteps": "{count, plural, =1{1 step} other{{count} steps}}",
+  "@tickSteps": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "boardWoken": "{ref} is awake",
   "@boardWoken": {
     "placeholders": {

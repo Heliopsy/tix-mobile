@@ -1262,7 +1262,8 @@ class FakeTix {
         return FakeResponse(200, t);
       case ('POST', ['route']):
         final from = t['status']! as String;
-        final to = body['to'] as String;
+        final hops = (body['route'] as List?)?.cast<String>();
+        final to = (body['to'] ?? hops!.last) as String;
         final stop = routeStops[tref];
         if (stop != null) {
           return FakeResponse(200, {
@@ -1278,8 +1279,8 @@ class FakeTix {
         bump();
         return FakeResponse(200, {
           'from': from,
-          'route': [to],
-          'applied': [to],
+          'route': hops ?? [to],
+          'applied': hops ?? [to],
           'task': t,
         });
       case ('POST', ['transition']):

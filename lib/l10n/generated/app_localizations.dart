@@ -2353,6 +2353,84 @@ abstract class AppLocalizations {
   /// **'Wake now'**
   String get boardWake;
 
+  /// Accessible name of a dashed tick that offers no route
+  ///
+  /// In en, this message translates to:
+  /// **'Why this cannot be ticked'**
+  String get tickLockedWhy;
+
+  /// No description provided for @tickCompleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete {ref}'**
+  String tickCompleteTitle(String ref);
+
+  /// No description provided for @tickReopenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reopen {ref}'**
+  String tickReopenTitle(String ref);
+
+  /// Why a tick offers nothing; why is one of the tickLock strings
+  ///
+  /// In en, this message translates to:
+  /// **'Not from here: {why}.'**
+  String tickLockedBody(String why);
+
+  /// No description provided for @tickLockCannotMove.
+  ///
+  /// In en, this message translates to:
+  /// **'you cannot move tasks'**
+  String get tickLockCannotMove;
+
+  /// No description provided for @tickLockNoWorkflow.
+  ///
+  /// In en, this message translates to:
+  /// **'its workflow could not be read'**
+  String get tickLockNoWorkflow;
+
+  /// No description provided for @tickLockNoRouteDone.
+  ///
+  /// In en, this message translates to:
+  /// **'no route leads to done from here'**
+  String get tickLockNoRouteDone;
+
+  /// No description provided for @tickLockNoRouteBack.
+  ///
+  /// In en, this message translates to:
+  /// **'no route leads back to an open state'**
+  String get tickLockNoRouteBack;
+
+  /// No description provided for @tickLockFinishComment.
+  ///
+  /// In en, this message translates to:
+  /// **'finishing it needs a comment'**
+  String get tickLockFinishComment;
+
+  /// No description provided for @tickLockReopenComment.
+  ///
+  /// In en, this message translates to:
+  /// **'reopening it needs a comment'**
+  String get tickLockReopenComment;
+
+  /// No description provided for @tickLockFinishScope.
+  ///
+  /// In en, this message translates to:
+  /// **'finishing it needs the {scope} scope'**
+  String tickLockFinishScope(String scope);
+
+  /// No description provided for @tickLockReopenScope.
+  ///
+  /// In en, this message translates to:
+  /// **'reopening it needs the {scope} scope'**
+  String tickLockReopenScope(String scope);
+
+  /// No description provided for @tickSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 step} other{{count} steps}}'**
+  String tickSteps(int count);
+
   /// No description provided for @boardWoken.
   ///
   /// In en, this message translates to:

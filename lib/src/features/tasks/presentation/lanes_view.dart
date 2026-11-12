@@ -6,6 +6,7 @@ import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/paging/paged.dart';
+import 'package:tix_mobile/src/core/session/access.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/data/models/group_pref.dart';
@@ -92,6 +93,7 @@ class LanesView extends ConsumerWidget {
       _ => lane.label,
     };
     final actions = TaskQuickActions(context, ref, query);
+    ref.watch(currentAccessProvider);
     final now = ref.watch(clockProvider)();
     final selection = ref.watch(taskSelectionProvider(query.scope));
     final selector = ref.read(taskSelectionProvider(query.scope).notifier);
@@ -257,6 +259,7 @@ class LanesView extends ConsumerWidget {
                                     open: () => onOpen(task),
                                   ),
                                   onToggleDone: () => actions.toggleDone(task),
+                                  tickLocked: actions.tickPlan(task).locked,
                                   onLongPress: () =>
                                       longPressTask(ref, query.scope, task.ref),
                                   onMore: () => showTaskMenu(

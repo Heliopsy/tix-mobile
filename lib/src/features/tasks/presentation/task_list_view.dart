@@ -8,6 +8,7 @@ import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/paging/paged.dart';
+import 'package:tix_mobile/src/core/session/access.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/widgets/paged_list_view.dart';
@@ -365,6 +366,7 @@ class _TaskListViewState extends ConsumerState<TaskListView> {
     final taskContext = ref.watch(taskContextProvider).value;
     final now = ref.watch(clockProvider)();
     final actions = TaskQuickActions(context, ref, query);
+    ref.watch(currentAccessProvider);
     final l10n = context.l10n;
     final lines = Paged<ListEntry>(
       items: entries,
@@ -608,6 +610,7 @@ class _Row extends StatelessWidget {
       onLongPress: onLongPress,
       onMore: onMenu,
       onToggleDone: () => actions.toggleDone(task),
+      tickLocked: actions.tickPlan(task).locked,
       onToggleStar: () => actions.toggleStar(task),
       onStatusTap: _edit(actions.pickMove),
       onPriorityTap: _edit(actions.setPriority),

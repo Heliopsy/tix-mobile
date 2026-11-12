@@ -1353,6 +1353,63 @@ class AppLocalizationsFr extends AppLocalizations {
   String get boardWake => 'Réactiver maintenant';
 
   @override
+  String get tickLockedWhy => 'Pourquoi ceci ne peut pas être coché';
+
+  @override
+  String tickCompleteTitle(String ref) {
+    return 'Terminer $ref';
+  }
+
+  @override
+  String tickReopenTitle(String ref) {
+    return 'Rouvrir $ref';
+  }
+
+  @override
+  String tickLockedBody(String why) {
+    return 'Pas d\'ici : $why.';
+  }
+
+  @override
+  String get tickLockCannotMove => 'vous ne pouvez pas déplacer de tâches';
+
+  @override
+  String get tickLockNoWorkflow => 'son workflow n\'a pas pu être lu';
+
+  @override
+  String get tickLockNoRouteDone => 'aucun chemin ne mène à terminé d\'ici';
+
+  @override
+  String get tickLockNoRouteBack => 'aucun chemin ne ramène à un état ouvert';
+
+  @override
+  String get tickLockFinishComment => 'la terminer demande un commentaire';
+
+  @override
+  String get tickLockReopenComment => 'la rouvrir demande un commentaire';
+
+  @override
+  String tickLockFinishScope(String scope) {
+    return 'la terminer demande le scope $scope';
+  }
+
+  @override
+  String tickLockReopenScope(String scope) {
+    return 'la rouvrir demande le scope $scope';
+  }
+
+  @override
+  String tickSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count étapes',
+      one: '1 étape',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String boardWoken(String ref) {
     return '$ref est réactivée';
   }
