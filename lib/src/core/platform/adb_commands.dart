@@ -89,7 +89,7 @@ const adbCommands = <AdbCommandSpec>[
   AdbCommandSpec('clear-cache', 'clear-cache'),
   AdbCommandSpec(
     'theme',
-    'theme --es value system|light|dark|oled',
+    'theme --es value system|light|dark|oled|dim',
     arg: 'value',
     needsApp: false,
   ),
@@ -102,7 +102,7 @@ const adbCommands = <AdbCommandSpec>[
 ];
 
 /// The themes `theme` takes.
-const adbThemes = ['system', 'light', 'dark', 'oled'];
+const adbThemes = ['system', 'light', 'dark', 'oled', 'dim'];
 
 /// The languages `locale` takes.
 const adbLocales = ['system', 'en', 'fr', 'de', 'bg'];

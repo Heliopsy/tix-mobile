@@ -164,7 +164,8 @@ class AppLocalizationsBg extends AppLocalizations {
   String get quickAddTitle => 'Бързо добавяне';
 
   @override
-  String get quickAddHint => 'Поправи входа !high #auth @raj due:fri';
+  String get quickAddHint =>
+      'Поправи входа !high #auth @raj due:fri +web ^web-3';
 
   @override
   String get quickAddHelp =>
@@ -185,7 +186,7 @@ class AppLocalizationsBg extends AppLocalizations {
   String get settingsTitle => 'Настройки';
 
   @override
-  String get themeLabel => 'Тема';
+  String get themeLabel => 'Цветова схема';
 
   @override
   String get themeSystem => 'Система';
@@ -690,8 +691,7 @@ class AppLocalizationsBg extends AppLocalizations {
   String get taskDetailAttachFile => 'Прикачи файл';
 
   @override
-  String get taskDetailBlocked =>
-      'Блокирана: чака задача, която не е завършена.';
+  String get taskDetailBlocked => 'Чака задача, която не е завършена.';
 
   @override
   String taskDetailChecklist(int done, int total) {
@@ -898,7 +898,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get taskDetailDependenciesInfo =>
-      'Тази задача се води блокирана, докато всяка задача тук не стигне до завършено състояние.';
+      'Тази задача чака, докато всяка задача тук не стигне до завършено състояние.';
 
   @override
   String taskDetailDependencyAdded(String ref) {
@@ -1176,7 +1176,7 @@ class AppLocalizationsBg extends AppLocalizations {
   String get taskDetailUpdated => 'Обновена';
 
   @override
-  String get taskDetailWake => 'Събуди сега';
+  String get taskDetailWake => 'Върни сега';
 
   @override
   String get taskDetailWoken => 'Отново е в списъците.';
@@ -1349,11 +1349,11 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
-  String get boardWake => 'Събуди сега';
+  String get boardWake => 'Върни сега';
 
   @override
   String boardWoken(String ref) {
-    return '$ref е събудена';
+    return '$ref е върната';
   }
 
   @override
@@ -1450,7 +1450,7 @@ class AppLocalizationsBg extends AppLocalizations {
   String get bulkTagRemove => 'Премахни етикет';
 
   @override
-  String get filterBlocked => 'Блокирани';
+  String get filterBlocked => 'Чака';
 
   @override
   String get filterClear => 'Изчисти';
@@ -1806,7 +1806,7 @@ class AppLocalizationsBg extends AppLocalizations {
   String get paletteGroupContexts => 'Превключване към';
 
   @override
-  String get paletteGroupTheme => 'Тема';
+  String get paletteGroupTheme => 'Цветова схема';
 
   @override
   String get paletteGroupTemplates => 'Шаблони';
@@ -1826,13 +1826,13 @@ class AppLocalizationsBg extends AppLocalizations {
   String get paletteGoTemplates => 'Към шаблоните';
 
   @override
-  String get paletteThemeLight => 'Светла тема';
+  String get paletteThemeLight => 'Светла цветова схема';
 
   @override
-  String get paletteThemeDark => 'Тъмна тема';
+  String get paletteThemeDark => 'Тъмна цветова схема';
 
   @override
-  String get paletteThemeSystem => 'Тема на системата';
+  String get paletteThemeSystem => 'Цветова схема на системата';
 
   @override
   String paletteUseTemplate(String name) {
@@ -2419,14 +2419,13 @@ class AppLocalizationsBg extends AppLocalizations {
   String get notifMoreBody => 'Отворете входящите, за да ги видите.';
 
   @override
-  String get themeOled => 'OLED черна';
+  String get themeOled => 'OLED';
 
   @override
-  String get themeSystemBlack => 'Чисто черно при тъмна тема';
+  String get themeDim => 'Нисък контраст';
 
   @override
-  String get themeSystemBlackHelp =>
-      'Използва OLED черна тема, когато системата е тъмна. Пести батерия на OLED екрани.';
+  String get themeSystemOled => 'Система, OLED на тъмно';
 
   @override
   String get goAbout => 'За tix';
@@ -2542,7 +2541,14 @@ class AppLocalizationsBg extends AppLocalizations {
   String get aboutOpenFailed => 'Връзката не може да се отвори.';
 
   @override
-  String get paletteThemeOled => 'OLED черна тема';
+  String get paletteThemeOled => 'OLED цветова схема';
+
+  @override
+  String get paletteThemeDim => 'Цветова схема с нисък контраст';
+
+  @override
+  String get paletteThemeSystemOled =>
+      'Цветова схема на системата, OLED на тъмно';
 
   @override
   String get manageTitle => 'Управление';
@@ -5622,10 +5628,10 @@ class AppLocalizationsBg extends AppLocalizations {
   String get adminAccountLogSystem => 'системата';
 
   @override
-  String get taskReclaim => 'Освободи заявката принудително';
+  String get taskReclaim => 'Отнеми резервацията';
 
   @override
-  String get taskReclaimSubmit => 'Освободи заявката';
+  String get taskReclaimSubmit => 'Отнеми';
 
   @override
   String get taskReclaimBody =>
@@ -5639,7 +5645,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String taskReclaimed(String ref) {
-    return 'Заявката за $ref е освободена.';
+    return 'Резервацията за $ref е отнета.';
   }
 
   @override
@@ -6275,7 +6281,7 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
-  String get auditTitle => 'Одит';
+  String get activityTitle => 'Активност';
 
   @override
   String get auditSubtitle =>
@@ -7885,7 +7891,7 @@ class AppLocalizationsBg extends AppLocalizations {
   String get goWatch => 'Към Активност';
 
   @override
-  String get watchTitle => 'Активност';
+  String get watchTitle => 'Събития на живо';
 
   @override
   String get watchSubtitle =>
@@ -8021,7 +8027,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get watchOfflineBody =>
-      'Сървърът не е достъпен. Активността продължава оттам, докъдето е стигнала, щом връзката се възстанови.';
+      'Сървърът не е достъпен. Събитията на живо продължават оттам, докъдето са стигнали, щом връзката се възстанови.';
 
   @override
   String get watchNoContext => 'Няма активен контекст';
@@ -8038,7 +8044,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get watchUnsupported =>
-      'Сървърът в момента не може да изпраща събития към приложението, затова Активността остава празна. Ще продължи, щом обновяването на живо заработи.';
+      'Сървърът в момента не може да изпраща събития към приложението, затова Събития на живо остава празно. Ще продължи, щом обновяването на живо заработи.';
 
   @override
   String watchExpired(int seq) {

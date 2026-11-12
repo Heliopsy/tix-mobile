@@ -2,6 +2,7 @@
 
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tix_mobile/src/core/design/tokens.dart';
 import 'package:tix_mobile/src/core/platform/adb_bridge.dart';
 import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
@@ -16,7 +17,8 @@ part 'settings.g.dart';
 SettingsRepository settingsRepository(Ref ref) =>
     SettingsRepository(ref.watch(keyValueStoreProvider));
 
-/// The theme a person picks. [oled] is dark on a pure black page.
+/// The colour scheme a person picks, in the order tix's web offers them.
+/// [oled] is dark on a pure black page; [dim] is tix's Low contrast.
 enum ThemeChoice {
   /// Follow the platform's light or dark.
   system,
@@ -28,56 +30,57 @@ enum ThemeChoice {
   dark,
 
   /// Always dark, on pure black.
-  oled;
+  oled,
+
+  /// Always dark, with softer contrast.
+  dim,
+
+  /// Follow the platform, on pure black whenever it is dark.
+  systemOled;
 
   /// The Material theme mode this choice runs in.
   ThemeMode get mode => switch (this) {
-    system => ThemeMode.system,
+    system || systemOled => ThemeMode.system,
     light => ThemeMode.light,
-    dark || oled => ThemeMode.dark,
+    dark || oled || dim => ThemeMode.dark,
   };
 }
 
-/// The chosen theme.
+/// The chosen colour scheme. [ThemeChoice.systemOled] is kept as the
+/// system choice with the pure-black flag, the way it was stored before it
+/// was a choice of its own, so older stored values read the same.
 @Riverpod(keepAlive: true)
 class ThemeSetting extends _$ThemeSetting {
   @override
   ThemeChoice build() {
-    final name = ref.watch(settingsRepositoryProvider).themeMode();
-    return ThemeChoice.values.firstWhere(
-      (m) => m.name == name,
+    final repo = ref.watch(settingsRepositoryProvider);
+    final choice = ThemeChoice.values.firstWhere(
+      (m) => m.name == repo.themeMode(),
       orElse: () => ThemeChoice.system,
     );
+    return choice == ThemeChoice.system && repo.systemBlack()
+        ? ThemeChoice.systemOled
+        : choice;
   }
 
   /// Switches to [choice] and remembers it.
   Future<void> set(ThemeChoice choice) async {
     state = choice;
-    await ref.read(settingsRepositoryProvider).setThemeMode(choice.name);
+    final repo = ref.read(settingsRepositoryProvider);
+    final oled = choice == ThemeChoice.systemOled;
+    await repo.setThemeMode(oled ? ThemeChoice.system.name : choice.name);
+    await repo.setSystemBlack(on: oled);
     ref.read(widgetsStaleProvider.notifier).touch();
   }
 }
 
-/// Whether the system theme goes pure black when the platform is dark.
+/// The tokens the dark theme is built on: OLED black, Low contrast, or
+/// null for tix's dark.
 @Riverpod(keepAlive: true)
-class SystemBlackSetting extends _$SystemBlackSetting {
-  @override
-  bool build() => ref.watch(settingsRepositoryProvider).systemBlack();
-
-  /// Turns pure black for the system's dark on or off and remembers it.
-  Future<void> set({required bool on}) async {
-    state = on;
-    await ref.read(settingsRepositoryProvider).setSystemBlack(on: on);
-    ref.read(widgetsStaleProvider.notifier).touch();
-  }
-}
-
-/// Whether the dark theme is drawn on pure black.
-@Riverpod(keepAlive: true)
-bool darkIsBlack(Ref ref) => switch (ref.watch(themeSettingProvider)) {
-  ThemeChoice.oled => true,
-  ThemeChoice.system => ref.watch(systemBlackSettingProvider),
-  ThemeChoice.light || ThemeChoice.dark => false,
+TixTokens? darkTokens(Ref ref) => switch (ref.watch(themeSettingProvider)) {
+  ThemeChoice.oled || ThemeChoice.systemOled => TixTokens.oled,
+  ThemeChoice.dim => TixTokens.dim,
+  ThemeChoice.system || ThemeChoice.light || ThemeChoice.dark => null,
 };
 
 /// The chosen language, null to follow the system.

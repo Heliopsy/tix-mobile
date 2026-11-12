@@ -358,7 +358,7 @@ abstract class AppLocalizations {
   /// No description provided for @quickAddHint.
   ///
   /// In en, this message translates to:
-  /// **'Fix login !high #auth @raj due:fri'**
+  /// **'Fix login !high #auth @raj due:fri +web ^web-3'**
   String get quickAddHint;
 
   /// No description provided for @quickAddHelp.
@@ -394,7 +394,7 @@ abstract class AppLocalizations {
   /// No description provided for @themeLabel.
   ///
   /// In en, this message translates to:
-  /// **'Theme'**
+  /// **'Colour scheme'**
   String get themeLabel;
 
   /// No description provided for @themeSystem.
@@ -1288,7 +1288,7 @@ abstract class AppLocalizations {
   /// No description provided for @taskDetailBlocked.
   ///
   /// In en, this message translates to:
-  /// **'Blocked: it waits for a task that is not finished.'**
+  /// **'Waiting on a task that is not finished.'**
   String get taskDetailBlocked;
 
   /// No description provided for @taskDetailChecklist.
@@ -1594,25 +1594,25 @@ abstract class AppLocalizations {
   /// No description provided for @taskDetailDependencies.
   ///
   /// In en, this message translates to:
-  /// **'Waits for'**
+  /// **'Waiting on'**
   String get taskDetailDependencies;
 
   /// No description provided for @taskDetailDependenciesInfo.
   ///
   /// In en, this message translates to:
-  /// **'This task counts as blocked until each task listed here reaches a finished state.'**
+  /// **'This task waits until each task listed here reaches a finished state.'**
   String get taskDetailDependenciesInfo;
 
   /// No description provided for @taskDetailDependencyAdded.
   ///
   /// In en, this message translates to:
-  /// **'Now waits for {ref}.'**
+  /// **'Now waiting on {ref}.'**
   String taskDetailDependencyAdded(String ref);
 
   /// No description provided for @taskDetailDependencyRemoved.
   ///
   /// In en, this message translates to:
-  /// **'No longer waits for {ref}.'**
+  /// **'No longer waiting on {ref}.'**
   String taskDetailDependencyRemoved(String ref);
 
   /// No description provided for @taskDetailDependsOn.
@@ -1822,7 +1822,7 @@ abstract class AppLocalizations {
   /// No description provided for @taskDetailNoDependencies.
   ///
   /// In en, this message translates to:
-  /// **'Waits for nothing.'**
+  /// **'Waiting on nothing.'**
   String get taskDetailNoDependencies;
 
   /// No description provided for @taskDetailNoHistory.
@@ -1900,7 +1900,7 @@ abstract class AppLocalizations {
   /// No description provided for @taskDetailRemoveDependency.
   ///
   /// In en, this message translates to:
-  /// **'Stop waiting for {ref}'**
+  /// **'Stop waiting on {ref}'**
   String taskDetailRemoveDependency(String ref);
 
   /// No description provided for @taskDetailRemoveTag.
@@ -2086,7 +2086,7 @@ abstract class AppLocalizations {
   /// No description provided for @taskDetailWake.
   ///
   /// In en, this message translates to:
-  /// **'Wake now'**
+  /// **'Unsnooze'**
   String get taskDetailWake;
 
   /// No description provided for @taskDetailWoken.
@@ -2350,13 +2350,13 @@ abstract class AppLocalizations {
   /// No description provided for @boardWake.
   ///
   /// In en, this message translates to:
-  /// **'Wake now'**
+  /// **'Unsnooze'**
   String get boardWake;
 
   /// No description provided for @boardWoken.
   ///
   /// In en, this message translates to:
-  /// **'{ref} is awake'**
+  /// **'{ref} unsnoozed'**
   String boardWoken(String ref);
 
   /// No description provided for @bulkClear.
@@ -2476,7 +2476,7 @@ abstract class AppLocalizations {
   /// No description provided for @filterBlocked.
   ///
   /// In en, this message translates to:
-  /// **'Blocked'**
+  /// **'Waiting on'**
   String get filterBlocked;
 
   /// No description provided for @filterClear.
@@ -3130,7 +3130,7 @@ abstract class AppLocalizations {
   /// No description provided for @paletteGroupTheme.
   ///
   /// In en, this message translates to:
-  /// **'Theme'**
+  /// **'Colour scheme'**
   String get paletteGroupTheme;
 
   /// No description provided for @paletteGroupTemplates.
@@ -3166,19 +3166,19 @@ abstract class AppLocalizations {
   /// No description provided for @paletteThemeLight.
   ///
   /// In en, this message translates to:
-  /// **'Light theme'**
+  /// **'Light colour scheme'**
   String get paletteThemeLight;
 
   /// No description provided for @paletteThemeDark.
   ///
   /// In en, this message translates to:
-  /// **'Dark theme'**
+  /// **'Dark colour scheme'**
   String get paletteThemeDark;
 
   /// No description provided for @paletteThemeSystem.
   ///
   /// In en, this message translates to:
-  /// **'Theme of the system'**
+  /// **'System colour scheme'**
   String get paletteThemeSystem;
 
   /// No description provided for @paletteUseTemplate.
@@ -3220,7 +3220,7 @@ abstract class AppLocalizations {
   /// No description provided for @templateEveryProject.
   ///
   /// In en, this message translates to:
-  /// **'Every project'**
+  /// **'All projects'**
   String get templateEveryProject;
 
   /// No description provided for @templateUses.
@@ -3328,7 +3328,7 @@ abstract class AppLocalizations {
   /// No description provided for @templateDueIn.
   ///
   /// In en, this message translates to:
-  /// **'Due after'**
+  /// **'Due in'**
   String get templateDueIn;
 
   /// No description provided for @templateDueInHelp.
@@ -4117,23 +4117,23 @@ abstract class AppLocalizations {
   /// **'Open the inbox to see them.'**
   String get notifMoreBody;
 
-  /// Theme choice: dark on a pure black page, for OLED screens.
+  /// Colour scheme choice: dark on a pure black page, for OLED screens.
   ///
   /// In en, this message translates to:
-  /// **'OLED black'**
+  /// **'OLED'**
   String get themeOled;
 
-  /// Switch under the System theme: use the OLED black theme whenever the system is dark.
+  /// Colour scheme choice: a dark scheme with softer contrast, as tix web's Low contrast.
   ///
   /// In en, this message translates to:
-  /// **'Pure black when dark'**
-  String get themeSystemBlack;
+  /// **'Low contrast'**
+  String get themeDim;
 
-  /// No description provided for @themeSystemBlackHelp.
+  /// Colour scheme choice: follow the system, on pure black whenever it is dark.
   ///
   /// In en, this message translates to:
-  /// **'Uses OLED black whenever the system is dark. Saves battery on OLED screens.'**
-  String get themeSystemBlackHelp;
+  /// **'System, OLED when dark'**
+  String get themeSystemOled;
 
   /// Command palette entry that opens the About screen.
   ///
@@ -4345,11 +4345,23 @@ abstract class AppLocalizations {
   /// **'Could not open the link.'**
   String get aboutOpenFailed;
 
-  /// Command palette entry that switches to the OLED black theme.
+  /// Command palette entry that switches to the OLED colour scheme.
   ///
   /// In en, this message translates to:
-  /// **'OLED black theme'**
+  /// **'OLED colour scheme'**
   String get paletteThemeOled;
+
+  /// Command palette entry that switches to the Low contrast colour scheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Low contrast colour scheme'**
+  String get paletteThemeDim;
+
+  /// Command palette entry that follows the system, on pure black when dark.
+  ///
+  /// In en, this message translates to:
+  /// **'System colour scheme, OLED when dark'**
+  String get paletteThemeSystemOled;
 
   /// No description provided for @manageTitle.
   ///
@@ -9586,13 +9598,13 @@ abstract class AppLocalizations {
   /// No description provided for @taskReclaim.
   ///
   /// In en, this message translates to:
-  /// **'Force-release claim'**
+  /// **'Reclaim the lease'**
   String get taskReclaim;
 
   /// No description provided for @taskReclaimSubmit.
   ///
   /// In en, this message translates to:
-  /// **'Release claim'**
+  /// **'Reclaim'**
   String get taskReclaimSubmit;
 
   /// No description provided for @taskReclaimBody.
@@ -9616,7 +9628,7 @@ abstract class AppLocalizations {
   /// No description provided for @taskReclaimed.
   ///
   /// In en, this message translates to:
-  /// **'Released the claim on {ref}.'**
+  /// **'Reclaimed the lease on {ref}.'**
   String taskReclaimed(String ref);
 
   /// No description provided for @totpWrongCode.
@@ -10657,11 +10669,11 @@ abstract class AppLocalizations {
   /// **'Deleted {ref} for good.'**
   String trashPurged(String ref);
 
-  /// No description provided for @auditTitle.
+  /// No description provided for @activityTitle.
   ///
   /// In en, this message translates to:
-  /// **'Audit log'**
-  String get auditTitle;
+  /// **'Activity'**
+  String get activityTitle;
 
   /// No description provided for @auditSubtitle.
   ///
@@ -12688,7 +12700,7 @@ abstract class AppLocalizations {
   /// No description provided for @syncOpDependency.
   ///
   /// In en, this message translates to:
-  /// **'{ref}: waits for {other}'**
+  /// **'{ref}: waiting on {other}'**
   String syncOpDependency(String ref, String other);
 
   /// No description provided for @syncOpArtifact.
@@ -13147,10 +13159,10 @@ abstract class AppLocalizations {
   /// **'Go to Activity'**
   String get goWatch;
 
-  /// Title of the screen that shows the tenant's events live
+  /// Title of the Live events screen, the raw event stream listed under Manage
   ///
   /// In en, this message translates to:
-  /// **'Activity'**
+  /// **'Live events'**
   String get watchTitle;
 
   /// Subtitle of the Watch screen and its Manage entry
@@ -13366,7 +13378,7 @@ abstract class AppLocalizations {
   /// Body when Watch is offline
   ///
   /// In en, this message translates to:
-  /// **'The server cannot be reached. Activity carries on from where it stopped once it can.'**
+  /// **'The server cannot be reached. Live events carry on from where they stopped once it can.'**
   String get watchOfflineBody;
 
   /// Watch has no server to follow
@@ -13396,7 +13408,7 @@ abstract class AppLocalizations {
   /// Notice when live updates only refresh on a timer
   ///
   /// In en, this message translates to:
-  /// **'This server cannot stream events to the app right now, so Activity stays empty. It picks up again once live updates work.'**
+  /// **'This server cannot stream events to the app right now, so Live events stays empty. It picks up again once live updates work.'**
   String get watchUnsupported;
 
   /// Notice when the server refused an expired cursor

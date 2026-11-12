@@ -10,6 +10,7 @@ import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/pinned_shortcuts.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
+import 'package:tix_mobile/src/core/session/access.dart';
 import 'package:tix_mobile/src/core/session/project_stars.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
@@ -563,6 +564,8 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
                 selected: selection.active,
                 onPressed: selection.active ? selector.exit : selector.enter,
               ),
+              if (projectKey != null && !selection.active)
+                ProjectTransferButton(projectKey: projectKey),
             ],
             primaryAction: projectKey == null || selection.active
                 ? null
@@ -741,6 +744,32 @@ class _ProjectTitle extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Opens Import and export on the project [projectKey], as the web's
+/// project header does; drawn only for a credential that may export or
+/// import.
+class ProjectTransferButton extends ConsumerWidget {
+  /// A button for the project [projectKey].
+  const ProjectTransferButton({required this.projectKey, super.key});
+
+  /// The project's key.
+  final String projectKey;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final access = ref.watch(currentAccessProvider).value;
+    if (access == null ||
+        !(access.hasValue('export') || access.hasValue('import'))) {
+      return const SizedBox.shrink();
+    }
+    return TixIconButton(
+      key: const Key('project.transfer'),
+      icon: Icons.import_export,
+      tooltip: context.l10n.manageTransferTitle,
+      onPressed: () => context.go(Routes.projectTransfer(projectKey)),
     );
   }
 }

@@ -34,6 +34,8 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
         _scheme ??
         (context.tix.isBlack
             ? TixTokens.oled
+            : context.tix.isDim
+            ? TixTokens.dim
             : TixTokens.of(Theme.of(context).brightness));
     final registry = ref.watch(commandRegistryProvider);
     return Theme(
@@ -44,15 +46,19 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
           actions: [
             TixIconButton(
               key: const Key('gallery.brightness'),
-              icon: scheme.isBlack
+              icon: scheme.isDim
                   ? Icons.light_mode
+                  : scheme.isBlack
+                  ? Icons.tonality
                   : scheme.isDark
                   ? Icons.contrast
                   : Icons.dark_mode,
               tooltip: l10n.themeLabel,
               onPressed: () => setState(
-                () => _scheme = scheme.isBlack
+                () => _scheme = scheme.isDim
                     ? TixTokens.light
+                    : scheme.isBlack
+                    ? TixTokens.dim
                     : scheme.isDark
                     ? TixTokens.oled
                     : TixTokens.dark,

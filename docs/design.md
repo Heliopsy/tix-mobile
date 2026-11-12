@@ -39,7 +39,8 @@ with `context.tix`. Never write a colour literal in a screen.
 | `scrim` | `--scrim` | 45% `#101828` | same | Behind a modal |
 | `projects[...]` | `--proj-*` | eight shades | eight shades | Project colours: slate, red, amber, green, teal, blue, violet, pink |
 
-`TixTokens.dim` carries tix's low-contrast scheme for a later setting.
+`TixTokens.dim` carries tix's Low contrast scheme, the web's `dim` palette in `010-tokens.css`, colour for colour.
+It keeps its own muted accent unless the tenant picked one. `TixTokens.isDim` tells it apart.
 
 ### OLED black
 
@@ -58,9 +59,11 @@ Text, status, priority and project colours are dark's, unchanged, so a status me
 theme. A tenant accent applies as in dark; its tint is mixed 40% towards black. `TixTokens.isBlack` tells the two
 dark schemes apart.
 
-Settings offers System, Light, Dark and OLED black. Under System a switch, "Pure black when dark", picks OLED black
-for the system's dark: a fourth segment alone could not say "follow the system, but black". Both are per device
-(`settings.theme`, `settings.systemBlack`).
+The reader's light and dark choice is the **colour scheme**, as on tix web; "Theme" means only the tenant accent.
+Settings offers, in the web's order: System, Light, Dark, OLED, Low contrast, and "System, OLED when dark". The last
+is stored as the system choice with `settings.systemBlack`, the way the old "Pure black when dark" switch stored it,
+so a device that had the switch on opens on that choice. Both are per device (`settings.theme`,
+`settings.systemBlack`).
 
 Status colours key off the category, never the state's name and never the accent:
 

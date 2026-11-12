@@ -59,7 +59,6 @@ List<SettingsItem> currentSettings(WidgetRef ref, AppLocalizations l10n) {
     signedIn: session != null,
     tenantAdmin: access != null && administers(access),
     can: access?.can,
-    systemTheme: ref.watch(themeSettingProvider) == ThemeChoice.system,
     localEngines: ref.watch(localInstancesEnabledProvider),
     widgets: ref.watch(widgetBridgeProvider).supported,
     adb: ref.watch(adbControlOfferedProvider),
@@ -285,7 +284,6 @@ class _Entry extends StatelessWidget {
     final l10n = context.l10n;
     return switch (item.id) {
       'appearance.theme' => const _ThemeEntry(),
-      'appearance.systemBlack' => const _SystemBlackEntry(),
       'appearance.reduceMotion' => const _ReduceMotionEntry(),
       'appearance.haptics' => const _HapticsEntry(),
       'language.app' => const _LanguageEntry(),
@@ -418,26 +416,18 @@ class _ThemeEntry extends ConsumerWidget {
           TixChoice(ThemeChoice.light, l10n.themeLight, icon: Icons.light_mode),
           TixChoice(ThemeChoice.dark, l10n.themeDark, icon: Icons.dark_mode),
           TixChoice(ThemeChoice.oled, l10n.themeOled, icon: Icons.contrast),
+          TixChoice(ThemeChoice.dim, l10n.themeDim, icon: Icons.tonality),
+          TixChoice(
+            ThemeChoice.systemOled,
+            l10n.themeSystemOled,
+            icon: Icons.brightness_4_outlined,
+          ),
         ],
         selected: ref.watch(themeSettingProvider),
         onSelected: (c) => ref.read(themeSettingProvider.notifier).set(c),
       ),
     );
   }
-}
-
-class _SystemBlackEntry extends ConsumerWidget {
-  const _SystemBlackEntry();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) => TixSwitchRow(
-    key: const Key('settings.systemBlack'),
-    title: context.l10n.themeSystemBlack,
-    subtitle: context.l10n.themeSystemBlackHelp,
-    value: ref.watch(systemBlackSettingProvider),
-    onChanged: (on) =>
-        ref.read(systemBlackSettingProvider.notifier).set(on: on),
-  );
 }
 
 class _ReduceMotionEntry extends ConsumerWidget {
@@ -859,16 +849,22 @@ class SettingsCommands extends ConsumerWidget {
       commands: [
         for (final (mode, label, icon) in [
           (
+            ThemeChoice.system,
+            l10n.paletteThemeSystem,
+            Icons.brightness_auto_outlined,
+          ),
+          (
             ThemeChoice.light,
             l10n.paletteThemeLight,
             Icons.light_mode_outlined,
           ),
           (ThemeChoice.dark, l10n.paletteThemeDark, Icons.dark_mode_outlined),
           (ThemeChoice.oled, l10n.paletteThemeOled, Icons.contrast),
+          (ThemeChoice.dim, l10n.paletteThemeDim, Icons.tonality),
           (
-            ThemeChoice.system,
-            l10n.paletteThemeSystem,
-            Icons.brightness_auto_outlined,
+            ThemeChoice.systemOled,
+            l10n.paletteThemeSystemOled,
+            Icons.brightness_4_outlined,
           ),
         ])
           TixCommand(

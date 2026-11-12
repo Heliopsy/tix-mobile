@@ -19,7 +19,7 @@ import 'package:tix_mobile/src/features/audit/application/audit.dart';
 
 String _when(BuildContext context, DateTime at) => context.times.stamp(at);
 
-/// The tenant's audit log: every change, newest first, narrowed by text,
+/// Activity, the tenant's audit log: every change, newest first, narrowed by text,
 /// surface, channel, actor, action, token and time, with each entry's
 /// detail beside the list on a wide window.
 class AuditScreen extends ConsumerWidget {
@@ -79,7 +79,7 @@ class AuditScreen extends ConsumerWidget {
       ),
     );
     return TixPage(
-      title: l10n.auditTitle,
+      title: l10n.activityTitle,
       subtitle: l10n.auditSubtitle,
       body: !twoPane
           ? list

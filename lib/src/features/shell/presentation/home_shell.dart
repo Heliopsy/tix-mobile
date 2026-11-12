@@ -58,16 +58,10 @@ class HomeShell extends StatelessWidget {
   /// Every destination, in the shell's branch order.
   static List<ShellDestination> destinations(AppLocalizations l10n) => [
     ShellDestination(
-      id: 'projects',
-      icon: Icons.folder_outlined,
-      selectedIcon: Icons.folder,
-      label: l10n.projectsTitle,
-    ),
-    ShellDestination(
-      id: 'tasks',
-      icon: Icons.checklist,
-      selectedIcon: Icons.checklist,
-      label: l10n.tasksTitle,
+      id: 'inbox',
+      icon: Icons.inbox_outlined,
+      selectedIcon: Icons.inbox,
+      label: l10n.inboxTitle,
     ),
     ShellDestination(
       id: 'myWork',
@@ -76,16 +70,22 @@ class HomeShell extends StatelessWidget {
       label: l10n.myWorkTitle,
     ),
     ShellDestination(
-      id: 'inbox',
-      icon: Icons.inbox_outlined,
-      selectedIcon: Icons.inbox,
-      label: l10n.inboxTitle,
+      id: 'tasks',
+      icon: Icons.checklist,
+      selectedIcon: Icons.checklist,
+      label: l10n.tasksTitle,
+    ),
+    ShellDestination(
+      id: 'projects',
+      icon: Icons.folder_outlined,
+      selectedIcon: Icons.folder,
+      label: l10n.projectsTitle,
     ),
     ShellDestination(
       id: 'activity',
-      icon: Icons.show_chart,
-      selectedIcon: Icons.show_chart,
-      label: l10n.watchTitle,
+      icon: Icons.history_outlined,
+      selectedIcon: Icons.history,
+      label: l10n.activityTitle,
     ),
     ShellDestination(
       id: 'manage',
@@ -118,20 +118,12 @@ class HomeShell extends StatelessWidget {
       child: CommandScope(
         commands: [
           TixCommand(
-            id: 'go.projects',
-            action: KeyActions.navProjects,
-            label: l10n.goProjects,
+            id: 'go.inbox',
+            action: KeyActions.navInbox,
+            label: l10n.goInbox,
             group: l10n.commandsNavigate,
-            icon: Icons.folder_outlined,
-            run: () => _select(at('projects')),
-          ),
-          TixCommand(
-            id: 'go.tasks',
-            action: KeyActions.navTasks,
-            label: l10n.goTasks,
-            group: l10n.commandsNavigate,
-            icon: Icons.checklist,
-            run: () => _select(at('tasks')),
+            icon: Icons.inbox_outlined,
+            run: () => _select(at('inbox')),
           ),
           TixCommand(
             id: 'go.myWork',
@@ -142,19 +134,27 @@ class HomeShell extends StatelessWidget {
             run: () => _select(at('myWork')),
           ),
           TixCommand(
-            id: 'go.inbox',
-            action: KeyActions.navInbox,
-            label: l10n.goInbox,
+            id: 'go.tasks',
+            action: KeyActions.navTasks,
+            label: l10n.goTasks,
             group: l10n.commandsNavigate,
-            icon: Icons.inbox_outlined,
-            run: () => _select(at('inbox')),
+            icon: Icons.checklist,
+            run: () => _select(at('tasks')),
+          ),
+          TixCommand(
+            id: 'go.projects',
+            action: KeyActions.navProjects,
+            label: l10n.goProjects,
+            group: l10n.commandsNavigate,
+            icon: Icons.folder_outlined,
+            run: () => _select(at('projects')),
           ),
           TixCommand(
             id: 'go.activity',
             action: KeyActions.navWatch,
             label: l10n.goWatch,
             group: l10n.commandsNavigate,
-            icon: Icons.show_chart,
+            icon: Icons.history_outlined,
             run: () => _select(at('activity')),
           ),
           TixCommand(

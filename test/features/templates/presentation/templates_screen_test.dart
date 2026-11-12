@@ -66,7 +66,7 @@ void main() {
           findsOneWidget,
         );
         expect(
-          find.descendant(of: row('bug'), matching: find.text('Every project')),
+          find.descendant(of: row('bug'), matching: find.text('All projects')),
           findsOneWidget,
         );
         expect(

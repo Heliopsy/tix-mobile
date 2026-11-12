@@ -125,9 +125,10 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   open, `x` to pick, `/` to filter, `v` to switch the view, `d` to mark done, `e` to rename, `t` to move, `m` to
   comment, `g i` or Ctrl+1 and the like to change destination, Esc to go back, `?` for the full list. Default, Vim,
   Emacs and Off presets, picked in Settings, where shortcuts can also be turned off.
-- **Quick add** in tix's one-line syntax: `Fix login !high #auth @raj due:fri`, from any screen (Ctrl+N or Cmd+N),
-  with a live preview of what the server makes of the line, completions for projects, tags and people, and "add
-  another". The server parses the line, so the app understands exactly what the CLI and the browser understand.
+- **Quick add** in tix's one-line syntax: `Fix login !high #auth @raj due:fri +web ^web-3`, from any screen (Ctrl+N
+  or Cmd+N), with a live preview of what the server makes of the line, completions for projects, tags and people,
+  and "add another". The server parses the line, so the app understands exactly what the CLI and the browser
+  understand.
 - **Add with details**: a form with a field per attribute, as tix's web has it: title, description, project,
   priority, due date, assignee, tags, repeat rule, parent, dependencies and lease. More details in quick add opens
   it with the typed line as the title; so does "Add with details" in the command palette.
@@ -169,12 +170,14 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   tokens issued with scopes and an expiry, shown once, listed with their last use, rotated with a grace window for
   the old value (retiring until it ends) and revoked; your account, tenants and history; the private calendar feed
   for Google, Apple or Outlook. Each shows only when your role or token allows it.
-- **Export and import**: a project's tasks, or a filtered part of them, as CSV, JSON, NDJSON or Markdown with the
-  columns you choose, a snapshot of the whole tenant, and importing a file of tasks after a dry run.
-- **Settings**, grouped by where each is kept and searchable: on this device the theme (system, light, dark or
-  OLED black), language, reduced motion, touch feedback, start screen and saved instances; with your account the
-  profile, security, your API tokens, the calendar feed, the date format and time zone every screen follows, inbox
-  kinds and channels, saved filters and the board arrangement; for administrators, the tenant's own settings.
+- **Import and export**: a project's tasks, or a filtered part of them, as CSV, JSON, NDJSON or Markdown with the
+  columns you choose, a snapshot of the whole tenant, and importing a file of tasks after a dry run. A project's
+  header opens it on that project.
+- **Settings**, grouped by where each is kept and searchable: on this device the colour scheme (System, Light, Dark,
+  OLED, Low contrast, or System with OLED when dark, the same choices as tix web), language, reduced motion, touch
+  feedback, start screen and saved instances; with your account the profile, security, your API tokens, the
+  calendar feed, the date format and time zone every screen follows, inbox kinds and channels, saved filters and the
+  board arrangement; for administrators, the tenant's own settings.
 - **About**: the app, engine and server versions, links to the site, source, roadmap and changelog, and a bug
   report with the versions filled in.
 - **Administration**: tenant settings with a live theme preview, domains, the server's live connections, and for
@@ -182,16 +185,18 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   SSH keys and active sessions (revoke any, this one included) under Settings, Security.
 - **Integrations and upkeep** for tenant admins: webhook endpoints with a test event and their delivery log with
   Redeliver, external sync sources from Jira, OpenProject or a file (check, run, preview, history), retention and
-  pruning, housekeeping, the trash with restore and delete for good, and the audit log filtered by channel,
-  surface, actor, action, token and time, with Copy JSON for the entry exactly as tix returned it.
-- **Activity**: the tenant's events as they happen, as `tix watch` shows them, newest first with the sequence number,
+  pruning, housekeeping, and the trash with restore and delete for good.
+- **Activity**: the tenant's audit log, as tix web names it, filtered by channel, surface, actor, action, token and
+  time, with Copy JSON for the entry exactly as tix returned it. It has its own place in the navigation, after
+  Projects and before Manage, and the desktop tray opens it.
+- **Live events** under Manage: the tenant's events as they happen, as `tix watch` shows them, newest first with the
+  sequence number,
   how long ago, who (name, handle, and the channel and token it came through), a coloured type badge and what
   changed: states, field names, the start of a comment. Filter by project, type (`task.*`) and actor, pause with a
   count of what arrived, replay from a sequence number, open the task or project and come back, read the whole
-  payload or copy the event as JSON. It has its own place in the navigation, between Inbox and Manage, and the
-  desktop tray opens it.
+  payload or copy the event as JSON.
 - **Adaptive layout**: a bottom navigation bar on phones, a navigation rail and a two-pane list and detail on tablets
-  and desktops.
+  and desktops, in tix web's order: Inbox, My work, Tasks, Projects, Activity, Manage, Settings.
 
 API tokens and sign-in sessions are kept in the platform's secure storage and are never written to logs or
 preferences. Passwords are not stored at all. How long a sign-in session lasts is the server's call: 12 hours by

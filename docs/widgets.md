@@ -142,7 +142,8 @@ reads `index.active` and then that context's keys.
 ```
 
 `theme` is `system`, `light`, `dark` or `black`. Widgets use OLED tokens for `black`, and for `system` with
-`systemBlack` when the system is dark.
+`systemBlack` when the system is dark: the app's "System, OLED when dark" colour scheme. Widgets have no Low
+contrast palette; that scheme draws them `dark`.
 
 ### Shared header
 

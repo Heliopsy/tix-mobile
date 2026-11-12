@@ -175,7 +175,7 @@ void main() {
       await press(tester, find.byKey(const Key('related.remove.infra-2')));
       expect(count(server, 'DELETE', '/tasks/infra-1/deps/id-infra-2'), 1);
       expect(find.byKey(const Key('related.infra-2')), findsNothing);
-      expect(find.text('Waits for nothing.'), findsOneWidget);
+      expect(find.text('Waiting on nothing.'), findsOneWidget);
     });
 
     testWidgets('are added by reference', (tester) async {
@@ -203,7 +203,7 @@ void main() {
         ),
         findsOneWidget,
       );
-      expect(find.text('Waits for nothing.'), findsOneWidget);
+      expect(find.text('Waiting on nothing.'), findsOneWidget);
     });
   });
 

@@ -2,6 +2,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/design/tokens.dart';
 import 'package:tix_mobile/src/features/settings/application/settings.dart';
 
 import '../../../helpers/app.dart';
@@ -34,29 +35,70 @@ void main() {
     expect(settings.values.containsKey('settings.locale'), isFalse);
   });
 
-  test('OLED black is remembered and draws dark on black', () async {
+  test('OLED is remembered and draws dark on black', () async {
     final settings = MemoryKeyValueStore();
     final c = makeContainer(fakeOverrides(FakeTix(), settings: settings));
-    expect(c.read(darkIsBlackProvider), isFalse);
+    expect(c.read(darkTokensProvider), isNull);
     await c.read(themeSettingProvider.notifier).set(ThemeChoice.oled);
     expect(c.read(themeSettingProvider).mode, ThemeMode.dark);
-    expect(c.read(darkIsBlackProvider), isTrue);
+    expect(c.read(darkTokensProvider), TixTokens.oled);
     expect(settings.values['settings.theme'], 'oled');
 
     await c.read(themeSettingProvider.notifier).set(ThemeChoice.dark);
-    expect(c.read(darkIsBlackProvider), isFalse);
-    await c.read(themeSettingProvider.notifier).set(ThemeChoice.system);
-    expect(c.read(themeSettingProvider).mode, ThemeMode.system);
-    expect(c.read(darkIsBlackProvider), isFalse);
-    await c.read(systemBlackSettingProvider.notifier).set(on: true);
-    expect(c.read(darkIsBlackProvider), isTrue);
-    expect(settings.values['settings.systemBlack'], 'true');
+    expect(c.read(darkTokensProvider), isNull);
+  });
+
+  test('Low contrast is remembered and draws the dim tokens', () async {
+    final settings = MemoryKeyValueStore();
+    final c = makeContainer(fakeOverrides(FakeTix(), settings: settings));
+    await c.read(themeSettingProvider.notifier).set(ThemeChoice.dim);
+    expect(c.read(themeSettingProvider).mode, ThemeMode.dark);
+    expect(c.read(darkTokensProvider), TixTokens.dim);
+    expect(settings.values['settings.theme'], 'dim');
 
     final again = makeContainer(fakeOverrides(FakeTix(), settings: settings));
-    expect(again.read(darkIsBlackProvider), isTrue);
-    await again.read(themeSettingProvider.notifier).set(ThemeChoice.light);
-    expect(again.read(darkIsBlackProvider), isFalse);
-    await again.read(systemBlackSettingProvider.notifier).set(on: false);
-    expect(settings.values.containsKey('settings.systemBlack'), isFalse);
+    expect(again.read(themeSettingProvider), ThemeChoice.dim);
+    expect(again.read(darkTokensProvider), TixTokens.dim);
+  });
+
+  test(
+    'System, OLED when dark is the system choice with the black flag',
+    () async {
+      final settings = MemoryKeyValueStore();
+      final c = makeContainer(fakeOverrides(FakeTix(), settings: settings));
+      await c.read(themeSettingProvider.notifier).set(ThemeChoice.systemOled);
+      expect(c.read(themeSettingProvider).mode, ThemeMode.system);
+      expect(c.read(darkTokensProvider), TixTokens.oled);
+      expect(settings.values, {
+        'settings.theme': 'system',
+        'settings.systemBlack': 'true',
+      });
+
+      final again = makeContainer(fakeOverrides(FakeTix(), settings: settings));
+      expect(again.read(themeSettingProvider), ThemeChoice.systemOled);
+      await again.read(themeSettingProvider.notifier).set(ThemeChoice.system);
+      expect(again.read(darkTokensProvider), isNull);
+      expect(settings.values.containsKey('settings.systemBlack'), isFalse);
+    },
+  );
+
+  test('a device that had Pure black when dark on opens on it', () {
+    for (final stored in [
+      {'settings.theme': 'system', 'settings.systemBlack': 'true'},
+      {'settings.systemBlack': 'true'},
+    ]) {
+      final settings = MemoryKeyValueStore()..values.addAll(stored);
+      final c = makeContainer(fakeOverrides(FakeTix(), settings: settings));
+      expect(c.read(themeSettingProvider), ThemeChoice.systemOled);
+      expect(c.read(darkTokensProvider), TixTokens.oled);
+    }
+    final dark = MemoryKeyValueStore()
+      ..values.addAll({
+        'settings.theme': 'dark',
+        'settings.systemBlack': 'true',
+      });
+    final c = makeContainer(fakeOverrides(FakeTix(), settings: dark));
+    expect(c.read(themeSettingProvider), ThemeChoice.dark);
+    expect(c.read(darkTokensProvider), isNull);
   });
 }

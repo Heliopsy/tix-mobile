@@ -63,15 +63,21 @@ final class SettingsRepositoryProvider
 String _$settingsRepositoryHash() =>
     r'12347d101927727d58d1e4a7c7d28b1cb4e83be0';
 
-/// The chosen theme.
+/// The chosen colour scheme. [ThemeChoice.systemOled] is kept as the
+/// system choice with the pure-black flag, the way it was stored before it
+/// was a choice of its own, so older stored values read the same.
 
 @ProviderFor(ThemeSetting)
 final themeSettingProvider = ThemeSettingProvider._();
 
-/// The chosen theme.
+/// The chosen colour scheme. [ThemeChoice.systemOled] is kept as the
+/// system choice with the pure-black flag, the way it was stored before it
+/// was a choice of its own, so older stored values read the same.
 final class ThemeSettingProvider
     extends $NotifierProvider<ThemeSetting, ThemeChoice> {
-  /// The chosen theme.
+  /// The chosen colour scheme. [ThemeChoice.systemOled] is kept as the
+  /// system choice with the pure-black flag, the way it was stored before it
+  /// was a choice of its own, so older stored values read the same.
   ThemeSettingProvider._()
     : super(
         from: null,
@@ -99,9 +105,11 @@ final class ThemeSettingProvider
   }
 }
 
-String _$themeSettingHash() => r'f334ffab8d93ffe33f8e20655c7b4716417f7a4e';
+String _$themeSettingHash() => r'06bd26390222fb2db759c1e1a144d87d01db21e7';
 
-/// The chosen theme.
+/// The chosen colour scheme. [ThemeChoice.systemOled] is kept as the
+/// system choice with the pure-black flag, the way it was stored before it
+/// was a choice of its own, so older stored values read the same.
 
 abstract class _$ThemeSetting extends $Notifier<ThemeChoice> {
   ThemeChoice build();
@@ -121,109 +129,54 @@ abstract class _$ThemeSetting extends $Notifier<ThemeChoice> {
   }
 }
 
-/// Whether the system theme goes pure black when the platform is dark.
+/// The tokens the dark theme is built on: OLED black, Low contrast, or
+/// null for tix's dark.
 
-@ProviderFor(SystemBlackSetting)
-final systemBlackSettingProvider = SystemBlackSettingProvider._();
+@ProviderFor(darkTokens)
+final darkTokensProvider = DarkTokensProvider._();
 
-/// Whether the system theme goes pure black when the platform is dark.
-final class SystemBlackSettingProvider
-    extends $NotifierProvider<SystemBlackSetting, bool> {
-  /// Whether the system theme goes pure black when the platform is dark.
-  SystemBlackSettingProvider._()
+/// The tokens the dark theme is built on: OLED black, Low contrast, or
+/// null for tix's dark.
+
+final class DarkTokensProvider
+    extends $FunctionalProvider<TixTokens?, TixTokens?, TixTokens?>
+    with $Provider<TixTokens?> {
+  /// The tokens the dark theme is built on: OLED black, Low contrast, or
+  /// null for tix's dark.
+  DarkTokensProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'systemBlackSettingProvider',
+        name: r'darkTokensProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$systemBlackSettingHash();
+  String debugGetCreateSourceHash() => _$darkTokensHash();
 
   @$internal
   @override
-  SystemBlackSetting create() => SystemBlackSetting();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<bool>(value),
-    );
-  }
-}
-
-String _$systemBlackSettingHash() =>
-    r'5ef2f05e0c3faeca8fb5cd6e427f3703db0aa663';
-
-/// Whether the system theme goes pure black when the platform is dark.
-
-abstract class _$SystemBlackSetting extends $Notifier<bool> {
-  bool build();
-  @$mustCallSuper
-  @override
-  WhenComplete runBuild() {
-    final ref = this.ref as $Ref<bool, bool>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<bool, bool>,
-              bool,
-              Object?,
-              Object?
-            >;
-    return element.handleCreate(ref, build);
-  }
-}
-
-/// Whether the dark theme is drawn on pure black.
-
-@ProviderFor(darkIsBlack)
-final darkIsBlackProvider = DarkIsBlackProvider._();
-
-/// Whether the dark theme is drawn on pure black.
-
-final class DarkIsBlackProvider extends $FunctionalProvider<bool, bool, bool>
-    with $Provider<bool> {
-  /// Whether the dark theme is drawn on pure black.
-  DarkIsBlackProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'darkIsBlackProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$darkIsBlackHash();
-
-  @$internal
-  @override
-  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+  $ProviderElement<TixTokens?> $createElement($ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  bool create(Ref ref) {
-    return darkIsBlack(ref);
+  TixTokens? create(Ref ref) {
+    return darkTokens(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
+  Override overrideWithValue(TixTokens? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<bool>(value),
+      providerOverride: $SyncValueProvider<TixTokens?>(value),
     );
   }
 }
 
-String _$darkIsBlackHash() => r'f494cdb87e8c8b5634e0c38e725f62aa11e53cef';
+String _$darkTokensHash() => r'd0cdfbd0af8ea59d6d953b8c156a4de441733252';
 
 /// The chosen language, null to follow the system.
 

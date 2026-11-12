@@ -85,6 +85,20 @@ void main() {
     expect(theme.colorScheme.surface, const Color(0xFF000000));
   });
 
+  test('Low contrast is the web dim palette and keeps its own accent', () {
+    const t = TixTokens.dim;
+    expect(t.bg, const Color(0xFF1D2126));
+    expect(t.ink, const Color(0xFFC7CCD3));
+    expect(t.isDim, isTrue);
+    expect(TixTokens.dark.isDim, isFalse);
+    final plain = buildTixTheme(Brightness.dark, base: t);
+    expect(plain.colorScheme.primary, const Color(0xFF5EB3AB));
+    expect(plain.scaffoldBackgroundColor, const Color(0xFF1D2126));
+    final ember = t.withAccent(TixAccent.resolve('ember'));
+    expect(ember.accent, isNot(t.accent));
+    expect(ember.bg, t.bg);
+  });
+
   test('project colours resolve palette names and shade custom ones', () {
     const t = TixTokens.light;
     expect(t.projectColour('teal'), t.projects[ProjectColour.teal]);
