@@ -1305,6 +1305,55 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get tasksSummaryNothingOpen => 'Nichts offen.';
+
+  @override
+  String get tasksSummaryNothing => 'Nichts auf der Liste.';
+
+  @override
+  String get tasksSummaryAllDone => 'Alles erledigt. Hier ist alles fertig.';
+
+  @override
+  String get tasksSummaryToGo => 'offen';
+
+  @override
+  String tasksSummaryDone(int count) {
+    return '$count erledigt';
+  }
+
+  @override
+  String tasksSummaryProjects(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'in $count Projekten',
+      one: 'in 1 Projekt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tasksSummaryWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count warten auf andere Aufgaben',
+      one: '1 wartet auf eine andere Aufgabe',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tasksSummaryWaitingHint =>
+      'Nur Aufgaben, die auf eine unerledigte Abhängigkeit warten';
+
+  @override
+  String get tasksSummaryOpenOnly => 'nur offene Arbeit';
+
+  @override
+  String get tasksSummaryShowFinished => 'auch erledigte zeigen';
+
+  @override
   String boardCount(int count, String more) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

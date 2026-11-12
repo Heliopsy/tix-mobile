@@ -2275,6 +2275,66 @@ abstract class AppLocalizations {
   /// **'{count} held by an agent'**
   String tasksHeldByAgent(int count);
 
+  /// Summary line under the task screen heading when the open-only list is empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing open.'**
+  String get tasksSummaryNothingOpen;
+
+  /// Summary line when the list is empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing on the list.'**
+  String get tasksSummaryNothing;
+
+  /// Summary line when every listed task is done.
+  ///
+  /// In en, this message translates to:
+  /// **'All clear. Everything here is done.'**
+  String get tasksSummaryAllDone;
+
+  /// After the bold count of open tasks in the summary line, as tix web says it.
+  ///
+  /// In en, this message translates to:
+  /// **'to go'**
+  String get tasksSummaryToGo;
+
+  /// In the summary line: how many listed tasks are done.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} done'**
+  String tasksSummaryDone(int count);
+
+  /// In the summary line: how many projects the listed tasks span.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{across 1 project} other{across {count} projects}}'**
+  String tasksSummaryProjects(int count);
+
+  /// Tappable in the summary line: tasks waiting on an unfinished dependency; tapping filters to them.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 waiting on another task} other{{count} waiting on other tasks}}'**
+  String tasksSummaryWaiting(int count);
+
+  /// Tooltip of the waiting count in the summary line.
+  ///
+  /// In en, this message translates to:
+  /// **'Only tasks waiting on an unfinished dependency'**
+  String get tasksSummaryWaitingHint;
+
+  /// In the summary line when finished work is hidden.
+  ///
+  /// In en, this message translates to:
+  /// **'open work only'**
+  String get tasksSummaryOpenOnly;
+
+  /// Tappable in the summary line: shows finished work too.
+  ///
+  /// In en, this message translates to:
+  /// **'show finished too'**
+  String get tasksSummaryShowFinished;
+
   /// No description provided for @boardCount.
   ///
   /// In en, this message translates to:

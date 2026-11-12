@@ -54,6 +54,15 @@ void main() {
     });
   });
 
+  test("is:waiting-on is tix's name for is:blocked", () {
+    expect(parse('is:waiting-on'), {
+      'blocked': ['true'],
+    });
+    expect(parse('-is:waiting-on'), {
+      'blocked': ['false'],
+    });
+  });
+
   test('is, has, checklist and the boolean keys', () {
     expect(parse('is:starred -is:blocked is:snoozed is:recurring'), {
       'starred': ['true'],

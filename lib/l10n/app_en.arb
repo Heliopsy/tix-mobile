@@ -768,6 +768,61 @@
       }
     }
   },
+  "tasksSummaryNothingOpen": "Nothing open.",
+  "@tasksSummaryNothingOpen": {
+    "description": "Summary line under the task screen heading when the open-only list is empty."
+  },
+  "tasksSummaryNothing": "Nothing on the list.",
+  "@tasksSummaryNothing": {
+    "description": "Summary line when the list is empty."
+  },
+  "tasksSummaryAllDone": "All clear. Everything here is done.",
+  "@tasksSummaryAllDone": {
+    "description": "Summary line when every listed task is done."
+  },
+  "tasksSummaryToGo": "to go",
+  "@tasksSummaryToGo": {
+    "description": "After the bold count of open tasks in the summary line, as tix web says it."
+  },
+  "tasksSummaryDone": "{count} done",
+  "@tasksSummaryDone": {
+    "description": "In the summary line: how many listed tasks are done.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksSummaryProjects": "{count, plural, =1{across 1 project} other{across {count} projects}}",
+  "@tasksSummaryProjects": {
+    "description": "In the summary line: how many projects the listed tasks span.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksSummaryWaiting": "{count, plural, =1{1 waiting on another task} other{{count} waiting on other tasks}}",
+  "@tasksSummaryWaiting": {
+    "description": "Tappable in the summary line: tasks waiting on an unfinished dependency; tapping filters to them.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksSummaryWaitingHint": "Only tasks waiting on an unfinished dependency",
+  "@tasksSummaryWaitingHint": {
+    "description": "Tooltip of the waiting count in the summary line."
+  },
+  "tasksSummaryOpenOnly": "open work only",
+  "@tasksSummaryOpenOnly": {
+    "description": "In the summary line when finished work is hidden."
+  },
+  "tasksSummaryShowFinished": "show finished too",
+  "@tasksSummaryShowFinished": {
+    "description": "Tappable in the summary line: shows finished work too."
+  },
   "boardCount": "{count, plural, =1{1{more} task} other{{count}{more} tasks}}",
   "@boardCount": {
     "placeholders": {

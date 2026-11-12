@@ -541,6 +541,36 @@ void main() {
     );
   });
 
+  group('summariseTasks', () {
+    Task task(String ref, [Map<String, Object?> extra = const {}]) =>
+        Task.fromJson({...taskJson(ref), ...extra});
+
+    test('counts open, done, projects, held and waiting', () {
+      final soon = fixedNow.add(const Duration(minutes: 5));
+      final s = summariseTasks(
+        [
+          task('infra-1', heldJson(soon)),
+          task('infra-2', {'blocked': true}),
+          task('web-1', {'blocked': true}),
+          task('web-2', {'status': 'done'}),
+        ],
+        fixedNow,
+        isDone: (Task t) => t.status == 'done',
+      );
+      expect(s, (open: 3, done: 1, projects: 2, held: 1, waiting: 2));
+    });
+
+    test('nothing counts nothing', () {
+      expect(summariseTasks(const <Task>[], fixedNow, isDone: (_) => false), (
+        open: 0,
+        done: 0,
+        projects: 0,
+        held: 0,
+        waiting: 0,
+      ));
+    });
+  });
+
   group('heldByAgent', () {
     Task task(String ref, [Map<String, Object?> extra = const {}]) =>
         Task.fromJson({...taskJson(ref), ...extra});

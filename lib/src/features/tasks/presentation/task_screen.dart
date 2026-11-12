@@ -33,6 +33,7 @@ import 'package:tix_mobile/src/features/tasks/presentation/quick_add_sheet.dart'
 import 'package:tix_mobile/src/features/tasks/presentation/task_actions.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_list_view.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/task_summary.dart';
 
 /// Every task on the server, as a list, a board or lanes.
 class TasksScreen extends ConsumerStatefulWidget {
@@ -256,9 +257,6 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
           ]
         : paged?.items ?? const <Task>[];
     final selectedRef = widget.selectedRef ?? _open;
-    final held = paged == null
-        ? 0
-        : heldByAgent(paged.items, ref.watch(clockProvider)());
     final screen = ref.read(taskScreenProvider(scope).notifier);
     final selector = ref.read(taskSelectionProvider(scope).notifier);
 
@@ -299,6 +297,8 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         TaskFilterPanel(scope: scope, focusNode: _filterFocus),
+        if (paged != null)
+          TaskSummaryLine(query: query, tasks: paged.items, view: view),
         if (layout is BoardRefused) BoardRefusedNotice(layout: layout),
         Expanded(
           child: Listener(onPointerDown: _dropCursor, child: content),
@@ -555,7 +555,6 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
             subtitle: paged == null
                 ? null
                 : l10n.boardCount(paged.items.length, paged.hasMore ? '+' : ''),
-            subtitleNote: held == 0 ? null : l10n.tasksHeldByAgent(held),
             actions: [
               TixIconButton(
                 key: const Key('tasks.selectMode'),

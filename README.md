@@ -118,6 +118,8 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   while tasks are being added. Sort, group by status or project, swipe to complete or snooze, star in place, and
   pick many tasks for one bulk move, priority, tag, assignee, star, copy or delete with a single Undo. Move one
   task or many into another project, where each takes a new reference and the old one keeps leading to it.
+  A line above the tasks says what they add up to, as the web does: how many to go and done, across how many
+  projects, how many an agent holds and how many wait on other tasks, with a tap to the waiting ones.
 - **Board and lanes**: a workflow's columns with drag and drop, or lanes by project, assignee, priority, tag or
   deadline, each lane's name narrowing the list to it. Each column and lane is starred, collapsed, moved or hidden
   the way tix keeps it for your account.
