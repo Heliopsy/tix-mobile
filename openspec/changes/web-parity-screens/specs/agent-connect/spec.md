@@ -9,8 +9,8 @@ reader's handle, and give the CLI, MCP, SSH, API and skill commands of tix's web
 
 #### Scenario: Commands for this server
 
-- **WHEN** a person signed in to https://tix.example.com in the tenant acme opens Connect an agent
-- **THEN** the CLI tab offers `tix ctx add acme --server https://tix.example.com --token $TIX_TOKEN --tenant acme --use`
+- **WHEN** a person signed in to `https://tix.example.com` in the tenant acme opens Connect an agent
+- **THEN** the CLI tab's context command names the context acme, that server, `$TIX_TOKEN` and `--tenant acme`
 
 ### Requirement: MCP clients
 
