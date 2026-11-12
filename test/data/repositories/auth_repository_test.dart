@@ -178,4 +178,64 @@ void main() {
       kind(TixErrorKind.unauthenticated),
     );
   });
+
+  group('remember', () {
+    Map<String, dynamic> loginBody(int i) =>
+        server.requestsTo('/api/v1/auth/login')[i].data as Map<String, dynamic>;
+
+    test('is sent with the step that completes the sign-in', () async {
+      server.requireCode = true;
+      final first = await auth.login(
+        base,
+        email: 'ana@example.com',
+        password: 'pw',
+        remember: true,
+      );
+      await auth.loginCode(
+        base,
+        ticket: first.challenge!.ticket,
+        code: FakeTix.goodCode,
+        remember: true,
+      );
+      expect(loginBody(0)['remember'], isTrue);
+      expect(loginBody(1)['remember'], isTrue);
+    });
+
+    test('is left out when not asked for', () async {
+      await auth.login(base, email: 'ana@example.com', password: 'pw');
+      expect(loginBody(0).containsKey('remember'), isFalse);
+    });
+
+    test('the policy is read without a credential', () async {
+      server.publicRoutes.add(
+        (o, path) => path == '/api/v1/auth/session-policy'
+            ? const FakeResponse(200, {
+                'ttl': '12h0m0s',
+                'remember_ttl': '720h0m0s',
+              })
+            : null,
+      );
+      final policy = await auth.sessionPolicy(base);
+      expect(policy?.rememberTtl, '720h0m0s');
+      expect(
+        server.requestsTo('/api/v1/auth/session-policy').single.headers,
+        isNot(contains('Authorization')),
+      );
+    });
+
+    for (final (status, code) in [
+      (404, 'not_found'),
+      (401, 'unauthenticated'),
+    ]) {
+      test('a tix without the policy answering $status has none', () async {
+        server.override = FakeResponse(status, envelope(code, 'x'));
+        expect(await auth.sessionPolicy(base), isNull);
+      });
+    }
+
+    test('any other failure reading the policy is not hidden', () async {
+      server.override = FakeResponse(503, envelope('upstream', 'x'));
+      await expectLater(auth.sessionPolicy(base), kind(TixErrorKind.upstream));
+    });
+  });
 }

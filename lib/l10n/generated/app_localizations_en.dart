@@ -95,6 +95,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'A name for this connection, seen only in this app. Handy when you use more than one server or account. Leave it empty to use the server\'s address.';
 
   @override
+  String get helpRememberBody =>
+      'Signed in this way, the server keeps your session for longer, so you are asked for your password less often. How long is up to whoever runs your tix.\n\nTurn it off on a device other people use. Signing out ends the session either way.';
+
+  @override
   String get helpTenantTitle => 'Tenants';
 
   @override
@@ -292,7 +296,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signInHelp =>
-      'Sessions last about 12 hours. Use a token for a device that should stay connected.';
+      'A session lasts as long as the server allows, longer with Stay signed in. Use a token for a device that should stay connected for good.';
+
+  @override
+  String get staySignedIn => 'Stay signed in';
+
+  @override
+  String get staySignedInHelp =>
+      'Keeps this device signed in for longer, where the server offers it. Turn it off on a shared device.';
 
   @override
   String get signInButton => 'Sign in';

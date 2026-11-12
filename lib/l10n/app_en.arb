@@ -30,6 +30,7 @@
   "helpPasswordBody": "Your tix password, the same one as on the web. Forgotten it? Whoever runs your tix can reset it.",
   "helpInviteBody": "When someone invites you to tix, you get an email with a link. Paste that link here, or share it to tix from your mail app.\n\nThe server's address comes with the link, so you don't need to type it.",
   "helpNameBody": "A name for this connection, seen only in this app. Handy when you use more than one server or account. Leave it empty to use the server's address.",
+  "helpRememberBody": "Signed in this way, the server keeps your session for longer, so you are asked for your password less often. How long is up to whoever runs your tix.\n\nTurn it off on a device other people use. Signing out ends the session either way.",
   "helpTenantTitle": "Tenants",
   "helpTenantBody": "One tix can hold several separate workspaces, called tenants, for example one per company or team. Each has its own projects and people.\n\nPick the one to open. You can add the others later.",
   "connectButton": "Connect",
@@ -135,7 +136,12 @@
   "methodSignIn": "Sign in",
   "emailLabel": "Email",
   "passwordLabel": "Password",
-  "signInHelp": "Sessions last about 12 hours. Use a token for a device that should stay connected.",
+  "signInHelp": "A session lasts as long as the server allows, longer with Stay signed in. Use a token for a device that should stay connected for good.",
+  "staySignedIn": "Stay signed in",
+  "@staySignedIn": {
+    "description": "Switch on the sign-in form asking the server for a longer, remembered session."
+  },
+  "staySignedInHelp": "Keeps this device signed in for longer, where the server offers it. Turn it off on a shared device.",
   "signInButton": "Sign in",
   "localIntro": "Create a new tix database or open one you already have.",
   "dbNameLabel": "Database name",

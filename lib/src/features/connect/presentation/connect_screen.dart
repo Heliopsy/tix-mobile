@@ -100,6 +100,7 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
   bool _busy = false;
   bool _showSecret = false;
   bool _pinned = false;
+  bool _remember = true;
   bool _accessRefused = false;
   String? _tenant;
   Object? _error;
@@ -218,6 +219,7 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
               name: _name.text,
               instanceId: widget.instanceId,
               replacing: _replacing,
+              remember: _remember,
             ),
     );
   }
@@ -616,6 +618,21 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
             helper: l10n.signInHelp,
             visible: _showSecret,
             onToggle: () => setState(() => _showSecret = !_showSecret),
+          ),
+        ),
+        const SizedBox(height: 8),
+        _Helped(
+          help: HelpButton(
+            key: const Key('connect.help.remember'),
+            title: l10n.staySignedIn,
+            body: l10n.helpRememberBody,
+          ),
+          child: SwitchListTile(
+            key: const Key('connect.remember'),
+            value: _remember,
+            onChanged: _busy ? null : (v) => setState(() => _remember = v),
+            title: Text(l10n.staySignedIn),
+            subtitle: Text(l10n.staySignedInHelp),
           ),
         ),
       ],

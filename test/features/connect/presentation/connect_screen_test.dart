@@ -193,6 +193,7 @@ void main() {
     }
     await tester.enterText(find.byKey(const Key('connect.email')), email);
     await tester.enterText(find.byKey(const Key('connect.password')), password);
+    await tester.pumpAndSettle();
     await tap(tester, find.byKey(const Key('connect.submit')));
     await tester.pumpAndSettle();
   }
@@ -217,6 +218,78 @@ void main() {
         expect(server.requestsTo('/auth/login').single.body['password'], 'pw');
       });
     }
+
+    group('stay signed in', () {
+      setUp(
+        () => server.publicRoutes.add(
+          (o, path) => path == '/api/v1/auth/session-policy'
+              ? const FakeResponse(200, {
+                  'ttl': '12h0m0s',
+                  'remember_ttl': '720h0m0s',
+                })
+              : null,
+        ),
+      );
+
+      SwitchListTile stay(WidgetTester tester) => tester.widget<SwitchListTile>(
+        find.byKey(const Key('connect.remember')),
+      );
+
+      testWidgets('is on by default and asks to be remembered', (tester) async {
+        await pumpScreen(
+          tester,
+          const ConnectScreen(adding: true),
+          overrides: fakeOverrides(server, secrets: secrets),
+        );
+        await tester.tap(find.text('Sign in').first);
+        await tester.pump();
+        expect(stay(tester).value, isTrue);
+        expect(
+          find.descendant(
+            of: find.byKey(const Key('connect.remember')),
+            matching: find.text('Stay signed in'),
+          ),
+          findsOneWidget,
+        );
+        await signIn(tester);
+        expect(server.requestsTo('/auth/login').single.body['remember'], true);
+      });
+
+      testWidgets('switched off, the sign-in is not remembered', (
+        tester,
+      ) async {
+        await pumpScreen(
+          tester,
+          const ConnectScreen(adding: true),
+          overrides: fakeOverrides(server, secrets: secrets),
+        );
+        await tester.tap(find.text('Sign in').first);
+        await tester.pump();
+        await tap(tester, find.byKey(const Key('connect.remember')));
+        await tester.pump();
+        expect(stay(tester).value, isFalse);
+        await signIn(tester);
+        expect(
+          server.requestsTo('/auth/login').single.body,
+          isNot(contains('remember')),
+        );
+      });
+
+      testWidgets('signing in again offers it too', (tester) async {
+        final stores = signInStores(server);
+        server.sessions.clear();
+        await pumpScreen(
+          tester,
+          const ConnectScreen(adding: true, connectionId: 's1'),
+          overrides: fakeOverrides(
+            server,
+            settings: stores.settings,
+            secrets: stores.secrets,
+          ),
+        );
+        expect(stay(tester).value, isTrue);
+      });
+    });
 
     testWidgets('a wrong password is explained', (tester) async {
       await pumpScreen(
@@ -1024,7 +1097,7 @@ void main() {
       expect(find.byTooltip('Help: API token'), findsOneWidget);
       await tester.tap(find.text('Sign in').first);
       await tester.pumpAndSettle();
-      for (final name in ['email', 'password']) {
+      for (final name in ['email', 'password', 'remember']) {
         expect(help(name), findsOneWidget, reason: name);
       }
       await tester.tap(find.text('Invite').first);
