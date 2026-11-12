@@ -478,8 +478,58 @@ class AppLocalizationsBg extends AppLocalizations {
       'Този акаунт трябва първо да настрои втори фактор. Влезте веднъж през браузъра, за да го направите.';
 
   @override
-  String get errorPasswordChange =>
-      'Този акаунт трябва първо да избере нова парола. Влезте веднъж през браузъра, за да го направите.';
+  String get errorNewPasswordRequired => 'Въведете нова парола.';
+
+  @override
+  String get errorPasswordMismatch => 'Двете пароли не съвпадат.';
+
+  @override
+  String get passwordChangeTitle => 'Изберете нова парола';
+
+  @override
+  String get passwordChangeIntro =>
+      'Администраторът ви е поискал да смените паролата си, преди да продължите.';
+
+  @override
+  String passwordChangeAs(String email) {
+    return 'Влизате като $email';
+  }
+
+  @override
+  String get newPasswordHelp => 'Поне 12 знака и различна от сегашната.';
+
+  @override
+  String get newPasswordAgainLabel => 'Новата парола отново';
+
+  @override
+  String get passwordChangeSubmit => 'Запази и влез';
+
+  @override
+  String get helpNewPasswordBody =>
+      'Акаунтът ви е създаден или нулиран с парола, която някой друг знае, затова tix ви моли да изберете своя, преди да продължите.\n\nСървърът решава какво приема: поне 12 знака и различна от паролата, с която влязохте. От сега нататък новата парола важи навсякъде, където влизате в tix, включително в уеб.';
+
+  @override
+  String get enrolTitle => 'Настройте втори фактор';
+
+  @override
+  String get enrolIntro =>
+      'Този тенант изисква втори фактор, а акаунтът още няма такъв. Добавете ключа по-долу в приложение за удостоверяване и въведете кода, който то показва.';
+
+  @override
+  String get enrolCodeHelp =>
+      'Шест цифри от приложението, в което току-що добавихте ключа.';
+
+  @override
+  String get helpSecondFactorBody =>
+      'Вторият фактор е код от приложение за удостоверяване, който се иска след паролата. Сменя се на всеки 30 секунди.\n\nДобавете ключа в приложение като Aegis, 2FAS, Google Authenticator или в мениджъра си на пароли, или го отворете там направо от това устройство. Пазете ключа в тайна: който го има, може да генерира кодовете ви.';
+
+  @override
+  String get signInCodesIntro =>
+      'Влязохте. Пазете тези кодове на сигурно място: всеки от тях ви вписва веднъж, ако загубите приложението за удостоверяване, и няма да бъдат показани отново.';
+
+  @override
+  String get helpRecoveryCodesBody =>
+      'Всеки код ви вписва веднъж вместо кода от приложението. tix пази само отпечатък от тях, затова нищо не може да ги покаже отново.\n\nКопирайте ги в мениджър на пароли или някъде офлайн. Ако ги загубите, създайте нови от екрана Сигурност.';
 
   @override
   String get errorTenantRequired => 'Въведете ключ за тенанта.';

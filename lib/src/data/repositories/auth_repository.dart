@@ -78,11 +78,13 @@ class AuthRepository {
   }
 
   /// The first step of a sign-in, asking for a remembered session when
-  /// [remember] and this step completes it.
+  /// [remember] and this step completes it. [newPassword] answers a
+  /// `password_change` challenge; tix judges it.
   Future<LoginResult> login(
     String baseUrl, {
     required String email,
     required String password,
+    String? newPassword,
     String? tenant,
     bool remember = false,
   }) async {
@@ -91,11 +93,15 @@ class AuthRepository {
     if (password.isEmpty) {
       throw const TixException(TixErrorKind.passwordRequired);
     }
+    if (newPassword != null && newPassword.isEmpty) {
+      throw const TixException(TixErrorKind.newPasswordRequired);
+    }
     return await _complete(
       _build(baseUrl, null, tenant: tenant).session.login(
         LoginRequest(
           email: address,
           password: password,
+          newPassword: newPassword,
           surface: _surface,
           remember: remember ? true : null,
         ),
@@ -216,9 +222,9 @@ class AuthRepository {
     if (challenge == null) return result;
     return switch (challenge.kind) {
       TOTPChallengeKind.code => result,
-      TOTPChallengeKind.passwordChange => throw const TixException(
-        TixErrorKind.passwordChange,
-      ),
+      TOTPChallengeKind.enrol when signingIn && challenge.enrolment != null =>
+        result,
+      TOTPChallengeKind.passwordChange when signingIn => result,
       _ => throw const TixException(TixErrorKind.secondFactorSetup),
     };
   }

@@ -895,11 +895,95 @@ abstract class AppLocalizations {
   /// **'This account must set up a second factor first. Sign in once in the browser to do that.'**
   String get errorSecondFactorSetup;
 
-  /// No description provided for @errorPasswordChange.
+  /// No description provided for @errorNewPasswordRequired.
   ///
   /// In en, this message translates to:
-  /// **'This account must choose a new password first. Sign in once in the browser to do that.'**
-  String get errorPasswordChange;
+  /// **'Enter a new password.'**
+  String get errorNewPasswordRequired;
+
+  /// No description provided for @errorPasswordMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The two passwords do not match.'**
+  String get errorPasswordMismatch;
+
+  /// No description provided for @passwordChangeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a new password'**
+  String get passwordChangeTitle;
+
+  /// No description provided for @passwordChangeIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Your administrator asked you to replace your password before you go on.'**
+  String get passwordChangeIntro;
+
+  /// Under Choose a new password: the account being signed in
+  ///
+  /// In en, this message translates to:
+  /// **'Signing in as {email}'**
+  String passwordChangeAs(String email);
+
+  /// No description provided for @newPasswordHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 12 characters, and not the one you have now.'**
+  String get newPasswordHelp;
+
+  /// Label of the field repeating the new password on Choose a new password
+  ///
+  /// In en, this message translates to:
+  /// **'New password again'**
+  String get newPasswordAgainLabel;
+
+  /// No description provided for @passwordChangeSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Save and sign in'**
+  String get passwordChangeSubmit;
+
+  /// No description provided for @helpNewPasswordBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account was set up, or reset, with a password someone else knows, so tix asks you to choose your own before you go on.\n\nThe server decides what it accepts: at least 12 characters, and not the password you signed in with. The new one works everywhere you sign in to tix, the web included, from now on.'**
+  String get helpNewPasswordBody;
+
+  /// Heading of the sign-in step that sets up a second factor the tenant requires
+  ///
+  /// In en, this message translates to:
+  /// **'Set up a second factor'**
+  String get enrolTitle;
+
+  /// No description provided for @enrolIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'This tenant asks for a second factor and this account holds none yet. Add the key below to an authenticator app, then enter the code it shows.'**
+  String get enrolIntro;
+
+  /// No description provided for @enrolCodeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Six digits, from the app you just added the key to.'**
+  String get enrolCodeHelp;
+
+  /// No description provided for @helpSecondFactorBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A second factor is a time-based code from an authenticator app, asked for after your password. It changes every 30 seconds.\n\nAdd the key to an app such as Aegis, 2FAS, Google Authenticator or your password manager, or open it there straight from this device. Keep the key private: anyone holding it can make your codes.'**
+  String get helpSecondFactorBody;
+
+  /// No description provided for @signInCodesIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'You are signed in. Keep these codes somewhere safe: each one signs you in once if you lose the authenticator, and they are not shown again.'**
+  String get signInCodesIntro;
+
+  /// No description provided for @helpRecoveryCodesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Each code signs you in once in place of the authenticator\'s code. tix keeps only a fingerprint of them, so nothing can show them again.\n\nCopy them to a password manager or somewhere offline. If you lose them, make a new set on the Security screen.'**
+  String get helpRecoveryCodesBody;
 
   /// No description provided for @errorTenantRequired.
   ///
