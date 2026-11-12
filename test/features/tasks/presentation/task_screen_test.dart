@@ -956,6 +956,41 @@ void main() {
     expect(server.requestsTo('/tasks/bulk').single.body['to'], 'done');
   });
 
+  testWidgets('lanes group by priority, and a heading narrows to its lane', (
+    tester,
+  ) async {
+    await pump(tester, const TasksScreen(), size: desktop);
+    await tester.tap(find.byKey(const Key('view.lanes')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('sort.menu')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('lanes.by.priority')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey(('lane', 'infra'))), findsNothing);
+    Finder inLane(String lane, String card) => find.descendant(
+      of: find.byKey(ValueKey(('lane', lane))),
+      matching: find.byKey(Key('card.$card')),
+    );
+    expect(inLane('highest', 'infra-1'), findsOneWidget);
+    expect(inLane('normal', 'web-1'), findsOneWidget);
+    expect(find.byKey(const ValueKey(('lane', 'low'))), findsNothing);
+    expect(
+      server.requests.map((r) => Uri.decodeFull(r.uri.path)),
+      contains('/api/v1/views/lanes:priority/groups'),
+    );
+    await tester.tap(find.byKey(const Key('lane.head.highest')));
+    await tester.pumpAndSettle();
+    expect(
+      tester
+          .widget<TextField>(find.byKey(const Key('filter.field')))
+          .controller!
+          .text,
+      'priority:highest',
+    );
+    expect(listings().last.queryParametersAll['priority'], ['1']);
+    expect(inLane('highest', 'infra-1'), findsOneWidget);
+  });
+
   testWidgets("My work groups the reader's tasks by deadline", (tester) async {
     server.tasks['web']!.first['assignee_actor_id'] = 'me';
     await pump(tester, const MyWorkScreen());

@@ -67,6 +67,13 @@ class TaskScreen extends _$TaskScreen {
   /// Draws the selection as [view].
   void setView(TaskView view) => state = state.copyWith(view: view);
 
+  /// Draws each lane as [by].
+  void setLanes(LaneGrouping by) => state = state.copyWith(lanes: by);
+
+  /// Narrows the screen to one lane: [term] replaces the filter, as a lane
+  /// heading on the web links to it, and the lanes and their grouping stay.
+  void showLane(String term) => setExpression(term);
+
   /// Moves to the next drawing this scope offers.
   void cycleView() {
     final views = viewsFor(scope);
@@ -118,13 +125,28 @@ class TaskScreen extends _$TaskScreen {
   );
 }
 
-/// The drawings [scope] offers: lanes need more than one project, My work
-/// is a list.
+/// The drawings [scope] offers: My work is a list.
 List<TaskView> viewsFor(TaskScope scope) => switch (scope) {
-  AllScope() => TaskView.values,
-  ProjectScope() => const [TaskView.list, TaskView.board],
+  AllScope() || ProjectScope() => TaskView.values,
   MineScope() => const [TaskView.list],
 };
+
+/// What a lane can be over [scope]: everything on the task list, all but
+/// Project on one project's page.
+List<LaneGrouping> laneGroupingsFor(TaskScope scope) => [
+  for (final g in LaneGrouping.values)
+    if (scope is! ProjectScope || g != LaneGrouping.project) g,
+];
+
+/// What each lane is on [state] over [scope]: the reader's choice when the
+/// scope offers it, else Project on the task list and Assignee on a project.
+LaneGrouping lanesOf(TaskScreenState state, TaskScope scope) {
+  final picked = state.lanes;
+  if (picked != null && laneGroupingsFor(scope).contains(picked)) {
+    return picked;
+  }
+  return scope is ProjectScope ? LaneGrouping.assignee : LaneGrouping.project;
+}
 
 /// Select mode on one scope: whether it is on, the tasks picked for a bulk
 /// action by reference, and where a Shift range starts.
@@ -558,4 +580,189 @@ List<Project> laneProjects(
     for (final p in context.projects)
       if (ids.contains(p.id) || named.contains(p.key.toLowerCase())) p,
   ];
+}
+
+/// The key of the lane holding the tasks with no assignee or no tag, as tix
+/// keys it in the arrangement.
+const laneNone = '-';
+
+/// The priority names, highest first, as a lane and a filter term spell
+/// them.
+const lanePriorities = ['highest', 'high', 'normal', 'low', 'lowest'];
+
+/// One lane of the lanes view before it is drawn.
+final class Lane {
+  /// A lane keyed [key] holding [tasks].
+  const Lane({
+    required this.key,
+    required this.tasks,
+    this.term = '',
+    this.label = '',
+    this.project,
+  });
+
+  /// The lane's group in the reader's arrangement.
+  final String key;
+
+  /// The filter term that narrows the screen to this lane, empty when no
+  /// term says it exactly.
+  final String term;
+
+  /// The handle or tag the lane is named by, empty where the drawing names
+  /// it.
+  final String label;
+
+  /// The project of a project lane.
+  final Project? project;
+
+  /// The lane's tasks, in the listing's order.
+  final List<Task> tasks;
+}
+
+/// [tasks] split into lanes [by] one property, in the order tix draws them
+/// before the reader's arrangement. A lane is drawn when a task lands in it
+/// or the filter names it; a deadline bucket only when a task lands in it.
+/// [handleOf] names a task's assignee once known, [me] is the reader's
+/// handle for `assignee:me`, and [prefs] decide which of its tags a task
+/// with several is drawn under: the first lane the arrangement shows.
+List<Lane> buildLanes(
+  List<Task> tasks, {
+  required LaneGrouping by,
+  required TaskQuery query,
+  required TaskIndex context,
+  required String Function(Task) handleOf,
+  required DateTime now,
+  String me = '',
+  TixTimeStyle style = TixTimeStyle.device,
+  Map<String, GroupPref> prefs = const {},
+}) {
+  final expression = query.expression;
+  switch (by) {
+    case LaneGrouping.project:
+      return [
+        for (final p in laneProjects(tasks, query, context))
+          Lane(
+            key: p.key,
+            term: 'project:${p.key}',
+            project: p,
+            tasks: [
+              for (final t in tasks)
+                if (t.projectId == p.id) t,
+            ],
+          ),
+      ];
+    case LaneGrouping.assignee:
+      String keyOf(Task t) {
+        if (t.assigneeActorId.isEmpty) return laneNone;
+        final h = handleOf(t);
+        return h.isEmpty ? t.assigneeActorId : h;
+      }
+      final named = <String>{
+        for (final v in filterTermValues(expression, 'assignee'))
+          if (v.toLowerCase() != 'me')
+            v.replaceFirst('@', '')
+          else if (me.isNotEmpty)
+            me,
+      };
+      final people = <String>{...named, for (final t in tasks) keyOf(t)}
+        ..remove(laneNone);
+      final sorted = people.toList()
+        ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+      return [
+        for (final p in sorted)
+          if (_landed(tasks, keyOf, p) case final mine
+              when mine.isNotEmpty || named.contains(p))
+            Lane(key: p, label: p, term: 'assignee:$p', tasks: mine),
+        if (_landed(tasks, keyOf, laneNone) case final none
+            when none.isNotEmpty)
+          Lane(key: laneNone, tasks: none),
+      ];
+    case LaneGrouping.priority:
+      final named = {
+        for (final v in filterTermValues(expression, 'priority'))
+          _priorityOf(v),
+      };
+      return [
+        for (var i = 0; i < lanePriorities.length; i++)
+          if (_landed(tasks, (t) => '${t.priority}', '${i + 1}') case final mine
+              when mine.isNotEmpty || named.contains(i + 1))
+            Lane(
+              key: lanePriorities[i],
+              term: 'priority:${lanePriorities[i]}',
+              tasks: mine,
+            ),
+      ];
+    case LaneGrouping.tag:
+      final seen = <String>{};
+      final named = <String>[];
+      final rest = <String>[];
+      for (final tag in filterTermValues(expression, 'tag')) {
+        if (seen.add(tag.toLowerCase())) named.add(tag);
+      }
+      for (final t in tasks) {
+        for (final tag in t.tags) {
+          if (seen.add(tag.toLowerCase())) rest.add(tag);
+        }
+      }
+      rest.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+      final keys = [...named, ...rest, laneNone];
+      final shown = arrangeGroups(keys, prefs).visible;
+      final rank = {
+        for (var i = 0; i < shown.length; i++) shown[i].toLowerCase(): i,
+      };
+      String? keyOf(Task t) {
+        if (t.tags.isEmpty) return laneNone;
+        String? best;
+        for (final tag in t.tags) {
+          final r = rank[tag.toLowerCase()];
+          if (r != null && (best == null || r < rank[best.toLowerCase()]!)) {
+            best = tag;
+          }
+        }
+        return best;
+      }
+      final byKey = <String, List<Task>>{};
+      for (final t in tasks) {
+        if (keyOf(t) case final String k) {
+          (byKey[k.toLowerCase()] ??= []).add(t);
+        }
+      }
+      return [
+        for (final k in keys)
+          if (byKey[k.toLowerCase()] ?? const <Task>[] case final mine
+              when mine.isNotEmpty || named.contains(k))
+            Lane(
+              key: k,
+              label: k == laneNone ? '' : k,
+              term: k == laneNone ? '' : 'tag:$k',
+              tasks: mine,
+            ),
+      ];
+    case LaneGrouping.due:
+      return [
+        for (final b in DueBucket.values)
+          if (_landed(
+                tasks,
+                (t) => dueBucket(t.dueAt, now, style: style).name,
+                b.name,
+              )
+              case final mine when mine.isNotEmpty)
+            Lane(key: b.name, tasks: mine),
+      ];
+  }
+}
+
+List<Task> _landed(List<Task> tasks, String Function(Task) keyOf, String key) {
+  final k = key.toLowerCase();
+  return [
+    for (final t in tasks)
+      if (keyOf(t).toLowerCase() == k) t,
+  ];
+}
+
+int _priorityOf(String value) {
+  final at = lanePriorities.indexOf(value.trim().toLowerCase());
+  if (at >= 0) return at + 1;
+  if (value.trim().toLowerCase() == 'medium') return 3;
+  return int.tryParse(value.trim()) ?? 0;
 }

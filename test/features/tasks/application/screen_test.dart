@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/data/models/group_pref.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/saved_filter.dart';
+import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/models/workflow.dart';
 import 'package:tix_mobile/src/features/tasks/application/listing.dart';
 import 'package:tix_mobile/src/features/tasks/application/screen.dart';
@@ -60,7 +61,7 @@ void main() {
       c.read(p.notifier).applySaved(f);
       expect(c.read(p).expression, 'tag:ops');
       expect(c.read(p).sort, 'priority');
-      expect(c.read(p).view, TaskView.list, reason: 'a project has no lanes');
+      expect(c.read(p).view, TaskView.lanes);
       expect(c.read(p).savedFilterId, 'f1');
       c.read(p.notifier).clear();
       expect(c.read(p).expression, '');
@@ -72,6 +73,8 @@ void main() {
       final p = taskScreenProvider(const ProjectScope('infra'));
       c.read(p.notifier).cycleView();
       expect(c.read(p).view, TaskView.board);
+      c.read(p.notifier).cycleView();
+      expect(c.read(p).view, TaskView.lanes);
       c.read(p.notifier).cycleView();
       expect(c.read(p).view, TaskView.list);
       expect(viewsFor(const MineScope()), [TaskView.list]);
@@ -235,6 +238,147 @@ void main() {
     expect(dueBucket(DateTime(2026, 11, 4, 18), now), DueBucket.today);
     expect(dueBucket(DateTime(2026, 11, 9), now), DueBucket.week);
     expect(dueBucket(DateTime(2026, 11, 20), now), DueBucket.later);
+  });
+
+  group('lanes', () {
+    const infra = Project(id: 'p1', key: 'infra', workflowId: 'wf1');
+    const web = Project(id: 'p2', key: 'web', workflowId: 'wf1');
+    final ctx = TaskIndex(
+      projects: const [infra, web],
+      workflows: [Workflow.fromJson(workflowJson())],
+    );
+    final now = DateTime.utc(2026, 11, 12, 12);
+    Task task(
+      String ref, {
+      String project = 'p1',
+      String assignee = '',
+      int priority = 3,
+      List<String> tags = const [],
+      DateTime? due,
+    }) => Task.fromJson({
+      ...taskJson(
+        ref,
+        priority: priority,
+        assignee: assignee,
+        tags: tags,
+        due: due?.toIso8601String(),
+      ),
+      'project_id': project,
+    });
+    final handles = {'a1': 'raj', 'a2': 'lena'};
+    List<Lane> lanes(
+      List<Task> tasks,
+      LaneGrouping by, {
+      String expression = '',
+      Map<String, GroupPref> prefs = const {},
+    }) => buildLanes(
+      tasks,
+      by: by,
+      query: TaskQuery(expression: expression),
+      context: ctx,
+      handleOf: (t) => handles[t.assigneeActorId] ?? '',
+      me: 'lena',
+      now: now,
+      prefs: prefs,
+    );
+    String drawn(List<Lane> ls) =>
+        [for (final l in ls) '${l.key}[${l.term}]=${l.tasks.map((t) => t.ref)}']
+            .join(' ');
+
+    test('a project page offers every grouping but Project, by assignee', () {
+      expect(laneGroupingsFor(const ProjectScope('infra')), [
+        LaneGrouping.assignee,
+        LaneGrouping.priority,
+        LaneGrouping.tag,
+        LaneGrouping.due,
+      ]);
+      const project = TaskScreenState(lanes: LaneGrouping.project);
+      expect(lanesOf(project, const ProjectScope('x')), LaneGrouping.assignee);
+      expect(lanesOf(project, const AllScope()), LaneGrouping.project);
+      expect(
+        lanesOf(const TaskScreenState(), const AllScope()),
+        LaneGrouping.project,
+      );
+      expect(LaneGrouping.project.view, 'lanes');
+      expect(LaneGrouping.tag.view, 'lanes:tag');
+    });
+
+    test('by project, each lane links to its project', () {
+      final ls = lanes([task('w-1', project: 'p2')], LaneGrouping.project);
+      expect(drawn(ls), 'web[project:web]=(w-1)');
+    });
+
+    test('by assignee: people A to Z, a named one empty, Unassigned last', () {
+      final ls = lanes(
+        [task('t-1', assignee: 'a1'), task('t-2'), task('t-3', assignee: 'a9')],
+        LaneGrouping.assignee,
+        expression: 'assignee:me',
+      );
+      expect(
+        drawn(ls),
+        'a9[assignee:a9]=(t-3) lena[assignee:lena]=() '
+        'raj[assignee:raj]=(t-1) -[]=(t-2)',
+      );
+    });
+
+    test('by priority: highest first, a named priority drawn empty', () {
+      final ls = lanes(
+        [task('t-1', priority: 4), task('t-2', priority: 1)],
+        LaneGrouping.priority,
+        expression: 'priority:high',
+      );
+      expect(
+        drawn(ls),
+        'highest[priority:highest]=(t-2) high[priority:high]=() '
+        'low[priority:low]=(t-1)',
+      );
+    });
+
+    test('by tag: named first, then A to Z, each card once, No tag last', () {
+      final tasks = [
+        task('t-1', tags: ['ops', 'api']),
+        task('t-2'),
+        task('t-3', tags: ['web']),
+      ];
+      expect(
+        drawn(lanes(tasks, LaneGrouping.tag, expression: 'tag:zeta')),
+        'zeta[tag:zeta]=() api[tag:api]=(t-1) web[tag:web]=(t-3) -[]=(t-2)',
+        reason: 'ops holds no card of its own and nothing names it',
+      );
+      final hidden = lanes(
+        tasks,
+        LaneGrouping.tag,
+        prefs: {'api': const GroupPref(group: 'api', hidden: true)},
+      );
+      expect(
+        drawn(hidden),
+        'ops[tag:ops]=(t-1) web[tag:web]=(t-3) -[]=(t-2)',
+        reason: 'a hidden lane gives its cards to the next of their tags',
+      );
+    });
+
+    test('by due: only the buckets a card lands in, with no link', () {
+      final ls = lanes([
+        task('t-1', due: now.subtract(const Duration(days: 1))),
+        task('t-2'),
+      ], LaneGrouping.due);
+      expect(drawn(ls), 'overdue[]=(t-1) none[]=(t-2)');
+    });
+
+    test('a lane heading replaces the filter with its term', () async {
+      final c = await signedInContainer(server);
+      final p = taskScreenProvider(const AllScope());
+      c.read(p.notifier)
+        ..setView(TaskView.lanes)
+        ..setLanes(LaneGrouping.tag)
+        ..setExpression('is:starred')
+        ..showLane('tag:ops');
+      expect(c.read(p).expression, 'tag:ops');
+      expect(
+        (c.read(p).view, c.read(p).lanes),
+        (TaskView.lanes, LaneGrouping.tag),
+      );
+    });
   });
 
   group('board layout', () {

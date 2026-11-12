@@ -2629,6 +2629,36 @@ abstract class AppLocalizations {
   /// **'No tasks'**
   String get lanesEmpty;
 
+  /// No description provided for @lanesGroupBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Group lanes by'**
+  String get lanesGroupBy;
+
+  /// No description provided for @lanesByProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Project'**
+  String get lanesByProject;
+
+  /// No description provided for @lanesByTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Tag'**
+  String get lanesByTag;
+
+  /// No description provided for @lanesNoTag.
+  ///
+  /// In en, this message translates to:
+  /// **'No tag'**
+  String get lanesNoTag;
+
+  /// Hint on a lane heading that narrows the screen to that lane.
+  ///
+  /// In en, this message translates to:
+  /// **'Only tasks in {name}'**
+  String lanesOnly(String name);
+
   /// No description provided for @myWorkEmpty.
   ///
   /// In en, this message translates to:

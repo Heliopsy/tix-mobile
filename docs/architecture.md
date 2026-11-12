@@ -263,7 +263,9 @@ tix's own wording, before anything is sent. A saved filter's expression is check
 
 The task screen's list, board and lanes draw one query, as the web does. The list narrows to the unfinished
 states of the tenant's workflows when the expression names no status; the board and the lanes do not. A board
-needs one workflow, so projects whose workflows differ in states or transitions get the list and a notice.
+needs one workflow, so projects whose workflows differ in states or transitions get the list and a notice. Lanes
+group by project, assignee, priority, tag or deadline; `buildLanes` ports tix's `lanegroup.go`, and each grouping
+keeps its arrangement under tix's view name (`lanes`, `lanes:assignee` and so on).
 
 ## What the credential may do
 

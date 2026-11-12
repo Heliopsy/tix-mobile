@@ -1534,6 +1534,23 @@ class AppLocalizationsFr extends AppLocalizations {
   String get lanesEmpty => 'Aucune tâche';
 
   @override
+  String get lanesGroupBy => 'Regrouper les couloirs par';
+
+  @override
+  String get lanesByProject => 'Projet';
+
+  @override
+  String get lanesByTag => 'Étiquette';
+
+  @override
+  String get lanesNoTag => 'Sans étiquette';
+
+  @override
+  String lanesOnly(String name) {
+    return 'Seulement les tâches de $name';
+  }
+
+  @override
   String get myWorkEmpty => 'Rien ne vous est assigné.';
 
   @override

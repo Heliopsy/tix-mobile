@@ -10,7 +10,7 @@ enum TaskView {
   /// Columns per workflow state.
   board,
 
-  /// One lane per project.
+  /// One lane per project, person, priority, tag or deadline.
   lanes;
 
   /// The view named [name], as a saved filter stores it.
@@ -32,6 +32,28 @@ enum TaskGrouping {
 
   /// A heading per project.
   project,
+}
+
+/// What each lane is: tix's `lanes=` choices, in the order it offers them.
+enum LaneGrouping {
+  /// A lane per project, arranged under `lanes`.
+  project,
+
+  /// A lane per assignee, then Unassigned.
+  assignee,
+
+  /// A lane per priority, highest first.
+  priority,
+
+  /// A lane per tag, then No tag.
+  tag,
+
+  /// A lane per deadline bucket.
+  due;
+
+  /// The view the reader's arrangement of these lanes is kept under:
+  /// `lanes` for projects, `lanes:BY` for the rest, as tix names them.
+  String get view => this == project ? 'lanes' : 'lanes:$name';
 }
 
 /// How many rows a list page holds.
@@ -170,6 +192,7 @@ class TaskScreenState {
     this.view = TaskView.list,
     this.grouping = TaskGrouping.none,
     this.showFinished = false,
+    this.lanes,
     this.savedFilterId,
     this.filterError,
   });
@@ -192,6 +215,9 @@ class TaskScreenState {
   /// Whether the list shows finished work too.
   final bool showFinished;
 
+  /// What each lane is, null for the scope's default.
+  final LaneGrouping? lanes;
+
   /// The saved filter last applied, while the filter still matches it.
   final String? savedFilterId;
 
@@ -206,6 +232,7 @@ class TaskScreenState {
     TaskView? view,
     TaskGrouping? grouping,
     bool? showFinished,
+    LaneGrouping? lanes,
     String? Function()? savedFilterId,
     String? Function()? filterError,
   }) => TaskScreenState(
@@ -215,6 +242,7 @@ class TaskScreenState {
     view: view ?? this.view,
     grouping: grouping ?? this.grouping,
     showFinished: showFinished ?? this.showFinished,
+    lanes: lanes ?? this.lanes,
     savedFilterId: savedFilterId == null ? this.savedFilterId : savedFilterId(),
     filterError: filterError == null ? this.filterError : filterError(),
   );
