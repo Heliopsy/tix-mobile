@@ -66,7 +66,7 @@ final class ConnectFlowProvider
   }
 }
 
-String _$connectFlowHash() => r'9184f98a2cb36698520e2f73af6df165ffd731b5';
+String _$connectFlowHash() => r'd678d43c89fee9bc5d040a464fa9b9ce24ea36a6';
 
 /// Adding an instance or a connection, one step at a time; one flow per
 /// connect screen, named by [key].

@@ -95,6 +95,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Un nom pour cette connexion, visible seulement dans cette application. Pratique si vous utilisez plusieurs serveurs ou comptes. Laissez vide pour utiliser l’adresse du serveur.';
 
   @override
+  String get helpRememberBody =>
+      'Ainsi connecté, le serveur garde votre session plus longtemps et vous demande votre mot de passe moins souvent. La durée dépend de la personne qui gère votre tix.\n\nDésactivez-le sur un appareil que d’autres utilisent. Se déconnecter met fin à la session dans tous les cas.';
+
+  @override
   String get helpTenantTitle => 'Espaces';
 
   @override
@@ -293,7 +297,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get signInHelp =>
-      'Les sessions durent environ 12 heures. Utilisez un jeton pour un appareil qui doit rester connecté.';
+      'Une session dure aussi longtemps que le serveur le permet, plus longtemps avec « Rester connecté ». Utilisez un jeton pour un appareil qui doit rester connecté en permanence.';
+
+  @override
+  String get staySignedIn => 'Rester connecté';
+
+  @override
+  String get staySignedInHelp =>
+      'Garde cet appareil connecté plus longtemps, quand le serveur le propose. Désactivez-le sur un appareil partagé.';
 
   @override
   String get signInButton => 'Se connecter';

@@ -60,12 +60,31 @@ class AuthRepository {
     }
   }
 
-  /// The first step of a sign-in.
+  /// How long a sign-in at [baseUrl] lasts and whether "keep me signed in"
+  /// is offered (`session.policy`), or null from a tix that predates it.
+  ///
+  /// A tix older than v0.58.0 has no such route, and answers a request for
+  /// it without a credential as unauthenticated rather than not found.
+  Future<SessionPolicy?> sessionPolicy(String baseUrl) async {
+    try {
+      return await _build(baseUrl, null).session.policy();
+    } on TixException catch (e) {
+      if (e.kind == TixErrorKind.notFound ||
+          e.kind == TixErrorKind.unauthenticated) {
+        return null;
+      }
+      rethrow;
+    }
+  }
+
+  /// The first step of a sign-in, asking for a remembered session when
+  /// [remember] and this step completes it.
   Future<LoginResult> login(
     String baseUrl, {
     required String email,
     required String password,
     String? tenant,
+    bool remember = false,
   }) async {
     final address = email.trim();
     if (address.isEmpty) throw const TixException(TixErrorKind.emailRequired);
@@ -74,22 +93,34 @@ class AuthRepository {
     }
     return await _complete(
       _build(baseUrl, null, tenant: tenant).session.login(
-        LoginRequest(email: address, password: password, surface: _surface),
+        LoginRequest(
+          email: address,
+          password: password,
+          surface: _surface,
+          remember: remember ? true : null,
+        ),
       ),
     );
   }
 
-  /// The second step of a sign-in: [code] for the challenge [ticket].
+  /// The second step of a sign-in: [code] for the challenge [ticket],
+  /// asking for a remembered session when [remember].
   Future<LoginResult> loginCode(
     String baseUrl, {
     required String ticket,
     required String code,
+    bool remember = false,
   }) async {
     final value = code.trim();
     if (value.isEmpty) throw const TixException(TixErrorKind.codeRequired);
     return await _complete(
       _build(baseUrl, null).session.login(
-        LoginRequest(ticket: ticket, code: value, surface: _surface),
+        LoginRequest(
+          ticket: ticket,
+          code: value,
+          surface: _surface,
+          remember: remember ? true : null,
+        ),
       ),
     );
   }

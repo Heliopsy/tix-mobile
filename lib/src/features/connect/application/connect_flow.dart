@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
+import 'package:tix_mobile/src/core/l10n/durations.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
@@ -17,6 +18,15 @@ import 'package:tix_mobile/src/data/models/invite_link.dart';
 import 'package:tix_mobile/src/data/models/membership.dart';
 
 part 'connect_flow.g.dart';
+
+/// Whether [policy] offers a remembered session longer than an ordinary one.
+/// A tix without the policy offers none, and is never sent the request.
+bool rememberOffered(SessionPolicy? policy) {
+  if (policy == null) return false;
+  final kept = parseGoDuration(policy.rememberTtl);
+  final ordinary = parseGoDuration(policy.ttl);
+  return kept != null && ordinary != null && kept > ordinary;
+}
 
 /// Where adding an instance or a connection has got to.
 @immutable
@@ -40,6 +50,7 @@ class SignInDraft {
     this.name = '',
     this.replacing,
     this.pinned,
+    this.remember = false,
   });
 
   /// The server.
@@ -56,6 +67,9 @@ class SignInDraft {
 
   /// Whether the connection being replaced was pinned.
   final bool? pinned;
+
+  /// Whether the step that completes the sign-in asks to be remembered.
+  final bool remember;
 }
 
 /// The server asked for a second factor code.
@@ -190,7 +204,8 @@ class ConnectFlow extends _$ConnectFlow {
   }
 
   /// Signs in with [email] and [password], at [url] or at the instance of
-  /// [instanceId] or of the connection [replacing].
+  /// [instanceId] or of the connection [replacing]. With [remember] it asks
+  /// for a remembered session where the server offers one.
   Future<void> signIn({
     required String url,
     required String email,
@@ -198,13 +213,20 @@ class ConnectFlow extends _$ConnectFlow {
     String name = '',
     String? instanceId,
     String? replacing,
+    bool remember = false,
   }) async {
     final repo = ref.read(instancesRepositoryProvider);
     final auth = ref.read(authRepositoryProvider);
     final old = replacing == null ? null : repo.connection(replacing);
     final instance = repo.instance(old?.instanceId ?? instanceId ?? '');
     final baseUrl = await auth.checkServer(instance?.baseUrl ?? url);
-    final result = await auth.login(baseUrl, email: email, password: password);
+    final keep = remember && rememberOffered(await auth.sessionPolicy(baseUrl));
+    final result = await auth.login(
+      baseUrl,
+      email: email,
+      password: password,
+      remember: keep,
+    );
     await _signedIn(
       SignInDraft(
         baseUrl: baseUrl,
@@ -212,6 +234,7 @@ class ConnectFlow extends _$ConnectFlow {
         name: name,
         replacing: old?.id,
         pinned: old?.pinned,
+        remember: keep,
       ),
       result,
     );
@@ -259,7 +282,12 @@ class ConnectFlow extends _$ConnectFlow {
     if (step.ticket.isNotEmpty) {
       final result = await ref
           .read(authRepositoryProvider)
-          .loginCode(step.draft.baseUrl, ticket: step.ticket, code: code);
+          .loginCode(
+            step.draft.baseUrl,
+            ticket: step.ticket,
+            code: code,
+            remember: step.draft.remember,
+          );
       await _signedIn(step.draft, result);
       return;
     }

@@ -22,6 +22,16 @@ step that completes the sign-in, the code step included, only when the policy's 
 - **WHEN** the policy's `remember_ttl` is `0s`
 - **THEN** the login request carries no `remember`
 
+### Requirement: Stay signed in is explained
+
+The Stay signed in switch SHALL have an (i) button like the other connect fields, opening a short explanation that
+a remembered session lasts longer, that the server decides how long, and that it belongs off on a shared device.
+
+#### Scenario: What staying signed in means
+
+- **WHEN** a person taps the (i) beside Stay signed in
+- **THEN** the explanation says the session lasts longer and to turn it off on a device other people use
+
 ### Requirement: An older server is never sent the flag
 
 When the session policy answers `401` or `404`, the app SHALL treat the server as offering no remembered session,

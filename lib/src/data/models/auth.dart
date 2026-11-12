@@ -8,6 +8,7 @@ export 'package:tix_mobile/src/data/api/gen/models.gen.dart'
         AuthSession,
         LoginRequest,
         LoginResult,
+        SessionPolicy,
         Surface,
         SwitchTenantInput,
         TOTPChallenge,

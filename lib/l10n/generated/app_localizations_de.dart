@@ -95,6 +95,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Ein Name für diese Verbindung, nur in dieser App sichtbar. Praktisch, wenn Sie mehr als einen Server oder ein Konto nutzen. Leer lassen, um die Adresse des Servers zu verwenden.';
 
   @override
+  String get helpRememberBody =>
+      'So angemeldet, hält der Server Ihre Sitzung länger, und Sie werden seltener nach dem Passwort gefragt. Wie lange, entscheidet die Person, die Ihr tix betreibt.\n\nAuf einem Gerät, das auch andere nutzen, ausschalten. Abmelden beendet die Sitzung in jedem Fall.';
+
+  @override
   String get helpTenantTitle => 'Mandanten';
 
   @override
@@ -293,7 +297,14 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get signInHelp =>
-      'Sitzungen gelten etwa 12 Stunden. Für ein Gerät, das verbunden bleiben soll, einen Token verwenden.';
+      'Eine Sitzung gilt so lange, wie der Server es erlaubt, mit „Angemeldet bleiben“ länger. Für ein Gerät, das dauerhaft verbunden bleiben soll, einen Token verwenden.';
+
+  @override
+  String get staySignedIn => 'Angemeldet bleiben';
+
+  @override
+  String get staySignedInHelp =>
+      'Hält dieses Gerät länger angemeldet, wo der Server das anbietet. Auf einem geteilten Gerät ausschalten.';
 
   @override
   String get signInButton => 'Anmelden';
