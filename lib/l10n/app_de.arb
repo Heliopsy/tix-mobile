@@ -656,7 +656,7 @@
   "inboxDeliveryRedeliver": "Erneut zustellen",
   "inboxDeliveryRequeued": "Erneut eingereiht",
   "liveUpdated": "Aktualisiert",
-  "liveNewAbove": "{count} neu, anzeigen",
+  "liveNewAbove": "{count, plural, =1{1 neu, anzeigen} other{{count} neu, anzeigen}}",
   "liveChangedElsewhere": "Das wurde anderswo geändert. Ihre Bearbeitungen bleiben erhalten.",
   "liveChangedElsewhereBy": "@{handle} hat das geändert. Ihre Bearbeitungen bleiben erhalten.",
   "liveKeepEditing": "Weiter bearbeiten",

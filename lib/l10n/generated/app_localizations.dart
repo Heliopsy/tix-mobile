@@ -4042,7 +4042,7 @@ abstract class AppLocalizations {
   /// "3 new, show": rows a live update put above where the reader is reading. Pressing it shows them.
   ///
   /// In en, this message translates to:
-  /// **'{count} new, show'**
+  /// **'{count, plural, =1{1 new, show} other{{count} new, show}}'**
   String liveNewAbove(int count);
 
   /// No description provided for @liveChangedElsewhere.
