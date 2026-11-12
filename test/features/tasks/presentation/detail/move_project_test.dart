@@ -55,7 +55,7 @@ void main() {
   testWidgets('a status the target lacks and fields left behind are said', (
     tester,
   ) async {
-    server.failures['POST /api/v1/tasks/infra-1/move'] = FakeResponse(200, {
+    server.failures['POST /api/v1/tasks/infra-1/move'] = const FakeResponse(200, {
       'task': {'id': 'id-infra-1', 'ref': 'web-7'},
       'from_ref': 'infra-1',
       'project': 'web',
