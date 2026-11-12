@@ -8779,4 +8779,264 @@ class AppLocalizationsFr extends AppLocalizations {
   String rowWaitingTip(String refs) {
     return 'Attend $refs';
   }
+
+  @override
+  String get importOpen => 'Ouvrir l’import';
+
+  @override
+  String get importProjectHelp =>
+      'Lire un fichier ou une liste collée dans ce projet, en choisissant d’abord ce que deviennent ses colonnes et ses valeurs.';
+
+  @override
+  String importStep(String step) {
+    String _temp0 = intl.Intl.selectLogic(step, {
+      'source': 'Envoi',
+      'columns': 'Colonnes',
+      'valueMap': 'Valeurs',
+      'preview': 'Aperçu',
+      'result': 'Résultat',
+      'other': 'Import',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String importStepOf(int number, String name) {
+    return 'Étape $number sur 5 : $name';
+  }
+
+  @override
+  String get importFewTitle => 'Seulement quelques tâches ?';
+
+  @override
+  String get importFewBody =>
+      'Ajoutez-les avec l’ajout rapide, ou collez-les ci-dessous, une par ligne. Aucune correspondance nécessaire. La correspondance est facultative : tix lit ses propres exports et les en-têtes habituels de Jira, GitHub, Trello et Linear tels quels, vous pouvez donc passer directement à l’aperçu.';
+
+  @override
+  String get importFileTitle => 'Un fichier';
+
+  @override
+  String get importFileHelp =>
+      'CSV, JSON ou NDJSON : un export tix, un export de Jira, GitHub, Trello ou Linear, ou un tableur enregistré en CSV.';
+
+  @override
+  String get importFileNone => 'Aucun fichier choisi';
+
+  @override
+  String get importFileRemove => 'Retirer le fichier';
+
+  @override
+  String get importPasteTitle => 'Ou collez une liste';
+
+  @override
+  String get importPasteLabel => 'Tâches, une par ligne';
+
+  @override
+  String get importPasteHint => 'Corriger la connexion due:fri #bug !high';
+
+  @override
+  String get importPasteHelp =>
+      'Écrites comme l’ajout rapide les lit : #étiquette, !priorité, @personne, due:date, ^parent. Utilisée quand aucun fichier n’est choisi.';
+
+  @override
+  String get importNextColumns => 'Suivant : colonnes';
+
+  @override
+  String get importNextValues => 'Suivant : valeurs';
+
+  @override
+  String get importNextPreview => 'Suivant : aperçu';
+
+  @override
+  String get importSkipToPreview => 'Aller à l’aperçu';
+
+  @override
+  String get importConfidentTitle => 'Toutes les colonnes ont été reconnues.';
+
+  @override
+  String get importConfidentBody =>
+      'La correspondance proposée fonctionne telle quelle, vous pouvez donc passer directement à l’aperçu.';
+
+  @override
+  String importRows(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lignes',
+      one: '1 ligne',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String importLooksLike(String source) {
+    return 'ressemble à un export $source';
+  }
+
+  @override
+  String get importColumnsHelp =>
+      'tix a choisi un champ pour chaque colonne ; changez ceux que vous voulez.';
+
+  @override
+  String importColumnField(String header) {
+    return 'Champ pour $header';
+  }
+
+  @override
+  String get importSuggested => 'proposé';
+
+  @override
+  String importTarget(String target) {
+    String _temp0 = intl.Intl.selectLogic(target, {
+      'title': 'Titre',
+      'body': 'Description',
+      'status': 'Statut',
+      'priority': 'Priorité',
+      'assignee': 'Responsable',
+      'tags': 'Étiquettes',
+      'due': 'Échéance',
+      'parent': 'Parent',
+      'depends_on': 'Dépend de',
+      'recurrence': 'Répétition',
+      'external_id': 'ID externe',
+      'alias': 'Autre ID',
+      'ref': 'Référence tix',
+      'append_body': 'Ajouter à la description',
+      'ignore': 'Ignorer',
+      'other': 'Autre',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get importValuesHelp =>
+      'Chaque valeur du fichier et ce qu’elle devient. Une proposition est une supposition de tix ; changez-la ou laissez-la.';
+
+  @override
+  String get importValuesNone => 'Aucune colonne ne remplit ce champ.';
+
+  @override
+  String importValueBecomes(String value) {
+    return '$value devient';
+  }
+
+  @override
+  String get importNoMapping => 'Aucune correspondance';
+
+  @override
+  String get importHandleHint => 'identifiant tix';
+
+  @override
+  String get importUnknown => 'Une valeur sans correspondance';
+
+  @override
+  String importPolicy(String policy) {
+    String _temp0 = intl.Intl.selectLogic(policy, {
+      'default': 'Utiliser la valeur par défaut',
+      'ignore': 'Laisser vide',
+      'skip_row': 'Ignorer la ligne',
+      'error': 'Arrêter avec une erreur',
+      'other': 'Autre',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String importToCreate(int count) {
+    return '$count à créer';
+  }
+
+  @override
+  String importToUpdate(int count) {
+    return '$count à mettre à jour';
+  }
+
+  @override
+  String importToSkip(int count) {
+    return '$count à ignorer';
+  }
+
+  @override
+  String importInError(int count) {
+    return '$count en erreur';
+  }
+
+  @override
+  String get importFailedNote =>
+      'Rien n’est écrit tant qu’une ligne est en erreur. Revenez en arrière pour changer la correspondance, ou corrigez le fichier et choisissez-le à nouveau.';
+
+  @override
+  String get importErrorsTitle => 'Lignes en erreur';
+
+  @override
+  String get importErrorsDownload => 'Télécharger le rapport d’erreurs';
+
+  @override
+  String get importPreviewTitle =>
+      'Les premières lignes telles que tix les écrira';
+
+  @override
+  String get importPreviewNone => 'Aucune ligne à afficher.';
+
+  @override
+  String importAction(String action) {
+    String _temp0 = intl.Intl.selectLogic(action, {
+      'create': 'Créer',
+      'update': 'Mettre à jour',
+      'skip': 'Ignorer',
+      'error': 'Erreur',
+      'other': 'Autre',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String importLine(int line) {
+    return 'Ligne $line';
+  }
+
+  @override
+  String get importModeTitle => 'Quand une ligne a déjà été importée';
+
+  @override
+  String get importModeHelp =>
+      'Une ligne est reconnue par la colonne associée à l’ID externe, ou par une référence tix.';
+
+  @override
+  String importMode(String mode) {
+    String _temp0 = intl.Intl.selectLogic(mode, {
+      'upsert': 'Mettre à jour les tâches déjà importées, créer les autres',
+      'create': 'Créer chaque ligne comme une nouvelle tâche',
+      'skip': 'Laisser les tâches déjà importées, créer les autres',
+      'other': 'Autre',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get importFixFirst => 'Corrigez d’abord les lignes en erreur';
+
+  @override
+  String get importNothing => 'Rien à importer';
+
+  @override
+  String get importDoneTitle => 'Importé.';
+
+  @override
+  String importDoneBody(int created, int updated, int skipped) {
+    return '$created créées, $updated mises à jour, $skipped ignorées.';
+  }
+
+  @override
+  String get importRolledBackTitle => 'Rien n’a été importé.';
+
+  @override
+  String get importRolledBackBody =>
+      'Certaines lignes sont en erreur, le fichier entier a donc été annulé.';
+
+  @override
+  String get importAnother => 'Importer un autre fichier';
+
+  @override
+  String get importOpenProject => 'Ouvrir le projet';
 }

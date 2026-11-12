@@ -148,19 +148,4 @@ class Transfer extends _$Transfer {
         .exportSnapshot(comments: comments),
     mimeType: 'application/x-ndjson',
   );
-
-  /// Reads [content] into [project], a dry run unless [commit].
-  Future<TaskImportResult> importTasks({
-    required String project,
-    required String content,
-    required String filename,
-    required bool commit,
-  }) => ref
-      .read(transferRepositoryProvider)
-      .importTasks(
-        project,
-        content: content,
-        filename: filename,
-        commit: commit,
-      );
 }

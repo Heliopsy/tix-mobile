@@ -8712,4 +8712,263 @@ class AppLocalizationsEn extends AppLocalizations {
   String rowWaitingTip(String refs) {
     return 'Waiting on $refs';
   }
+
+  @override
+  String get importOpen => 'Open the import';
+
+  @override
+  String get importProjectHelp =>
+      'Read a file or a pasted list into this project, choosing what its columns and values become first.';
+
+  @override
+  String importStep(String step) {
+    String _temp0 = intl.Intl.selectLogic(step, {
+      'source': 'Upload',
+      'columns': 'Map columns',
+      'valueMap': 'Map values',
+      'preview': 'Preview',
+      'result': 'Result',
+      'other': 'Import',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String importStepOf(int number, String name) {
+    return 'Step $number of 5: $name';
+  }
+
+  @override
+  String get importFewTitle => 'Only a few tasks?';
+
+  @override
+  String get importFewBody =>
+      'Add them with quick add, or paste them below, one per line. No mapping needed. The mapping is optional: tix reads its own exports and the usual headers of Jira, GitHub, Trello and Linear as they are, so you can go straight to the preview.';
+
+  @override
+  String get importFileTitle => 'A file';
+
+  @override
+  String get importFileHelp =>
+      'CSV, JSON or NDJSON: a tix export, an export from Jira, GitHub, Trello or Linear, or any spreadsheet saved as CSV.';
+
+  @override
+  String get importFileNone => 'No file chosen';
+
+  @override
+  String get importFileRemove => 'Remove the file';
+
+  @override
+  String get importPasteTitle => 'Or paste a list';
+
+  @override
+  String get importPasteLabel => 'Tasks, one per line';
+
+  @override
+  String get importPasteHint => 'Fix login due:fri #bug !high';
+
+  @override
+  String get importPasteHelp =>
+      'Written the way quick add reads it: #tag, !priority, @person, due:date, ^parent. Used when no file is chosen.';
+
+  @override
+  String get importNextColumns => 'Next: map columns';
+
+  @override
+  String get importNextValues => 'Next: map values';
+
+  @override
+  String get importNextPreview => 'Next: preview';
+
+  @override
+  String get importSkipToPreview => 'Skip to preview';
+
+  @override
+  String get importConfidentTitle => 'Every column was recognised.';
+
+  @override
+  String get importConfidentBody =>
+      'The suggested mapping works as it is, so you can go straight to the preview.';
+
+  @override
+  String importRows(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rows',
+      one: '1 row',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String importLooksLike(String source) {
+    return 'looks like a $source export';
+  }
+
+  @override
+  String get importColumnsHelp =>
+      'tix chose a field for every column; change any you like.';
+
+  @override
+  String importColumnField(String header) {
+    return 'Field for $header';
+  }
+
+  @override
+  String get importSuggested => 'suggested';
+
+  @override
+  String importTarget(String target) {
+    String _temp0 = intl.Intl.selectLogic(target, {
+      'title': 'Title',
+      'body': 'Description',
+      'status': 'Status',
+      'priority': 'Priority',
+      'assignee': 'Assignee',
+      'tags': 'Tags',
+      'due': 'Due',
+      'parent': 'Parent',
+      'depends_on': 'Depends on',
+      'recurrence': 'Repeat',
+      'external_id': 'External ID',
+      'alias': 'Other ID',
+      'ref': 'tix reference',
+      'append_body': 'Append to description',
+      'ignore': 'Ignore',
+      'other': 'Other',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get importValuesHelp =>
+      'Each value of the file and what it becomes. A suggestion is tix\'s guess; change it or leave it.';
+
+  @override
+  String get importValuesNone => 'No column fills this field.';
+
+  @override
+  String importValueBecomes(String value) {
+    return '$value becomes';
+  }
+
+  @override
+  String get importNoMapping => 'No mapping';
+
+  @override
+  String get importHandleHint => 'tix handle';
+
+  @override
+  String get importUnknown => 'A value with no mapping';
+
+  @override
+  String importPolicy(String policy) {
+    String _temp0 = intl.Intl.selectLogic(policy, {
+      'default': 'Use the default',
+      'ignore': 'Leave it empty',
+      'skip_row': 'Skip the row',
+      'error': 'Stop with an error',
+      'other': 'Other',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String importToCreate(int count) {
+    return '$count to create';
+  }
+
+  @override
+  String importToUpdate(int count) {
+    return '$count to update';
+  }
+
+  @override
+  String importToSkip(int count) {
+    return '$count to skip';
+  }
+
+  @override
+  String importInError(int count) {
+    return '$count in error';
+  }
+
+  @override
+  String get importFailedNote =>
+      'Nothing is written while any row is in error. Go back to change the mapping, or fix the file and choose it again.';
+
+  @override
+  String get importErrorsTitle => 'Rows in error';
+
+  @override
+  String get importErrorsDownload => 'Download the error report';
+
+  @override
+  String get importPreviewTitle => 'The first rows as tix will write them';
+
+  @override
+  String get importPreviewNone => 'No rows to show.';
+
+  @override
+  String importAction(String action) {
+    String _temp0 = intl.Intl.selectLogic(action, {
+      'create': 'Create',
+      'update': 'Update',
+      'skip': 'Skip',
+      'error': 'Error',
+      'other': 'Other',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String importLine(int line) {
+    return 'Line $line';
+  }
+
+  @override
+  String get importModeTitle => 'When a row was imported before';
+
+  @override
+  String get importModeHelp =>
+      'A row is matched by the column mapped to External ID, or by a tix reference.';
+
+  @override
+  String importMode(String mode) {
+    String _temp0 = intl.Intl.selectLogic(mode, {
+      'upsert': 'Update tasks already imported, create the rest',
+      'create': 'Create every row as a new task',
+      'skip': 'Leave tasks already imported alone, create the rest',
+      'other': 'Other',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get importFixFirst => 'Fix the rows in error first';
+
+  @override
+  String get importNothing => 'Nothing to import';
+
+  @override
+  String get importDoneTitle => 'Imported.';
+
+  @override
+  String importDoneBody(int created, int updated, int skipped) {
+    return '$created created, $updated updated, $skipped skipped.';
+  }
+
+  @override
+  String get importRolledBackTitle => 'Nothing was imported.';
+
+  @override
+  String get importRolledBackBody =>
+      'Some rows are in error, so the whole file was rolled back.';
+
+  @override
+  String get importAnother => 'Import another file';
+
+  @override
+  String get importOpenProject => 'Open the project';
 }

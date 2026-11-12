@@ -170,7 +170,9 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   the old value (retiring until it ends) and revoked; your account, tenants and history; the private calendar feed
   for Google, Apple or Outlook. Each shows only when your role or token allows it.
 - **Export and import**: a project's tasks, or a filtered part of them, as CSV, JSON, NDJSON or Markdown with the
-  columns you choose, a snapshot of the whole tenant, and importing a file of tasks after a dry run.
+  columns you choose, a snapshot of the whole tenant, and an import in five steps, as on the web: a file or a
+  pasted list in quick-add syntax, which field each column fills, what each status, priority and person becomes,
+  a preview with the rows in error and a CSV report of them, then the result. Every step has a way back.
 - **Settings**, grouped by where each is kept and searchable: on this device the theme (system, light, dark or
   OLED black), language, reduced motion, touch feedback, start screen and saved instances; with your account the
   profile, security, your API tokens, the calendar feed, the date format and time zone every screen follows, inbox

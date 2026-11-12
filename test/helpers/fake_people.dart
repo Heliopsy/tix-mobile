@@ -131,6 +131,9 @@ class FakePeople {
   /// What each task import asked for.
   final imports = <Map<String, dynamic>>[];
 
+  /// Answers a task import in place of the two-row default.
+  Map<String, Object?> Function(Map<String, dynamic> body)? importAnswer;
+
   var _n = 0;
 
   /// When a rotation happens, as the tests' clock reads it.
@@ -324,6 +327,8 @@ class FakePeople {
       case ('POST', ['projects', _, 'tasks', 'import']):
         imports.add(body);
         final dry = body['dry_run'] == true;
+        final answer = importAnswer;
+        if (answer != null) return FakeResponse(200, answer(body));
         return FakeResponse(200, {
           'dry_run': dry,
           'committed': !dry,

@@ -297,7 +297,11 @@ Future<ProviderContainer> pumpScreen(
             routes: [GoRoute(path: ':id', builder: stub)],
           ),
           GoRoute(path: 'tokens', builder: stub),
-          GoRoute(path: 'transfer', builder: stub),
+          GoRoute(
+            path: 'transfer',
+            builder: stub,
+            routes: [GoRoute(path: 'import', builder: stub)],
+          ),
         ],
       ),
     ],

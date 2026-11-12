@@ -14544,6 +14544,336 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Waiting on {refs}'**
   String rowWaitingTip(String refs);
+
+  /// No description provided for @importOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the import'**
+  String get importOpen;
+
+  /// No description provided for @importProjectHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Read a file or a pasted list into this project, choosing what its columns and values become first.'**
+  String get importProjectHelp;
+
+  /// No description provided for @importStep.
+  ///
+  /// In en, this message translates to:
+  /// **'{step, select, source{Upload} columns{Map columns} valueMap{Map values} preview{Preview} result{Result} other{Import}}'**
+  String importStep(String step);
+
+  /// No description provided for @importStepOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {number} of 5: {name}'**
+  String importStepOf(int number, String name);
+
+  /// No description provided for @importFewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Only a few tasks?'**
+  String get importFewTitle;
+
+  /// No description provided for @importFewBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add them with quick add, or paste them below, one per line. No mapping needed. The mapping is optional: tix reads its own exports and the usual headers of Jira, GitHub, Trello and Linear as they are, so you can go straight to the preview.'**
+  String get importFewBody;
+
+  /// No description provided for @importFileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A file'**
+  String get importFileTitle;
+
+  /// No description provided for @importFileHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'CSV, JSON or NDJSON: a tix export, an export from Jira, GitHub, Trello or Linear, or any spreadsheet saved as CSV.'**
+  String get importFileHelp;
+
+  /// No description provided for @importFileNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No file chosen'**
+  String get importFileNone;
+
+  /// No description provided for @importFileRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the file'**
+  String get importFileRemove;
+
+  /// No description provided for @importPasteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Or paste a list'**
+  String get importPasteTitle;
+
+  /// No description provided for @importPasteLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks, one per line'**
+  String get importPasteLabel;
+
+  /// No description provided for @importPasteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Fix login due:fri #bug !high'**
+  String get importPasteHint;
+
+  /// No description provided for @importPasteHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Written the way quick add reads it: #tag, !priority, @person, due:date, ^parent. Used when no file is chosen.'**
+  String get importPasteHelp;
+
+  /// No description provided for @importNextColumns.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: map columns'**
+  String get importNextColumns;
+
+  /// No description provided for @importNextValues.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: map values'**
+  String get importNextValues;
+
+  /// No description provided for @importNextPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: preview'**
+  String get importNextPreview;
+
+  /// No description provided for @importSkipToPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip to preview'**
+  String get importSkipToPreview;
+
+  /// No description provided for @importConfidentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Every column was recognised.'**
+  String get importConfidentTitle;
+
+  /// No description provided for @importConfidentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The suggested mapping works as it is, so you can go straight to the preview.'**
+  String get importConfidentBody;
+
+  /// No description provided for @importRows.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row} other{{count} rows}}'**
+  String importRows(int count);
+
+  /// No description provided for @importLooksLike.
+  ///
+  /// In en, this message translates to:
+  /// **'looks like a {source} export'**
+  String importLooksLike(String source);
+
+  /// No description provided for @importColumnsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'tix chose a field for every column; change any you like.'**
+  String get importColumnsHelp;
+
+  /// No description provided for @importColumnField.
+  ///
+  /// In en, this message translates to:
+  /// **'Field for {header}'**
+  String importColumnField(String header);
+
+  /// No description provided for @importSuggested.
+  ///
+  /// In en, this message translates to:
+  /// **'suggested'**
+  String get importSuggested;
+
+  /// No description provided for @importTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'{target, select, title{Title} body{Description} status{Status} priority{Priority} assignee{Assignee} tags{Tags} due{Due} parent{Parent} depends_on{Depends on} recurrence{Repeat} external_id{External ID} alias{Other ID} ref{tix reference} append_body{Append to description} ignore{Ignore} other{Other}}'**
+  String importTarget(String target);
+
+  /// No description provided for @importValuesHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Each value of the file and what it becomes. A suggestion is tix\'s guess; change it or leave it.'**
+  String get importValuesHelp;
+
+  /// No description provided for @importValuesNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No column fills this field.'**
+  String get importValuesNone;
+
+  /// No description provided for @importValueBecomes.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} becomes'**
+  String importValueBecomes(String value);
+
+  /// No description provided for @importNoMapping.
+  ///
+  /// In en, this message translates to:
+  /// **'No mapping'**
+  String get importNoMapping;
+
+  /// No description provided for @importHandleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'tix handle'**
+  String get importHandleHint;
+
+  /// No description provided for @importUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'A value with no mapping'**
+  String get importUnknown;
+
+  /// No description provided for @importPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'{policy, select, default{Use the default} ignore{Leave it empty} skip_row{Skip the row} error{Stop with an error} other{Other}}'**
+  String importPolicy(String policy);
+
+  /// No description provided for @importToCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} to create'**
+  String importToCreate(int count);
+
+  /// No description provided for @importToUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} to update'**
+  String importToUpdate(int count);
+
+  /// No description provided for @importToSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} to skip'**
+  String importToSkip(int count);
+
+  /// No description provided for @importInError.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} in error'**
+  String importInError(int count);
+
+  /// No description provided for @importFailedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is written while any row is in error. Go back to change the mapping, or fix the file and choose it again.'**
+  String get importFailedNote;
+
+  /// No description provided for @importErrorsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rows in error'**
+  String get importErrorsTitle;
+
+  /// No description provided for @importErrorsDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Download the error report'**
+  String get importErrorsDownload;
+
+  /// No description provided for @importPreviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The first rows as tix will write them'**
+  String get importPreviewTitle;
+
+  /// No description provided for @importPreviewNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No rows to show.'**
+  String get importPreviewNone;
+
+  /// No description provided for @importAction.
+  ///
+  /// In en, this message translates to:
+  /// **'{action, select, create{Create} update{Update} skip{Skip} error{Error} other{Other}}'**
+  String importAction(String action);
+
+  /// No description provided for @importLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Line {line}'**
+  String importLine(int line);
+
+  /// No description provided for @importModeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'When a row was imported before'**
+  String get importModeTitle;
+
+  /// No description provided for @importModeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A row is matched by the column mapped to External ID, or by a tix reference.'**
+  String get importModeHelp;
+
+  /// No description provided for @importMode.
+  ///
+  /// In en, this message translates to:
+  /// **'{mode, select, upsert{Update tasks already imported, create the rest} create{Create every row as a new task} skip{Leave tasks already imported alone, create the rest} other{Other}}'**
+  String importMode(String mode);
+
+  /// No description provided for @importFixFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Fix the rows in error first'**
+  String get importFixFirst;
+
+  /// No description provided for @importNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to import'**
+  String get importNothing;
+
+  /// No description provided for @importDoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported.'**
+  String get importDoneTitle;
+
+  /// No description provided for @importDoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{created} created, {updated} updated, {skipped} skipped.'**
+  String importDoneBody(int created, int updated, int skipped);
+
+  /// No description provided for @importRolledBackTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing was imported.'**
+  String get importRolledBackTitle;
+
+  /// No description provided for @importRolledBackBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Some rows are in error, so the whole file was rolled back.'**
+  String get importRolledBackBody;
+
+  /// No description provided for @importAnother.
+  ///
+  /// In en, this message translates to:
+  /// **'Import another file'**
+  String get importAnother;
+
+  /// No description provided for @importOpenProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the project'**
+  String get importOpenProject;
 }
 
 class _AppLocalizationsDelegate

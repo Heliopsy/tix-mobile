@@ -59,6 +59,7 @@ import 'package:tix_mobile/src/features/tasks/presentation/task_screen.dart';
 import 'package:tix_mobile/src/features/templates/presentation/templates_commands.dart';
 import 'package:tix_mobile/src/features/templates/presentation/templates_screen.dart';
 import 'package:tix_mobile/src/features/tokens/presentation/tokens_screen.dart';
+import 'package:tix_mobile/src/features/transfer/presentation/import_screen.dart';
 import 'package:tix_mobile/src/features/transfer/presentation/transfer_screen.dart';
 import 'package:tix_mobile/src/features/watch/presentation/watch_screen.dart';
 import 'package:tix_mobile/src/features/widgets/presentation/home_widgets_scope.dart';
@@ -497,6 +498,13 @@ final manageRoutes = [
       project: state.uri.queryParameters['project'] ?? '',
       query: state.uri.queryParameters['q'] ?? '',
     ),
+    routes: [
+      GoRoute(
+        path: 'import',
+        builder: (_, state) =>
+            ImportScreen(project: state.uri.queryParameters['project'] ?? ''),
+      ),
+    ],
   ),
 ];
 

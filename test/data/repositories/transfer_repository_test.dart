@@ -65,4 +65,47 @@ void main() {
     );
     expect(people.imports.last['dry_run'], false);
   });
+
+  test('an import sends its format, mapping, mode and preview', () async {
+    await repo.importTasks(
+      'infra',
+      content: 'Fix login #bug\nWrite docs',
+      format: 'lines',
+      mode: 'skip',
+      commit: false,
+      preview: 200,
+    );
+    expect(people.imports.last, {
+      'content': 'Fix login #bug\nWrite docs',
+      'format': 'lines',
+      'mode': 'skip',
+      'dry_run': true,
+      'preview': 200,
+    });
+    await repo.importTasks(
+      'infra',
+      content: 'Summary\nA\n',
+      filename: 'jira.csv',
+      mapping: '{"version":1,"columns":{"Summary":"title"}}',
+      mode: 'upsert',
+      commit: true,
+    );
+    expect(people.imports.last, {
+      'content': 'Summary\nA\n',
+      'filename': 'jira.csv',
+      'mapping': '{"version":1,"columns":{"Summary":"title"}}',
+      'mode': 'upsert',
+      'dry_run': false,
+    });
+  });
+
+  test('a workflow reads as its states', () async {
+    expect(await repo.workflowStates('wf1'), [
+      (key: 'todo', label: 'To do'),
+      (key: 'doing', label: 'Doing'),
+      (key: 'blocked', label: 'Blocked'),
+      (key: 'done', label: 'Done'),
+      (key: 'cancelled', label: 'Cancelled'),
+    ]);
+  });
 }

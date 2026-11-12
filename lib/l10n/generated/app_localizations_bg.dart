@@ -8726,4 +8726,263 @@ class AppLocalizationsBg extends AppLocalizations {
   String rowWaitingTip(String refs) {
     return 'Чака $refs';
   }
+
+  @override
+  String get importOpen => 'Отвори внасянето';
+
+  @override
+  String get importProjectHelp =>
+      'Внасяне на файл или поставен списък в този проект, като първо изберете какво стават колоните и стойностите му.';
+
+  @override
+  String importStep(String step) {
+    String _temp0 = intl.Intl.selectLogic(step, {
+      'source': 'Качване',
+      'columns': 'Колони',
+      'valueMap': 'Стойности',
+      'preview': 'Преглед',
+      'result': 'Резултат',
+      'other': 'Внасяне',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String importStepOf(int number, String name) {
+    return 'Стъпка $number от 5: $name';
+  }
+
+  @override
+  String get importFewTitle => 'Само няколко задачи?';
+
+  @override
+  String get importFewBody =>
+      'Добавете ги с бързо добавяне или ги поставете по-долу, по една на ред. Не е нужно съпоставяне. Съпоставянето не е задължително: tix чете собствените си експорти и обичайните заглавия на Jira, GitHub, Trello и Linear както са, така че можете да минете направо към прегледа.';
+
+  @override
+  String get importFileTitle => 'Файл';
+
+  @override
+  String get importFileHelp =>
+      'CSV, JSON или NDJSON: експорт от tix, от Jira, GitHub, Trello или Linear, или всяка таблица, записана като CSV.';
+
+  @override
+  String get importFileNone => 'Няма избран файл';
+
+  @override
+  String get importFileRemove => 'Премахни файла';
+
+  @override
+  String get importPasteTitle => 'Или постави списък';
+
+  @override
+  String get importPasteLabel => 'Задачи, по една на ред';
+
+  @override
+  String get importPasteHint => 'Поправи входа due:fri #bug !high';
+
+  @override
+  String get importPasteHelp =>
+      'Написани както ги чете бързото добавяне: #етикет, !приоритет, @човек, due:дата, ^родител. Използва се, когато няма избран файл.';
+
+  @override
+  String get importNextColumns => 'Напред: колони';
+
+  @override
+  String get importNextValues => 'Напред: стойности';
+
+  @override
+  String get importNextPreview => 'Напред: преглед';
+
+  @override
+  String get importSkipToPreview => 'Направо към прегледа';
+
+  @override
+  String get importConfidentTitle => 'Всички колони са разпознати.';
+
+  @override
+  String get importConfidentBody =>
+      'Предложеното съпоставяне работи както е, така че можете да минете направо към прегледа.';
+
+  @override
+  String importRows(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count реда',
+      one: '1 ред',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String importLooksLike(String source) {
+    return 'прилича на експорт от $source';
+  }
+
+  @override
+  String get importColumnsHelp =>
+      'tix избра поле за всяка колона; променете която искате.';
+
+  @override
+  String importColumnField(String header) {
+    return 'Поле за $header';
+  }
+
+  @override
+  String get importSuggested => 'предложено';
+
+  @override
+  String importTarget(String target) {
+    String _temp0 = intl.Intl.selectLogic(target, {
+      'title': 'Заглавие',
+      'body': 'Описание',
+      'status': 'Статус',
+      'priority': 'Приоритет',
+      'assignee': 'Изпълнител',
+      'tags': 'Етикети',
+      'due': 'Срок',
+      'parent': 'Родител',
+      'depends_on': 'Зависи от',
+      'recurrence': 'Повторение',
+      'external_id': 'Външен ID',
+      'alias': 'Друг ID',
+      'ref': 'Препратка в tix',
+      'append_body': 'Добави към описанието',
+      'ignore': 'Пропусни',
+      'other': 'Друго',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get importValuesHelp =>
+      'Всяка стойност от файла и какво става тя. Предложението е догадка на tix; променете го или го оставете.';
+
+  @override
+  String get importValuesNone => 'Никоя колона не попълва това поле.';
+
+  @override
+  String importValueBecomes(String value) {
+    return '$value става';
+  }
+
+  @override
+  String get importNoMapping => 'Без съпоставяне';
+
+  @override
+  String get importHandleHint => 'потребителско име в tix';
+
+  @override
+  String get importUnknown => 'Стойност без съпоставяне';
+
+  @override
+  String importPolicy(String policy) {
+    String _temp0 = intl.Intl.selectLogic(policy, {
+      'default': 'Използвай подразбиращата се',
+      'ignore': 'Остави празно',
+      'skip_row': 'Пропусни реда',
+      'error': 'Спри с грешка',
+      'other': 'Друго',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String importToCreate(int count) {
+    return '$count за създаване';
+  }
+
+  @override
+  String importToUpdate(int count) {
+    return '$count за обновяване';
+  }
+
+  @override
+  String importToSkip(int count) {
+    return '$count за пропускане';
+  }
+
+  @override
+  String importInError(int count) {
+    return '$count с грешка';
+  }
+
+  @override
+  String get importFailedNote =>
+      'Нищо не се записва, докато има ред с грешка. Върнете се, за да промените съпоставянето, или поправете файла и го изберете отново.';
+
+  @override
+  String get importErrorsTitle => 'Редове с грешка';
+
+  @override
+  String get importErrorsDownload => 'Изтегли отчета за грешките';
+
+  @override
+  String get importPreviewTitle => 'Първите редове, както tix ще ги запише';
+
+  @override
+  String get importPreviewNone => 'Няма редове за показване.';
+
+  @override
+  String importAction(String action) {
+    String _temp0 = intl.Intl.selectLogic(action, {
+      'create': 'Създаване',
+      'update': 'Обновяване',
+      'skip': 'Пропускане',
+      'error': 'Грешка',
+      'other': 'Друго',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String importLine(int line) {
+    return 'Ред $line';
+  }
+
+  @override
+  String get importModeTitle => 'Когато ред е внасян преди';
+
+  @override
+  String get importModeHelp =>
+      'Редът се свързва по колоната, съпоставена с Външен ID, или по препратка в tix.';
+
+  @override
+  String importMode(String mode) {
+    String _temp0 = intl.Intl.selectLogic(mode, {
+      'upsert': 'Обнови вече внесените задачи, създай останалите',
+      'create': 'Създай всеки ред като нова задача',
+      'skip': 'Остави вече внесените задачи, създай останалите',
+      'other': 'Друго',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get importFixFirst => 'Първо поправете редовете с грешка';
+
+  @override
+  String get importNothing => 'Няма какво да се внесе';
+
+  @override
+  String get importDoneTitle => 'Внесено.';
+
+  @override
+  String importDoneBody(int created, int updated, int skipped) {
+    return '$created създадени, $updated обновени, $skipped пропуснати.';
+  }
+
+  @override
+  String get importRolledBackTitle => 'Нищо не е внесено.';
+
+  @override
+  String get importRolledBackBody =>
+      'Някои редове са с грешка, затова целият файл е върнат.';
+
+  @override
+  String get importAnother => 'Внеси друг файл';
+
+  @override
+  String get importOpenProject => 'Отвори проекта';
 }
