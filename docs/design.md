@@ -156,6 +156,7 @@ All in `lib/src/core/design/components/`. Each has a doc comment saying when to 
 | `ErrorState` | A failure: the message, Retry, Sign in again when the session ended, and Back |
 | `SkeletonList`, `SkeletonBox` | Loading. Never a spinner for a list's first page |
 | `SectionHeader`, `TixSection`, `InfoTip` | Headed, always-visible groups; a short explanation behind (i) |
+| `HelpButton`, `ScreenHelpButton`, `TixPageHelp` | A field's (i) explanation in a sheet; a screen's (?) in its page header, opening tix's docs section about it. The router sets `TixPageHelp` once and `core/help/screen_help.dart` maps each route to its section, so a screen adds nothing |
 | `TixTextField`, `TixSearchField`, `TixSwitchRow` | Form inputs: label above, help and errors below, capped at the field measure |
 | `TixChoices` | A pick-one setting (theme, language): chips that wrap, so a long label or 200% text never hides an option |
 | `TixPropertyList`, `TixPropertyRow` | A record's attributes, each a 48 dp row that opens its editor; the label moves above the value at large text |
@@ -429,10 +430,12 @@ Follow this for every screen. Reviewers check it.
 7. Quick actions on rows go through `runOptimistic`, with Undo where the server can undo.
 8. Register the screen's actions with `CommandScope`; give the main ones a single-letter key when it does not
    clash with the list in the `?` help.
-9. Every string from `lib/l10n/`, in English and Bulgarian.
-10. Check it at 400 and 1280 wide, light, dark and OLED black, a non-default accent (the gallery's palette menu
+9. Add the route to `screenDocs` in `core/help/screen_help.dart`: the tix docs page and heading that explain it,
+   or null when tix's docs do not cover it. A test fails on a route without an entry.
+10. Every string from `lib/l10n/`, in English and Bulgarian.
+11. Check it at 400 and 1280 wide, light, dark and OLED black, a non-default accent (the gallery's palette menu
     shows how), and at 200% text, in English, German and French.
-11. Tests: loading, data, empty and error at a compact and an expanded width; that the primary action and any
+12. Tests: loading, data, empty and error at a compact and an expanded width; that the primary action and any
     destructive action work; that a guard fails when broken.
 
 ## Goldens

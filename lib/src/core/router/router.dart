@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tix_mobile/src/core/help/screen_help.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
@@ -225,13 +226,15 @@ GoRouter router(Ref ref) {
       if (Routes.galleryEnabled)
         GoRoute(path: Routes.gallery, builder: (_, _) => const GalleryScreen()),
       ShellRoute(
-        builder: (_, _, child) => DeepLinkHost(
-          child: HomeWidgetsScope(
-            child: InboxAlertsScope(
-              child: QuickActionsHost(
-                child: TemplatesCommands(
-                  child: SettingsCommands(
-                    child: OfflineSyncScope(child: child),
+        builder: (_, _, child) => ScreenHelpScope(
+          child: DeepLinkHost(
+            child: HomeWidgetsScope(
+              child: InboxAlertsScope(
+                child: QuickActionsHost(
+                  child: TemplatesCommands(
+                    child: SettingsCommands(
+                      child: OfflineSyncScope(child: child),
+                    ),
                   ),
                 ),
               ),
