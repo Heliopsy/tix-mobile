@@ -13,6 +13,7 @@ import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/l10n/via_label.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
+import 'package:tix_mobile/src/core/widgets/actor_link.dart';
 import 'package:tix_mobile/src/core/widgets/copy_json.dart';
 import 'package:tix_mobile/src/core/widgets/live_status.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
@@ -573,25 +574,32 @@ class WatchRow extends StatelessWidget {
       onLongPress: json == null
           ? null
           : () => unawaited(copyJson(context, json)),
-      leading: TixAvatar(
-        key: Key('watch.$seq.avatar'),
-        label: who.name,
-        seed: who.handle ?? who.name,
-        hued: true,
-        icon: event.actorId.isEmpty ? Icons.settings_outlined : null,
+      leading: ActorLink(
+        actor: event.actorId,
+        child: TixAvatar(
+          key: Key('watch.$seq.avatar'),
+          label: who.name,
+          seed: who.handle ?? who.name,
+          hued: true,
+          icon: event.actorId.isEmpty ? Icons.settings_outlined : null,
+        ),
       ),
       title: Wrap(
         spacing: TixSpace.s2,
         runSpacing: TixSpace.s1,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          Text(
-            who.name,
-            key: Key('watch.$seq.actor'),
-            style: TextStyle(
-              fontSize: TixText.sm,
-              fontWeight: FontWeight.w600,
-              color: t.ink,
+          ActorLink(
+            key: Key('watch.$seq.actorLink'),
+            actor: event.actorId,
+            child: Text(
+              who.name,
+              key: Key('watch.$seq.actor'),
+              style: TextStyle(
+                fontSize: TixText.sm,
+                fontWeight: FontWeight.w600,
+                color: t.ink,
+              ),
             ),
           ),
           if (who.handle case final handle?)

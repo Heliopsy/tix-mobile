@@ -3,7 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tix_mobile/src/features/tasks/application/handoff.dart';
+import 'package:tix_mobile/src/core/agents/handoff.dart';
 
 void main() {
   const task = HandoffTask(

@@ -84,6 +84,16 @@ void main() {
       expect(find.text('No comments yet.'), findsOneWidget);
     });
 
+    testWidgets('the author and a mention open the actor screen', (
+      tester,
+    ) async {
+      server.comments['infra-1'] = [comment('c1', 'ask @ana')];
+      await pumpTask(tester, server);
+      await tester.tap(find.byKey(const Key('comment.author.c1')));
+      await tester.pumpAndSettle();
+      expect(find.text('route:/actors/a1'), findsOneWidget);
+    });
+
     testWidgets('a failed list offers a retry', (tester) async {
       server.failures['GET /api/v1/tasks/infra-1/comments'] = FakeResponse(
         500,

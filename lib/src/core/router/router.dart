@@ -39,6 +39,7 @@ import 'package:tix_mobile/src/features/maintenance/presentation/housekeeping_sc
 import 'package:tix_mobile/src/features/maintenance/presentation/retention_screen.dart';
 import 'package:tix_mobile/src/features/maintenance/presentation/trash_screen.dart';
 import 'package:tix_mobile/src/features/manage/presentation/manage_screen.dart';
+import 'package:tix_mobile/src/features/people/presentation/actor_screen.dart';
 import 'package:tix_mobile/src/features/people/presentation/user_screen.dart';
 import 'package:tix_mobile/src/features/people/presentation/users_screen.dart';
 import 'package:tix_mobile/src/features/projects/presentation/fields_screen.dart';
@@ -50,6 +51,7 @@ import 'package:tix_mobile/src/features/settings/presentation/offline_screen.dar
 import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';
 import 'package:tix_mobile/src/features/shell/presentation/home_shell.dart';
 import 'package:tix_mobile/src/features/shell/presentation/splash_screen.dart';
+import 'package:tix_mobile/src/features/stats/presentation/stats_screen.dart';
 import 'package:tix_mobile/src/features/status/presentation/status_screen.dart';
 import 'package:tix_mobile/src/features/sync/presentation/conflicts_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/saved_filters_screen.dart';
@@ -58,6 +60,7 @@ import 'package:tix_mobile/src/features/tasks/presentation/task_list_screen.dart
 import 'package:tix_mobile/src/features/tasks/presentation/task_screen.dart';
 import 'package:tix_mobile/src/features/templates/presentation/templates_commands.dart';
 import 'package:tix_mobile/src/features/templates/presentation/templates_screen.dart';
+import 'package:tix_mobile/src/features/tokens/presentation/connect_agent_screen.dart';
 import 'package:tix_mobile/src/features/tokens/presentation/tokens_screen.dart';
 import 'package:tix_mobile/src/features/transfer/presentation/transfer_screen.dart';
 import 'package:tix_mobile/src/features/watch/presentation/watch_screen.dart';
@@ -114,6 +117,7 @@ const Set<String> _tabRoots = {
   Routes.inbox,
   Routes.activity,
   Routes.events,
+  Routes.stats,
   Routes.manage,
   Routes.settings,
 };
@@ -324,6 +328,19 @@ GoRouter router(Ref ref) {
                     path: Routes.activity,
                     builder: (_, _) => const AuditScreen(),
                   ),
+                  GoRoute(
+                    path: '/actors/:id',
+                    builder: (_, state) =>
+                        ActorScreen(actorRef: state.pathParameters['id']!),
+                  ),
+                ],
+              ),
+              StatefulShellBranch(
+                routes: [
+                  GoRoute(
+                    path: Routes.stats,
+                    builder: (_, _) => const StatsScreen(),
+                  ),
                 ],
               ),
               StatefulShellBranch(
@@ -484,6 +501,7 @@ final accountRoutes = [
     path: 'tokens',
     builder: (_, _) => const TokensScreen(personal: true),
   ),
+  GoRoute(path: 'connect-agent', builder: (_, _) => const ConnectAgentScreen()),
 ];
 
 /// People, tokens and transfers of the tenant, under Manage.

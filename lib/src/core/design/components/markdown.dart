@@ -8,6 +8,7 @@ import 'package:tix_mobile/src/core/design/components/motion.dart';
 import 'package:tix_mobile/src/core/design/theme.dart';
 import 'package:tix_mobile/src/core/design/tokens.dart';
 import 'package:tix_mobile/src/core/markdown/checklist.dart';
+import 'package:tix_mobile/src/core/markdown/mentions.dart';
 
 /// The link schemes a description may open, as tix allows them.
 const _safeSchemes = {'http', 'https', 'mailto'};
@@ -25,6 +26,7 @@ class TixMarkdown extends StatelessWidget {
     required this.data,
     this.onToggle,
     this.onLink,
+    this.onMention,
     this.selectable = true,
     super.key,
   });
@@ -39,12 +41,20 @@ class TixMarkdown extends StatelessWidget {
   /// Opens a link the person pressed; only safe schemes reach it.
   final ValueChanged<Uri>? onLink;
 
+  /// Opens the handle of an `@handle` the person pressed; null leaves
+  /// mentions as text.
+  final ValueChanged<String>? onMention;
+
   /// Whether the text can be selected.
   final bool selectable;
 
   @override
   Widget build(BuildContext context) {
-    final parts = splitDescription(data);
+    final mention = onMention;
+    final parts = splitDescription(mention == null ? data : linkMentions(data));
+    void link(Uri uri) => uri.scheme == mentionScheme
+        ? mention?.call(uri.path)
+        : onLink?.call(uri);
     return Align(
       alignment: AlignmentDirectional.topStart,
       child: ConstrainedBox(
@@ -59,13 +69,13 @@ class TixMarkdown extends StatelessWidget {
                   child: _Body(
                     text: text,
                     selectable: selectable,
-                    onLink: onLink,
+                    onLink: link,
                   ),
                 ),
                 final ChecklistPart item => _Item(
                   item: item,
                   onToggle: onToggle,
-                  onLink: onLink,
+                  onLink: link,
                 ),
               },
           ],
@@ -119,7 +129,8 @@ class _Body extends StatelessWidget {
 void _open(String? href, ValueChanged<Uri>? onLink) {
   final uri = href == null ? null : Uri.tryParse(href);
   if (uri == null || onLink == null) return;
-  if (!_safeSchemes.contains(uri.scheme.toLowerCase())) return;
+  final scheme = uri.scheme.toLowerCase();
+  if (!_safeSchemes.contains(scheme) && scheme != mentionScheme) return;
   onLink(uri);
 }
 

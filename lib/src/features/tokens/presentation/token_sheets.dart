@@ -206,19 +206,31 @@ class _RotateTokenSheetState extends ConsumerState<RotateTokenSheet> {
 
 /// The issue-a-token form: a name, scopes the caller holds, an expiry.
 class IssueTokenSheet extends ConsumerStatefulWidget {
-  /// Issues into the listing of [actorId].
-  const IssueTokenSheet({required this.actorId, super.key});
+  /// Issues into the listing of [actorId], the form starting on
+  /// [initialName] and [initialScopes].
+  const IssueTokenSheet({
+    required this.actorId,
+    this.initialName = '',
+    this.initialScopes = const [],
+    super.key,
+  });
 
   /// The listing the token joins.
   final String? actorId;
+
+  /// The name the form starts with.
+  final String initialName;
+
+  /// The scopes the form starts with.
+  final List<String> initialScopes;
 
   @override
   ConsumerState<IssueTokenSheet> createState() => _IssueTokenSheetState();
 }
 
 class _IssueTokenSheetState extends ConsumerState<IssueTokenSheet> {
-  final _name = TextEditingController();
-  final _scopes = <String>{};
+  late final _name = TextEditingController(text: widget.initialName);
+  late final _scopes = <String>{...widget.initialScopes};
   String _expiry = defaultTokenExpiry;
   var _busy = false;
   String? _error;
