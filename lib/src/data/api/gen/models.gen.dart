@@ -1560,6 +1560,27 @@ abstract class CreatedTenant with _$CreatedTenant {
     /// interface. Each surface is set independently and defaults to false.
     @JsonKey(name: 'require_totp_web') @Default(false) bool requireTotpWeb,
 
+    /// SessionIdleTimeout ends a session unused for this long. It can only be
+    /// shorter than the server's session.idle_timeout; zero inherits.
+    @JsonKey(name: 'session_idle_timeout')
+    @Default('')
+    String sessionIdleTimeout,
+
+    /// SessionRememberOff turns "keep me signed in" off on this tenant.
+    @JsonKey(name: 'session_remember_off')
+    @Default(false)
+    bool sessionRememberOff,
+
+    /// SessionRememberTTL is how long a "keep me signed in" sign-in lasts, within
+    /// the server's session.remember_ttl; zero inherits.
+    @JsonKey(name: 'session_remember_ttl')
+    @Default('')
+    String sessionRememberTtl,
+
+    /// SessionTTL is how long a sign-in on this tenant lasts. It can shorten the
+    /// server's session.ttl but never lengthen it; zero inherits.
+    @JsonKey(name: 'session_ttl') @Default('') String sessionTtl,
+
     /// Theme names the palette this tenant presents itself with, on every surface.
     /// Empty means nobody chose, and the accent is derived from the tenant's own
     /// identity instead; see ThemeRegistry.Resolve.
@@ -3044,6 +3065,11 @@ abstract class LoginRequest with _$LoginRequest {
     /// Password is the user's password, in the first step.
     @JsonKey(name: 'password') String? password,
 
+    /// Remember asks for a "keep me signed in" session, sent with the step that
+    /// completes the sign-in. The session then lasts the tenant's remember_ttl and
+    /// its cookie persists until then.
+    @JsonKey(name: 'remember') bool? remember,
+
     /// Surface is the sign-in path the session is for, which decides whether a
     /// second factor is required.
     @JsonKey(
@@ -3944,8 +3970,15 @@ abstract class AuthSession with _$AuthSession {
     /// ActorID is the actor the session acts as.
     @JsonKey(name: 'actor_id') @Default('') String actorId,
 
+    /// CreatedAt is when the session was minted, in RFC 3339.
+    @JsonKey(name: 'created_at') @TixDateTime() DateTime? createdAt,
+
     /// ExpiresAt is when the session stops working, in RFC 3339.
     @JsonKey(name: 'expires_at') @TixDateTime() DateTime? expiresAt,
+
+    /// Remembered reports a "keep me signed in" session. A browser keeps its cookie
+    /// until ExpiresAt; otherwise the cookie ends with the browser.
+    @JsonKey(name: 'remembered') @Default(false) bool remembered,
 
     /// TenantID is the tenant the session belongs to.
     @JsonKey(name: 'tenant_id') @Default('') String tenantId,
@@ -3979,6 +4012,10 @@ abstract class SessionInfo with _$SessionInfo {
     /// Method is how it signed in: password, ssh-key or switch.
     @JsonKey(name: 'method') @Default('') String method,
 
+    /// Remembered reports a "keep me signed in" sign-in, which lasts the tenant's
+    /// remember_ttl rather than its ttl.
+    @JsonKey(name: 'remembered') @Default(false) bool remembered,
+
     /// SecondFactor reports that the sign-in passed a second factor.
     @JsonKey(name: 'second_factor') @Default(false) bool secondFactor,
 
@@ -3990,6 +4027,37 @@ abstract class SessionInfo with _$SessionInfo {
   /// Reads a [SessionInfo] from its JSON object.
   factory SessionInfo.fromJson(Map<String, dynamic> json) =>
       _$SessionInfoFromJson(json);
+}
+
+/// SessionPolicy is how long a new sign-in on a tenant lasts and how long it
+/// may sit unused: the server's session settings narrowed by the tenant's own.
+@freezed
+abstract class SessionPolicy with _$SessionPolicy {
+  /// Creates a [SessionPolicy].
+  const factory SessionPolicy({
+    /// IdleTimeout ends a session unused for this long; zero is off.
+    @JsonKey(name: 'idle_timeout') @Default('') String idleTimeout,
+
+    /// RememberTTL is how long a "keep me signed in" sign-in lasts; zero means the
+    /// choice is not offered.
+    @JsonKey(name: 'remember_ttl') @Default('') String rememberTtl,
+
+    /// ServerIdleTimeout is the server's session.idle_timeout, zero when off.
+    @JsonKey(name: 'server_idle_timeout') @Default('') String serverIdleTimeout,
+
+    /// ServerRememberTTL is the server's session.remember_ttl, zero when off.
+    @JsonKey(name: 'server_remember_ttl') @Default('') String serverRememberTtl,
+
+    /// ServerTTL is the server's session.ttl, which a tenant may only shorten.
+    @JsonKey(name: 'server_ttl') @Default('') String serverTtl,
+
+    /// TTL is how long a sign-in lasts from the moment it is made.
+    @JsonKey(name: 'ttl') @Default('') String ttl,
+  }) = _SessionPolicy;
+
+  /// Reads a [SessionPolicy] from its JSON object.
+  factory SessionPolicy.fromJson(Map<String, dynamic> json) =>
+      _$SessionPolicyFromJson(json);
 }
 
 /// SnoozeInput says until when a task sleeps.
@@ -5507,6 +5575,27 @@ abstract class Tenant with _$Tenant {
     /// interface. Each surface is set independently and defaults to false.
     @JsonKey(name: 'require_totp_web') @Default(false) bool requireTotpWeb,
 
+    /// SessionIdleTimeout ends a session unused for this long. It can only be
+    /// shorter than the server's session.idle_timeout; zero inherits.
+    @JsonKey(name: 'session_idle_timeout')
+    @Default('')
+    String sessionIdleTimeout,
+
+    /// SessionRememberOff turns "keep me signed in" off on this tenant.
+    @JsonKey(name: 'session_remember_off')
+    @Default(false)
+    bool sessionRememberOff,
+
+    /// SessionRememberTTL is how long a "keep me signed in" sign-in lasts, within
+    /// the server's session.remember_ttl; zero inherits.
+    @JsonKey(name: 'session_remember_ttl')
+    @Default('')
+    String sessionRememberTtl,
+
+    /// SessionTTL is how long a sign-in on this tenant lasts. It can shorten the
+    /// server's session.ttl but never lengthen it; zero inherits.
+    @JsonKey(name: 'session_ttl') @Default('') String sessionTtl,
+
     /// Theme names the palette this tenant presents itself with, on every surface.
     /// Empty means nobody chose, and the accent is derived from the tenant's own
     /// identity instead; see ThemeRegistry.Resolve.
@@ -6041,6 +6130,22 @@ abstract class UpdateTenantInput with _$UpdateTenantInput {
     /// subject to it who holds no enrolment is taken through enrolment at sign-in
     /// rather than refused.
     @JsonKey(name: 'require_totp_web') bool? requireTotpWeb,
+
+    /// SessionIdleTimeout ends sessions unused for this long, such as "30m". Zero
+    /// inherits the server's session.idle_timeout and omitted leaves it; a value
+    /// above the server's is refused. It applies to existing sessions.
+    @JsonKey(name: 'session_idle_timeout') String? sessionIdleTimeout,
+
+    /// SessionRememberTTL is how long a "keep me signed in" sign-in lasts: a
+    /// duration such as "7d", "off" (or "0") to stop offering it, or "" to inherit
+    /// the server's session.remember_ttl. Omitted leaves it; a value above the
+    /// server's is refused.
+    @JsonKey(name: 'session_remember_ttl') String? sessionRememberTtl,
+
+    /// SessionTTL shortens how long a sign-in on this tenant lasts, a duration such
+    /// as "8h". Zero inherits the server's session.ttl and omitted leaves it; a
+    /// value above the server's is refused. Existing sessions keep their expiry.
+    @JsonKey(name: 'session_ttl') String? sessionTtl,
 
     /// Theme names the palette this tenant presents itself with. A pointer to the
     /// empty string clears it, which returns the tenant to the accent derived from

@@ -2041,6 +2041,18 @@ class SessionOps {
     );
   }
 
+  /// SessionPolicy reports how long a new sign-in on the current tenant lasts,
+  /// how long a session may sit unused, and how long a "keep me signed in"
+  /// sign-in lasts: the server's session.ttl, session.idle_timeout and
+  /// session.remember_ttl, tightened by the tenant's own settings.
+  ///
+  /// `GET /api/v1/auth/session-policy` (`session.policy`).
+  Future<SessionPolicy> policy() async {
+    return SessionPolicy.fromJson(
+      await _t.json('GET', '/api/v1/auth/session-policy'),
+    );
+  }
+
   /// RevokeSession ends one of the caller's own sessions by identifier, so it
   /// stops signing anybody in.
   ///
