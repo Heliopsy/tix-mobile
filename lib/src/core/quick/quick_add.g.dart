@@ -52,7 +52,7 @@ final class QuickAddDraftsProvider
   }
 }
 
-String _$quickAddDraftsHash() => r'9680072e36f923b5a9d120dc9a391a0a74df4909';
+String _$quickAddDraftsHash() => r'a5d90d19f29defdd0ed1f4327f5010bd80252008';
 
 /// Where every feature asks for quick add. The quick-add host, mounted around
 /// the signed-in screens, opens the sheet for each draft and takes it; a

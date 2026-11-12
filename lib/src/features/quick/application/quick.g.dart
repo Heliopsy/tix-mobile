@@ -568,7 +568,7 @@ final class QuickAdderProvider extends $NotifierProvider<QuickAdder, void> {
   }
 }
 
-String _$quickAdderHash() => r'de53993c317fa78148ec3c052980da65a97edae4';
+String _$quickAdderHash() => r'd5375d704ffa649087348484f3af458b6dd2b403';
 
 /// Adds tasks from quick add and from templates. The sheet and the host
 /// watch it, which keeps it alive across a request.
