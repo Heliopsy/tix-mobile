@@ -19,8 +19,8 @@ import 'package:tix_mobile/src/features/audit/application/audit.dart';
 
 String _when(BuildContext context, DateTime at) => context.times.stamp(at);
 
-/// Activity, the tenant's audit log: every change, newest first, narrowed by text,
-/// surface, channel, actor, action, token and time, with each entry's
+/// Activity, the tenant's audit log: every change, newest first, narrowed by
+/// text, surface, channel, actor, action, token and time, with each entry's
 /// detail beside the list on a wide window.
 class AuditScreen extends ConsumerWidget {
   /// Creates the screen.
