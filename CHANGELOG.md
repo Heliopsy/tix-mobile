@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.15.0](https://github.com/Heliopsy/tix-mobile/compare/v0.14.0...v0.15.0) (2026-11-12)
+
+
+### Features
+
+* **tasks:** move a task to another project ([c617aab](https://github.com/Heliopsy/tix-mobile/commit/c617aab28f5fe57adbbcf5f500678a65d6c7f684))
+* **tasks:** show the token behind a change and react to comments ([20f61a6](https://github.com/Heliopsy/tix-mobile/commit/20f61a6f2dcae37ff427bf95aac40352cd4c8621))
+
+
+### Bug Fixes
+
+* **tasks:** keep reactions on after a deleted comment's 404, and toggle at once ([a1b73d4](https://github.com/Heliopsy/tix-mobile/commit/a1b73d48053c540f59c5b9fba619665b2a380c73))
+
+
+### Dependencies
+
+* go 1.27.4, which the pinned tix requires ([13f3a80](https://github.com/Heliopsy/tix-mobile/commit/13f3a801abf3f280dd0e4f8ed012ac1ac38b30e4))
+* pin tix at the merged comment reactions commit ([050ca33](https://github.com/Heliopsy/tix-mobile/commit/050ca3330e51e4e38fec8e02409dd9c041773070))
+* pin tix at v0.57.0 ([a2fe484](https://github.com/Heliopsy/tix-mobile/commit/a2fe484515fd24539ba40e4f12eadbaae80047b0))
+
 ## [0.14.0](https://github.com/Heliopsy/tix-mobile/compare/v0.13.2...v0.14.0) (2026-11-11)
 
 
