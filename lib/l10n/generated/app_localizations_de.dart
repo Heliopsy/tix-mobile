@@ -2362,7 +2362,13 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String liveNewAbove(int count) {
-    return '$count neu, anzeigen';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count neu, anzeigen',
+      one: '1 neu, anzeigen',
+    );
+    return '$_temp0';
   }
 
   @override
