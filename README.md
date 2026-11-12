@@ -191,15 +191,24 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   pruning, housekeeping, and the trash with restore and delete for good.
 - **Activity**: the tenant's audit log, as tix web names it, filtered by channel, surface, actor, action, token and
   time, with Copy JSON for the entry exactly as tix returned it. It has its own place in the navigation, after
-  Projects and before Manage, and the desktop tray opens it.
+  Projects and before Statistics, and the desktop tray opens it.
 - **Live events** under Manage: the tenant's events as they happen, as `tix watch` shows them, newest first with the
   sequence number,
   how long ago, who (name, handle, and the channel and token it came through), a coloured type badge and what
   changed: states, field names, the start of a comment. Filter by project, type (`task.*`) and actor, pause with a
   count of what arrived, replay from a sequence number, open the task or project and come back, read the whole
   payload or copy the event as JSON.
+- **Statistics**, as the web's: completed, created, median and slowest lead time over 7, 14, 30 or 90 days, for
+  every project or one, completed per day, where the work is by state, who moved the most tasks and what has
+  waited longest.
+- **Actor pages**: a person's or agent's handle, name and id, the tasks assigned to them, their API tokens and SSH
+  keys (with `token:admin`) and their last 20 audit entries (with `audit:read`). Names in comments, history,
+  Activity, audit, the leaderboard and token lists, and every `@handle`, open them.
+- **Connect an agent**: the CLI, MCP (one tab per client), SSH, API and skill commands for the active server, with
+  a token issued on the spot filled into every one and kept nowhere.
 - **Adaptive layout**: a bottom navigation bar on phones, a navigation rail and a two-pane list and detail on tablets
-  and desktops, in tix web's order: Inbox, My work, Tasks, Projects, Activity, Manage, Settings.
+  and desktops, in tix web's order: Inbox, My work, Tasks, Projects, Activity, Statistics, Manage,
+  Settings.
 
 API tokens and sign-in sessions are kept in the platform's secure storage and are never written to logs or
 preferences. Passwords are not stored at all. How long a sign-in session lasts is the server's call: 12 hours by

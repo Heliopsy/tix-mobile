@@ -85,6 +85,38 @@ Intro with [a link](https://example.com) and [a script](javascript:alert(1)).
     ]);
   });
 
+  testWidgets('a mention opens its handle and never reaches onLink', (
+    tester,
+  ) async {
+    final opened = <Uri>[];
+    final mentioned = <String>[];
+    await pumpComponent(
+      tester,
+      TixMarkdown(
+        data: 'ask @raj',
+        onLink: opened.add,
+        onMention: mentioned.add,
+      ),
+    );
+    final markdown = tester.widget<MarkdownBody>(find.byType(MarkdownBody));
+    expect(markdown.data, 'ask [@raj](tix-actor:raj)');
+    markdown.onTapLink!('@raj', 'tix-actor:raj', '');
+    expect(mentioned, ['raj']);
+    expect(opened, isEmpty);
+  });
+
+  testWidgets('without onMention a handle stays text', (tester) async {
+    final opened = <Uri>[];
+    await pumpComponent(
+      tester,
+      TixMarkdown(data: 'ask @raj', onLink: opened.add),
+    );
+    final markdown = tester.widget<MarkdownBody>(find.byType(MarkdownBody));
+    expect(markdown.data, 'ask @raj');
+    markdown.onTapLink!('x', 'tix-actor:raj', '');
+    expect(opened, isEmpty);
+  });
+
   for (final locale in textLocales) {
     for (final MapEntry(key: width, value: size) in widths.entries) {
       testWidgets('$width, $locale: survives twice the text size', (

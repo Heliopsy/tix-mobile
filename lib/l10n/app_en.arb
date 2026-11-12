@@ -2505,6 +2505,124 @@
   },
   "tokensTitle": "API tokens",
   "tokensMine": "My API tokens",
+  "actorSubtitle": "A person or an agent of this tenant",
+  "@actorSubtitle": {
+    "description": "Line under an actor's name on their screen"
+  },
+  "actorInfo": "A person or an agent of this tenant, by the name others use for it. What it may do is not shown here.",
+  "@actorInfo": {
+    "description": "Explanation behind the (i) of the actor screen's About section"
+  },
+  "actorOpenHint": "Opens their page",
+  "@actorOpenHint": {
+    "description": "Screen reader hint on a name that opens the actor screen"
+  },
+  "actorAbout": "About",
+  "@actorAbout": {
+    "description": "Heading of who an actor is"
+  },
+  "actorYou": "(you)",
+  "@actorYou": {
+    "description": "Beside an actor's name when it is the reader"
+  },
+  "actorKindUser": "person",
+  "@actorKindUser": {
+    "description": "Badge of a person's actor"
+  },
+  "actorKindAgent": "agent",
+  "@actorKindAgent": {
+    "description": "Badge of an agent's actor"
+  },
+  "actorKindSystem": "system",
+  "@actorKindSystem": {
+    "description": "Badge of the system actor"
+  },
+  "actorHandle": "Handle",
+  "@actorHandle": {
+    "description": "Label of an actor's handle"
+  },
+  "actorName": "Name",
+  "@actorName": {
+    "description": "Label of an actor's display name"
+  },
+  "actorNotSet": "Not set",
+  "@actorNotSet": {
+    "description": "Shown when an actor has no display name"
+  },
+  "actorId": "Actor id",
+  "@actorId": {
+    "description": "Label of an actor's id"
+  },
+  "actorCopyId": "Copy the actor id",
+  "@actorCopyId": {
+    "description": "Tooltip of the button that copies an actor's id"
+  },
+  "actorYourProfile": "Your profile",
+  "@actorYourProfile": {
+    "description": "Button on the reader's own actor screen that opens their account"
+  },
+  "actorTasks": "Tasks assigned to {name}",
+  "@actorTasks": {
+    "description": "Heading of the tasks assigned to an actor",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "actorTasksFirst": "The first 20 are shown.",
+  "@actorTasksFirst": {
+    "description": "Under the assigned tasks heading when there are more"
+  },
+  "actorTasksNone": "Nothing is assigned.",
+  "@actorTasksNone": {
+    "description": "Shown when an actor has no assigned task"
+  },
+  "actorTokens": "API tokens",
+  "@actorTokens": {
+    "description": "Heading of an actor's API tokens"
+  },
+  "actorTokensNone": "No API tokens.",
+  "@actorTokensNone": {
+    "description": "Shown when an actor has no API token"
+  },
+  "actorKeys": "SSH keys",
+  "@actorKeys": {
+    "description": "Heading of an actor's SSH keys"
+  },
+  "actorKeysNone": "No SSH keys.",
+  "@actorKeysNone": {
+    "description": "Shown when an actor has no SSH key"
+  },
+  "actorRevoked": "Revoked",
+  "@actorRevoked": {
+    "description": "Badge on a revoked token or key"
+  },
+  "actorLastUsed": "last used {date}",
+  "@actorLastUsed": {
+    "description": "When a token was last used",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "actorNeverUsed": "never used",
+  "@actorNeverUsed": {
+    "description": "A token that was never used"
+  },
+  "actorRecent": "Recent activity",
+  "@actorRecent": {
+    "description": "Heading of an actor's last audit entries"
+  },
+  "actorRecentNone": "No recorded activity.",
+  "@actorRecentNone": {
+    "description": "Shown when an actor has no audit entry"
+  },
+  "actorRecentNeedsAudit": "Recent activity needs the audit:read scope, which you do not hold.",
+  "@actorRecentNeedsAudit": {
+    "description": "Shown instead of recent activity without audit:read"
+  },
   "tokensIssue": "Issue a token",
   "tokensIssueButton": "Issue token",
   "tokensWholeTenant": "Every token of this tenant",
@@ -2896,6 +3014,312 @@
   "settingsAccountHelp": "Profile, tenants and history",
   "settingsCalendarHelp": "Your due dates in your calendar app",
   "settingsTokensHelp": "Credentials for scripts, the CLI and agents",
+  "connectAgentTitle": "Connect an agent",
+  "@connectAgentTitle": {
+    "description": "Title of the Connect an agent screen and its Settings entry"
+  },
+  "connectAgentSubtitle": "Commands for the CLI, MCP clients, SSH, the API and the agent skill",
+  "@connectAgentSubtitle": {
+    "description": "Subtitle of the Connect an agent entry in Settings"
+  },
+  "goConnectAgent": "Connect an agent",
+  "@goConnectAgent": {
+    "description": "Command palette entry that opens Connect an agent"
+  },
+  "connectAgentIntro": "Get a credential, pick how you connect, then copy the commands.",
+  "@connectAgentIntro": {
+    "description": "Line under the Connect an agent title"
+  },
+  "connectAgentInfo": "Get a credential, pick how you connect, then copy the commands. Every command is filled in for this server and for you.",
+  "@connectAgentInfo": {
+    "description": "Explanation behind the (i) of Connect an agent"
+  },
+  "connectAgentServer": "Server",
+  "@connectAgentServer": {
+    "description": "Label of the server address on Connect an agent"
+  },
+  "connectAgentTenant": "Tenant",
+  "@connectAgentTenant": {
+    "description": "Label of the tenant on Connect an agent"
+  },
+  "connectAgentSignedInAs": "Signed in as",
+  "@connectAgentSignedInAs": {
+    "description": "Label of the reader's handle on Connect an agent"
+  },
+  "connectAgentStepCredential": "1. Get a credential",
+  "@connectAgentStepCredential": {
+    "description": "First step heading on Connect an agent"
+  },
+  "connectAgentStepPick": "2. Pick how you connect",
+  "@connectAgentStepPick": {
+    "description": "Second step heading on Connect an agent"
+  },
+  "connectAgentStepCopy": "3. Copy the commands: {way}",
+  "@connectAgentStepCopy": {
+    "description": "Third step heading on Connect an agent, naming the way picked",
+    "placeholders": {
+      "way": {
+        "type": "String"
+      }
+    }
+  },
+  "connectAgentCli": "CLI",
+  "@connectAgentCli": {
+    "description": "Way to connect: the command line"
+  },
+  "connectAgentMcp": "MCP",
+  "@connectAgentMcp": {
+    "description": "Way to connect: an MCP client"
+  },
+  "connectAgentSsh": "SSH",
+  "@connectAgentSsh": {
+    "description": "Way to connect: SSH"
+  },
+  "connectAgentApi": "API",
+  "@connectAgentApi": {
+    "description": "Way to connect: the HTTP API"
+  },
+  "connectAgentSkill": "Skill",
+  "@connectAgentSkill": {
+    "description": "Way to connect: the agent skill"
+  },
+  "connectAgentTokenNeeded": "The CLI, MCP and API commands read $TIX_TOKEN. Issue a token here and the screen fills it in, or set TIX_TOKEN in your shell to one you already have.",
+  "@connectAgentTokenNeeded": {
+    "description": "Shown in step 1 before a token is issued"
+  },
+  "connectAgentNoTokenAdmin": "Issuing a token needs the token:admin scope, which you do not hold. Ask an administrator for one.",
+  "@connectAgentNoTokenAdmin": {
+    "description": "Shown in step 1 to a reader who cannot issue tokens"
+  },
+  "connectAgentTokenFilled": "Every command on this screen now carries this token. It is kept nowhere: leaving the screen puts $TIX_TOKEN back.",
+  "@connectAgentTokenFilled": {
+    "description": "Note under a token issued on Connect an agent"
+  },
+  "connectAgentExportNote": "Sets TIX_TOKEN in this shell, for commands that read it.",
+  "@connectAgentExportNote": {
+    "description": "Note of the export command under an issued token"
+  },
+  "connectAgentFromCli": "From the command line",
+  "@connectAgentFromCli": {
+    "description": "Heading of the command that mints the agent token"
+  },
+  "connectAgentSeeTokens": "See and revoke your tokens",
+  "@connectAgentSeeTokens": {
+    "description": "Button that opens the reader's tokens"
+  },
+  "connectAgentRotate": "Rotate it later",
+  "@connectAgentRotate": {
+    "description": "Heading of the rotate command"
+  },
+  "connectAgentRotateNote": "Issues a new value with the same name and scopes, and keeps the old one working for ten minutes so a running agent is not cut off.",
+  "@connectAgentRotateNote": {
+    "description": "Note of the rotate command"
+  },
+  "connectAgentSshNoToken": "The SSH tab needs no token: your enrolled SSH key is the credential.",
+  "@connectAgentSshNoToken": {
+    "description": "Note at the end of step 1"
+  },
+  "connectAgentOpenSsh": "Open the SSH tab",
+  "@connectAgentOpenSsh": {
+    "description": "Button that switches to the SSH commands"
+  },
+  "connectAgentInstall": "Install the CLI",
+  "@connectAgentInstall": {
+    "description": "Heading of the install commands, and the button that opens them from MCP"
+  },
+  "connectAgentInstallNote": "Install the version this server runs, so the CLI and the server agree.",
+  "@connectAgentInstallNote": {
+    "description": "Note under Install the CLI"
+  },
+  "connectAgentInstallUnix": "Linux and macOS",
+  "@connectAgentInstallUnix": {
+    "description": "Install choice"
+  },
+  "connectAgentInstallUnixNote": "Downloads the release for this OS and CPU, checks its checksum and puts tix on your PATH.",
+  "@connectAgentInstallUnixNote": {
+    "description": "Note of the Linux and macOS install"
+  },
+  "connectAgentInstallWindows": "Windows",
+  "@connectAgentInstallWindows": {
+    "description": "Install choice"
+  },
+  "connectAgentInstallWindowsNote": "The same install in PowerShell.",
+  "@connectAgentInstallWindowsNote": {
+    "description": "Note of the Windows install"
+  },
+  "connectAgentInstallGo": "Go",
+  "@connectAgentInstallGo": {
+    "description": "Install choice"
+  },
+  "connectAgentInstallGoNote": "Builds tix with your Go toolchain.",
+  "@connectAgentInstallGoNote": {
+    "description": "Note of the Go install"
+  },
+  "connectAgentInstallContainer": "Container",
+  "@connectAgentInstallContainer": {
+    "description": "Install choice"
+  },
+  "connectAgentInstallContainerNote": "Runs one command from the published image, with nothing installed. Docker takes the same arguments.",
+  "@connectAgentInstallContainerNote": {
+    "description": "Note of the container install"
+  },
+  "connectAgentSaveContext": "Save a context",
+  "@connectAgentSaveContext": {
+    "description": "Heading of the context command"
+  },
+  "connectAgentSaveContextNote": "Stores the server, token and tenant under one name and makes it the default, so later commands need no flags.",
+  "@connectAgentSaveContextNote": {
+    "description": "Note of the context command"
+  },
+  "connectAgentVerify": "Check the connection",
+  "@connectAgentVerify": {
+    "description": "Heading of the verify command"
+  },
+  "connectAgentVerifyNote": "Lists five tasks from this server. An error names what is wrong: the address, the token or a scope.",
+  "@connectAgentVerifyNote": {
+    "description": "Note of the verify command"
+  },
+  "connectAgentMcpNote": "tix mcp serves the API as tools over standard input and output, so the CLI has to be installed first. A tool that deletes or cannot be undone is left out unless you add --allow-destructive after mcp.",
+  "@connectAgentMcpNote": {
+    "description": "Note at the top of the MCP commands"
+  },
+  "connectAgentCommandLine": "Command line",
+  "@connectAgentCommandLine": {
+    "description": "Heading of a client's registration command"
+  },
+  "connectAgentMcpProjectRoot": "At the root of a project.",
+  "@connectAgentMcpProjectRoot": {
+    "description": "Note of Claude Code's .mcp.json"
+  },
+  "connectAgentMcpCodex": "Shared by the Codex CLI and IDE extension.",
+  "@connectAgentMcpCodex": {
+    "description": "Note of Codex's config.toml"
+  },
+  "connectAgentMcpOpenCode": "The command and its arguments are one array, and the variables go under environment.",
+  "@connectAgentMcpOpenCode": {
+    "description": "Note of OpenCode's opencode.json"
+  },
+  "connectAgentMcpGemini": "In a project, or ~/.gemini/settings.json for every project. Gemini CLI starts it only in a trusted folder.",
+  "@connectAgentMcpGemini": {
+    "description": "Note of Gemini CLI's settings.json"
+  },
+  "connectAgentMcpClaudeDesktop": "Quit and reopen the app after editing it.",
+  "@connectAgentMcpClaudeDesktop": {
+    "description": "Note of Claude Desktop's config file"
+  },
+  "connectAgentMcpCursor": "In a project, or ~/.cursor/mcp.json for every project.",
+  "@connectAgentMcpCursor": {
+    "description": "Note of Cursor's mcp.json"
+  },
+  "connectAgentMcpVscode": "In a workspace, for GitHub Copilot's agent mode.",
+  "@connectAgentMcpVscode": {
+    "description": "Note of VS Code's mcp.json"
+  },
+  "connectAgentMcpVscodeCli": "Adds the same server to your user profile.",
+  "@connectAgentMcpVscodeCli": {
+    "description": "Note of VS Code's command"
+  },
+  "connectAgentMcpZed": "Zed's settings file, opened with zed: open settings file.",
+  "@connectAgentMcpZed": {
+    "description": "Note of Zed's settings.json"
+  },
+  "connectAgentSeeTools": "See the tools",
+  "@connectAgentSeeTools": {
+    "description": "Heading of tix mcp --list"
+  },
+  "connectAgentSeeToolsNote": "Prints every tool, the scope it needs and whether it is offered. It needs no server.",
+  "@connectAgentSeeToolsNote": {
+    "description": "Note of tix mcp --list"
+  },
+  "connectAgentSshNote": "Your SSH key is the credential, and nothing needs installing. The tenant goes where the user name usually does.",
+  "@connectAgentSshNote": {
+    "description": "Note at the top of the SSH commands"
+  },
+  "connectAgentSshAddress": "The app cannot tell whether this server runs an SSH listener, or on which address. These commands use the server's host and port 22; an administrator names the real address with ssh.public_address.",
+  "@connectAgentSshAddress": {
+    "description": "Note on SSH commands: the app guesses the address"
+  },
+  "connectAgentSshKey": "Enrol your key",
+  "@connectAgentSshKey": {
+    "description": "Heading of the key enrol command"
+  },
+  "connectAgentSshKeyNote": "Once, from a configured CLI. Add --all-tenants to enrol it in every tenant you belong to. The Security screen does the same in the app.",
+  "@connectAgentSshKeyNote": {
+    "description": "Note of the key enrol command"
+  },
+  "connectAgentSshTui": "Open the terminal interface",
+  "@connectAgentSshTui": {
+    "description": "Heading of the ssh command"
+  },
+  "connectAgentSshCmd": "Run a tix command",
+  "@connectAgentSshCmd": {
+    "description": "Heading of a command run over SSH"
+  },
+  "connectAgentSshCmdNote": "Runs on the server as you, with nothing installed or configured here. The server reads no file of yours: redirect with < and > instead.",
+  "@connectAgentSshCmdNote": {
+    "description": "Note of a command run over SSH"
+  },
+  "connectAgentSshExport": "Export over SSH",
+  "@connectAgentSshExport": {
+    "description": "Heading of the export over SSH"
+  },
+  "connectAgentSshExportNote": "Streams the tenant's snapshot to your machine. It needs the export scope.",
+  "@connectAgentSshExportNote": {
+    "description": "Note of the export over SSH"
+  },
+  "connectAgentSshWatch": "Stream events",
+  "@connectAgentSshWatch": {
+    "description": "Heading of the event stream over SSH"
+  },
+  "connectAgentSshWatchNote": "One JSON event per line, for a script. Add -t after ssh for the coloured view a person reads.",
+  "@connectAgentSshWatchNote": {
+    "description": "Note of the event stream over SSH"
+  },
+  "connectAgentRestWhoami": "Who the token is",
+  "@connectAgentRestWhoami": {
+    "description": "Heading of the whoami call"
+  },
+  "connectAgentRestTasks": "List tasks",
+  "@connectAgentRestTasks": {
+    "description": "Heading of the task listing call"
+  },
+  "connectAgentOpenApi": "Every operation is described in the OpenAPI document at {url}, which needs no token.",
+  "@connectAgentOpenApi": {
+    "description": "Note under the API commands",
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "connectAgentSkillNote": "The skill teaches an agent the claim, lease and release loop, the exit codes and the JSON output.",
+  "@connectAgentSkillNote": {
+    "description": "Note at the top of the skill commands"
+  },
+  "connectAgentSkillProject": "Claude Code, this project",
+  "@connectAgentSkillProject": {
+    "description": "Skill install choice"
+  },
+  "connectAgentSkillProjectNote": "Run it at the root of the repository. Commit the folder so everyone working there gets it.",
+  "@connectAgentSkillProjectNote": {
+    "description": "Note of the project skill install"
+  },
+  "connectAgentSkillUser": "Claude Code, every project",
+  "@connectAgentSkillUser": {
+    "description": "Skill install choice"
+  },
+  "connectAgentSkillUserNote": "Installs it for you alone, in every project.",
+  "@connectAgentSkillUserNote": {
+    "description": "Note of the user skill install"
+  },
+  "connectAgentSkillOther": "Other agents",
+  "@connectAgentSkillOther": {
+    "description": "Skill install choice"
+  },
+  "connectAgentSkillOtherNote": "Codex, OpenCode, Gemini CLI and most other agents read AGENTS.md. Any agent that can fetch a URL can follow the skill.",
+  "@connectAgentSkillOtherNote": {
+    "description": "Note of the other agents skill install"
+  },
   "securityTitle": "Security",
   "securitySubtitle": "Your second factor and SSH keys",
   "totpTitle": "Second factor",
@@ -4869,6 +5293,153 @@
   "watchTitle": "Live events",
   "@watchTitle": {
     "description": "Title of the Live events screen, the raw event stream listed under Manage"
+  },
+  "statsTitle": "Statistics",
+  "@statsTitle": {
+    "description": "Title of the Statistics screen and its navigation destination"
+  },
+  "goStats": "Go to Statistics",
+  "@goStats": {
+    "description": "Command palette entry that opens Statistics"
+  },
+  "statsIntro": "Throughput, lead time and who moved the work, over a window that ends now.",
+  "@statsIntro": {
+    "description": "Line under the Statistics title"
+  },
+  "statsInfo": "Completed counts tasks that reached a terminal state in the window, cancelled ones included; created counts tasks made in it. Lead time runs from a task's creation to its terminal state; slowest is the longest of those. The window always ends now.",
+  "@statsInfo": {
+    "description": "Explanation behind the (i) beside the Statistics title, as tix's web says it"
+  },
+  "statsWindow": "Window",
+  "@statsWindow": {
+    "description": "Label of the window picker on Statistics"
+  },
+  "statsDays": "{days} days",
+  "@statsDays": {
+    "description": "One window choice on Statistics",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "statsProject": "Project",
+  "@statsProject": {
+    "description": "Label of the project picker on Statistics"
+  },
+  "statsEveryProject": "Every project",
+  "@statsEveryProject": {
+    "description": "Project picker choice that shows the whole tenant"
+  },
+  "statsShortProjects": "This picker does not list every project in this tenant, so a project missing from it cannot be chosen here. The figures below are unaffected.",
+  "@statsShortProjects": {
+    "description": "Note when the project picker could not list every project"
+  },
+  "statsCompleted": "completed",
+  "@statsCompleted": {
+    "description": "Caption under the count of completed tasks"
+  },
+  "statsCreated": "created",
+  "@statsCreated": {
+    "description": "Caption under the count of created tasks"
+  },
+  "statsMedianLead": "median lead time",
+  "@statsMedianLead": {
+    "description": "Caption under the median lead time"
+  },
+  "statsSlowest": "slowest",
+  "@statsSlowest": {
+    "description": "Caption under the slowest lead time"
+  },
+  "statsPerDay": "Completed per day",
+  "@statsPerDay": {
+    "description": "Heading of the per-day chart"
+  },
+  "statsPerDayInfo": "Tasks that reached a terminal state, by the UTC day it happened. A task reopened since then is not counted, and only its latest completion is.",
+  "@statsPerDayInfo": {
+    "description": "Explanation behind the (i) of the per-day chart"
+  },
+  "statsPerDayLabel": "Tasks completed per day",
+  "@statsPerDayLabel": {
+    "description": "Screen reader label of the per-day chart"
+  },
+  "statsDayCompleted": "{day}: {count} completed",
+  "@statsDayCompleted": {
+    "description": "Tooltip and screen reader label of one day's bar",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsNoneCompleted": "Nothing was completed in this window.",
+  "@statsNoneCompleted": {
+    "description": "Shown instead of the per-day chart when nothing was completed"
+  },
+  "statsWhere": "Where the work is",
+  "@statsWhere": {
+    "description": "Heading of the state category breakdown"
+  },
+  "statsWhereInfo": "How many tasks sit in each state category right now, whatever the window. Done and cancelled are kept apart, so abandoned work never reads as finished work.",
+  "@statsWhereInfo": {
+    "description": "Explanation behind the (i) of the state category breakdown"
+  },
+  "statsSpread": "How the tasks are spread across states",
+  "@statsSpread": {
+    "description": "Screen reader label of the divided bar"
+  },
+  "statsNoTasks": "No tasks yet.",
+  "@statsNoTasks": {
+    "description": "Shown instead of the breakdown when the tenant has no tasks"
+  },
+  "statsActive": "Most active",
+  "@statsActive": {
+    "description": "Heading of the leaderboard"
+  },
+  "statsActiveInfo": "People and agents ranked by how many tasks they moved to a terminal state, read from the audit log. It is not a measure of effort. A move older than the audit retention window counts for nobody.",
+  "@statsActiveInfo": {
+    "description": "Explanation behind the (i) of the leaderboard"
+  },
+  "statsCounting": "Counting {measure}.",
+  "@statsCounting": {
+    "description": "What the leaderboard counts, under its heading",
+    "placeholders": {
+      "measure": {
+        "type": "String"
+      }
+    }
+  },
+  "statsMeasureMoved": "tasks moved to a terminal state",
+  "@statsMeasureMoved": {
+    "description": "The leaderboard's measure, as tix names it"
+  },
+  "statsNobody": "Nobody moved a task to a terminal state in this window.",
+  "@statsNobody": {
+    "description": "Shown instead of the leaderboard when it is empty"
+  },
+  "statsWaiting": "Waiting longest",
+  "@statsWaiting": {
+    "description": "Heading of the oldest open tasks"
+  },
+  "statsWaitingInfo": "The oldest tasks that have not reached a terminal state, whatever the window. Age counts from when the task was created.",
+  "@statsWaitingInfo": {
+    "description": "Explanation behind the (i) of the oldest open tasks"
+  },
+  "statsNothingWaiting": "Nothing is waiting: every task has reached a terminal state.",
+  "@statsNothingWaiting": {
+    "description": "Shown when no open task is waiting"
+  },
+  "statsAge": "age {age}",
+  "@statsAge": {
+    "description": "How old a waiting task is, in its row",
+    "placeholders": {
+      "age": {
+        "type": "String"
+      }
+    }
   },
   "watchSubtitle": "The tenant's events as they happen, newest first.",
   "@watchSubtitle": {

@@ -4211,6 +4211,93 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tokensMine => 'Meine API-Token';
 
   @override
+  String get actorSubtitle => 'Eine Person oder ein Agent dieses Mandanten';
+
+  @override
+  String get actorInfo =>
+      'Eine Person oder ein Agent dieses Mandanten, unter dem Namen, den andere verwenden. Was er darf, wird hier nicht gezeigt.';
+
+  @override
+  String get actorOpenHint => 'Öffnet die Seite';
+
+  @override
+  String get actorAbout => 'Über';
+
+  @override
+  String get actorYou => '(Sie)';
+
+  @override
+  String get actorKindUser => 'Person';
+
+  @override
+  String get actorKindAgent => 'Agent';
+
+  @override
+  String get actorKindSystem => 'System';
+
+  @override
+  String get actorHandle => 'Handle';
+
+  @override
+  String get actorName => 'Name';
+
+  @override
+  String get actorNotSet => 'Nicht festgelegt';
+
+  @override
+  String get actorId => 'Akteur-ID';
+
+  @override
+  String get actorCopyId => 'Akteur-ID kopieren';
+
+  @override
+  String get actorYourProfile => 'Ihr Profil';
+
+  @override
+  String actorTasks(String name) {
+    return 'Aufgaben von $name';
+  }
+
+  @override
+  String get actorTasksFirst => 'Die ersten 20 werden angezeigt.';
+
+  @override
+  String get actorTasksNone => 'Nichts ist zugewiesen.';
+
+  @override
+  String get actorTokens => 'API-Tokens';
+
+  @override
+  String get actorTokensNone => 'Keine API-Tokens.';
+
+  @override
+  String get actorKeys => 'SSH-Schlüssel';
+
+  @override
+  String get actorKeysNone => 'Keine SSH-Schlüssel.';
+
+  @override
+  String get actorRevoked => 'Widerrufen';
+
+  @override
+  String actorLastUsed(String date) {
+    return 'zuletzt benutzt $date';
+  }
+
+  @override
+  String get actorNeverUsed => 'nie benutzt';
+
+  @override
+  String get actorRecent => 'Letzte Aktivität';
+
+  @override
+  String get actorRecentNone => 'Keine aufgezeichnete Aktivität.';
+
+  @override
+  String get actorRecentNeedsAudit =>
+      'Die letzte Aktivität braucht den Scope audit:read, den Sie nicht haben.';
+
+  @override
   String get tokensIssue => 'Token ausstellen';
 
   @override
@@ -4908,6 +4995,268 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get settingsTokensHelp =>
       'Zugangsdaten für Skripte, die CLI und Agenten';
+
+  @override
+  String get connectAgentTitle => 'Agent verbinden';
+
+  @override
+  String get connectAgentSubtitle =>
+      'Befehle für CLI, MCP-Clients, SSH, die API und den Agenten-Skill';
+
+  @override
+  String get goConnectAgent => 'Agent verbinden';
+
+  @override
+  String get connectAgentIntro =>
+      'Holen Sie sich eine Anmeldung, wählen Sie die Verbindungsart und kopieren Sie die Befehle.';
+
+  @override
+  String get connectAgentInfo =>
+      'Holen Sie sich eine Anmeldung, wählen Sie die Verbindungsart und kopieren Sie die Befehle. Jeder Befehl ist für diesen Server und für Sie ausgefüllt.';
+
+  @override
+  String get connectAgentServer => 'Server';
+
+  @override
+  String get connectAgentTenant => 'Mandant';
+
+  @override
+  String get connectAgentSignedInAs => 'Angemeldet als';
+
+  @override
+  String get connectAgentStepCredential => '1. Anmeldung holen';
+
+  @override
+  String get connectAgentStepPick => '2. Verbindungsart wählen';
+
+  @override
+  String connectAgentStepCopy(String way) {
+    return '3. Befehle kopieren: $way';
+  }
+
+  @override
+  String get connectAgentCli => 'CLI';
+
+  @override
+  String get connectAgentMcp => 'MCP';
+
+  @override
+  String get connectAgentSsh => 'SSH';
+
+  @override
+  String get connectAgentApi => 'API';
+
+  @override
+  String get connectAgentSkill => 'Skill';
+
+  @override
+  String get connectAgentTokenNeeded =>
+      'Die Befehle für CLI, MCP und API lesen \$TIX_TOKEN. Stellen Sie hier ein Token aus, dann füllt der Bildschirm es ein, oder setzen Sie TIX_TOKEN in Ihrer Shell auf ein vorhandenes.';
+
+  @override
+  String get connectAgentNoTokenAdmin =>
+      'Ein Token auszustellen braucht den Scope token:admin, den Sie nicht haben. Bitten Sie eine Administratorin oder einen Administrator darum.';
+
+  @override
+  String get connectAgentTokenFilled =>
+      'Jeder Befehl auf diesem Bildschirm enthält jetzt dieses Token. Es wird nirgends gespeichert: Wer den Bildschirm verlässt, bekommt wieder \$TIX_TOKEN.';
+
+  @override
+  String get connectAgentExportNote =>
+      'Setzt TIX_TOKEN in dieser Shell, für Befehle, die es lesen.';
+
+  @override
+  String get connectAgentFromCli => 'Über die Kommandozeile';
+
+  @override
+  String get connectAgentSeeTokens => 'Ihre Tokens ansehen und widerrufen';
+
+  @override
+  String get connectAgentRotate => 'Später rotieren';
+
+  @override
+  String get connectAgentRotateNote =>
+      'Stellt einen neuen Wert mit gleichem Namen und Scopes aus und lässt den alten zehn Minuten weiter gelten, damit ein laufender Agent nicht abbricht.';
+
+  @override
+  String get connectAgentSshNoToken =>
+      'Der SSH-Tab braucht kein Token: Ihr registrierter SSH-Schlüssel ist die Anmeldung.';
+
+  @override
+  String get connectAgentOpenSsh => 'SSH-Tab öffnen';
+
+  @override
+  String get connectAgentInstall => 'CLI installieren';
+
+  @override
+  String get connectAgentInstallNote =>
+      'Installieren Sie die Version, die dieser Server ausführt, damit CLI und Server zusammenpassen.';
+
+  @override
+  String get connectAgentInstallUnix => 'Linux und macOS';
+
+  @override
+  String get connectAgentInstallUnixNote =>
+      'Lädt die Version für dieses Betriebssystem und diese CPU, prüft die Prüfsumme und legt tix in Ihren PATH.';
+
+  @override
+  String get connectAgentInstallWindows => 'Windows';
+
+  @override
+  String get connectAgentInstallWindowsNote =>
+      'Dieselbe Installation in PowerShell.';
+
+  @override
+  String get connectAgentInstallGo => 'Go';
+
+  @override
+  String get connectAgentInstallGoNote => 'Baut tix mit Ihrer Go-Toolchain.';
+
+  @override
+  String get connectAgentInstallContainer => 'Container';
+
+  @override
+  String get connectAgentInstallContainerNote =>
+      'Führt einen Befehl aus dem veröffentlichten Image aus, ohne Installation. Docker nimmt dieselben Argumente.';
+
+  @override
+  String get connectAgentSaveContext => 'Kontext speichern';
+
+  @override
+  String get connectAgentSaveContextNote =>
+      'Speichert Server, Token und Mandant unter einem Namen und macht ihn zum Standard, sodass spätere Befehle keine Flags brauchen.';
+
+  @override
+  String get connectAgentVerify => 'Verbindung prüfen';
+
+  @override
+  String get connectAgentVerifyNote =>
+      'Listet fünf Aufgaben dieses Servers. Ein Fehler nennt, was nicht stimmt: Adresse, Token oder ein Scope.';
+
+  @override
+  String get connectAgentMcpNote =>
+      'tix mcp stellt die API als Werkzeuge über Standardein- und -ausgabe bereit, die CLI muss also zuerst installiert sein. Ein Werkzeug, das löscht oder nicht rückgängig zu machen ist, fehlt, außer Sie fügen --allow-destructive nach mcp hinzu.';
+
+  @override
+  String get connectAgentCommandLine => 'Kommandozeile';
+
+  @override
+  String get connectAgentMcpProjectRoot =>
+      'Im Wurzelverzeichnis eines Projekts.';
+
+  @override
+  String get connectAgentMcpCodex =>
+      'Gemeinsam für Codex CLI und IDE-Erweiterung.';
+
+  @override
+  String get connectAgentMcpOpenCode =>
+      'Befehl und Argumente sind ein Array, die Variablen stehen unter environment.';
+
+  @override
+  String get connectAgentMcpGemini =>
+      'In einem Projekt, oder ~/.gemini/settings.json für alle Projekte. Gemini CLI startet es nur in einem vertrauenswürdigen Ordner.';
+
+  @override
+  String get connectAgentMcpClaudeDesktop =>
+      'Beenden und öffnen Sie die App nach dem Bearbeiten neu.';
+
+  @override
+  String get connectAgentMcpCursor =>
+      'In einem Projekt, oder ~/.cursor/mcp.json für alle Projekte.';
+
+  @override
+  String get connectAgentMcpVscode =>
+      'In einem Arbeitsbereich, für den Agentenmodus von GitHub Copilot.';
+
+  @override
+  String get connectAgentMcpVscodeCli =>
+      'Fügt denselben Server Ihrem Benutzerprofil hinzu.';
+
+  @override
+  String get connectAgentMcpZed =>
+      'Die Einstellungsdatei von Zed, geöffnet mit zed: open settings file.';
+
+  @override
+  String get connectAgentSeeTools => 'Werkzeuge ansehen';
+
+  @override
+  String get connectAgentSeeToolsNote =>
+      'Gibt jedes Werkzeug aus, den nötigen Scope und ob es angeboten wird. Es braucht keinen Server.';
+
+  @override
+  String get connectAgentSshNote =>
+      'Ihr SSH-Schlüssel ist die Anmeldung, und nichts muss installiert werden. Der Mandant steht dort, wo sonst der Benutzername steht.';
+
+  @override
+  String get connectAgentSshAddress =>
+      'Die App kann nicht erkennen, ob dieser Server SSH anbietet oder unter welcher Adresse. Diese Befehle nutzen den Host des Servers und Port 22; die tatsächliche Adresse legt eine Administratorin oder ein Administrator mit ssh.public_address fest.';
+
+  @override
+  String get connectAgentSshKey => 'Schlüssel registrieren';
+
+  @override
+  String get connectAgentSshKeyNote =>
+      'Einmal, von einer eingerichteten CLI. Mit --all-tenants registrieren Sie ihn in jedem Ihrer Mandanten. Der Bildschirm Sicherheit tut dasselbe in der App.';
+
+  @override
+  String get connectAgentSshTui => 'Terminaloberfläche öffnen';
+
+  @override
+  String get connectAgentSshCmd => 'Einen tix-Befehl ausführen';
+
+  @override
+  String get connectAgentSshCmdNote =>
+      'Läuft auf dem Server als Sie, ohne dass hier etwas installiert oder eingerichtet ist. Der Server liest keine Datei von Ihnen: leiten Sie stattdessen mit < und > um.';
+
+  @override
+  String get connectAgentSshExport => 'Export über SSH';
+
+  @override
+  String get connectAgentSshExportNote =>
+      'Überträgt den Snapshot des Mandanten auf Ihren Rechner. Dafür braucht es den Scope export.';
+
+  @override
+  String get connectAgentSshWatch => 'Ereignisse streamen';
+
+  @override
+  String get connectAgentSshWatchNote =>
+      'Ein JSON-Ereignis pro Zeile, für ein Skript. Fügen Sie -t nach ssh hinzu für die farbige Ansicht zum Lesen.';
+
+  @override
+  String get connectAgentRestWhoami => 'Wem das Token gehört';
+
+  @override
+  String get connectAgentRestTasks => 'Aufgaben auflisten';
+
+  @override
+  String connectAgentOpenApi(String url) {
+    return 'Jede Operation ist im OpenAPI-Dokument unter $url beschrieben, das kein Token braucht.';
+  }
+
+  @override
+  String get connectAgentSkillNote =>
+      'Der Skill bringt einem Agenten den Ablauf aus Übernehmen, Lease und Freigeben bei, die Exit-Codes und die JSON-Ausgabe.';
+
+  @override
+  String get connectAgentSkillProject => 'Claude Code, dieses Projekt';
+
+  @override
+  String get connectAgentSkillProjectNote =>
+      'Im Wurzelverzeichnis des Repositorys ausführen. Committen Sie den Ordner, damit alle dort ihn bekommen.';
+
+  @override
+  String get connectAgentSkillUser => 'Claude Code, alle Projekte';
+
+  @override
+  String get connectAgentSkillUserNote =>
+      'Installiert ihn nur für Sie, in jedem Projekt.';
+
+  @override
+  String get connectAgentSkillOther => 'Andere Agenten';
+
+  @override
+  String get connectAgentSkillOtherNote =>
+      'Codex, OpenCode, Gemini CLI und die meisten anderen Agenten lesen AGENTS.md. Jeder Agent, der eine URL abrufen kann, kann dem Skill folgen.';
 
   @override
   String get securityTitle => 'Sicherheit';
@@ -8016,6 +8365,117 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get watchTitle => 'Live-Ereignisse';
+
+  @override
+  String get statsTitle => 'Statistik';
+
+  @override
+  String get goStats => 'Zu Statistik';
+
+  @override
+  String get statsIntro =>
+      'Durchsatz, Durchlaufzeit und wer die Arbeit bewegt hat, über einen Zeitraum, der jetzt endet.';
+
+  @override
+  String get statsInfo =>
+      '„Abgeschlossen“ zählt Aufgaben, die im Zeitraum einen Endzustand erreicht haben, abgebrochene eingeschlossen; „erstellt“ zählt die darin angelegten. Die Durchlaufzeit reicht von der Erstellung einer Aufgabe bis zu ihrem Endzustand; „langsamste“ ist die längste davon. Der Zeitraum endet immer jetzt.';
+
+  @override
+  String get statsWindow => 'Zeitraum';
+
+  @override
+  String statsDays(int days) {
+    return '$days Tage';
+  }
+
+  @override
+  String get statsProject => 'Projekt';
+
+  @override
+  String get statsEveryProject => 'Alle Projekte';
+
+  @override
+  String get statsShortProjects =>
+      'Diese Auswahl listet nicht alle Projekte dieses Mandanten auf, ein fehlendes Projekt kann hier also nicht gewählt werden. Die Zahlen unten sind davon nicht betroffen.';
+
+  @override
+  String get statsCompleted => 'abgeschlossen';
+
+  @override
+  String get statsCreated => 'erstellt';
+
+  @override
+  String get statsMedianLead => 'mittlere Durchlaufzeit';
+
+  @override
+  String get statsSlowest => 'langsamste';
+
+  @override
+  String get statsPerDay => 'Pro Tag abgeschlossen';
+
+  @override
+  String get statsPerDayInfo =>
+      'Aufgaben, die einen Endzustand erreicht haben, nach dem UTC-Tag, an dem es geschah. Eine seither wieder geöffnete Aufgabe zählt nicht, und nur ihr letzter Abschluss zählt.';
+
+  @override
+  String get statsPerDayLabel => 'Abgeschlossene Aufgaben pro Tag';
+
+  @override
+  String statsDayCompleted(String day, int count) {
+    return '$day: $count abgeschlossen';
+  }
+
+  @override
+  String get statsNoneCompleted =>
+      'In diesem Zeitraum wurde nichts abgeschlossen.';
+
+  @override
+  String get statsWhere => 'Wo die Arbeit liegt';
+
+  @override
+  String get statsWhereInfo =>
+      'Wie viele Aufgaben gerade in jeder Zustandskategorie liegen, unabhängig vom Zeitraum. Erledigt und abgebrochen bleiben getrennt, damit aufgegebene Arbeit nie als fertig erscheint.';
+
+  @override
+  String get statsSpread => 'Wie sich die Aufgaben auf die Zustände verteilen';
+
+  @override
+  String get statsNoTasks => 'Noch keine Aufgaben.';
+
+  @override
+  String get statsActive => 'Am aktivsten';
+
+  @override
+  String get statsActiveInfo =>
+      'Personen und Agenten, geordnet danach, wie viele Aufgaben sie in einen Endzustand gebracht haben, gelesen aus dem Audit-Log. Das ist kein Maß für Aufwand. Ein Wechsel, der älter ist als die Aufbewahrung des Audit-Logs, zählt für niemanden.';
+
+  @override
+  String statsCounting(String measure) {
+    return 'Gezählt werden $measure.';
+  }
+
+  @override
+  String get statsMeasureMoved => 'in einen Endzustand gebrachte Aufgaben';
+
+  @override
+  String get statsNobody =>
+      'In diesem Zeitraum hat niemand eine Aufgabe in einen Endzustand gebracht.';
+
+  @override
+  String get statsWaiting => 'Warten am längsten';
+
+  @override
+  String get statsWaitingInfo =>
+      'Die ältesten Aufgaben, die noch keinen Endzustand erreicht haben, unabhängig vom Zeitraum. Das Alter zählt ab der Erstellung der Aufgabe.';
+
+  @override
+  String get statsNothingWaiting =>
+      'Nichts wartet: Jede Aufgabe hat einen Endzustand erreicht.';
+
+  @override
+  String statsAge(String age) {
+    return 'Alter $age';
+  }
 
   @override
   String get watchSubtitle =>

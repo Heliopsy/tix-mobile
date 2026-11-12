@@ -110,6 +110,18 @@ abstract final class Routes {
   /// Where the raw event stream used to be; redirects to [events].
   static const legacyWatch = '/watch';
 
+  /// Throughput, lead time, where the work is and who moved it, as the web's
+  /// Statistics screen.
+  static const stats = '/stats';
+
+  /// A person or agent of the tenant, by id or handle.
+  static String actor(String idOrHandle) =>
+      '/actors/${Uri.encodeComponent(idOrHandle)}';
+
+  /// The commands that connect a CLI, an MCP client or an agent to the
+  /// active server, as the web's Connect an agent screen.
+  static const connectAgent = '/settings/connect-agent';
+
   /// What stays available offline, its storage and sync.
   static const offline = '/settings/offline';
 
