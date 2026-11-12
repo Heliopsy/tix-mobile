@@ -52,6 +52,10 @@ TaskParams parseFilterExpression(String expression, {required DateTime now}) {
     }
     final negate = token.text.startsWith('-');
     final text = negate ? token.text.substring(1) : token.text;
+    if (atHandle(text) case final String handle) {
+      _applyTerm('assignee', handle, false, negate, now, add);
+      continue;
+    }
     final cut = text.indexOf(RegExp('[:~]'));
     if (cut < 0) {
       if (text.isEmpty) continue;
@@ -353,6 +357,15 @@ TixException _invalid(String message) =>
 /// One word of a filter expression; `quoted` when a quote opened it, which
 /// makes it free text however many colons it holds.
 typedef FilterToken = ({String text, bool quoted});
+
+/// The handle of a word written `@handle`, as tix reads it for `assignee:`;
+/// null for a lone `@` and for a word that carries an operator.
+String? atHandle(String word) {
+  if (!word.startsWith('@')) return null;
+  final handle = word.substring(1);
+  if (handle.isEmpty || handle.contains(RegExp('[:~]'))) return null;
+  return handle;
+}
 
 /// Splits [expression] on spaces, honouring double quotes, as tix does.
 List<FilterToken> tokenizeFilter(String expression) {

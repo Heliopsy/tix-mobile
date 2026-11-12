@@ -119,8 +119,10 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 - **Board and lanes**: a workflow's columns with drag and drop, or lanes by project, assignee, priority, tag or
   deadline, each lane's name narrowing the list to it. Each column and lane is starred, collapsed, moved or hidden
   the way tix keeps it for your account.
-- **Filters and search** in tix's filter language, one-tap chips (mine, starred, snoozed, blocked, due windows,
-  finished), and saved filters, your own and shared ones, also opened by name from `/tasks?filter=<name>`.
+- **Filters and search** in tix's filter language, with suggestions for keys and values as you type (arrows, Enter,
+  Tab and Escape on a keyboard), pickers for status, priority, assignee and tag, a removable chip per term, one-tap
+  chips (mine, starred, snoozed, blocked, due windows, finished), and saved filters, your own and shared ones, also
+  opened by name from `/tasks?filter=<name>`.
 - **My work**: your open tasks under Overdue, Today, This week, Later and No date.
 - **Keyboard**: every screen works without a mouse, with the same keys as tix web. `j` and `k` to move, Enter to
   open, `x` to pick, `/` to filter, `v` to switch the view, `d` to mark done, `e` to rename, `t` to move, `m` to

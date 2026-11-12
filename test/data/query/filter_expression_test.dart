@@ -25,6 +25,16 @@ void main() {
     });
   });
 
+  test('a handle is an assignee term, as tix reads it', () {
+    expect(parse('@raj -@mia'), {
+      'assignee': ['raj'],
+      'not_assignee': ['mia'],
+    });
+    expect(parse('@ mail@host'), {
+      'q': ['@ mail@host'],
+    });
+  });
+
   test('free words and quoted text are the search', () {
     expect(parse('fix "status:odd words" login'), {
       'q': ['fix status:odd words login'],

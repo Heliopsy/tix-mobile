@@ -73,8 +73,16 @@ class TixFilterBar extends StatelessWidget {
     this.onSubmitted,
     this.focusNode,
     this.below,
+    this.suggestions,
+    this.terms = const [],
     super.key,
   });
+
+  /// What the word being typed completes to, right under the field.
+  final Widget? suggestions;
+
+  /// One removable chip per term of the query, under the field.
+  final List<Widget> terms;
 
   /// The query's text, when the caller writes into it (a chip that adds a
   /// term, a saved filter that replaces it).
@@ -140,12 +148,21 @@ class TixFilterBar extends StatelessWidget {
                 ],
               ],
             ),
+          ?suggestions,
           if (error case final String message) ...[
             const SizedBox(height: TixSpace.s1),
             Text(
               message,
               key: const Key('filter.error'),
               style: TextStyle(color: context.tix.danger, fontSize: TixText.xs),
+            ),
+          ],
+          if (terms.isNotEmpty) ...[
+            const SizedBox(height: TixSpace.s2),
+            Wrap(
+              spacing: TixSpace.s1,
+              runSpacing: TixSpace.s1,
+              children: terms,
             ),
           ],
           if (chips.isNotEmpty) ...[
@@ -164,6 +181,176 @@ class TixFilterBar extends StatelessWidget {
           ],
           ?below,
         ],
+      ),
+    );
+  }
+}
+
+/// One term of a filter query, such as `tag:ops`, with a button that
+/// takes it out.
+class TixTermChip extends StatelessWidget {
+  /// A chip for [term] removed through [onRemove].
+  const TixTermChip({
+    required this.term,
+    required this.onRemove,
+    required this.removeLabel,
+    super.key,
+  });
+
+  /// The term as written.
+  final String term;
+
+  /// Takes the term out of the query.
+  final VoidCallback onRemove;
+
+  /// What a screen reader says for the remove button.
+  final String removeLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tix;
+    final negated = term.startsWith('-');
+    return InputChip(
+      label: Text(term),
+      labelStyle: TextStyle(
+        fontSize: TixText.xs,
+        color: negated ? t.danger : t.accent,
+      ),
+      backgroundColor: negated ? t.dangerSoft : t.accentSoft,
+      side: BorderSide.none,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(TixRadius.pill),
+      ),
+      deleteIcon: Icon(Icons.close, size: 16, color: t.muted),
+      deleteButtonTooltipMessage: removeLabel,
+      onDeleted: onRemove,
+      materialTapTargetSize: MaterialTapTargetSize.padded,
+    );
+  }
+}
+
+/// One option of a [TixSuggestionList].
+typedef TixSuggestion = ({String label, String note});
+
+/// What the word being typed in a field completes to: a short list of
+/// rows under the field, one of them [highlighted] when keys moved there.
+class TixSuggestionList extends StatelessWidget {
+  /// A list of [options] taken through [onPick].
+  const TixSuggestionList({
+    required this.options,
+    required this.onPick,
+    required this.semanticLabel,
+    this.highlighted = -1,
+    super.key,
+  });
+
+  /// The options, in order.
+  final List<TixSuggestion> options;
+
+  /// Called with the index of the option taken.
+  final ValueChanged<int> onPick;
+
+  /// What a screen reader calls the list.
+  final String semanticLabel;
+
+  /// The option the keys reached; -1 for none.
+  final int highlighted;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tix;
+    return Padding(
+      padding: const EdgeInsets.only(top: TixSpace.s1),
+      child: Semantics(
+        container: true,
+        label: semanticLabel,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: t.surface,
+            border: Border.all(color: t.line),
+            borderRadius: BorderRadius.circular(TixRadius.md),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(TixRadius.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (final (i, o) in options.indexed)
+                  _SuggestionRow(
+                    key: Key('suggest.$i'),
+                    option: o,
+                    highlighted: i == highlighted,
+                    onTap: () => onPick(i),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SuggestionRow extends StatelessWidget {
+  const _SuggestionRow({
+    required this.option,
+    required this.highlighted,
+    required this.onTap,
+    super.key,
+  });
+
+  final TixSuggestion option;
+  final bool highlighted;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tix;
+    return Semantics(
+      button: true,
+      selected: highlighted,
+      child: Material(
+        color: highlighted ? t.accentSoft : Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          canRequestFocus: false,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: TixSize.target),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: TixSpace.s3,
+                vertical: TixSpace.s2,
+              ),
+              child: Row(
+                children: [
+                  Flexible(
+                    child: Text(
+                      option.label,
+                      style: TextStyle(
+                        fontSize: TixText.sm,
+                        color: highlighted ? t.accent : t.ink,
+                        fontWeight: highlighted
+                            ? FontWeight.w600
+                            : FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  if (option.note.isNotEmpty) ...[
+                    const SizedBox(width: TixSpace.s2),
+                    Flexible(
+                      child: Text(
+                        option.note,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: TixText.xs, color: t.muted),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

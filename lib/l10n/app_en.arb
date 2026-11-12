@@ -988,6 +988,20 @@
   "filterSharedHelp": "Others see it under their saved filters; only you and administrators can change it.",
   "filterSnoozed": "Snoozed",
   "filterUnshare": "Stop sharing",
+  "filterSuggestions": "Filter suggestions",
+  "filterRemoveTerm": "Remove {term}",
+  "@filterRemoveTerm": {
+    "placeholders": {
+      "term": {
+        "type": "String"
+      }
+    }
+  },
+  "filterPickers": "Filters",
+  "filterPickersHelp": "Each choice replaces that part of the filter. Any takes it out.",
+  "filterAny": "Any",
+  "filterTag": "Tag",
+  "filterMe": "Me",
   "goMyWork": "Go to My work",
   "goTasks": "Go to Tasks",
   "groupNone": "No grouping",

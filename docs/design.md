@@ -161,6 +161,7 @@ All in `lib/src/core/design/components/`. Each has a doc comment saying when to 
 | `TixPropertyList`, `TixPropertyRow` | A record's attributes, each a 48 dp row that opens its editor; the label moves above the value at large text |
 | `TixMarkdown` | Descriptions and comments: images become links, only `http`, `https` and `mailto` open, and checklist items are ticks |
 | `TixFilterBar`, `TixFilterChip` | A list's query and toggles |
+| `TixSuggestionList`, `TixTermChip` | What the word being typed completes to; one removable term of a query |
 | `TixSelectField`, `TixFieldLabel` | A labelled choice from a short list; the label above a control without one |
 | `TixColourPicker`, `ProjectIconPicker` | A project's colour (none, the eight swatches, custom hex) and icon (none, emoji, built-in, image) |
 | `TixNotice` | A message inside a screen or form: a refusal above the form, a warning, why it is read only |

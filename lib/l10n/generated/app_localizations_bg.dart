@@ -1552,6 +1552,30 @@ class AppLocalizationsBg extends AppLocalizations {
   String get filterUnshare => 'Спри споделянето';
 
   @override
+  String get filterSuggestions => 'Предложения за филтъра';
+
+  @override
+  String filterRemoveTerm(String term) {
+    return 'Премахване на $term';
+  }
+
+  @override
+  String get filterPickers => 'Филтри';
+
+  @override
+  String get filterPickersHelp =>
+      'Всеки избор заменя тази част от филтъра. „Всички“ я премахва.';
+
+  @override
+  String get filterAny => 'Всички';
+
+  @override
+  String get filterTag => 'Етикет';
+
+  @override
+  String get filterMe => 'Аз';
+
+  @override
   String get goMyWork => 'Към Моята работа';
 
   @override
