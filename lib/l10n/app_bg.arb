@@ -2286,7 +2286,7 @@
   "rowClaimSomeone": "някой",
   "rowClaimExpired": "поемането изтече",
   "rowAgo": "преди {span}",
-  "rowClaims": "поемания: {count}",
+  "rowClaims": "{count, plural, =1{1 поемане} other{{count} поемания}}",
   "rowClaimExpiredTip": "{holder} остави поемането да изтече преди {span}, в {time}; задачата отново може да бъде поета",
   "rowRepeats": "Повтаря се {rule}",
   "rowChecklist": "{done} от {total} точки от списъка са отметнати",

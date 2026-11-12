@@ -8310,7 +8310,13 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String rowClaims(int count) {
-    return 'поемания: $count';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count поемания',
+      one: '1 поемане',
+    );
+    return '$_temp0';
   }
 
   @override
