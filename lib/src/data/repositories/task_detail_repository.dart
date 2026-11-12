@@ -11,6 +11,7 @@ import 'package:tix_mobile/src/data/cache/response_cache.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/page.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
+import 'package:tix_mobile/src/data/models/subtask_tree.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/models/task_detail.dart';
 import 'package:tix_mobile/src/data/models/task_patch.dart';
@@ -18,6 +19,7 @@ import 'package:tix_mobile/src/data/models/wire.dart';
 import 'package:tix_mobile/src/data/offline/outbox.dart';
 
 export 'package:tix_mobile/src/data/api/gen/models.gen.dart' show TaskMove;
+export 'package:tix_mobile/src/data/models/subtask_tree.dart';
 export 'package:tix_mobile/src/data/models/task_detail.dart';
 export 'package:tix_mobile/src/data/models/task_patch.dart';
 
@@ -236,17 +238,38 @@ class TaskDetailRepository {
   /// Brings [ref] back from the trash (`task.restore`).
   Future<Task> restore(String ref) => _api.task.restore(ref);
 
-  /// The direct subtasks of [ref] (`task.tree`, depth 1).
-  Future<List<Task>> subtasks(String ref) => _cache.remember(
-    'task/$ref/subtasks',
-    _api.task.tree(ref, depth: 1).then((p) => p.items.skip(1).toList()),
-    (v) => _encode(v, (t) => t.toJson()),
-    decode: (j) => _list(j, Task.fromJson),
+  /// The subtask tree under [ref] (`task.tree`), read one level deeper than
+  /// it is drawn. A tree the server refuses as too large to walk is read one
+  /// level deep instead and comes back [SubtaskTree.shallow].
+  Future<SubtaskTree> subtasks(String ref) => _cache.remember(
+    'task/$ref/tree',
+    _tree(ref),
+    (v) => {'shallow': v.shallow, 'tasks': _encode(v.tasks, (t) => t.toJson())},
+    decode: _decodeTree,
   );
 
-  /// The subtasks of [ref] as last read.
-  Future<List<Task>?> cachedSubtasks(String ref) =>
-      _cache.peek('task/$ref/subtasks', (j) => _list(j, Task.fromJson));
+  Future<SubtaskTree> _tree(String ref) async {
+    try {
+      final page = await _api.task.tree(ref, depth: SubtaskTree.readDepth);
+      return SubtaskTree(tasks: page.items.skip(1).toList());
+    } on TixException catch (e) {
+      if (e.kind != TixErrorKind.preconditionFailed) rethrow;
+    }
+    final page = await _api.task.tree(ref, depth: 1);
+    return SubtaskTree(tasks: page.items.skip(1).toList(), shallow: true);
+  }
+
+  static SubtaskTree _decodeTree(Object? json) {
+    final m = json! as Map<String, Object?>;
+    return SubtaskTree(
+      tasks: _list(m['tasks'], Task.fromJson),
+      shallow: m['shallow'] == true,
+    );
+  }
+
+  /// The subtask tree under [ref] as last read.
+  Future<SubtaskTree?> cachedSubtasks(String ref) =>
+      _cache.peek('task/$ref/tree', _decodeTree);
 
   /// Creates a subtask of [parent] in [project] titled [title]
   /// (`task.create`).

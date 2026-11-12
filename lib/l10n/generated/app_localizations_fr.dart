@@ -1142,6 +1142,34 @@ class AppLocalizationsFr extends AppLocalizations {
   String get taskDetailSubtasks => 'Sous-tâches';
 
   @override
+  String get taskDetailSubtasksInfo =>
+      'Toute l\'arborescence sous cette tâche. Trois niveaux s\'affichent d\'un coup, un niveau plus profond se charge à la demande. La flèche à côté d\'une sous-tâche replie ses propres sous-tâches.';
+
+  @override
+  String taskDetailSubtasksOf(String ref) {
+    return 'Sous-tâches de $ref';
+  }
+
+  @override
+  String taskDetailShowSubtasks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Afficher $count sous-tâches',
+      one: 'Afficher 1 sous-tâche',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get taskDetailSubtasksShallow =>
+      'Cette arborescence est trop grande pour être affichée en entier, seules les sous-tâches directes sont montrées.';
+
+  @override
+  String get taskDetailDeleteAllSubtasksBody =>
+      'Ses sous-tâches sont supprimées avec elle, à tous les niveaux.';
+
+  @override
   String get taskDetailSystem => 'tix';
 
   @override

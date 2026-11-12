@@ -581,15 +581,18 @@ abstract class _$TaskDependencies extends $AsyncNotifier<List<Task>> {
   }
 }
 
-/// A task's direct subtasks.
+/// The subtask tree under a task, with its offline drafts as direct
+/// subtasks.
 
 @ProviderFor(TaskSubtasks)
 final taskSubtasksProvider = TaskSubtasksFamily._();
 
-/// A task's direct subtasks.
+/// The subtask tree under a task, with its offline drafts as direct
+/// subtasks.
 final class TaskSubtasksProvider
-    extends $AsyncNotifierProvider<TaskSubtasks, List<Task>> {
-  /// A task's direct subtasks.
+    extends $AsyncNotifierProvider<TaskSubtasks, SubtaskTree> {
+  /// The subtask tree under a task, with its offline drafts as direct
+  /// subtasks.
   TaskSubtasksProvider._({
     required TaskSubtasksFamily super.from,
     required String super.argument,
@@ -626,17 +629,18 @@ final class TaskSubtasksProvider
   }
 }
 
-String _$taskSubtasksHash() => r'e7f9dd7bf38b12676cf6319cbefe6c019e614ccc';
+String _$taskSubtasksHash() => r'469de5a38e990b79ee1b587209b88d0bd154be00';
 
-/// A task's direct subtasks.
+/// The subtask tree under a task, with its offline drafts as direct
+/// subtasks.
 
 final class TaskSubtasksFamily extends $Family
     with
         $ClassFamilyOverride<
           TaskSubtasks,
-          AsyncValue<List<Task>>,
-          List<Task>,
-          FutureOr<List<Task>>,
+          AsyncValue<SubtaskTree>,
+          SubtaskTree,
+          FutureOr<SubtaskTree>,
           String
         > {
   TaskSubtasksFamily._()
@@ -648,7 +652,8 @@ final class TaskSubtasksFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// A task's direct subtasks.
+  /// The subtask tree under a task, with its offline drafts as direct
+  /// subtasks.
 
   TaskSubtasksProvider call(String taskRef) =>
       TaskSubtasksProvider._(argument: taskRef, from: this);
@@ -657,22 +662,23 @@ final class TaskSubtasksFamily extends $Family
   String toString() => r'taskSubtasksProvider';
 }
 
-/// A task's direct subtasks.
+/// The subtask tree under a task, with its offline drafts as direct
+/// subtasks.
 
-abstract class _$TaskSubtasks extends $AsyncNotifier<List<Task>> {
+abstract class _$TaskSubtasks extends $AsyncNotifier<SubtaskTree> {
   late final _$args = ref.$arg as String;
   String get taskRef => _$args;
 
-  FutureOr<List<Task>> build(String taskRef);
+  FutureOr<SubtaskTree> build(String taskRef);
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<AsyncValue<List<Task>>, List<Task>>;
+    final ref = this.ref as $Ref<AsyncValue<SubtaskTree>, SubtaskTree>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<Task>>, List<Task>>,
-              AsyncValue<List<Task>>,
+              AnyNotifier<AsyncValue<SubtaskTree>, SubtaskTree>,
+              AsyncValue<SubtaskTree>,
               Object?,
               Object?
             >;

@@ -1145,6 +1145,34 @@ class AppLocalizationsDe extends AppLocalizations {
   String get taskDetailSubtasks => 'Unteraufgaben';
 
   @override
+  String get taskDetailSubtasksInfo =>
+      'Der ganze Baum unter dieser Aufgabe. Drei Ebenen werden auf einmal gezeigt, eine tiefere lädt, wenn Sie sie anfordern. Der Pfeil neben einer Unteraufgabe klappt ihre Unteraufgaben ein.';
+
+  @override
+  String taskDetailSubtasksOf(String ref) {
+    return 'Unteraufgaben von $ref';
+  }
+
+  @override
+  String taskDetailShowSubtasks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Unteraufgaben zeigen',
+      one: '1 Unteraufgabe zeigen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get taskDetailSubtasksShallow =>
+      'Dieser Baum ist zu groß, um ihn ganz zu zeigen, daher werden nur die direkten Unteraufgaben angezeigt.';
+
+  @override
+  String get taskDetailDeleteAllSubtasksBody =>
+      'Ihre Unteraufgaben werden auf allen Ebenen mitgelöscht.';
+
+  @override
   String get taskDetailSystem => 'tix';
 
   @override

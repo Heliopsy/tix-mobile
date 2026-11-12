@@ -264,8 +264,8 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
     } on Object {
       trash = const TrashStatus();
     }
-    final subtasks = ref.read(taskSubtasksProvider(task.ref)).value ?? [];
-    final cascade = subtasks.isNotEmpty;
+    final subtasks = ref.read(taskSubtasksProvider(task.ref)).value;
+    final cascade = !(subtasks?.isEmpty ?? true);
     final permanent = hard || !trash.enabled;
     if (!mounted) return;
     if (permanent || cascade) {
@@ -275,7 +275,10 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
         body: [
           if (permanent) l10n.taskDetailDeletePermanentBody,
           if (!permanent) l10n.taskDetailDeleteTrashBody,
-          if (cascade) l10n.taskDetailDeleteSubtasksBody(subtasks.length),
+          if (cascade && subtasks!.complete)
+            l10n.taskDetailDeleteSubtasksBody(subtasks.tasks.length)
+          else if (cascade)
+            l10n.taskDetailDeleteAllSubtasksBody,
         ].join(' '),
         action: permanent
             ? l10n.taskDetailDeleteForGood

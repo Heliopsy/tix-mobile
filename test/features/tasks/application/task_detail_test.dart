@@ -261,11 +261,14 @@ void main() {
     );
     final c = await signedIn();
     final provider = taskSubtasksProvider('infra-1');
-    expect((await c.read(keep(c, provider).future)).single.ref, 'infra-3');
+    expect(
+      (await c.read(keep(c, provider).future)).tasks.single.ref,
+      'infra-3',
+    );
     await c.read(provider.notifier).add('infra', 'Another');
     expect(server.requests.last.body, containsPair('parent_ref', 'infra-1'));
     expect(server.requests.last.body, containsPair('project_ref', 'infra'));
-    expect(c.read(provider).value, hasLength(2));
+    expect(c.read(provider).value!.nodes, hasLength(2));
   });
 
   test('an artifact is attached and listed', () async {

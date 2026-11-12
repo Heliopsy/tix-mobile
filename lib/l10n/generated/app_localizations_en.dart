@@ -1137,6 +1137,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get taskDetailSubtasks => 'Subtasks';
 
   @override
+  String get taskDetailSubtasksInfo =>
+      'The whole tree under this task. Three levels show at once, and a deeper level loads when you ask for it. The arrow beside a subtask folds its own subtasks away.';
+
+  @override
+  String taskDetailSubtasksOf(String ref) {
+    return 'Subtasks of $ref';
+  }
+
+  @override
+  String taskDetailShowSubtasks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Show $count subtasks',
+      one: 'Show 1 subtask',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get taskDetailSubtasksShallow =>
+      'This tree is too large to draw whole, so only direct subtasks are shown.';
+
+  @override
+  String get taskDetailDeleteAllSubtasksBody =>
+      'Its subtasks are deleted with it, at every level.';
+
+  @override
   String get taskDetailSystem => 'tix';
 
   @override

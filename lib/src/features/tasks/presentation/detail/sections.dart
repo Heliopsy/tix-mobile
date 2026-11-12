@@ -214,7 +214,7 @@ class _SectionAction extends StatelessWidget {
   }
 }
 
-/// A list of related tasks: subtasks or dependencies.
+/// A list of related tasks, such as dependencies.
 class _TaskList extends ConsumerWidget {
   const _TaskList({required this.tasks, this.onRemove, this.removeLabel});
 
@@ -225,46 +225,43 @@ class _TaskList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final now = ref.watch(clockProvider)();
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        border: Border.all(color: context.tix.line),
-        borderRadius: BorderRadius.circular(TixRadius.base),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(TixRadius.base),
-        child: Column(
-          children: [
-            for (final task in tasks)
-              Row(
-                children: [
-                  Expanded(
-                    child: TaskRow(
-                      key: Key('related.${task.ref}'),
-                      task: task,
-                      now: now,
-                      onTap: () => context.go(
-                        Routes.task(projectKeyOf(task.ref), task.ref),
-                      ),
+    return _Bordered(
+      child: Column(
+        children: [
+          for (final task in tasks)
+            Row(
+              children: [
+                Expanded(
+                  child: TaskRow(
+                    key: Key('related.${task.ref}'),
+                    task: task,
+                    now: now,
+                    onTap: () => context.go(
+                      Routes.task(projectKeyOf(task.ref), task.ref),
                     ),
                   ),
-                  if (onRemove != null)
-                    TixIconButton(
-                      key: Key('related.remove.${task.ref}'),
-                      icon: Icons.link_off,
-                      tooltip: removeLabel!(task),
-                      onPressed: () => onRemove!(task),
-                    ),
-                ],
-              ),
-          ],
-        ),
+                ),
+                if (onRemove != null)
+                  TixIconButton(
+                    key: Key('related.remove.${task.ref}'),
+                    icon: Icons.link_off,
+                    tooltip: removeLabel!(task),
+                    onPressed: () => onRemove!(task),
+                  ),
+              ],
+            ),
+        ],
       ),
     );
   }
 }
 
-/// The task's direct subtasks and a way to add one.
-class SubtasksSection extends ConsumerWidget {
+/// The subtask tree under the task, folding by node, and a way to add one.
+///
+/// Draws [SubtaskTree.drawDepth] levels as the web does; a node on the last
+/// level with subtasks of its own offers them, and loads that node's tree in
+/// place. Every node starts open; folds last as long as the screen.
+class SubtasksSection extends ConsumerStatefulWidget {
   /// The subtasks of [task].
   const SubtasksSection({required this.task, super.key});
 
@@ -272,8 +269,31 @@ class SubtasksSection extends ConsumerWidget {
   final Task task;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SubtasksSection> createState() => _SubtasksSectionState();
+}
+
+class _SubtasksSectionState extends ConsumerState<SubtasksSection> {
+  final _folded = <String>{};
+  final _loaded = <String>{};
+
+  bool _open(SubtaskNode node) =>
+      !_folded.contains(node.task.ref) &&
+      (node.children.isNotEmpty || _loaded.contains(node.task.ref));
+
+  void _toggle(SubtaskNode node) => setState(() {
+    final ref = node.task.ref;
+    if (_open(node)) {
+      _folded.add(ref);
+    } else {
+      _folded.remove(ref);
+      if (node.more > 0) _loaded.add(ref);
+    }
+  });
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final task = widget.task;
     final provider = taskSubtasksProvider(task.ref);
     final subtasks = ref.watch(provider);
     Future<void> add() async {
@@ -294,14 +314,14 @@ class SubtasksSection extends ConsumerWidget {
       );
     }
 
+    final direct = subtasks.value?.nodes.length ?? 0;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SectionHeader(
           title: l10n.taskDetailSubtasks,
-          subtitle: subtasks.value?.isNotEmpty ?? false
-              ? l10n.taskDetailCount(subtasks.value!.length)
-              : null,
+          info: l10n.taskDetailSubtasksInfo,
+          subtitle: direct > 0 ? l10n.taskDetailCount(direct) : null,
           padding: const EdgeInsets.only(top: TixSpace.s5, bottom: TixSpace.s2),
           trailing: _SectionAction(
             key: const Key('subtask.add'),
@@ -315,7 +335,26 @@ class SubtasksSection extends ConsumerWidget {
             l10n.taskDetailNoSubtasks,
             style: TextStyle(color: context.tix.muted),
           ),
-          AsyncData(:final value) => _TaskList(tasks: value),
+          AsyncData(:final value) => Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: TixSpace.s2,
+            children: [
+              if (value.shallow)
+                Text(
+                  l10n.taskDetailSubtasksShallow,
+                  key: const Key('subtask.shallow'),
+                  style: TextStyle(color: context.tix.muted),
+                ),
+              _Bordered(
+                child: _SubtaskLevel(
+                  nodes: value.nodes,
+                  above: 0,
+                  folds: value.nested,
+                  tree: this,
+                ),
+              ),
+            ],
+          ),
           AsyncError(:final error) => ErrorState(
             error: error,
             compact: true,
@@ -324,6 +363,189 @@ class SubtasksSection extends ConsumerWidget {
           _ => const SkeletonList(rows: 2, leading: false, inline: true),
         },
       ],
+    );
+  }
+}
+
+/// The rounded outline a list of related tasks sits in.
+class _Bordered extends StatelessWidget {
+  const _Bordered({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => DecoratedBox(
+    decoration: BoxDecoration(
+      border: Border.all(color: context.tix.line),
+      borderRadius: BorderRadius.circular(TixRadius.base),
+    ),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(TixRadius.base),
+      child: child,
+    ),
+  );
+}
+
+/// One level of the subtask tree, each node followed by what is open under
+/// it. [above] is how many levels sit above [nodes]' own, for a level loaded
+/// from a deeper node; [folds] reserves the fold column.
+class _SubtaskLevel extends StatelessWidget {
+  const _SubtaskLevel({
+    required this.nodes,
+    required this.above,
+    required this.folds,
+    required this.tree,
+  });
+
+  final List<SubtaskNode> nodes;
+  final int above;
+  final bool folds;
+  final _SubtasksSectionState tree;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      for (final node in nodes) ...[
+        _SubtaskRow(
+          node: node,
+          level: above + node.level,
+          folds: folds,
+          tree: tree,
+        ),
+        if (!tree._folded.contains(node.task.ref)) ...[
+          if (node.children.isNotEmpty)
+            _SubtaskLevel(
+              nodes: node.children,
+              above: above,
+              folds: folds,
+              tree: tree,
+            )
+          else if (node.more > 0 && tree._loaded.contains(node.task.ref))
+            _LoadedLevel(
+              taskRef: node.task.ref,
+              above: above + node.level,
+              tree: tree,
+            )
+          else if (node.more > 0)
+            _Indented(
+              level: above + node.level + 1,
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: TixButton.quiet(
+                  key: Key('subtask.more.${node.task.ref}'),
+                  label: context.l10n.taskDetailShowSubtasks(node.more),
+                  size: TixButtonSize.small,
+                  onPressed: () => tree._toggle(node),
+                ),
+              ),
+            ),
+        ],
+      ],
+    ],
+  );
+}
+
+/// The levels under [taskRef], read from its own tree when asked for.
+class _LoadedLevel extends ConsumerWidget {
+  const _LoadedLevel({
+    required this.taskRef,
+    required this.above,
+    required this.tree,
+  });
+
+  final String taskRef;
+  final int above;
+  final _SubtasksSectionState tree;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final provider = taskSubtasksProvider(taskRef);
+    return switch (ref.watch(provider)) {
+      AsyncData(:final value) => _SubtaskLevel(
+        nodes: value.nodes,
+        above: above,
+        folds: true,
+        tree: tree,
+      ),
+      AsyncError(:final error) => _Indented(
+        level: above + 1,
+        child: ErrorState(
+          error: error,
+          compact: true,
+          onRetry: () => ref.invalidate(provider),
+        ),
+      ),
+      _ => const SkeletonList(rows: 1, leading: false, inline: true),
+    };
+  }
+}
+
+/// [child] moved in by its depth, up to a few levels so a deep row keeps
+/// room for its title.
+class _Indented extends StatelessWidget {
+  const _Indented({required this.level, required this.child});
+
+  static const _deepest = 5;
+
+  final int level;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: EdgeInsetsDirectional.only(
+      start: TixSpace.s5 * ((level < _deepest ? level : _deepest) - 1),
+    ),
+    child: child,
+  );
+}
+
+/// One subtask: its fold control, then the row that opens it.
+class _SubtaskRow extends ConsumerWidget {
+  const _SubtaskRow({
+    required this.node,
+    required this.level,
+    required this.folds,
+    required this.tree,
+  });
+
+  final SubtaskNode node;
+  final int level;
+  final bool folds;
+  final _SubtasksSectionState tree;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final task = node.task;
+    final now = ref.watch(clockProvider)();
+    final open = tree._open(node);
+    return _Indented(
+      level: level,
+      child: Row(
+        children: [
+          if (node.children.isNotEmpty || node.more > 0)
+            Semantics(
+              expanded: open,
+              child: TixIconButton(
+                key: Key('subtask.fold.${task.ref}'),
+                icon: open ? Icons.expand_more : Icons.chevron_right,
+                tooltip: context.l10n.taskDetailSubtasksOf(task.ref),
+                onPressed: () => tree._toggle(node),
+              ),
+            )
+          else if (folds)
+            const SizedBox(width: TixSize.target),
+          Expanded(
+            child: TaskRow(
+              key: Key('related.${task.ref}'),
+              task: task,
+              now: now,
+              onTap: () =>
+                  context.go(Routes.task(projectKeyOf(task.ref), task.ref)),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

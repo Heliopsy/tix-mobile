@@ -662,6 +662,25 @@
   "taskDetailStarred": "Starred.",
   "taskDetailSubtaskAdded": "Subtask added.",
   "taskDetailSubtasks": "Subtasks",
+  "taskDetailSubtasksInfo": "The whole tree under this task. Three levels show at once, and a deeper level loads when you ask for it. The arrow beside a subtask folds its own subtasks away.",
+  "taskDetailSubtasksOf": "Subtasks of {ref}",
+  "@taskDetailSubtasksOf": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "taskDetailShowSubtasks": "{count, plural, =1{Show 1 subtask} other{Show {count} subtasks}}",
+  "@taskDetailShowSubtasks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "taskDetailSubtasksShallow": "This tree is too large to draw whole, so only direct subtasks are shown.",
+  "taskDetailDeleteAllSubtasksBody": "Its subtasks are deleted with it, at every level.",
   "taskDetailSystem": "tix",
   "taskDetailTagAdded": "Tagged {name}.",
   "@taskDetailTagAdded": {

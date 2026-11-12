@@ -130,6 +130,37 @@ void main() {
       await press(tester, find.byKey(const Key('confirm.ok')));
       expect(deletes().single.queryParameters, {'cascade': 'true'});
     });
+
+    testWidgets('the confirmation counts subtasks at every level', (
+      tester,
+    ) async {
+      server.tasks['infra']!.addAll([
+        taskJson('infra-3', title: 'Child', parentId: 'id-infra-1'),
+        taskJson('infra-4', title: 'Grandchild', parentId: 'id-infra-3'),
+      ]);
+      await pumpTask(tester, server);
+      await menu(tester, 'delete');
+      expect(
+        find.textContaining('Its 2 subtasks are deleted with it.'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('a tree deeper than was read is not counted', (tester) async {
+      var parent = 'id-infra-1';
+      for (final ref in ['infra-3', 'infra-4', 'infra-5', 'infra-6']) {
+        server.tasks['infra']!.add(taskJson(ref, parentId: parent));
+        parent = 'id-$ref';
+      }
+      await pumpTask(tester, server);
+      await menu(tester, 'delete');
+      expect(
+        find.textContaining(
+          'Its subtasks are deleted with it, at every level.',
+        ),
+        findsOneWidget,
+      );
+    });
   });
 
   group('snooze', () {

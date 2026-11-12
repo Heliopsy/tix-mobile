@@ -106,11 +106,12 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 - **Custom fields** per project, every type, with a default entered as its type.
 - **Task detail** where every attribute the web edits is edited in place: title, Markdown description with a
   checklist you tick, workflow moves, priority, assignee, due date, tags, custom fields and the repeat rule;
-  subtasks, dependencies, comments with `@` mentions, history and attached files; star, snooze, copy and delete
-  with Undo. How long a claim on the task lasts, and which level decides it. Hand a task to a coding agent with
-  the same copy-ready prompt and client commands the web gives. Share a task through the system share sheet,
-  or copy its link, a Markdown link or its key and title. Each history row shows its entry raw and copies it as
-  JSON. Keys on a keyboard, haptics on a phone, the properties beside the description on a wide screen.
+  the subtask tree with folding, dependencies, comments with `@` mentions, history and attached files; star,
+  snooze, copy and delete with Undo. How long a claim on the task lasts, and which level decides it. Hand a task
+  to a coding agent with the same copy-ready prompt and client commands the web gives. Share a task through the
+  system share sheet, or copy its link, a Markdown link or its key and title. Each history row shows its entry raw
+  and copies it as JSON. Keys on a keyboard, haptics on a phone, the properties beside the description on a wide
+  screen.
 - **Task lists** with pull to refresh and keyset pagination, so a long list loads a page at a time and stays stable
   while tasks are being added. Sort, group by status or project, swipe to complete or snooze, star in place, and
   pick many tasks for one bulk move, priority, tag, assignee, star, copy or delete with a single Undo. Move one

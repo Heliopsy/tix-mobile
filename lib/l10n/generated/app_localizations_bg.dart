@@ -1142,6 +1142,34 @@ class AppLocalizationsBg extends AppLocalizations {
   String get taskDetailSubtasks => 'Подзадачи';
 
   @override
+  String get taskDetailSubtasksInfo =>
+      'Цялото дърво под тази задача. Показват се три нива наведнъж, а по-дълбоко ниво се зарежда, когато го поискате. Стрелката до подзадача скрива нейните подзадачи.';
+
+  @override
+  String taskDetailSubtasksOf(String ref) {
+    return 'Подзадачи на $ref';
+  }
+
+  @override
+  String taskDetailShowSubtasks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Покажи $count подзадачи',
+      one: 'Покажи 1 подзадача',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get taskDetailSubtasksShallow =>
+      'Дървото е твърде голямо, за да се покаже цялото, затова се виждат само преките подзадачи.';
+
+  @override
+  String get taskDetailDeleteAllSubtasksBody =>
+      'Подзадачите ѝ се изтриват с нея, на всяко ниво.';
+
+  @override
   String get taskDetailSystem => 'tix';
 
   @override
