@@ -161,12 +161,12 @@ class TasksRepository {
   /// Creates a task in [project] from a quick-add [line], which the server
   /// parses: `Fix login !high #auth @raj due:fri`.
   /// Offline, it waits in the outbox and answers with a draft.
-  Future<Task> quickAdd(String project, String line) {
-    final request = CreateTaskRequest(
-      title: line,
-      projectRef: project,
-      parse: true,
-    );
+  Future<Task> quickAdd(String project, String line) =>
+      create(CreateTaskRequest(title: line, projectRef: project, parse: true));
+
+  /// Creates a task from [request] as it stands, or queues it as a draft
+  /// when the server cannot be reached.
+  Future<Task> create(CreateTaskRequest request) {
     final outbox = _outbox;
     if (outbox == null) return _api.task.create(request);
     return outbox.create(

@@ -9,14 +9,19 @@ part 'quick_add.g.dart';
 /// or asked for from a shortcut.
 @immutable
 class QuickAddDraft {
-  /// A draft holding [text], to add in [project] when given.
-  const QuickAddDraft({this.text = '', this.project});
+  /// A draft holding [text], to add in [project] when given, in the full
+  /// form when [detailed].
+  const QuickAddDraft({this.text = '', this.project, this.detailed = false});
 
   /// The line, on one line.
   final String text;
 
   /// The project to add in, or null for the one on show.
   final String? project;
+
+  /// Whether it opens Add with details, where [text] is the title as typed,
+  /// rather than the one-line box.
+  final bool detailed;
 }
 
 /// Where every feature asks for quick add. The quick-add host, mounted around
@@ -27,9 +32,14 @@ class QuickAddDrafts extends _$QuickAddDrafts {
   @override
   QuickAddDraft? build() => null;
 
-  /// Asks for quick add holding [text], in [project] when given.
-  void open({String text = '', String? project}) =>
-      state = QuickAddDraft(text: oneLine(text), project: project);
+  /// Asks for quick add holding [text], in [project] when given, or for
+  /// Add with details when [detailed].
+  void open({String text = '', String? project, bool detailed = false}) =>
+      state = QuickAddDraft(
+        text: oneLine(text),
+        project: project,
+        detailed: detailed,
+      );
 
   /// Hands over the waiting draft, if any, and clears it.
   QuickAddDraft? take() {

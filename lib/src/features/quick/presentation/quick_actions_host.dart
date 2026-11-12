@@ -18,6 +18,7 @@ import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/models/template.dart';
 import 'package:tix_mobile/src/features/quick/application/quick.dart';
 import 'package:tix_mobile/src/features/quick/presentation/quick_add_sheet.dart';
+import 'package:tix_mobile/src/features/quick/presentation/task_create_form.dart';
 
 /// The launcher shortcut types.
 abstract final class AppShortcutTypes {
@@ -37,10 +38,10 @@ final taskRefPattern = RegExp(
   caseSensitive: false,
 );
 
-/// Mounted around the signed-in screens by the router: opens quick add for
-/// every draft (the shell's button, Ctrl+N, shares, launcher shortcuts),
-/// registers the global commands and palette searches, and remembers the
-/// tasks opened for the palette.
+/// Mounted around the signed-in screens by the router: opens quick add, or
+/// Add with details, for every draft (the shell's button, Ctrl+N, shares,
+/// launcher shortcuts), registers the global commands and palette searches,
+/// and remembers the tasks opened for the palette.
 class QuickActionsHost extends ConsumerStatefulWidget {
   /// Hosts quick actions around [child].
   const QuickActionsHost({required this.child, super.key});
@@ -147,12 +148,14 @@ class _QuickActionsHostState extends ConsumerState<QuickActionsHost> {
         !known.any((p) => p.key == project)) {
       ref.invalidate(quickProjectsProvider);
     }
-    final task = await showGlobalQuickAdd(
-      context,
-      draft: draft,
-      project: project,
-      onManageTemplates: () => _router?.go(Routes.templates),
-    );
+    final task = draft.detailed
+        ? await showTaskCreateForm(context, title: draft.text, project: project)
+        : await showGlobalQuickAdd(
+            context,
+            draft: draft,
+            project: project,
+            onManageTemplates: () => _router?.go(Routes.templates),
+          );
     _sheetOpen = false;
     if (!mounted) return;
     if (task != null) _created(task);
@@ -279,6 +282,13 @@ class _QuickActionsHostState extends ConsumerState<QuickActionsHost> {
           icon: Icons.add_task,
           action: KeyActions.quickAdd,
           run: drafts.open,
+        ),
+        TixCommand(
+          id: 'quick.details',
+          label: l10n.addDetailsTitle,
+          group: l10n.commandsTasks,
+          icon: Icons.notes,
+          run: () => drafts.open(detailed: true),
         ),
         TixCommand(
           id: 'quick.paste',

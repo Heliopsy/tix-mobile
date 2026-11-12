@@ -1696,6 +1696,100 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le presse-papiers ne contient pas de texte.';
 
   @override
+  String get addDetailsTitle => 'Ajouter avec détails';
+
+  @override
+  String get addDetailsMore => 'Plus de détails';
+
+  @override
+  String get addDetailsTitleLabel => 'Titre';
+
+  @override
+  String get addDetailsTitleHint => 'Que faut-il faire ?';
+
+  @override
+  String get addDetailsTitleRequired => 'Une tâche a besoin d\'un titre.';
+
+  @override
+  String get addDetailsBody => 'Description';
+
+  @override
+  String get addDetailsBodyHint => 'Ajouter une description';
+
+  @override
+  String get addDetailsPriority => 'Priorité';
+
+  @override
+  String get addDetailsDue => 'Date d\'échéance';
+
+  @override
+  String get addDetailsDuePick => 'Choisir une date';
+
+  @override
+  String get addDetailsDueClear => 'Effacer la date d\'échéance';
+
+  @override
+  String get addDetailsAssignee => 'Responsable';
+
+  @override
+  String get addDetailsAssigneeHint => 'personne pour l\'instant';
+
+  @override
+  String get addDetailsAssigneeInfo =>
+      'L\'identifiant d\'une personne ou d\'un agent. Laissez-le vide et la tâche attend la personne qui la prendra.';
+
+  @override
+  String get addDetailsTags => 'Étiquettes';
+
+  @override
+  String get addDetailsTagsHint => 'séparées par des virgules';
+
+  @override
+  String get addDetailsMoreOptions => 'Plus d\'options';
+
+  @override
+  String get addDetailsMoreOptionsHint =>
+      'répétition, parent, dépendances, durée de prise en charge';
+
+  @override
+  String get addDetailsRepeat => 'Répéter une fois terminée';
+
+  @override
+  String get addDetailsRepeatHint =>
+      'par ex. every week, every month on day 1, 3 days after done';
+
+  @override
+  String get addDetailsRepeatInfo =>
+      'Terminer une tâche récurrente crée la suivante, avec le même titre, les mêmes étiquettes et le même responsable, due à la date suivante. L\'annuler met fin à la série.';
+
+  @override
+  String get addDetailsParent => 'Tâche parente';
+
+  @override
+  String get addDetailsParentInfo =>
+      'Fait de celle-ci une sous-tâche d\'une autre tâche. Désignez-la par sa référence, la clé et le numéro sur sa ligne.';
+
+  @override
+  String get addDetailsDependsOn => 'Dépend de';
+
+  @override
+  String get addDetailsDependsOnInfo =>
+      'Les tâches à terminer avant que celle-ci puisse commencer, séparées par des virgules. D\'ici là, la tâche est affichée comme en attente.';
+
+  @override
+  String get addDetailsLease => 'Durée de prise en charge';
+
+  @override
+  String get addDetailsLeaseHint => 'Hérité';
+
+  @override
+  String get addDetailsLeaseInfo =>
+      'Durée d\'une prise en charge de cette tâche avant expiration, quand la prise en charge n\'indique pas sa propre durée. Vide utilise celle du projet, puis celle d\'un workflow personnalisé, puis celle du locataire. Jamais plus que le maximum.';
+
+  @override
+  String get addDetailsCreate => 'Créer la tâche';
+
+  @override
   String get paletteGroupProjects => 'Projets';
 
   @override

@@ -127,6 +127,9 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 - **Quick add** in tix's one-line syntax: `Fix login !high #auth @raj due:fri`, from any screen (Ctrl+N or Cmd+N),
   with a live preview of what the server makes of the line, completions for projects, tags and people, and "add
   another". The server parses the line, so the app understands exactly what the CLI and the browser understand.
+- **Add with details**: a form with a field per attribute, as tix's web has it: title, description, project,
+  priority, due date, assignee, tags, repeat rule, parent, dependencies and lease. More details in quick add opens
+  it with the typed line as the title; so does "Add with details" in the command palette.
 - **Templates**: save a task as a template, edit or delete it, and create a task from one in one tap.
 - **Share to tix** on Android: shared text and links open quick add as a draft. Launcher shortcuts for Quick add,
   Inbox and My work on Android and iOS.

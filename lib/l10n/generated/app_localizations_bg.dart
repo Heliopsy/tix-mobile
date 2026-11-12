@@ -1692,6 +1692,100 @@ class AppLocalizationsBg extends AppLocalizations {
   String get quickAddClipboardEmpty => 'В клипборда няма текст.';
 
   @override
+  String get addDetailsTitle => 'Добави с подробности';
+
+  @override
+  String get addDetailsMore => 'Още подробности';
+
+  @override
+  String get addDetailsTitleLabel => 'Заглавие';
+
+  @override
+  String get addDetailsTitleHint => 'Какво трябва да се направи?';
+
+  @override
+  String get addDetailsTitleRequired => 'Задачата трябва да има заглавие.';
+
+  @override
+  String get addDetailsBody => 'Описание';
+
+  @override
+  String get addDetailsBodyHint => 'Добави описание';
+
+  @override
+  String get addDetailsPriority => 'Приоритет';
+
+  @override
+  String get addDetailsDue => 'Краен срок';
+
+  @override
+  String get addDetailsDuePick => 'Избери дата';
+
+  @override
+  String get addDetailsDueClear => 'Премахни крайния срок';
+
+  @override
+  String get addDetailsAssignee => 'Изпълнител';
+
+  @override
+  String get addDetailsAssigneeHint => 'все още никой';
+
+  @override
+  String get addDetailsAssigneeInfo =>
+      'Потребителското име на човек или агент. Оставете празно и задачата ще чака който я поеме.';
+
+  @override
+  String get addDetailsTags => 'Етикети';
+
+  @override
+  String get addDetailsTagsHint => 'разделени със запетая';
+
+  @override
+  String get addDetailsMoreOptions => 'Още настройки';
+
+  @override
+  String get addDetailsMoreOptionsHint =>
+      'повторение, родител, зависимости, резервация';
+
+  @override
+  String get addDetailsRepeat => 'Повтаряй след завършване';
+
+  @override
+  String get addDetailsRepeatHint =>
+      'например: every week, every month on day 1, 3 days after done';
+
+  @override
+  String get addDetailsRepeatInfo =>
+      'Завършването на повтаряща се задача създава следващата, със същото заглавие, етикети и изпълнител и краен срок на следващата дата. Отказването ѝ прекратява поредицата.';
+
+  @override
+  String get addDetailsParent => 'Родителска задача';
+
+  @override
+  String get addDetailsParentInfo =>
+      'Прави задачата подзадача на друга. Посочете я с референцията ѝ, ключа и номера от реда ѝ.';
+
+  @override
+  String get addDetailsDependsOn => 'Зависи от';
+
+  @override
+  String get addDetailsDependsOnInfo =>
+      'Задачи, които трябва да са завършени, преди тази да започне, разделени със запетая. Дотогава задачата се показва като чакаща.';
+
+  @override
+  String get addDetailsLease => 'Резервация';
+
+  @override
+  String get addDetailsLeaseHint => 'Наследена';
+
+  @override
+  String get addDetailsLeaseInfo =>
+      'Колко дълго трае поемането на тази задача, преди резервацията да изтече, когато поемането не посочва своя продължителност. Празно поле използва тази на проекта, после на авторски работен процес, после на тенанта. Никога по-дълго от максимума.';
+
+  @override
+  String get addDetailsCreate => 'Създай задача';
+
+  @override
   String get paletteGroupProjects => 'Проекти';
 
   @override

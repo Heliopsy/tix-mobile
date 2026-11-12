@@ -250,4 +250,40 @@ void main() {
       expect(c.read(keyValueStoreProvider).read('quick.addAnother'), 'true');
     });
   });
+
+  group('TaskDetails', () {
+    test('leaves empty fields out and never asks for parsing', () {
+      const details = TaskDetails(
+        project: 'web',
+        title: '  Ship it !high  ',
+        body: ' ',
+        tags: ' , ',
+      );
+      expect(details.request.toJson(), {
+        'project_ref': 'web',
+        'title': 'Ship it !high',
+      });
+    });
+
+    test('splits lists on commas and sends the due date in UTC', () {
+      final due = DateTime.utc(2026, 11, 13, 23);
+      final details = TaskDetails(
+        project: 'web',
+        title: 'Ship it',
+        priority: 2,
+        due: due.toLocal(),
+        tags: 'auth,, ui ',
+        dependsOn: 'web-2 ,web-3',
+        lease: ' 2h ',
+      );
+      final request = details.request;
+      expect(request.tags, ['auth', 'ui']);
+      expect(request.dependsOn, ['web-2', 'web-3']);
+      expect(request.dueAt, due);
+      expect(request.dueAt!.isUtc, isTrue);
+      expect(request.lease, '2h');
+      expect(request.priority, 2);
+      expect(request.parse, isNull);
+    });
+  });
 }

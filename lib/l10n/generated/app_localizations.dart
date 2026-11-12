@@ -2917,6 +2917,180 @@ abstract class AppLocalizations {
   /// **'The clipboard holds no text.'**
   String get quickAddClipboardEmpty;
 
+  /// Heading of the full task form and its palette command, as tix's web names it
+  ///
+  /// In en, this message translates to:
+  /// **'Add with details'**
+  String get addDetailsTitle;
+
+  /// Button in quick add that opens the full task form holding the typed line as the title
+  ///
+  /// In en, this message translates to:
+  /// **'More details'**
+  String get addDetailsMore;
+
+  /// No description provided for @addDetailsTitleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get addDetailsTitleLabel;
+
+  /// No description provided for @addDetailsTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What needs doing?'**
+  String get addDetailsTitleHint;
+
+  /// No description provided for @addDetailsTitleRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'A task needs a title.'**
+  String get addDetailsTitleRequired;
+
+  /// No description provided for @addDetailsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get addDetailsBody;
+
+  /// No description provided for @addDetailsBodyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a description'**
+  String get addDetailsBodyHint;
+
+  /// No description provided for @addDetailsPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority'**
+  String get addDetailsPriority;
+
+  /// No description provided for @addDetailsDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date'**
+  String get addDetailsDue;
+
+  /// No description provided for @addDetailsDuePick.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a date'**
+  String get addDetailsDuePick;
+
+  /// No description provided for @addDetailsDueClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear the due date'**
+  String get addDetailsDueClear;
+
+  /// No description provided for @addDetailsAssignee.
+  ///
+  /// In en, this message translates to:
+  /// **'Assignee'**
+  String get addDetailsAssignee;
+
+  /// No description provided for @addDetailsAssigneeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'nobody yet'**
+  String get addDetailsAssigneeHint;
+
+  /// No description provided for @addDetailsAssigneeInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'A person\'s or an agent\'s handle. Leave it empty and the task waits for whoever picks it up.'**
+  String get addDetailsAssigneeInfo;
+
+  /// No description provided for @addDetailsTags.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get addDetailsTags;
+
+  /// No description provided for @addDetailsTagsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'comma separated'**
+  String get addDetailsTagsHint;
+
+  /// No description provided for @addDetailsMoreOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get addDetailsMoreOptions;
+
+  /// No description provided for @addDetailsMoreOptionsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'repeat, parent, dependencies, lease'**
+  String get addDetailsMoreOptionsHint;
+
+  /// No description provided for @addDetailsRepeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat when done'**
+  String get addDetailsRepeat;
+
+  /// No description provided for @addDetailsRepeatHint.
+  ///
+  /// In en, this message translates to:
+  /// **'every week, every month on day 1, 3 days after done'**
+  String get addDetailsRepeatHint;
+
+  /// No description provided for @addDetailsRepeatInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Finishing a repeating task creates the next one, with the same title, tags and assignee, due on the next date. Cancelling it ends the series.'**
+  String get addDetailsRepeatInfo;
+
+  /// No description provided for @addDetailsParent.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent task'**
+  String get addDetailsParent;
+
+  /// No description provided for @addDetailsParentInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Makes this a subtask of another task. Name it by its reference, the key and number on its row.'**
+  String get addDetailsParentInfo;
+
+  /// No description provided for @addDetailsDependsOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Depends on'**
+  String get addDetailsDependsOn;
+
+  /// No description provided for @addDetailsDependsOnInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks that have to be finished before this one can start, comma separated. The task is shown as waiting on them until they are.'**
+  String get addDetailsDependsOnInfo;
+
+  /// No description provided for @addDetailsLease.
+  ///
+  /// In en, this message translates to:
+  /// **'Lease'**
+  String get addDetailsLease;
+
+  /// No description provided for @addDetailsLeaseHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Inherited'**
+  String get addDetailsLeaseHint;
+
+  /// No description provided for @addDetailsLeaseInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'How long a claim on this task holds before it expires, when the claim names no length of its own. Empty uses the project\'s, then an authored workflow\'s, then the tenant\'s. Never longer than the maximum.'**
+  String get addDetailsLeaseInfo;
+
+  /// No description provided for @addDetailsCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create task'**
+  String get addDetailsCreate;
+
   /// No description provided for @paletteGroupProjects.
   ///
   /// In en, this message translates to:

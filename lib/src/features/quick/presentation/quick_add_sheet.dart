@@ -210,6 +210,13 @@ class _GlobalQuickAddSheetState extends ConsumerState<GlobalQuickAddSheet> {
     }
   }
 
+  void _moreDetails(String? project) {
+    Navigator.of(context).pop();
+    ref
+        .read(quickAddDraftsProvider.notifier)
+        .open(text: _line.text, project: project, detailed: true);
+  }
+
   String? _errorText(BuildContext context) {
     final error = _error;
     if (error == null) return null;
@@ -247,6 +254,12 @@ class _GlobalQuickAddSheetState extends ConsumerState<GlobalQuickAddSheet> {
           key: const Key('quickAdd.cancel'),
           label: l10n.cancel,
           onPressed: _busy ? null : () => Navigator.of(context).pop(),
+        ),
+        TixButton(
+          key: const Key('quickAdd.details'),
+          icon: Icons.notes,
+          label: l10n.addDetailsMore,
+          onPressed: _busy ? null : () => _moreDetails(project),
         ),
       ],
       child: Column(
