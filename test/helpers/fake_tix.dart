@@ -737,6 +737,9 @@ class FakeTix {
         );
         return FakeResponse(200, {'items': filters, 'next_cursor': ''});
       case ('POST', '/api/v1/tasks'):
+        if (createRefusal case final refusal?) {
+          return FakeResponse(400, refusal);
+        }
         final body = o.data as Map<String, dynamic>;
         final project = body['project_ref'] as String;
         final list = tasks.putIfAbsent(project, () => []);
@@ -1893,6 +1896,9 @@ class FakeTix {
 
   /// Whether every request fails as if there were no network.
   bool offline = false;
+
+  /// The error envelope every task create is refused with, when set.
+  Map<String, Object?>? createRefusal;
 
   /// Dry runs of these lines wait until the completer completes.
   final previewHolds = <String, Completer<void>>{};

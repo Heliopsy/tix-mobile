@@ -117,6 +117,47 @@ void main() {
     expect(find.text('route:/projects/web/tasks/web-1'), findsOneWidget);
   });
 
+  testWidgets('More details carries the typed line and project into Add '
+      'with details, which sends it unparsed', (tester) async {
+    await pump(tester, size: phone);
+    container
+        .read(quickAddDraftsProvider.notifier)
+        .open(text: 'Renew cert !high', project: 'web');
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('quickAdd.details')));
+    await tester.pumpAndSettle();
+    expect(line(), findsNothing);
+    final title = find.byKey(const Key('addDetails.title'));
+    expect(
+      tester.widget<TextField>(title).controller!.text,
+      'Renew cert !high',
+    );
+    final create = find.byKey(const Key('addDetails.create'));
+    await tester.ensureVisible(create);
+    await tester.tap(create);
+    await tester.pumpAndSettle();
+    expect(server.requestsTo('/api/v1/tasks').single.body, {
+      'project_ref': 'web',
+      'title': 'Renew cert !high',
+      'priority': 3,
+    });
+    expect(find.text('Created web-1'), findsOneWidget);
+  });
+
+  testWidgets('the palette opens Add with details', (tester) async {
+    await pump(tester);
+    await chord(tester, LogicalKeyboardKey.keyK);
+    await tester.enterText(
+      find.byKey(const Key('palette.query')),
+      'add with details',
+    );
+    await tester.pump();
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('addDetails.title')), findsOneWidget);
+    expect(line(), findsNothing);
+  });
+
   testWidgets('a project the loaded list lacks reloads the list and stays '
       'chosen', (tester) async {
     await pump(tester, size: phone);

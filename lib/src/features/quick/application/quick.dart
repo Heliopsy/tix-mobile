@@ -276,6 +276,23 @@ class QuickAdder extends _$QuickAdder {
     return task;
   }
 
+  /// Creates a task from the fields of Add with details, sent as they were
+  /// written, and remembers what it used.
+  Future<Task> addDetailed(TaskDetails details) async {
+    final task = await ref
+        .read(tasksRepositoryProvider)
+        .create(details.request);
+    ref.read(tasksChangedProvider.notifier).touch();
+    await ref
+        .read(recentQuickValuesProvider.notifier)
+        .remember(
+          project: details.project,
+          tags: task.tags,
+          handle: details.assignee.trim(),
+        );
+    return task;
+  }
+
   /// Creates a task from [template], in [project] when given.
   Future<Task> use(TaskTemplate template, {String? project}) async {
     final task = await ref
@@ -285,6 +302,85 @@ class QuickAdder extends _$QuickAdder {
       ..invalidate(quickTemplatesProvider)
       ..read(tasksChangedProvider.notifier).touch();
     return task;
+  }
+}
+
+/// What Add with details was filled in with, each field as typed.
+@immutable
+class TaskDetails {
+  /// The fields of a new task titled [title] in [project].
+  const TaskDetails({
+    required this.project,
+    required this.title,
+    this.body = '',
+    this.priority,
+    this.due,
+    this.assignee = '',
+    this.tags = '',
+    this.repeat = '',
+    this.parent = '',
+    this.dependsOn = '',
+    this.lease = '',
+  });
+
+  /// The project's key.
+  final String project;
+
+  /// The title, stored as typed rather than read as a quick-add line.
+  final String title;
+
+  /// The Markdown description.
+  final String body;
+
+  /// The priority, or null for the server's default.
+  final int? priority;
+
+  /// When it is due, or null for never.
+  final DateTime? due;
+
+  /// The assignee's handle or identifier, empty for nobody.
+  final String assignee;
+
+  /// Tag names, comma separated.
+  final String tags;
+
+  /// A repeat rule such as `every week`.
+  final String repeat;
+
+  /// The parent task's reference.
+  final String parent;
+
+  /// References of the tasks this one waits on, comma separated.
+  final String dependsOn;
+
+  /// How long a claim holds, such as `2h`; empty inherits.
+  final String lease;
+
+  /// The create request: structured fields, never parsed, and every empty
+  /// one left out so the server applies its default.
+  CreateTaskRequest get request {
+    String? text(String v) => v.trim().isEmpty ? null : v.trim();
+    List<String>? list(String v) {
+      final items = [
+        for (final p in v.split(','))
+          if (p.trim().isNotEmpty) p.trim(),
+      ];
+      return items.isEmpty ? null : items;
+    }
+
+    return CreateTaskRequest(
+      projectRef: project,
+      title: title.trim(),
+      body: text(body),
+      priority: priority,
+      dueAt: due?.toUtc(),
+      assigneeActorId: text(assignee),
+      tags: list(tags),
+      recurrence: text(repeat),
+      parentRef: text(parent),
+      dependsOn: list(dependsOn),
+      lease: text(lease),
+    );
   }
 }
 

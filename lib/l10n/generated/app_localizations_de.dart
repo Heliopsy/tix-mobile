@@ -1683,6 +1683,100 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die Zwischenablage enthält keinen Text.';
 
   @override
+  String get addDetailsTitle => 'Mit Details hinzufügen';
+
+  @override
+  String get addDetailsMore => 'Mehr Details';
+
+  @override
+  String get addDetailsTitleLabel => 'Titel';
+
+  @override
+  String get addDetailsTitleHint => 'Was ist zu tun?';
+
+  @override
+  String get addDetailsTitleRequired => 'Eine Aufgabe braucht einen Titel.';
+
+  @override
+  String get addDetailsBody => 'Beschreibung';
+
+  @override
+  String get addDetailsBodyHint => 'Beschreibung hinzufügen';
+
+  @override
+  String get addDetailsPriority => 'Priorität';
+
+  @override
+  String get addDetailsDue => 'Fälligkeitsdatum';
+
+  @override
+  String get addDetailsDuePick => 'Datum wählen';
+
+  @override
+  String get addDetailsDueClear => 'Fälligkeitsdatum entfernen';
+
+  @override
+  String get addDetailsAssignee => 'Zuständig';
+
+  @override
+  String get addDetailsAssigneeHint => 'noch niemand';
+
+  @override
+  String get addDetailsAssigneeInfo =>
+      'Das Kürzel einer Person oder eines Agenten. Leer gelassen wartet die Aufgabe auf den, der sie übernimmt.';
+
+  @override
+  String get addDetailsTags => 'Tags';
+
+  @override
+  String get addDetailsTagsHint => 'durch Kommas getrennt';
+
+  @override
+  String get addDetailsMoreOptions => 'Weitere Optionen';
+
+  @override
+  String get addDetailsMoreOptionsHint =>
+      'Wiederholung, übergeordnete Aufgabe, Abhängigkeiten, Übernahmedauer';
+
+  @override
+  String get addDetailsRepeat => 'Nach Erledigung wiederholen';
+
+  @override
+  String get addDetailsRepeatHint =>
+      'z. B. every week, every month on day 1, 3 days after done';
+
+  @override
+  String get addDetailsRepeatInfo =>
+      'Wird eine wiederkehrende Aufgabe erledigt, entsteht die nächste mit demselben Titel, denselben Tags und derselben zuständigen Person, fällig am nächsten Termin. Wird sie abgebrochen, endet die Serie.';
+
+  @override
+  String get addDetailsParent => 'Übergeordnete Aufgabe';
+
+  @override
+  String get addDetailsParentInfo =>
+      'Macht dies zur Unteraufgabe einer anderen Aufgabe. Nennen Sie sie mit ihrer Referenz, dem Schlüssel und der Nummer in ihrer Zeile.';
+
+  @override
+  String get addDetailsDependsOn => 'Hängt ab von';
+
+  @override
+  String get addDetailsDependsOnInfo =>
+      'Aufgaben, die erledigt sein müssen, bevor diese beginnen kann, durch Kommas getrennt. Bis dahin wird die Aufgabe als wartend gezeigt.';
+
+  @override
+  String get addDetailsLease => 'Übernahmedauer';
+
+  @override
+  String get addDetailsLeaseHint => 'Geerbt';
+
+  @override
+  String get addDetailsLeaseInfo =>
+      'Wie lange eine Übernahme dieser Aufgabe hält, bevor sie abläuft, wenn die Übernahme keine eigene Dauer nennt. Leer gilt die des Projekts, dann die eines eigenen Workflows, dann die des Mandanten. Nie länger als das Maximum.';
+
+  @override
+  String get addDetailsCreate => 'Aufgabe erstellen';
+
+  @override
   String get paletteGroupProjects => 'Projekte';
 
   @override

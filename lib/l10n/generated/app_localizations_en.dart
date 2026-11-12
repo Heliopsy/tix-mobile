@@ -1671,6 +1671,99 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quickAddClipboardEmpty => 'The clipboard holds no text.';
 
   @override
+  String get addDetailsTitle => 'Add with details';
+
+  @override
+  String get addDetailsMore => 'More details';
+
+  @override
+  String get addDetailsTitleLabel => 'Title';
+
+  @override
+  String get addDetailsTitleHint => 'What needs doing?';
+
+  @override
+  String get addDetailsTitleRequired => 'A task needs a title.';
+
+  @override
+  String get addDetailsBody => 'Description';
+
+  @override
+  String get addDetailsBodyHint => 'Add a description';
+
+  @override
+  String get addDetailsPriority => 'Priority';
+
+  @override
+  String get addDetailsDue => 'Due date';
+
+  @override
+  String get addDetailsDuePick => 'Pick a date';
+
+  @override
+  String get addDetailsDueClear => 'Clear the due date';
+
+  @override
+  String get addDetailsAssignee => 'Assignee';
+
+  @override
+  String get addDetailsAssigneeHint => 'nobody yet';
+
+  @override
+  String get addDetailsAssigneeInfo =>
+      'A person\'s or an agent\'s handle. Leave it empty and the task waits for whoever picks it up.';
+
+  @override
+  String get addDetailsTags => 'Tags';
+
+  @override
+  String get addDetailsTagsHint => 'comma separated';
+
+  @override
+  String get addDetailsMoreOptions => 'More options';
+
+  @override
+  String get addDetailsMoreOptionsHint => 'repeat, parent, dependencies, lease';
+
+  @override
+  String get addDetailsRepeat => 'Repeat when done';
+
+  @override
+  String get addDetailsRepeatHint =>
+      'every week, every month on day 1, 3 days after done';
+
+  @override
+  String get addDetailsRepeatInfo =>
+      'Finishing a repeating task creates the next one, with the same title, tags and assignee, due on the next date. Cancelling it ends the series.';
+
+  @override
+  String get addDetailsParent => 'Parent task';
+
+  @override
+  String get addDetailsParentInfo =>
+      'Makes this a subtask of another task. Name it by its reference, the key and number on its row.';
+
+  @override
+  String get addDetailsDependsOn => 'Depends on';
+
+  @override
+  String get addDetailsDependsOnInfo =>
+      'Tasks that have to be finished before this one can start, comma separated. The task is shown as waiting on them until they are.';
+
+  @override
+  String get addDetailsLease => 'Lease';
+
+  @override
+  String get addDetailsLeaseHint => 'Inherited';
+
+  @override
+  String get addDetailsLeaseInfo =>
+      'How long a claim on this task holds before it expires, when the claim names no length of its own. Empty uses the project\'s, then an authored workflow\'s, then the tenant\'s. Never longer than the maximum.';
+
+  @override
+  String get addDetailsCreate => 'Create task';
+
+  @override
   String get paletteGroupProjects => 'Projects';
 
   @override
