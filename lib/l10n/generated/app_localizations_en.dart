@@ -44,6 +44,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contextNameHelp => 'Shown in the switcher.';
 
   @override
+  String helpAbout(String topic) {
+    return 'Help: $topic';
+  }
+
+  @override
+  String get helpServerBody =>
+      'A tix server is the computer your team\'s tix runs on. Its address is the one you open tix with in a web browser, such as https://tix.example.com.\n\nDon\'t know it? Ask whoever runs tix for you. You can leave out https:// and the slash at the end.';
+
+  @override
+  String get helpKindTitle => 'Server or this device';
+
+  @override
+  String get helpKindBody =>
+      'Server: connect to a tix someone runs for you or your team, and work on the same tasks as everyone else there.\n\nThis device: tix runs inside this app, on a database kept on this device. No server and no account needed, and nothing is shared with anyone.';
+
+  @override
+  String get helpMethodTitle => 'How to connect';
+
+  @override
+  String get helpMethodSignIn =>
+      'Sign in: use the email and password you sign in to tix on the web with.';
+
+  @override
+  String get helpMethodToken =>
+      'Token: paste an API token instead of a password. It stays connected until it is revoked, so it suits a device you keep.';
+
+  @override
+  String get helpMethodInvite =>
+      'Invite: got an invite email? Paste its link and the server is filled in for you.';
+
+  @override
+  String get helpTokenBody =>
+      'An API token is a long code that lets this app in without your password.\n\nCreate one on the API tokens page of tix on the web, or run tix token create wherever the tix command works. Copy it when it is shown: you only see it once.';
+
+  @override
+  String get helpEmailBody =>
+      'The email address of your tix account, the one you sign in to tix on the web with.';
+
+  @override
+  String get helpPasswordBody =>
+      'Your tix password, the same one as on the web. Forgotten it? Whoever runs your tix can reset it.';
+
+  @override
+  String get helpInviteBody =>
+      'When someone invites you to tix, you get an email with a link. Paste that link here, or share it to tix from your mail app.\n\nThe server\'s address comes with the link, so you don\'t need to type it.';
+
+  @override
+  String get helpNameBody =>
+      'A name for this connection, seen only in this app. Handy when you use more than one server or account. Leave it empty to use the server\'s address.';
+
+  @override
+  String get helpTenantTitle => 'Tenants';
+
+  @override
+  String get helpTenantBody =>
+      'One tix can hold several separate workspaces, called tenants, for example one per company or team. Each has its own projects and people.\n\nPick the one to open. You can add the others later.';
+
+  @override
   String get connectButton => 'Connect';
 
   @override

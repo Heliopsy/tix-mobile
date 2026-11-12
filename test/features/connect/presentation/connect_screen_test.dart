@@ -983,4 +983,152 @@ void main() {
       expect(engine.started, ['/n.db']);
     });
   });
+
+  group('help', () {
+    for (final MapEntry(key: width, value: size) in widths.entries) {
+      testWidgets('$width: the (i) beside the address says where it comes '
+          'from', (tester) async {
+        await pumpScreen(
+          tester,
+          const ConnectScreen(),
+          size: size,
+          overrides: fakeOverrides(server),
+        );
+        await tap(tester, find.byKey(const Key('connect.help.server')));
+        await tester.pumpAndSettle();
+        final shown = find.byType(width == 'compact' ? BottomSheet : Dialog);
+        expect(shown, findsOneWidget);
+        expect(
+          find.descendant(
+            of: shown,
+            matching: find.textContaining('https://tix.example.com'),
+          ),
+          findsOneWidget,
+        );
+        await tester.tap(find.byKey(const Key('help.close')));
+        await tester.pumpAndSettle();
+        expect(shown, findsNothing);
+      });
+    }
+
+    testWidgets('every field and choice has its own (i)', (tester) async {
+      await pumpScreen(
+        tester,
+        const ConnectScreen(),
+        overrides: fakeOverrides(server),
+      );
+      Finder help(String name) => find.byKey(Key('connect.help.$name'));
+      for (final name in ['kind', 'server', 'method', 'token', 'name']) {
+        expect(help(name), findsOneWidget, reason: name);
+      }
+      expect(find.byTooltip('Help: API token'), findsOneWidget);
+      await tester.tap(find.text('Sign in').first);
+      await tester.pumpAndSettle();
+      for (final name in ['email', 'password']) {
+        expect(help(name), findsOneWidget, reason: name);
+      }
+      await tester.tap(find.text('Invite').first);
+      await tester.pumpAndSettle();
+      expect(help('invite'), findsOneWidget);
+      expect(help('server'), findsNothing);
+    });
+
+    testWidgets('the token help names both places a token comes from', (
+      tester,
+    ) async {
+      await pumpScreen(
+        tester,
+        const ConnectScreen(),
+        overrides: fakeOverrides(server),
+      );
+      await tap(tester, find.byKey(const Key('connect.help.token')));
+      await tester.pumpAndSettle();
+      final body = find.byKey(const Key('help.body'));
+      expect(
+        find.descendant(of: body, matching: find.textContaining('API tokens')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: body,
+          matching: find.textContaining('tix token create'),
+        ),
+        findsOneWidget,
+      );
+    });
+  });
+
+  group('address', () {
+    testWidgets('trailing slashes are dropped before connecting', (
+      tester,
+    ) async {
+      final c = await pumpScreen(
+        tester,
+        const ConnectScreen(),
+        overrides: fakeOverrides(server, secrets: secrets),
+      );
+      await fill(tester, ' https://tix.example/// ', 'tok');
+      expect(find.byKey(const Key('connect.error')), findsNothing);
+      expect(
+        tester
+            .widget<TextField>(find.byKey(const Key('connect.url')))
+            .controller!
+            .text,
+        'https://tix.example',
+      );
+      expect(
+        c.read(instancesRepositoryProvider).instances().single.baseUrl,
+        'https://tix.example',
+      );
+    });
+
+    testWidgets('a second spelling of a saved address adds no instance', (
+      tester,
+    ) async {
+      final c = await pumpScreen(
+        tester,
+        const ConnectScreen(),
+        overrides: fakeOverrides(server, secrets: secrets),
+      );
+      final repo = c.read(instancesRepositoryProvider);
+      await repo.save(
+        instance: Instance(
+          id: 'old',
+          name: 'Old',
+          kind: InstanceKind.remote,
+          baseUrl: 'https://tix.example',
+          createdAt: DateTime.utc(2026),
+        ),
+        connection: Connection(
+          id: 'k',
+          instanceId: 'old',
+          kind: ConnectionKind.token,
+          handle: 'bot',
+          createdAt: DateTime.utc(2026),
+        ),
+        secret: 'old',
+      );
+      await fill(tester, 'tix.example/', 'tok');
+      expect(find.byKey(const Key('connect.error')), findsNothing);
+      expect(repo.instances().map((i) => i.id), ['old']);
+      expect(repo.connections(), hasLength(2));
+    });
+
+    testWidgets('an address handed to the screen is shown tidied', (
+      tester,
+    ) async {
+      await pumpScreen(
+        tester,
+        const ConnectScreen(adding: true, url: 'https://tix.example/'),
+        overrides: fakeOverrides(server),
+      );
+      expect(
+        tester
+            .widget<TextField>(find.byKey(const Key('connect.url')))
+            .controller!
+            .text,
+        'https://tix.example',
+      );
+    });
+  });
 }

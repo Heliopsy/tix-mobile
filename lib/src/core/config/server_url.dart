@@ -26,3 +26,6 @@ String? normalizeServerUrl(String input) {
     path: path,
   ).toString();
 }
+
+/// [url] without the slashes it ends with, so a path can follow it.
+String withoutTrailingSlash(String url) => url.replaceAll(RegExp(r'/+$'), '');

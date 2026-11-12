@@ -2,6 +2,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/dates.dart';
@@ -342,6 +343,5 @@ class FeedAddressSheet extends ConsumerWidget {
 /// path on [base].
 String feedAddress(IssuedCalendarFeed issued, String base) {
   if (issued.url.isNotEmpty) return issued.url;
-  final b = base.endsWith('/') ? base.substring(0, base.length - 1) : base;
-  return '$b${issued.path}';
+  return '${withoutTrailingSlash(base)}${issued.path}';
 }

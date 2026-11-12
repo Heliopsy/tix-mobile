@@ -2,6 +2,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/dates.dart';
@@ -320,8 +321,7 @@ class InviteLinkSheet extends ConsumerWidget {
 /// [url] when the server knew its own address, else [path] on [base].
 String absoluteLink(String url, String path, String base) {
   if (url.isNotEmpty) return url;
-  final b = base.endsWith('/') ? base.substring(0, base.length - 1) : base;
-  return '$b$path';
+  return '${withoutTrailingSlash(base)}$path';
 }
 
 /// Opens the form that gives an existing actor a role here.

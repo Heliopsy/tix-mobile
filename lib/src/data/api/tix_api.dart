@@ -2,6 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:tix_mobile/src/core/config/config.dart';
+import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/logging/log.dart';
 import 'package:tix_mobile/src/data/api/credential.dart';
 import 'package:tix_mobile/src/data/api/gen/client.gen.dart';
@@ -52,7 +53,7 @@ class TixApi extends TixClient {
   }) {
     final dio = Dio(
       BaseOptions(
-        baseUrl: baseUrl,
+        baseUrl: withoutTrailingSlash(baseUrl),
         connectTimeout: connectTimeout,
         receiveTimeout: receiveTimeout,
         listFormat: ListFormat.multi,

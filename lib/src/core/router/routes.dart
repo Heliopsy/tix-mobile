@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:flutter/foundation.dart';
+import 'package:tix_mobile/src/core/config/server_url.dart';
 
 /// App locations.
 abstract final class Routes {
@@ -130,7 +131,10 @@ abstract final class Routes {
   /// Add the remote instance at [url], with a sign-in for [email].
   static String addInstanceAt(String url, {String email = ''}) => Uri(
     path: connect,
-    queryParameters: {'url': url, if (email.isNotEmpty) 'email': email},
+    queryParameters: {
+      'url': normalizeServerUrl(url) ?? url.trim(),
+      if (email.isNotEmpty) 'email': email,
+    },
   ).toString();
 
   /// The caller's profile, tenants and account history.

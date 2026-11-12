@@ -163,6 +163,96 @@ abstract class AppLocalizations {
   /// **'Shown in the switcher.'**
   String get contextNameHelp;
 
+  /// No description provided for @helpAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'Help: {topic}'**
+  String helpAbout(String topic);
+
+  /// No description provided for @helpServerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A tix server is the computer your team\'s tix runs on. Its address is the one you open tix with in a web browser, such as https://tix.example.com.\n\nDon\'t know it? Ask whoever runs tix for you. You can leave out https:// and the slash at the end.'**
+  String get helpServerBody;
+
+  /// No description provided for @helpKindTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Server or this device'**
+  String get helpKindTitle;
+
+  /// No description provided for @helpKindBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Server: connect to a tix someone runs for you or your team, and work on the same tasks as everyone else there.\n\nThis device: tix runs inside this app, on a database kept on this device. No server and no account needed, and nothing is shared with anyone.'**
+  String get helpKindBody;
+
+  /// No description provided for @helpMethodTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How to connect'**
+  String get helpMethodTitle;
+
+  /// No description provided for @helpMethodSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in: use the email and password you sign in to tix on the web with.'**
+  String get helpMethodSignIn;
+
+  /// No description provided for @helpMethodToken.
+  ///
+  /// In en, this message translates to:
+  /// **'Token: paste an API token instead of a password. It stays connected until it is revoked, so it suits a device you keep.'**
+  String get helpMethodToken;
+
+  /// No description provided for @helpMethodInvite.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite: got an invite email? Paste its link and the server is filled in for you.'**
+  String get helpMethodInvite;
+
+  /// No description provided for @helpTokenBody.
+  ///
+  /// In en, this message translates to:
+  /// **'An API token is a long code that lets this app in without your password.\n\nCreate one on the API tokens page of tix on the web, or run tix token create wherever the tix command works. Copy it when it is shown: you only see it once.'**
+  String get helpTokenBody;
+
+  /// No description provided for @helpEmailBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The email address of your tix account, the one you sign in to tix on the web with.'**
+  String get helpEmailBody;
+
+  /// No description provided for @helpPasswordBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tix password, the same one as on the web. Forgotten it? Whoever runs your tix can reset it.'**
+  String get helpPasswordBody;
+
+  /// No description provided for @helpInviteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'When someone invites you to tix, you get an email with a link. Paste that link here, or share it to tix from your mail app.\n\nThe server\'s address comes with the link, so you don\'t need to type it.'**
+  String get helpInviteBody;
+
+  /// No description provided for @helpNameBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A name for this connection, seen only in this app. Handy when you use more than one server or account. Leave it empty to use the server\'s address.'**
+  String get helpNameBody;
+
+  /// No description provided for @helpTenantTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tenants'**
+  String get helpTenantTitle;
+
+  /// No description provided for @helpTenantBody.
+  ///
+  /// In en, this message translates to:
+  /// **'One tix can hold several separate workspaces, called tenants, for example one per company or team. Each has its own projects and people.\n\nPick the one to open. You can add the others later.'**
+  String get helpTenantBody;
+
   /// No description provided for @connectButton.
   ///
   /// In en, this message translates to:
