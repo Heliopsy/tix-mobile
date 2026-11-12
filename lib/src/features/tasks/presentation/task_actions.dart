@@ -18,6 +18,7 @@ import 'package:tix_mobile/src/features/tasks/application/task_detail.dart'
     show projectKeyOf;
 import 'package:tix_mobile/src/features/tasks/application/tasks.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/detail/editors.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/task_share.dart';
 
 /// The design system's category for a workflow category key.
 StatusCategory statusCategoryOf(String? category) => switch (category) {
@@ -417,6 +418,9 @@ enum TaskMenuItem {
   /// Add a tag.
   tag,
 
+  /// Share it: Share…, Copy link, Copy as Markdown, Copy key and title.
+  share,
+
   /// Pick for a bulk action.
   select,
 }
@@ -496,6 +500,13 @@ Future<void> showTaskMenu(
         label: l10n.boardTagAdd,
         icon: Icons.sell_outlined,
       ),
+      if (!isDraftRef(task.ref))
+        TixSheetAction(
+          key: const Key('menu.share'),
+          value: TaskMenuItem.share,
+          label: l10n.taskShare,
+          icon: Icons.ios_share,
+        ),
       if (onSelect != null)
         TixSheetAction(
           key: const Key('menu.select'),
@@ -527,6 +538,8 @@ Future<void> showTaskMenu(
       await actions.setDue(task);
     case TaskMenuItem.tag:
       await actions.addTag(task);
+    case TaskMenuItem.share:
+      await shareTask(context, actions.ref, task);
     case TaskMenuItem.select:
       onSelect?.call();
   }

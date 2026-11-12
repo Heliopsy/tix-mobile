@@ -8316,6 +8316,51 @@ class AppLocalizationsFr extends AppLocalizations {
       'agent ia confier déléguer ai claude codex prompt mcp';
 
   @override
+  String get taskShare => 'Partager';
+
+  @override
+  String taskShareTitle(String ref) {
+    return 'Partager $ref';
+  }
+
+  @override
+  String get taskShareNative => 'Partager…';
+
+  @override
+  String get taskShareCopyLink => 'Copier le lien';
+
+  @override
+  String get taskShareCopyMarkdown => 'Copier en Markdown';
+
+  @override
+  String get taskShareCopyText => 'Copier la clé et le titre';
+
+  @override
+  String get taskShareLinkCopied => 'Lien copié';
+
+  @override
+  String get taskShareMarkdownCopied => 'Lien Markdown copié';
+
+  @override
+  String get taskShareTextCopied => 'Clé et titre copiés';
+
+  @override
+  String get taskShareKeywords =>
+      'partager lien adresse copier share url markdown';
+
+  @override
+  String get taskDetailHistoryRaw => 'Brut';
+
+  @override
+  String get taskDetailHistoryRawTitle => 'Entrée brute';
+
+  @override
+  String get taskDetailHistoryCopyAll => 'Tout copier en JSON';
+
+  @override
+  String get taskDetailHistoryCopyTip => 'Copier cette entrée en JSON';
+
+  @override
   String get taskDetailReactionAdd => 'Ajouter une réaction';
 
   @override

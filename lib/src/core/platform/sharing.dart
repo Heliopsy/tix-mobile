@@ -33,8 +33,10 @@ class SystemTextSharing implements TextSharing {
 TextSharing textSharing(Ref ref) => const SystemTextSharing();
 
 /// Where [context]'s widget is on screen, to anchor a share sheet on
-/// tablets.
+/// tablets; null when it is not a laid-out box.
 Rect? originOf(BuildContext context) {
-  final box = context.findRenderObject() as RenderBox?;
-  return box == null ? null : box.localToGlobal(Offset.zero) & box.size;
+  final box = context.findRenderObject();
+  return box is RenderBox && box.hasSize
+      ? box.localToGlobal(Offset.zero) & box.size
+      : null;
 }

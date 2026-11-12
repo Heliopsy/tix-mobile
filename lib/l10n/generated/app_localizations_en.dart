@@ -8251,6 +8251,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get taskHandoffKeywords => 'agent ai claude codex prompt mcp delegate';
 
   @override
+  String get taskShare => 'Share';
+
+  @override
+  String taskShareTitle(String ref) {
+    return 'Share $ref';
+  }
+
+  @override
+  String get taskShareNative => 'Share…';
+
+  @override
+  String get taskShareCopyLink => 'Copy link';
+
+  @override
+  String get taskShareCopyMarkdown => 'Copy as Markdown';
+
+  @override
+  String get taskShareCopyText => 'Copy key and title';
+
+  @override
+  String get taskShareLinkCopied => 'Link copied';
+
+  @override
+  String get taskShareMarkdownCopied => 'Markdown link copied';
+
+  @override
+  String get taskShareTextCopied => 'Key and title copied';
+
+  @override
+  String get taskShareKeywords => 'share link url copy markdown';
+
+  @override
+  String get taskDetailHistoryRaw => 'Raw';
+
+  @override
+  String get taskDetailHistoryRawTitle => 'Raw entry';
+
+  @override
+  String get taskDetailHistoryCopyAll => 'Copy all as JSON';
+
+  @override
+  String get taskDetailHistoryCopyTip => 'Copy this entry as JSON';
+
+  @override
   String get taskDetailReactionAdd => 'Add reaction';
 
   @override
