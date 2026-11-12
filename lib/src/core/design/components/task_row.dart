@@ -142,6 +142,7 @@ class TaskRow extends StatefulWidget {
     this.facts = const TaskFacts(),
     this.selected = false,
     this.onToggleDone,
+    this.tickLocked = false,
     this.onToggleStar,
     this.onStatusTap,
     this.onPriorityTap,
@@ -169,6 +170,10 @@ class TaskRow extends StatefulWidget {
 
   /// Completes or reopens; null draws the tick as a placeholder.
   final VoidCallback? onToggleDone;
+
+  /// Whether no route completes or reopens the task from here: the tick is
+  /// dashed, and [onToggleDone] explains why.
+  final bool tickLocked;
 
   /// Stars or unstars; null leaves the star off unless starred.
   final VoidCallback? onToggleStar;
@@ -255,6 +260,7 @@ class _TaskRowState extends State<TaskRow> with SingleTickerProviderStateMixin {
       :onMore,
       :onPicked,
       :onToggleDone,
+      :tickLocked,
       :onToggleStar,
       :onStatusTap,
       :onPriorityTap,
@@ -331,7 +337,11 @@ class _TaskRowState extends State<TaskRow> with SingleTickerProviderStateMixin {
                     ),
                     TaskCheck(done: done, inert: true),
                   ] else
-                    TaskCheck(done: done, onChanged: onToggleDone),
+                    TaskCheck(
+                      done: done,
+                      onChanged: onToggleDone,
+                      locked: tickLocked,
+                    ),
                   if (task.starred || onToggleStar != null)
                     _Star(starred: task.starred, onTap: onToggleStar),
                   const SizedBox(width: TixSpace.s1),
@@ -709,13 +719,15 @@ class _Star extends StatelessWidget {
 /// Ticking it fills the circle with a small bounce and draws the check from
 /// left to right; unticking plays it backwards. Null [onChanged] draws an
 /// open task as a dashed placeholder, tix's mark for a row that cannot be
-/// ticked from here. [inert] draws it small and muted with no tap target and
-/// no semantics, as select mode does.
+/// ticked from here. [locked] draws it dashed too but keeps it pressable, so
+/// the press can say why it cannot be ticked. [inert] draws it small and
+/// muted with no tap target and no semantics, as select mode does.
 class TaskCheck extends StatefulWidget {
   /// A circle that is ticked when [done].
   const TaskCheck({
     required this.done,
     this.onChanged,
+    this.locked = false,
     this.inert = false,
     super.key,
   });
@@ -725,6 +737,9 @@ class TaskCheck extends StatefulWidget {
 
   /// Toggles it.
   final VoidCallback? onChanged;
+
+  /// Whether no route ticks it from here; pressing it explains why.
+  final bool locked;
 
   /// Whether it only shows the state, as in select mode.
   final bool inert;
@@ -786,7 +801,7 @@ class _TaskCheckState extends State<TaskCheck>
   Widget build(BuildContext context) {
     final t = context.tix;
     final l10n = context.l10n;
-    final TaskCheck(:done, :onChanged, :inert) = widget;
+    final TaskCheck(:done, :onChanged, :locked, :inert) = widget;
     final circle = AnimatedBuilder(
       animation: _motion,
       builder: (context, _) {
@@ -834,8 +849,9 @@ class _TaskCheckState extends State<TaskCheck>
     final hit = SizedBox.square(
       dimension: 40,
       child: Center(
-        child: onChanged == null && !done
+        child: (onChanged == null || locked) && !done
             ? CustomPaint(
+                key: const Key('check.dashed'),
                 painter: DashedBorder(
                   colour: t.lineStrong,
                   radius: TixRadius.pill,
@@ -846,14 +862,18 @@ class _TaskCheckState extends State<TaskCheck>
       ),
     );
     void toggle() {
-      if (!done) unawaited(TixHaptics.light());
+      if (!done && !locked) unawaited(TixHaptics.light());
       onChanged!();
     }
 
     return Semantics(
       container: true,
       checked: done,
-      label: done ? l10n.reopen : l10n.markDone,
+      label: locked
+          ? l10n.tickLockedWhy
+          : done
+          ? l10n.reopen
+          : l10n.markDone,
       button: onChanged != null,
       onTap: onChanged == null ? null : toggle,
       excludeSemantics: true,

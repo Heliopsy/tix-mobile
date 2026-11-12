@@ -1380,6 +1380,64 @@ class AppLocalizationsBg extends AppLocalizations {
   String get boardWake => 'Върни сега';
 
   @override
+  String get tickLockedWhy => 'Защо това не може да се отметне';
+
+  @override
+  String tickCompleteTitle(String ref) {
+    return 'Завърши $ref';
+  }
+
+  @override
+  String tickReopenTitle(String ref) {
+    return 'Отвори отново $ref';
+  }
+
+  @override
+  String tickLockedBody(String why) {
+    return 'Не и оттук: $why.';
+  }
+
+  @override
+  String get tickLockCannotMove => 'нямате право да местите задачи';
+
+  @override
+  String get tickLockNoWorkflow =>
+      'работният ѝ процес не може да бъде прочетен';
+
+  @override
+  String get tickLockNoRouteDone => 'оттук няма път до завършено';
+
+  @override
+  String get tickLockNoRouteBack => 'няма път обратно до отворено състояние';
+
+  @override
+  String get tickLockFinishComment => 'завършването ѝ изисква коментар';
+
+  @override
+  String get tickLockReopenComment => 'повторното ѝ отваряне изисква коментар';
+
+  @override
+  String tickLockFinishScope(String scope) {
+    return 'завършването ѝ изисква правото $scope';
+  }
+
+  @override
+  String tickLockReopenScope(String scope) {
+    return 'повторното ѝ отваряне изисква правото $scope';
+  }
+
+  @override
+  String tickSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count стъпки',
+      one: '1 стъпка',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String boardWoken(String ref) {
     return '$ref е върната';
   }

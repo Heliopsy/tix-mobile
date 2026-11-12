@@ -26,6 +26,7 @@ class TaskCard extends StatelessWidget {
     this.selected = false,
     this.now,
     this.onToggleDone,
+    this.tickLocked = false,
     this.onLongPress,
     this.onMore,
     this.picked,
@@ -53,6 +54,10 @@ class TaskCard extends StatelessWidget {
   /// Completes or reopens; null leaves the tick off, as on a board where
   /// the column is the status.
   final VoidCallback? onToggleDone;
+
+  /// Whether no route completes or reopens the task from here; see
+  /// [TaskCheck.locked].
+  final bool tickLocked;
 
   /// What a long press does; also a secondary click when [onMore] is null.
   final VoidCallback? onLongPress;
@@ -154,6 +159,7 @@ class TaskCard extends StatelessWidget {
                             child: TaskCheck(
                               done: done,
                               onChanged: onToggleDone,
+                              locked: tickLocked,
                             ),
                           ),
                         ),

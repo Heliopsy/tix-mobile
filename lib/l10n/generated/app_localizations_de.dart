@@ -1385,6 +1385,65 @@ class AppLocalizationsDe extends AppLocalizations {
   String get boardWake => 'Nicht mehr zurückstellen';
 
   @override
+  String get tickLockedWhy => 'Warum sich das nicht abhaken lässt';
+
+  @override
+  String tickCompleteTitle(String ref) {
+    return '$ref abschließen';
+  }
+
+  @override
+  String tickReopenTitle(String ref) {
+    return '$ref wieder öffnen';
+  }
+
+  @override
+  String tickLockedBody(String why) {
+    return 'Nicht von hier: $why.';
+  }
+
+  @override
+  String get tickLockCannotMove => 'Sie dürfen keine Aufgaben verschieben';
+
+  @override
+  String get tickLockNoWorkflow => 'ihr Workflow konnte nicht gelesen werden';
+
+  @override
+  String get tickLockNoRouteDone => 'von hier führt kein Weg zu erledigt';
+
+  @override
+  String get tickLockNoRouteBack =>
+      'kein Weg führt zurück in einen offenen Status';
+
+  @override
+  String get tickLockFinishComment => 'zum Abschließen ist ein Kommentar nötig';
+
+  @override
+  String get tickLockReopenComment =>
+      'zum Wiederöffnen ist ein Kommentar nötig';
+
+  @override
+  String tickLockFinishScope(String scope) {
+    return 'zum Abschließen ist der Scope $scope nötig';
+  }
+
+  @override
+  String tickLockReopenScope(String scope) {
+    return 'zum Wiederöffnen ist der Scope $scope nötig';
+  }
+
+  @override
+  String tickSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Schritte',
+      one: '1 Schritt',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String boardWoken(String ref) {
     return '$ref nicht mehr zurückgestellt';
   }

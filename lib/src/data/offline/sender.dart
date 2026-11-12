@@ -176,9 +176,15 @@ class ApiOutboxSender implements OutboxSender {
       case OutboxOp.move:
         final to = s('to');
         final comment = s('comment');
+        final route = values['route'];
         final result = await api.task.route(
           target,
-          RouteInput(to: to, comment: comment.isEmpty ? null : comment),
+          route is List
+              ? RouteInput(
+                  route: [for (final k in route) '$k'],
+                  comment: comment.isEmpty ? null : comment,
+                )
+              : RouteInput(to: to, comment: comment.isEmpty ? null : comment),
           idempotencyKey: key,
         );
         if (result.stopped.isNotEmpty && result.stopped != to) {

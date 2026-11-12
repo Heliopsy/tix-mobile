@@ -3,7 +3,8 @@
 import 'dart:convert';
 
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
-import 'package:tix_mobile/src/data/api/gen/models.gen.dart' show SnoozeInput;
+import 'package:tix_mobile/src/data/api/gen/models.gen.dart'
+    show RouteInput, SnoozeInput;
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/cache/response_cache.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
@@ -198,6 +199,25 @@ class TaskListRepository {
     () => _one(BulkTaskInput(action: BulkAction.move, refs: [ref], to: status)),
     base: base,
     values: {'to': status},
+  );
+
+  /// Moves [ref] through the states [route] names, in order, in one request
+  /// (`task.route`), so the reader's choice of journey is the one written. A
+  /// hop the server refuses fails with its reason.
+  Future<void> route(String ref, List<String> route, {Task? base}) => _write(
+    OutboxOp.move,
+    ref,
+    () async {
+      final result = await _api.task.route(ref, RouteInput(route: route));
+      if (result.stopped.isNotEmpty) {
+        throw TixException(
+          TixErrorKind.preconditionFailed,
+          message: result.reason,
+        );
+      }
+    },
+    base: base,
+    values: {'to': route.last, 'route': route},
   );
 
   /// Assigns [ref] to [actorId], or clears it when empty.
