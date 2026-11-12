@@ -3,15 +3,19 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/offline/outbox.dart';
+import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/models/task_patch.dart';
 import 'package:tix_mobile/src/data/models/workflow.dart';
 import 'package:tix_mobile/src/features/tasks/application/listing.dart';
+import 'package:tix_mobile/src/features/tasks/application/task_detail.dart'
+    show projectKeyOf;
 import 'package:tix_mobile/src/features/tasks/application/tasks.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/detail/editors.dart';
 
@@ -31,6 +35,7 @@ TaskFacts factsFor(
   Task task,
   TaskIndex? context, {
   String handle = '',
+  String holder = '',
   bool showProject = true,
   SyncMarkKind? sync,
 }) {
@@ -41,6 +46,7 @@ TaskFacts factsFor(
     projectColour: project?.color ?? '',
     projectIcon: showProject ? project?.icon ?? '' : '',
     assigneeHandle: handle,
+    holderHandle: holder,
     statusCategory: category == null ? null : statusCategoryOf(category),
     sync: sync,
   );
@@ -58,6 +64,19 @@ SyncMarkKind? syncMarkOf(WidgetRef ref, Task task) {
 String assigneeHandle(WidgetRef ref, Task task) => task.assigneeActorId.isEmpty
     ? ''
     : ref.watch(actorProvider(task.assigneeActorId)).value?.handle ?? '';
+
+/// The handle of whoever holds [task]'s claim, or let it run out last,
+/// once looked up.
+String holderHandle(WidgetRef ref, Task task) {
+  final id = task.claimedByActorId.isNotEmpty
+      ? task.claimedByActorId
+      : task.leaseExpiredByActorId;
+  return id.isEmpty ? '' : ref.watch(actorProvider(id)).value?.handle ?? '';
+}
+
+/// Opens the task [taskRef] from a mark on another task's row or card.
+void openTaskRef(BuildContext context, String taskRef) =>
+    unawaited(context.push(Routes.task(projectKeyOf(taskRef), taskRef)));
 
 /// Quick actions on one task in one listing: each changes the screen at
 /// once, sends, rolls back on refusal and offers Undo.

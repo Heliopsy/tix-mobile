@@ -8331,4 +8331,80 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get taskDetailReactionOneEmoji => 'Saisissez un seul emoji.';
+
+  @override
+  String get rowHeld => 'pris';
+
+  @override
+  String rowHeldBy(String holder) {
+    return 'pris · $holder';
+  }
+
+  @override
+  String rowHeldTip(String holder) {
+    return 'Pris par $holder';
+  }
+
+  @override
+  String rowHeldUntil(String holder, String time) {
+    return 'Pris par $holder jusqu’à $time';
+  }
+
+  @override
+  String get rowClaimSomeone => 'quelqu’un';
+
+  @override
+  String get rowClaimExpired => 'prise expirée';
+
+  @override
+  String rowAgo(String span) {
+    return 'il y a $span';
+  }
+
+  @override
+  String rowClaims(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count prises',
+      one: '1 prise',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rowClaimExpiredTip(String holder, String span, String time) {
+    return '$holder a laissé la prise expirer il y a $span, à $time ; la tâche peut de nouveau être prise';
+  }
+
+  @override
+  String rowRepeats(String rule) {
+    return 'Se répète $rule';
+  }
+
+  @override
+  String rowChecklist(int done, int total) {
+    return '$done éléments de la liste sur $total faits';
+  }
+
+  @override
+  String rowWaitingOn(String ref) {
+    return 'attend $ref';
+  }
+
+  @override
+  String rowWaitingOnCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'attend $count tâches',
+      one: 'attend 1 tâche',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rowWaitingTip(String refs) {
+    return 'Attend $refs';
+  }
 }

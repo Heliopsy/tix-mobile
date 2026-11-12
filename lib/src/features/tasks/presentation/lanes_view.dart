@@ -198,6 +198,7 @@ class LanesView extends ConsumerWidget {
                                     task,
                                     taskContext,
                                     handle: assigneeHandle(ref, task),
+                                    holder: holderHandle(ref, task),
                                     sync: syncMarkOf(ref, task),
                                     showProject: false,
                                   ),
@@ -207,6 +208,7 @@ class LanesView extends ConsumerWidget {
                                       ? selection.contains(task.ref)
                                       : null,
                                   onPicked: (_) => selector.toggle(task.ref),
+                                  onOpenRef: (r) => openTaskRef(context, r),
                                   onTap: () => tapTask(
                                     ref,
                                     query.scope,

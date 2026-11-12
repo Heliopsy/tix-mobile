@@ -10,7 +10,8 @@ import 'package:tix_mobile/src/data/models/task.dart';
 
 /// One task on a board column, as `050-board.css` draws a card: the
 /// project's colour across the top, the reference and priority, the title
-/// in up to three lines, then status, assignee, due and two tags.
+/// in up to three lines, then status, assignee, due, the claim, waiting,
+/// repeat and checklist marks, and two tags.
 ///
 /// In select mode ([picked] non-null) a checkbox leads the card, the tick
 /// is muted and inert, and the dots are left off, as on [TaskRow].
@@ -29,6 +30,7 @@ class TaskCard extends StatelessWidget {
     this.onMore,
     this.picked,
     this.onPicked,
+    this.onOpenRef,
     this.showStatus = true,
     super.key,
   });
@@ -64,6 +66,9 @@ class TaskCard extends StatelessWidget {
 
   /// Picks or unpicks the card.
   final ValueChanged<bool>? onPicked;
+
+  /// Opens another task by reference, as the waiting mark names it.
+  final ValueChanged<String>? onOpenRef;
 
   /// Whether the status pill is drawn; a board column already says it.
   final bool showStatus;
@@ -224,6 +229,12 @@ class TaskCard extends StatelessWidget {
                         ],
                       ),
                     if (due != null && !done) DueMark(due: due, now: now),
+                    ...taskFlagMarks(
+                      task,
+                      facts,
+                      now ?? DateTime.now(),
+                      onOpenRef: onOpenRef,
+                    ),
                     for (final tag in task.tags.take(2)) TagChip(tag),
                     if (task.tags.length > 2) MoreMark(task.tags.length - 2),
                   ],

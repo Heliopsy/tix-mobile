@@ -2278,5 +2278,19 @@
   "taskDetailReactionUnsupported": "Този сървър не поддържа реакции.",
   "taskDetailReactionOther": "Друго емоджи",
   "taskDetailReactionOtherHelp": "Напишете или поставете едно емоджи.",
-  "taskDetailReactionOneEmoji": "Въведете само едно емоджи."
+  "taskDetailReactionOneEmoji": "Въведете само едно емоджи.",
+  "rowHeld": "поета",
+  "rowHeldBy": "поета · {holder}",
+  "rowHeldTip": "Заета от {holder}",
+  "rowHeldUntil": "Заета от {holder} до {time}",
+  "rowClaimSomeone": "някой",
+  "rowClaimExpired": "поемането изтече",
+  "rowAgo": "преди {span}",
+  "rowClaims": "поемания: {count}",
+  "rowClaimExpiredTip": "{holder} остави поемането да изтече преди {span}, в {time}; задачата отново може да бъде поета",
+  "rowRepeats": "Повтаря се {rule}",
+  "rowChecklist": "{done} от {total} точки от списъка са отметнати",
+  "rowWaitingOn": "чака {ref}",
+  "rowWaitingOnCount": "{count, plural, =1{чака 1 задача} other{чака {count} задачи}}",
+  "rowWaitingTip": "Чака {refs}"
 }

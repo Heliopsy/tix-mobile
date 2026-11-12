@@ -2278,5 +2278,19 @@
   "taskDetailReactionUnsupported": "Dieser Server unterstützt keine Reaktionen.",
   "taskDetailReactionOther": "Beliebiges Emoji",
   "taskDetailReactionOtherHelp": "Ein Emoji eingeben oder einfügen.",
-  "taskDetailReactionOneEmoji": "Geben Sie genau ein Emoji ein."
+  "taskDetailReactionOneEmoji": "Geben Sie genau ein Emoji ein.",
+  "rowHeld": "gehalten",
+  "rowHeldBy": "gehalten · {holder}",
+  "rowHeldTip": "Gehalten von {holder}",
+  "rowHeldUntil": "Gehalten von {holder} bis {time}",
+  "rowClaimSomeone": "jemand",
+  "rowClaimExpired": "Anspruch abgelaufen",
+  "rowAgo": "vor {span}",
+  "rowClaims": "{count, plural, =1{1 Anspruch} other{{count} Ansprüche}}",
+  "rowClaimExpiredTip": "{holder} hat den Anspruch vor {span} um {time} ablaufen lassen; die Aufgabe kann wieder beansprucht werden",
+  "rowRepeats": "Wiederholt sich {rule}",
+  "rowChecklist": "{done} von {total} Checklistenpunkten erledigt",
+  "rowWaitingOn": "wartet auf {ref}",
+  "rowWaitingOnCount": "{count, plural, =1{wartet auf 1 Aufgabe} other{wartet auf {count} Aufgaben}}",
+  "rowWaitingTip": "Wartet auf {refs}"
 }

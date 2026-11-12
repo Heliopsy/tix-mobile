@@ -21,6 +21,7 @@ class TaskFacts {
     this.projectColour = '',
     this.projectIcon = '',
     this.assigneeHandle = '',
+    this.holderHandle = '',
     this.statusCategory,
     this.sync,
   });
@@ -37,11 +38,75 @@ class TaskFacts {
   /// The assignee's handle, empty for nobody or not yet known.
   final String assigneeHandle;
 
+  /// The handle of whoever holds the claim, or let it run out last; empty
+  /// for nobody or not yet known.
+  final String holderHandle;
+
   /// The status's category when the workflow is known.
   final StatusCategory? statusCategory;
 
   /// What the outbox says about the task, null when it is in sync.
   final SyncMarkKind? sync;
+}
+
+/// How long a lapsed claim keeps showing on a row: tix's
+/// `LeaseExpiryEvidenceWindow`.
+const claimEvidenceWindow = Duration(hours: 24);
+
+/// How a task's claim reads on a row.
+enum ClaimState {
+  /// Nobody holds it, and no claim ran out recently.
+  none,
+
+  /// Held: claimed with a lease still running, or with no lease at all.
+  held,
+
+  /// The last claim ran out within [claimEvidenceWindow] and nothing has
+  /// claimed it since.
+  expired,
+}
+
+/// [task]'s claim at [now], read as tix's web reads it.
+ClaimState claimStateOf(Task task, DateTime now) {
+  if (task.claimedByActorId.isNotEmpty) {
+    final until = task.leaseExpiresAt;
+    if (until == null || until.isAfter(now)) return ClaimState.held;
+  }
+  final lapsed = task.leaseExpiredAt;
+  if (lapsed != null && now.difference(lapsed) < claimEvidenceWindow) {
+    return ClaimState.expired;
+  }
+  return ClaimState.none;
+}
+
+/// The marks a row and a card carry after the deadline, in tix's order:
+/// the claim, waiting on a dependency, the repeat rule and the checklist.
+List<Widget> taskFlagMarks(
+  Task task,
+  TaskFacts facts,
+  DateTime now, {
+  ValueChanged<String>? onOpenRef,
+}) {
+  final checklist = task.checklist;
+  return [
+    switch (claimStateOf(task, now)) {
+      ClaimState.held => HeldMark(
+        holder: facts.holderHandle,
+        until: task.leaseExpiresAt,
+      ),
+      ClaimState.expired => ClaimExpiredMark(
+        ago: now.difference(task.leaseExpiredAt!),
+        at: task.leaseExpiredAt,
+        holder: facts.holderHandle,
+        claims: task.claimCount,
+      ),
+      ClaimState.none => null,
+    },
+    if (task.blocked) WaitMark(task.waitingOn, onOpen: onOpenRef),
+    if (task.recurrence.isNotEmpty) RepeatMark(task.recurrence),
+    if (checklist != null && checklist.total > 0)
+      ChecklistMark(done: checklist.done, total: checklist.total),
+  ].nonNulls.toList();
 }
 
 /// Whether [task] is finished, by its completion time or its status.
@@ -84,6 +149,7 @@ class TaskRow extends StatefulWidget {
     this.onMore,
     this.picked,
     this.onPicked,
+    this.onOpenRef,
     this.focused = false,
     this.now,
     super.key,
@@ -126,6 +192,10 @@ class TaskRow extends StatefulWidget {
 
   /// Picks or unpicks the row.
   final ValueChanged<bool>? onPicked;
+
+  /// Opens another task by reference, as the waiting mark names it; null
+  /// leaves the mark as text.
+  final ValueChanged<String>? onOpenRef;
 
   /// Whether the keyboard cursor is on the row.
   final bool focused;
@@ -188,6 +258,7 @@ class _TaskRowState extends State<TaskRow> with SingleTickerProviderStateMixin {
       :onToggleStar,
       :onStatusTap,
       :onPriorityTap,
+      :onOpenRef,
       :now,
     ) = widget;
     final t = context.tix;
@@ -213,6 +284,7 @@ class _TaskRowState extends State<TaskRow> with SingleTickerProviderStateMixin {
           showProject: box.maxWidth >= 480,
           onStatusTap: onStatusTap,
           onPriorityTap: onPriorityTap,
+          onOpenRef: onOpenRef,
           now: now,
         );
         return Material(
@@ -337,16 +409,6 @@ class _Title extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (task.blocked) ...[
-          Padding(
-            padding: const EdgeInsets.only(top: 3),
-            child: Tooltip(
-              message: context.l10n.blockedByOther,
-              child: Icon(Icons.block, size: 14, color: t.danger),
-            ),
-          ),
-          const SizedBox(width: TixSpace.s1),
-        ],
         Expanded(
           child: sweeping
               ? CustomPaint(
@@ -441,6 +503,7 @@ class _Meta extends StatelessWidget {
     required this.showProject,
     required this.onStatusTap,
     required this.onPriorityTap,
+    required this.onOpenRef,
     required this.now,
   });
 
@@ -451,6 +514,7 @@ class _Meta extends StatelessWidget {
   final bool showProject;
   final VoidCallback? onStatusTap;
   final VoidCallback? onPriorityTap;
+  final ValueChanged<String>? onOpenRef;
   final DateTime? now;
 
   @override
@@ -480,11 +544,12 @@ class _Meta extends StatelessWidget {
     final shown = task.tags.take(3).toList();
     final due = task.dueAt;
     final snoozed = task.snoozedUntil;
+    final clock = now ?? DateTime.now();
     final flags = <Widget>[
       if (due != null && !isTaskDone(task, facts.statusCategory))
         DueMark(due: due, now: now),
-      if (snoozed != null && snoozed.isAfter(now ?? DateTime.now()))
-        SnoozeMark(until: snoozed),
+      ...taskFlagMarks(task, facts, clock, onOpenRef: onOpenRef),
+      if (snoozed != null && snoozed.isAfter(clock)) SnoozeMark(until: snoozed),
     ];
     final children = <Widget>[
       if (status != null) cell(86, status),
@@ -521,7 +586,7 @@ class _Meta extends StatelessWidget {
           ),
         ),
       if (wide)
-        cell(112, Wrap(spacing: TixSpace.s1, children: flags))
+        cell(160, Wrap(spacing: TixSpace.s1, runSpacing: 2, children: flags))
       else
         ...flags,
       cell(84, RefText(task.ref), end: true),

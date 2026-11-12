@@ -549,6 +549,288 @@ class SnoozeMark extends StatelessWidget {
   }
 }
 
+/// "held · @raj": an agent holds the task's claim. Outlined in the accent,
+/// as tix's `.lease.held`.
+class HeldMark extends StatelessWidget {
+  /// Held by [holder] (a handle without its `@`, empty when not yet known)
+  /// until [until], when the lease has an end.
+  const HeldMark({this.holder = '', this.until, super.key});
+
+  /// The holder's handle.
+  final String holder;
+
+  /// When the lease runs out unless renewed.
+  final DateTime? until;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final who = holder.isEmpty ? '' : '@$holder';
+    final end = until;
+    final at = end == null
+        ? null
+        : context.times.style.shortStamp(end) ??
+              context.times.style.dayMonth(end);
+    return _LeaseMark(
+      key: const Key('mark.held'),
+      colour: context.tix.accent,
+      text: who.isEmpty ? l10n.rowHeld : l10n.rowHeldBy(who),
+      tooltip: at == null
+          ? l10n.rowHeldTip(who.isEmpty ? l10n.rowClaimSomeone : who)
+          : l10n.rowHeldUntil(who.isEmpty ? l10n.rowClaimSomeone : who, at),
+    );
+  }
+}
+
+/// "claim expired · 3 h ago": the last claim ran out rather than being
+/// released, within tix's evidence window. Outlined in warn; the claim count
+/// rides along only when the task was claimed more than once, which is an
+/// agent that keeps dropping it.
+class ClaimExpiredMark extends StatelessWidget {
+  /// Ran out at [at], [ago] before now, held by [holder], after [claims]
+  /// claims.
+  const ClaimExpiredMark({
+    required this.ago,
+    this.at,
+    this.holder = '',
+    this.claims = 0,
+    super.key,
+  });
+
+  /// How long ago the claim ran out.
+  final Duration ago;
+
+  /// When it ran out.
+  final DateTime? at;
+
+  /// The handle whose claim ran out, empty when not known.
+  final String holder;
+
+  /// How many times the task has been claimed.
+  final int claims;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final since = shortAgo(l10n, ago);
+    final when = at;
+    final stamp = when == null
+        ? since
+        : context.times.style.shortStamp(when) ??
+              context.times.style.dayMonth(when);
+    return _LeaseMark(
+      key: const Key('mark.expired'),
+      colour: context.tix.warn,
+      text: [
+        l10n.rowClaimExpired,
+        l10n.rowAgo(since),
+        if (claims > 1) l10n.rowClaims(claims),
+      ].join(' · '),
+      tooltip: l10n.rowClaimExpiredTip(
+        holder.isEmpty ? l10n.rowClaimSomeone : '@$holder',
+        since,
+        stamp,
+      ),
+    );
+  }
+}
+
+/// [d] in at most its two largest units, as tix's `Duration.Human` writes
+/// a span: "45 min", "3 h", "3 h 20 min", "2 d 4 h".
+String shortAgo(AppLocalizations l10n, Duration d) {
+  final span = d.isNegative ? -d : d;
+  if (span.inMinutes < 1) return l10n.durationSeconds(span.inSeconds);
+  if (span.inHours < 1) return l10n.durationMinutes(span.inMinutes);
+  if (span.inDays < 1) {
+    final m = span.inMinutes % 60;
+    return [
+      l10n.durationHours(span.inHours),
+      if (m > 0) l10n.durationMinutes(m),
+    ].join(' ');
+  }
+  final h = span.inHours % 24;
+  return [
+    l10n.durationDays(span.inDays),
+    if (h > 0) l10n.durationHours(h),
+  ].join(' ');
+}
+
+class _LeaseMark extends StatelessWidget {
+  const _LeaseMark({
+    required this.colour,
+    required this.text,
+    required this.tooltip,
+    super.key,
+  });
+
+  final Color colour;
+  final String text;
+  final String tooltip;
+
+  @override
+  Widget build(BuildContext context) => Tooltip(
+    message: tooltip,
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6),
+      decoration: BoxDecoration(
+        border: Border.all(color: colour),
+        borderRadius: BorderRadius.circular(TixRadius.pill),
+      ),
+      child: Text(
+        text,
+        maxLines: 1,
+        softWrap: false,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          fontSize: TixText.xs2,
+          fontWeight: FontWeight.w600,
+          color: colour,
+          height: 1.4,
+        ),
+      ),
+    ),
+  );
+}
+
+/// "↻ every week": the task repeats by [rule]. Muted, the rule beside the
+/// glyph.
+class RepeatMark extends StatelessWidget {
+  /// Repeats by [rule], tix's canonical repeat rule.
+  const RepeatMark(this.rule, {super.key});
+
+  /// The rule.
+  final String rule;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tix;
+    return Tooltip(
+      message: context.l10n.rowRepeats(rule),
+      child: _GlyphText(
+        key: const Key('mark.repeat'),
+        icon: Icons.repeat,
+        text: rule,
+        colour: t.muted,
+      ),
+    );
+  }
+}
+
+/// "☑ 3/5": how many of the description's checklist items are ticked; in
+/// the ok colour once all are.
+class ChecklistMark extends StatelessWidget {
+  /// [done] of [total] items ticked.
+  const ChecklistMark({required this.done, required this.total, super.key});
+
+  /// Items ticked.
+  final int done;
+
+  /// Items in all.
+  final int total;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tix;
+    return Tooltip(
+      message: context.l10n.rowChecklist(done, total),
+      child: _GlyphText(
+        key: const Key('mark.checklist'),
+        icon: Icons.checklist,
+        text: '$done/$total',
+        colour: total > 0 && done == total ? t.ok : t.muted,
+        tabular: true,
+      ),
+    );
+  }
+}
+
+/// "⌛ waiting on AICP-12": the task waits on an unfinished dependency,
+/// named when there is one and counted when there are more. Drawn in danger,
+/// as tix draws a blocked task. [onOpen] opens the first task it waits on.
+class WaitMark extends StatelessWidget {
+  /// Waits on [refs], in reference order; empty when the server did not say
+  /// which.
+  const WaitMark(this.refs, {this.onOpen, super.key});
+
+  /// The unfinished tasks this one waits on.
+  final List<String> refs;
+
+  /// Opens the task named by its reference.
+  final ValueChanged<String>? onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final text = switch (refs.length) {
+      0 => l10n.blockedByOther.toLowerCase(),
+      1 => l10n.rowWaitingOn(refs.single),
+      _ => l10n.rowWaitingOnCount(refs.length),
+    };
+    final mark = _GlyphText(
+      icon: Icons.hourglass_bottom,
+      text: text,
+      colour: context.tix.danger,
+    );
+    final open = onOpen;
+    return Tooltip(
+      key: const Key('mark.waiting'),
+      message: refs.isEmpty
+          ? l10n.blockedByOther
+          : l10n.rowWaitingTip(refs.join(', ')),
+      child: open == null || refs.isEmpty
+          ? mark
+          : Semantics(
+              button: true,
+              child: InkWell(
+                onTap: () => open(refs.first),
+                borderRadius: BorderRadius.circular(TixRadius.sm),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(minHeight: 28),
+                  child: Align(widthFactor: 1, child: mark),
+                ),
+              ),
+            ),
+    );
+  }
+}
+
+class _GlyphText extends StatelessWidget {
+  const _GlyphText({
+    required this.icon,
+    required this.text,
+    required this.colour,
+    this.tabular = false,
+    super.key,
+  });
+
+  final IconData icon;
+  final String text;
+  final Color colour;
+  final bool tabular;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(icon, size: 12, color: colour),
+      const SizedBox(width: 3),
+      Flexible(
+        child: Text(
+          text,
+          maxLines: 1,
+          softWrap: false,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: TixText.xs2,
+            color: colour,
+            fontFeatures: tabular ? const [FontFeature.tabularFigures()] : null,
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
 /// The tone of a [TixBadge].
 enum TixTone {
   /// Muted, outlined.

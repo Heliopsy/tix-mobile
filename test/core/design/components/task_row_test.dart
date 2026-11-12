@@ -50,8 +50,141 @@ void main() {
       tester,
       TaskRow(task: task.copyWith(blocked: true), onTap: () {}),
     );
-    final icon = tester.widget<Icon>(inRow(find.byIcon(Icons.block)));
+    final icon = tester.widget<Icon>(
+      inRow(find.byIcon(Icons.hourglass_bottom)),
+    );
     expect(icon.color, TixTokens.light.danger);
+  });
+
+  group('marks', () {
+    final marked = task.copyWith(
+      claimedByActorId: 'a1',
+      leaseExpiresAt: fixedNow.add(const Duration(hours: 1)),
+      blocked: true,
+      waitingOn: const ['aicp-12'],
+      recurrence: 'every week',
+      checklist: const Checklist(done: 3, total: 5),
+    );
+    const holder = TaskFacts(holderHandle: 'atlas');
+
+    Finder inCard(Finder f) =>
+        find.descendant(of: find.byType(TaskCard), matching: f);
+
+    testWidgets('a row and a card say who holds the claim, what the task '
+        'waits on, its repeat and its checklist', (tester) async {
+      await pumpComponent(
+        tester,
+        ListView(
+          children: [
+            TaskRow(task: marked, facts: holder, now: fixedNow, onTap: () {}),
+            TaskCard(task: marked, facts: holder, now: fixedNow, onTap: () {}),
+          ],
+        ),
+        size: desktop,
+      );
+      for (final scope in [inRow, inCard]) {
+        for (final text in [
+          'held · @atlas',
+          'waiting on aicp-12',
+          'every week',
+          '3/5',
+        ]) {
+          expect(scope(find.text(text)), findsOneWidget, reason: text);
+        }
+      }
+    });
+
+    testWidgets('a claim that ran out says how long ago and how many claims', (
+      tester,
+    ) async {
+      await pumpComponent(
+        tester,
+        TaskRow(
+          task: task.copyWith(
+            leaseExpiredAt: fixedNow.subtract(const Duration(hours: 3)),
+            leaseExpiredByActorId: 'a1',
+            claimCount: 4,
+          ),
+          facts: holder,
+          now: fixedNow,
+          onTap: () {},
+        ),
+      );
+      expect(
+        inRow(find.text('claim expired · 3 h ago · 4 claims')),
+        findsOneWidget,
+      );
+      expect(inRow(find.byKey(const Key('mark.held'))), findsNothing);
+    });
+
+    testWidgets('a single claim that ran out leaves the count off', (
+      tester,
+    ) async {
+      await pumpComponent(
+        tester,
+        TaskRow(
+          task: task.copyWith(
+            leaseExpiredAt: fixedNow.subtract(const Duration(minutes: 20)),
+            claimCount: 1,
+          ),
+          now: fixedNow,
+          onTap: () {},
+        ),
+      );
+      expect(inRow(find.text('claim expired · 20 min ago')), findsOneWidget);
+    });
+
+    testWidgets('a lapse older than a day and a lease past its end show '
+        'nothing', (tester) async {
+      await pumpComponent(
+        tester,
+        TaskRow(
+          task: task.copyWith(
+            claimedByActorId: 'a1',
+            leaseExpiresAt: fixedNow.subtract(const Duration(minutes: 1)),
+            leaseExpiredAt: fixedNow.subtract(const Duration(hours: 25)),
+          ),
+          now: fixedNow,
+          onTap: () {},
+        ),
+      );
+      expect(inRow(find.byKey(const Key('mark.held'))), findsNothing);
+      expect(inRow(find.byKey(const Key('mark.expired'))), findsNothing);
+    });
+
+    testWidgets('waiting on several tasks counts them; tapping opens the '
+        'first', (tester) async {
+      String? opened;
+      await pumpComponent(
+        tester,
+        TaskRow(
+          task: task.copyWith(
+            blocked: true,
+            waitingOn: const ['aicp-12', 'aicp-14'],
+          ),
+          now: fixedNow,
+          onTap: () {},
+          onOpenRef: (r) => opened = r,
+        ),
+      );
+      await tester.tap(inRow(find.text('waiting on 2 tasks')));
+      expect(opened, 'aicp-12');
+    });
+
+    testWidgets('a finished checklist is drawn in the ok colour', (
+      tester,
+    ) async {
+      await pumpComponent(
+        tester,
+        TaskRow(
+          task: task.copyWith(checklist: const Checklist(done: 5, total: 5)),
+          now: fixedNow,
+          onTap: () {},
+        ),
+      );
+      final text = tester.widget<Text>(inRow(find.text('5/5')));
+      expect(text.style?.color, TixTokens.light.ok);
+    });
   });
 
   testWidgets('a narrow row leaves the tags off', (tester) async {
@@ -325,6 +458,19 @@ void main() {
             children: [
               TaskRow(task: task, facts: facts, now: fixedNow, onTap: () {}),
               TaskCard(task: task, facts: facts, now: fixedNow, onTap: () {}),
+              TaskRow(
+                task: task.copyWith(
+                  leaseExpiredAt: fixedNow.subtract(const Duration(hours: 3)),
+                  claimCount: 4,
+                  blocked: true,
+                  waitingOn: const ['aicp-12', 'aicp-14'],
+                  recurrence: 'every 2 weeks on mon,thu',
+                  checklist: const Checklist(done: 3, total: 5),
+                ),
+                facts: facts,
+                now: fixedNow,
+                onTap: () {},
+              ),
             ],
           ),
           size: size,
