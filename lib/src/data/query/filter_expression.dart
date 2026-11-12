@@ -232,7 +232,7 @@ void _applyIs(String value, bool negate, void Function(String, String) add) {
       add('claimed', yes);
     case 'unclaimed' || 'free':
       add('claimed', no);
-    case 'blocked':
+    case 'blocked' || 'waiting-on':
       add('blocked', yes);
     case 'unblocked' || 'ready':
       add('blocked', no);
@@ -257,9 +257,9 @@ void _applyIs(String value, bool negate, void Function(String, String) add) {
       add('root_only', 'true');
     default:
       throw _invalid(
-        'unknown is: value "$value"; try claimed, unclaimed, blocked, '
-        'unblocked, recurring, starred, unstarred, snoozed, awake, deleted, '
-        'trashed or root',
+        'unknown is: value "$value"; try claimed, unclaimed, waiting-on (or '
+        'blocked), unblocked, recurring, starred, unstarred, snoozed, awake, '
+        'deleted, trashed or root',
       );
   }
 }

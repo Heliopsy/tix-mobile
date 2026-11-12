@@ -42,6 +42,45 @@ int heldByAgent(Iterable<Task> tasks, DateTime now) => tasks
     )
     .length;
 
+/// What a task screen's summary line counts.
+typedef TaskSummary = ({
+  int open,
+  int done,
+  int projects,
+  int held,
+  int waiting,
+});
+
+/// Counts [tasks] the way tix's web summary counts a page: open and done by
+/// [isDone], the projects they span, the ones an agent holds at [now], and
+/// the ones waiting on an unfinished dependency.
+TaskSummary summariseTasks(
+  Iterable<Task> tasks,
+  DateTime now, {
+  required bool Function(Task) isDone,
+}) {
+  var open = 0;
+  var done = 0;
+  var waiting = 0;
+  final projects = <String>{};
+  for (final t in tasks) {
+    if (isDone(t)) {
+      done++;
+    } else {
+      open++;
+    }
+    if (t.blocked) waiting++;
+    if (t.projectId.isNotEmpty) projects.add(t.projectId);
+  }
+  return (
+    open: open,
+    done: done,
+    projects: projects.length,
+    held: heldByAgent(tasks, now),
+    waiting: waiting,
+  );
+}
+
 void _keepFor(Ref ref, Duration duration) {
   final link = ref.keepAlive();
   Timer? timer;

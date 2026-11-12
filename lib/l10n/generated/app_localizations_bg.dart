@@ -1299,6 +1299,55 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
+  String get tasksSummaryNothingOpen => 'Няма отворени.';
+
+  @override
+  String get tasksSummaryNothing => 'Списъкът е празен.';
+
+  @override
+  String get tasksSummaryAllDone => 'Всичко е наред. Всичко тук е готово.';
+
+  @override
+  String get tasksSummaryToGo => 'за изпълнение';
+
+  @override
+  String tasksSummaryDone(int count) {
+    return 'готови: $count';
+  }
+
+  @override
+  String tasksSummaryProjects(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'в $count проекта',
+      one: 'в 1 проект',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tasksSummaryWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count чакат други задачи',
+      one: '1 чака друга задача',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tasksSummaryWaitingHint =>
+      'Само задачи, които чакат незавършена зависимост';
+
+  @override
+  String get tasksSummaryOpenOnly => 'само отворената работа';
+
+  @override
+  String get tasksSummaryShowFinished => 'покажи и завършените';
+
+  @override
   String boardCount(int count, String more) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
