@@ -56,12 +56,20 @@ class TaskIndex {
 }
 
 /// The `GET /tasks` parameters [query] stands for, read at [now] against
-/// [context].
-TaskParams paramsFor(TaskQuery query, TaskIndex context, DateTime now) {
+/// [context]. With [held], My work asks for the tasks the reader holds a
+/// claim on instead of the ones assigned to them.
+TaskParams paramsFor(
+  TaskQuery query,
+  TaskIndex context,
+  DateTime now, {
+  bool held = false,
+}) {
   final params = parseFilterExpression(query.expression, now: now);
   switch (query.scope) {
     case ProjectScope(:final key):
       params['project'] = [key];
+    case MineScope() when held:
+      params['claimed_by'] = ['me'];
     case MineScope():
       params['assignee'] = ['me'];
     case AllScope():

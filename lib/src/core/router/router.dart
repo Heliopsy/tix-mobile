@@ -54,6 +54,7 @@ import 'package:tix_mobile/src/features/shell/presentation/splash_screen.dart';
 import 'package:tix_mobile/src/features/stats/presentation/stats_screen.dart';
 import 'package:tix_mobile/src/features/status/presentation/status_screen.dart';
 import 'package:tix_mobile/src/features/sync/presentation/conflicts_screen.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/my_work_badge.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/saved_filters_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_list_screen.dart';
@@ -249,6 +250,7 @@ GoRouter router(Ref ref) {
             builder: (_, _, shell) => HomeShell(
               shell: shell,
               inboxIcon: (icon) => InboxNavIcon(icon: icon),
+              myWorkIcon: (icon) => MyWorkNavIcon(icon: icon),
             ),
             branches: [
               StatefulShellBranch(

@@ -1471,6 +1471,21 @@ class FakeTix {
             t,
       ];
     }
+    if (q['claimed_by'] case final List<String> a) {
+      rows = [
+        for (final t in rows)
+          if (a.contains(t['claimed_by_actor_id'])) t,
+      ];
+    }
+    if (q['due_before']?.first case final String before) {
+      final end = DateTime.parse(before);
+      rows = [
+        for (final t in rows)
+          if (t['due_at'] case final String due
+              when DateTime.parse(due).isBefore(end))
+            t,
+      ];
+    }
     if (q.containsKey('starred')) {
       rows = [
         for (final t in rows)

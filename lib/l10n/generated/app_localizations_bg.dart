@@ -9311,4 +9311,18 @@ class AppLocalizationsBg extends AppLocalizations {
   String rowWaitingTip(String refs) {
     return 'Чака $refs';
   }
+
+  @override
+  String get myWorkIncludeHeld => 'Включи и задачите, които държа';
+
+  @override
+  String myWorkOverdueBadge(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count просрочени задачи',
+      one: '1 просрочена задача',
+    );
+    return '$_temp0';
+  }
 }
