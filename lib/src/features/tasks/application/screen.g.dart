@@ -66,7 +66,7 @@ final class TaskScreenProvider
   }
 }
 
-String _$taskScreenHash() => r'7a6bc009117590779c342d56274a223cab41307a';
+String _$taskScreenHash() => r'218009124372d6d2995eea342752db3df8adeec9';
 
 /// The filter, drawing and options of the task screen over one scope, kept
 /// while the app runs so going back finds them as they were.
