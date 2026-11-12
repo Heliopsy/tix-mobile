@@ -3,6 +3,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
+import 'package:tix_mobile/src/data/models/auth.dart';
 import 'package:tix_mobile/src/data/repositories/auth_repository.dart';
 
 import '../../helpers/fake_tix.dart';
@@ -79,17 +80,71 @@ void main() {
     });
   });
 
-  test('enrolment and a password change go to the browser', () async {
+  test('an enrol challenge without its secret goes to the browser', () async {
     server.challengeKind = 'enrol';
     await expectLater(
       auth.login(base, email: 'ana@example.com', password: 'pw'),
       kind(TixErrorKind.secondFactorSetup),
     );
-    server.challengeKind = 'password_change';
-    await expectLater(
-      auth.login(base, email: 'ana@example.com', password: 'pw'),
-      kind(TixErrorKind.passwordChange),
+  });
+
+  test('a password change comes back as a challenge, and the new password '
+      'goes with the same email and password', () async {
+    server.mustChangePassword.add('ana@example.com');
+    final first = await auth.login(
+      base,
+      email: 'ana@example.com',
+      password: 'pw',
     );
+    expect(first.challenge?.kind, TOTPChallengeKind.passwordChange);
+    final done = await auth.login(
+      base,
+      email: 'ana@example.com',
+      password: 'pw',
+      newPassword: 'a much longer one',
+      remember: true,
+    );
+    expect(done.session, isNotNull);
+    expect(server.requests.last.data, {
+      'email': 'ana@example.com',
+      'password': 'pw',
+      'new_password': 'a much longer one',
+      'surface': 'cli',
+      'remember': true,
+    });
+  });
+
+  test('an empty new password is not sent', () async {
+    await expectLater(
+      auth.login(
+        base,
+        email: 'ana@example.com',
+        password: 'pw',
+        newPassword: '',
+      ),
+      kind(TixErrorKind.newPasswordRequired),
+    );
+    expect(server.requests, isEmpty);
+  });
+
+  test('an enrol challenge carries its secret, and its code returns the '
+      'recovery codes', () async {
+    server.mustEnrol.add('ana@example.com');
+    final first = await auth.login(
+      base,
+      email: 'ana@example.com',
+      password: 'pw',
+    );
+    final challenge = first.challenge!;
+    expect(challenge.kind, TOTPChallengeKind.enrol);
+    expect(challenge.enrolment?.secret, FakeTix.enrolSecret);
+    final done = await auth.loginCode(
+      base,
+      ticket: challenge.ticket,
+      code: FakeTix.goodCode,
+    );
+    expect(done.session, isNotNull);
+    expect(done.recoveryCodes, FakeTix.recoveryCodes);
   });
 
   test('switch and logout present the session cookie', () async {

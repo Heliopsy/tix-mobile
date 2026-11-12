@@ -12,4 +12,5 @@ export 'package:tix_mobile/src/data/api/gen/models.gen.dart'
         Surface,
         SwitchTenantInput,
         TOTPChallenge,
-        TOTPChallengeKind;
+        TOTPChallengeKind,
+        TOTPEnrolment;

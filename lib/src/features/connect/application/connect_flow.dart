@@ -99,6 +99,55 @@ final class ConnectCode extends ConnectStep {
   final bool pinned;
 }
 
+/// The account must choose a new password before the sign-in goes on.
+final class ConnectPasswordChange extends ConnectStep {
+  /// Asks for a new password for [draft]'s account.
+  const ConnectPasswordChange(this.draft);
+
+  /// The sign-in.
+  final SignInDraft draft;
+}
+
+/// The tenant requires a second factor the account lacks: [enrolment] goes
+/// into an authenticator, and its code completes the challenge [ticket].
+final class ConnectEnrol extends ConnectStep {
+  /// Sets up [enrolment] for [ticket].
+  const ConnectEnrol(
+    this.draft, {
+    required this.ticket,
+    required this.enrolment,
+  });
+
+  /// The sign-in.
+  final SignInDraft draft;
+
+  /// The login challenge's ticket.
+  final String ticket;
+
+  /// The secret to add, shown only on this step.
+  final TOTPEnrolment enrolment;
+}
+
+/// Signed in by enrolling: [codes] are shown once, and the sign-in goes on
+/// with [session] only once the person has saved them.
+final class ConnectRecoveryCodes extends ConnectStep {
+  /// Shows [codes] before going on with [session].
+  const ConnectRecoveryCodes(
+    this.draft, {
+    required this.session,
+    required this.codes,
+  });
+
+  /// The sign-in.
+  final SignInDraft draft;
+
+  /// The session the enrolment completed.
+  final AuthSession session;
+
+  /// The recovery codes, never stored.
+  final List<String> codes;
+}
+
 /// Signed in; the person chooses a tenant and whether to pin it.
 final class ConnectTenants extends ConnectStep {
   /// Offers [me]'s memberships.
@@ -275,9 +324,58 @@ class ConnectFlow extends _$ConnectFlow {
     );
   }
 
-  /// Sends the second factor [code] the server asked for.
+  /// Answers a required password change with [newPassword], typed again as
+  /// [confirm], sending the [password] the sign-in began with once more.
+  /// tix decides whether the new one will do; only the match is checked
+  /// here, because tix never sees [confirm].
+  Future<void> changePassword({
+    required String password,
+    required String newPassword,
+    required String confirm,
+  }) async {
+    final step = state;
+    if (step is! ConnectPasswordChange) return;
+    if (newPassword.isEmpty) {
+      throw const TixException(TixErrorKind.newPasswordRequired);
+    }
+    if (newPassword != confirm) {
+      throw const TixException(TixErrorKind.passwordMismatch);
+    }
+    final result = await ref
+        .read(authRepositoryProvider)
+        .login(
+          step.draft.baseUrl,
+          email: step.draft.email,
+          password: password,
+          newPassword: newPassword,
+          remember: step.draft.remember,
+        );
+    await _signedIn(step.draft, result);
+  }
+
+  /// Goes on with the sign-in once its recovery codes are saved.
+  Future<void> codesSaved() async {
+    final step = state;
+    if (step is! ConnectRecoveryCodes) return;
+    await _signedIn(step.draft, LoginResult(session: step.session));
+  }
+
+  /// Sends the second factor [code] the server asked for, or the first code
+  /// of an enrolment.
   Future<void> code(String code) async {
     final step = state;
+    if (step is ConnectEnrol) {
+      final result = await ref
+          .read(authRepositoryProvider)
+          .loginCode(
+            step.draft.baseUrl,
+            ticket: step.ticket,
+            code: code,
+            remember: step.draft.remember,
+          );
+      await _signedIn(step.draft, result);
+      return;
+    }
     if (step is! ConnectCode) return;
     if (step.ticket.isNotEmpty) {
       final result = await ref
@@ -322,7 +420,25 @@ class ConnectFlow extends _$ConnectFlow {
   Future<void> _signedIn(SignInDraft draft, LoginResult result) async {
     final session = result.session;
     if (session == null) {
-      state = ConnectCode(draft, ticket: result.challenge?.ticket ?? '');
+      final challenge = result.challenge;
+      final enrolment = challenge?.enrolment;
+      state = switch (challenge?.kind) {
+        TOTPChallengeKind.passwordChange => ConnectPasswordChange(draft),
+        TOTPChallengeKind.enrol when enrolment != null => ConnectEnrol(
+          draft,
+          ticket: challenge!.ticket,
+          enrolment: enrolment,
+        ),
+        _ => ConnectCode(draft, ticket: challenge?.ticket ?? ''),
+      };
+      return;
+    }
+    if (result.recoveryCodes.isNotEmpty) {
+      state = ConnectRecoveryCodes(
+        draft,
+        session: session,
+        codes: result.recoveryCodes,
+      );
       return;
     }
     final me = await ref

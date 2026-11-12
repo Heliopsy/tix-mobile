@@ -345,7 +345,9 @@ void main() {
       expect(find.byKey(const Key('connect.code')), findsNothing);
     });
 
-    testWidgets('enrolment is sent to the browser', (tester) async {
+    testWidgets('an enrol challenge without its key is sent to the browser', (
+      tester,
+    ) async {
       server.challengeKind = 'enrol';
       await pumpScreen(
         tester,

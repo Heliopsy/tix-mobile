@@ -9,7 +9,9 @@ import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
+import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/platform/attachments.dart';
 import 'package:tix_mobile/src/core/platform/files.dart';
 import 'package:tix_mobile/src/core/platform/local_access.dart';
 import 'package:tix_mobile/src/core/platform/share_intake.dart';
@@ -84,6 +86,8 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
   final _password = TextEditingController();
   final _name = TextEditingController();
   final _code = TextEditingController();
+  final _newPassword = TextEditingController();
+  final _confirm = TextEditingController();
   final _dbName = TextEditingController();
   final _tenantKey = TextEditingController();
   final _tenantName = TextEditingController();
@@ -170,6 +174,8 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
       _password,
       _name,
       _code,
+      _newPassword,
+      _confirm,
       _dbName,
       _tenantKey,
       _tenantName,
@@ -357,7 +363,9 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
     final step = ref.read(_provider);
     if (step is! ConnectForm && step is! ConnectDone) {
       setState(() => _error = null);
-      _code.clear();
+      for (final c in [_code, _newPassword, _confirm]) {
+        c.clear();
+      }
       _flow.restart().ignore();
       return;
     }
@@ -379,7 +387,9 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
           repo.connection(widget.connectionId ?? '')?.instanceId ??
           '',
     );
-    final canGoBack = widget.adding || step is! ConnectForm;
+    final canGoBack =
+        (widget.adding || step is! ConnectForm) &&
+        step is! ConnectRecoveryCodes;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -405,13 +415,20 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
                     ...switch (step) {
                       ConnectForm() || ConnectDone() => _form(context, saved),
                       ConnectCode() => _codeStep(context),
+                      ConnectPasswordChange() => _passwordStep(context, step),
+                      ConnectEnrol() => _enrolStep(context, step),
+                      ConnectRecoveryCodes() => _codesStep(context, step),
                       ConnectTenants() => _tenantStep(context, step),
                       LocalTenants() => _localStep(context, step),
                     },
                     if (error != null) ...[
                       const SizedBox(height: 16),
                       Text(
-                        errorMessage(l10n, error),
+                        step is ConnectEnrol &&
+                                error is TixException &&
+                                error.kind == TixErrorKind.badCredentials
+                            ? l10n.totpWrongCode
+                            : errorMessage(l10n, error),
                         key: const Key('connect.error'),
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.error,
@@ -934,6 +951,161 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
     ];
   }
 
+  Future<void> _changePassword() => _run(() async {
+    await _flow.changePassword(
+      password: _password.text,
+      newPassword: _newPassword.text,
+      confirm: _confirm.text,
+    );
+    if (ref.read(_provider) is ConnectPasswordChange) return;
+    for (final c in [_password, _newPassword, _confirm]) {
+      c.clear();
+    }
+  });
+
+  List<Widget> _passwordStep(BuildContext context, ConnectPasswordChange step) {
+    final l10n = context.l10n;
+    return [
+      Text(
+        l10n.passwordChangeTitle,
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+      const SizedBox(height: 8),
+      Text(l10n.passwordChangeIntro),
+      const SizedBox(height: 8),
+      Text(
+        l10n.passwordChangeAs(step.draft.email),
+        key: const Key('connect.changeAs'),
+        style: Theme.of(context).textTheme.bodySmall,
+      ),
+      const SizedBox(height: 16),
+      _Helped(
+        help: HelpButton(
+          key: const Key('connect.help.newPassword'),
+          title: l10n.passwordChangeTitle,
+          body: l10n.helpNewPasswordBody,
+        ),
+        child: _SecretField(
+          fieldKey: const Key('connect.newPassword'),
+          controller: _newPassword,
+          enabled: !_busy,
+          label: l10n.inviteNewPassword,
+          helper: l10n.newPasswordHelp,
+          visible: _showSecret,
+          onToggle: () => setState(() => _showSecret = !_showSecret),
+          newPassword: true,
+        ),
+      ),
+      const SizedBox(height: 16),
+      _SecretField(
+        fieldKey: const Key('connect.confirmPassword'),
+        controller: _confirm,
+        enabled: !_busy,
+        label: l10n.newPasswordAgainLabel,
+        visible: _showSecret,
+        onToggle: () => setState(() => _showSecret = !_showSecret),
+        newPassword: true,
+        onSubmitted: _busy ? null : _changePassword,
+      ),
+      const SizedBox(height: 24),
+      FilledButton(
+        key: const Key('connect.changePassword'),
+        onPressed: _busy ? null : _changePassword,
+        child: _spinnerOr(l10n.passwordChangeSubmit),
+      ),
+    ];
+  }
+
+  List<Widget> _enrolStep(BuildContext context, ConnectEnrol step) {
+    final l10n = context.l10n;
+    final enrolment = step.enrolment;
+    final uri = Uri.tryParse(enrolment.uri);
+    return [
+      _Helped(
+        help: HelpButton(
+          key: const Key('connect.help.secondFactor'),
+          title: l10n.enrolTitle,
+          body: l10n.helpSecondFactorBody,
+        ),
+        child: Text(
+          l10n.enrolTitle,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+      ),
+      const SizedBox(height: 8),
+      Text(l10n.enrolIntro),
+      const SizedBox(height: 16),
+      OneTimeSecret(
+        key: const Key('connect.enrolSecret'),
+        heading: l10n.totpSecretHeading,
+        note: l10n.totpSecretNote(enrolment.account, enrolment.issuer),
+        values: [enrolment.secret],
+      ),
+      if (uri != null && enrolment.uri.isNotEmpty) ...[
+        const SizedBox(height: 8),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: TixButton.quiet(
+            key: const Key('connect.enrolOpenApp'),
+            label: l10n.totpOpenApp,
+            icon: Icons.open_in_new,
+            onPressed: () =>
+                unawaited(ref.read(attachmentsProvider).openLink(uri)),
+          ),
+        ),
+      ],
+      const SizedBox(height: 16),
+      TextField(
+        key: const Key('connect.enrolCode'),
+        controller: _code,
+        enabled: !_busy,
+        keyboardType: TextInputType.number,
+        autofillHints: const [AutofillHints.oneTimeCode],
+        autocorrect: false,
+        onSubmitted: (_) => _busy ? null : _run(() => _flow.code(_code.text)),
+        decoration: InputDecoration(
+          labelText: l10n.codeLabel,
+          helperText: l10n.enrolCodeHelp,
+          helperMaxLines: 3,
+          border: const OutlineInputBorder(),
+        ),
+      ),
+      const SizedBox(height: 24),
+      FilledButton(
+        key: const Key('connect.enrolConfirm'),
+        onPressed: _busy ? null : () => _run(() => _flow.code(_code.text)),
+        child: _spinnerOr(l10n.totpConfirm),
+      ),
+    ];
+  }
+
+  List<Widget> _codesStep(BuildContext context, ConnectRecoveryCodes step) {
+    final l10n = context.l10n;
+    return [
+      _Helped(
+        help: HelpButton(
+          key: const Key('connect.help.recoveryCodes'),
+          title: l10n.totpCodesHeading,
+          body: l10n.helpRecoveryCodesBody,
+        ),
+        child: Text(l10n.signInCodesIntro),
+      ),
+      const SizedBox(height: 16),
+      OneTimeSecret(
+        key: const Key('connect.recoveryCodes'),
+        heading: l10n.totpCodesHeading,
+        note: l10n.totpCodesNote,
+        values: step.codes,
+      ),
+      const SizedBox(height: 24),
+      FilledButton(
+        key: const Key('connect.codesSaved'),
+        onPressed: _busy ? null : () => _run(_flow.codesSaved),
+        child: _spinnerOr(l10n.totpCodesSaved),
+      ),
+    ];
+  }
+
   List<Widget> _tenantStep(BuildContext context, ConnectTenants step) {
     final l10n = context.l10n;
     final base = Uri.parse(step.draft.baseUrl);
@@ -1073,18 +1245,22 @@ class _SecretField extends StatelessWidget {
     required this.controller,
     required this.enabled,
     required this.label,
-    required this.helper,
     required this.visible,
     required this.onToggle,
+    this.helper,
+    this.newPassword = false,
+    this.onSubmitted,
   });
 
   final Key fieldKey;
   final TextEditingController controller;
   final bool enabled;
   final String label;
-  final String helper;
+  final String? helper;
   final bool visible;
   final VoidCallback onToggle;
+  final bool newPassword;
+  final VoidCallback? onSubmitted;
 
   @override
   Widget build(BuildContext context) => TextField(
@@ -1094,8 +1270,13 @@ class _SecretField extends StatelessWidget {
     obscureText: !visible,
     autocorrect: false,
     enableSuggestions: false,
-    autofillHints: const [AutofillHints.password],
-    textInputAction: TextInputAction.next,
+    autofillHints: [
+      if (newPassword) AutofillHints.newPassword else AutofillHints.password,
+    ],
+    textInputAction: onSubmitted == null
+        ? TextInputAction.next
+        : TextInputAction.done,
+    onSubmitted: onSubmitted == null ? null : (_) => onSubmitted!(),
     decoration: InputDecoration(
       labelText: label,
       helperText: helper,

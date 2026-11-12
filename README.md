@@ -80,6 +80,8 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 
 - **Several tix servers**, each with one or more connections: an API token, or a sign-in with email and password
   (second factor included). A sign-in can follow you between your tenants on that server or stay pinned to one.
+  A password your administrator asks you to replace, or a second factor your tenant requires, is set up right
+  there, recovery codes included, without a detour through the browser.
 - **Invite links**: paste one, or share it to tix, see what it admits you to, accept it, and the server and the
   sign-in are added for you.
 - **Token rotation** for a token connection: one tap swaps its API token for a new one and keeps only the new value.
