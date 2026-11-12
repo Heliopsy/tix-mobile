@@ -52,6 +52,16 @@ class TenantSettings extends _$TenantSettings {
       ref.read(adminRepositoryProvider).deleteTenant(tenantRef);
 }
 
+/// The server's own session settings, which a tenant may only tighten.
+@riverpod
+Future<SessionPolicy> serverSessionPolicy(Ref ref) =>
+    ref.watch(adminRepositoryProvider).sessionPolicy();
+
+/// The server's own artifact limits, which a tenant may only tighten.
+@riverpod
+Future<ArtifactLimits> serverArtifactLimits(Ref ref) =>
+    ref.watch(adminRepositoryProvider).artifactLimits();
+
 /// The hostnames mapped to the caller's tenant.
 @riverpod
 class TenantDomainList extends _$TenantDomainList {

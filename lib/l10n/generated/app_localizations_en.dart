@@ -5173,6 +5173,70 @@ class AppLocalizationsEn extends AppLocalizations {
       'Caps every claim in this tenant. It can lower the server\'s ceiling, never raise it.';
 
   @override
+  String get tenantSessionTitle => 'Sessions';
+
+  @override
+  String get tenantSessionInfo =>
+      'How long a sign-in on this tenant lasts. Each setting can be shorter than the server\'s, never longer.';
+
+  @override
+  String get tenantSessionTtl => 'Sign-in lasts';
+
+  @override
+  String get tenantSessionTtlInfo =>
+      'How long a sign-in on this tenant lasts from the moment it is made, such as 8h. It can be shorter than the server\'s but not longer. Sessions already signed in keep the expiry they were given.';
+
+  @override
+  String get tenantSessionIdle => 'Sign out when idle for';
+
+  @override
+  String get tenantSessionIdleInfo =>
+      'End a session nobody has used for this long, such as 30m, kept signed in or not. It applies to sessions already signed in as soon as it is saved. It can be shorter than the server\'s but not longer; empty with no server setting means never.';
+
+  @override
+  String get tenantSessionRemember => 'Keep me signed in lasts';
+
+  @override
+  String get tenantSessionRememberInfo =>
+      'How long a sign-in lasts when the person ticks Keep me signed in, such as 7d, or off to stop offering it. It can be shorter than the server\'s but not longer.';
+
+  @override
+  String get tenantSessionNever => 'never';
+
+  @override
+  String get tenantSessionNote =>
+      'Leave any empty to use the server\'s setting, shown greyed.';
+
+  @override
+  String get tenantArtifactTitle => 'Artifacts';
+
+  @override
+  String get tenantArtifactInfo =>
+      'The files an artifact may carry on this tenant. Each limit can be tighter than the server\'s, never looser.';
+
+  @override
+  String get tenantArtifactMaxBytes => 'Largest artifact file';
+
+  @override
+  String get tenantArtifactMaxBytesInfo =>
+      'The largest file an artifact may carry on this tenant, such as 512KiB or 5MiB. It can be lower than the server\'s limit but not higher. Files already attached stay as they are.';
+
+  @override
+  String get tenantArtifactSizeBad =>
+      'Write a size such as 1048576, 512KiB or 5MiB.';
+
+  @override
+  String get tenantArtifactTypes => 'Accepted artifact types';
+
+  @override
+  String get tenantArtifactTypesInfo =>
+      'The media types an artifact file may have on this tenant, separated by commas, such as image/*, application/pdf. Only types the server accepts can be listed. Whatever the type, a file is always offered as a download and never opened in the browser.';
+
+  @override
+  String get tenantArtifactNote =>
+      'Leave either empty to use the server\'s limit, shown greyed.';
+
+  @override
   String get tenantTrashTitle => 'Trash';
 
   @override

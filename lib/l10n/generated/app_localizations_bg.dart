@@ -5177,6 +5177,70 @@ class AppLocalizationsBg extends AppLocalizations {
       'Ограничава всяка заявка в наемателя. Може да свали тавана на сървъра, но не и да го вдигне.';
 
   @override
+  String get tenantSessionTitle => 'Сесии';
+
+  @override
+  String get tenantSessionInfo =>
+      'Колко трае входът в този наемател. Всяка настройка може да е по-кратка от тази на сървъра, но не и по-дълга.';
+
+  @override
+  String get tenantSessionTtl => 'Входът трае';
+
+  @override
+  String get tenantSessionTtlInfo =>
+      'Колко трае входът в този наемател от момента, в който е направен, например 8h. Може да е по-кратко от това на сървъра, но не и по-дълго. Вече влезлите сесии запазват изтичането, което са получили.';
+
+  @override
+  String get tenantSessionIdle => 'Изход при бездействие от';
+
+  @override
+  String get tenantSessionIdleInfo =>
+      'Прекратява сесия, която никой не е ползвал толкова време, например 30m, със или без „Запомни ме“. Важи за вече влезлите сесии веднага щом се запази. Може да е по-кратко от това на сървъра, но не и по-дълго; празно без настройка на сървъра означава никога.';
+
+  @override
+  String get tenantSessionRemember => '„Запомни ме“ трае';
+
+  @override
+  String get tenantSessionRememberInfo =>
+      'Колко трае входът, когато човекът отметне „Запомни ме“, например 7d, или off, за да не се предлага. Може да е по-кратко от това на сървъра, но не и по-дълго.';
+
+  @override
+  String get tenantSessionNever => 'никога';
+
+  @override
+  String get tenantSessionNote =>
+      'Оставете празно, за да се ползва настройката на сървъра, показана в сиво.';
+
+  @override
+  String get tenantArtifactTitle => 'Артефакти';
+
+  @override
+  String get tenantArtifactInfo =>
+      'Файловете, които артефакт може да носи в този наемател. Всяко ограничение може да е по-строго от това на сървъра, но не и по-свободно.';
+
+  @override
+  String get tenantArtifactMaxBytes => 'Най-голям файл на артефакт';
+
+  @override
+  String get tenantArtifactMaxBytesInfo =>
+      'Най-големият файл, който артефакт може да носи в този наемател, например 512KiB или 5MiB. Може да е по-нисък от ограничението на сървъра, но не и по-висок. Вече прикачените файлове остават както са.';
+
+  @override
+  String get tenantArtifactSizeBad =>
+      'Напишете размер като 1048576, 512KiB или 5MiB.';
+
+  @override
+  String get tenantArtifactTypes => 'Приемани типове артефакти';
+
+  @override
+  String get tenantArtifactTypesInfo =>
+      'Медийните типове, които файл на артефакт може да има в този наемател, разделени със запетаи, например image/*, application/pdf. Може да се изброят само типове, които сървърът приема. Какъвто и да е типът, файлът винаги се предлага за изтегляне и никога не се отваря в браузъра.';
+
+  @override
+  String get tenantArtifactNote =>
+      'Оставете празно, за да се ползва ограничението на сървъра, показано в сиво.';
+
+  @override
   String get tenantTrashTitle => 'Кошче';
 
   @override

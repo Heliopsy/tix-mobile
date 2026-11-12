@@ -156,6 +156,96 @@ abstract class _$TenantSettings extends $AsyncNotifier<Tenant> {
   }
 }
 
+/// The server's own session settings, which a tenant may only tighten.
+
+@ProviderFor(serverSessionPolicy)
+final serverSessionPolicyProvider = ServerSessionPolicyProvider._();
+
+/// The server's own session settings, which a tenant may only tighten.
+
+final class ServerSessionPolicyProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<SessionPolicy>,
+          SessionPolicy,
+          FutureOr<SessionPolicy>
+        >
+    with $FutureModifier<SessionPolicy>, $FutureProvider<SessionPolicy> {
+  /// The server's own session settings, which a tenant may only tighten.
+  ServerSessionPolicyProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'serverSessionPolicyProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$serverSessionPolicyHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<SessionPolicy> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<SessionPolicy> create(Ref ref) {
+    return serverSessionPolicy(ref);
+  }
+}
+
+String _$serverSessionPolicyHash() =>
+    r'52720999bf56c7b31599b81b69123840d3f102ca';
+
+/// The server's own artifact limits, which a tenant may only tighten.
+
+@ProviderFor(serverArtifactLimits)
+final serverArtifactLimitsProvider = ServerArtifactLimitsProvider._();
+
+/// The server's own artifact limits, which a tenant may only tighten.
+
+final class ServerArtifactLimitsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<ArtifactLimits>,
+          ArtifactLimits,
+          FutureOr<ArtifactLimits>
+        >
+    with $FutureModifier<ArtifactLimits>, $FutureProvider<ArtifactLimits> {
+  /// The server's own artifact limits, which a tenant may only tighten.
+  ServerArtifactLimitsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'serverArtifactLimitsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$serverArtifactLimitsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<ArtifactLimits> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<ArtifactLimits> create(Ref ref) {
+    return serverArtifactLimits(ref);
+  }
+}
+
+String _$serverArtifactLimitsHash() =>
+    r'78190b3a42c5b0f7bb5eabd08f561709b15f1a2c';
+
 /// The hostnames mapped to the caller's tenant.
 
 @ProviderFor(TenantDomainList)

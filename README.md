@@ -177,8 +177,9 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   kinds and channels, saved filters and the board arrangement; for administrators, the tenant's own settings.
 - **About**: the app, engine and server versions, links to the site, source, roadmap and changelog, and a bug
   report with the versions filled in.
-- **Administration**: tenant settings with a live theme preview, domains, the server's live connections, and for
-  a global admin every tenant, its users and the global admins. Your own second factor (recovery codes shown once),
+- **Administration**: tenant settings with a live theme preview, how long sign-ins last and when idle ones end,
+  Keep me signed in, artifact size and type limits, domains, the server's live connections, and for a global admin
+  every tenant, its users and the global admins. Your own second factor (recovery codes shown once),
   SSH keys and active sessions (revoke any, this one included) under Settings, Security.
 - **Integrations and upkeep** for tenant admins: webhook endpoints with a test event and their delivery log with
   Redeliver, external sync sources from Jira, OpenProject or a file (check, run, preview, history), retention and
