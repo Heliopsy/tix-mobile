@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
-import 'package:tix_mobile/src/core/platform/attachments.dart';
 import 'package:tix_mobile/src/features/transfer/presentation/transfer_screen.dart';
 
 import '../../../helpers/fake_tix.dart';
@@ -123,21 +122,17 @@ void main() {
     expect(rig.files.saved.single.name, 'tix-snapshot.ndjson');
   });
 
-  testWidgets('an import runs dry first, then for real', (tester) async {
+  testWidgets('the import opens on the chosen project', (tester) async {
     final rig = PeopleRig();
-    rig.files.picked = PickedFile(
-      name: 'jira.csv',
-      bytes: utf8.encode('title\nA\nB\n'),
-      mimeType: 'text/csv',
-    );
     await rig.pump(tester, const TransferScreen(), size: tallDesktop);
-    await tapIn(tester, find.byKey(const Key('transfer.pick')));
-    expect(rig.people.imports.single['dry_run'], true);
-    expect(rig.people.imports.single['filename'], 'jira.csv');
-    expect(find.byKey(const Key('transfer.dryRun')), findsOneWidget);
-    await tapIn(tester, find.byKey(const Key('transfer.commit')));
-    expect(rig.people.imports.last['dry_run'], false);
-    expect(find.text('Imported: 2 created, 0 updated'), findsOneWidget);
+    await tapIn(tester, find.byKey(const Key('transfer.importProject')));
+    await tapIn(tester, find.text('Web').last);
+    await tapIn(tester, find.byKey(const Key('transfer.openImport')));
+    expect(
+      find.text('route:/manage/transfer/import?project=web'),
+      findsOneWidget,
+    );
+    expect(rig.people.imports, isEmpty);
   });
 
   testWidgets('a viewer sees no import and no snapshot', (tester) async {

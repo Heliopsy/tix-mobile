@@ -39,16 +39,23 @@ class ProjectSettingsScreen extends ConsumerWidget {
         key: ValueKey(p.updatedAt ?? p.key),
         project: p,
         canWrite: access.has(Scope.projectWrite),
+        canImport: access.has(Scope.import),
       ),
     );
   }
 }
 
 class _Editor extends ConsumerStatefulWidget {
-  const _Editor({required this.project, required this.canWrite, super.key});
+  const _Editor({
+    required this.project,
+    required this.canWrite,
+    required this.canImport,
+    super.key,
+  });
 
   final Project project;
   final bool canWrite;
+  final bool canImport;
 
   @override
   ConsumerState<_Editor> createState() => _EditorState();
@@ -404,6 +411,20 @@ class _EditorState extends ConsumerState<_Editor> {
                       ),
                     ],
                   ),
+                  if (widget.canImport)
+                    TixSection(
+                      title: l10n.transferImportTitle,
+                      children: [
+                        ListTile(
+                          key: const Key('project.import'),
+                          leading: const Icon(Icons.upload_file),
+                          title: Text(l10n.importOpen),
+                          subtitle: Text(l10n.importProjectHelp),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: () => context.push(Routes.importTasks(_p.key)),
+                        ),
+                      ],
+                    ),
                   if (write)
                     TixSection(
                       title: l10n.manageDangerZone,
