@@ -2678,6 +2678,157 @@ class AppLocalizationsFr extends AppLocalizations {
   String get aboutVersions => 'Versions';
 
   @override
+  String get releaseTitle => 'Version du serveur';
+
+  @override
+  String get releaseSubtitle =>
+      'La version de ce serveur et s\'il en existe une plus récente';
+
+  @override
+  String get goRelease => 'Aller à Version du serveur';
+
+  @override
+  String get releaseIntro =>
+      'Ce qu\'exécute cette installation, et ce que dit d\'elle-même la dernière version publiée.';
+
+  @override
+  String get releaseStatus => 'État';
+
+  @override
+  String get releaseUpdateAvailable => 'Mise à jour disponible';
+
+  @override
+  String releaseAvailable(String version) {
+    return 'v$version est disponible';
+  }
+
+  @override
+  String releaseRunsOlder(String version) {
+    return 'Cette installation exécute v$version. Les commandes ci-dessous installent la version plus récente.';
+  }
+
+  @override
+  String get releaseUpToDate => 'À jour';
+
+  @override
+  String get releaseCurrentTitle => 'Cette installation est à jour';
+
+  @override
+  String releaseNewest(String version) {
+    return 'v$version est la dernière version publiée.';
+  }
+
+  @override
+  String get releaseNotComparable => 'Non comparable';
+
+  @override
+  String get releaseUnknownTitle =>
+      'La version de ce build ne peut pas être comparée';
+
+  @override
+  String releaseUnknown(String latest, String running) {
+    return 'v$latest est la dernière version publiée, et v$running n\'est pas un numéro de version comparable.';
+  }
+
+  @override
+  String get releaseCheckFailed => 'Échec de la vérification';
+
+  @override
+  String get releaseFailedTitle => 'Le flux des versions est injoignable';
+
+  @override
+  String get releaseFailed =>
+      'C\'est le cas habituel d\'un réseau isolé. Le serveur réessaie dans les six heures.';
+
+  @override
+  String get releaseNotChecked => 'Non vérifié';
+
+  @override
+  String get releasePendingTitle => 'Pas encore vérifié';
+
+  @override
+  String get releasePending =>
+      'Le serveur interroge le flux des versions en arrière-plan. Actualisez dans un instant.';
+
+  @override
+  String get releaseRunningHere => 'Exécutée ici';
+
+  @override
+  String get releaseNewestPublished => 'Dernière publiée';
+
+  @override
+  String get releaseNotKnown => 'inconnue';
+
+  @override
+  String get releaseCheckedNote =>
+      'Vérifié auprès du flux public des versions au plus toutes les six heures, depuis le serveur et non depuis cet appareil.';
+
+  @override
+  String get releaseHowToUpgrade => 'Comment mettre à jour';
+
+  @override
+  String get releaseUpgradeNote =>
+      'Utilisez la méthode d\'installation de ce serveur. Rien ici ne redémarre un tix serve en cours : redémarrez-le une fois la nouvelle version en place.';
+
+  @override
+  String get releaseMethodBinary => 'Binaire de version';
+
+  @override
+  String get releaseMethodBinaryHelp =>
+      'Installé avec install.sh ou extrait d\'une archive de version. Vérifie le téléchargement par rapport à sa somme de contrôle publiée avant de remplacer le binaire.';
+
+  @override
+  String get releaseMethodContainer => 'Image de conteneur';
+
+  @override
+  String get releaseMethodContainerHelp =>
+      'Récupérez la nouvelle étiquette, puis recréez le conteneur sur le même volume.';
+
+  @override
+  String get releaseMethodGo => 'Chaîne d\'outils Go';
+
+  @override
+  String get releaseMethodGoHelp =>
+      'Installé avec go install. tix update refuse cette copie, qui appartient à la chaîne d\'outils.';
+
+  @override
+  String get releasePackageManager =>
+      'Installé depuis un gestionnaire de paquets ? Mettez à jour de la même façon.';
+
+  @override
+  String releaseWhatChanged(String version) {
+    return 'Ce qui change dans v$version';
+  }
+
+  @override
+  String get releaseNotesNote =>
+      'Les liens ont été retirés. Ces notes viennent du flux des versions et décrivent la dernière version, pas celle exécutée ici.';
+
+  @override
+  String get releaseWhatsNew => 'Nouveautés';
+
+  @override
+  String get releaseChangesRunning =>
+      'D\'après le journal des modifications du serveur : la version qui y tourne, puis les précédentes. Les liens ont été retirés.';
+
+  @override
+  String releaseUntagged(String version) {
+    return 'v$version n\'est pas une version étiquetée : voici donc les entrées les plus récentes du journal avec lequel elle a été construite.';
+  }
+
+  @override
+  String releaseNoEntry(String version) {
+    return 'Le journal du serveur n\'a pas d\'entrée pour v$version : voici donc ses entrées les plus récentes.';
+  }
+
+  @override
+  String get releaseNoChangelog =>
+      'Le serveur ne contient aucun journal des modifications.';
+
+  @override
+  String get releaseYouRun => 'Exécutée ici';
+
+  @override
   String get aboutAppVersion => 'Application';
 
   @override

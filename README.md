@@ -213,6 +213,8 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 - **Actor pages**: a person's or agent's handle, name and id, the tasks assigned to them, their API tokens and SSH
   keys (with `token:admin`) and their last 20 audit entries (with `audit:read`). Names in comments, history,
   Activity, audit, the leaderboard and token lists, and every `@handle`, open them.
+- **Server release**: the version the server runs, whether it is up to date, the upgrade command for each way tix
+  is installed, the newest release's notes and the changelog the server carries.
 - **Connect an agent**: the CLI, MCP (one tab per client), SSH, API and skill commands for the active server, with
   a token issued on the spot filled into every one and kept nowhere.
 - **Adaptive layout**: a bottom navigation bar on phones, a navigation rail and a two-pane list and detail on tablets

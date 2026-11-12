@@ -1666,6 +1666,208 @@
   },
   "aboutIntro": "tix-mobile is the app for tix, the open source task tracker. It works with any tix server, or runs tix on this device with no server at all. The server decides what happens to your work, so tasks behave exactly as they do in tix's web app and on the command line.",
   "aboutVersions": "Versions",
+  "releaseTitle": "Server release",
+  "@releaseTitle": {
+    "description": "Title of the server release screen and its Settings entry"
+  },
+  "releaseSubtitle": "The version this server runs and whether a newer one is out",
+  "@releaseSubtitle": {
+    "description": "Subtitle of the server release entry in Settings"
+  },
+  "goRelease": "Go to Server release",
+  "@goRelease": {
+    "description": "Command palette entry that opens the server release screen"
+  },
+  "releaseIntro": "What this installation is running, and what the newest published release says about itself.",
+  "@releaseIntro": {
+    "description": "Line under the server release title"
+  },
+  "releaseStatus": "Status",
+  "@releaseStatus": {
+    "description": "Heading of the release status card"
+  },
+  "releaseUpdateAvailable": "Update available",
+  "@releaseUpdateAvailable": {
+    "description": "Badge when a newer release is out"
+  },
+  "releaseAvailable": "v{version} is available",
+  "@releaseAvailable": {
+    "description": "Heading when a newer release is out",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "releaseRunsOlder": "This installation runs v{version}. The commands below install the newer release.",
+  "@releaseRunsOlder": {
+    "description": "Line under the newer release heading",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "releaseUpToDate": "Up to date",
+  "@releaseUpToDate": {
+    "description": "Badge when the server is current"
+  },
+  "releaseCurrentTitle": "This installation is up to date",
+  "@releaseCurrentTitle": {
+    "description": "Heading when the server is current"
+  },
+  "releaseNewest": "v{version} is the newest published release.",
+  "@releaseNewest": {
+    "description": "Line under the current heading",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "releaseNotComparable": "Not comparable",
+  "@releaseNotComparable": {
+    "description": "Badge when the running version cannot be ordered"
+  },
+  "releaseUnknownTitle": "This build's version cannot be compared",
+  "@releaseUnknownTitle": {
+    "description": "Heading when the running version cannot be ordered"
+  },
+  "releaseUnknown": "v{latest} is the newest published release, and v{running} is not a version number it can be ordered against.",
+  "@releaseUnknown": {
+    "description": "Line under the not comparable heading",
+    "placeholders": {
+      "latest": {
+        "type": "String"
+      },
+      "running": {
+        "type": "String"
+      }
+    }
+  },
+  "releaseCheckFailed": "Check failed",
+  "@releaseCheckFailed": {
+    "description": "Badge when the release feed could not be read"
+  },
+  "releaseFailedTitle": "The release feed could not be reached",
+  "@releaseFailedTitle": {
+    "description": "Heading when the release feed could not be read"
+  },
+  "releaseFailed": "That is the ordinary case for an isolated network. The server tries again within six hours.",
+  "@releaseFailed": {
+    "description": "Line under the failed heading"
+  },
+  "releaseNotChecked": "Not checked",
+  "@releaseNotChecked": {
+    "description": "Badge before the server has checked"
+  },
+  "releasePendingTitle": "Not checked yet",
+  "@releasePendingTitle": {
+    "description": "Heading before the server has checked"
+  },
+  "releasePending": "The server asks the release feed in the background. Pull to refresh in a moment.",
+  "@releasePending": {
+    "description": "Line under the not checked heading"
+  },
+  "releaseRunningHere": "Running here",
+  "@releaseRunningHere": {
+    "description": "Label of the server's running version"
+  },
+  "releaseNewestPublished": "Newest published",
+  "@releaseNewestPublished": {
+    "description": "Label of the newest release"
+  },
+  "releaseNotKnown": "not known",
+  "@releaseNotKnown": {
+    "description": "Shown when the newest release is unknown"
+  },
+  "releaseCheckedNote": "Checked against the public release feed at most every six hours, from the server rather than this device.",
+  "@releaseCheckedNote": {
+    "description": "Note under the release status"
+  },
+  "releaseHowToUpgrade": "How to upgrade",
+  "@releaseHowToUpgrade": {
+    "description": "Heading of the upgrade commands"
+  },
+  "releaseUpgradeNote": "Use the way this server was installed. Nothing here restarts a running tix serve: restart it once the new version is in place.",
+  "@releaseUpgradeNote": {
+    "description": "Line under How to upgrade"
+  },
+  "releaseMethodBinary": "Release binary",
+  "@releaseMethodBinary": {
+    "description": "Upgrade method name"
+  },
+  "releaseMethodBinaryHelp": "Installed with install.sh or unpacked from a release archive. Checks the download against its published checksum before replacing the binary.",
+  "@releaseMethodBinaryHelp": {
+    "description": "When the release binary method applies"
+  },
+  "releaseMethodContainer": "Container image",
+  "@releaseMethodContainer": {
+    "description": "Upgrade method name"
+  },
+  "releaseMethodContainerHelp": "Pull the new tag, then recreate the container on the same volume.",
+  "@releaseMethodContainerHelp": {
+    "description": "When the container method applies"
+  },
+  "releaseMethodGo": "Go toolchain",
+  "@releaseMethodGo": {
+    "description": "Upgrade method name"
+  },
+  "releaseMethodGoHelp": "Installed with go install. tix update refuses this copy, because the toolchain owns it.",
+  "@releaseMethodGoHelp": {
+    "description": "When the Go method applies"
+  },
+  "releasePackageManager": "Installed from a package manager? Upgrade it the way you installed it.",
+  "@releasePackageManager": {
+    "description": "Last line of How to upgrade"
+  },
+  "releaseWhatChanged": "What changed in v{version}",
+  "@releaseWhatChanged": {
+    "description": "Heading of the newest release's notes",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "releaseNotesNote": "Links have been removed. These notes come from the release feed, so they describe the newest release rather than the one running here.",
+  "@releaseNotesNote": {
+    "description": "Line under the newest release's notes heading"
+  },
+  "releaseWhatsNew": "What's new",
+  "@releaseWhatsNew": {
+    "description": "Heading of the changelog entries"
+  },
+  "releaseChangesRunning": "From the changelog the server carries: the version running there, then the releases before it. Links have been removed.",
+  "@releaseChangesRunning": {
+    "description": "Line under What's new when the running version has an entry"
+  },
+  "releaseUntagged": "v{version} is not a tagged release, so these are the newest entries in the changelog it was built with.",
+  "@releaseUntagged": {
+    "description": "Line under What's new for an untagged build",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "releaseNoEntry": "The changelog the server carries has no entry for v{version}, so these are its newest entries.",
+  "@releaseNoEntry": {
+    "description": "Line under What's new when the running version has no entry",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "releaseNoChangelog": "The server carries no changelog.",
+  "@releaseNoChangelog": {
+    "description": "Line under What's new when there is no changelog"
+  },
+  "releaseYouRun": "Running here",
+  "@releaseYouRun": {
+    "description": "Badge on the changelog entry of the running version"
+  },
   "aboutAppVersion": "App",
   "aboutEngineVersion": "Embedded engine",
   "aboutEngineNone": "Not in this build",

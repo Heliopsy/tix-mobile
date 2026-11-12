@@ -213,6 +213,13 @@ class HomeShell extends StatelessWidget {
             run: () => context.go(Routes.connectAgent),
           ),
           TixCommand(
+            id: 'go.release',
+            label: l10n.goRelease,
+            group: l10n.commandsNavigate,
+            icon: Icons.new_releases_outlined,
+            run: () => context.go(Routes.serverRelease),
+          ),
+          TixCommand(
             id: 'go.about',
             label: l10n.goAbout,
             group: l10n.commandsNavigate,

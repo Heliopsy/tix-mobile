@@ -47,6 +47,7 @@ import 'package:tix_mobile/src/features/projects/presentation/fields_screen.dart
 import 'package:tix_mobile/src/features/projects/presentation/project_settings_screen.dart';
 import 'package:tix_mobile/src/features/projects/presentation/projects_screen.dart';
 import 'package:tix_mobile/src/features/quick/presentation/quick_actions_host.dart';
+import 'package:tix_mobile/src/features/release/presentation/release_screen.dart';
 import 'package:tix_mobile/src/features/security/presentation/security_screen.dart';
 import 'package:tix_mobile/src/features/settings/presentation/offline_screen.dart';
 import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';
@@ -508,6 +509,7 @@ final accountRoutes = [
     builder: (_, _) => const TokensScreen(personal: true),
   ),
   GoRoute(path: 'connect-agent', builder: (_, _) => const ConnectAgentScreen()),
+  GoRoute(path: 'release', builder: (_, _) => const ReleaseScreen()),
 ];
 
 /// People, tokens and transfers of the tenant, under Manage.
