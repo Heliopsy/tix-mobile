@@ -20,13 +20,13 @@ Map<String, Object?> _workflow(
 
 const _todo = {'key': 'todo', 'label': 'To do', 'category': 'todo'};
 const _review = {'key': 'review', 'label': 'Review', 'category': 'in_progress'};
-const _done = {
+const Map<String, Object> _done = {
   'key': 'done',
   'label': 'Done',
   'category': 'done',
   'terminal': true,
 };
-const _shipped = {
+const Map<String, Object> _shipped = {
   'key': 'shipped',
   'label': 'Shipped',
   'category': 'done',
