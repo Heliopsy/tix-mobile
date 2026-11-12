@@ -12721,7 +12721,14 @@ mixin _$CreatedTenant {
 /// top of the key. Defaults to false.
 @JsonKey(name: 'require_totp_ssh') bool get requireTotpSsh;/// RequireTOTPWeb requires a second factor when signing in to the browser
 /// interface. Each surface is set independently and defaults to false.
-@JsonKey(name: 'require_totp_web') bool get requireTotpWeb;/// Theme names the palette this tenant presents itself with, on every surface.
+@JsonKey(name: 'require_totp_web') bool get requireTotpWeb;/// SessionIdleTimeout ends a session unused for this long. It can only be
+/// shorter than the server's session.idle_timeout; zero inherits.
+@JsonKey(name: 'session_idle_timeout') String get sessionIdleTimeout;/// SessionRememberOff turns "keep me signed in" off on this tenant.
+@JsonKey(name: 'session_remember_off') bool get sessionRememberOff;/// SessionRememberTTL is how long a "keep me signed in" sign-in lasts, within
+/// the server's session.remember_ttl; zero inherits.
+@JsonKey(name: 'session_remember_ttl') String get sessionRememberTtl;/// SessionTTL is how long a sign-in on this tenant lasts. It can shorten the
+/// server's session.ttl but never lengthen it; zero inherits.
+@JsonKey(name: 'session_ttl') String get sessionTtl;/// Theme names the palette this tenant presents itself with, on every surface.
 /// Empty means nobody chose, and the accent is derived from the tenant's own
 /// identity instead; see ThemeRegistry.Resolve.
 @JsonKey(name: 'theme') String get theme;/// TimeFormat is the date format this tenant's people read unless they chose
@@ -12745,20 +12752,20 @@ $CreatedTenantCopyWith<CreatedTenant> get copyWith => _$CreatedTenantCopyWithImp
 @override
 bool operator ==(Object other) {
   final _this = this as CreatedTenant;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreatedTenant&&const DeepCollectionEquality().equals(other.admins, _this.admins)&&(identical(other.artifactMaxBytes, _this.artifactMaxBytes) || other.artifactMaxBytes == _this.artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _this.artifactTypes)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&const DeepCollectionEquality().equals(other.initialCredentials, _this.initialCredentials)&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.mfaRequiredAt, _this.mfaRequiredAt) || other.mfaRequiredAt == _this.mfaRequiredAt)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreatedTenant&&const DeepCollectionEquality().equals(other.admins, _this.admins)&&(identical(other.artifactMaxBytes, _this.artifactMaxBytes) || other.artifactMaxBytes == _this.artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _this.artifactTypes)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&const DeepCollectionEquality().equals(other.initialCredentials, _this.initialCredentials)&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.mfaRequiredAt, _this.mfaRequiredAt) || other.mfaRequiredAt == _this.mfaRequiredAt)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.sessionIdleTimeout, _this.sessionIdleTimeout) || other.sessionIdleTimeout == _this.sessionIdleTimeout)&&(identical(other.sessionRememberOff, _this.sessionRememberOff) || other.sessionRememberOff == _this.sessionRememberOff)&&(identical(other.sessionRememberTtl, _this.sessionRememberTtl) || other.sessionRememberTtl == _this.sessionRememberTtl)&&(identical(other.sessionTtl, _this.sessionTtl) || other.sessionTtl == _this.sessionTtl)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as CreatedTenant;
-  return Object.hashAll([runtimeType,const DeepCollectionEquality().hash(_this.admins),_this.artifactMaxBytes,const DeepCollectionEquality().hash(_this.artifactTypes),_this.createdAt,_this.deletedAt,_this.id,const DeepCollectionEquality().hash(_this.initialCredentials),_this.key,_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.mfaRequiredAt,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff,_this.updatedAt]);
+  return Object.hashAll([runtimeType,const DeepCollectionEquality().hash(_this.admins),_this.artifactMaxBytes,const DeepCollectionEquality().hash(_this.artifactTypes),_this.createdAt,_this.deletedAt,_this.id,const DeepCollectionEquality().hash(_this.initialCredentials),_this.key,_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.mfaRequiredAt,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.sessionIdleTimeout,_this.sessionRememberOff,_this.sessionRememberTtl,_this.sessionTtl,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff,_this.updatedAt]);
 }
 
 @override
 String toString() {
   final _this = this as CreatedTenant;
-  return 'CreatedTenant(admins: ${_this.admins}, artifactMaxBytes: ${_this.artifactMaxBytes}, artifactTypes: ${_this.artifactTypes}, createdAt: ${_this.createdAt}, deletedAt: ${_this.deletedAt}, id: ${_this.id}, initialCredentials: ${_this.initialCredentials}, key: ${_this.key}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, mfaRequiredAt: ${_this.mfaRequiredAt}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff}, updatedAt: ${_this.updatedAt})';
+  return 'CreatedTenant(admins: ${_this.admins}, artifactMaxBytes: ${_this.artifactMaxBytes}, artifactTypes: ${_this.artifactTypes}, createdAt: ${_this.createdAt}, deletedAt: ${_this.deletedAt}, id: ${_this.id}, initialCredentials: ${_this.initialCredentials}, key: ${_this.key}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, mfaRequiredAt: ${_this.mfaRequiredAt}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, sessionIdleTimeout: ${_this.sessionIdleTimeout}, sessionRememberOff: ${_this.sessionRememberOff}, sessionRememberTtl: ${_this.sessionRememberTtl}, sessionTtl: ${_this.sessionTtl}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -12769,7 +12776,7 @@ abstract mixin class $CreatedTenantCopyWith<$Res>  {
   factory $CreatedTenantCopyWith(CreatedTenant value, $Res Function(CreatedTenant) _then) = _$CreatedTenantCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'admins') List<CreatedAdmin> admins,@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'initial_credentials') List<InitialCredential> initialCredentials,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'admins') List<CreatedAdmin> admins,@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'initial_credentials') List<InitialCredential> initialCredentials,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String sessionIdleTimeout,@JsonKey(name: 'session_remember_off') bool sessionRememberOff,@JsonKey(name: 'session_remember_ttl') String sessionRememberTtl,@JsonKey(name: 'session_ttl') String sessionTtl,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -12786,7 +12793,7 @@ class _$CreatedTenantCopyWithImpl<$Res>
 
 /// Create a copy of CreatedTenant
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? admins = null,Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? initialCredentials = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? admins = null,Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? initialCredentials = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? sessionIdleTimeout = null,Object? sessionRememberOff = null,Object? sessionRememberTtl = null,Object? sessionTtl = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
   return _then(CreatedTenant(
 admins: null == admins ? _self.admins : admins // ignore: cast_nullable_to_non_nullable
 as List<CreatedAdmin>,artifactMaxBytes: null == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
@@ -12805,7 +12812,11 @@ as DateTime?,name: null == name ? _self.name : name // ignore: cast_nullable_to_
 as String,requireTotpCli: null == requireTotpCli ? _self.requireTotpCli : requireTotpCli // ignore: cast_nullable_to_non_nullable
 as bool,requireTotpSsh: null == requireTotpSsh ? _self.requireTotpSsh : requireTotpSsh // ignore: cast_nullable_to_non_nullable
 as bool,requireTotpWeb: null == requireTotpWeb ? _self.requireTotpWeb : requireTotpWeb // ignore: cast_nullable_to_non_nullable
-as bool,theme: null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
+as bool,sessionIdleTimeout: null == sessionIdleTimeout ? _self.sessionIdleTimeout : sessionIdleTimeout // ignore: cast_nullable_to_non_nullable
+as String,sessionRememberOff: null == sessionRememberOff ? _self.sessionRememberOff : sessionRememberOff // ignore: cast_nullable_to_non_nullable
+as bool,sessionRememberTtl: null == sessionRememberTtl ? _self.sessionRememberTtl : sessionRememberTtl // ignore: cast_nullable_to_non_nullable
+as String,sessionTtl: null == sessionTtl ? _self.sessionTtl : sessionTtl // ignore: cast_nullable_to_non_nullable
+as String,theme: null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
 as String,timeFormat: null == timeFormat ? _self.timeFormat : timeFormat // ignore: cast_nullable_to_non_nullable
 as String,timezone: null == timezone ? _self.timezone : timezone // ignore: cast_nullable_to_non_nullable
 as String,trashOff: null == trashOff ? _self.trashOff : trashOff // ignore: cast_nullable_to_non_nullable
@@ -12895,10 +12906,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CreatedTenant() when $default != null:
-return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -12916,10 +12927,10 @@ return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.cr
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _CreatedTenant():
-return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -12936,10 +12947,10 @@ return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.cr
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _CreatedTenant() when $default != null:
-return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   return null;
 
 }
@@ -12951,7 +12962,7 @@ return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.cr
 @JsonSerializable()
 
 class _CreatedTenant implements CreatedTenant {
-  const _CreatedTenant({@JsonKey(name: 'admins')  List<CreatedAdmin> admins = const <CreatedAdmin>[], @JsonKey(name: 'artifact_max_bytes') this.artifactMaxBytes = 0, @JsonKey(name: 'artifact_types')  List<String> artifactTypes = const <String>[], @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials = const <InitialCredential>[], @JsonKey(name: 'key') this.key = '', @JsonKey(name: 'lease_default') this.leaseDefault = '', @JsonKey(name: 'lease_max') this.leaseMax = '', @JsonKey(name: 'mfa_grace') this.mfaGrace = '', @JsonKey(name: 'mfa_policy') this.mfaPolicy = '', @JsonKey(name: 'mfa_required_at')@TixDateTime() this.mfaRequiredAt, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'require_totp_cli') this.requireTotpCli = false, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh = false, @JsonKey(name: 'require_totp_web') this.requireTotpWeb = false, @JsonKey(name: 'theme') this.theme = '', @JsonKey(name: 'time_format') this.timeFormat = '', @JsonKey(name: 'timezone') this.timezone = '', @JsonKey(name: 'trash_off') this.trashOff = false, @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt}): _admins = admins,_artifactTypes = artifactTypes,_initialCredentials = initialCredentials;
+  const _CreatedTenant({@JsonKey(name: 'admins')  List<CreatedAdmin> admins = const <CreatedAdmin>[], @JsonKey(name: 'artifact_max_bytes') this.artifactMaxBytes = 0, @JsonKey(name: 'artifact_types')  List<String> artifactTypes = const <String>[], @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials = const <InitialCredential>[], @JsonKey(name: 'key') this.key = '', @JsonKey(name: 'lease_default') this.leaseDefault = '', @JsonKey(name: 'lease_max') this.leaseMax = '', @JsonKey(name: 'mfa_grace') this.mfaGrace = '', @JsonKey(name: 'mfa_policy') this.mfaPolicy = '', @JsonKey(name: 'mfa_required_at')@TixDateTime() this.mfaRequiredAt, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'require_totp_cli') this.requireTotpCli = false, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh = false, @JsonKey(name: 'require_totp_web') this.requireTotpWeb = false, @JsonKey(name: 'session_idle_timeout') this.sessionIdleTimeout = '', @JsonKey(name: 'session_remember_off') this.sessionRememberOff = false, @JsonKey(name: 'session_remember_ttl') this.sessionRememberTtl = '', @JsonKey(name: 'session_ttl') this.sessionTtl = '', @JsonKey(name: 'theme') this.theme = '', @JsonKey(name: 'time_format') this.timeFormat = '', @JsonKey(name: 'timezone') this.timezone = '', @JsonKey(name: 'trash_off') this.trashOff = false, @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt}): _admins = admins,_artifactTypes = artifactTypes,_initialCredentials = initialCredentials;
   factory _CreatedTenant.fromJson(Map<String, dynamic> json) => _$CreatedTenantFromJson(json);
 
 /// Admins are the administrators created with the tenant, in the order they
@@ -13029,6 +13040,17 @@ class _CreatedTenant implements CreatedTenant {
 /// RequireTOTPWeb requires a second factor when signing in to the browser
 /// interface. Each surface is set independently and defaults to false.
 @override@JsonKey(name: 'require_totp_web') final  bool requireTotpWeb;
+/// SessionIdleTimeout ends a session unused for this long. It can only be
+/// shorter than the server's session.idle_timeout; zero inherits.
+@override@JsonKey(name: 'session_idle_timeout') final  String sessionIdleTimeout;
+/// SessionRememberOff turns "keep me signed in" off on this tenant.
+@override@JsonKey(name: 'session_remember_off') final  bool sessionRememberOff;
+/// SessionRememberTTL is how long a "keep me signed in" sign-in lasts, within
+/// the server's session.remember_ttl; zero inherits.
+@override@JsonKey(name: 'session_remember_ttl') final  String sessionRememberTtl;
+/// SessionTTL is how long a sign-in on this tenant lasts. It can shorten the
+/// server's session.ttl but never lengthen it; zero inherits.
+@override@JsonKey(name: 'session_ttl') final  String sessionTtl;
 /// Theme names the palette this tenant presents itself with, on every surface.
 /// Empty means nobody chose, and the accent is derived from the tenant's own
 /// identity instead; see ThemeRegistry.Resolve.
@@ -13058,18 +13080,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreatedTenant&&const DeepCollectionEquality().equals(other.admins, _admins)&&(identical(other.artifactMaxBytes, artifactMaxBytes) || other.artifactMaxBytes == artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _artifactTypes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.initialCredentials, _initialCredentials)&&(identical(other.key, key) || other.key == key)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.mfaRequiredAt, mfaRequiredAt) || other.mfaRequiredAt == mfaRequiredAt)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreatedTenant&&const DeepCollectionEquality().equals(other.admins, _admins)&&(identical(other.artifactMaxBytes, artifactMaxBytes) || other.artifactMaxBytes == artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _artifactTypes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.initialCredentials, _initialCredentials)&&(identical(other.key, key) || other.key == key)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.mfaRequiredAt, mfaRequiredAt) || other.mfaRequiredAt == mfaRequiredAt)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.sessionIdleTimeout, sessionIdleTimeout) || other.sessionIdleTimeout == sessionIdleTimeout)&&(identical(other.sessionRememberOff, sessionRememberOff) || other.sessionRememberOff == sessionRememberOff)&&(identical(other.sessionRememberTtl, sessionRememberTtl) || other.sessionRememberTtl == sessionRememberTtl)&&(identical(other.sessionTtl, sessionTtl) || other.sessionTtl == sessionTtl)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hashAll([runtimeType,const DeepCollectionEquality().hash(_admins),artifactMaxBytes,const DeepCollectionEquality().hash(_artifactTypes),createdAt,deletedAt,id,const DeepCollectionEquality().hash(_initialCredentials),key,leaseDefault,leaseMax,mfaGrace,mfaPolicy,mfaRequiredAt,name,requireTotpCli,requireTotpSsh,requireTotpWeb,theme,timeFormat,timezone,trashOff,updatedAt]);
+    return Object.hashAll([runtimeType,const DeepCollectionEquality().hash(_admins),artifactMaxBytes,const DeepCollectionEquality().hash(_artifactTypes),createdAt,deletedAt,id,const DeepCollectionEquality().hash(_initialCredentials),key,leaseDefault,leaseMax,mfaGrace,mfaPolicy,mfaRequiredAt,name,requireTotpCli,requireTotpSsh,requireTotpWeb,sessionIdleTimeout,sessionRememberOff,sessionRememberTtl,sessionTtl,theme,timeFormat,timezone,trashOff,updatedAt]);
 }
 
 @override
 String toString() {
-    return 'CreatedTenant(admins: $admins, artifactMaxBytes: $artifactMaxBytes, artifactTypes: $artifactTypes, createdAt: $createdAt, deletedAt: $deletedAt, id: $id, initialCredentials: $initialCredentials, key: $key, leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, mfaRequiredAt: $mfaRequiredAt, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff, updatedAt: $updatedAt)';
+    return 'CreatedTenant(admins: $admins, artifactMaxBytes: $artifactMaxBytes, artifactTypes: $artifactTypes, createdAt: $createdAt, deletedAt: $deletedAt, id: $id, initialCredentials: $initialCredentials, key: $key, leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, mfaRequiredAt: $mfaRequiredAt, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, sessionIdleTimeout: $sessionIdleTimeout, sessionRememberOff: $sessionRememberOff, sessionRememberTtl: $sessionRememberTtl, sessionTtl: $sessionTtl, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff, updatedAt: $updatedAt)';
 }
 
 
@@ -13080,7 +13102,7 @@ abstract mixin class _$CreatedTenantCopyWith<$Res> implements $CreatedTenantCopy
   factory _$CreatedTenantCopyWith(_CreatedTenant value, $Res Function(_CreatedTenant) _then) = __$CreatedTenantCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'admins') List<CreatedAdmin> admins,@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'initial_credentials') List<InitialCredential> initialCredentials,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'admins') List<CreatedAdmin> admins,@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'initial_credentials') List<InitialCredential> initialCredentials,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String sessionIdleTimeout,@JsonKey(name: 'session_remember_off') bool sessionRememberOff,@JsonKey(name: 'session_remember_ttl') String sessionRememberTtl,@JsonKey(name: 'session_ttl') String sessionTtl,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -13097,7 +13119,7 @@ class __$CreatedTenantCopyWithImpl<$Res>
 
 /// Create a copy of CreatedTenant
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? admins = null,Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? initialCredentials = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? admins = null,Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? initialCredentials = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? sessionIdleTimeout = null,Object? sessionRememberOff = null,Object? sessionRememberTtl = null,Object? sessionTtl = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
   return _then(_CreatedTenant(
 admins: null == admins ? _self._admins : admins // ignore: cast_nullable_to_non_nullable
 as List<CreatedAdmin>,artifactMaxBytes: null == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
@@ -13116,7 +13138,11 @@ as DateTime?,name: null == name ? _self.name : name // ignore: cast_nullable_to_
 as String,requireTotpCli: null == requireTotpCli ? _self.requireTotpCli : requireTotpCli // ignore: cast_nullable_to_non_nullable
 as bool,requireTotpSsh: null == requireTotpSsh ? _self.requireTotpSsh : requireTotpSsh // ignore: cast_nullable_to_non_nullable
 as bool,requireTotpWeb: null == requireTotpWeb ? _self.requireTotpWeb : requireTotpWeb // ignore: cast_nullable_to_non_nullable
-as bool,theme: null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
+as bool,sessionIdleTimeout: null == sessionIdleTimeout ? _self.sessionIdleTimeout : sessionIdleTimeout // ignore: cast_nullable_to_non_nullable
+as String,sessionRememberOff: null == sessionRememberOff ? _self.sessionRememberOff : sessionRememberOff // ignore: cast_nullable_to_non_nullable
+as bool,sessionRememberTtl: null == sessionRememberTtl ? _self.sessionRememberTtl : sessionRememberTtl // ignore: cast_nullable_to_non_nullable
+as String,sessionTtl: null == sessionTtl ? _self.sessionTtl : sessionTtl // ignore: cast_nullable_to_non_nullable
+as String,theme: null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
 as String,timeFormat: null == timeFormat ? _self.timeFormat : timeFormat // ignore: cast_nullable_to_non_nullable
 as String,timezone: null == timezone ? _self.timezone : timezone // ignore: cast_nullable_to_non_nullable
 as String,trashOff: null == trashOff ? _self.trashOff : trashOff // ignore: cast_nullable_to_non_nullable
@@ -25890,7 +25916,10 @@ mixin _$LoginRequest {
 @JsonKey(name: 'email') String? get email;/// NewPassword replaces the password, sent with the email and password again
 /// after a password_change challenge.
 @JsonKey(name: 'new_password') String? get newPassword;/// Password is the user's password, in the first step.
-@JsonKey(name: 'password') String? get password;/// Surface is the sign-in path the session is for, which decides whether a
+@JsonKey(name: 'password') String? get password;/// Remember asks for a "keep me signed in" session, sent with the step that
+/// completes the sign-in. The session then lasts the tenant's remember_ttl and
+/// its cookie persists until then.
+@JsonKey(name: 'remember') bool? get remember;/// Surface is the sign-in path the session is for, which decides whether a
 /// second factor is required.
 @JsonKey(name: 'surface', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Surface? get surface;/// Ticket is the challenge ticket from the first step, in the second step.
 @JsonKey(name: 'ticket') String? get ticket;
@@ -25907,20 +25936,20 @@ $LoginRequestCopyWith<LoginRequest> get copyWith => _$LoginRequestCopyWithImpl<L
 @override
 bool operator ==(Object other) {
   final _this = this as LoginRequest;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginRequest&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.newPassword, _this.newPassword) || other.newPassword == _this.newPassword)&&(identical(other.password, _this.password) || other.password == _this.password)&&(identical(other.surface, _this.surface) || other.surface == _this.surface)&&(identical(other.ticket, _this.ticket) || other.ticket == _this.ticket));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginRequest&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.newPassword, _this.newPassword) || other.newPassword == _this.newPassword)&&(identical(other.password, _this.password) || other.password == _this.password)&&(identical(other.remember, _this.remember) || other.remember == _this.remember)&&(identical(other.surface, _this.surface) || other.surface == _this.surface)&&(identical(other.ticket, _this.ticket) || other.ticket == _this.ticket));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as LoginRequest;
-  return Object.hash(runtimeType,_this.code,_this.email,_this.newPassword,_this.password,_this.surface,_this.ticket);
+  return Object.hash(runtimeType,_this.code,_this.email,_this.newPassword,_this.password,_this.remember,_this.surface,_this.ticket);
 }
 
 @override
 String toString() {
   final _this = this as LoginRequest;
-  return 'LoginRequest(code: ${_this.code}, email: ${_this.email}, newPassword: ${_this.newPassword}, password: ${_this.password}, surface: ${_this.surface}, ticket: ${_this.ticket})';
+  return 'LoginRequest(code: ${_this.code}, email: ${_this.email}, newPassword: ${_this.newPassword}, password: ${_this.password}, remember: ${_this.remember}, surface: ${_this.surface}, ticket: ${_this.ticket})';
 }
 
 
@@ -25931,7 +25960,7 @@ abstract mixin class $LoginRequestCopyWith<$Res>  {
   factory $LoginRequestCopyWith(LoginRequest value, $Res Function(LoginRequest) _then) = _$LoginRequestCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'code') String? code,@JsonKey(name: 'email') String? email,@JsonKey(name: 'new_password') String? newPassword,@JsonKey(name: 'password') String? password,@JsonKey(name: 'surface', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Surface? surface,@JsonKey(name: 'ticket') String? ticket
+@JsonKey(name: 'code') String? code,@JsonKey(name: 'email') String? email,@JsonKey(name: 'new_password') String? newPassword,@JsonKey(name: 'password') String? password,@JsonKey(name: 'remember') bool? remember,@JsonKey(name: 'surface', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Surface? surface,@JsonKey(name: 'ticket') String? ticket
 });
 
 
@@ -25948,13 +25977,14 @@ class _$LoginRequestCopyWithImpl<$Res>
 
 /// Create a copy of LoginRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = freezed,Object? email = freezed,Object? newPassword = freezed,Object? password = freezed,Object? surface = freezed,Object? ticket = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = freezed,Object? email = freezed,Object? newPassword = freezed,Object? password = freezed,Object? remember = freezed,Object? surface = freezed,Object? ticket = freezed,}) {
   return _then(LoginRequest(
 code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String?,newPassword: freezed == newPassword ? _self.newPassword : newPassword // ignore: cast_nullable_to_non_nullable
 as String?,password: freezed == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
-as String?,surface: freezed == surface ? _self.surface : surface // ignore: cast_nullable_to_non_nullable
+as String?,remember: freezed == remember ? _self.remember : remember // ignore: cast_nullable_to_non_nullable
+as bool?,surface: freezed == surface ? _self.surface : surface // ignore: cast_nullable_to_non_nullable
 as Surface?,ticket: freezed == ticket ? _self.ticket : ticket // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -26041,10 +26071,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'code')  String? code, @JsonKey(name: 'email')  String? email, @JsonKey(name: 'new_password')  String? newPassword, @JsonKey(name: 'password')  String? password, @JsonKey(name: 'surface', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Surface? surface, @JsonKey(name: 'ticket')  String? ticket)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'code')  String? code, @JsonKey(name: 'email')  String? email, @JsonKey(name: 'new_password')  String? newPassword, @JsonKey(name: 'password')  String? password, @JsonKey(name: 'remember')  bool? remember, @JsonKey(name: 'surface', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Surface? surface, @JsonKey(name: 'ticket')  String? ticket)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LoginRequest() when $default != null:
-return $default(_that.code,_that.email,_that.newPassword,_that.password,_that.surface,_that.ticket);case _:
+return $default(_that.code,_that.email,_that.newPassword,_that.password,_that.remember,_that.surface,_that.ticket);case _:
   return orElse();
 
 }
@@ -26062,10 +26092,10 @@ return $default(_that.code,_that.email,_that.newPassword,_that.password,_that.su
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'code')  String? code, @JsonKey(name: 'email')  String? email, @JsonKey(name: 'new_password')  String? newPassword, @JsonKey(name: 'password')  String? password, @JsonKey(name: 'surface', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Surface? surface, @JsonKey(name: 'ticket')  String? ticket)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'code')  String? code, @JsonKey(name: 'email')  String? email, @JsonKey(name: 'new_password')  String? newPassword, @JsonKey(name: 'password')  String? password, @JsonKey(name: 'remember')  bool? remember, @JsonKey(name: 'surface', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Surface? surface, @JsonKey(name: 'ticket')  String? ticket)  $default,) {final _that = this;
 switch (_that) {
 case _LoginRequest():
-return $default(_that.code,_that.email,_that.newPassword,_that.password,_that.surface,_that.ticket);case _:
+return $default(_that.code,_that.email,_that.newPassword,_that.password,_that.remember,_that.surface,_that.ticket);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -26082,10 +26112,10 @@ return $default(_that.code,_that.email,_that.newPassword,_that.password,_that.su
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'code')  String? code, @JsonKey(name: 'email')  String? email, @JsonKey(name: 'new_password')  String? newPassword, @JsonKey(name: 'password')  String? password, @JsonKey(name: 'surface', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Surface? surface, @JsonKey(name: 'ticket')  String? ticket)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'code')  String? code, @JsonKey(name: 'email')  String? email, @JsonKey(name: 'new_password')  String? newPassword, @JsonKey(name: 'password')  String? password, @JsonKey(name: 'remember')  bool? remember, @JsonKey(name: 'surface', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Surface? surface, @JsonKey(name: 'ticket')  String? ticket)?  $default,) {final _that = this;
 switch (_that) {
 case _LoginRequest() when $default != null:
-return $default(_that.code,_that.email,_that.newPassword,_that.password,_that.surface,_that.ticket);case _:
+return $default(_that.code,_that.email,_that.newPassword,_that.password,_that.remember,_that.surface,_that.ticket);case _:
   return null;
 
 }
@@ -26097,7 +26127,7 @@ return $default(_that.code,_that.email,_that.newPassword,_that.password,_that.su
 @JsonSerializable()
 
 class _LoginRequest implements LoginRequest {
-  const _LoginRequest({@JsonKey(name: 'code') this.code, @JsonKey(name: 'email') this.email, @JsonKey(name: 'new_password') this.newPassword, @JsonKey(name: 'password') this.password, @JsonKey(name: 'surface', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.surface, @JsonKey(name: 'ticket') this.ticket});
+  const _LoginRequest({@JsonKey(name: 'code') this.code, @JsonKey(name: 'email') this.email, @JsonKey(name: 'new_password') this.newPassword, @JsonKey(name: 'password') this.password, @JsonKey(name: 'remember') this.remember, @JsonKey(name: 'surface', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.surface, @JsonKey(name: 'ticket') this.ticket});
   factory _LoginRequest.fromJson(Map<String, dynamic> json) => _$LoginRequestFromJson(json);
 
 /// Code is the six-digit TOTP code or a recovery code, in the second step.
@@ -26109,6 +26139,10 @@ class _LoginRequest implements LoginRequest {
 @override@JsonKey(name: 'new_password') final  String? newPassword;
 /// Password is the user's password, in the first step.
 @override@JsonKey(name: 'password') final  String? password;
+/// Remember asks for a "keep me signed in" session, sent with the step that
+/// completes the sign-in. The session then lasts the tenant's remember_ttl and
+/// its cookie persists until then.
+@override@JsonKey(name: 'remember') final  bool? remember;
 /// Surface is the sign-in path the session is for, which decides whether a
 /// second factor is required.
 @override@JsonKey(name: 'surface', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) final  Surface? surface;
@@ -26128,18 +26162,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginRequest&&(identical(other.code, code) || other.code == code)&&(identical(other.email, email) || other.email == email)&&(identical(other.newPassword, newPassword) || other.newPassword == newPassword)&&(identical(other.password, password) || other.password == password)&&(identical(other.surface, surface) || other.surface == surface)&&(identical(other.ticket, ticket) || other.ticket == ticket));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginRequest&&(identical(other.code, code) || other.code == code)&&(identical(other.email, email) || other.email == email)&&(identical(other.newPassword, newPassword) || other.newPassword == newPassword)&&(identical(other.password, password) || other.password == password)&&(identical(other.remember, remember) || other.remember == remember)&&(identical(other.surface, surface) || other.surface == surface)&&(identical(other.ticket, ticket) || other.ticket == ticket));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,code,email,newPassword,password,surface,ticket);
+    return Object.hash(runtimeType,code,email,newPassword,password,remember,surface,ticket);
 }
 
 @override
 String toString() {
-    return 'LoginRequest(code: $code, email: $email, newPassword: $newPassword, password: $password, surface: $surface, ticket: $ticket)';
+    return 'LoginRequest(code: $code, email: $email, newPassword: $newPassword, password: $password, remember: $remember, surface: $surface, ticket: $ticket)';
 }
 
 
@@ -26150,7 +26184,7 @@ abstract mixin class _$LoginRequestCopyWith<$Res> implements $LoginRequestCopyWi
   factory _$LoginRequestCopyWith(_LoginRequest value, $Res Function(_LoginRequest) _then) = __$LoginRequestCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'code') String? code,@JsonKey(name: 'email') String? email,@JsonKey(name: 'new_password') String? newPassword,@JsonKey(name: 'password') String? password,@JsonKey(name: 'surface', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Surface? surface,@JsonKey(name: 'ticket') String? ticket
+@JsonKey(name: 'code') String? code,@JsonKey(name: 'email') String? email,@JsonKey(name: 'new_password') String? newPassword,@JsonKey(name: 'password') String? password,@JsonKey(name: 'remember') bool? remember,@JsonKey(name: 'surface', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Surface? surface,@JsonKey(name: 'ticket') String? ticket
 });
 
 
@@ -26167,13 +26201,14 @@ class __$LoginRequestCopyWithImpl<$Res>
 
 /// Create a copy of LoginRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = freezed,Object? email = freezed,Object? newPassword = freezed,Object? password = freezed,Object? surface = freezed,Object? ticket = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = freezed,Object? email = freezed,Object? newPassword = freezed,Object? password = freezed,Object? remember = freezed,Object? surface = freezed,Object? ticket = freezed,}) {
   return _then(_LoginRequest(
 code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String?,newPassword: freezed == newPassword ? _self.newPassword : newPassword // ignore: cast_nullable_to_non_nullable
 as String?,password: freezed == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
-as String?,surface: freezed == surface ? _self.surface : surface // ignore: cast_nullable_to_non_nullable
+as String?,remember: freezed == remember ? _self.remember : remember // ignore: cast_nullable_to_non_nullable
+as bool?,surface: freezed == surface ? _self.surface : surface // ignore: cast_nullable_to_non_nullable
 as Surface?,ticket: freezed == ticket ? _self.ticket : ticket // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -34620,8 +34655,11 @@ as String,
 mixin _$AuthSession {
 
 /// ActorID is the actor the session acts as.
-@JsonKey(name: 'actor_id') String get actorId;/// ExpiresAt is when the session stops working, in RFC 3339.
-@JsonKey(name: 'expires_at')@TixDateTime() DateTime? get expiresAt;/// TenantID is the tenant the session belongs to.
+@JsonKey(name: 'actor_id') String get actorId;/// CreatedAt is when the session was minted, in RFC 3339.
+@JsonKey(name: 'created_at')@TixDateTime() DateTime? get createdAt;/// ExpiresAt is when the session stops working, in RFC 3339.
+@JsonKey(name: 'expires_at')@TixDateTime() DateTime? get expiresAt;/// Remembered reports a "keep me signed in" session. A browser keeps its cookie
+/// until ExpiresAt; otherwise the cookie ends with the browser.
+@JsonKey(name: 'remembered') bool get remembered;/// TenantID is the tenant the session belongs to.
 @JsonKey(name: 'tenant_id') String get tenantId;/// Token is the session secret, presented as the session cookie.
 @JsonKey(name: 'token') String get token;
 /// Create a copy of AuthSession
@@ -34637,20 +34675,20 @@ $AuthSessionCopyWith<AuthSession> get copyWith => _$AuthSessionCopyWithImpl<Auth
 @override
 bool operator ==(Object other) {
   final _this = this as AuthSession;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthSession&&(identical(other.actorId, _this.actorId) || other.actorId == _this.actorId)&&(identical(other.expiresAt, _this.expiresAt) || other.expiresAt == _this.expiresAt)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.token, _this.token) || other.token == _this.token));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthSession&&(identical(other.actorId, _this.actorId) || other.actorId == _this.actorId)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.expiresAt, _this.expiresAt) || other.expiresAt == _this.expiresAt)&&(identical(other.remembered, _this.remembered) || other.remembered == _this.remembered)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.token, _this.token) || other.token == _this.token));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as AuthSession;
-  return Object.hash(runtimeType,_this.actorId,_this.expiresAt,_this.tenantId,_this.token);
+  return Object.hash(runtimeType,_this.actorId,_this.createdAt,_this.expiresAt,_this.remembered,_this.tenantId,_this.token);
 }
 
 @override
 String toString() {
   final _this = this as AuthSession;
-  return 'AuthSession(actorId: ${_this.actorId}, expiresAt: ${_this.expiresAt}, tenantId: ${_this.tenantId}, token: ${_this.token})';
+  return 'AuthSession(actorId: ${_this.actorId}, createdAt: ${_this.createdAt}, expiresAt: ${_this.expiresAt}, remembered: ${_this.remembered}, tenantId: ${_this.tenantId}, token: ${_this.token})';
 }
 
 
@@ -34661,7 +34699,7 @@ abstract mixin class $AuthSessionCopyWith<$Res>  {
   factory $AuthSessionCopyWith(AuthSession value, $Res Function(AuthSession) _then) = _$AuthSessionCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'actor_id') String actorId,@JsonKey(name: 'expires_at')@TixDateTime() DateTime? expiresAt,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'token') String token
+@JsonKey(name: 'actor_id') String actorId,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'expires_at')@TixDateTime() DateTime? expiresAt,@JsonKey(name: 'remembered') bool remembered,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'token') String token
 });
 
 
@@ -34678,11 +34716,13 @@ class _$AuthSessionCopyWithImpl<$Res>
 
 /// Create a copy of AuthSession
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? actorId = null,Object? expiresAt = freezed,Object? tenantId = null,Object? token = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? actorId = null,Object? createdAt = freezed,Object? expiresAt = freezed,Object? remembered = null,Object? tenantId = null,Object? token = null,}) {
   return _then(AuthSession(
 actorId: null == actorId ? _self.actorId : actorId // ignore: cast_nullable_to_non_nullable
-as String,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,remembered: null == remembered ? _self.remembered : remembered // ignore: cast_nullable_to_non_nullable
+as bool,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
 as String,token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -34769,10 +34809,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String actorId, @JsonKey(name: 'expires_at')@TixDateTime()  DateTime? expiresAt, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'token')  String token)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String actorId, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'expires_at')@TixDateTime()  DateTime? expiresAt, @JsonKey(name: 'remembered')  bool remembered, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'token')  String token)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AuthSession() when $default != null:
-return $default(_that.actorId,_that.expiresAt,_that.tenantId,_that.token);case _:
+return $default(_that.actorId,_that.createdAt,_that.expiresAt,_that.remembered,_that.tenantId,_that.token);case _:
   return orElse();
 
 }
@@ -34790,10 +34830,10 @@ return $default(_that.actorId,_that.expiresAt,_that.tenantId,_that.token);case _
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String actorId, @JsonKey(name: 'expires_at')@TixDateTime()  DateTime? expiresAt, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'token')  String token)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String actorId, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'expires_at')@TixDateTime()  DateTime? expiresAt, @JsonKey(name: 'remembered')  bool remembered, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'token')  String token)  $default,) {final _that = this;
 switch (_that) {
 case _AuthSession():
-return $default(_that.actorId,_that.expiresAt,_that.tenantId,_that.token);case _:
+return $default(_that.actorId,_that.createdAt,_that.expiresAt,_that.remembered,_that.tenantId,_that.token);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -34810,10 +34850,10 @@ return $default(_that.actorId,_that.expiresAt,_that.tenantId,_that.token);case _
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'actor_id')  String actorId, @JsonKey(name: 'expires_at')@TixDateTime()  DateTime? expiresAt, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'token')  String token)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'actor_id')  String actorId, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'expires_at')@TixDateTime()  DateTime? expiresAt, @JsonKey(name: 'remembered')  bool remembered, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'token')  String token)?  $default,) {final _that = this;
 switch (_that) {
 case _AuthSession() when $default != null:
-return $default(_that.actorId,_that.expiresAt,_that.tenantId,_that.token);case _:
+return $default(_that.actorId,_that.createdAt,_that.expiresAt,_that.remembered,_that.tenantId,_that.token);case _:
   return null;
 
 }
@@ -34825,13 +34865,18 @@ return $default(_that.actorId,_that.expiresAt,_that.tenantId,_that.token);case _
 @JsonSerializable()
 
 class _AuthSession implements AuthSession {
-  const _AuthSession({@JsonKey(name: 'actor_id') this.actorId = '', @JsonKey(name: 'expires_at')@TixDateTime() this.expiresAt, @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'token') this.token = ''});
+  const _AuthSession({@JsonKey(name: 'actor_id') this.actorId = '', @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'expires_at')@TixDateTime() this.expiresAt, @JsonKey(name: 'remembered') this.remembered = false, @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'token') this.token = ''});
   factory _AuthSession.fromJson(Map<String, dynamic> json) => _$AuthSessionFromJson(json);
 
 /// ActorID is the actor the session acts as.
 @override@JsonKey(name: 'actor_id') final  String actorId;
+/// CreatedAt is when the session was minted, in RFC 3339.
+@override@JsonKey(name: 'created_at')@TixDateTime() final  DateTime? createdAt;
 /// ExpiresAt is when the session stops working, in RFC 3339.
 @override@JsonKey(name: 'expires_at')@TixDateTime() final  DateTime? expiresAt;
+/// Remembered reports a "keep me signed in" session. A browser keeps its cookie
+/// until ExpiresAt; otherwise the cookie ends with the browser.
+@override@JsonKey(name: 'remembered') final  bool remembered;
 /// TenantID is the tenant the session belongs to.
 @override@JsonKey(name: 'tenant_id') final  String tenantId;
 /// Token is the session secret, presented as the session cookie.
@@ -34850,18 +34895,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AuthSession&&(identical(other.actorId, actorId) || other.actorId == actorId)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.token, token) || other.token == token));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AuthSession&&(identical(other.actorId, actorId) || other.actorId == actorId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.remembered, remembered) || other.remembered == remembered)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.token, token) || other.token == token));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,actorId,expiresAt,tenantId,token);
+    return Object.hash(runtimeType,actorId,createdAt,expiresAt,remembered,tenantId,token);
 }
 
 @override
 String toString() {
-    return 'AuthSession(actorId: $actorId, expiresAt: $expiresAt, tenantId: $tenantId, token: $token)';
+    return 'AuthSession(actorId: $actorId, createdAt: $createdAt, expiresAt: $expiresAt, remembered: $remembered, tenantId: $tenantId, token: $token)';
 }
 
 
@@ -34872,7 +34917,7 @@ abstract mixin class _$AuthSessionCopyWith<$Res> implements $AuthSessionCopyWith
   factory _$AuthSessionCopyWith(_AuthSession value, $Res Function(_AuthSession) _then) = __$AuthSessionCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'actor_id') String actorId,@JsonKey(name: 'expires_at')@TixDateTime() DateTime? expiresAt,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'token') String token
+@JsonKey(name: 'actor_id') String actorId,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'expires_at')@TixDateTime() DateTime? expiresAt,@JsonKey(name: 'remembered') bool remembered,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'token') String token
 });
 
 
@@ -34889,11 +34934,13 @@ class __$AuthSessionCopyWithImpl<$Res>
 
 /// Create a copy of AuthSession
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? actorId = null,Object? expiresAt = freezed,Object? tenantId = null,Object? token = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? actorId = null,Object? createdAt = freezed,Object? expiresAt = freezed,Object? remembered = null,Object? tenantId = null,Object? token = null,}) {
   return _then(_AuthSession(
 actorId: null == actorId ? _self.actorId : actorId // ignore: cast_nullable_to_non_nullable
-as String,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,remembered: null == remembered ? _self.remembered : remembered // ignore: cast_nullable_to_non_nullable
+as bool,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
 as String,token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -34911,7 +34958,9 @@ mixin _$SessionInfo {
 @JsonKey(name: 'current') bool get current;/// ExpiresAt is when the session stops working.
 @JsonKey(name: 'expires_at')@TixDateTime() DateTime? get expiresAt;/// ID identifies the session for revoking it. It is not a credential.
 @JsonKey(name: 'id') String get id;/// Method is how it signed in: password, ssh-key or switch.
-@JsonKey(name: 'method') String get method;/// SecondFactor reports that the sign-in passed a second factor.
+@JsonKey(name: 'method') String get method;/// Remembered reports a "keep me signed in" sign-in, which lasts the tenant's
+/// remember_ttl rather than its ttl.
+@JsonKey(name: 'remembered') bool get remembered;/// SecondFactor reports that the sign-in passed a second factor.
 @JsonKey(name: 'second_factor') bool get secondFactor;/// UserAgent is the user agent the sign-in request sent, truncated, or empty
 /// for a session that predates recording it.
 @JsonKey(name: 'user_agent') String get userAgent;
@@ -34928,20 +34977,20 @@ $SessionInfoCopyWith<SessionInfo> get copyWith => _$SessionInfoCopyWithImpl<Sess
 @override
 bool operator ==(Object other) {
   final _this = this as SessionInfo;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SessionInfo&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.current, _this.current) || other.current == _this.current)&&(identical(other.expiresAt, _this.expiresAt) || other.expiresAt == _this.expiresAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.method, _this.method) || other.method == _this.method)&&(identical(other.secondFactor, _this.secondFactor) || other.secondFactor == _this.secondFactor)&&(identical(other.userAgent, _this.userAgent) || other.userAgent == _this.userAgent));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SessionInfo&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.current, _this.current) || other.current == _this.current)&&(identical(other.expiresAt, _this.expiresAt) || other.expiresAt == _this.expiresAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.method, _this.method) || other.method == _this.method)&&(identical(other.remembered, _this.remembered) || other.remembered == _this.remembered)&&(identical(other.secondFactor, _this.secondFactor) || other.secondFactor == _this.secondFactor)&&(identical(other.userAgent, _this.userAgent) || other.userAgent == _this.userAgent));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as SessionInfo;
-  return Object.hash(runtimeType,_this.createdAt,_this.current,_this.expiresAt,_this.id,_this.method,_this.secondFactor,_this.userAgent);
+  return Object.hash(runtimeType,_this.createdAt,_this.current,_this.expiresAt,_this.id,_this.method,_this.remembered,_this.secondFactor,_this.userAgent);
 }
 
 @override
 String toString() {
   final _this = this as SessionInfo;
-  return 'SessionInfo(createdAt: ${_this.createdAt}, current: ${_this.current}, expiresAt: ${_this.expiresAt}, id: ${_this.id}, method: ${_this.method}, secondFactor: ${_this.secondFactor}, userAgent: ${_this.userAgent})';
+  return 'SessionInfo(createdAt: ${_this.createdAt}, current: ${_this.current}, expiresAt: ${_this.expiresAt}, id: ${_this.id}, method: ${_this.method}, remembered: ${_this.remembered}, secondFactor: ${_this.secondFactor}, userAgent: ${_this.userAgent})';
 }
 
 
@@ -34952,7 +35001,7 @@ abstract mixin class $SessionInfoCopyWith<$Res>  {
   factory $SessionInfoCopyWith(SessionInfo value, $Res Function(SessionInfo) _then) = _$SessionInfoCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'current') bool current,@JsonKey(name: 'expires_at')@TixDateTime() DateTime? expiresAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'method') String method,@JsonKey(name: 'second_factor') bool secondFactor,@JsonKey(name: 'user_agent') String userAgent
+@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'current') bool current,@JsonKey(name: 'expires_at')@TixDateTime() DateTime? expiresAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'method') String method,@JsonKey(name: 'remembered') bool remembered,@JsonKey(name: 'second_factor') bool secondFactor,@JsonKey(name: 'user_agent') String userAgent
 });
 
 
@@ -34969,14 +35018,15 @@ class _$SessionInfoCopyWithImpl<$Res>
 
 /// Create a copy of SessionInfo
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? createdAt = freezed,Object? current = null,Object? expiresAt = freezed,Object? id = null,Object? method = null,Object? secondFactor = null,Object? userAgent = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? createdAt = freezed,Object? current = null,Object? expiresAt = freezed,Object? id = null,Object? method = null,Object? remembered = null,Object? secondFactor = null,Object? userAgent = null,}) {
   return _then(SessionInfo(
 createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,current: null == current ? _self.current : current // ignore: cast_nullable_to_non_nullable
 as bool,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,method: null == method ? _self.method : method // ignore: cast_nullable_to_non_nullable
-as String,secondFactor: null == secondFactor ? _self.secondFactor : secondFactor // ignore: cast_nullable_to_non_nullable
+as String,remembered: null == remembered ? _self.remembered : remembered // ignore: cast_nullable_to_non_nullable
+as bool,secondFactor: null == secondFactor ? _self.secondFactor : secondFactor // ignore: cast_nullable_to_non_nullable
 as bool,userAgent: null == userAgent ? _self.userAgent : userAgent // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -35063,10 +35113,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'current')  bool current, @JsonKey(name: 'expires_at')@TixDateTime()  DateTime? expiresAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'method')  String method, @JsonKey(name: 'second_factor')  bool secondFactor, @JsonKey(name: 'user_agent')  String userAgent)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'current')  bool current, @JsonKey(name: 'expires_at')@TixDateTime()  DateTime? expiresAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'method')  String method, @JsonKey(name: 'remembered')  bool remembered, @JsonKey(name: 'second_factor')  bool secondFactor, @JsonKey(name: 'user_agent')  String userAgent)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SessionInfo() when $default != null:
-return $default(_that.createdAt,_that.current,_that.expiresAt,_that.id,_that.method,_that.secondFactor,_that.userAgent);case _:
+return $default(_that.createdAt,_that.current,_that.expiresAt,_that.id,_that.method,_that.remembered,_that.secondFactor,_that.userAgent);case _:
   return orElse();
 
 }
@@ -35084,10 +35134,10 @@ return $default(_that.createdAt,_that.current,_that.expiresAt,_that.id,_that.met
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'current')  bool current, @JsonKey(name: 'expires_at')@TixDateTime()  DateTime? expiresAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'method')  String method, @JsonKey(name: 'second_factor')  bool secondFactor, @JsonKey(name: 'user_agent')  String userAgent)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'current')  bool current, @JsonKey(name: 'expires_at')@TixDateTime()  DateTime? expiresAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'method')  String method, @JsonKey(name: 'remembered')  bool remembered, @JsonKey(name: 'second_factor')  bool secondFactor, @JsonKey(name: 'user_agent')  String userAgent)  $default,) {final _that = this;
 switch (_that) {
 case _SessionInfo():
-return $default(_that.createdAt,_that.current,_that.expiresAt,_that.id,_that.method,_that.secondFactor,_that.userAgent);case _:
+return $default(_that.createdAt,_that.current,_that.expiresAt,_that.id,_that.method,_that.remembered,_that.secondFactor,_that.userAgent);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -35104,10 +35154,10 @@ return $default(_that.createdAt,_that.current,_that.expiresAt,_that.id,_that.met
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'current')  bool current, @JsonKey(name: 'expires_at')@TixDateTime()  DateTime? expiresAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'method')  String method, @JsonKey(name: 'second_factor')  bool secondFactor, @JsonKey(name: 'user_agent')  String userAgent)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'current')  bool current, @JsonKey(name: 'expires_at')@TixDateTime()  DateTime? expiresAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'method')  String method, @JsonKey(name: 'remembered')  bool remembered, @JsonKey(name: 'second_factor')  bool secondFactor, @JsonKey(name: 'user_agent')  String userAgent)?  $default,) {final _that = this;
 switch (_that) {
 case _SessionInfo() when $default != null:
-return $default(_that.createdAt,_that.current,_that.expiresAt,_that.id,_that.method,_that.secondFactor,_that.userAgent);case _:
+return $default(_that.createdAt,_that.current,_that.expiresAt,_that.id,_that.method,_that.remembered,_that.secondFactor,_that.userAgent);case _:
   return null;
 
 }
@@ -35119,7 +35169,7 @@ return $default(_that.createdAt,_that.current,_that.expiresAt,_that.id,_that.met
 @JsonSerializable()
 
 class _SessionInfo implements SessionInfo {
-  const _SessionInfo({@JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'current') this.current = false, @JsonKey(name: 'expires_at')@TixDateTime() this.expiresAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'method') this.method = '', @JsonKey(name: 'second_factor') this.secondFactor = false, @JsonKey(name: 'user_agent') this.userAgent = ''});
+  const _SessionInfo({@JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'current') this.current = false, @JsonKey(name: 'expires_at')@TixDateTime() this.expiresAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'method') this.method = '', @JsonKey(name: 'remembered') this.remembered = false, @JsonKey(name: 'second_factor') this.secondFactor = false, @JsonKey(name: 'user_agent') this.userAgent = ''});
   factory _SessionInfo.fromJson(Map<String, dynamic> json) => _$SessionInfoFromJson(json);
 
 /// CreatedAt is when the sign-in happened.
@@ -35132,6 +35182,9 @@ class _SessionInfo implements SessionInfo {
 @override@JsonKey(name: 'id') final  String id;
 /// Method is how it signed in: password, ssh-key or switch.
 @override@JsonKey(name: 'method') final  String method;
+/// Remembered reports a "keep me signed in" sign-in, which lasts the tenant's
+/// remember_ttl rather than its ttl.
+@override@JsonKey(name: 'remembered') final  bool remembered;
 /// SecondFactor reports that the sign-in passed a second factor.
 @override@JsonKey(name: 'second_factor') final  bool secondFactor;
 /// UserAgent is the user agent the sign-in request sent, truncated, or empty
@@ -35151,18 +35204,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionInfo&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.current, current) || other.current == current)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.id, id) || other.id == id)&&(identical(other.method, method) || other.method == method)&&(identical(other.secondFactor, secondFactor) || other.secondFactor == secondFactor)&&(identical(other.userAgent, userAgent) || other.userAgent == userAgent));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionInfo&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.current, current) || other.current == current)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.id, id) || other.id == id)&&(identical(other.method, method) || other.method == method)&&(identical(other.remembered, remembered) || other.remembered == remembered)&&(identical(other.secondFactor, secondFactor) || other.secondFactor == secondFactor)&&(identical(other.userAgent, userAgent) || other.userAgent == userAgent));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,createdAt,current,expiresAt,id,method,secondFactor,userAgent);
+    return Object.hash(runtimeType,createdAt,current,expiresAt,id,method,remembered,secondFactor,userAgent);
 }
 
 @override
 String toString() {
-    return 'SessionInfo(createdAt: $createdAt, current: $current, expiresAt: $expiresAt, id: $id, method: $method, secondFactor: $secondFactor, userAgent: $userAgent)';
+    return 'SessionInfo(createdAt: $createdAt, current: $current, expiresAt: $expiresAt, id: $id, method: $method, remembered: $remembered, secondFactor: $secondFactor, userAgent: $userAgent)';
 }
 
 
@@ -35173,7 +35226,7 @@ abstract mixin class _$SessionInfoCopyWith<$Res> implements $SessionInfoCopyWith
   factory _$SessionInfoCopyWith(_SessionInfo value, $Res Function(_SessionInfo) _then) = __$SessionInfoCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'current') bool current,@JsonKey(name: 'expires_at')@TixDateTime() DateTime? expiresAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'method') String method,@JsonKey(name: 'second_factor') bool secondFactor,@JsonKey(name: 'user_agent') String userAgent
+@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'current') bool current,@JsonKey(name: 'expires_at')@TixDateTime() DateTime? expiresAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'method') String method,@JsonKey(name: 'remembered') bool remembered,@JsonKey(name: 'second_factor') bool secondFactor,@JsonKey(name: 'user_agent') String userAgent
 });
 
 
@@ -35190,15 +35243,315 @@ class __$SessionInfoCopyWithImpl<$Res>
 
 /// Create a copy of SessionInfo
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? createdAt = freezed,Object? current = null,Object? expiresAt = freezed,Object? id = null,Object? method = null,Object? secondFactor = null,Object? userAgent = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? createdAt = freezed,Object? current = null,Object? expiresAt = freezed,Object? id = null,Object? method = null,Object? remembered = null,Object? secondFactor = null,Object? userAgent = null,}) {
   return _then(_SessionInfo(
 createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,current: null == current ? _self.current : current // ignore: cast_nullable_to_non_nullable
 as bool,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,method: null == method ? _self.method : method // ignore: cast_nullable_to_non_nullable
-as String,secondFactor: null == secondFactor ? _self.secondFactor : secondFactor // ignore: cast_nullable_to_non_nullable
+as String,remembered: null == remembered ? _self.remembered : remembered // ignore: cast_nullable_to_non_nullable
+as bool,secondFactor: null == secondFactor ? _self.secondFactor : secondFactor // ignore: cast_nullable_to_non_nullable
 as bool,userAgent: null == userAgent ? _self.userAgent : userAgent // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$SessionPolicy {
+
+/// IdleTimeout ends a session unused for this long; zero is off.
+@JsonKey(name: 'idle_timeout') String get idleTimeout;/// RememberTTL is how long a "keep me signed in" sign-in lasts; zero means the
+/// choice is not offered.
+@JsonKey(name: 'remember_ttl') String get rememberTtl;/// ServerIdleTimeout is the server's session.idle_timeout, zero when off.
+@JsonKey(name: 'server_idle_timeout') String get serverIdleTimeout;/// ServerRememberTTL is the server's session.remember_ttl, zero when off.
+@JsonKey(name: 'server_remember_ttl') String get serverRememberTtl;/// ServerTTL is the server's session.ttl, which a tenant may only shorten.
+@JsonKey(name: 'server_ttl') String get serverTtl;/// TTL is how long a sign-in lasts from the moment it is made.
+@JsonKey(name: 'ttl') String get ttl;
+/// Create a copy of SessionPolicy
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SessionPolicyCopyWith<SessionPolicy> get copyWith => _$SessionPolicyCopyWithImpl<SessionPolicy>(this as SessionPolicy, _$identity);
+
+  /// Serializes this SessionPolicy to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as SessionPolicy;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SessionPolicy&&(identical(other.idleTimeout, _this.idleTimeout) || other.idleTimeout == _this.idleTimeout)&&(identical(other.rememberTtl, _this.rememberTtl) || other.rememberTtl == _this.rememberTtl)&&(identical(other.serverIdleTimeout, _this.serverIdleTimeout) || other.serverIdleTimeout == _this.serverIdleTimeout)&&(identical(other.serverRememberTtl, _this.serverRememberTtl) || other.serverRememberTtl == _this.serverRememberTtl)&&(identical(other.serverTtl, _this.serverTtl) || other.serverTtl == _this.serverTtl)&&(identical(other.ttl, _this.ttl) || other.ttl == _this.ttl));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as SessionPolicy;
+  return Object.hash(runtimeType,_this.idleTimeout,_this.rememberTtl,_this.serverIdleTimeout,_this.serverRememberTtl,_this.serverTtl,_this.ttl);
+}
+
+@override
+String toString() {
+  final _this = this as SessionPolicy;
+  return 'SessionPolicy(idleTimeout: ${_this.idleTimeout}, rememberTtl: ${_this.rememberTtl}, serverIdleTimeout: ${_this.serverIdleTimeout}, serverRememberTtl: ${_this.serverRememberTtl}, serverTtl: ${_this.serverTtl}, ttl: ${_this.ttl})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SessionPolicyCopyWith<$Res>  {
+  factory $SessionPolicyCopyWith(SessionPolicy value, $Res Function(SessionPolicy) _then) = _$SessionPolicyCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'idle_timeout') String idleTimeout,@JsonKey(name: 'remember_ttl') String rememberTtl,@JsonKey(name: 'server_idle_timeout') String serverIdleTimeout,@JsonKey(name: 'server_remember_ttl') String serverRememberTtl,@JsonKey(name: 'server_ttl') String serverTtl,@JsonKey(name: 'ttl') String ttl
+});
+
+
+
+
+}
+/// @nodoc
+class _$SessionPolicyCopyWithImpl<$Res>
+    implements $SessionPolicyCopyWith<$Res> {
+  _$SessionPolicyCopyWithImpl(this._self, this._then);
+
+  final SessionPolicy _self;
+  final $Res Function(SessionPolicy) _then;
+
+/// Create a copy of SessionPolicy
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? idleTimeout = null,Object? rememberTtl = null,Object? serverIdleTimeout = null,Object? serverRememberTtl = null,Object? serverTtl = null,Object? ttl = null,}) {
+  return _then(SessionPolicy(
+idleTimeout: null == idleTimeout ? _self.idleTimeout : idleTimeout // ignore: cast_nullable_to_non_nullable
+as String,rememberTtl: null == rememberTtl ? _self.rememberTtl : rememberTtl // ignore: cast_nullable_to_non_nullable
+as String,serverIdleTimeout: null == serverIdleTimeout ? _self.serverIdleTimeout : serverIdleTimeout // ignore: cast_nullable_to_non_nullable
+as String,serverRememberTtl: null == serverRememberTtl ? _self.serverRememberTtl : serverRememberTtl // ignore: cast_nullable_to_non_nullable
+as String,serverTtl: null == serverTtl ? _self.serverTtl : serverTtl // ignore: cast_nullable_to_non_nullable
+as String,ttl: null == ttl ? _self.ttl : ttl // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [SessionPolicy].
+extension SessionPolicyPatterns on SessionPolicy {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SessionPolicy value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _SessionPolicy() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SessionPolicy value)  $default,){
+final _that = this;
+switch (_that) {
+case _SessionPolicy():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SessionPolicy value)?  $default,){
+final _that = this;
+switch (_that) {
+case _SessionPolicy() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'idle_timeout')  String idleTimeout, @JsonKey(name: 'remember_ttl')  String rememberTtl, @JsonKey(name: 'server_idle_timeout')  String serverIdleTimeout, @JsonKey(name: 'server_remember_ttl')  String serverRememberTtl, @JsonKey(name: 'server_ttl')  String serverTtl, @JsonKey(name: 'ttl')  String ttl)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _SessionPolicy() when $default != null:
+return $default(_that.idleTimeout,_that.rememberTtl,_that.serverIdleTimeout,_that.serverRememberTtl,_that.serverTtl,_that.ttl);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'idle_timeout')  String idleTimeout, @JsonKey(name: 'remember_ttl')  String rememberTtl, @JsonKey(name: 'server_idle_timeout')  String serverIdleTimeout, @JsonKey(name: 'server_remember_ttl')  String serverRememberTtl, @JsonKey(name: 'server_ttl')  String serverTtl, @JsonKey(name: 'ttl')  String ttl)  $default,) {final _that = this;
+switch (_that) {
+case _SessionPolicy():
+return $default(_that.idleTimeout,_that.rememberTtl,_that.serverIdleTimeout,_that.serverRememberTtl,_that.serverTtl,_that.ttl);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'idle_timeout')  String idleTimeout, @JsonKey(name: 'remember_ttl')  String rememberTtl, @JsonKey(name: 'server_idle_timeout')  String serverIdleTimeout, @JsonKey(name: 'server_remember_ttl')  String serverRememberTtl, @JsonKey(name: 'server_ttl')  String serverTtl, @JsonKey(name: 'ttl')  String ttl)?  $default,) {final _that = this;
+switch (_that) {
+case _SessionPolicy() when $default != null:
+return $default(_that.idleTimeout,_that.rememberTtl,_that.serverIdleTimeout,_that.serverRememberTtl,_that.serverTtl,_that.ttl);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _SessionPolicy implements SessionPolicy {
+  const _SessionPolicy({@JsonKey(name: 'idle_timeout') this.idleTimeout = '', @JsonKey(name: 'remember_ttl') this.rememberTtl = '', @JsonKey(name: 'server_idle_timeout') this.serverIdleTimeout = '', @JsonKey(name: 'server_remember_ttl') this.serverRememberTtl = '', @JsonKey(name: 'server_ttl') this.serverTtl = '', @JsonKey(name: 'ttl') this.ttl = ''});
+  factory _SessionPolicy.fromJson(Map<String, dynamic> json) => _$SessionPolicyFromJson(json);
+
+/// IdleTimeout ends a session unused for this long; zero is off.
+@override@JsonKey(name: 'idle_timeout') final  String idleTimeout;
+/// RememberTTL is how long a "keep me signed in" sign-in lasts; zero means the
+/// choice is not offered.
+@override@JsonKey(name: 'remember_ttl') final  String rememberTtl;
+/// ServerIdleTimeout is the server's session.idle_timeout, zero when off.
+@override@JsonKey(name: 'server_idle_timeout') final  String serverIdleTimeout;
+/// ServerRememberTTL is the server's session.remember_ttl, zero when off.
+@override@JsonKey(name: 'server_remember_ttl') final  String serverRememberTtl;
+/// ServerTTL is the server's session.ttl, which a tenant may only shorten.
+@override@JsonKey(name: 'server_ttl') final  String serverTtl;
+/// TTL is how long a sign-in lasts from the moment it is made.
+@override@JsonKey(name: 'ttl') final  String ttl;
+
+/// Create a copy of SessionPolicy
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SessionPolicyCopyWith<_SessionPolicy> get copyWith => __$SessionPolicyCopyWithImpl<_SessionPolicy>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$SessionPolicyToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionPolicy&&(identical(other.idleTimeout, idleTimeout) || other.idleTimeout == idleTimeout)&&(identical(other.rememberTtl, rememberTtl) || other.rememberTtl == rememberTtl)&&(identical(other.serverIdleTimeout, serverIdleTimeout) || other.serverIdleTimeout == serverIdleTimeout)&&(identical(other.serverRememberTtl, serverRememberTtl) || other.serverRememberTtl == serverRememberTtl)&&(identical(other.serverTtl, serverTtl) || other.serverTtl == serverTtl)&&(identical(other.ttl, ttl) || other.ttl == ttl));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,idleTimeout,rememberTtl,serverIdleTimeout,serverRememberTtl,serverTtl,ttl);
+}
+
+@override
+String toString() {
+    return 'SessionPolicy(idleTimeout: $idleTimeout, rememberTtl: $rememberTtl, serverIdleTimeout: $serverIdleTimeout, serverRememberTtl: $serverRememberTtl, serverTtl: $serverTtl, ttl: $ttl)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$SessionPolicyCopyWith<$Res> implements $SessionPolicyCopyWith<$Res> {
+  factory _$SessionPolicyCopyWith(_SessionPolicy value, $Res Function(_SessionPolicy) _then) = __$SessionPolicyCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'idle_timeout') String idleTimeout,@JsonKey(name: 'remember_ttl') String rememberTtl,@JsonKey(name: 'server_idle_timeout') String serverIdleTimeout,@JsonKey(name: 'server_remember_ttl') String serverRememberTtl,@JsonKey(name: 'server_ttl') String serverTtl,@JsonKey(name: 'ttl') String ttl
+});
+
+
+
+
+}
+/// @nodoc
+class __$SessionPolicyCopyWithImpl<$Res>
+    implements _$SessionPolicyCopyWith<$Res> {
+  __$SessionPolicyCopyWithImpl(this._self, this._then);
+
+  final _SessionPolicy _self;
+  final $Res Function(_SessionPolicy) _then;
+
+/// Create a copy of SessionPolicy
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? idleTimeout = null,Object? rememberTtl = null,Object? serverIdleTimeout = null,Object? serverRememberTtl = null,Object? serverTtl = null,Object? ttl = null,}) {
+  return _then(_SessionPolicy(
+idleTimeout: null == idleTimeout ? _self.idleTimeout : idleTimeout // ignore: cast_nullable_to_non_nullable
+as String,rememberTtl: null == rememberTtl ? _self.rememberTtl : rememberTtl // ignore: cast_nullable_to_non_nullable
+as String,serverIdleTimeout: null == serverIdleTimeout ? _self.serverIdleTimeout : serverIdleTimeout // ignore: cast_nullable_to_non_nullable
+as String,serverRememberTtl: null == serverRememberTtl ? _self.serverRememberTtl : serverRememberTtl // ignore: cast_nullable_to_non_nullable
+as String,serverTtl: null == serverTtl ? _self.serverTtl : serverTtl // ignore: cast_nullable_to_non_nullable
+as String,ttl: null == ttl ? _self.ttl : ttl // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -47682,7 +48035,14 @@ mixin _$Tenant {
 /// top of the key. Defaults to false.
 @JsonKey(name: 'require_totp_ssh') bool get requireTotpSsh;/// RequireTOTPWeb requires a second factor when signing in to the browser
 /// interface. Each surface is set independently and defaults to false.
-@JsonKey(name: 'require_totp_web') bool get requireTotpWeb;/// Theme names the palette this tenant presents itself with, on every surface.
+@JsonKey(name: 'require_totp_web') bool get requireTotpWeb;/// SessionIdleTimeout ends a session unused for this long. It can only be
+/// shorter than the server's session.idle_timeout; zero inherits.
+@JsonKey(name: 'session_idle_timeout') String get sessionIdleTimeout;/// SessionRememberOff turns "keep me signed in" off on this tenant.
+@JsonKey(name: 'session_remember_off') bool get sessionRememberOff;/// SessionRememberTTL is how long a "keep me signed in" sign-in lasts, within
+/// the server's session.remember_ttl; zero inherits.
+@JsonKey(name: 'session_remember_ttl') String get sessionRememberTtl;/// SessionTTL is how long a sign-in on this tenant lasts. It can shorten the
+/// server's session.ttl but never lengthen it; zero inherits.
+@JsonKey(name: 'session_ttl') String get sessionTtl;/// Theme names the palette this tenant presents itself with, on every surface.
 /// Empty means nobody chose, and the accent is derived from the tenant's own
 /// identity instead; see ThemeRegistry.Resolve.
 @JsonKey(name: 'theme') String get theme;/// TimeFormat is the date format this tenant's people read unless they chose
@@ -47706,20 +48066,20 @@ $TenantCopyWith<Tenant> get copyWith => _$TenantCopyWithImpl<Tenant>(this as Ten
 @override
 bool operator ==(Object other) {
   final _this = this as Tenant;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Tenant&&(identical(other.artifactMaxBytes, _this.artifactMaxBytes) || other.artifactMaxBytes == _this.artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _this.artifactTypes)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.mfaRequiredAt, _this.mfaRequiredAt) || other.mfaRequiredAt == _this.mfaRequiredAt)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Tenant&&(identical(other.artifactMaxBytes, _this.artifactMaxBytes) || other.artifactMaxBytes == _this.artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _this.artifactTypes)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.mfaRequiredAt, _this.mfaRequiredAt) || other.mfaRequiredAt == _this.mfaRequiredAt)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.sessionIdleTimeout, _this.sessionIdleTimeout) || other.sessionIdleTimeout == _this.sessionIdleTimeout)&&(identical(other.sessionRememberOff, _this.sessionRememberOff) || other.sessionRememberOff == _this.sessionRememberOff)&&(identical(other.sessionRememberTtl, _this.sessionRememberTtl) || other.sessionRememberTtl == _this.sessionRememberTtl)&&(identical(other.sessionTtl, _this.sessionTtl) || other.sessionTtl == _this.sessionTtl)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Tenant;
-  return Object.hashAll([runtimeType,_this.artifactMaxBytes,const DeepCollectionEquality().hash(_this.artifactTypes),_this.createdAt,_this.deletedAt,_this.id,_this.key,_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.mfaRequiredAt,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff,_this.updatedAt]);
+  return Object.hashAll([runtimeType,_this.artifactMaxBytes,const DeepCollectionEquality().hash(_this.artifactTypes),_this.createdAt,_this.deletedAt,_this.id,_this.key,_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.mfaRequiredAt,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.sessionIdleTimeout,_this.sessionRememberOff,_this.sessionRememberTtl,_this.sessionTtl,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff,_this.updatedAt]);
 }
 
 @override
 String toString() {
   final _this = this as Tenant;
-  return 'Tenant(artifactMaxBytes: ${_this.artifactMaxBytes}, artifactTypes: ${_this.artifactTypes}, createdAt: ${_this.createdAt}, deletedAt: ${_this.deletedAt}, id: ${_this.id}, key: ${_this.key}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, mfaRequiredAt: ${_this.mfaRequiredAt}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff}, updatedAt: ${_this.updatedAt})';
+  return 'Tenant(artifactMaxBytes: ${_this.artifactMaxBytes}, artifactTypes: ${_this.artifactTypes}, createdAt: ${_this.createdAt}, deletedAt: ${_this.deletedAt}, id: ${_this.id}, key: ${_this.key}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, mfaRequiredAt: ${_this.mfaRequiredAt}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, sessionIdleTimeout: ${_this.sessionIdleTimeout}, sessionRememberOff: ${_this.sessionRememberOff}, sessionRememberTtl: ${_this.sessionRememberTtl}, sessionTtl: ${_this.sessionTtl}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -47730,7 +48090,7 @@ abstract mixin class $TenantCopyWith<$Res>  {
   factory $TenantCopyWith(Tenant value, $Res Function(Tenant) _then) = _$TenantCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String sessionIdleTimeout,@JsonKey(name: 'session_remember_off') bool sessionRememberOff,@JsonKey(name: 'session_remember_ttl') String sessionRememberTtl,@JsonKey(name: 'session_ttl') String sessionTtl,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -47747,7 +48107,7 @@ class _$TenantCopyWithImpl<$Res>
 
 /// Create a copy of Tenant
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? sessionIdleTimeout = null,Object? sessionRememberOff = null,Object? sessionRememberTtl = null,Object? sessionTtl = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
   return _then(Tenant(
 artifactMaxBytes: null == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
 as int,artifactTypes: null == artifactTypes ? _self.artifactTypes : artifactTypes // ignore: cast_nullable_to_non_nullable
@@ -47764,7 +48124,11 @@ as DateTime?,name: null == name ? _self.name : name // ignore: cast_nullable_to_
 as String,requireTotpCli: null == requireTotpCli ? _self.requireTotpCli : requireTotpCli // ignore: cast_nullable_to_non_nullable
 as bool,requireTotpSsh: null == requireTotpSsh ? _self.requireTotpSsh : requireTotpSsh // ignore: cast_nullable_to_non_nullable
 as bool,requireTotpWeb: null == requireTotpWeb ? _self.requireTotpWeb : requireTotpWeb // ignore: cast_nullable_to_non_nullable
-as bool,theme: null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
+as bool,sessionIdleTimeout: null == sessionIdleTimeout ? _self.sessionIdleTimeout : sessionIdleTimeout // ignore: cast_nullable_to_non_nullable
+as String,sessionRememberOff: null == sessionRememberOff ? _self.sessionRememberOff : sessionRememberOff // ignore: cast_nullable_to_non_nullable
+as bool,sessionRememberTtl: null == sessionRememberTtl ? _self.sessionRememberTtl : sessionRememberTtl // ignore: cast_nullable_to_non_nullable
+as String,sessionTtl: null == sessionTtl ? _self.sessionTtl : sessionTtl // ignore: cast_nullable_to_non_nullable
+as String,theme: null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
 as String,timeFormat: null == timeFormat ? _self.timeFormat : timeFormat // ignore: cast_nullable_to_non_nullable
 as String,timezone: null == timezone ? _self.timezone : timezone // ignore: cast_nullable_to_non_nullable
 as String,trashOff: null == trashOff ? _self.trashOff : trashOff // ignore: cast_nullable_to_non_nullable
@@ -47854,10 +48218,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Tenant() when $default != null:
-return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -47875,10 +48239,10 @@ return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Tenant():
-return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -47895,10 +48259,10 @@ return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Tenant() when $default != null:
-return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   return null;
 
 }
@@ -47910,7 +48274,7 @@ return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that
 @JsonSerializable()
 
 class _Tenant implements Tenant {
-  const _Tenant({@JsonKey(name: 'artifact_max_bytes') this.artifactMaxBytes = 0, @JsonKey(name: 'artifact_types')  List<String> artifactTypes = const <String>[], @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'key') this.key = '', @JsonKey(name: 'lease_default') this.leaseDefault = '', @JsonKey(name: 'lease_max') this.leaseMax = '', @JsonKey(name: 'mfa_grace') this.mfaGrace = '', @JsonKey(name: 'mfa_policy') this.mfaPolicy = '', @JsonKey(name: 'mfa_required_at')@TixDateTime() this.mfaRequiredAt, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'require_totp_cli') this.requireTotpCli = false, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh = false, @JsonKey(name: 'require_totp_web') this.requireTotpWeb = false, @JsonKey(name: 'theme') this.theme = '', @JsonKey(name: 'time_format') this.timeFormat = '', @JsonKey(name: 'timezone') this.timezone = '', @JsonKey(name: 'trash_off') this.trashOff = false, @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt}): _artifactTypes = artifactTypes;
+  const _Tenant({@JsonKey(name: 'artifact_max_bytes') this.artifactMaxBytes = 0, @JsonKey(name: 'artifact_types')  List<String> artifactTypes = const <String>[], @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'key') this.key = '', @JsonKey(name: 'lease_default') this.leaseDefault = '', @JsonKey(name: 'lease_max') this.leaseMax = '', @JsonKey(name: 'mfa_grace') this.mfaGrace = '', @JsonKey(name: 'mfa_policy') this.mfaPolicy = '', @JsonKey(name: 'mfa_required_at')@TixDateTime() this.mfaRequiredAt, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'require_totp_cli') this.requireTotpCli = false, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh = false, @JsonKey(name: 'require_totp_web') this.requireTotpWeb = false, @JsonKey(name: 'session_idle_timeout') this.sessionIdleTimeout = '', @JsonKey(name: 'session_remember_off') this.sessionRememberOff = false, @JsonKey(name: 'session_remember_ttl') this.sessionRememberTtl = '', @JsonKey(name: 'session_ttl') this.sessionTtl = '', @JsonKey(name: 'theme') this.theme = '', @JsonKey(name: 'time_format') this.timeFormat = '', @JsonKey(name: 'timezone') this.timezone = '', @JsonKey(name: 'trash_off') this.trashOff = false, @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt}): _artifactTypes = artifactTypes;
   factory _Tenant.fromJson(Map<String, dynamic> json) => _$TenantFromJson(json);
 
 /// ArtifactMaxBytes is the largest artifact blob this tenant accepts. It can
@@ -47964,6 +48328,17 @@ class _Tenant implements Tenant {
 /// RequireTOTPWeb requires a second factor when signing in to the browser
 /// interface. Each surface is set independently and defaults to false.
 @override@JsonKey(name: 'require_totp_web') final  bool requireTotpWeb;
+/// SessionIdleTimeout ends a session unused for this long. It can only be
+/// shorter than the server's session.idle_timeout; zero inherits.
+@override@JsonKey(name: 'session_idle_timeout') final  String sessionIdleTimeout;
+/// SessionRememberOff turns "keep me signed in" off on this tenant.
+@override@JsonKey(name: 'session_remember_off') final  bool sessionRememberOff;
+/// SessionRememberTTL is how long a "keep me signed in" sign-in lasts, within
+/// the server's session.remember_ttl; zero inherits.
+@override@JsonKey(name: 'session_remember_ttl') final  String sessionRememberTtl;
+/// SessionTTL is how long a sign-in on this tenant lasts. It can shorten the
+/// server's session.ttl but never lengthen it; zero inherits.
+@override@JsonKey(name: 'session_ttl') final  String sessionTtl;
 /// Theme names the palette this tenant presents itself with, on every surface.
 /// Empty means nobody chose, and the accent is derived from the tenant's own
 /// identity instead; see ThemeRegistry.Resolve.
@@ -47993,18 +48368,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Tenant&&(identical(other.artifactMaxBytes, artifactMaxBytes) || other.artifactMaxBytes == artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _artifactTypes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.id, id) || other.id == id)&&(identical(other.key, key) || other.key == key)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.mfaRequiredAt, mfaRequiredAt) || other.mfaRequiredAt == mfaRequiredAt)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Tenant&&(identical(other.artifactMaxBytes, artifactMaxBytes) || other.artifactMaxBytes == artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _artifactTypes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.id, id) || other.id == id)&&(identical(other.key, key) || other.key == key)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.mfaRequiredAt, mfaRequiredAt) || other.mfaRequiredAt == mfaRequiredAt)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.sessionIdleTimeout, sessionIdleTimeout) || other.sessionIdleTimeout == sessionIdleTimeout)&&(identical(other.sessionRememberOff, sessionRememberOff) || other.sessionRememberOff == sessionRememberOff)&&(identical(other.sessionRememberTtl, sessionRememberTtl) || other.sessionRememberTtl == sessionRememberTtl)&&(identical(other.sessionTtl, sessionTtl) || other.sessionTtl == sessionTtl)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hashAll([runtimeType,artifactMaxBytes,const DeepCollectionEquality().hash(_artifactTypes),createdAt,deletedAt,id,key,leaseDefault,leaseMax,mfaGrace,mfaPolicy,mfaRequiredAt,name,requireTotpCli,requireTotpSsh,requireTotpWeb,theme,timeFormat,timezone,trashOff,updatedAt]);
+    return Object.hashAll([runtimeType,artifactMaxBytes,const DeepCollectionEquality().hash(_artifactTypes),createdAt,deletedAt,id,key,leaseDefault,leaseMax,mfaGrace,mfaPolicy,mfaRequiredAt,name,requireTotpCli,requireTotpSsh,requireTotpWeb,sessionIdleTimeout,sessionRememberOff,sessionRememberTtl,sessionTtl,theme,timeFormat,timezone,trashOff,updatedAt]);
 }
 
 @override
 String toString() {
-    return 'Tenant(artifactMaxBytes: $artifactMaxBytes, artifactTypes: $artifactTypes, createdAt: $createdAt, deletedAt: $deletedAt, id: $id, key: $key, leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, mfaRequiredAt: $mfaRequiredAt, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff, updatedAt: $updatedAt)';
+    return 'Tenant(artifactMaxBytes: $artifactMaxBytes, artifactTypes: $artifactTypes, createdAt: $createdAt, deletedAt: $deletedAt, id: $id, key: $key, leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, mfaRequiredAt: $mfaRequiredAt, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, sessionIdleTimeout: $sessionIdleTimeout, sessionRememberOff: $sessionRememberOff, sessionRememberTtl: $sessionRememberTtl, sessionTtl: $sessionTtl, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff, updatedAt: $updatedAt)';
 }
 
 
@@ -48015,7 +48390,7 @@ abstract mixin class _$TenantCopyWith<$Res> implements $TenantCopyWith<$Res> {
   factory _$TenantCopyWith(_Tenant value, $Res Function(_Tenant) _then) = __$TenantCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String sessionIdleTimeout,@JsonKey(name: 'session_remember_off') bool sessionRememberOff,@JsonKey(name: 'session_remember_ttl') String sessionRememberTtl,@JsonKey(name: 'session_ttl') String sessionTtl,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -48032,7 +48407,7 @@ class __$TenantCopyWithImpl<$Res>
 
 /// Create a copy of Tenant
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? sessionIdleTimeout = null,Object? sessionRememberOff = null,Object? sessionRememberTtl = null,Object? sessionTtl = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
   return _then(_Tenant(
 artifactMaxBytes: null == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
 as int,artifactTypes: null == artifactTypes ? _self._artifactTypes : artifactTypes // ignore: cast_nullable_to_non_nullable
@@ -48049,7 +48424,11 @@ as DateTime?,name: null == name ? _self.name : name // ignore: cast_nullable_to_
 as String,requireTotpCli: null == requireTotpCli ? _self.requireTotpCli : requireTotpCli // ignore: cast_nullable_to_non_nullable
 as bool,requireTotpSsh: null == requireTotpSsh ? _self.requireTotpSsh : requireTotpSsh // ignore: cast_nullable_to_non_nullable
 as bool,requireTotpWeb: null == requireTotpWeb ? _self.requireTotpWeb : requireTotpWeb // ignore: cast_nullable_to_non_nullable
-as bool,theme: null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
+as bool,sessionIdleTimeout: null == sessionIdleTimeout ? _self.sessionIdleTimeout : sessionIdleTimeout // ignore: cast_nullable_to_non_nullable
+as String,sessionRememberOff: null == sessionRememberOff ? _self.sessionRememberOff : sessionRememberOff // ignore: cast_nullable_to_non_nullable
+as bool,sessionRememberTtl: null == sessionRememberTtl ? _self.sessionRememberTtl : sessionRememberTtl // ignore: cast_nullable_to_non_nullable
+as String,sessionTtl: null == sessionTtl ? _self.sessionTtl : sessionTtl // ignore: cast_nullable_to_non_nullable
+as String,theme: null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
 as String,timeFormat: null == timeFormat ? _self.timeFormat : timeFormat // ignore: cast_nullable_to_non_nullable
 as String,timezone: null == timezone ? _self.timezone : timezone // ignore: cast_nullable_to_non_nullable
 as String,trashOff: null == trashOff ? _self.trashOff : trashOff // ignore: cast_nullable_to_non_nullable
@@ -52220,7 +52599,17 @@ mixin _$UpdateTenantInput {
 /// authorization right. Turning one on cannot lock the tenant out: a user
 /// subject to it who holds no enrolment is taken through enrolment at sign-in
 /// rather than refused.
-@JsonKey(name: 'require_totp_web') bool? get requireTotpWeb;/// Theme names the palette this tenant presents itself with. A pointer to the
+@JsonKey(name: 'require_totp_web') bool? get requireTotpWeb;/// SessionIdleTimeout ends sessions unused for this long, such as "30m". Zero
+/// inherits the server's session.idle_timeout and omitted leaves it; a value
+/// above the server's is refused. It applies to existing sessions.
+@JsonKey(name: 'session_idle_timeout') String? get sessionIdleTimeout;/// SessionRememberTTL is how long a "keep me signed in" sign-in lasts: a
+/// duration such as "7d", "off" (or "0") to stop offering it, or "" to inherit
+/// the server's session.remember_ttl. Omitted leaves it; a value above the
+/// server's is refused.
+@JsonKey(name: 'session_remember_ttl') String? get sessionRememberTtl;/// SessionTTL shortens how long a sign-in on this tenant lasts, a duration such
+/// as "8h". Zero inherits the server's session.ttl and omitted leaves it; a
+/// value above the server's is refused. Existing sessions keep their expiry.
+@JsonKey(name: 'session_ttl') String? get sessionTtl;/// Theme names the palette this tenant presents itself with. A pointer to the
 /// empty string clears it, which returns the tenant to the accent derived from
 /// its own identity; nil leaves it alone.
 @JsonKey(name: 'theme') String? get theme;/// TimeFormat is the date format this tenant's people read unless they chose
@@ -52244,20 +52633,20 @@ $UpdateTenantInputCopyWith<UpdateTenantInput> get copyWith => _$UpdateTenantInpu
 @override
 bool operator ==(Object other) {
   final _this = this as UpdateTenantInput;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateTenantInput&&(identical(other.artifactMaxBytes, _this.artifactMaxBytes) || other.artifactMaxBytes == _this.artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _this.artifactTypes)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateTenantInput&&(identical(other.artifactMaxBytes, _this.artifactMaxBytes) || other.artifactMaxBytes == _this.artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _this.artifactTypes)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.sessionIdleTimeout, _this.sessionIdleTimeout) || other.sessionIdleTimeout == _this.sessionIdleTimeout)&&(identical(other.sessionRememberTtl, _this.sessionRememberTtl) || other.sessionRememberTtl == _this.sessionRememberTtl)&&(identical(other.sessionTtl, _this.sessionTtl) || other.sessionTtl == _this.sessionTtl)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as UpdateTenantInput;
-  return Object.hash(runtimeType,_this.artifactMaxBytes,const DeepCollectionEquality().hash(_this.artifactTypes),_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff);
+  return Object.hash(runtimeType,_this.artifactMaxBytes,const DeepCollectionEquality().hash(_this.artifactTypes),_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.sessionIdleTimeout,_this.sessionRememberTtl,_this.sessionTtl,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff);
 }
 
 @override
 String toString() {
   final _this = this as UpdateTenantInput;
-  return 'UpdateTenantInput(artifactMaxBytes: ${_this.artifactMaxBytes}, artifactTypes: ${_this.artifactTypes}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff})';
+  return 'UpdateTenantInput(artifactMaxBytes: ${_this.artifactMaxBytes}, artifactTypes: ${_this.artifactTypes}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, sessionIdleTimeout: ${_this.sessionIdleTimeout}, sessionRememberTtl: ${_this.sessionRememberTtl}, sessionTtl: ${_this.sessionTtl}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff})';
 }
 
 
@@ -52268,7 +52657,7 @@ abstract mixin class $UpdateTenantInputCopyWith<$Res>  {
   factory $UpdateTenantInputCopyWith(UpdateTenantInput value, $Res Function(UpdateTenantInput) _then) = _$UpdateTenantInputCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'artifact_max_bytes') int? artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String>? artifactTypes,@JsonKey(name: 'lease_default') String? leaseDefault,@JsonKey(name: 'lease_max') String? leaseMax,@JsonKey(name: 'mfa_grace') String? mfaGrace,@JsonKey(name: 'mfa_policy') String? mfaPolicy,@JsonKey(name: 'name') String? name,@JsonKey(name: 'require_totp_cli') bool? requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool? requireTotpSsh,@JsonKey(name: 'require_totp_web') bool? requireTotpWeb,@JsonKey(name: 'theme') String? theme,@JsonKey(name: 'time_format') String? timeFormat,@JsonKey(name: 'timezone') String? timezone,@JsonKey(name: 'trash_off') bool? trashOff
+@JsonKey(name: 'artifact_max_bytes') int? artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String>? artifactTypes,@JsonKey(name: 'lease_default') String? leaseDefault,@JsonKey(name: 'lease_max') String? leaseMax,@JsonKey(name: 'mfa_grace') String? mfaGrace,@JsonKey(name: 'mfa_policy') String? mfaPolicy,@JsonKey(name: 'name') String? name,@JsonKey(name: 'require_totp_cli') bool? requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool? requireTotpSsh,@JsonKey(name: 'require_totp_web') bool? requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String? sessionIdleTimeout,@JsonKey(name: 'session_remember_ttl') String? sessionRememberTtl,@JsonKey(name: 'session_ttl') String? sessionTtl,@JsonKey(name: 'theme') String? theme,@JsonKey(name: 'time_format') String? timeFormat,@JsonKey(name: 'timezone') String? timezone,@JsonKey(name: 'trash_off') bool? trashOff
 });
 
 
@@ -52285,7 +52674,7 @@ class _$UpdateTenantInputCopyWithImpl<$Res>
 
 /// Create a copy of UpdateTenantInput
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? artifactMaxBytes = freezed,Object? artifactTypes = freezed,Object? leaseDefault = freezed,Object? leaseMax = freezed,Object? mfaGrace = freezed,Object? mfaPolicy = freezed,Object? name = freezed,Object? requireTotpCli = freezed,Object? requireTotpSsh = freezed,Object? requireTotpWeb = freezed,Object? theme = freezed,Object? timeFormat = freezed,Object? timezone = freezed,Object? trashOff = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? artifactMaxBytes = freezed,Object? artifactTypes = freezed,Object? leaseDefault = freezed,Object? leaseMax = freezed,Object? mfaGrace = freezed,Object? mfaPolicy = freezed,Object? name = freezed,Object? requireTotpCli = freezed,Object? requireTotpSsh = freezed,Object? requireTotpWeb = freezed,Object? sessionIdleTimeout = freezed,Object? sessionRememberTtl = freezed,Object? sessionTtl = freezed,Object? theme = freezed,Object? timeFormat = freezed,Object? timezone = freezed,Object? trashOff = freezed,}) {
   return _then(UpdateTenantInput(
 artifactMaxBytes: freezed == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
 as int?,artifactTypes: freezed == artifactTypes ? _self.artifactTypes : artifactTypes // ignore: cast_nullable_to_non_nullable
@@ -52297,7 +52686,10 @@ as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to
 as String?,requireTotpCli: freezed == requireTotpCli ? _self.requireTotpCli : requireTotpCli // ignore: cast_nullable_to_non_nullable
 as bool?,requireTotpSsh: freezed == requireTotpSsh ? _self.requireTotpSsh : requireTotpSsh // ignore: cast_nullable_to_non_nullable
 as bool?,requireTotpWeb: freezed == requireTotpWeb ? _self.requireTotpWeb : requireTotpWeb // ignore: cast_nullable_to_non_nullable
-as bool?,theme: freezed == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
+as bool?,sessionIdleTimeout: freezed == sessionIdleTimeout ? _self.sessionIdleTimeout : sessionIdleTimeout // ignore: cast_nullable_to_non_nullable
+as String?,sessionRememberTtl: freezed == sessionRememberTtl ? _self.sessionRememberTtl : sessionRememberTtl // ignore: cast_nullable_to_non_nullable
+as String?,sessionTtl: freezed == sessionTtl ? _self.sessionTtl : sessionTtl // ignore: cast_nullable_to_non_nullable
+as String?,theme: freezed == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
 as String?,timeFormat: freezed == timeFormat ? _self.timeFormat : timeFormat // ignore: cast_nullable_to_non_nullable
 as String?,timezone: freezed == timezone ? _self.timezone : timezone // ignore: cast_nullable_to_non_nullable
 as String?,trashOff: freezed == trashOff ? _self.trashOff : trashOff // ignore: cast_nullable_to_non_nullable
@@ -52386,10 +52778,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int? artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int? artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String? sessionIdleTimeout, @JsonKey(name: 'session_remember_ttl')  String? sessionRememberTtl, @JsonKey(name: 'session_ttl')  String? sessionTtl, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UpdateTenantInput() when $default != null:
-return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
   return orElse();
 
 }
@@ -52407,10 +52799,10 @@ return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int? artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int? artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String? sessionIdleTimeout, @JsonKey(name: 'session_remember_ttl')  String? sessionRememberTtl, @JsonKey(name: 'session_ttl')  String? sessionTtl, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)  $default,) {final _that = this;
 switch (_that) {
 case _UpdateTenantInput():
-return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -52427,10 +52819,10 @@ return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'artifact_max_bytes')  int? artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'artifact_max_bytes')  int? artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String? sessionIdleTimeout, @JsonKey(name: 'session_remember_ttl')  String? sessionRememberTtl, @JsonKey(name: 'session_ttl')  String? sessionTtl, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)?  $default,) {final _that = this;
 switch (_that) {
 case _UpdateTenantInput() when $default != null:
-return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
   return null;
 
 }
@@ -52442,7 +52834,7 @@ return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_t
 @JsonSerializable()
 
 class _UpdateTenantInput implements UpdateTenantInput {
-  const _UpdateTenantInput({@JsonKey(name: 'artifact_max_bytes') this.artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'lease_default') this.leaseDefault, @JsonKey(name: 'lease_max') this.leaseMax, @JsonKey(name: 'mfa_grace') this.mfaGrace, @JsonKey(name: 'mfa_policy') this.mfaPolicy, @JsonKey(name: 'name') this.name, @JsonKey(name: 'require_totp_cli') this.requireTotpCli, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh, @JsonKey(name: 'require_totp_web') this.requireTotpWeb, @JsonKey(name: 'theme') this.theme, @JsonKey(name: 'time_format') this.timeFormat, @JsonKey(name: 'timezone') this.timezone, @JsonKey(name: 'trash_off') this.trashOff}): _artifactTypes = artifactTypes;
+  const _UpdateTenantInput({@JsonKey(name: 'artifact_max_bytes') this.artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'lease_default') this.leaseDefault, @JsonKey(name: 'lease_max') this.leaseMax, @JsonKey(name: 'mfa_grace') this.mfaGrace, @JsonKey(name: 'mfa_policy') this.mfaPolicy, @JsonKey(name: 'name') this.name, @JsonKey(name: 'require_totp_cli') this.requireTotpCli, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh, @JsonKey(name: 'require_totp_web') this.requireTotpWeb, @JsonKey(name: 'session_idle_timeout') this.sessionIdleTimeout, @JsonKey(name: 'session_remember_ttl') this.sessionRememberTtl, @JsonKey(name: 'session_ttl') this.sessionTtl, @JsonKey(name: 'theme') this.theme, @JsonKey(name: 'time_format') this.timeFormat, @JsonKey(name: 'timezone') this.timezone, @JsonKey(name: 'trash_off') this.trashOff}): _artifactTypes = artifactTypes;
   factory _UpdateTenantInput.fromJson(Map<String, dynamic> json) => _$UpdateTenantInputFromJson(json);
 
 /// ArtifactMaxBytes lowers the largest artifact blob this tenant accepts below
@@ -52494,6 +52886,19 @@ class _UpdateTenantInput implements UpdateTenantInput {
 /// subject to it who holds no enrolment is taken through enrolment at sign-in
 /// rather than refused.
 @override@JsonKey(name: 'require_totp_web') final  bool? requireTotpWeb;
+/// SessionIdleTimeout ends sessions unused for this long, such as "30m". Zero
+/// inherits the server's session.idle_timeout and omitted leaves it; a value
+/// above the server's is refused. It applies to existing sessions.
+@override@JsonKey(name: 'session_idle_timeout') final  String? sessionIdleTimeout;
+/// SessionRememberTTL is how long a "keep me signed in" sign-in lasts: a
+/// duration such as "7d", "off" (or "0") to stop offering it, or "" to inherit
+/// the server's session.remember_ttl. Omitted leaves it; a value above the
+/// server's is refused.
+@override@JsonKey(name: 'session_remember_ttl') final  String? sessionRememberTtl;
+/// SessionTTL shortens how long a sign-in on this tenant lasts, a duration such
+/// as "8h". Zero inherits the server's session.ttl and omitted leaves it; a
+/// value above the server's is refused. Existing sessions keep their expiry.
+@override@JsonKey(name: 'session_ttl') final  String? sessionTtl;
 /// Theme names the palette this tenant presents itself with. A pointer to the
 /// empty string clears it, which returns the tenant to the accent derived from
 /// its own identity; nil leaves it alone.
@@ -52522,18 +52927,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateTenantInput&&(identical(other.artifactMaxBytes, artifactMaxBytes) || other.artifactMaxBytes == artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _artifactTypes)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateTenantInput&&(identical(other.artifactMaxBytes, artifactMaxBytes) || other.artifactMaxBytes == artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _artifactTypes)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.sessionIdleTimeout, sessionIdleTimeout) || other.sessionIdleTimeout == sessionIdleTimeout)&&(identical(other.sessionRememberTtl, sessionRememberTtl) || other.sessionRememberTtl == sessionRememberTtl)&&(identical(other.sessionTtl, sessionTtl) || other.sessionTtl == sessionTtl)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,artifactMaxBytes,const DeepCollectionEquality().hash(_artifactTypes),leaseDefault,leaseMax,mfaGrace,mfaPolicy,name,requireTotpCli,requireTotpSsh,requireTotpWeb,theme,timeFormat,timezone,trashOff);
+    return Object.hash(runtimeType,artifactMaxBytes,const DeepCollectionEquality().hash(_artifactTypes),leaseDefault,leaseMax,mfaGrace,mfaPolicy,name,requireTotpCli,requireTotpSsh,requireTotpWeb,sessionIdleTimeout,sessionRememberTtl,sessionTtl,theme,timeFormat,timezone,trashOff);
 }
 
 @override
 String toString() {
-    return 'UpdateTenantInput(artifactMaxBytes: $artifactMaxBytes, artifactTypes: $artifactTypes, leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff)';
+    return 'UpdateTenantInput(artifactMaxBytes: $artifactMaxBytes, artifactTypes: $artifactTypes, leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, sessionIdleTimeout: $sessionIdleTimeout, sessionRememberTtl: $sessionRememberTtl, sessionTtl: $sessionTtl, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff)';
 }
 
 
@@ -52544,7 +52949,7 @@ abstract mixin class _$UpdateTenantInputCopyWith<$Res> implements $UpdateTenantI
   factory _$UpdateTenantInputCopyWith(_UpdateTenantInput value, $Res Function(_UpdateTenantInput) _then) = __$UpdateTenantInputCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'artifact_max_bytes') int? artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String>? artifactTypes,@JsonKey(name: 'lease_default') String? leaseDefault,@JsonKey(name: 'lease_max') String? leaseMax,@JsonKey(name: 'mfa_grace') String? mfaGrace,@JsonKey(name: 'mfa_policy') String? mfaPolicy,@JsonKey(name: 'name') String? name,@JsonKey(name: 'require_totp_cli') bool? requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool? requireTotpSsh,@JsonKey(name: 'require_totp_web') bool? requireTotpWeb,@JsonKey(name: 'theme') String? theme,@JsonKey(name: 'time_format') String? timeFormat,@JsonKey(name: 'timezone') String? timezone,@JsonKey(name: 'trash_off') bool? trashOff
+@JsonKey(name: 'artifact_max_bytes') int? artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String>? artifactTypes,@JsonKey(name: 'lease_default') String? leaseDefault,@JsonKey(name: 'lease_max') String? leaseMax,@JsonKey(name: 'mfa_grace') String? mfaGrace,@JsonKey(name: 'mfa_policy') String? mfaPolicy,@JsonKey(name: 'name') String? name,@JsonKey(name: 'require_totp_cli') bool? requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool? requireTotpSsh,@JsonKey(name: 'require_totp_web') bool? requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String? sessionIdleTimeout,@JsonKey(name: 'session_remember_ttl') String? sessionRememberTtl,@JsonKey(name: 'session_ttl') String? sessionTtl,@JsonKey(name: 'theme') String? theme,@JsonKey(name: 'time_format') String? timeFormat,@JsonKey(name: 'timezone') String? timezone,@JsonKey(name: 'trash_off') bool? trashOff
 });
 
 
@@ -52561,7 +52966,7 @@ class __$UpdateTenantInputCopyWithImpl<$Res>
 
 /// Create a copy of UpdateTenantInput
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? artifactMaxBytes = freezed,Object? artifactTypes = freezed,Object? leaseDefault = freezed,Object? leaseMax = freezed,Object? mfaGrace = freezed,Object? mfaPolicy = freezed,Object? name = freezed,Object? requireTotpCli = freezed,Object? requireTotpSsh = freezed,Object? requireTotpWeb = freezed,Object? theme = freezed,Object? timeFormat = freezed,Object? timezone = freezed,Object? trashOff = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? artifactMaxBytes = freezed,Object? artifactTypes = freezed,Object? leaseDefault = freezed,Object? leaseMax = freezed,Object? mfaGrace = freezed,Object? mfaPolicy = freezed,Object? name = freezed,Object? requireTotpCli = freezed,Object? requireTotpSsh = freezed,Object? requireTotpWeb = freezed,Object? sessionIdleTimeout = freezed,Object? sessionRememberTtl = freezed,Object? sessionTtl = freezed,Object? theme = freezed,Object? timeFormat = freezed,Object? timezone = freezed,Object? trashOff = freezed,}) {
   return _then(_UpdateTenantInput(
 artifactMaxBytes: freezed == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
 as int?,artifactTypes: freezed == artifactTypes ? _self._artifactTypes : artifactTypes // ignore: cast_nullable_to_non_nullable
@@ -52573,7 +52978,10 @@ as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to
 as String?,requireTotpCli: freezed == requireTotpCli ? _self.requireTotpCli : requireTotpCli // ignore: cast_nullable_to_non_nullable
 as bool?,requireTotpSsh: freezed == requireTotpSsh ? _self.requireTotpSsh : requireTotpSsh // ignore: cast_nullable_to_non_nullable
 as bool?,requireTotpWeb: freezed == requireTotpWeb ? _self.requireTotpWeb : requireTotpWeb // ignore: cast_nullable_to_non_nullable
-as bool?,theme: freezed == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
+as bool?,sessionIdleTimeout: freezed == sessionIdleTimeout ? _self.sessionIdleTimeout : sessionIdleTimeout // ignore: cast_nullable_to_non_nullable
+as String?,sessionRememberTtl: freezed == sessionRememberTtl ? _self.sessionRememberTtl : sessionRememberTtl // ignore: cast_nullable_to_non_nullable
+as String?,sessionTtl: freezed == sessionTtl ? _self.sessionTtl : sessionTtl // ignore: cast_nullable_to_non_nullable
+as String?,theme: freezed == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
 as String?,timeFormat: freezed == timeFormat ? _self.timeFormat : timeFormat // ignore: cast_nullable_to_non_nullable
 as String?,timezone: freezed == timezone ? _self.timezone : timezone // ignore: cast_nullable_to_non_nullable
 as String?,trashOff: freezed == trashOff ? _self.trashOff : trashOff // ignore: cast_nullable_to_non_nullable

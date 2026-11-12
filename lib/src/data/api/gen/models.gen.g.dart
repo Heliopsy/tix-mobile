@@ -1169,6 +1169,10 @@ _CreatedTenant _$CreatedTenantFromJson(Map<String, dynamic> json) =>
       requireTotpCli: json['require_totp_cli'] as bool? ?? false,
       requireTotpSsh: json['require_totp_ssh'] as bool? ?? false,
       requireTotpWeb: json['require_totp_web'] as bool? ?? false,
+      sessionIdleTimeout: json['session_idle_timeout'] as String? ?? '',
+      sessionRememberOff: json['session_remember_off'] as bool? ?? false,
+      sessionRememberTtl: json['session_remember_ttl'] as String? ?? '',
+      sessionTtl: json['session_ttl'] as String? ?? '',
       theme: json['theme'] as String? ?? '',
       timeFormat: json['time_format'] as String? ?? '',
       timezone: json['timezone'] as String? ?? '',
@@ -1209,6 +1213,10 @@ Map<String, dynamic> _$CreatedTenantToJson(_CreatedTenant instance) =>
       'require_totp_cli': instance.requireTotpCli,
       'require_totp_ssh': instance.requireTotpSsh,
       'require_totp_web': instance.requireTotpWeb,
+      'session_idle_timeout': instance.sessionIdleTimeout,
+      'session_remember_off': instance.sessionRememberOff,
+      'session_remember_ttl': instance.sessionRememberTtl,
+      'session_ttl': instance.sessionTtl,
       'theme': instance.theme,
       'time_format': instance.timeFormat,
       'timezone': instance.timezone,
@@ -2302,6 +2310,7 @@ _LoginRequest _$LoginRequestFromJson(Map<String, dynamic> json) =>
       email: json['email'] as String?,
       newPassword: json['new_password'] as String?,
       password: json['password'] as String?,
+      remember: json['remember'] as bool?,
       surface: $enumDecodeNullable(
         _$SurfaceEnumMap,
         json['surface'],
@@ -2316,6 +2325,7 @@ Map<String, dynamic> _$LoginRequestToJson(_LoginRequest instance) =>
       'email': ?instance.email,
       'new_password': ?instance.newPassword,
       'password': ?instance.password,
+      'remember': ?instance.remember,
       'surface': ?_$SurfaceEnumMap[instance.surface],
       'ticket': ?instance.ticket,
     };
@@ -2900,10 +2910,15 @@ Map<String, dynamic> _$ServerStatusToJson(_ServerStatus instance) =>
 
 _AuthSession _$AuthSessionFromJson(Map<String, dynamic> json) => _AuthSession(
   actorId: json['actor_id'] as String? ?? '',
+  createdAt: _$JsonConverterFromJson<String, DateTime>(
+    json['created_at'],
+    const TixDateTime().fromJson,
+  ),
   expiresAt: _$JsonConverterFromJson<String, DateTime>(
     json['expires_at'],
     const TixDateTime().fromJson,
   ),
+  remembered: json['remembered'] as bool? ?? false,
   tenantId: json['tenant_id'] as String? ?? '',
   token: json['token'] as String? ?? '',
 );
@@ -2911,10 +2926,15 @@ _AuthSession _$AuthSessionFromJson(Map<String, dynamic> json) => _AuthSession(
 Map<String, dynamic> _$AuthSessionToJson(_AuthSession instance) =>
     <String, dynamic>{
       'actor_id': instance.actorId,
+      'created_at': ?_$JsonConverterToJson<String, DateTime>(
+        instance.createdAt,
+        const TixDateTime().toJson,
+      ),
       'expires_at': ?_$JsonConverterToJson<String, DateTime>(
         instance.expiresAt,
         const TixDateTime().toJson,
       ),
+      'remembered': instance.remembered,
       'tenant_id': instance.tenantId,
       'token': instance.token,
     };
@@ -2931,6 +2951,7 @@ _SessionInfo _$SessionInfoFromJson(Map<String, dynamic> json) => _SessionInfo(
   ),
   id: json['id'] as String? ?? '',
   method: json['method'] as String? ?? '',
+  remembered: json['remembered'] as bool? ?? false,
   secondFactor: json['second_factor'] as bool? ?? false,
   userAgent: json['user_agent'] as String? ?? '',
 );
@@ -2948,8 +2969,29 @@ Map<String, dynamic> _$SessionInfoToJson(_SessionInfo instance) =>
       ),
       'id': instance.id,
       'method': instance.method,
+      'remembered': instance.remembered,
       'second_factor': instance.secondFactor,
       'user_agent': instance.userAgent,
+    };
+
+_SessionPolicy _$SessionPolicyFromJson(Map<String, dynamic> json) =>
+    _SessionPolicy(
+      idleTimeout: json['idle_timeout'] as String? ?? '',
+      rememberTtl: json['remember_ttl'] as String? ?? '',
+      serverIdleTimeout: json['server_idle_timeout'] as String? ?? '',
+      serverRememberTtl: json['server_remember_ttl'] as String? ?? '',
+      serverTtl: json['server_ttl'] as String? ?? '',
+      ttl: json['ttl'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$SessionPolicyToJson(_SessionPolicy instance) =>
+    <String, dynamic>{
+      'idle_timeout': instance.idleTimeout,
+      'remember_ttl': instance.rememberTtl,
+      'server_idle_timeout': instance.serverIdleTimeout,
+      'server_remember_ttl': instance.serverRememberTtl,
+      'server_ttl': instance.serverTtl,
+      'ttl': instance.ttl,
     };
 
 _SnoozeInput _$SnoozeInputFromJson(Map<String, dynamic> json) => _SnoozeInput(
@@ -4071,6 +4113,10 @@ _Tenant _$TenantFromJson(Map<String, dynamic> json) => _Tenant(
   requireTotpCli: json['require_totp_cli'] as bool? ?? false,
   requireTotpSsh: json['require_totp_ssh'] as bool? ?? false,
   requireTotpWeb: json['require_totp_web'] as bool? ?? false,
+  sessionIdleTimeout: json['session_idle_timeout'] as String? ?? '',
+  sessionRememberOff: json['session_remember_off'] as bool? ?? false,
+  sessionRememberTtl: json['session_remember_ttl'] as String? ?? '',
+  sessionTtl: json['session_ttl'] as String? ?? '',
   theme: json['theme'] as String? ?? '',
   timeFormat: json['time_format'] as String? ?? '',
   timezone: json['timezone'] as String? ?? '',
@@ -4106,6 +4152,10 @@ Map<String, dynamic> _$TenantToJson(_Tenant instance) => <String, dynamic>{
   'require_totp_cli': instance.requireTotpCli,
   'require_totp_ssh': instance.requireTotpSsh,
   'require_totp_web': instance.requireTotpWeb,
+  'session_idle_timeout': instance.sessionIdleTimeout,
+  'session_remember_off': instance.sessionRememberOff,
+  'session_remember_ttl': instance.sessionRememberTtl,
+  'session_ttl': instance.sessionTtl,
   'theme': instance.theme,
   'time_format': instance.timeFormat,
   'timezone': instance.timezone,
@@ -4437,6 +4487,9 @@ _UpdateTenantInput _$UpdateTenantInputFromJson(Map<String, dynamic> json) =>
       requireTotpCli: json['require_totp_cli'] as bool?,
       requireTotpSsh: json['require_totp_ssh'] as bool?,
       requireTotpWeb: json['require_totp_web'] as bool?,
+      sessionIdleTimeout: json['session_idle_timeout'] as String?,
+      sessionRememberTtl: json['session_remember_ttl'] as String?,
+      sessionTtl: json['session_ttl'] as String?,
       theme: json['theme'] as String?,
       timeFormat: json['time_format'] as String?,
       timezone: json['timezone'] as String?,
@@ -4455,6 +4508,9 @@ Map<String, dynamic> _$UpdateTenantInputToJson(_UpdateTenantInput instance) =>
       'require_totp_cli': ?instance.requireTotpCli,
       'require_totp_ssh': ?instance.requireTotpSsh,
       'require_totp_web': ?instance.requireTotpWeb,
+      'session_idle_timeout': ?instance.sessionIdleTimeout,
+      'session_remember_ttl': ?instance.sessionRememberTtl,
+      'session_ttl': ?instance.sessionTtl,
       'theme': ?instance.theme,
       'time_format': ?instance.timeFormat,
       'timezone': ?instance.timezone,
