@@ -14,6 +14,12 @@ void main() {
       'https://tix.example/api/v1/': 'https://tix.example',
       'https://host/tix//': 'https://host/tix',
       'https://tix.example/?q=1#top': 'https://tix.example',
+      'https://tix.example.com/': 'https://tix.example.com',
+      'https://tix.example.com///': 'https://tix.example.com',
+      ' tix.example.com/ ': 'https://tix.example.com',
+      'tix.example.com:8443//': 'https://tix.example.com:8443',
+      'http://tix.example.com/': 'http://tix.example.com',
+      '\thttps://tix.example.com/tix/\n': 'https://tix.example.com/tix',
     };
     for (final MapEntry(key: input, value: want) in cases.entries) {
       expect(normalizeServerUrl(input), want, reason: input);
@@ -21,8 +27,28 @@ void main() {
   });
 
   test('normalizeServerUrl refuses what is not a web address', () {
-    for (final input in ['', '   ', 'ftp://tix.example', 'https://', '::']) {
+    for (final input in [
+      '',
+      '   ',
+      '///',
+      'ftp://tix.example',
+      'https://',
+      '::',
+    ]) {
       expect(normalizeServerUrl(input), isNull, reason: input);
+    }
+  });
+
+  test('withoutTrailingSlash leaves room for one slash before a path', () {
+    const cases = {
+      'https://tix.example': 'https://tix.example',
+      'https://tix.example/': 'https://tix.example',
+      'https://tix.example///': 'https://tix.example',
+      '/tix/': '/tix',
+      '': '',
+    };
+    for (final MapEntry(key: input, value: want) in cases.entries) {
+      expect(withoutTrailingSlash(input), want, reason: input);
     }
   });
 

@@ -7,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/config/server_url.dart';
+import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/files.dart';
 import 'package:tix_mobile/src/core/platform/local_access.dart';
@@ -74,7 +76,9 @@ class ConnectScreen extends ConsumerStatefulWidget {
 }
 
 class _ConnectScreenState extends ConsumerState<ConnectScreen> {
-  late final _url = TextEditingController(text: widget.url);
+  late final _url = TextEditingController(
+    text: normalizeServerUrl(widget.url) ?? widget.url,
+  );
   final _token = TextEditingController();
   late final _email = TextEditingController(text: widget.email);
   final _password = TextEditingController();
@@ -196,23 +200,27 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
     }
   }
 
-  Future<void> _submitRemote() => _run(
-    () => _method == ConnectMethod.token
-        ? _flow.token(
-            url: _url.text,
-            token: _token.text,
-            name: _name.text,
-            instanceId: widget.instanceId,
-          )
-        : _flow.signIn(
-            url: _url.text,
-            email: _email.text,
-            password: _password.text,
-            name: _name.text,
-            instanceId: widget.instanceId,
-            replacing: _replacing,
-          ),
-  );
+  Future<void> _submitRemote() {
+    final url = normalizeServerUrl(_url.text);
+    if (url != null && url != _url.text) _url.text = url;
+    return _run(
+      () => _method == ConnectMethod.token
+          ? _flow.token(
+              url: _url.text,
+              token: _token.text,
+              name: _name.text,
+              instanceId: widget.instanceId,
+            )
+          : _flow.signIn(
+              url: _url.text,
+              email: _email.text,
+              password: _password.text,
+              name: _name.text,
+              instanceId: widget.instanceId,
+              replacing: _replacing,
+            ),
+    );
+  }
 
   Future<void> _previewInvite() => _run(() async {
     final found = await _flow.previewInvite(_inviteLink.text);
@@ -434,28 +442,35 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
         const SizedBox(height: 24),
         Text(l10n.connectIntro),
         const SizedBox(height: 24),
-        SegmentedButton<InstanceKind>(
-          key: const Key('connect.kind'),
-          segments: [
-            ButtonSegment(
-              value: InstanceKind.remote,
-              label: Text(l10n.instanceRemote),
-              icon: const Icon(Icons.cloud_outlined),
-            ),
-            ButtonSegment(
-              value: InstanceKind.local,
-              label: Text(l10n.instanceLocal),
-              icon: const Icon(Icons.storage_outlined),
-              enabled: localEnabled,
-            ),
-          ],
-          selected: {_kind},
-          onSelectionChanged: _busy
-              ? null
-              : (s) => setState(() {
-                  _kind = s.first;
-                  _error = null;
-                }),
+        _Helped(
+          help: HelpButton(
+            key: const Key('connect.help.kind'),
+            title: l10n.helpKindTitle,
+            body: l10n.helpKindBody,
+          ),
+          child: SegmentedButton<InstanceKind>(
+            key: const Key('connect.kind'),
+            segments: [
+              ButtonSegment(
+                value: InstanceKind.remote,
+                label: Text(l10n.instanceRemote),
+                icon: const Icon(Icons.cloud_outlined),
+              ),
+              ButtonSegment(
+                value: InstanceKind.local,
+                label: Text(l10n.instanceLocal),
+                icon: const Icon(Icons.storage_outlined),
+                enabled: localEnabled,
+              ),
+            ],
+            selected: {_kind},
+            onSelectionChanged: _busy
+                ? null
+                : (s) => setState(() {
+                    _kind = s.first;
+                    _error = null;
+                  }),
+          ),
         ),
         if (!localEnabled) ...[
           const SizedBox(height: 8),
@@ -479,18 +494,25 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
     final reauth = _replacing != null;
     return [
       if (saved == null && _method != ConnectMethod.invite)
-        TextField(
-          key: const Key('connect.url'),
-          controller: _url,
-          enabled: !_busy,
-          keyboardType: TextInputType.url,
-          autofillHints: const [AutofillHints.url],
-          autocorrect: false,
-          textInputAction: TextInputAction.next,
-          decoration: InputDecoration(
-            labelText: l10n.serverUrlLabel,
-            hintText: l10n.serverUrlHint,
-            border: const OutlineInputBorder(),
+        _Helped(
+          help: HelpButton(
+            key: const Key('connect.help.server'),
+            title: l10n.serverUrlLabel,
+            body: l10n.helpServerBody,
+          ),
+          child: TextField(
+            key: const Key('connect.url'),
+            controller: _url,
+            enabled: !_busy,
+            keyboardType: TextInputType.url,
+            autofillHints: const [AutofillHints.url],
+            autocorrect: false,
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              labelText: l10n.serverUrlLabel,
+              hintText: l10n.serverUrlHint,
+              border: const OutlineInputBorder(),
+            ),
           ),
         )
       else if (saved != null)
@@ -498,71 +520,103 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
       if (saved != null || _method != ConnectMethod.invite)
         const SizedBox(height: 16),
       if (!reauth) ...[
-        SegmentedButton<ConnectMethod>(
-          key: const Key('connect.method'),
-          segments: [
-            ButtonSegment(
-              value: ConnectMethod.token,
-              label: Text(l10n.methodToken),
-              icon: const Icon(Icons.key),
-            ),
-            ButtonSegment(
-              value: ConnectMethod.signIn,
-              label: Text(l10n.methodSignIn),
-              icon: const Icon(Icons.person_outline),
-            ),
-            if (saved == null)
+        _Helped(
+          help: HelpButton(
+            key: const Key('connect.help.method'),
+            title: l10n.helpMethodTitle,
+            body: [
+              l10n.helpMethodSignIn,
+              l10n.helpMethodToken,
+              if (saved == null) l10n.helpMethodInvite,
+            ].join('\n\n'),
+          ),
+          child: SegmentedButton<ConnectMethod>(
+            key: const Key('connect.method'),
+            segments: [
               ButtonSegment(
-                value: ConnectMethod.invite,
-                label: Text(l10n.methodInvite),
-                icon: const Icon(Icons.mail_outline),
+                value: ConnectMethod.token,
+                label: Text(l10n.methodToken),
+                icon: const Icon(Icons.key),
               ),
-          ],
-          selected: {_method},
-          onSelectionChanged: _busy
-              ? null
-              : (s) => setState(() {
-                  _method = s.first;
-                  _error = null;
-                }),
+              ButtonSegment(
+                value: ConnectMethod.signIn,
+                label: Text(l10n.methodSignIn),
+                icon: const Icon(Icons.person_outline),
+              ),
+              if (saved == null)
+                ButtonSegment(
+                  value: ConnectMethod.invite,
+                  label: Text(l10n.methodInvite),
+                  icon: const Icon(Icons.mail_outline),
+                ),
+            ],
+            selected: {_method},
+            onSelectionChanged: _busy
+                ? null
+                : (s) => setState(() {
+                    _method = s.first;
+                    _error = null;
+                  }),
+          ),
         ),
         const SizedBox(height: 16),
       ],
       if (_method == ConnectMethod.invite)
         ..._inviteForm(context)
       else if (_method == ConnectMethod.token)
-        _SecretField(
-          fieldKey: const Key('connect.token'),
-          controller: _token,
-          enabled: !_busy,
-          label: l10n.tokenLabel,
-          helper: l10n.tokenHelp,
-          visible: _showSecret,
-          onToggle: () => setState(() => _showSecret = !_showSecret),
+        _Helped(
+          help: HelpButton(
+            key: const Key('connect.help.token'),
+            title: l10n.tokenLabel,
+            body: l10n.helpTokenBody,
+          ),
+          child: _SecretField(
+            fieldKey: const Key('connect.token'),
+            controller: _token,
+            enabled: !_busy,
+            label: l10n.tokenLabel,
+            helper: l10n.tokenHelp,
+            visible: _showSecret,
+            onToggle: () => setState(() => _showSecret = !_showSecret),
+          ),
         )
       else ...[
-        TextField(
-          key: const Key('connect.email'),
-          controller: _email,
-          enabled: !_busy,
-          keyboardType: TextInputType.emailAddress,
-          autofillHints: const [AutofillHints.email],
-          autocorrect: false,
-          textInputAction: TextInputAction.next,
-          decoration: InputDecoration(
-            labelText: l10n.emailLabel,
-            border: const OutlineInputBorder(),
+        _Helped(
+          help: HelpButton(
+            key: const Key('connect.help.email'),
+            title: l10n.emailLabel,
+            body: l10n.helpEmailBody,
+          ),
+          child: TextField(
+            key: const Key('connect.email'),
+            controller: _email,
+            enabled: !_busy,
+            keyboardType: TextInputType.emailAddress,
+            autofillHints: const [AutofillHints.email],
+            autocorrect: false,
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              labelText: l10n.emailLabel,
+              border: const OutlineInputBorder(),
+            ),
           ),
         ),
         const SizedBox(height: 16),
-        _SecretField(
-          fieldKey: const Key('connect.password'),
-          controller: _password,
-          enabled: !_busy,
-          label: l10n.passwordLabel,
-          helper: l10n.signInHelp,
-          visible: _showSecret,
-          onToggle: () => setState(() => _showSecret = !_showSecret),
+        _Helped(
+          help: HelpButton(
+            key: const Key('connect.help.password'),
+            title: l10n.passwordLabel,
+            body: l10n.helpPasswordBody,
+          ),
+          child: _SecretField(
+            fieldKey: const Key('connect.password'),
+            controller: _password,
+            enabled: !_busy,
+            label: l10n.passwordLabel,
+            helper: l10n.signInHelp,
+            visible: _showSecret,
+            onToggle: () => setState(() => _showSecret = !_showSecret),
+          ),
         ),
       ],
       if (saved == null && _method != ConnectMethod.invite) ...[
@@ -595,26 +649,33 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
     final expires = preview?.expiresAt;
     final locale = Localizations.localeOf(context).toLanguageTag();
     return [
-      TextField(
-        key: const Key('connect.inviteLink'),
-        controller: _inviteLink,
-        enabled: !_busy,
-        keyboardType: TextInputType.url,
-        autocorrect: false,
-        enableSuggestions: false,
-        textInputAction: TextInputAction.go,
-        onSubmitted: (_) => _busy ? null : _previewInvite(),
-        decoration: InputDecoration(
-          labelText: l10n.inviteLinkLabel,
-          hintText: l10n.inviteLinkHint,
-          helperText: l10n.inviteLinkHelp,
-          helperMaxLines: 3,
-          border: const OutlineInputBorder(),
-          suffixIcon: IconButton(
-            key: const Key('connect.invitePaste'),
-            tooltip: l10n.invitePaste,
-            icon: const Icon(Icons.content_paste),
-            onPressed: _busy ? null : _pasteInvite,
+      _Helped(
+        help: HelpButton(
+          key: const Key('connect.help.invite'),
+          title: l10n.inviteLinkLabel,
+          body: l10n.helpInviteBody,
+        ),
+        child: TextField(
+          key: const Key('connect.inviteLink'),
+          controller: _inviteLink,
+          enabled: !_busy,
+          keyboardType: TextInputType.url,
+          autocorrect: false,
+          enableSuggestions: false,
+          textInputAction: TextInputAction.go,
+          onSubmitted: (_) => _busy ? null : _previewInvite(),
+          decoration: InputDecoration(
+            labelText: l10n.inviteLinkLabel,
+            hintText: l10n.inviteLinkHint,
+            helperText: l10n.inviteLinkHelp,
+            helperMaxLines: 3,
+            border: const OutlineInputBorder(),
+            suffixIcon: IconButton(
+              key: const Key('connect.invitePaste'),
+              tooltip: l10n.invitePaste,
+              icon: const Icon(Icons.content_paste),
+              onPressed: _busy ? null : _pasteInvite,
+            ),
           ),
         ),
       ),
@@ -870,7 +931,14 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
     final chosen = _tenant ?? step.me.tenantKey;
     final selected = here.where((m) => m.tenantKey == chosen).firstOrNull;
     return [
-      Text(l10n.chooseTenantIntro),
+      _Helped(
+        help: HelpButton(
+          key: const Key('connect.help.tenant'),
+          title: l10n.helpTenantTitle,
+          body: l10n.helpTenantBody,
+        ),
+        child: Text(l10n.chooseTenantIntro),
+      ),
       const SizedBox(height: 8),
       for (final m in here)
         ListTile(
@@ -924,7 +992,14 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
           key: const Key('connect.findings'),
         ),
       const SizedBox(height: 16),
-      Text(l10n.localTenantsIntro),
+      _Helped(
+        help: HelpButton(
+          key: const Key('connect.help.tenant'),
+          title: l10n.helpTenantTitle,
+          body: l10n.helpTenantBody,
+        ),
+        child: Text(l10n.localTenantsIntro),
+      ),
       const SizedBox(height: 8),
       for (final TenantRef t in step.tenants)
         ListTile(
@@ -1032,19 +1107,48 @@ class _NameField extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final submit = onSubmitted;
-    return TextField(
-      key: const Key('connect.name'),
-      controller: controller,
-      enabled: enabled,
-      textInputAction: TextInputAction.done,
-      onSubmitted: submit == null ? null : (_) => submit(),
-      decoration: InputDecoration(
-        labelText: l10n.contextNameLabel,
-        helperText: l10n.contextNameHelp,
-        border: const OutlineInputBorder(),
+    return _Helped(
+      help: HelpButton(
+        key: const Key('connect.help.name'),
+        title: l10n.contextNameLabel,
+        body: l10n.helpNameBody,
+      ),
+      child: TextField(
+        key: const Key('connect.name'),
+        controller: controller,
+        enabled: enabled,
+        textInputAction: TextInputAction.done,
+        onSubmitted: submit == null ? null : (_) => submit(),
+        decoration: InputDecoration(
+          labelText: l10n.contextNameLabel,
+          helperText: l10n.contextNameHelp,
+          border: const OutlineInputBorder(),
+        ),
       ),
     );
   }
+}
+
+/// [child] with its (i) [help] on the right, at the top so it stays beside
+/// a field whose helper text wraps.
+class _Helped extends StatelessWidget {
+  const _Helped({required this.help, required this.child});
+
+  final HelpButton help;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Expanded(child: child),
+      const SizedBox(width: TixSpace.s1),
+      Padding(
+        padding: const EdgeInsets.only(top: TixSpace.s1),
+        child: help,
+      ),
+    ],
+  );
 }
 
 class _ElsewhereTile extends StatelessWidget {

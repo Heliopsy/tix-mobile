@@ -44,6 +44,64 @@ class AppLocalizationsDe extends AppLocalizations {
   String get contextNameHelp => 'Wird im Umschalter angezeigt.';
 
   @override
+  String helpAbout(String topic) {
+    return 'Hilfe: $topic';
+  }
+
+  @override
+  String get helpServerBody =>
+      'Ein tix-Server ist der Rechner, auf dem das tix Ihres Teams läuft. Seine Adresse ist die, mit der Sie tix im Webbrowser öffnen, etwa https://tix.example.com.\n\nSie kennen sie nicht? Fragen Sie die Person, die tix für Sie betreibt. https:// und den Schrägstrich am Ende können Sie weglassen.';
+
+  @override
+  String get helpKindTitle => 'Server oder dieses Gerät';
+
+  @override
+  String get helpKindBody =>
+      'Server: Verbinden Sie sich mit einem tix, das jemand für Sie oder Ihr Team betreibt, und arbeiten Sie an denselben Aufgaben wie alle anderen dort.\n\nDieses Gerät: tix läuft in dieser App, mit einer Datenbank auf diesem Gerät. Kein Server und kein Konto nötig, und nichts wird mit anderen geteilt.';
+
+  @override
+  String get helpMethodTitle => 'Wie verbinden';
+
+  @override
+  String get helpMethodSignIn =>
+      'Anmelden: mit der E-Mail-Adresse und dem Passwort, mit denen Sie sich bei tix im Web anmelden.';
+
+  @override
+  String get helpMethodToken =>
+      'Token: Fügen Sie statt eines Passworts ein API-Token ein. Es bleibt verbunden, bis es widerrufen wird, und passt daher zu einem Gerät, das Sie behalten.';
+
+  @override
+  String get helpMethodInvite =>
+      'Einladung: Sie haben eine Einladung per E-Mail bekommen? Fügen Sie den Link ein, der Server wird dann für Sie eingetragen.';
+
+  @override
+  String get helpTokenBody =>
+      'Ein API-Token ist ein langer Code, mit dem diese App ohne Ihr Passwort hineinkommt.\n\nErstellen Sie eines auf der Seite „API-Tokens“ von tix im Web, oder führen Sie tix token create dort aus, wo der Befehl tix funktioniert. Kopieren Sie es, sobald es angezeigt wird: Sie sehen es nur einmal.';
+
+  @override
+  String get helpEmailBody =>
+      'Die E-Mail-Adresse Ihres tix-Kontos, mit der Sie sich bei tix im Web anmelden.';
+
+  @override
+  String get helpPasswordBody =>
+      'Ihr tix-Passwort, dasselbe wie im Web. Vergessen? Die Person, die Ihr tix betreibt, kann es zurücksetzen.';
+
+  @override
+  String get helpInviteBody =>
+      'Wenn Sie jemand zu tix einlädt, bekommen Sie eine E-Mail mit einem Link. Fügen Sie den Link hier ein, oder teilen Sie ihn aus Ihrer Mail-App mit tix.\n\nDie Adresse des Servers steckt im Link, Sie müssen sie also nicht eintippen.';
+
+  @override
+  String get helpNameBody =>
+      'Ein Name für diese Verbindung, nur in dieser App sichtbar. Praktisch, wenn Sie mehr als einen Server oder ein Konto nutzen. Leer lassen, um die Adresse des Servers zu verwenden.';
+
+  @override
+  String get helpTenantTitle => 'Mandanten';
+
+  @override
+  String get helpTenantBody =>
+      'Ein tix kann mehrere getrennte Arbeitsbereiche enthalten, sogenannte Mandanten, etwa einen pro Firma oder Team. Jeder hat eigene Projekte und Personen.\n\nWählen Sie den, der geöffnet werden soll. Die anderen können Sie später hinzufügen.';
+
+  @override
   String get connectButton => 'Verbinden';
 
   @override

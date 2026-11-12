@@ -6,6 +6,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:meta/meta.dart';
+import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/logging/log.dart';
 import 'package:tix_mobile/src/data/events/event_tail.dart';
 import 'package:tix_mobile/src/data/events/tix_event.dart';
@@ -211,12 +212,9 @@ class TixEventStream {
   /// The WebSocket address of the event stream under [baseUrl].
   static Uri eventsUrl(String baseUrl) {
     final base = Uri.parse(baseUrl);
-    final path = base.path.endsWith('/')
-        ? base.path.substring(0, base.path.length - 1)
-        : base.path;
     return base.replace(
       scheme: base.scheme == 'https' ? 'wss' : 'ws',
-      path: '$path/api/v1/events',
+      path: '${withoutTrailingSlash(base.path)}/api/v1/events',
     );
   }
 

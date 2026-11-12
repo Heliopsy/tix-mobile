@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/storage/stores.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
@@ -86,10 +87,14 @@ class InstancesRepository {
       '${DateTime.now().microsecondsSinceEpoch.toRadixString(36)}'
       '${(_counter++).toRadixString(36)}';
 
-  /// Moves 0.1's saved servers over, once. The old keys are left in place so
-  /// an older build still opens.
+  /// Moves 0.1's saved servers over, once, then tidies saved addresses. The
+  /// old keys are left in place so an older build still opens.
   Future<void> migrate() async {
-    if (_settings.read(_versionKey) != null) return;
+    if (_settings.read(_versionKey) == null) await _migrateLegacy();
+    await tidyAddresses();
+  }
+
+  Future<void> _migrateLegacy() async {
     if (_settings.read(_instancesKey) == null) {
       final m = migrateServers(
         _settings.read(_legacyListKey),
@@ -131,11 +136,50 @@ class InstancesRepository {
   /// The connection [id], null when there is none.
   Connection? connection(String id) => _find(connections(), (c) => c.id == id);
 
-  /// The remote instance at [baseUrl], null when none is saved.
-  Instance? remoteAt(String baseUrl) => _find(
-    instances(),
-    (i) => i.kind == InstanceKind.remote && i.baseUrl == baseUrl,
-  );
+  /// The remote instance at [baseUrl], however it is spelled, null when none
+  /// is saved.
+  Instance? remoteAt(String baseUrl) {
+    final want = _address(baseUrl);
+    return _find(
+      instances(),
+      (i) => i.kind == InstanceKind.remote && _address(i.baseUrl) == want,
+    );
+  }
+
+  /// Rewrites each remote instance's address as [normalizeServerUrl] spells
+  /// it, and folds instances that then share an address into the first,
+  /// moving their connections to it. Secrets are keyed by connection, so
+  /// none moves.
+  Future<void> tidyAddresses() async {
+    final kept = <String, String>{};
+    final folded = <String, String>{};
+    final tidy = <Instance>[];
+    var changed = false;
+    for (final i in instances()) {
+      if (i.kind != InstanceKind.remote) {
+        tidy.add(i);
+        continue;
+      }
+      final url = _address(i.baseUrl);
+      final first = kept[url];
+      if (first != null) {
+        folded[i.id] = first;
+        changed = true;
+        continue;
+      }
+      kept[url] = i.id;
+      tidy.add(url == i.baseUrl ? i : i.copyWith(baseUrl: url));
+      changed |= url != i.baseUrl;
+    }
+    if (!changed) return;
+    await _writeConnections([
+      for (final c in connections())
+        c.copyWith(instanceId: folded[c.instanceId] ?? c.instanceId),
+    ]);
+    await _writeInstances(tidy);
+  }
+
+  static String _address(String url) => normalizeServerUrl(url) ?? url;
 
   /// The local instance on [dbPath], null when none is saved.
   Instance? localAt(String dbPath) => _find(

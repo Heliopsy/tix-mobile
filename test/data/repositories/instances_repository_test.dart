@@ -236,4 +236,82 @@ void main() {
     expect(repo.instance('l')!.host, '');
     expect(InstancesRepository.newId(), isNot(InstancesRepository.newId()));
   });
+
+  group('saved addresses', () {
+    void saved(List<Instance> instances, List<Connection> connections) {
+      settings.values
+        ..['storage.version'] = '2'
+        ..['instances'] = jsonEncode([for (final i in instances) i.toJson()])
+        ..['connections'] = jsonEncode([
+          for (final c in connections) c.toJson(),
+        ]);
+    }
+
+    test(
+      'a trailing slash is dropped and the twin folded in on start',
+      () async {
+        final local = Instance(
+          id: 'l',
+          name: 'Notes',
+          kind: InstanceKind.local,
+          dbPath: '/n.db/',
+          createdAt: now,
+        );
+        saved(
+          [
+            remote('a', 'https://tix.example.com/'),
+            local,
+            remote('b', 'https://tix.example.com'),
+            remote('c', 'http://home.example//'),
+          ],
+          [
+            token('ka', 'a'),
+            token('kb', 'b', tenant: 'acme'),
+            token('kc', 'c'),
+            token('kl', 'l'),
+          ],
+        );
+        secrets.values
+          ..['token.ka'] = 'ta'
+          ..['token.kb'] = 'tb';
+        await repo.migrate();
+        expect(
+          {for (final i in repo.instances()) i.id: i.location},
+          {
+            'a': 'https://tix.example.com',
+            'l': '/n.db/',
+            'c': 'http://home.example',
+          },
+        );
+        expect(
+          {for (final c in repo.connections()) c.id: c.instanceId},
+          {'ka': 'a', 'kb': 'a', 'kc': 'c', 'kl': 'l'},
+        );
+        expect(secrets.values, {'token.ka': 'ta', 'token.kb': 'tb'});
+      },
+    );
+
+    test('tidy addresses are left alone', () async {
+      saved([remote('a', 'https://tix.example.com')], [token('ka', 'a')]);
+      final before = Map.of(settings.values);
+      await repo.migrate();
+      expect(settings.values, before);
+    });
+
+    test('remoteAt finds an instance however its address is spelled', () async {
+      await repo.save(
+        instance: remote('a', 'https://tix.example.com'),
+        connection: token('ka', 'a'),
+        secret: 't',
+      );
+      for (final spelling in [
+        'https://tix.example.com/',
+        ' tix.example.com// ',
+        'https://tix.example.com/api/v1',
+      ]) {
+        expect(repo.remoteAt(spelling)?.id, 'a', reason: spelling);
+      }
+      expect(repo.remoteAt('http://tix.example.com'), isNull);
+    });
+  });
 }

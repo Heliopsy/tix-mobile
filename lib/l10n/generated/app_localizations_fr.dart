@@ -44,6 +44,64 @@ class AppLocalizationsFr extends AppLocalizations {
   String get contextNameHelp => 'Affiché dans le sélecteur.';
 
   @override
+  String helpAbout(String topic) {
+    return 'Aide : $topic';
+  }
+
+  @override
+  String get helpServerBody =>
+      'Un serveur tix est l’ordinateur sur lequel tourne le tix de votre équipe. Son adresse est celle avec laquelle vous ouvrez tix dans un navigateur, par exemple https://tix.example.com.\n\nVous ne la connaissez pas ? Demandez à la personne qui gère tix pour vous. Vous pouvez omettre https:// et la barre oblique finale.';
+
+  @override
+  String get helpKindTitle => 'Serveur ou cet appareil';
+
+  @override
+  String get helpKindBody =>
+      'Serveur : connectez-vous à un tix géré pour vous ou votre équipe, et travaillez sur les mêmes tâches que tout le monde.\n\nCet appareil : tix tourne dans cette application, avec une base de données gardée sur cet appareil. Ni serveur ni compte, et rien n’est partagé avec qui que ce soit.';
+
+  @override
+  String get helpMethodTitle => 'Comment se connecter';
+
+  @override
+  String get helpMethodSignIn =>
+      'Identification : utilisez l’e-mail et le mot de passe avec lesquels vous vous identifiez sur tix dans le navigateur.';
+
+  @override
+  String get helpMethodToken =>
+      'Jeton : collez un jeton d’API au lieu d’un mot de passe. Il reste connecté jusqu’à sa révocation, idéal pour un appareil que vous gardez.';
+
+  @override
+  String get helpMethodInvite =>
+      'Invitation : vous avez reçu un e-mail d’invitation ? Collez son lien et le serveur est rempli pour vous.';
+
+  @override
+  String get helpTokenBody =>
+      'Un jeton d’API est un long code qui laisse entrer cette application sans votre mot de passe.\n\nCréez-en un sur la page « Jetons d’API » de tix dans le navigateur, ou lancez tix token create là où la commande tix fonctionne. Copiez-le dès qu’il s’affiche : vous ne le verrez qu’une fois.';
+
+  @override
+  String get helpEmailBody =>
+      'L’adresse e-mail de votre compte tix, celle avec laquelle vous vous identifiez sur tix dans le navigateur.';
+
+  @override
+  String get helpPasswordBody =>
+      'Votre mot de passe tix, le même que dans le navigateur. Oublié ? La personne qui gère votre tix peut le réinitialiser.';
+
+  @override
+  String get helpInviteBody =>
+      'Quand quelqu’un vous invite sur tix, vous recevez un e-mail avec un lien. Collez ce lien ici, ou partagez-le vers tix depuis votre application de messagerie.\n\nL’adresse du serveur est dans le lien, inutile de la saisir.';
+
+  @override
+  String get helpNameBody =>
+      'Un nom pour cette connexion, visible seulement dans cette application. Pratique si vous utilisez plusieurs serveurs ou comptes. Laissez vide pour utiliser l’adresse du serveur.';
+
+  @override
+  String get helpTenantTitle => 'Espaces';
+
+  @override
+  String get helpTenantBody =>
+      'Un même tix peut contenir plusieurs espaces séparés, par exemple un par entreprise ou par équipe. Chacun a ses propres projets et membres.\n\nChoisissez celui à ouvrir. Vous pourrez ajouter les autres plus tard.';
+
+  @override
   String get connectButton => 'Se connecter';
 
   @override

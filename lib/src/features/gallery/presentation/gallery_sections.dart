@@ -384,6 +384,7 @@ class _GalleryFormsState extends State<GalleryForms> {
   final _line = TextEditingController(text: 'Fix login !high #auth @raj');
   final _name = TextEditingController(text: 'Acme');
   final _hex = TextEditingController(text: 'teal');
+  final _server = TextEditingController(text: 'https://tix.example.com');
   bool _mine = true;
   bool _on = true;
 
@@ -392,6 +393,7 @@ class _GalleryFormsState extends State<GalleryForms> {
     _line.dispose();
     _name.dispose();
     _hex.dispose();
+    _server.dispose();
     super.dispose();
   }
 
@@ -404,6 +406,33 @@ class _GalleryFormsState extends State<GalleryForms> {
         controller: _name,
         help: 'What people see in the switcher.',
         info: 'Shown on every surface, the terminal included.',
+      ),
+      const SizedBox(height: TixSpace.s3),
+      Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: TixMeasure.field + TixSize.target,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: TixTextField(
+                  label: 'Server address',
+                  controller: _server,
+                ),
+              ),
+              const HelpButton(
+                title: 'Server address',
+                body:
+                    'The address you open tix with in a browser, such as '
+                    'https://tix.example.com.\n\nAsk whoever runs tix for '
+                    'you.',
+              ),
+            ],
+          ),
+        ),
       ),
       const SizedBox(height: TixSpace.s3),
       TixTextField(

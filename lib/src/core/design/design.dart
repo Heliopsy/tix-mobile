@@ -13,6 +13,7 @@ export 'components/dialogs.dart';
 export 'components/fields.dart';
 export 'components/filters.dart';
 export 'components/focus_ring.dart';
+export 'components/help.dart';
 export 'components/inbox_row.dart';
 export 'components/list_keys.dart';
 export 'components/live.dart';
