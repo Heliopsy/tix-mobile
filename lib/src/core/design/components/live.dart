@@ -65,6 +65,80 @@ class UpdatedMark extends StatelessWidget {
   }
 }
 
+/// "3 new, show": rows a live update put above where the reader is
+/// reading, as tix's `livePill` says it. It floats over the top edge of the
+/// list rather than pushing anything down; pressing it calls [onPressed],
+/// which shows the rows and scrolls to them.
+///
+/// Draw it only while [count] is above zero, centred at the list's top.
+class NewRowsPill extends StatelessWidget {
+  /// Offers the [count] rows waiting above.
+  const NewRowsPill({required this.count, required this.onPressed, super.key});
+
+  /// How many rows are waiting.
+  final int count;
+
+  /// Shows them.
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tix;
+    return Semantics(
+      liveRegion: true,
+      button: true,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onPressed,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: TixSize.target),
+          child: Center(
+            widthFactor: 1,
+            heightFactor: 1,
+            child: DecoratedBox(
+              decoration: ShapeDecoration(
+                shape: const StadiumBorder(),
+                shadows: t.shadowStrong,
+              ),
+              child: Material(
+                color: t.accent,
+                shape: const StadiumBorder(),
+                child: InkWell(
+                  onTap: onPressed,
+                  customBorder: const StadiumBorder(),
+                  child: Container(
+                    constraints: const BoxConstraints(
+                      minHeight: TixSize.controlSmall + TixSpace.s1,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: TixSpace.s3,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.arrow_upward, size: 14, color: t.onAccent),
+                        const SizedBox(width: TixSpace.s1),
+                        Text(
+                          context.l10n.liveNewAbove(count),
+                          style: TextStyle(
+                            fontSize: TixText.xs,
+                            fontWeight: FontWeight.w600,
+                            color: t.onAccent,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// Says that what the person is editing changed elsewhere, and offers to
 /// load the new version. Their input stays until they choose [onReload].
 ///

@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/rendering.dart' show RenderAbstractViewport;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/clock/clock.dart';
@@ -203,6 +204,12 @@ List<ListEntry> buildListEntries(
 /// tick and strike-through can play, then moves to where the listing now
 /// puts it, or collapses away when the listing no longer holds it. With
 /// reduced motion it moves or goes at once.
+///
+/// Tasks a refresh puts above the first line the reader can see, while they
+/// are scrolled away from the top, wait out of the list so nothing under
+/// the reader moves; a [NewRowsPill] counts them and shows them, as tix's
+/// live pill does. At the top, or once the reader scrolls back there, they
+/// are drawn at once.
 class TaskListView extends ConsumerStatefulWidget {
   /// Lists [entries] of the listing for [query].
   const TaskListView({
@@ -268,12 +275,88 @@ class _TaskListViewState extends ConsumerState<TaskListView> {
   final _held = <String, _Hold>{};
   List<ListEntry> _drawn = const [];
 
+  /// Lines a refresh put above the reader's place, by [_keyOf], kept out of
+  /// the list until the reader asks for them or reaches the top.
+  final _waiting = <Object>{};
+  final _seen = <Object, BuildContext>{};
+  late final _scroll = ScrollController()..addListener(_onScroll);
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_waiting.isNotEmpty && _scroll.position.pixels <= 0) {
+      setState(_waiting.clear);
+    }
+  }
+
+  /// The drawn line at the top of the viewport, by [_keyOf].
+  Object? _topLine() {
+    if (!_scroll.hasClients) return null;
+    final pixels = _scroll.position.pixels;
+    Object? top;
+    var topAt = double.infinity;
+    for (final MapEntry(:key, value: context) in _seen.entries) {
+      if (!context.mounted) continue;
+      final box = context.findRenderObject();
+      if (box is! RenderBox || !box.hasSize || !box.attached) continue;
+      final viewport = RenderAbstractViewport.maybeOf(box);
+      if (viewport == null) continue;
+      final at = viewport.getOffsetToReveal(box, 0).offset;
+      if (at + box.size.height > pixels && at < topAt) {
+        top = key;
+        topAt = at;
+      }
+    }
+    return top;
+  }
+
+  /// Keeps out of the list the lines [widget] adds above the reader's place.
+  void _holdArrivals(TaskListView old) {
+    final present = {for (final e in widget.entries) _keyOf(e)};
+    _waiting.retainAll(present);
+    if (!_scroll.hasClients || _scroll.position.pixels <= 0) {
+      _waiting.clear();
+      return;
+    }
+    final before = {for (final e in old.entries) _keyOf(e)};
+    if (before.isEmpty) return;
+    final top = _topLine();
+    final topAt = widget.entries.indexWhere((e) => _keyOf(e) == top);
+    for (final e in widget.entries.take(topAt < 0 ? 0 : topAt)) {
+      if (e is HiddenEntry) continue;
+      final key = _keyOf(e);
+      if (!before.contains(key)) _waiting.add(key);
+    }
+  }
+
+  void _showWaiting() {
+    setState(_waiting.clear);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_scroll.hasClients) return;
+      final duration = TixMotion.of(context, TixMotion.slow);
+      if (duration == Duration.zero) {
+        _scroll.jumpTo(0);
+      } else {
+        _scroll.animateTo(0, duration: duration, curve: TixMotion.ease);
+      }
+    });
+  }
+
   bool _isDone(Task task) =>
       ref.read(taskContextProvider).value?.isFinished(task) ?? isTaskDone(task);
 
   @override
   void didUpdateWidget(TaskListView old) {
     super.didUpdateWidget(old);
+    if (old.query != widget.query) {
+      _waiting.clear();
+    } else {
+      _holdArrivals(old);
+    }
     if (old.query != widget.query ||
         TixMotion.of(context, TixMotion.settle) == Duration.zero) {
       _ticked.clear();
@@ -353,14 +436,20 @@ class _TaskListViewState extends ConsumerState<TaskListView> {
       :selectedRef,
       :focusedRef,
     ) = widget;
-    final entries = _drawn = _merge(widget.entries);
+    final entries = _drawn = [
+      for (final e in _merge(widget.entries))
+        if (!_waiting.contains(_keyOf(e))) e,
+    ];
+    final arrived = _waiting
+        .where((k) => k is (String, String) && k.$1 == 'row')
+        .length;
     final provider = taskListingProvider(query);
     final selection = ref.watch(taskSelectionProvider(query.scope));
     final picking = selection.active;
     final selector = ref.read(taskSelectionProvider(query.scope).notifier);
     final order = [
       for (final e in widget.entries)
-        if (e is RowEntry) e.task.ref,
+        if (e is RowEntry && !_waiting.contains(_keyOf(e))) e.task.ref,
     ];
     final taskContext = ref.watch(taskContextProvider).value;
     final now = ref.watch(clockProvider)();
@@ -372,7 +461,8 @@ class _TaskListViewState extends ConsumerState<TaskListView> {
       loadingMore: paged.loadingMore,
       moreError: paged.moreError,
     );
-    return PagedListView<ListEntry>(
+    final list = PagedListView<ListEntry>(
+      controller: _scroll,
       paged: paged.items.isEmpty && _held.isEmpty
           ? const Paged<ListEntry>(items: [])
           : lines,
@@ -380,72 +470,135 @@ class _TaskListViewState extends ConsumerState<TaskListView> {
       empty: empty,
       onRefresh: () => ref.refresh(provider.future),
       onLoadMore: () => ref.read(provider.notifier).loadMore(),
-      itemBuilder: (context, entry) => switch (entry) {
-        HiddenEntry(:final view, :final hidden, :final labels) => Align(
-          alignment: AlignmentDirectional.centerEnd,
-          child: HiddenGroups(
-            view: view,
-            hidden: hidden,
-            labelOf: (g) => labels[g] ?? g,
-          ),
-        ),
-        HeadingEntry() => GroupHeading(
-          key: ValueKey(('heading', entry.group)),
-          view: entry.view,
-          group: entry.group,
-          label: entry.label,
-          count: entry.count,
-          natural: entry.natural,
-          leading: entry.category == null
-              ? null
-              : StatusPill(label: entry.label, category: entry.category),
-        ),
-        RowEntry(:final task) => _Slot(
-          key: ValueKey(('row', task.id)),
-          hold: _held[task.id],
-          onReleased: () => _release(task.id),
-          child: KeepInView(
-            active: task.ref == focusedRef,
-            child: _Row(
-              task: task,
-              facts: factsFor(
-                task,
-                taskContext,
-                handle: assigneeHandle(ref, task),
-                holder: holderHandle(ref, task),
-                sync: syncMarkOf(ref, task),
-                showProject: query.scope is! ProjectScope,
-              ),
-              now: now,
-              done: actions.isDone(task),
-              picked: picking ? selection.contains(task.ref) : null,
-              selected: task.ref == selectedRef,
-              focused: task.ref == focusedRef,
-              onTap: () => tapTask(
-                ref,
-                query.scope,
-                task.ref,
-                order: order,
-                open: () => onOpen(task),
-              ),
-              onPicked: (_) => selector.toggle(task.ref),
-              onLongPress: () => longPressTask(ref, query.scope, task.ref),
-              onMenu: () => showTaskMenu(
-                context,
-                actions,
-                task,
-                onOpen: () => onOpen(task),
-                onSelect: () => selector.toggle(task.ref),
-              ),
-              actions: actions,
-              completeLabel: l10n.complete,
-              snoozeLabel: l10n.snooze,
+      itemBuilder: (context, entry) => _Seen(
+        id: _keyOf(entry),
+        seen: _seen,
+        child: switch (entry) {
+          HiddenEntry(:final view, :final hidden, :final labels) => Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: HiddenGroups(
+              view: view,
+              hidden: hidden,
+              labelOf: (g) => labels[g] ?? g,
             ),
           ),
-        ),
-      },
+          HeadingEntry() => GroupHeading(
+            key: ValueKey(('heading', entry.group)),
+            view: entry.view,
+            group: entry.group,
+            label: entry.label,
+            count: entry.count,
+            natural: entry.natural,
+            leading: entry.category == null
+                ? null
+                : StatusPill(label: entry.label, category: entry.category),
+          ),
+          RowEntry(:final task) => _Slot(
+            key: ValueKey(('row', task.id)),
+            hold: _held[task.id],
+            onReleased: () => _release(task.id),
+            child: KeepInView(
+              active: task.ref == focusedRef,
+              child: _Row(
+                task: task,
+                facts: factsFor(
+                  task,
+                  taskContext,
+                  handle: assigneeHandle(ref, task),
+                  holder: holderHandle(ref, task),
+                  sync: syncMarkOf(ref, task),
+                  showProject: query.scope is! ProjectScope,
+                ),
+                now: now,
+                done: actions.isDone(task),
+                picked: picking ? selection.contains(task.ref) : null,
+                selected: task.ref == selectedRef,
+                focused: task.ref == focusedRef,
+                onTap: () => tapTask(
+                  ref,
+                  query.scope,
+                  task.ref,
+                  order: order,
+                  open: () => onOpen(task),
+                ),
+                onPicked: (_) => selector.toggle(task.ref),
+                onLongPress: () => longPressTask(ref, query.scope, task.ref),
+                onMenu: () => showTaskMenu(
+                  context,
+                  actions,
+                  task,
+                  onOpen: () => onOpen(task),
+                  onSelect: () => selector.toggle(task.ref),
+                ),
+                actions: actions,
+                completeLabel: l10n.complete,
+                snoozeLabel: l10n.snooze,
+              ),
+            ),
+          ),
+        },
+      ),
+    );
+    return Stack(
+      children: [
+        list,
+        if (arrived > 0)
+          Positioned(
+            top: TixSpace.s1,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: NewRowsPill(
+                key: const Key('list.newAbove'),
+                count: arrived,
+                onPressed: _showWaiting,
+              ),
+            ),
+          ),
+      ],
     );
   }
+}
+
+/// Registers its line's context under [id] in [seen] while it is built, so
+/// the list can tell which line is at the top of the viewport.
+class _Seen extends StatefulWidget {
+  const _Seen({required this.id, required this.seen, required this.child});
+
+  final Object id;
+  final Map<Object, BuildContext> seen;
+  final Widget child;
+
+  @override
+  State<_Seen> createState() => _SeenState();
+}
+
+class _SeenState extends State<_Seen> {
+  @override
+  void initState() {
+    super.initState();
+    widget.seen[widget.id] = context;
+  }
+
+  @override
+  void didUpdateWidget(_Seen old) {
+    super.didUpdateWidget(old);
+    if (old.id != widget.id && identical(old.seen[old.id], context)) {
+      old.seen.remove(old.id);
+    }
+    widget.seen[widget.id] = context;
+  }
+
+  @override
+  void dispose() {
+    if (identical(widget.seen[widget.id], context)) {
+      widget.seen.remove(widget.id);
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
 
 /// A row's place in the list: as drawn, or held by a [_Hold] until

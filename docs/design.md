@@ -139,6 +139,7 @@ All in `lib/src/core/design/components/`. Each has a doc comment saying when to 
 | `TaskPick` | The square checkbox that picks a row or card in select mode, read as "Select" |
 | `InboxRow` | An inbox item: who did what, the task, the excerpt or the move, when; unread dot |
 | `UpdatedMark`, `FreshHighlight` | A list refreshed itself from a live event; a row that just arrived |
+| `NewRowsPill` | "3 new, show": rows a refresh put above where the reader is, floating over the list's top edge |
 | `ChangedElsewhereBanner` | What the person is editing changed elsewhere: keep editing or reload, never a silent reload |
 | `StatusPill` | A task status. The only filled mark on a row. `framed` makes it a control |
 | `PriorityMark` | A priority, caret and word |
@@ -269,7 +270,9 @@ success shows a toast with Undo, which rolls back locally and calls `undo`.
 
 Lists follow tix's event stream through `refreshOn` and `onEvents` (`core/events`). A list that refreshes in
 place marks the new rows with `FreshHighlight` and shows `UpdatedMark` for a few seconds; it never moves the
-scroll position. A screen with unsaved input never reloads under the person: it listens for events about its
+scroll position. The task list keeps rows a refresh puts above the reader's place out of the list while the
+reader is scrolled down, and floats a `NewRowsPill` counting them; pressing it, or scrolling back to the top,
+draws them. A screen with unsaved input never reloads under the person: it listens for events about its
 item (`EventTopics.taskDetail`, matching the subject) and shows `ChangedElsewhereBanner` instead.
 
 New inbox items become local notifications (`core/notifications`, over `flutter_local_notifications`) while the
