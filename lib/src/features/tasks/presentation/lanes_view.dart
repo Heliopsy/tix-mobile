@@ -7,6 +7,7 @@ import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/paging/paged.dart';
 import 'package:tix_mobile/src/core/theme/layout.dart';
+import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/data/models/group_pref.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
@@ -17,9 +18,10 @@ import 'package:tix_mobile/src/features/tasks/presentation/group_menu.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/select_mode.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_actions.dart';
 
-/// One lane per project, the way the web draws Lanes: each lane the
-/// project's cards, each card ticked, its status a badge, its menu on the
-/// dots. A long press picks a card and turns select mode on.
+/// One lane per project, person, priority, tag or deadline, the way the web
+/// draws Lanes: each lane its cards, each card ticked, its status a badge,
+/// its menu on the dots. A lane's name narrows the screen to that lane. A
+/// long press picks a card and turns select mode on.
 class LanesView extends ConsumerWidget {
   /// Draws [paged] of the listing for [query] as lanes.
   const LanesView({
@@ -52,12 +54,43 @@ class LanesView extends ConsumerWidget {
     final t = context.tix;
     final taskContext = ref.watch(taskContextProvider).value;
     if (taskContext == null) return const SkeletonList();
-    const view = 'lanes';
+    final scope = query.scope;
+    final by = lanesOf(ref.watch(taskScreenProvider(scope)), scope);
+    final view = by.view;
     final prefs = ref.watch(viewArrangementProvider(view)).value ?? const {};
-    final projects = laneProjects(paged.items, query, taskContext);
-    final byKey = {for (final p in projects) p.key: p};
-    final natural = [for (final p in projects) p.key];
+    final lanes = buildLanes(
+      paged.items,
+      by: by,
+      query: query,
+      context: taskContext,
+      handleOf: (task) => assigneeHandle(ref, task),
+      me: ref.watch(meProvider).value?.handle ?? '',
+      now: ref.watch(clockProvider)(),
+      style: context.times.style,
+      prefs: prefs,
+    );
+    final byKey = {for (final l in lanes) l.key: l};
+    final natural = [for (final l in lanes) l.key];
     final arranged = arrangeGroups(natural, prefs);
+    String nameOf(Lane lane) => switch (by) {
+      LaneGrouping.project => switch (lane.project) {
+        final Project p when p.name.isNotEmpty => p.name,
+        _ => lane.key,
+      },
+      LaneGrouping.assignee when lane.key == laneNone => l10n.unassigned,
+      LaneGrouping.tag when lane.key == laneNone => l10n.lanesNoTag,
+      LaneGrouping.priority => l10n.priorityLabel(
+        '${lanePriorities.indexOf(lane.key) + 1}',
+      ),
+      LaneGrouping.due => switch (DueBucket.values.byName(lane.key)) {
+        DueBucket.overdue => l10n.myWorkOverdue,
+        DueBucket.today => l10n.myWorkToday,
+        DueBucket.week => l10n.myWorkWeek,
+        DueBucket.later => l10n.myWorkLater,
+        DueBucket.none => l10n.myWorkNoDate,
+      },
+      _ => lane.label,
+    };
     final actions = TaskQuickActions(context, ref, query);
     final now = ref.watch(clockProvider)();
     final selection = ref.watch(taskSelectionProvider(query.scope));
@@ -65,25 +98,25 @@ class LanesView extends ConsumerWidget {
     bool shown(Task task) => showFinished || !actions.isDone(task);
     final order = [
       for (final key in arranged.visible)
-        if (byKey[key] case final Project p
-            when !(prefs[key]?.collapsed ?? false))
-          for (final task in paged.items)
-            if (task.projectId == p.id && shown(task)) task.ref,
+        if (byKey[key] case final Lane l when !(prefs[key]?.collapsed ?? false))
+          for (final task in l.tasks)
+            if (shown(task)) task.ref,
     ];
     final compact = context.isCompact;
     final width = compact
         ? MediaQuery.sizeOf(context).width * 0.86
         : boardColumnWidth;
-    Widget lane(Project project) {
-      final pref = prefs[project.key] ?? GroupPref(group: project.key);
+    Widget lane(Lane lane) {
+      final pref = prefs[lane.key] ?? GroupPref(group: lane.key);
       final tasks = [
-        for (final task in paged.items)
-          if (task.projectId == project.id && shown(task)) task,
+        for (final task in lane.tasks)
+          if (shown(task)) task,
       ];
-      final name = project.name.isEmpty ? project.key : project.name;
-      final stripe = t.projectColour(project.color);
+      final project = lane.project;
+      final name = nameOf(lane);
+      final stripe = project == null ? null : t.projectColour(project.color);
       return Container(
-        key: ValueKey(('lane', project.key)),
+        key: ValueKey(('lane', lane.key)),
         width: pref.collapsed ? boardStripWidth : width,
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
@@ -102,7 +135,7 @@ class LanesView extends ConsumerWidget {
                   children: [
                     GroupMenu(
                       view: view,
-                      group: project.key,
+                      group: lane.key,
                       label: name,
                       natural: natural,
                     ),
@@ -130,20 +163,25 @@ class LanesView extends ConsumerWidget {
                       ),
                       child: Row(
                         children: [
-                          ProjectMark(
-                            name: name,
-                            colour: project.color,
-                            icon: project.icon,
-                          ),
-                          const SizedBox(width: TixSpace.s2),
+                          if (project != null) ...[
+                            ProjectMark(
+                              name: name,
+                              colour: project.color,
+                              icon: project.icon,
+                            ),
+                            const SizedBox(width: TixSpace.s2),
+                          ],
                           Flexible(
-                            child: Text(
-                              name,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: TixText.sm,
-                                fontWeight: FontWeight.w600,
-                              ),
+                            child: _LaneName(
+                              key: Key('lane.head.${lane.key}'),
+                              name: name,
+                              onTap: lane.term.isEmpty
+                                  ? null
+                                  : () => ref
+                                        .read(
+                                          taskScreenProvider(scope).notifier,
+                                        )
+                                        .showLane(lane.term),
                             ),
                           ),
                           const SizedBox(width: TixSpace.s2),
@@ -161,7 +199,7 @@ class LanesView extends ConsumerWidget {
                           const Spacer(),
                           GroupMenu(
                             view: view,
-                            group: project.key,
+                            group: lane.key,
                             label: name,
                             natural: natural,
                           ),
@@ -199,7 +237,9 @@ class LanesView extends ConsumerWidget {
                                     taskContext,
                                     handle: assigneeHandle(ref, task),
                                     sync: syncMarkOf(ref, task),
-                                    showProject: false,
+                                    showProject:
+                                        by != LaneGrouping.project &&
+                                        scope is! ProjectScope,
                                   ),
                                   now: now,
                                   selected: task.ref == focusedRef,
@@ -247,8 +287,8 @@ class LanesView extends ConsumerWidget {
         ),
         children: [
           for (final key in arranged.visible)
-            if (byKey[key] case final Project p) ...[
-              lane(p),
+            if (byKey[key] case final Lane l) ...[
+              lane(l),
               const SizedBox(width: TixSpace.s3),
             ],
           Column(
@@ -257,9 +297,9 @@ class LanesView extends ConsumerWidget {
               HiddenGroups(
                 view: view,
                 hidden: arranged.hidden,
-                labelOf: (g) {
-                  final p = byKey[g];
-                  return p == null || p.name.isEmpty ? g : p.name;
+                labelOf: (g) => switch (byKey[g]) {
+                  final Lane l => nameOf(l),
+                  null => g,
                 },
               ),
               if (paged.hasMore)
@@ -278,6 +318,46 @@ class LanesView extends ConsumerWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// A lane's name: a link that narrows the screen to the lane when [onTap]
+/// is given, as the web's lane heading is.
+class _LaneName extends StatelessWidget {
+  const _LaneName({required this.name, this.onTap, super.key});
+
+  final String name;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Text(
+      name,
+      overflow: TextOverflow.ellipsis,
+      style: const TextStyle(fontSize: TixText.sm, fontWeight: FontWeight.w600),
+    );
+    final tap = onTap;
+    if (tap == null) return text;
+    final hint = context.l10n.lanesOnly(name);
+    return Semantics(
+      button: true,
+      hint: hint,
+      child: Tooltip(
+        message: hint,
+        child: InkWell(
+          onTap: tap,
+          borderRadius: BorderRadius.circular(TixRadius.sm),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 32),
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              widthFactor: 1,
+              child: text,
+            ),
+          ),
+        ),
       ),
     );
   }

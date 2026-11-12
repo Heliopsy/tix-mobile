@@ -1531,6 +1531,23 @@ class AppLocalizationsBg extends AppLocalizations {
   String get lanesEmpty => 'Няма задачи';
 
   @override
+  String get lanesGroupBy => 'Ленти по';
+
+  @override
+  String get lanesByProject => 'Проект';
+
+  @override
+  String get lanesByTag => 'Етикет';
+
+  @override
+  String get lanesNoTag => 'Без етикет';
+
+  @override
+  String lanesOnly(String name) {
+    return 'Само задачите в $name';
+  }
+
+  @override
   String get myWorkEmpty => 'Нищо не ви е възложено.';
 
   @override

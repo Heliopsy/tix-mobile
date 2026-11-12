@@ -969,6 +969,19 @@
   "groupProject": "Group by project",
   "groupStatus": "Group by status",
   "lanesEmpty": "No tasks",
+  "lanesGroupBy": "Group lanes by",
+  "lanesByProject": "Project",
+  "lanesByTag": "Tag",
+  "lanesNoTag": "No tag",
+  "lanesOnly": "Only tasks in {name}",
+  "@lanesOnly": {
+    "description": "Hint on a lane heading that narrows the screen to that lane.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "myWorkEmpty": "Nothing assigned to you.",
   "myWorkEmptyBody": "Open tasks assigned to you show here by deadline.",
   "myWorkLater": "Later",

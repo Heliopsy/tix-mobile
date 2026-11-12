@@ -114,8 +114,9 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   while tasks are being added. Sort, group by status or project, swipe to complete or snooze, star in place, and
   pick many tasks for one bulk move, priority, tag, assignee, star, copy or delete with a single Undo. Move one
   task or many into another project, where each takes a new reference and the old one keeps leading to it.
-- **Board and lanes**: a workflow's columns with drag and drop, or one lane per project, each column and lane
-  starred, collapsed, moved or hidden the way tix keeps it for your account.
+- **Board and lanes**: a workflow's columns with drag and drop, or lanes by project, assignee, priority, tag or
+  deadline, each lane's name narrowing the list to it. Each column and lane is starred, collapsed, moved or hidden
+  the way tix keeps it for your account.
 - **Filters and search** in tix's filter language, one-tap chips (mine, starred, snoozed, blocked, due windows,
   finished), and saved filters, your own and shared ones, also opened by name from `/tasks?filter=<name>`.
 - **My work**: your open tasks under Overdue, Today, This week, Later and No date.

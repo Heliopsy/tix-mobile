@@ -1527,6 +1527,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lanesEmpty => 'No tasks';
 
   @override
+  String get lanesGroupBy => 'Group lanes by';
+
+  @override
+  String get lanesByProject => 'Project';
+
+  @override
+  String get lanesByTag => 'Tag';
+
+  @override
+  String get lanesNoTag => 'No tag';
+
+  @override
+  String lanesOnly(String name) {
+    return 'Only tasks in $name';
+  }
+
+  @override
   String get myWorkEmpty => 'Nothing assigned to you.';
 
   @override

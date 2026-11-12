@@ -218,6 +218,7 @@ class _SortMenu extends ConsumerWidget {
       onSelected: (v) => switch (v) {
         final String s => screen.setSort(s),
         final TaskGrouping g => screen.setGrouping(g),
+        final LaneGrouping g => screen.setLanes(g),
         _ => screen.toggleDirection(),
       },
       itemBuilder: (_) => [
@@ -235,6 +236,27 @@ class _SortMenu extends ConsumerWidget {
           checked: state.descending,
           child: Text(l10n.sortDescending),
         ),
+        if (state.view == TaskView.lanes) ...[
+          const PopupMenuDivider(),
+          PopupMenuItem<Object>(
+            enabled: false,
+            height: 32,
+            child: Text(l10n.lanesGroupBy),
+          ),
+          for (final g in laneGroupingsFor(scope))
+            CheckedPopupMenuItem<Object>(
+              key: Key('lanes.by.${g.name}'),
+              value: g,
+              checked: lanesOf(state, scope) == g,
+              child: Text(switch (g) {
+                LaneGrouping.project => l10n.lanesByProject,
+                LaneGrouping.assignee => l10n.fieldAssignee,
+                LaneGrouping.priority => l10n.fieldPriority,
+                LaneGrouping.tag => l10n.lanesByTag,
+                LaneGrouping.due => l10n.fieldDue,
+              }),
+            ),
+        ],
         if (state.view == TaskView.list) ...[
           const PopupMenuDivider(),
           for (final (g, text) in [
