@@ -118,6 +118,10 @@ abstract final class Routes {
   static String actor(String idOrHandle) =>
       '/actors/${Uri.encodeComponent(idOrHandle)}';
 
+  /// The active server's version, whether it is up to date, how to upgrade
+  /// it and what changed, as the web's Release screen.
+  static const serverRelease = '/settings/release';
+
   /// The commands that connect a CLI, an MCP client or an agent to the
   /// active server, as the web's Connect an agent screen.
   static const connectAgent = '/settings/connect-agent';

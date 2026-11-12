@@ -2666,6 +2666,155 @@ class AppLocalizationsBg extends AppLocalizations {
   String get aboutVersions => 'Версии';
 
   @override
+  String get releaseTitle => 'Версия на сървъра';
+
+  @override
+  String get releaseSubtitle => 'Версията на този сървър и дали има по-нова';
+
+  @override
+  String get goRelease => 'Към Версия на сървъра';
+
+  @override
+  String get releaseIntro =>
+      'Какво изпълнява тази инсталация и какво казва за себе си най-новата публикувана версия.';
+
+  @override
+  String get releaseStatus => 'Състояние';
+
+  @override
+  String get releaseUpdateAvailable => 'Има обновление';
+
+  @override
+  String releaseAvailable(String version) {
+    return 'Налична е v$version';
+  }
+
+  @override
+  String releaseRunsOlder(String version) {
+    return 'Тази инсталация работи с v$version. Командите по-долу инсталират по-новата версия.';
+  }
+
+  @override
+  String get releaseUpToDate => 'Актуална';
+
+  @override
+  String get releaseCurrentTitle => 'Тази инсталация е актуална';
+
+  @override
+  String releaseNewest(String version) {
+    return 'v$version е най-новата публикувана версия.';
+  }
+
+  @override
+  String get releaseNotComparable => 'Несравнима';
+
+  @override
+  String get releaseUnknownTitle =>
+      'Версията на тази компилация не може да се сравни';
+
+  @override
+  String releaseUnknown(String latest, String running) {
+    return 'v$latest е най-новата публикувана версия, а v$running не е номер на версия, с който да се сравни.';
+  }
+
+  @override
+  String get releaseCheckFailed => 'Проверката не успя';
+
+  @override
+  String get releaseFailedTitle => 'Каналът за версии не е достъпен';
+
+  @override
+  String get releaseFailed =>
+      'Това е обичайно за изолирана мрежа. Сървърът ще опита отново до шест часа.';
+
+  @override
+  String get releaseNotChecked => 'Непроверено';
+
+  @override
+  String get releasePendingTitle => 'Още не е проверено';
+
+  @override
+  String get releasePending =>
+      'Сървърът проверява канала за версии във фонов режим. Опреснете след малко.';
+
+  @override
+  String get releaseRunningHere => 'Работи тук';
+
+  @override
+  String get releaseNewestPublished => 'Най-нова публикувана';
+
+  @override
+  String get releaseNotKnown => 'неизвестна';
+
+  @override
+  String get releaseCheckedNote =>
+      'Проверява се в публичния канал за версии най-много на всеки шест часа, от сървъра, а не от това устройство.';
+
+  @override
+  String get releaseHowToUpgrade => 'Как да обновите';
+
+  @override
+  String get releaseUpgradeNote =>
+      'Използвайте начина, по който е инсталиран този сървър. Нищо тук не рестартира работещ tix serve: рестартирайте го, след като новата версия е на място.';
+
+  @override
+  String get releaseMethodBinary => 'Двоичен файл от версия';
+
+  @override
+  String get releaseMethodBinaryHelp =>
+      'Инсталиран с install.sh или разархивиран от архив на версия. Сверява изтеглянето с публикуваната контролна сума, преди да замени двоичния файл.';
+
+  @override
+  String get releaseMethodContainer => 'Образ за контейнер';
+
+  @override
+  String get releaseMethodContainerHelp =>
+      'Изтеглете новия таг и пресъздайте контейнера върху същия том.';
+
+  @override
+  String get releaseMethodGo => 'Инструменти на Go';
+
+  @override
+  String get releaseMethodGoHelp =>
+      'Инсталиран с go install. tix update отказва да замени това копие, защото то принадлежи на инструментите на Go.';
+
+  @override
+  String get releasePackageManager =>
+      'Инсталирали сте от пакетен мениджър? Обновете по същия начин, по който сте инсталирали.';
+
+  @override
+  String releaseWhatChanged(String version) {
+    return 'Какво се промени във v$version';
+  }
+
+  @override
+  String get releaseNotesNote =>
+      'Връзките са премахнати. Тези бележки идват от канала за версии, така че описват най-новата версия, а не тази, която работи тук.';
+
+  @override
+  String get releaseWhatsNew => 'Какво ново';
+
+  @override
+  String get releaseChangesRunning =>
+      'От списъка с промени на сървъра: версията, която работи там, и версиите преди нея. Връзките са премахнати.';
+
+  @override
+  String releaseUntagged(String version) {
+    return 'v$version не е издадена версия, затова това са най-новите записи в списъка с промени, с който е компилирана.';
+  }
+
+  @override
+  String releaseNoEntry(String version) {
+    return 'Списъкът с промени на сървъра няма запис за v$version, затова това са най-новите му записи.';
+  }
+
+  @override
+  String get releaseNoChangelog => 'Сървърът не съдържа списък с промени.';
+
+  @override
+  String get releaseYouRun => 'Работи тук';
+
+  @override
   String get aboutAppVersion => 'Приложение';
 
   @override

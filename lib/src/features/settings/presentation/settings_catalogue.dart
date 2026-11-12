@@ -361,6 +361,15 @@ List<SettingsItem> settingsCatalogue(
     icon: Icons.info_outline,
     route: Routes.about,
   ),
+  if (signedIn)
+    SettingsItem(
+      id: 'about.release',
+      section: SettingsSection.about,
+      label: l10n.releaseTitle,
+      icon: Icons.new_releases_outlined,
+      keywords: 'version update upgrade changelog',
+      route: Routes.serverRelease,
+    ),
   if (Routes.galleryEnabled)
     SettingsItem(
       id: 'about.gallery',

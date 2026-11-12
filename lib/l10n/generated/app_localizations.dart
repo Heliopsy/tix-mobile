@@ -4465,6 +4465,252 @@ abstract class AppLocalizations {
   /// **'Versions'**
   String get aboutVersions;
 
+  /// Title of the server release screen and its Settings entry
+  ///
+  /// In en, this message translates to:
+  /// **'Server release'**
+  String get releaseTitle;
+
+  /// Subtitle of the server release entry in Settings
+  ///
+  /// In en, this message translates to:
+  /// **'The version this server runs and whether a newer one is out'**
+  String get releaseSubtitle;
+
+  /// Command palette entry that opens the server release screen
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Server release'**
+  String get goRelease;
+
+  /// Line under the server release title
+  ///
+  /// In en, this message translates to:
+  /// **'What this installation is running, and what the newest published release says about itself.'**
+  String get releaseIntro;
+
+  /// Heading of the release status card
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get releaseStatus;
+
+  /// Badge when a newer release is out
+  ///
+  /// In en, this message translates to:
+  /// **'Update available'**
+  String get releaseUpdateAvailable;
+
+  /// Heading when a newer release is out
+  ///
+  /// In en, this message translates to:
+  /// **'v{version} is available'**
+  String releaseAvailable(String version);
+
+  /// Line under the newer release heading
+  ///
+  /// In en, this message translates to:
+  /// **'This installation runs v{version}. The commands below install the newer release.'**
+  String releaseRunsOlder(String version);
+
+  /// Badge when the server is current
+  ///
+  /// In en, this message translates to:
+  /// **'Up to date'**
+  String get releaseUpToDate;
+
+  /// Heading when the server is current
+  ///
+  /// In en, this message translates to:
+  /// **'This installation is up to date'**
+  String get releaseCurrentTitle;
+
+  /// Line under the current heading
+  ///
+  /// In en, this message translates to:
+  /// **'v{version} is the newest published release.'**
+  String releaseNewest(String version);
+
+  /// Badge when the running version cannot be ordered
+  ///
+  /// In en, this message translates to:
+  /// **'Not comparable'**
+  String get releaseNotComparable;
+
+  /// Heading when the running version cannot be ordered
+  ///
+  /// In en, this message translates to:
+  /// **'This build\'s version cannot be compared'**
+  String get releaseUnknownTitle;
+
+  /// Line under the not comparable heading
+  ///
+  /// In en, this message translates to:
+  /// **'v{latest} is the newest published release, and v{running} is not a version number it can be ordered against.'**
+  String releaseUnknown(String latest, String running);
+
+  /// Badge when the release feed could not be read
+  ///
+  /// In en, this message translates to:
+  /// **'Check failed'**
+  String get releaseCheckFailed;
+
+  /// Heading when the release feed could not be read
+  ///
+  /// In en, this message translates to:
+  /// **'The release feed could not be reached'**
+  String get releaseFailedTitle;
+
+  /// Line under the failed heading
+  ///
+  /// In en, this message translates to:
+  /// **'That is the ordinary case for an isolated network. The server tries again within six hours.'**
+  String get releaseFailed;
+
+  /// Badge before the server has checked
+  ///
+  /// In en, this message translates to:
+  /// **'Not checked'**
+  String get releaseNotChecked;
+
+  /// Heading before the server has checked
+  ///
+  /// In en, this message translates to:
+  /// **'Not checked yet'**
+  String get releasePendingTitle;
+
+  /// Line under the not checked heading
+  ///
+  /// In en, this message translates to:
+  /// **'The server asks the release feed in the background. Pull to refresh in a moment.'**
+  String get releasePending;
+
+  /// Label of the server's running version
+  ///
+  /// In en, this message translates to:
+  /// **'Running here'**
+  String get releaseRunningHere;
+
+  /// Label of the newest release
+  ///
+  /// In en, this message translates to:
+  /// **'Newest published'**
+  String get releaseNewestPublished;
+
+  /// Shown when the newest release is unknown
+  ///
+  /// In en, this message translates to:
+  /// **'not known'**
+  String get releaseNotKnown;
+
+  /// Note under the release status
+  ///
+  /// In en, this message translates to:
+  /// **'Checked against the public release feed at most every six hours, from the server rather than this device.'**
+  String get releaseCheckedNote;
+
+  /// Heading of the upgrade commands
+  ///
+  /// In en, this message translates to:
+  /// **'How to upgrade'**
+  String get releaseHowToUpgrade;
+
+  /// Line under How to upgrade
+  ///
+  /// In en, this message translates to:
+  /// **'Use the way this server was installed. Nothing here restarts a running tix serve: restart it once the new version is in place.'**
+  String get releaseUpgradeNote;
+
+  /// Upgrade method name
+  ///
+  /// In en, this message translates to:
+  /// **'Release binary'**
+  String get releaseMethodBinary;
+
+  /// When the release binary method applies
+  ///
+  /// In en, this message translates to:
+  /// **'Installed with install.sh or unpacked from a release archive. Checks the download against its published checksum before replacing the binary.'**
+  String get releaseMethodBinaryHelp;
+
+  /// Upgrade method name
+  ///
+  /// In en, this message translates to:
+  /// **'Container image'**
+  String get releaseMethodContainer;
+
+  /// When the container method applies
+  ///
+  /// In en, this message translates to:
+  /// **'Pull the new tag, then recreate the container on the same volume.'**
+  String get releaseMethodContainerHelp;
+
+  /// Upgrade method name
+  ///
+  /// In en, this message translates to:
+  /// **'Go toolchain'**
+  String get releaseMethodGo;
+
+  /// When the Go method applies
+  ///
+  /// In en, this message translates to:
+  /// **'Installed with go install. tix update refuses this copy, because the toolchain owns it.'**
+  String get releaseMethodGoHelp;
+
+  /// Last line of How to upgrade
+  ///
+  /// In en, this message translates to:
+  /// **'Installed from a package manager? Upgrade it the way you installed it.'**
+  String get releasePackageManager;
+
+  /// Heading of the newest release's notes
+  ///
+  /// In en, this message translates to:
+  /// **'What changed in v{version}'**
+  String releaseWhatChanged(String version);
+
+  /// Line under the newest release's notes heading
+  ///
+  /// In en, this message translates to:
+  /// **'Links have been removed. These notes come from the release feed, so they describe the newest release rather than the one running here.'**
+  String get releaseNotesNote;
+
+  /// Heading of the changelog entries
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s new'**
+  String get releaseWhatsNew;
+
+  /// Line under What's new when the running version has an entry
+  ///
+  /// In en, this message translates to:
+  /// **'From the changelog the server carries: the version running there, then the releases before it. Links have been removed.'**
+  String get releaseChangesRunning;
+
+  /// Line under What's new for an untagged build
+  ///
+  /// In en, this message translates to:
+  /// **'v{version} is not a tagged release, so these are the newest entries in the changelog it was built with.'**
+  String releaseUntagged(String version);
+
+  /// Line under What's new when the running version has no entry
+  ///
+  /// In en, this message translates to:
+  /// **'The changelog the server carries has no entry for v{version}, so these are its newest entries.'**
+  String releaseNoEntry(String version);
+
+  /// Line under What's new when there is no changelog
+  ///
+  /// In en, this message translates to:
+  /// **'The server carries no changelog.'**
+  String get releaseNoChangelog;
+
+  /// Badge on the changelog entry of the running version
+  ///
+  /// In en, this message translates to:
+  /// **'Running here'**
+  String get releaseYouRun;
+
   /// No description provided for @aboutAppVersion.
   ///
   /// In en, this message translates to:

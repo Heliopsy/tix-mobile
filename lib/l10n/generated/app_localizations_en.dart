@@ -2661,6 +2661,155 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aboutVersions => 'Versions';
 
   @override
+  String get releaseTitle => 'Server release';
+
+  @override
+  String get releaseSubtitle =>
+      'The version this server runs and whether a newer one is out';
+
+  @override
+  String get goRelease => 'Go to Server release';
+
+  @override
+  String get releaseIntro =>
+      'What this installation is running, and what the newest published release says about itself.';
+
+  @override
+  String get releaseStatus => 'Status';
+
+  @override
+  String get releaseUpdateAvailable => 'Update available';
+
+  @override
+  String releaseAvailable(String version) {
+    return 'v$version is available';
+  }
+
+  @override
+  String releaseRunsOlder(String version) {
+    return 'This installation runs v$version. The commands below install the newer release.';
+  }
+
+  @override
+  String get releaseUpToDate => 'Up to date';
+
+  @override
+  String get releaseCurrentTitle => 'This installation is up to date';
+
+  @override
+  String releaseNewest(String version) {
+    return 'v$version is the newest published release.';
+  }
+
+  @override
+  String get releaseNotComparable => 'Not comparable';
+
+  @override
+  String get releaseUnknownTitle => 'This build\'s version cannot be compared';
+
+  @override
+  String releaseUnknown(String latest, String running) {
+    return 'v$latest is the newest published release, and v$running is not a version number it can be ordered against.';
+  }
+
+  @override
+  String get releaseCheckFailed => 'Check failed';
+
+  @override
+  String get releaseFailedTitle => 'The release feed could not be reached';
+
+  @override
+  String get releaseFailed =>
+      'That is the ordinary case for an isolated network. The server tries again within six hours.';
+
+  @override
+  String get releaseNotChecked => 'Not checked';
+
+  @override
+  String get releasePendingTitle => 'Not checked yet';
+
+  @override
+  String get releasePending =>
+      'The server asks the release feed in the background. Pull to refresh in a moment.';
+
+  @override
+  String get releaseRunningHere => 'Running here';
+
+  @override
+  String get releaseNewestPublished => 'Newest published';
+
+  @override
+  String get releaseNotKnown => 'not known';
+
+  @override
+  String get releaseCheckedNote =>
+      'Checked against the public release feed at most every six hours, from the server rather than this device.';
+
+  @override
+  String get releaseHowToUpgrade => 'How to upgrade';
+
+  @override
+  String get releaseUpgradeNote =>
+      'Use the way this server was installed. Nothing here restarts a running tix serve: restart it once the new version is in place.';
+
+  @override
+  String get releaseMethodBinary => 'Release binary';
+
+  @override
+  String get releaseMethodBinaryHelp =>
+      'Installed with install.sh or unpacked from a release archive. Checks the download against its published checksum before replacing the binary.';
+
+  @override
+  String get releaseMethodContainer => 'Container image';
+
+  @override
+  String get releaseMethodContainerHelp =>
+      'Pull the new tag, then recreate the container on the same volume.';
+
+  @override
+  String get releaseMethodGo => 'Go toolchain';
+
+  @override
+  String get releaseMethodGoHelp =>
+      'Installed with go install. tix update refuses this copy, because the toolchain owns it.';
+
+  @override
+  String get releasePackageManager =>
+      'Installed from a package manager? Upgrade it the way you installed it.';
+
+  @override
+  String releaseWhatChanged(String version) {
+    return 'What changed in v$version';
+  }
+
+  @override
+  String get releaseNotesNote =>
+      'Links have been removed. These notes come from the release feed, so they describe the newest release rather than the one running here.';
+
+  @override
+  String get releaseWhatsNew => 'What\'s new';
+
+  @override
+  String get releaseChangesRunning =>
+      'From the changelog the server carries: the version running there, then the releases before it. Links have been removed.';
+
+  @override
+  String releaseUntagged(String version) {
+    return 'v$version is not a tagged release, so these are the newest entries in the changelog it was built with.';
+  }
+
+  @override
+  String releaseNoEntry(String version) {
+    return 'The changelog the server carries has no entry for v$version, so these are its newest entries.';
+  }
+
+  @override
+  String get releaseNoChangelog => 'The server carries no changelog.';
+
+  @override
+  String get releaseYouRun => 'Running here';
+
+  @override
   String get aboutAppVersion => 'App';
 
   @override

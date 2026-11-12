@@ -312,6 +312,11 @@ class _Entry extends StatelessWidget {
         leading: const TixMark(size: TixSpace.s5),
       ),
       'about.gallery' => _LinkEntry(item: item, push: true),
+      'about.release' => _LinkEntry(
+        item: item,
+        subtitle: l10n.releaseSubtitle,
+        push: true,
+      ),
       'profile.account' => _LinkEntry(
         item: item,
         subtitle: l10n.settingsAccountHelp,
