@@ -503,6 +503,32 @@ void main() {
       expect(find.text('Key and title copied'), findsOneWidget);
     });
 
+    testWidgets('the menu snoozes from the presets or a picked date', (
+      tester,
+    ) async {
+      await pump(tester, const TasksScreen());
+      await tester.tap(inRow('Fix login', find.byKey(const Key('row.more'))));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('menu.snooze')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('snooze.pick')), findsOneWidget);
+      expect(find.byKey(const Key('snooze.wake')), findsNothing);
+      await tester.tap(find.byKey(const Key('snooze.pick')));
+      await tester.pumpAndSettle();
+      expect(find.byType(DatePickerDialog), findsOneWidget);
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+      expect(find.byType(TimePickerDialog), findsOneWidget);
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+      final sent = [
+        for (final r in server.requestsTo('/tasks/infra-1/snooze'))
+          if (r.method == 'PUT') r.data,
+      ];
+      expect(sent, hasLength(1));
+      expect(find.text('infra-1 snoozed'), findsOneWidget);
+    });
+
     testWidgets('p on the focused row opens the priority picker', (
       tester,
     ) async {

@@ -1374,6 +1374,63 @@ class AppLocalizationsEn extends AppLocalizations {
   String get boardWake => 'Unsnooze';
 
   @override
+  String get tickLockedWhy => 'Why this cannot be ticked';
+
+  @override
+  String tickCompleteTitle(String ref) {
+    return 'Complete $ref';
+  }
+
+  @override
+  String tickReopenTitle(String ref) {
+    return 'Reopen $ref';
+  }
+
+  @override
+  String tickLockedBody(String why) {
+    return 'Not from here: $why.';
+  }
+
+  @override
+  String get tickLockCannotMove => 'you cannot move tasks';
+
+  @override
+  String get tickLockNoWorkflow => 'its workflow could not be read';
+
+  @override
+  String get tickLockNoRouteDone => 'no route leads to done from here';
+
+  @override
+  String get tickLockNoRouteBack => 'no route leads back to an open state';
+
+  @override
+  String get tickLockFinishComment => 'finishing it needs a comment';
+
+  @override
+  String get tickLockReopenComment => 'reopening it needs a comment';
+
+  @override
+  String tickLockFinishScope(String scope) {
+    return 'finishing it needs the $scope scope';
+  }
+
+  @override
+  String tickLockReopenScope(String scope) {
+    return 'reopening it needs the $scope scope';
+  }
+
+  @override
+  String tickSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count steps',
+      one: '1 step',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String boardWoken(String ref) {
     return '$ref unsnoozed';
   }

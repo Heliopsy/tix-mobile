@@ -529,14 +529,20 @@ StatusCategory statusCategoryOf(WorkflowState? s, [String status = '']) {
   };
 }
 
-/// Asks until when to snooze, from the presets or a picked time.
-Future<DateTime?> pickSnooze(BuildContext context, DateTime now) async {
+/// Asks until when to snooze, from the presets or a picked time, under
+/// [title]. With [wake] it also offers waking the task, answering [wake].
+Future<DateTime?> pickSnoozeTime(
+  BuildContext context,
+  DateTime now, {
+  String? title,
+  DateTime? wake,
+}) async {
   final l10n = context.l10n;
   final times = context.times;
   String when(DateTime t) => times.weekdayStamp(t, now: now);
   final choice = await showActionSheet<Object>(
     context,
-    title: l10n.taskDetailSnoozeTitle,
+    title: title ?? l10n.taskDetailSnoozeTitle,
     actions: [
       for (final p in SnoozePreset.values)
         TixSheetAction(
@@ -560,9 +566,17 @@ Future<DateTime?> pickSnooze(BuildContext context, DateTime now) async {
         label: l10n.taskDetailPickDateTime,
         icon: Icons.edit_calendar_outlined,
       ),
+      if (wake != null)
+        TixSheetAction(
+          key: const Key('snooze.wake'),
+          value: wake,
+          label: l10n.boardWake,
+          icon: Icons.alarm_on,
+        ),
     ],
   );
   if (!context.mounted || choice == null) return null;
+  if (choice is DateTime) return choice;
   if (choice is SnoozePreset) return choice.from(now, style: times.style);
   return await pickDateTime(
     context,

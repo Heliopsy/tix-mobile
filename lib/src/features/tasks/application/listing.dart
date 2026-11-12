@@ -196,6 +196,10 @@ class TaskListing extends _$TaskListing {
   /// Asks the server to move [ref] to [status].
   Future<void> sendMove(String ref, String status) => _repo.move(ref, status);
 
+  /// Asks the server to move [ref] through the states [route] names.
+  Future<void> sendRoute(String ref, List<String> route) =>
+      _repo.route(ref, route);
+
   /// Asks the server to star or unstar [ref].
   Future<void> sendStar(String ref, {required bool starred}) =>
       starred ? _repo.star(ref) : _repo.unstar(ref);

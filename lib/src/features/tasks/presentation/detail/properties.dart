@@ -211,7 +211,7 @@ extension TaskEdits on WidgetRef {
       );
       return;
     }
-    final picked = await pickSnooze(context, now);
+    final picked = await pickSnoozeTime(context, now);
     if (picked == null || !context.mounted) return;
     final times = context.times;
     await changeTask(

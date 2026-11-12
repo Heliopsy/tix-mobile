@@ -10,6 +10,7 @@ import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/offline/outbox.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
+import 'package:tix_mobile/src/core/session/access.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/models/task_patch.dart';
 import 'package:tix_mobile/src/data/models/workflow.dart';
@@ -103,20 +104,40 @@ class TaskQuickActions {
   /// Whether [task] is finished.
   bool isDone(Task task) => _context?.isFinished(task) ?? isTaskDone(task);
 
-  /// Completes [task], or reopens it when finished.
+  /// What [task]'s tick does for this reader: one route, a menu of them,
+  /// or why it offers none. Before the reader's scopes are known the
+  /// server is left to decide.
+  TickPlan tickPlan(Task task) {
+    final workflow = _context?.workflowOf(task);
+    if (workflow == null) {
+      return TickPlan.locked(TickLock.noWorkflow, reopen: isDone(task));
+    }
+    final access = ref.read(currentAccessProvider).value;
+    return workflow.tickPlan(task.status, (s) => access?.has(s) ?? true);
+  }
+
+  /// Completes [task], or reopens it when finished, along the route its
+  /// workflow offers; asks which when several lead there, and says why when
+  /// none does.
   Future<void> toggleDone(Task task) async {
     final l10n = context.l10n;
-    final workflow = _context?.workflowOf(task);
-    final done = isDone(task);
-    final target = done ? workflow?.initial : workflow?.doneState?.id;
-    if (target == null || target.isEmpty) {
-      showTixToast(context, l10n.boardNoRoute(task.ref), tone: TixTone.danger);
+    final plan = tickPlan(task);
+    if (plan.locked) {
+      await showTickLocked(context, task.ref, plan);
       return;
     }
+    final route = plan.choose
+        ? await pickTickRoute(context, task.ref, plan)
+        : plan.routes.single;
+    if (route == null || !context.mounted) return;
+    final reopen = plan.reopen;
+    final target = route.to.id;
     final now = ref.read(clockProvider)();
     final change = _listing.change(
-      task.copyWith(status: target, completedAt: done ? null : now),
-      send: () => _listing.sendMove(task.ref, target),
+      task.copyWith(status: target, completedAt: reopen ? null : now),
+      send: plan.choose && route.multiHop
+          ? () => _listing.sendRoute(task.ref, route.keys)
+          : () => _listing.sendMove(task.ref, target),
       reverse: () => _listing.sendMove(task.ref, task.status),
     );
     await runOptimistic(
@@ -125,7 +146,7 @@ class TaskQuickActions {
       rollback: change.rollback,
       commit: change.commit,
       describe: _describe,
-      success: done
+      success: reopen
           ? l10n.boardReopened(task.ref)
           : l10n.boardCompleted(task.ref),
       undo: change.undo,
@@ -341,50 +362,91 @@ class TaskQuickActions {
   }
 }
 
-/// What [pickSnooze] answers to wake a snoozed task.
-final wakeNow = DateTime.utc(1970);
+/// Why a tick offers nothing, in the reader's language.
+String tickLockReason(AppLocalizations l10n, TickPlan plan) =>
+    switch (plan.lock) {
+      TickLock.cannotMove => l10n.tickLockCannotMove,
+      TickLock.noWorkflow => l10n.tickLockNoWorkflow,
+      TickLock.noRoute =>
+        plan.reopen ? l10n.tickLockNoRouteBack : l10n.tickLockNoRouteDone,
+      TickLock.needsComment =>
+        plan.reopen ? l10n.tickLockReopenComment : l10n.tickLockFinishComment,
+      TickLock.needsScope =>
+        plan.reopen
+            ? l10n.tickLockReopenScope(plan.scope)
+            : l10n.tickLockFinishScope(plan.scope),
+      null => '',
+    };
 
-/// Asks until when [task] should sleep, measured from [now]: later today,
-/// tomorrow morning or next week; [wakeNow] when it is snoozed and should
-/// wake.
-Future<DateTime?> pickSnooze(BuildContext context, Task task, DateTime now) {
+/// Says why the tick of [taskRef] offers nothing.
+Future<void> showTickLocked(
+  BuildContext context,
+  String taskRef,
+  TickPlan plan,
+) => showTixSheet<void>(
+  context,
+  builder: (context) {
+    final l10n = context.l10n;
+    return TixSheetBody(
+      title: plan.reopen
+          ? l10n.tickReopenTitle(taskRef)
+          : l10n.tickCompleteTitle(taskRef),
+      actions: [
+        TixButton.quiet(
+          key: const Key('tick.close'),
+          label: l10n.close,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ],
+      child: Text(
+        l10n.tickLockedBody(tickLockReason(l10n, plan)),
+        key: const Key('tick.why'),
+      ),
+    );
+  },
+);
+
+/// Asks which of [plan]'s routes to take [taskRef] along. A route through
+/// other states names them and its length, so the reader consents to the
+/// whole journey.
+Future<WorkflowRoute?> pickTickRoute(
+  BuildContext context,
+  String taskRef,
+  TickPlan plan,
+) {
   final l10n = context.l10n;
-  final today = DateTime(now.year, now.month, now.day);
-  final tomorrow = today.add(const Duration(days: 1, hours: 9));
-  final monday = today.add(Duration(days: 8 - now.weekday, hours: 9));
-  final snoozed = task.snoozedUntil?.isAfter(now) ?? false;
-  return showActionSheet<DateTime>(
+  return showActionSheet<WorkflowRoute>(
     context,
-    title: l10n.boardSnoozeTitle(task.ref),
+    title: plan.reopen
+        ? l10n.tickReopenTitle(taskRef)
+        : l10n.tickCompleteTitle(taskRef),
     actions: [
-      TixSheetAction(
-        key: const Key('snooze.later'),
-        value: now.add(const Duration(hours: 3)),
-        label: l10n.boardSnoozeLater,
-        icon: Icons.schedule,
-      ),
-      TixSheetAction(
-        key: const Key('snooze.tomorrow'),
-        value: tomorrow,
-        label: l10n.boardSnoozeTomorrow,
-        icon: Icons.wb_twilight,
-      ),
-      TixSheetAction(
-        key: const Key('snooze.week'),
-        value: monday,
-        label: l10n.boardSnoozeWeek,
-        icon: Icons.date_range,
-      ),
-      if (snoozed)
+      for (final r in plan.routes)
         TixSheetAction(
-          key: const Key('snooze.wake'),
-          value: wakeNow,
-          label: l10n.boardWake,
-          icon: Icons.alarm_on,
+          key: Key('tick.${r.value}'),
+          value: r,
+          label: r.multiHop
+              ? '${r.to.name} · ${r.path} · ${l10n.tickSteps(r.hops)}'
+              : r.to.name,
+          icon: plan.reopen ? Icons.undo : Icons.check_circle_outline,
         ),
     ],
   );
 }
+
+/// What [pickSnooze] answers to wake a snoozed task.
+final wakeNow = DateTime.utc(1970);
+
+/// Asks until when [task] should sleep, measured from [now]: later today,
+/// tomorrow morning, next week or a picked date and time; [wakeNow] when it
+/// is snoozed and should wake.
+Future<DateTime?> pickSnooze(BuildContext context, Task task, DateTime now) =>
+    pickSnoozeTime(
+      context,
+      now,
+      title: context.l10n.boardSnoozeTitle(task.ref),
+      wake: (task.snoozedUntil?.isAfter(now) ?? false) ? wakeNow : null,
+    );
 
 /// The things a row's or card's menu offers.
 enum TaskMenuItem {
