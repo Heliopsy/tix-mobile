@@ -27,6 +27,21 @@ void main() {
     'updated_at': '2026-10-30T09:00:00Z',
   };
 
+  List<String> clipboard(WidgetTester tester) {
+    final copied = <String>[];
+    final messenger = tester.binding.defaultBinaryMessenger
+      ..setMockMethodCallHandler(SystemChannels.platform, (call) async {
+        if (call.method == 'Clipboard.setData') {
+          copied.add((call.arguments as Map)['text'] as String);
+        }
+        return null;
+      });
+    addTearDown(
+      () => messenger.setMockMethodCallHandler(SystemChannels.platform, null),
+    );
+    return copied;
+  }
+
   Future<void> tab(WidgetTester tester, String name) => press(
     tester,
     find.descendant(
@@ -519,6 +534,45 @@ void main() {
         find.textContaining('tix created the task', findRichText: true),
         findsOneWidget,
       );
+    });
+
+    testWidgets('Copy JSON on a row copies the entry as tix sent it', (
+      tester,
+    ) async {
+      final copied = clipboard(tester);
+      server.audit['infra-1']!.first['novel'] = 1;
+      await pumpTask(tester, server);
+      await tab(tester, 'History');
+      await press(tester, find.byKey(const Key('history.3.copyJson')));
+      expect(copied, [
+        const JsonEncoder.withIndent('  ')
+            .convert(server.audit['infra-1']!.first),
+      ]);
+      expect(copied.single, contains('"novel": 1'));
+      expect(toast('JSON copied.'), findsOneWidget);
+    });
+
+    testWidgets('Raw shows the entry as recorded and copies it all', (
+      tester,
+    ) async {
+      final copied = clipboard(tester);
+      await pumpTask(tester, server);
+      await tab(tester, 'History');
+      await press(tester, find.byKey(const Key('history.3.raw')));
+      final sheet = find.byKey(const Key('audit.detail.3'));
+      expect(sheet, findsOneWidget);
+      expect(find.text('Raw entry'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: sheet,
+          matching: find.textContaining('"priority": 2'),
+        ),
+        findsOneWidget,
+      );
+      await press(tester, find.byKey(const Key('history.raw.copyAll')));
+      expect(copied.single, contains('"seq": 3'));
+      await press(tester, find.byKey(const Key('history.raw.close')));
+      expect(find.byKey(const Key('audit.detail.3')), findsNothing);
     });
 
     testWidgets('names the API token a change was made with', (tester) async {

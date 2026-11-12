@@ -12,8 +12,11 @@ import 'package:tix_mobile/src/core/l10n/via_label.dart';
 import 'package:tix_mobile/src/core/platform/attachments.dart';
 import 'package:tix_mobile/src/core/session/access.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
+import 'package:tix_mobile/src/core/widgets/audit_entry_detail.dart';
+import 'package:tix_mobile/src/core/widgets/copy_json.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
+import 'package:tix_mobile/src/data/models/wire.dart';
 import 'package:tix_mobile/src/features/tasks/application/task_detail.dart';
 import 'package:tix_mobile/src/features/tasks/application/tasks.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/detail/actions.dart';
@@ -716,6 +719,26 @@ class _HistoryTile extends ConsumerWidget {
                   ].join(' · '),
                   style: TextStyle(fontSize: TixText.xs, color: t.muted),
                 ),
+                Wrap(
+                  spacing: TixSpace.s2,
+                  children: [
+                    TixButton.quiet(
+                      key: Key('history.${entry.seq}.raw'),
+                      label: l10n.taskDetailHistoryRaw,
+                      size: TixButtonSize.small,
+                      onPressed: () => unawaited(_showRaw(context, entry)),
+                    ),
+                    if (wireJson(entry) case final json?)
+                      Tooltip(
+                        message: l10n.taskDetailHistoryCopyTip,
+                        child: CopyJsonButton(
+                          key: Key('history.${entry.seq}.copyJson'),
+                          json: json,
+                          size: TixButtonSize.small,
+                        ),
+                      ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -723,6 +746,29 @@ class _HistoryTile extends ConsumerWidget {
       ),
     );
   }
+
+  static Future<void> _showRaw(BuildContext context, AuditEntry entry) =>
+      showTixSheet<void>(
+        context,
+        builder: (context) => TixSheetBody(
+          title: context.l10n.taskDetailHistoryRawTitle,
+          actions: [
+            if (wireJson(entry) case final json?)
+              TixButton.quiet(
+                key: const Key('history.raw.copyAll'),
+                label: context.l10n.taskDetailHistoryCopyAll,
+                icon: Icons.data_object,
+                onPressed: () => unawaited(copyJson(context, json)),
+              ),
+            TixButton.quiet(
+              key: const Key('history.raw.close'),
+              label: context.l10n.close,
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+          child: AuditEntryDetail(entry: entry),
+        ),
+      );
 
   static String _status(Object? record) =>
       record is Map ? '${record['status'] ?? ''}' : '';

@@ -8245,6 +8245,51 @@ class AppLocalizationsBg extends AppLocalizations {
       'агент ии подкана делегирай agent ai claude codex prompt mcp';
 
   @override
+  String get taskShare => 'Сподели';
+
+  @override
+  String taskShareTitle(String ref) {
+    return 'Сподели $ref';
+  }
+
+  @override
+  String get taskShareNative => 'Сподели…';
+
+  @override
+  String get taskShareCopyLink => 'Копирай връзката';
+
+  @override
+  String get taskShareCopyMarkdown => 'Копирай като Markdown';
+
+  @override
+  String get taskShareCopyText => 'Копирай ключа и заглавието';
+
+  @override
+  String get taskShareLinkCopied => 'Връзката е копирана';
+
+  @override
+  String get taskShareMarkdownCopied => 'Markdown връзката е копирана';
+
+  @override
+  String get taskShareTextCopied => 'Ключът и заглавието са копирани';
+
+  @override
+  String get taskShareKeywords =>
+      'сподели връзка адрес копирай share link url markdown';
+
+  @override
+  String get taskDetailHistoryRaw => 'Сурови данни';
+
+  @override
+  String get taskDetailHistoryRawTitle => 'Сурови данни за записа';
+
+  @override
+  String get taskDetailHistoryCopyAll => 'Копирай всичко като JSON';
+
+  @override
+  String get taskDetailHistoryCopyTip => 'Копирай този запис като JSON';
+
+  @override
   String get taskDetailReactionAdd => 'Добави реакция';
 
   @override

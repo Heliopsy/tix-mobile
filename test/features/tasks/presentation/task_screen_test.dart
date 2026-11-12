@@ -475,6 +475,34 @@ void main() {
       expect(find.text('infra-1 tagged ops'), findsOneWidget);
     });
 
+    testWidgets('the menu shares the task', (tester) async {
+      final copied = <String>[];
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (call) async {
+          if (call.method == 'Clipboard.setData') {
+            copied.add((call.arguments as Map)['text'] as String);
+          }
+          return null;
+        },
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform,
+          null,
+        ),
+      );
+      await pump(tester, const TasksScreen());
+      await tester.tap(inRow('Fix login', find.byKey(const Key('row.more'))));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('menu.share')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('share.text')));
+      await tester.pumpAndSettle();
+      expect(copied, ['infra-1 Fix login']);
+      expect(find.text('Key and title copied'), findsOneWidget);
+    });
+
     testWidgets('p on the focused row opens the priority picker', (
       tester,
     ) async {

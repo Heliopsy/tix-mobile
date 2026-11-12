@@ -3,6 +3,7 @@
 import 'package:tix_mobile/src/core/config/config.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/markdown/checklist.dart';
+import 'package:tix_mobile/src/data/api/answer.dart';
 import 'package:tix_mobile/src/data/api/gen/models.gen.dart'
     show ForceReclaimInput, MoveTaskInput, TaskMove;
 import 'package:tix_mobile/src/data/api/tix_api.dart';
@@ -13,6 +14,7 @@ import 'package:tix_mobile/src/data/models/project.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
 import 'package:tix_mobile/src/data/models/task_detail.dart';
 import 'package:tix_mobile/src/data/models/task_patch.dart';
+import 'package:tix_mobile/src/data/models/wire.dart';
 import 'package:tix_mobile/src/data/offline/outbox.dart';
 
 export 'package:tix_mobile/src/data/api/gen/models.gen.dart' show TaskMove;
@@ -262,9 +264,18 @@ class TaskDetailRepository {
     );
   }
 
-  /// One page of [ref]'s history, newest first (`task.audit`).
-  Future<Page<AuditEntry>> history(String ref, {String? cursor}) =>
-      _api.task.audit(ref, cursor: cursor, limit: pageSize, direction: 'desc');
+  /// One page of [ref]'s history, newest first (`task.audit`), each entry
+  /// keeping the JSON object tix sent for it ([wireJson]).
+  Future<Page<AuditEntry>> history(String ref, {String? cursor}) async {
+    final (page, answer) = await withAnswer(
+      _api.transport,
+      (t) =>
+          TaskOps(t)
+              .audit(ref, cursor: cursor, limit: pageSize, direction: 'desc'),
+    );
+    keepWireAll(page.items, answer?['items']);
+    return page;
+  }
 
   /// Puts the tag [name] on [ref] (`tag.add`).
   Future<void> addTag(String ref, String name) => _write(

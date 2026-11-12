@@ -22,6 +22,7 @@ import 'package:tix_mobile/src/features/tasks/presentation/detail/handoff.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/detail/properties.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/detail/reclaim.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/detail/sections.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/task_share.dart';
 
 export 'package:tix_mobile/src/features/tasks/presentation/detail/properties.dart'
     show AssigneeName;
@@ -572,6 +573,15 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
           keywords: l10n.taskHandoffKeywords,
           run: () => unawaited(showHandoff(context, task)),
         ),
+      if (!isDraftRef(task.ref))
+        TixCommand(
+          id: 'taskDetail.share',
+          label: l10n.taskShareTitle(task.ref),
+          group: group,
+          icon: Icons.ios_share,
+          keywords: l10n.taskShareKeywords,
+          run: () => unawaited(shareTask(context, ref, task)),
+        ),
       cmd(
         'delete',
         l10n.taskDetailDelete,
@@ -807,6 +817,15 @@ class _Header extends ConsumerWidget {
                 icon: Icons.smart_toy_outlined,
                 tooltip: l10n.taskHandoff,
                 onPressed: () => showHandoff(context, task),
+              ),
+            if (!isDraftRef(task.ref))
+              Builder(
+                builder: (context) => TixIconButton(
+                  key: const Key('task.share'),
+                  icon: Icons.ios_share,
+                  tooltip: l10n.taskShareTitle(task.ref),
+                  onPressed: () => shareTask(context, ref, task),
+                ),
               ),
             TixIconButton(
               key: const Key('task.menu'),

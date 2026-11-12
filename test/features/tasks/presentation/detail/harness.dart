@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
@@ -26,6 +27,7 @@ Future<ProviderContainer> pumpTask(
   Locale locale = const Locale('en'),
   bool settle = true,
   FakeAttachments? files,
+  List<Override> overrides = const [],
 }) {
   final stores = signedInStores();
   final screen = TixShortcuts(child: TaskDetailScreen(taskRef: ref));
@@ -42,6 +44,7 @@ Future<ProviderContainer> pumpTask(
         secrets: stores.secrets,
       ),
       (files ?? FakeAttachments()).asOverride,
+      ...overrides,
     ],
   );
 }

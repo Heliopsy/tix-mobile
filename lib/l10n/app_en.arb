@@ -5349,6 +5349,38 @@
   },
   "taskHandoffMcp": "With the tix MCP tools",
   "taskHandoffKeywords": "agent ai claude codex prompt mcp delegate",
+  "taskShare": "Share",
+  "@taskShare": {
+    "description": "Row menu item that opens the Share menu for a task"
+  },
+  "taskShareTitle": "Share {ref}",
+  "@taskShareTitle": {
+    "description": "Title of a task's Share menu and its button",
+    "placeholders": {
+      "ref": {
+        "type": "String",
+        "example": "INFRA-12"
+      }
+    }
+  },
+  "taskShareNative": "Share…",
+  "@taskShareNative": {
+    "description": "Opens the system share sheet with the task's link"
+  },
+  "taskShareCopyLink": "Copy link",
+  "taskShareCopyMarkdown": "Copy as Markdown",
+  "taskShareCopyText": "Copy key and title",
+  "taskShareLinkCopied": "Link copied",
+  "taskShareMarkdownCopied": "Markdown link copied",
+  "taskShareTextCopied": "Key and title copied",
+  "taskShareKeywords": "share link url copy markdown",
+  "taskDetailHistoryRaw": "Raw",
+  "@taskDetailHistoryRaw": {
+    "description": "Button on a history row that shows the audit entry as recorded"
+  },
+  "taskDetailHistoryRawTitle": "Raw entry",
+  "taskDetailHistoryCopyAll": "Copy all as JSON",
+  "taskDetailHistoryCopyTip": "Copy this entry as JSON",
   "taskDetailReactionAdd": "Add reaction",
   "@taskDetailReactionAdd": {
     "description": "Button under a comment that opens the emoji picker"

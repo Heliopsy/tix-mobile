@@ -13729,6 +13729,90 @@ abstract class AppLocalizations {
   /// **'agent ai claude codex prompt mcp delegate'**
   String get taskHandoffKeywords;
 
+  /// Row menu item that opens the Share menu for a task
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get taskShare;
+
+  /// Title of a task's Share menu and its button
+  ///
+  /// In en, this message translates to:
+  /// **'Share {ref}'**
+  String taskShareTitle(String ref);
+
+  /// Opens the system share sheet with the task's link
+  ///
+  /// In en, this message translates to:
+  /// **'Share…'**
+  String get taskShareNative;
+
+  /// No description provided for @taskShareCopyLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy link'**
+  String get taskShareCopyLink;
+
+  /// No description provided for @taskShareCopyMarkdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy as Markdown'**
+  String get taskShareCopyMarkdown;
+
+  /// No description provided for @taskShareCopyText.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy key and title'**
+  String get taskShareCopyText;
+
+  /// No description provided for @taskShareLinkCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Link copied'**
+  String get taskShareLinkCopied;
+
+  /// No description provided for @taskShareMarkdownCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Markdown link copied'**
+  String get taskShareMarkdownCopied;
+
+  /// No description provided for @taskShareTextCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Key and title copied'**
+  String get taskShareTextCopied;
+
+  /// No description provided for @taskShareKeywords.
+  ///
+  /// In en, this message translates to:
+  /// **'share link url copy markdown'**
+  String get taskShareKeywords;
+
+  /// Button on a history row that shows the audit entry as recorded
+  ///
+  /// In en, this message translates to:
+  /// **'Raw'**
+  String get taskDetailHistoryRaw;
+
+  /// No description provided for @taskDetailHistoryRawTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Raw entry'**
+  String get taskDetailHistoryRawTitle;
+
+  /// No description provided for @taskDetailHistoryCopyAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy all as JSON'**
+  String get taskDetailHistoryCopyAll;
+
+  /// No description provided for @taskDetailHistoryCopyTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy this entry as JSON'**
+  String get taskDetailHistoryCopyTip;
+
   /// Button under a comment that opens the emoji picker
   ///
   /// In en, this message translates to:
