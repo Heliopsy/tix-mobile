@@ -2278,5 +2278,19 @@
   "taskDetailReactionUnsupported": "Ce serveur ne prend pas en charge les réactions.",
   "taskDetailReactionOther": "N’importe quel emoji",
   "taskDetailReactionOtherHelp": "Saisissez ou collez un emoji.",
-  "taskDetailReactionOneEmoji": "Saisissez un seul emoji."
+  "taskDetailReactionOneEmoji": "Saisissez un seul emoji.",
+  "rowHeld": "pris",
+  "rowHeldBy": "pris · {holder}",
+  "rowHeldTip": "Pris par {holder}",
+  "rowHeldUntil": "Pris par {holder} jusqu’à {time}",
+  "rowClaimSomeone": "quelqu’un",
+  "rowClaimExpired": "prise expirée",
+  "rowAgo": "il y a {span}",
+  "rowClaims": "{count, plural, =1{1 prise} other{{count} prises}}",
+  "rowClaimExpiredTip": "{holder} a laissé la prise expirer il y a {span}, à {time} ; la tâche peut de nouveau être prise",
+  "rowRepeats": "Se répète {rule}",
+  "rowChecklist": "{done} éléments de la liste sur {total} faits",
+  "rowWaitingOn": "attend {ref}",
+  "rowWaitingOnCount": "{count, plural, =1{attend 1 tâche} other{attend {count} tâches}}",
+  "rowWaitingTip": "Attend {refs}"
 }

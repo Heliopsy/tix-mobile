@@ -278,6 +278,19 @@ class GalleryMarks extends StatelessWidget {
           SnoozeMark(until: DateTime.utc(2026, 11, 9)),
         ]),
         row([
+          const HeldMark(holder: 'atlas'),
+          const ClaimExpiredMark(
+            ago: Duration(hours: 3),
+            holder: 'atlas',
+            claims: 4,
+          ),
+          const WaitMark(['infra-12']),
+          const WaitMark(['infra-12', 'infra-15']),
+          const RepeatMark('every week'),
+          const ChecklistMark(done: 3, total: 5),
+          const ChecklistMark(done: 5, total: 5),
+        ]),
+        row([
           const TixAvatar(label: 'Nadia Petrova'),
           const TixAvatar(label: 'Atlas (build agent)', size: 28),
           const TixAvatar(label: 'raj', hued: true, size: 28),

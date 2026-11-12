@@ -8266,4 +8266,80 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get taskDetailReactionOneEmoji => 'Enter a single emoji.';
+
+  @override
+  String get rowHeld => 'held';
+
+  @override
+  String rowHeldBy(String holder) {
+    return 'held · $holder';
+  }
+
+  @override
+  String rowHeldTip(String holder) {
+    return 'Held by $holder';
+  }
+
+  @override
+  String rowHeldUntil(String holder, String time) {
+    return 'Held by $holder until $time';
+  }
+
+  @override
+  String get rowClaimSomeone => 'someone';
+
+  @override
+  String get rowClaimExpired => 'claim expired';
+
+  @override
+  String rowAgo(String span) {
+    return '$span ago';
+  }
+
+  @override
+  String rowClaims(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count claims',
+      one: '1 claim',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rowClaimExpiredTip(String holder, String span, String time) {
+    return '$holder let the claim run out $span ago, at $time; the task is claimable again';
+  }
+
+  @override
+  String rowRepeats(String rule) {
+    return 'Repeats $rule';
+  }
+
+  @override
+  String rowChecklist(int done, int total) {
+    return '$done of $total checklist items done';
+  }
+
+  @override
+  String rowWaitingOn(String ref) {
+    return 'waiting on $ref';
+  }
+
+  @override
+  String rowWaitingOnCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'waiting on $count tasks',
+      one: 'waiting on 1 task',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rowWaitingTip(String refs) {
+    return 'Waiting on $refs';
+  }
 }

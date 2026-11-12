@@ -5405,5 +5405,133 @@
   "taskDetailReactionOneEmoji": "Enter a single emoji.",
   "@taskDetailReactionOneEmoji": {
     "description": "Error under the reaction picker's field when it holds more than one character"
+  },
+  "rowHeld": "held",
+  "@rowHeld": {
+    "description": "Row mark: an agent holds the task's claim, holder not yet known"
+  },
+  "rowHeldBy": "held · {holder}",
+  "@rowHeldBy": {
+    "description": "Row mark: who holds the task's claim",
+    "placeholders": {
+      "holder": {
+        "type": "String",
+        "example": "@atlas"
+      }
+    }
+  },
+  "rowHeldTip": "Held by {holder}",
+  "@rowHeldTip": {
+    "description": "Tooltip on the held mark of a claim with no lease end",
+    "placeholders": {
+      "holder": {
+        "type": "String"
+      }
+    }
+  },
+  "rowHeldUntil": "Held by {holder} until {time}",
+  "@rowHeldUntil": {
+    "description": "Tooltip on the held mark: who holds the claim and when the lease runs out",
+    "placeholders": {
+      "holder": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "rowClaimSomeone": "someone",
+  "@rowClaimSomeone": {
+    "description": "Stands in for a claim holder whose handle is not known"
+  },
+  "rowClaimExpired": "claim expired",
+  "@rowClaimExpired": {
+    "description": "Row mark: the last claim ran out instead of being released"
+  },
+  "rowAgo": "{span} ago",
+  "@rowAgo": {
+    "description": "How long ago something happened, after the claim expired mark",
+    "placeholders": {
+      "span": {
+        "type": "String",
+        "example": "3 h"
+      }
+    }
+  },
+  "rowClaims": "{count, plural, =1{1 claim} other{{count} claims}}",
+  "@rowClaims": {
+    "description": "How many times the task was claimed, beside an expired claim",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rowClaimExpiredTip": "{holder} let the claim run out {span} ago, at {time}; the task is claimable again",
+  "@rowClaimExpiredTip": {
+    "description": "Tooltip on the claim expired mark",
+    "placeholders": {
+      "holder": {
+        "type": "String"
+      },
+      "span": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "rowRepeats": "Repeats {rule}",
+  "@rowRepeats": {
+    "description": "Tooltip on the repeat mark",
+    "placeholders": {
+      "rule": {
+        "type": "String",
+        "example": "every week"
+      }
+    }
+  },
+  "rowChecklist": "{done} of {total} checklist items done",
+  "@rowChecklist": {
+    "description": "Tooltip on the checklist count mark",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "rowWaitingOn": "waiting on {ref}",
+  "@rowWaitingOn": {
+    "description": "Row mark: the one unfinished task this one waits on",
+    "placeholders": {
+      "ref": {
+        "type": "String",
+        "example": "AICP-12"
+      }
+    }
+  },
+  "rowWaitingOnCount": "{count, plural, =1{waiting on 1 task} other{waiting on {count} tasks}}",
+  "@rowWaitingOnCount": {
+    "description": "Row mark: how many unfinished tasks this one waits on",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rowWaitingTip": "Waiting on {refs}",
+  "@rowWaitingTip": {
+    "description": "Tooltip on the waiting mark: every task it waits on",
+    "placeholders": {
+      "refs": {
+        "type": "String",
+        "example": "AICP-12, AICP-14"
+      }
+    }
   }
 }

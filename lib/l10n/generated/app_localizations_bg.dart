@@ -8278,4 +8278,74 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get taskDetailReactionOneEmoji => 'Въведете само едно емоджи.';
+
+  @override
+  String get rowHeld => 'поета';
+
+  @override
+  String rowHeldBy(String holder) {
+    return 'поета · $holder';
+  }
+
+  @override
+  String rowHeldTip(String holder) {
+    return 'Заета от $holder';
+  }
+
+  @override
+  String rowHeldUntil(String holder, String time) {
+    return 'Заета от $holder до $time';
+  }
+
+  @override
+  String get rowClaimSomeone => 'някой';
+
+  @override
+  String get rowClaimExpired => 'поемането изтече';
+
+  @override
+  String rowAgo(String span) {
+    return 'преди $span';
+  }
+
+  @override
+  String rowClaims(int count) {
+    return 'поемания: $count';
+  }
+
+  @override
+  String rowClaimExpiredTip(String holder, String span, String time) {
+    return '$holder остави поемането да изтече преди $span, в $time; задачата отново може да бъде поета';
+  }
+
+  @override
+  String rowRepeats(String rule) {
+    return 'Повтаря се $rule';
+  }
+
+  @override
+  String rowChecklist(int done, int total) {
+    return '$done от $total точки от списъка са отметнати';
+  }
+
+  @override
+  String rowWaitingOn(String ref) {
+    return 'чака $ref';
+  }
+
+  @override
+  String rowWaitingOnCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'чака $count задачи',
+      one: 'чака 1 задача',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rowWaitingTip(String refs) {
+    return 'Чака $refs';
+  }
 }

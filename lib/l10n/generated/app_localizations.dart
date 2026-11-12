@@ -13782,6 +13782,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter a single emoji.'**
   String get taskDetailReactionOneEmoji;
+
+  /// Row mark: an agent holds the task's claim, holder not yet known
+  ///
+  /// In en, this message translates to:
+  /// **'held'**
+  String get rowHeld;
+
+  /// Row mark: who holds the task's claim
+  ///
+  /// In en, this message translates to:
+  /// **'held · {holder}'**
+  String rowHeldBy(String holder);
+
+  /// Tooltip on the held mark of a claim with no lease end
+  ///
+  /// In en, this message translates to:
+  /// **'Held by {holder}'**
+  String rowHeldTip(String holder);
+
+  /// Tooltip on the held mark: who holds the claim and when the lease runs out
+  ///
+  /// In en, this message translates to:
+  /// **'Held by {holder} until {time}'**
+  String rowHeldUntil(String holder, String time);
+
+  /// Stands in for a claim holder whose handle is not known
+  ///
+  /// In en, this message translates to:
+  /// **'someone'**
+  String get rowClaimSomeone;
+
+  /// Row mark: the last claim ran out instead of being released
+  ///
+  /// In en, this message translates to:
+  /// **'claim expired'**
+  String get rowClaimExpired;
+
+  /// How long ago something happened, after the claim expired mark
+  ///
+  /// In en, this message translates to:
+  /// **'{span} ago'**
+  String rowAgo(String span);
+
+  /// How many times the task was claimed, beside an expired claim
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 claim} other{{count} claims}}'**
+  String rowClaims(int count);
+
+  /// Tooltip on the claim expired mark
+  ///
+  /// In en, this message translates to:
+  /// **'{holder} let the claim run out {span} ago, at {time}; the task is claimable again'**
+  String rowClaimExpiredTip(String holder, String span, String time);
+
+  /// Tooltip on the repeat mark
+  ///
+  /// In en, this message translates to:
+  /// **'Repeats {rule}'**
+  String rowRepeats(String rule);
+
+  /// Tooltip on the checklist count mark
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} checklist items done'**
+  String rowChecklist(int done, int total);
+
+  /// Row mark: the one unfinished task this one waits on
+  ///
+  /// In en, this message translates to:
+  /// **'waiting on {ref}'**
+  String rowWaitingOn(String ref);
+
+  /// Row mark: how many unfinished tasks this one waits on
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{waiting on 1 task} other{waiting on {count} tasks}}'**
+  String rowWaitingOnCount(int count);
+
+  /// Tooltip on the waiting mark: every task it waits on
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting on {refs}'**
+  String rowWaitingTip(String refs);
 }
 
 class _AppLocalizationsDelegate
