@@ -72,13 +72,13 @@ void main() {
         secrets: stores.secrets,
       ),
     );
-    await palette(tester, 'dark theme');
+    await palette(tester, 'dark colour scheme');
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
     expect(c.read(themeSettingProvider), ThemeChoice.dark);
     expect(stores.settings.values.values, contains('dark'));
 
-    await palette(tester, 'OLED black');
+    await palette(tester, 'OLED colour scheme');
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
     expect(c.read(themeSettingProvider), ThemeChoice.oled);

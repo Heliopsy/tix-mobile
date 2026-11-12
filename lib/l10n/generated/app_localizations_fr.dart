@@ -164,7 +164,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get quickAddTitle => 'Ajout rapide';
 
   @override
-  String get quickAddHint => 'Corriger la connexion !high #auth @raj due:fri';
+  String get quickAddHint =>
+      'Corriger la connexion !high #auth @raj due:fri +web ^web-3';
 
   @override
   String get quickAddHelp => '!priority  #tag  @assignee  due:date  ^parent';
@@ -184,7 +185,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsTitle => 'Paramètres';
 
   @override
-  String get themeLabel => 'Thème';
+  String get themeLabel => 'Jeu de couleurs';
 
   @override
   String get themeSystem => 'Système';
@@ -690,7 +691,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get taskDetailBlocked =>
-      'Bloquée : elle attend une tâche qui n’est pas terminée.';
+      'En attente d’une tâche qui n’est pas terminée.';
 
   @override
   String taskDetailChecklist(int done, int total) {
@@ -898,7 +899,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get taskDetailDependenciesInfo =>
-      'Cette tâche est considérée comme bloquée tant que chaque tâche listée ici n’a pas atteint un état terminé.';
+      'Cette tâche attend que chaque tâche listée ici atteigne un état terminé.';
 
   @override
   String taskDetailDependencyAdded(String ref) {
@@ -1176,7 +1177,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get taskDetailUpdated => 'Mise à jour';
 
   @override
-  String get taskDetailWake => 'Réactiver maintenant';
+  String get taskDetailWake => 'Ne plus reporter';
 
   @override
   String get taskDetailWoken => 'De retour dans les listes.';
@@ -1350,11 +1351,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get boardWake => 'Réactiver maintenant';
+  String get boardWake => 'Ne plus reporter';
 
   @override
   String boardWoken(String ref) {
-    return '$ref est réactivée';
+    return '$ref n’est plus reportée';
   }
 
   @override
@@ -1452,7 +1453,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get bulkTagRemove => 'Retirer un tag';
 
   @override
-  String get filterBlocked => 'Bloquées';
+  String get filterBlocked => 'En attente de';
 
   @override
   String get filterClear => 'Effacer';
@@ -1810,7 +1811,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get paletteGroupContexts => 'Basculer vers';
 
   @override
-  String get paletteGroupTheme => 'Thème';
+  String get paletteGroupTheme => 'Jeu de couleurs';
 
   @override
   String get paletteGroupTemplates => 'Modèles';
@@ -1830,13 +1831,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get paletteGoTemplates => 'Aller aux modèles';
 
   @override
-  String get paletteThemeLight => 'Thème clair';
+  String get paletteThemeLight => 'Jeu de couleurs clair';
 
   @override
-  String get paletteThemeDark => 'Thème sombre';
+  String get paletteThemeDark => 'Jeu de couleurs sombre';
 
   @override
-  String get paletteThemeSystem => 'Thème du système';
+  String get paletteThemeSystem => 'Jeu de couleurs du système';
 
   @override
   String paletteUseTemplate(String name) {
@@ -1941,7 +1942,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get templateTenantWide => 'Partager avec tous les projets';
 
   @override
-  String get templateDueIn => 'Échéance après';
+  String get templateDueIn => 'Échéance dans';
 
   @override
   String get templateDueInHelp =>
@@ -2429,14 +2430,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get notifMoreBody => 'Ouvrez la boîte de réception pour les voir.';
 
   @override
-  String get themeOled => 'Noir OLED';
+  String get themeOled => 'OLED';
 
   @override
-  String get themeSystemBlack => 'Noir pur en mode sombre';
+  String get themeDim => 'Contraste faible';
 
   @override
-  String get themeSystemBlackHelp =>
-      'Utilise le noir OLED dès que le système est en mode sombre. Économise la batterie sur les écrans OLED.';
+  String get themeSystemOled => 'Système, OLED en mode sombre';
 
   @override
   String get goAbout => 'À propos de tix';
@@ -2553,7 +2553,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get aboutOpenFailed => 'Impossible d’ouvrir le lien.';
 
   @override
-  String get paletteThemeOled => 'Thème noir OLED';
+  String get paletteThemeOled => 'Jeu de couleurs OLED';
+
+  @override
+  String get paletteThemeDim => 'Jeu de couleurs à faible contraste';
+
+  @override
+  String get paletteThemeSystemOled =>
+      'Jeu de couleurs du système, OLED en mode sombre';
 
   @override
   String get manageTitle => 'Gestion';
@@ -5656,10 +5663,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get adminAccountLogSystem => 'le système';
 
   @override
-  String get taskReclaim => 'Forcer la libération';
+  String get taskReclaim => 'Reprendre la réservation';
 
   @override
-  String get taskReclaimSubmit => 'Libérer la réservation';
+  String get taskReclaimSubmit => 'Reprendre';
 
   @override
   String get taskReclaimBody =>
@@ -5673,7 +5680,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String taskReclaimed(String ref) {
-    return 'Réservation de $ref libérée.';
+    return 'Réservation de $ref reprise.';
   }
 
   @override
@@ -6314,7 +6321,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get auditTitle => 'Journal d’audit';
+  String get activityTitle => 'Activité';
 
   @override
   String get auditSubtitle =>
@@ -7935,7 +7942,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get goWatch => 'Aller à Activité';
 
   @override
-  String get watchTitle => 'Activité';
+  String get watchTitle => 'Événements en direct';
 
   @override
   String get watchSubtitle =>
@@ -8071,7 +8078,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get watchOfflineBody =>
-      'Le serveur est injoignable. L\'activité reprend là où elle s\'était arrêtée dès qu\'il le redevient.';
+      'Le serveur est injoignable. Les événements en direct reprennent là où ils s’étaient arrêtés dès qu’il le redevient.';
 
   @override
   String get watchNoContext => 'Aucun contexte actif';
@@ -8089,7 +8096,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get watchUnsupported =>
-      'Ce serveur ne peut pas envoyer d\'événements à l\'application pour l\'instant, l\'activité reste donc vide. Elle reprendra quand les mises à jour en direct fonctionneront.';
+      'Ce serveur ne peut pas envoyer d’événements à l’application pour l’instant, la liste des événements en direct reste donc vide. Elle reprendra quand les mises à jour en direct fonctionneront.';
 
   @override
   String watchExpired(int seq) {

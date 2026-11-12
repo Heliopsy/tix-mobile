@@ -6,7 +6,6 @@ import 'package:tix_mobile/src/core/design/accent_provider.dart';
 import 'package:tix_mobile/src/core/design/components/focus_ring.dart';
 import 'package:tix_mobile/src/core/design/components/motion.dart';
 import 'package:tix_mobile/src/core/design/theme.dart';
-import 'package:tix_mobile/src/core/design/tokens.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/time/reader_time.dart';
@@ -24,7 +23,7 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
     final theme = ref.watch(themeSettingProvider);
-    final black = ref.watch(darkIsBlackProvider);
+    final dark = ref.watch(darkTokensProvider);
     final locale = ref.watch(localeSettingProvider);
     final accent = ref.watch(tenantAccentProvider);
     final time = ref.watch(readerTimeStyleProvider);
@@ -34,11 +33,7 @@ class App extends ConsumerWidget {
       onGenerateTitle: (context) => context.l10n.appTitle,
       debugShowCheckedModeBanner: false,
       theme: buildTixTheme(Brightness.light, accent: accent),
-      darkTheme: buildTixTheme(
-        Brightness.dark,
-        accent: accent,
-        base: black ? TixTokens.oled : null,
-      ),
+      darkTheme: buildTixTheme(Brightness.dark, accent: accent, base: dark),
       themeMode: theme.mode,
       locale: locale,
       localizationsDelegates: const [

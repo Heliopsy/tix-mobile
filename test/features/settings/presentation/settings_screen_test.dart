@@ -331,22 +331,52 @@ void main() {
     expect(c.read(localeSettingProvider), isNull);
   });
 
-  testWidgets('OLED black is a theme, and the system can go black', (
+  testWidgets("the colour scheme offers the web's six choices in its order", (
     tester,
   ) async {
     final c = await pump(tester);
-    final toggle = find.byKey(const Key('settings.systemBlack'));
-    expect(toggle, findsOneWidget);
-    await tester.tap(toggle);
+    final choices = find.byKey(const Key('settings.theme'));
+    expect(find.text('Colour scheme'), findsOneWidget);
+    final labels = [
+      'System',
+      'Light',
+      'Dark',
+      'OLED',
+      'Low contrast',
+      'System, OLED when dark',
+    ];
+    final xs = [
+      for (final l in labels)
+        tester.getTopLeft(find.descendant(of: choices, matching: find.text(l))),
+    ];
+    for (var i = 1; i < xs.length; i++) {
+      expect(
+        xs[i].dy > xs[i - 1].dy ||
+            (xs[i].dy == xs[i - 1].dy && xs[i].dx > xs[i - 1].dx),
+        isTrue,
+        reason: '${labels[i]} after ${labels[i - 1]}',
+      );
+    }
+    expect(find.byKey(const Key('settings.systemBlack')), findsNothing);
+
+    await tester.tap(
+      find.descendant(
+        of: choices,
+        matching: find.text('System, OLED when dark'),
+      ),
+    );
     await tester.pumpAndSettle();
-    expect(c.read(systemBlackSettingProvider), isTrue);
+    expect(c.read(themeSettingProvider), ThemeChoice.systemOled);
+    expect(stores.settings.values['settings.theme'], 'system');
     expect(stores.settings.values['settings.systemBlack'], 'true');
 
-    await tester.tap(find.text('OLED black'));
+    await tester.tap(
+      find.descendant(of: choices, matching: find.text('Low contrast')),
+    );
     await tester.pumpAndSettle();
-    expect(c.read(themeSettingProvider), ThemeChoice.oled);
-    expect(stores.settings.values['settings.theme'], 'oled');
-    expect(toggle, findsNothing);
+    expect(c.read(themeSettingProvider), ThemeChoice.dim);
+    expect(stores.settings.values['settings.theme'], 'dim');
+    expect(stores.settings.values.containsKey('settings.systemBlack'), isFalse);
   });
 
   testWidgets('instances shows the active context and opens the list', (

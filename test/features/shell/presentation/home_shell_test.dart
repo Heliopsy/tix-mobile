@@ -138,7 +138,7 @@ void main() {
     });
   }
 
-  testWidgets('the shell lists Activity after Inbox, Manage before Settings', (
+  testWidgets("the shell lists its destinations in tix web's order", (
     tester,
   ) async {
     final stores = signedInStores();
@@ -161,7 +161,7 @@ void main() {
       ),
     );
     expect(
-      find.text('projects,tasks,myWork,inbox,activity,manage,settings'),
+      find.text('inbox,myWork,tasks,projects,activity,manage,settings'),
       findsOneWidget,
     );
   });

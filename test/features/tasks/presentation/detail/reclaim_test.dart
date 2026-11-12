@@ -52,7 +52,7 @@ void main() {
       expect(bodies(server, 'POST', '/tasks/infra-1/claim/reclaim'), [
         {'reason': 'worker died'},
       ]);
-      expect(find.text('Released the claim on infra-1.'), findsOneWidget);
+      expect(find.text('Reclaimed the lease on infra-1.'), findsOneWidget);
       await openMenu(tester);
       expect(find.byKey(const Key('menu.reclaim')), findsNothing);
     });

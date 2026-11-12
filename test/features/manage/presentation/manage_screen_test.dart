@@ -74,7 +74,7 @@ void main() {
     });
   }
 
-  testWidgets('an admin with event:subscribe finds no Watch here', (
+  testWidgets('an admin finds Live events here, and no audit log', (
     tester,
   ) async {
     final server = FakeTix()
@@ -83,14 +83,17 @@ void main() {
         'scopes': ['event:subscribe', 'audit:read'],
       };
     await pump(tester, server, size: desktop);
-    final audit = find.byKey(const Key('manage.tenant.audit'));
+    final events = find.byKey(const Key('manage.tenant.events'));
     await tester.scrollUntilVisible(
-      audit,
+      events,
       200,
       scrollable: find.byType(Scrollable).first,
     );
-    expect(audit, findsOneWidget);
-    expect(find.byKey(const Key('manage.tenant.watch')), findsNothing);
+    expect(
+      find.descendant(of: events, matching: find.text('Live events')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const Key('manage.tenant.audit')), findsNothing);
     expect(find.text('Activity'), findsNothing);
   });
 

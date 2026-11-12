@@ -164,7 +164,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quickAddTitle => 'Quick add';
 
   @override
-  String get quickAddHint => 'Fix login !high #auth @raj due:fri';
+  String get quickAddHint => 'Fix login !high #auth @raj due:fri +web ^web-3';
 
   @override
   String get quickAddHelp => '!priority  #tag  @assignee  due:date  ^parent';
@@ -184,7 +184,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsTitle => 'Settings';
 
   @override
-  String get themeLabel => 'Theme';
+  String get themeLabel => 'Colour scheme';
 
   @override
   String get themeSystem => 'System';
@@ -687,8 +687,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get taskDetailAttachFile => 'Attach file';
 
   @override
-  String get taskDetailBlocked =>
-      'Blocked: it waits for a task that is not finished.';
+  String get taskDetailBlocked => 'Waiting on a task that is not finished.';
 
   @override
   String taskDetailChecklist(int done, int total) {
@@ -891,20 +890,20 @@ class AppLocalizationsEn extends AppLocalizations {
       'It goes to the trash and can be restored.';
 
   @override
-  String get taskDetailDependencies => 'Waits for';
+  String get taskDetailDependencies => 'Waiting on';
 
   @override
   String get taskDetailDependenciesInfo =>
-      'This task counts as blocked until each task listed here reaches a finished state.';
+      'This task waits until each task listed here reaches a finished state.';
 
   @override
   String taskDetailDependencyAdded(String ref) {
-    return 'Now waits for $ref.';
+    return 'Now waiting on $ref.';
   }
 
   @override
   String taskDetailDependencyRemoved(String ref) {
-    return 'No longer waits for $ref.';
+    return 'No longer waiting on $ref.';
   }
 
   @override
@@ -1027,7 +1026,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get taskDetailNoComments => 'No comments yet.';
 
   @override
-  String get taskDetailNoDependencies => 'Waits for nothing.';
+  String get taskDetailNoDependencies => 'Waiting on nothing.';
 
   @override
   String get taskDetailNoHistory => 'No history.';
@@ -1067,7 +1066,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String taskDetailRemoveDependency(String ref) {
-    return 'Stop waiting for $ref';
+    return 'Stop waiting on $ref';
   }
 
   @override
@@ -1171,7 +1170,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get taskDetailUpdated => 'Updated';
 
   @override
-  String get taskDetailWake => 'Wake now';
+  String get taskDetailWake => 'Unsnooze';
 
   @override
   String get taskDetailWoken => 'Back in the lists.';
@@ -1344,11 +1343,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get boardWake => 'Wake now';
+  String get boardWake => 'Unsnooze';
 
   @override
   String boardWoken(String ref) {
-    return '$ref is awake';
+    return '$ref unsnoozed';
   }
 
   @override
@@ -1446,7 +1445,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bulkTagRemove => 'Remove tag';
 
   @override
-  String get filterBlocked => 'Blocked';
+  String get filterBlocked => 'Waiting on';
 
   @override
   String get filterClear => 'Clear';
@@ -1801,7 +1800,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paletteGroupContexts => 'Switch to';
 
   @override
-  String get paletteGroupTheme => 'Theme';
+  String get paletteGroupTheme => 'Colour scheme';
 
   @override
   String get paletteGroupTemplates => 'Templates';
@@ -1821,13 +1820,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paletteGoTemplates => 'Go to templates';
 
   @override
-  String get paletteThemeLight => 'Light theme';
+  String get paletteThemeLight => 'Light colour scheme';
 
   @override
-  String get paletteThemeDark => 'Dark theme';
+  String get paletteThemeDark => 'Dark colour scheme';
 
   @override
-  String get paletteThemeSystem => 'Theme of the system';
+  String get paletteThemeSystem => 'System colour scheme';
 
   @override
   String paletteUseTemplate(String name) {
@@ -1851,7 +1850,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Save a task as a template to add it again in one tap.';
 
   @override
-  String get templateEveryProject => 'Every project';
+  String get templateEveryProject => 'All projects';
 
   @override
   String templateUses(int count) {
@@ -1930,7 +1929,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get templateTenantWide => 'Share with every project';
 
   @override
-  String get templateDueIn => 'Due after';
+  String get templateDueIn => 'Due in';
 
   @override
   String get templateDueInHelp =>
@@ -2415,14 +2414,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifMoreBody => 'Open the inbox to see them.';
 
   @override
-  String get themeOled => 'OLED black';
+  String get themeOled => 'OLED';
 
   @override
-  String get themeSystemBlack => 'Pure black when dark';
+  String get themeDim => 'Low contrast';
 
   @override
-  String get themeSystemBlackHelp =>
-      'Uses OLED black whenever the system is dark. Saves battery on OLED screens.';
+  String get themeSystemOled => 'System, OLED when dark';
 
   @override
   String get goAbout => 'About tix';
@@ -2538,7 +2536,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aboutOpenFailed => 'Could not open the link.';
 
   @override
-  String get paletteThemeOled => 'OLED black theme';
+  String get paletteThemeOled => 'OLED colour scheme';
+
+  @override
+  String get paletteThemeDim => 'Low contrast colour scheme';
+
+  @override
+  String get paletteThemeSystemOled => 'System colour scheme, OLED when dark';
 
   @override
   String get manageTitle => 'Manage';
@@ -5619,10 +5623,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adminAccountLogSystem => 'the system';
 
   @override
-  String get taskReclaim => 'Force-release claim';
+  String get taskReclaim => 'Reclaim the lease';
 
   @override
-  String get taskReclaimSubmit => 'Release claim';
+  String get taskReclaimSubmit => 'Reclaim';
 
   @override
   String get taskReclaimBody =>
@@ -5636,7 +5640,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String taskReclaimed(String ref) {
-    return 'Released the claim on $ref.';
+    return 'Reclaimed the lease on $ref.';
   }
 
   @override
@@ -6266,7 +6270,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get auditTitle => 'Audit log';
+  String get activityTitle => 'Activity';
 
   @override
   String get auditSubtitle => 'Every change in this tenant, newest first.';
@@ -7540,7 +7544,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String syncOpDependency(String ref, String other) {
-    return '$ref: waits for $other';
+    return '$ref: waiting on $other';
   }
 
   @override
@@ -7875,7 +7879,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get goWatch => 'Go to Activity';
 
   @override
-  String get watchTitle => 'Activity';
+  String get watchTitle => 'Live events';
 
   @override
   String get watchSubtitle =>
@@ -8010,7 +8014,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get watchOfflineBody =>
-      'The server cannot be reached. Activity carries on from where it stopped once it can.';
+      'The server cannot be reached. Live events carry on from where they stopped once it can.';
 
   @override
   String get watchNoContext => 'No context is active';
@@ -8027,7 +8031,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get watchUnsupported =>
-      'This server cannot stream events to the app right now, so Activity stays empty. It picks up again once live updates work.';
+      'This server cannot stream events to the app right now, so Live events stays empty. It picks up again once live updates work.';
 
   @override
   String watchExpired(int seq) {

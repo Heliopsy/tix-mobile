@@ -86,7 +86,8 @@ adb shell am start -a android.intent.action.VIEW -d "'tix://quick-add?project=OP
 | `tix://projects/<KEY>/tasks/<ref>` | The task |
 | `tix://settings` | Settings |
 | `tix://about` | About |
-| `tix://activity` | Activity (`tix://watch` still works) |
+| `tix://activity` | Activity, the audit feed |
+| `tix://events` | Live events, the raw event stream (`tix://watch` still works) |
 | `tix://connection` | Connection details, over the screen on show |
 | `tix://quick-add` | Quick add over the screen on show; `?project=<KEY>` picks the project |
 
@@ -174,7 +175,7 @@ adb shell am broadcast -n red.tix.tix_mobile/.adb.AdbReceiver -a red.tix.ADB --e
 # Forget the saved copies (the response cache) of the active context; waiting writes are kept
 adb shell am broadcast -n red.tix.tix_mobile/.adb.AdbReceiver -a red.tix.ADB --es cmd clear-cache
 
-# Theme: system, light, dark or oled
+# Colour scheme: system, light, dark, oled or dim
 adb shell am broadcast -n red.tix.tix_mobile/.adb.AdbReceiver -a red.tix.ADB --es cmd theme --es value dark
 
 # Language: system, en, fr, de or bg
@@ -193,7 +194,7 @@ adb shell am broadcast -n red.tix.tix_mobile/.adb.AdbReceiver -a red.tix.ADB --e
 | `engine-stop` | | Stops (rests) the active local instance's engine |
 | `engine-start` | | Starts it again |
 | `clear-cache` | | Forgets the active context's saved copies |
-| `theme` | `value` | Sets the theme |
+| `theme` | `value` | Sets the colour scheme |
 | `locale` | `value` | Sets the language |
 
 When the app is not open, `help`, `dump`, `theme`, `locale` and `open` run in a background engine. The rest need

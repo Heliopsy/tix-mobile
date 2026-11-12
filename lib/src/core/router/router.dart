@@ -113,6 +113,7 @@ const Set<String> _tabRoots = {
   Routes.myWork,
   Routes.inbox,
   Routes.activity,
+  Routes.events,
   Routes.manage,
   Routes.settings,
 };
@@ -238,10 +239,7 @@ GoRouter router(Ref ref) {
             pageBuilder: (_, _) =>
                 const NoTransitionPage(child: SplashScreen()),
           ),
-          GoRoute(
-            path: Routes.legacyWatch,
-            redirect: (_, _) => Routes.activity,
-          ),
+          GoRoute(path: Routes.legacyWatch, redirect: (_, _) => Routes.events),
           StatefulShellRoute.indexedStack(
             key: mover.shell,
             builder: (_, _, shell) => HomeShell(
@@ -249,6 +247,32 @@ GoRouter router(Ref ref) {
               inboxIcon: (icon) => InboxNavIcon(icon: icon),
             ),
             branches: [
+              StatefulShellBranch(
+                routes: [
+                  GoRoute(
+                    path: Routes.inbox,
+                    builder: (_, _) => const InboxScreen(),
+                  ),
+                ],
+              ),
+              StatefulShellBranch(
+                routes: [
+                  GoRoute(
+                    path: Routes.myWork,
+                    builder: (_, _) => const MyWorkScreen(),
+                  ),
+                ],
+              ),
+              StatefulShellBranch(
+                routes: [
+                  GoRoute(
+                    path: Routes.tasks,
+                    builder: (_, state) => TasksScreen(
+                      filter: state.uri.queryParameters['filter'] ?? '',
+                    ),
+                  ),
+                ],
+              ),
               StatefulShellBranch(
                 routes: [
                   GoRoute(
@@ -278,6 +302,12 @@ GoRouter router(Ref ref) {
                               projectKey: state.pathParameters['key']!,
                             ),
                           ),
+                          GoRoute(
+                            path: 'transfer',
+                            builder: (_, state) => TransferScreen(
+                              project: state.pathParameters['key']!,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -291,34 +321,8 @@ GoRouter router(Ref ref) {
               StatefulShellBranch(
                 routes: [
                   GoRoute(
-                    path: Routes.tasks,
-                    builder: (_, state) => TasksScreen(
-                      filter: state.uri.queryParameters['filter'] ?? '',
-                    ),
-                  ),
-                ],
-              ),
-              StatefulShellBranch(
-                routes: [
-                  GoRoute(
-                    path: Routes.myWork,
-                    builder: (_, _) => const MyWorkScreen(),
-                  ),
-                ],
-              ),
-              StatefulShellBranch(
-                routes: [
-                  GoRoute(
-                    path: Routes.inbox,
-                    builder: (_, _) => const InboxScreen(),
-                  ),
-                ],
-              ),
-              StatefulShellBranch(
-                routes: [
-                  GoRoute(
                     path: Routes.activity,
-                    builder: (_, _) => const WatchScreen(),
+                    builder: (_, _) => const AuditScreen(),
                   ),
                 ],
               ),
@@ -368,6 +372,10 @@ GoRouter router(Ref ref) {
                       ...adminRoutes,
                       ...upkeepRoutes,
                     ],
+                  ),
+                  GoRoute(
+                    path: Routes.events,
+                    builder: (_, _) => const WatchScreen(),
                   ),
                 ],
               ),
@@ -507,9 +515,10 @@ final upkeepRoutes = <RouteBase>[
   GoRoute(path: 'retention', builder: (_, _) => const RetentionScreen()),
   GoRoute(path: 'housekeeping', builder: (_, _) => const HousekeepingScreen()),
   GoRoute(path: 'trash', builder: (_, _) => const TrashScreen()),
-  GoRoute(path: 'audit', builder: (_, _) => const AuditScreen()),
-  // Activity, once Watch, moved to its own destination; old links still land.
-  GoRoute(path: 'watch', redirect: (_, _) => Routes.activity),
+  // The audit log is Activity now, a destination of its own, and the raw
+  // stream once named Watch is Live events; old links still land.
+  GoRoute(path: 'audit', redirect: (_, _) => Routes.activity),
+  GoRoute(path: 'watch', redirect: (_, _) => Routes.events),
 ];
 
 /// Tenant and server administration (wave 3), under Manage.

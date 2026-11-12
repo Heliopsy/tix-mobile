@@ -166,8 +166,8 @@ String settingsScopeLabel(AppLocalizations l10n, SettingsScope scope) =>
     };
 
 /// Every setting the screen offers right now: account settings only with
-/// a session, tenant settings only for an administrator, the black switch
-/// only under the system theme, the idle timeout only where local databases
+/// a session, tenant settings only for an administrator, the idle timeout
+/// only where local databases
 /// are offered, widgets only where the platform has them, the desktop's
 /// switches only where [desktop] offers them, updates only where [updates]
 /// is not off and installing automatically only where the app installs
@@ -176,7 +176,6 @@ List<SettingsItem> settingsCatalogue(
   AppLocalizations l10n, {
   required bool signedIn,
   required bool tenantAdmin,
-  required bool systemTheme,
   bool Function(String scope)? can,
   bool localEngines = false,
   bool widgets = false,
@@ -191,20 +190,14 @@ List<SettingsItem> settingsCatalogue(
     label: l10n.themeLabel,
     icon: Icons.brightness_auto_outlined,
     keywords: [
+      l10n.themeSystem,
       l10n.themeLight,
       l10n.themeDark,
       l10n.themeOled,
-      l10n.themeSystem,
+      l10n.themeDim,
+      l10n.themeSystemOled,
     ].join(' '),
   ),
-  if (systemTheme)
-    SettingsItem(
-      id: 'appearance.systemBlack',
-      section: SettingsSection.appearance,
-      label: l10n.themeSystemBlack,
-      icon: Icons.contrast,
-      keywords: l10n.themeOled,
-    ),
   SettingsItem(
     id: 'appearance.reduceMotion',
     section: SettingsSection.appearance,

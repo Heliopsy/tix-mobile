@@ -154,7 +154,7 @@ void main() {
               ),
             )
             .message,
-        'Wake now',
+        'Unsnooze',
       );
       await press(tester, find.byKey(const Key('task.snooze')));
       expect(count(server, 'DELETE', '/tasks/infra-1/snooze'), 1);

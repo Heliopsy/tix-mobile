@@ -96,13 +96,18 @@ abstract final class Routes {
   /// The tenant's trash.
   static const trash = '/manage/trash';
 
-  /// The tenant's audit log.
+  /// Where the audit log used to be, under Manage; redirects to [activity].
   static const audit = '/manage/audit';
 
-  /// The tenant's events as they happen, named Activity as on the web.
+  /// Activity: the tenant's audit feed, every change newest first, as the
+  /// web names it.
   static const activity = '/activity';
 
-  /// Where Activity used to be; redirects to [activity].
+  /// Live events: the tenant's raw event stream as it happens, listed
+  /// under Manage.
+  static const events = '/events';
+
+  /// Where the raw event stream used to be; redirects to [events].
   static const legacyWatch = '/watch';
 
   /// What stays available offline, its storage and sync.
@@ -173,6 +178,9 @@ abstract final class Routes {
 
   /// The settings of the project [key].
   static String projectSettings(String key) => '${project(key)}/settings';
+
+  /// Import and export, opened on the project [key].
+  static String projectTransfer(String key) => '${project(key)}/transfer';
 
   /// The custom fields of the project [key].
   static String projectFields(String key) => '${project(key)}/fields';

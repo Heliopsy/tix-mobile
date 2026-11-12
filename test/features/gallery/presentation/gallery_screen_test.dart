@@ -15,7 +15,7 @@ void main() {
   });
 
   for (final MapEntry(key: width, value: size) in widths.entries) {
-    testWidgets('$width: every block draws, in light, dark and OLED black', (
+    testWidgets('$width: every block draws, in light, dark, OLED and dim', (
       tester,
     ) async {
       await pumpComponent(tester, const GalleryScreen(), size: size);
@@ -24,7 +24,12 @@ void main() {
       TixTokens tokens() =>
           Theme.of(tester.element(find.text('Tokens'))).extension<TixTokens>()!;
       expect(tokens().bg, TixTokens.light.bg);
-      for (final next in [TixTokens.dark, TixTokens.oled, TixTokens.light]) {
+      for (final next in [
+        TixTokens.dark,
+        TixTokens.oled,
+        TixTokens.dim,
+        TixTokens.light,
+      ]) {
         await tester.tap(find.byKey(const Key('gallery.brightness')));
         await tester.pump();
         expect(tokens().bg, next.bg);

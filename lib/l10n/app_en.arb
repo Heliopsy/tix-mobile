@@ -56,7 +56,7 @@
     }
   },
   "quickAddTitle": "Quick add",
-  "quickAddHint": "Fix login !high #auth @raj due:fri",
+  "quickAddHint": "Fix login !high #auth @raj due:fri +web ^web-3",
   "quickAddHelp": "!priority  #tag  @assignee  due:date  ^parent",
   "quickAddButton": "Add",
   "cancel": "Cancel",
@@ -69,7 +69,7 @@
     }
   },
   "settingsTitle": "Settings",
-  "themeLabel": "Theme",
+  "themeLabel": "Colour scheme",
   "themeSystem": "System",
   "themeLight": "Light",
   "themeDark": "Dark",
@@ -319,7 +319,7 @@
     }
   },
   "taskDetailAttachFile": "Attach file",
-  "taskDetailBlocked": "Blocked: it waits for a task that is not finished.",
+  "taskDetailBlocked": "Waiting on a task that is not finished.",
   "taskDetailChecklist": "{done} of {total} done",
   "@taskDetailChecklist": {
     "placeholders": {
@@ -497,9 +497,9 @@
     }
   },
   "taskDetailDeleteTrashBody": "It goes to the trash and can be restored.",
-  "taskDetailDependencies": "Waits for",
-  "taskDetailDependenciesInfo": "This task counts as blocked until each task listed here reaches a finished state.",
-  "taskDetailDependencyAdded": "Now waits for {ref}.",
+  "taskDetailDependencies": "Waiting on",
+  "taskDetailDependenciesInfo": "This task waits until each task listed here reaches a finished state.",
+  "taskDetailDependencyAdded": "Now waiting on {ref}.",
   "@taskDetailDependencyAdded": {
     "placeholders": {
       "ref": {
@@ -507,7 +507,7 @@
       }
     }
   },
-  "taskDetailDependencyRemoved": "No longer waits for {ref}.",
+  "taskDetailDependencyRemoved": "No longer waiting on {ref}.",
   "@taskDetailDependencyRemoved": {
     "placeholders": {
       "ref": {
@@ -607,7 +607,7 @@
   "taskDetailNo": "No",
   "taskDetailNoArtifacts": "No artifacts.",
   "taskDetailNoComments": "No comments yet.",
-  "taskDetailNoDependencies": "Waits for nothing.",
+  "taskDetailNoDependencies": "Waiting on nothing.",
   "taskDetailNoHistory": "No history.",
   "taskDetailNoMoves": "The workflow allows no move from here.",
   "taskDetailNoRepeat": "Does not repeat",
@@ -620,7 +620,7 @@
   "taskDetailPriorityTitle": "Priority",
   "taskDetailProject": "Project",
   "taskDetailRefCopied": "Reference copied.",
-  "taskDetailRemoveDependency": "Stop waiting for {ref}",
+  "taskDetailRemoveDependency": "Stop waiting on {ref}",
   "@taskDetailRemoveDependency": {
     "placeholders": {
       "ref": {
@@ -686,7 +686,7 @@
   "taskDetailUnstar": "Remove star",
   "taskDetailUnstarred": "Star removed.",
   "taskDetailUpdated": "Updated",
-  "taskDetailWake": "Wake now",
+  "taskDetailWake": "Unsnooze",
   "taskDetailWoken": "Back in the lists.",
   "taskDetailWrite": "Write",
   "taskDetailYes": "Yes",
@@ -859,8 +859,8 @@
       }
     }
   },
-  "boardWake": "Wake now",
-  "boardWoken": "{ref} is awake",
+  "boardWake": "Unsnooze",
+  "boardWoken": "{ref} unsnoozed",
   "@boardWoken": {
     "placeholders": {
       "ref": {
@@ -932,7 +932,7 @@
   },
   "bulkTagAdd": "Add tag",
   "bulkTagRemove": "Remove tag",
-  "filterBlocked": "Blocked",
+  "filterBlocked": "Waiting on",
   "filterClear": "Clear",
   "filterDelete": "Delete filter",
   "filterDeleteBody": "Anyone it was shared with loses it too.",
@@ -1090,7 +1090,7 @@
   "paletteGroupProjects": "Projects",
   "paletteGroupRecent": "Recent tasks",
   "paletteGroupContexts": "Switch to",
-  "paletteGroupTheme": "Theme",
+  "paletteGroupTheme": "Colour scheme",
   "paletteGroupTemplates": "Templates",
   "paletteOpenTask": "Open {ref}",
   "@paletteOpenTask": {
@@ -1103,9 +1103,9 @@
   "paletteGoInbox": "Go to inbox",
   "paletteGoMyWork": "Go to my work",
   "paletteGoTemplates": "Go to templates",
-  "paletteThemeLight": "Light theme",
-  "paletteThemeDark": "Dark theme",
-  "paletteThemeSystem": "Theme of the system",
+  "paletteThemeLight": "Light colour scheme",
+  "paletteThemeDark": "Dark colour scheme",
+  "paletteThemeSystem": "System colour scheme",
   "paletteUseTemplate": "New task from {name}",
   "@paletteUseTemplate": {
     "placeholders": {
@@ -1119,7 +1119,7 @@
   "templateNew": "New template",
   "templatesEmpty": "No templates yet.",
   "templatesEmptyBody": "Save a task as a template to add it again in one tap.",
-  "templateEveryProject": "Every project",
+  "templateEveryProject": "All projects",
   "templateUses": "{count, plural, =0{Never used} =1{Used once} other{Used {count} times}}",
   "@templateUses": {
     "placeholders": {
@@ -1172,7 +1172,7 @@
   "templateTaskRefHelp": "The reference of the task to keep, such as ops-12.",
   "templateWithSubtasks": "Keep its subtasks",
   "templateTenantWide": "Share with every project",
-  "templateDueIn": "Due after",
+  "templateDueIn": "Due in",
   "templateDueInHelp": "How long after a use the task falls due, such as 3d or 2w. Empty for none.",
   "templateScratchNote": "tix keeps templates from tasks, so this also adds the task to the project.",
   "templateTitle": "Title",
@@ -1450,15 +1450,18 @@
     }
   },
   "notifMoreBody": "Open the inbox to see them.",
-  "themeOled": "OLED black",
+  "themeOled": "OLED",
   "@themeOled": {
-    "description": "Theme choice: dark on a pure black page, for OLED screens."
+    "description": "Colour scheme choice: dark on a pure black page, for OLED screens."
   },
-  "themeSystemBlack": "Pure black when dark",
-  "@themeSystemBlack": {
-    "description": "Switch under the System theme: use the OLED black theme whenever the system is dark."
+  "themeDim": "Low contrast",
+  "@themeDim": {
+    "description": "Colour scheme choice: a dark scheme with softer contrast, as tix web's Low contrast."
   },
-  "themeSystemBlackHelp": "Uses OLED black whenever the system is dark. Saves battery on OLED screens.",
+  "themeSystemOled": "System, OLED when dark",
+  "@themeSystemOled": {
+    "description": "Colour scheme choice: follow the system, on pure black whenever it is dark."
+  },
   "goAbout": "About tix",
   "@goAbout": {
     "description": "Command palette entry that opens the About screen."
@@ -1504,9 +1507,17 @@
   "aboutLicences": "Licences",
   "aboutLicencesHelp": "The open source software inside this app",
   "aboutOpenFailed": "Could not open the link.",
-  "paletteThemeOled": "OLED black theme",
+  "paletteThemeOled": "OLED colour scheme",
   "@paletteThemeOled": {
-    "description": "Command palette entry that switches to the OLED black theme."
+    "description": "Command palette entry that switches to the OLED colour scheme."
+  },
+  "paletteThemeDim": "Low contrast colour scheme",
+  "@paletteThemeDim": {
+    "description": "Command palette entry that switches to the Low contrast colour scheme."
+  },
+  "paletteThemeSystemOled": "System colour scheme, OLED when dark",
+  "@paletteThemeSystemOled": {
+    "description": "Command palette entry that follows the system, on pure black when dark."
   },
   "manageTitle": "Manage",
   "manageSubtitle": "What you can manage in {tenant}",
@@ -3261,12 +3272,12 @@
     }
   },
   "adminAccountLogSystem": "the system",
-  "taskReclaim": "Force-release claim",
-  "taskReclaimSubmit": "Release claim",
+  "taskReclaim": "Reclaim the lease",
+  "taskReclaimSubmit": "Reclaim",
   "taskReclaimBody": "Ends the lease another actor holds on this task, for when its worker died. That worker's next renewal is refused.",
   "taskReclaimReason": "Reason (optional)",
   "taskReclaimReasonHelp": "Kept in the task's history.",
-  "taskReclaimed": "Released the claim on {ref}.",
+  "taskReclaimed": "Reclaimed the lease on {ref}.",
   "@taskReclaimed": {
     "placeholders": {
       "ref": {
@@ -3686,7 +3697,7 @@
       }
     }
   },
-  "auditTitle": "Audit log",
+  "activityTitle": "Activity",
   "auditSubtitle": "Every change in this tenant, newest first.",
   "auditSearch": "Search actions, records and values",
   "auditVia": "Channel",
@@ -4479,7 +4490,7 @@
       }
     }
   },
-  "syncOpDependency": "{ref}: waits for {other}",
+  "syncOpDependency": "{ref}: waiting on {other}",
   "@syncOpDependency": {
     "placeholders": {
       "ref": {
@@ -4813,9 +4824,9 @@
   "@goWatch": {
     "description": "Palette command opening the Activity screen"
   },
-  "watchTitle": "Activity",
+  "watchTitle": "Live events",
   "@watchTitle": {
-    "description": "Title of the screen that shows the tenant's events live"
+    "description": "Title of the Live events screen, the raw event stream listed under Manage"
   },
   "watchSubtitle": "The tenant's events as they happen, newest first.",
   "@watchSubtitle": {
@@ -4992,7 +5003,7 @@
   "@watchOffline": {
     "description": "Watch cannot reach the server"
   },
-  "watchOfflineBody": "The server cannot be reached. Activity carries on from where it stopped once it can.",
+  "watchOfflineBody": "The server cannot be reached. Live events carry on from where they stopped once it can.",
   "@watchOfflineBody": {
     "description": "Body when Watch is offline"
   },
@@ -5012,7 +5023,7 @@
   "@watchFilterRefused": {
     "description": "Title of the notice when a Watch filter is refused"
   },
-  "watchUnsupported": "This server cannot stream events to the app right now, so Activity stays empty. It picks up again once live updates work.",
+  "watchUnsupported": "This server cannot stream events to the app right now, so Live events stays empty. It picks up again once live updates work.",
   "@watchUnsupported": {
     "description": "Notice when live updates only refresh on a timer"
   },

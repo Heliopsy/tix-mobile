@@ -470,13 +470,18 @@ class TixTokens extends ThemeExtension<TixTokens> {
   /// Whether the page is pure black, as in [oled].
   bool get isBlack => bg == const Color(0xFF000000);
 
+  /// Whether these are the Low contrast tokens, [dim].
+  bool get isDim => bg == dim.bg;
+
   /// These tokens with [a]'s accent for this scheme.
   ///
   /// The accent is moved just far enough to reach 4.5:1 on the page and the
   /// surface, the rule tix applies to custom accents. One built-in sits under
   /// it (forest's light accent, 4.37:1 on white), and text on a filled
-  /// button would read below AA without this.
+  /// button would read below AA without this. [dim] keeps its own muted
+  /// accent unless the tenant picked one, as on the web.
   TixTokens withAccent(TixAccent a) {
+    if (isDim && a == TixAccent.standard) return this;
     final accent = readable(isDark ? a.accentDark : a.accent, contrastFloor, [
       bg,
       surface,

@@ -303,10 +303,11 @@ Map<String, String> widgetStrings(AppLocalizations l10n) => {
   'pickProject': l10n.widgetPickProject,
 };
 
-/// The stored theme choice as widgets name it.
+/// The stored colour scheme as widgets name it. Widgets have no Low
+/// contrast palette, so it draws them dark.
 String widgetTheme(String? stored) => switch (stored) {
   'light' => 'light',
-  'dark' => 'dark',
+  'dark' || 'dim' => 'dark',
   'oled' => 'black',
   _ => 'system',
 };

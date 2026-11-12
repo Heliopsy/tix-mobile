@@ -10,10 +10,12 @@ import 'package:tix_mobile/src/core/config/config.dart';
 import 'package:tix_mobile/src/core/platform/app_info.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/features/about/presentation/about_screen.dart';
+import 'package:tix_mobile/src/features/audit/presentation/audit_screen.dart';
 import 'package:tix_mobile/src/features/inbox/presentation/inbox_screen.dart';
 import 'package:tix_mobile/src/features/settings/presentation/settings_screen.dart';
 import 'package:tix_mobile/src/features/shell/presentation/home_shell.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
+import 'package:tix_mobile/src/features/transfer/presentation/transfer_screen.dart';
 import 'package:tix_mobile/src/features/watch/presentation/watch_screen.dart';
 
 import 'helpers/app.dart';
@@ -328,7 +330,7 @@ void main() {
     expect(find.byType(InboxScreen), findsOneWidget);
   });
 
-  group('Activity is a destination of its own', () {
+  group('Activity is the audit feed, Live events sits under Manage', () {
     void stillMotion(WidgetTester tester) {
       tester.platformDispatcher.accessibilityFeaturesTestValue =
           const FakeAccessibilityFeatures(disableAnimations: true);
@@ -345,41 +347,61 @@ void main() {
             .uri
             .path;
 
-    testWidgets('on a phone, under More between Inbox and Manage', (
+    testWidgets(
+      'on a phone, the bar leads with Inbox and More holds Activity',
+      (tester) async {
+        stillMotion(tester);
+        final stores = signedInStores();
+        await pumpApp(
+          tester,
+          settings: stores.settings,
+          secrets: stores.secrets,
+        );
+        final bar = tester.widget<NavigationBar>(find.byType(NavigationBar));
+        expect(
+          [
+            for (final d in bar.destinations)
+              (d as NavigationDestination).label,
+          ],
+          ['Inbox', 'My work', 'Tasks', 'Projects', 'More'],
+        );
+        await tester.tap(find.byKey(const Key('nav.more')));
+        await tester.pumpAndSettle();
+        final activity = find.byKey(const Key('nav.more.activity'));
+        expect(
+          tester.getTopLeft(activity).dy,
+          lessThan(
+            tester.getTopLeft(find.byKey(const Key('nav.more.manage'))).dy,
+          ),
+        );
+        expect(
+          find.descendant(of: activity, matching: find.text('Activity')),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(
+            of: activity,
+            matching: find.byIcon(Icons.history_outlined),
+          ),
+          findsOneWidget,
+        );
+        await tester.tap(activity);
+        await tester.pumpAndSettle();
+        expect(find.byType(AuditScreen), findsOneWidget);
+        expect(find.byType(WatchScreen), findsNothing);
+        expect(location(tester), Routes.activity);
+        expect(
+          tester
+              .widget<NavigationBar>(find.byType(NavigationBar))
+              .selectedIndex,
+          maxBarDestinations - 1,
+        );
+      },
+    );
+
+    testWidgets("on a desktop, the rail in the web's order opens each place", (
       tester,
     ) async {
-      stillMotion(tester);
-      final stores = signedInStores();
-      await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
-      expect(find.byKey(const Key('nav.inbox')), findsOneWidget);
-      await tester.tap(find.byKey(const Key('nav.more')));
-      await tester.pumpAndSettle();
-      final activity = find.byKey(const Key('nav.more.activity'));
-      expect(
-        tester.getTopLeft(activity).dy,
-        lessThan(
-          tester.getTopLeft(find.byKey(const Key('nav.more.manage'))).dy,
-        ),
-      );
-      expect(
-        find.descendant(of: activity, matching: find.text('Activity')),
-        findsOneWidget,
-      );
-      expect(
-        find.descendant(of: activity, matching: find.byIcon(Icons.show_chart)),
-        findsOneWidget,
-      );
-      await tester.tap(activity);
-      await tester.pumpAndSettle();
-      expect(find.byType(WatchScreen), findsOneWidget);
-      expect(location(tester), Routes.activity);
-      expect(
-        tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
-        maxBarDestinations - 1,
-      );
-    });
-
-    testWidgets('on a desktop, in the rail, and g w opens it', (tester) async {
       stillMotion(tester);
       final stores = signedInStores();
       await pumpApp(
@@ -389,47 +411,55 @@ void main() {
         secrets: stores.secrets,
       );
       final rail = find.byType(NavigationRail);
+      const order = {
+        'Inbox': Routes.inbox,
+        'My work': Routes.myWork,
+        'Tasks': Routes.tasks,
+        'Projects': Routes.projects,
+        'Activity': Routes.activity,
+        'Manage': Routes.manage,
+        'Settings': Routes.settings,
+      };
       expect(
         tester
             .widget<NavigationRail>(rail)
             .destinations
             .map((d) => (d.label as Text).data),
-        [
-          'Projects',
-          'Tasks',
-          'My work',
-          'Inbox',
-          'Activity',
-          'Manage',
-          'Settings',
-        ],
+        order.keys,
       );
-      expect(
-        find.descendant(of: rail, matching: find.byIcon(Icons.stream)),
-        findsNothing,
-      );
-      await tester.tap(
-        find.descendant(of: rail, matching: find.text('Activity')),
-      );
-      await tester.pumpAndSettle();
-      expect(find.byType(WatchScreen), findsOneWidget);
-      expect(tester.widget<NavigationRail>(rail).selectedIndex, 4);
-      await tester.tap(find.descendant(of: rail, matching: find.text('Inbox')));
-      await tester.pumpAndSettle();
-      expect(find.byType(WatchScreen), findsNothing);
       await tester.sendKeyEvent(LogicalKeyboardKey.keyG);
       await tester.sendKeyEvent(LogicalKeyboardKey.keyW);
       await tester.pumpAndSettle();
-      expect(find.byType(WatchScreen), findsOneWidget);
+      expect(find.byType(AuditScreen), findsOneWidget);
+      expect(location(tester), Routes.activity);
+      for (final (i, MapEntry(key: label, value: path))
+          in order.entries.indexed) {
+        await tester.tap(find.descendant(of: rail, matching: find.text(label)));
+        await tester.pumpAndSettle();
+        expect(location(tester), path, reason: label);
+        expect(tester.widget<NavigationRail>(rail).selectedIndex, i);
+      }
+    });
+
+    testWidgets('an old /manage/audit link lands on Activity', (tester) async {
+      stillMotion(tester);
+      final stores = signedInStores();
+      await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
+      ProviderScope.containerOf(tester.element(find.byType(App)))
+          .read(routerProvider)
+          .go(Routes.audit);
+      await tester.pumpAndSettle();
+      expect(find.byType(AuditScreen), findsOneWidget);
       expect(location(tester), Routes.activity);
     });
 
     for (final old in ['/watch', '/manage/watch']) {
-      testWidgets('an old $old link lands on it', (tester) async {
+      testWidgets('an old $old link lands on Live events', (tester) async {
         stillMotion(tester);
         final stores = signedInStores();
         await pumpApp(
           tester,
+          size: desktop,
           settings: stores.settings,
           secrets: stores.secrets,
         );
@@ -438,8 +468,46 @@ void main() {
             .go(old);
         await tester.pumpAndSettle();
         expect(find.byType(WatchScreen), findsOneWidget);
-        expect(location(tester), Routes.activity);
+        expect(location(tester), Routes.events);
+        expect(
+          tester
+              .widget<NavigationRail>(find.byType(NavigationRail))
+              .selectedIndex,
+          5,
+        );
       });
     }
+
+    testWidgets('a project opens Import and export on itself', (tester) async {
+      stillMotion(tester);
+      final stores = signedInStores();
+      await pumpApp(
+        tester,
+        size: desktop,
+        settings: stores.settings,
+        secrets: stores.secrets,
+      );
+      final router = ProviderScope.containerOf(
+        tester.element(find.byType(App)),
+      ).read(routerProvider)..go(Routes.project('infra'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('project.transfer')));
+      await tester.pumpAndSettle();
+      expect(find.byType(TransferScreen), findsOneWidget);
+      expect(location(tester), Routes.projectTransfer('infra'));
+      expect(
+        tester.widget<TransferScreen>(find.byType(TransferScreen)).project,
+        'infra',
+      );
+      expect(
+        tester
+            .widget<NavigationRail>(find.byType(NavigationRail))
+            .selectedIndex,
+        3,
+      );
+      router.pop();
+      await tester.pumpAndSettle();
+      expect(location(tester), Routes.project('infra'));
+    });
   });
 }

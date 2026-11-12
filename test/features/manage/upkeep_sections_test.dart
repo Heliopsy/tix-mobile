@@ -18,16 +18,16 @@ void main() {
     Routes.retention,
     Routes.housekeeping,
     Routes.trash,
-    Routes.audit,
+    Routes.events,
   };
 
   test('a tenant admin sees every integration and upkeep screen', () {
     expect(visible(const Actor(role: Role.admin)), containsAll(upkeep));
   });
 
-  test('a member sees only the audit log of them', () {
+  test('a member sees only Live events of them', () {
     expect(visible(const Actor(role: Role.member)).intersection(upkeep), {
-      Routes.audit,
+      Routes.events,
     });
   });
 
@@ -36,11 +36,19 @@ void main() {
     expect(routes.intersection(upkeep), {Routes.webhooks});
   });
 
-  test('Activity is a destination of its own, not listed under Manage', () {
+  test('Activity, the audit feed, is a destination, not under Manage', () {
     final all = Actor(scopes: [for (final s in Scope.values) s.value]);
     expect(visible(all), isNot(contains(Routes.activity)));
-    expect(visible(all), isNot(contains('/manage/watch')));
-    expect(manageSections.map((e) => e.id), isNot(contains('tenant.watch')));
+    expect(visible(all), isNot(contains(Routes.audit)));
+    expect(manageSections.map((e) => e.id), isNot(contains('tenant.audit')));
+  });
+
+  test('Live events needs event:subscribe', () {
+    expect(visible(const Actor(scopes: ['event:subscribe'])), {Routes.events});
+    expect(
+      visible(const Actor(scopes: ['audit:read'])),
+      isNot(contains(Routes.events)),
+    );
   });
 
   test('they sit in the Tenant group', () {
