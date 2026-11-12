@@ -35,7 +35,7 @@ A key still waiting for its value SHALL not be applied while typing.
 #### Scenario: A status completes
 
 - **WHEN** a person types `status:in` in a project whose workflow has `in_progress`
-- **THEN** `status:in_progress` is offered, and tapping it makes the field read `status:in_progress ` and applies it
+- **THEN** `status:in_progress` is offered, and tapping it makes the field read `status:in_progress` and a space, and applies it
 
 #### Scenario: A tag after a hash
 
