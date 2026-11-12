@@ -1530,6 +1530,30 @@ class AppLocalizationsDe extends AppLocalizations {
   String get filterUnshare => 'Nicht mehr teilen';
 
   @override
+  String get filterSuggestions => 'Filtervorschläge';
+
+  @override
+  String filterRemoveTerm(String term) {
+    return '$term entfernen';
+  }
+
+  @override
+  String get filterPickers => 'Filter';
+
+  @override
+  String get filterPickersHelp =>
+      'Jede Auswahl ersetzt diesen Teil des Filters. Alle nimmt ihn heraus.';
+
+  @override
+  String get filterAny => 'Alle';
+
+  @override
+  String get filterTag => 'Tag';
+
+  @override
+  String get filterMe => 'Ich';
+
+  @override
   String get goMyWork => 'Zu „Meine Arbeit“';
 
   @override

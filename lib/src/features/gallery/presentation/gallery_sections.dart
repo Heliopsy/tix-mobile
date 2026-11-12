@@ -456,6 +456,23 @@ class _GalleryFormsState extends State<GalleryForms> {
       const SizedBox(height: TixSpace.s3),
       TixFilterBar(
         onQuery: (_) {},
+        suggestions: TixSuggestionList(
+          semanticLabel: 'Filter suggestions',
+          highlighted: 0,
+          onPick: (_) {},
+          options: const [
+            (label: 'project:web', note: 'Website'),
+            (label: 'project:infra', note: 'Infrastructure'),
+          ],
+        ),
+        terms: [
+          TixTermChip(term: 'tag:ops', removeLabel: 'Remove', onRemove: () {}),
+          TixTermChip(
+            term: '-status:done',
+            removeLabel: 'Remove',
+            onRemove: () {},
+          ),
+        ],
         chips: [
           TixFilterChip(
             label: 'Mine',

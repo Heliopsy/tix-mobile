@@ -1527,6 +1527,30 @@ class AppLocalizationsFr extends AppLocalizations {
   String get filterUnshare => 'Ne plus partager';
 
   @override
+  String get filterSuggestions => 'Suggestions de filtre';
+
+  @override
+  String filterRemoveTerm(String term) {
+    return 'Retirer $term';
+  }
+
+  @override
+  String get filterPickers => 'Filtres';
+
+  @override
+  String get filterPickersHelp =>
+      'Chaque choix remplace cette partie du filtre. Tous la retire.';
+
+  @override
+  String get filterAny => 'Tous';
+
+  @override
+  String get filterTag => 'Étiquette';
+
+  @override
+  String get filterMe => 'Moi';
+
+  @override
   String get goMyWork => 'Aller à Mon travail';
 
   @override

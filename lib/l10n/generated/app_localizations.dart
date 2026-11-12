@@ -2611,6 +2611,48 @@ abstract class AppLocalizations {
   /// **'Stop sharing'**
   String get filterUnshare;
 
+  /// No description provided for @filterSuggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter suggestions'**
+  String get filterSuggestions;
+
+  /// No description provided for @filterRemoveTerm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {term}'**
+  String filterRemoveTerm(String term);
+
+  /// No description provided for @filterPickers.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filterPickers;
+
+  /// No description provided for @filterPickersHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Each choice replaces that part of the filter. Any takes it out.'**
+  String get filterPickersHelp;
+
+  /// No description provided for @filterAny.
+  ///
+  /// In en, this message translates to:
+  /// **'Any'**
+  String get filterAny;
+
+  /// No description provided for @filterTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Tag'**
+  String get filterTag;
+
+  /// No description provided for @filterMe.
+  ///
+  /// In en, this message translates to:
+  /// **'Me'**
+  String get filterMe;
+
   /// No description provided for @goMyWork.
   ///
   /// In en, this message translates to:

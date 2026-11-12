@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
@@ -12,6 +13,7 @@ import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/core/widgets/pin_shortcut_button.dart';
 import 'package:tix_mobile/src/data/models/saved_filter.dart';
 import 'package:tix_mobile/src/data/query/filter_expression.dart';
+import 'package:tix_mobile/src/features/tasks/application/filter_suggest.dart';
 import 'package:tix_mobile/src/features/tasks/application/screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/bulk_bar.dart';
 
@@ -36,20 +38,125 @@ class _TaskFilterPanelState extends ConsumerState<TaskFilterPanel> {
     text: ref.read(taskScreenProvider(widget.scope)).expression,
   );
 
+  FocusNode? _ownFocus;
+
+  FocusNode get _focus =>
+      widget.focusNode ?? (_ownFocus ??= FocusNode(debugLabel: 'filter'));
+
   Timer? _typing;
+
+  FilterWord? _word;
+  List<FilterSuggestion> _options = const [];
+  int _reached = -1;
+  String? _closedOn;
 
   /// How long typing pauses before the filter applies.
   static const settle = Duration(milliseconds: 450);
 
   @override
+  void initState() {
+    super.initState();
+    _text.addListener(_suggest);
+    _focus.addListener(_focusChanged);
+  }
+
+  @override
   void dispose() {
     _typing?.cancel();
+    _focus.removeListener(_focusChanged);
+    _ownFocus?.dispose();
     _text.dispose();
     super.dispose();
   }
 
+  void _focusChanged() {
+    if (_focus.hasFocus) {
+      _suggest();
+    } else {
+      _close();
+    }
+  }
+
+  void _suggest() {
+    if (!mounted) return;
+    final text = _text.text;
+    final caret = _text.selection.baseOffset;
+    final word = _focus.hasFocus && caret >= 0 && text != _closedOn
+        ? filterWordAt(text, caret)
+        : null;
+    final options = word == null
+        ? const <FilterSuggestion>[]
+        : filterSuggest(
+            ref.read(filterSuggestDataProvider(widget.scope)),
+            word,
+          );
+    if (options.isEmpty && _options.isEmpty) return;
+    setState(() {
+      _word = word;
+      _options = options;
+      _reached = -1;
+    });
+  }
+
+  void _close() {
+    if (_options.isEmpty) return;
+    setState(() {
+      _options = const [];
+      _reached = -1;
+    });
+  }
+
+  void _take(int index) {
+    final word = _word;
+    if (word == null || index < 0 || index >= _options.length) return;
+    final insert = _options[index].insert;
+    final next = filterInsert(_text.text, word, insert);
+    _text.value = TextEditingValue(
+      text: next.text,
+      selection: TextSelection.collapsed(offset: next.caret),
+    );
+    _focus.requestFocus();
+    if (!insert.endsWith(':')) _submit(next.text);
+  }
+
+  KeyEventResult _key(FocusNode _, KeyEvent event) {
+    if (event is KeyUpEvent || !_focus.hasPrimaryFocus) {
+      return KeyEventResult.ignored;
+    }
+    final key = event.logicalKey;
+    if (_options.isEmpty) {
+      if (key != LogicalKeyboardKey.arrowDown) return KeyEventResult.ignored;
+      _closedOn = null;
+      _suggest();
+      if (_options.isEmpty) return KeyEventResult.ignored;
+      setState(() => _reached = 0);
+      return KeyEventResult.handled;
+    }
+    final count = _options.length;
+    if (key == LogicalKeyboardKey.arrowDown) {
+      setState(() => _reached = (_reached + 1) % count);
+    } else if (key == LogicalKeyboardKey.arrowUp) {
+      setState(() => _reached = _reached <= 0 ? count - 1 : _reached - 1);
+    } else if (key == LogicalKeyboardKey.enter ||
+        key == LogicalKeyboardKey.numpadEnter) {
+      if (_reached < 0) return KeyEventResult.ignored;
+      _take(_reached);
+    } else if (key == LogicalKeyboardKey.tab) {
+      _take(_reached < 0 ? 0 : _reached);
+    } else if (key == LogicalKeyboardKey.escape) {
+      _closedOn = _text.text;
+      _close();
+    } else {
+      return KeyEventResult.ignored;
+    }
+    return KeyEventResult.handled;
+  }
+
   void _changed(String text) {
+    _closedOn = null;
     _typing?.cancel();
+    final word = filterWordAt(text, _text.selection.baseOffset);
+    if (word != null && word.typed.isEmpty && word.key.length > 1) return;
     _typing = Timer(settle, () {
       if (mounted) _screen.setExpression(text);
     });
@@ -114,18 +221,48 @@ class _TaskFilterPanelState extends ConsumerState<TaskFilterPanel> {
           onSelected: (on) => _screen.setShowFinished(show: on),
         ),
     ];
-    return TixFilterBar(
+    ref.watch(filterSuggestDataProvider(widget.scope));
+    final bar = TixFilterBar(
       controller: _text,
-      focusNode: widget.focusNode,
+      focusNode: _focus,
       fieldKey: const Key('filter.field'),
       hint: l10n.filterHint,
       error: state.filterError,
       onQuery: _changed,
       onSubmitted: _submit,
       chips: chips,
+      suggestions: _options.isEmpty
+          ? null
+          : TixSuggestionList(
+              key: const Key('filter.suggestions'),
+              semanticLabel: l10n.filterSuggestions,
+              highlighted: _reached,
+              onPick: _take,
+              options: [
+                for (final o in _options) (label: o.label, note: o.note),
+              ],
+            ),
+      terms: [
+        for (final t in filterTerms(expr))
+          TixTermChip(
+            key: Key('term.${t.text}'),
+            term: t.text,
+            removeLabel: l10n.filterRemoveTerm(t.text),
+            onRemove: () => _screen.setExpression(removeFilterTerm(expr, t)),
+          ),
+      ],
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          IconButton(
+            key: const Key('filter.pickers'),
+            tooltip: l10n.filterPickers,
+            icon: const Icon(Icons.tune),
+            onPressed: () => showTixSheet<void>(
+              context,
+              builder: (_) => _FilterPickers(scope: widget.scope),
+            ),
+          ),
           if (widget.scope is! MineScope) _SortMenu(scope: widget.scope),
           if (viewsFor(widget.scope).length > 1)
             _ViewSwitch(scope: widget.scope),
@@ -134,6 +271,94 @@ class _TaskFilterPanelState extends ConsumerState<TaskFilterPanel> {
       below: widget.scope is MineScope
           ? null
           : _SavedFilterRow(scope: widget.scope),
+    );
+    return Focus(
+      canRequestFocus: false,
+      skipTraversal: true,
+      onKeyEvent: _key,
+      child: bar,
+    );
+  }
+}
+
+/// The Filters sheet: one picker each for status, priority, assignee and
+/// tag, each replacing that key's terms in the expression.
+class _FilterPickers extends ConsumerWidget {
+  const _FilterPickers({required this.scope});
+
+  final TaskScope scope;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final expr = ref.watch(
+      taskScreenProvider(scope).select((s) => s.expression),
+    );
+    final data = ref.watch(filterSuggestDataProvider(scope));
+    final screen = ref.read(taskScreenProvider(scope).notifier);
+    Widget picker(String key, String label, List<TixOption<String>> options) {
+      final now = selectingValues(expr, key);
+      final one = now.length == 1 ? now.single : null;
+      final known = options
+          .where((o) => o.value.toLowerCase() == one?.toLowerCase())
+          .firstOrNull;
+      final value = now.isEmpty ? '' : known?.value ?? one;
+      final shown = [
+        TixOption<String>('', l10n.filterAny),
+        ...options,
+        if (one != null && known == null) TixOption(one, one),
+      ];
+      return Padding(
+        padding: const EdgeInsets.only(bottom: TixSpace.s3),
+        child: TixSelectField<String>(
+          key: ValueKey('pick.$key.$value'),
+          fieldKey: Key('pick.$key'),
+          label: label,
+          value: value,
+          options: shown,
+          onChanged: (v) => screen.setExpression(
+            setFilterKey(expr, key, v == null || v.isEmpty ? null : v),
+          ),
+        ),
+      );
+    }
+
+    return TixSheetBody(
+      title: l10n.filterPickers,
+      actions: [
+        TixButton.quiet(
+          key: const Key('pick.done'),
+          label: l10n.close,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: TixSpace.s3),
+            child: Text(
+              l10n.filterPickersHelp,
+              style: TextStyle(fontSize: TixText.sm, color: context.tix.muted),
+            ),
+          ),
+          picker('status', l10n.fieldStatus, [
+            for (final s in data.statuses) TixOption(s, s),
+          ]),
+          picker('priority', l10n.fieldPriority, [
+            for (final (i, p) in suggestPriorities.indexed)
+              TixOption(p, l10n.priorityLabel('${i + 1}')),
+          ]),
+          picker('assignee', l10n.fieldAssignee, [
+            TixOption('me', l10n.filterMe),
+            for (final h in data.people) TixOption(h, '@$h'),
+          ]),
+          picker('tag', l10n.filterTag, [
+            for (final t in data.tags) TixOption(t, t),
+          ]),
+        ],
+      ),
     );
   }
 }
