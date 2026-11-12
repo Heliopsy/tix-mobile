@@ -145,6 +145,7 @@ class TaskQuery {
     this.descending = false,
     this.openOnly = false,
     this.limit = listPageSize,
+    this.includeHeld = false,
   });
 
   /// Where the tasks come from.
@@ -165,9 +166,13 @@ class TaskQuery {
   /// How many tasks one page holds.
   final int limit;
 
+  /// Whether My work also takes in the tasks the reader holds a claim on.
+  final bool includeHeld;
+
   @override
   bool operator ==(Object other) =>
       other is TaskQuery &&
+      other.includeHeld == includeHeld &&
       other.scope == scope &&
       other.expression == expression &&
       other.sort == sort &&
@@ -176,8 +181,15 @@ class TaskQuery {
       other.limit == limit;
 
   @override
-  int get hashCode =>
-      Object.hash(scope, expression, sort, descending, openOnly, limit);
+  int get hashCode => Object.hash(
+    scope,
+    expression,
+    sort,
+    descending,
+    openOnly,
+    limit,
+    includeHeld,
+  );
 }
 
 /// What the task screen shows: the typed filter, the drawing and the list's
@@ -193,6 +205,7 @@ class TaskScreenState {
     this.grouping = TaskGrouping.none,
     this.showFinished = false,
     this.lanes,
+    this.includeHeld = false,
     this.savedFilterId,
     this.filterError,
   });
@@ -218,6 +231,9 @@ class TaskScreenState {
   /// What each lane is, null for the scope's default.
   final LaneGrouping? lanes;
 
+  /// Whether My work also lists the tasks the reader holds.
+  final bool includeHeld;
+
   /// The saved filter last applied, while the filter still matches it.
   final String? savedFilterId;
 
@@ -233,6 +249,7 @@ class TaskScreenState {
     TaskGrouping? grouping,
     bool? showFinished,
     LaneGrouping? lanes,
+    bool? includeHeld,
     String? Function()? savedFilterId,
     String? Function()? filterError,
   }) => TaskScreenState(
@@ -243,6 +260,7 @@ class TaskScreenState {
     grouping: grouping ?? this.grouping,
     showFinished: showFinished ?? this.showFinished,
     lanes: lanes ?? this.lanes,
+    includeHeld: includeHeld ?? this.includeHeld,
     savedFilterId: savedFilterId == null ? this.savedFilterId : savedFilterId(),
     filterError: filterError == null ? this.filterError : filterError(),
   );
@@ -257,5 +275,6 @@ class TaskScreenState {
     limit: scope is MineScope || view != TaskView.list
         ? boardPageSize
         : listPageSize,
+    includeHeld: scope is MineScope && includeHeld,
   );
 }

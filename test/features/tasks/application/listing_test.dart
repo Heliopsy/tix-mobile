@@ -68,6 +68,71 @@ void main() {
     expect(mine['sort'], 'due_at');
   });
 
+  test('My work takes in the tasks the reader holds, each once', () async {
+    server.tasks['infra']!
+      ..[0] = {...server.tasks['infra']![0], 'claimed_by_actor_id': 'me'}
+      ..[1] = {...server.tasks['infra']![1], 'claimed_by_actor_id': 'bot'};
+    server.tasks['web']![0] = {
+      ...server.tasks['web']![0],
+      'claimed_by_actor_id': 'me',
+    };
+    final (c, q) = await listing(
+      const TaskQuery(scope: MineScope(), includeHeld: true),
+    );
+    final asked = server.requestsTo('/api/v1/tasks').map((r) => r.uri);
+    expect(asked.where((u) => u.queryParameters['claimed_by'] == 'me'), [
+      isA<Uri>().having(
+        (u) => u.queryParameters.containsKey('assignee'),
+        'assignee',
+        isFalse,
+      ),
+    ]);
+    expect(refs(c, q), ['web-1', 'infra-1']);
+  });
+
+  test('without the toggle My work asks only for assigned tasks', () async {
+    final (c, q) = await listing(const TaskQuery(scope: MineScope()));
+    expect(
+      server
+          .requestsTo('/api/v1/tasks')
+          .where((r) => r.uri.queryParameters.containsKey('claimed_by')),
+      isEmpty,
+    );
+    expect(refs(c, q), ['web-1']);
+  });
+
+  test("My work's badge counts the reader's open overdue tasks", () async {
+    server.tasks['web']!.addAll([
+      taskJson(
+        'web-2',
+        assignee: 'me',
+        due: fixedNow.subtract(const Duration(days: 1)).toIso8601String(),
+      ),
+      taskJson(
+        'web-3',
+        assignee: 'me',
+        status: 'done',
+        due: fixedNow.subtract(const Duration(days: 1)).toIso8601String(),
+      ),
+      taskJson(
+        'web-4',
+        assignee: 'me',
+        due: fixedNow.add(const Duration(days: 1)).toIso8601String(),
+      ),
+      taskJson(
+        'web-5',
+        due: fixedNow.subtract(const Duration(days: 1)).toIso8601String(),
+      ),
+    ]);
+    final c = await signedInContainer(server);
+    final sub = c.listen(myOverdueProvider, (_, _) {});
+    addTearDown(sub.close);
+    expect(await c.read(myOverdueProvider.future), 1);
+    final asked = server.requestsTo('/api/v1/tasks').last.uri;
+    expect(asked.queryParameters['assignee'], 'me');
+    expect(asked.queryParameters['limit'], '${overdueBadgeCap + 1}');
+  });
+
   test('sort, direction and page size travel with the query', () async {
     await listing(const TaskQuery(sort: 'title', descending: true, limit: 200));
     final p = lastListing().queryParameters;

@@ -9294,4 +9294,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String rowWaitingTip(String refs) {
     return 'Waiting on $refs';
   }
+
+  @override
+  String get myWorkIncludeHeld => 'Include tasks I hold';
+
+  @override
+  String myWorkOverdueBadge(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count overdue tasks',
+      one: '1 overdue task',
+    );
+    return '$_temp0';
+  }
 }

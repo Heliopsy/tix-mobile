@@ -89,6 +89,10 @@ class TaskScreen extends _$TaskScreen {
   void setShowFinished({required bool show}) =>
       state = state.copyWith(showFinished: show);
 
+  /// Takes the tasks the reader holds into My work, or leaves them out.
+  void setIncludeHeld({required bool include}) =>
+      state = state.copyWith(includeHeld: include);
+
   /// Applies [filter]'s expression, sort and view.
   void applySaved(SavedFilter filter) {
     final view = TaskView.named(filter.view);
