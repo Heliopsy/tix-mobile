@@ -474,8 +474,59 @@ class AppLocalizationsEn extends AppLocalizations {
       'This account must set up a second factor first. Sign in once in the browser to do that.';
 
   @override
-  String get errorPasswordChange =>
-      'This account must choose a new password first. Sign in once in the browser to do that.';
+  String get errorNewPasswordRequired => 'Enter a new password.';
+
+  @override
+  String get errorPasswordMismatch => 'The two passwords do not match.';
+
+  @override
+  String get passwordChangeTitle => 'Choose a new password';
+
+  @override
+  String get passwordChangeIntro =>
+      'Your administrator asked you to replace your password before you go on.';
+
+  @override
+  String passwordChangeAs(String email) {
+    return 'Signing in as $email';
+  }
+
+  @override
+  String get newPasswordHelp =>
+      'At least 12 characters, and not the one you have now.';
+
+  @override
+  String get newPasswordAgainLabel => 'New password again';
+
+  @override
+  String get passwordChangeSubmit => 'Save and sign in';
+
+  @override
+  String get helpNewPasswordBody =>
+      'Your account was set up, or reset, with a password someone else knows, so tix asks you to choose your own before you go on.\n\nThe server decides what it accepts: at least 12 characters, and not the password you signed in with. The new one works everywhere you sign in to tix, the web included, from now on.';
+
+  @override
+  String get enrolTitle => 'Set up a second factor';
+
+  @override
+  String get enrolIntro =>
+      'This tenant asks for a second factor and this account holds none yet. Add the key below to an authenticator app, then enter the code it shows.';
+
+  @override
+  String get enrolCodeHelp =>
+      'Six digits, from the app you just added the key to.';
+
+  @override
+  String get helpSecondFactorBody =>
+      'A second factor is a time-based code from an authenticator app, asked for after your password. It changes every 30 seconds.\n\nAdd the key to an app such as Aegis, 2FAS, Google Authenticator or your password manager, or open it there straight from this device. Keep the key private: anyone holding it can make your codes.';
+
+  @override
+  String get signInCodesIntro =>
+      'You are signed in. Keep these codes somewhere safe: each one signs you in once if you lose the authenticator, and they are not shown again.';
+
+  @override
+  String get helpRecoveryCodesBody =>
+      'Each code signs you in once in place of the authenticator\'s code. tix keeps only a fingerprint of them, so nothing can show them again.\n\nCopy them to a password manager or somewhere offline. If you lose them, make a new set on the Security screen.';
 
   @override
   String get errorTenantRequired => 'Enter a key for the tenant.';

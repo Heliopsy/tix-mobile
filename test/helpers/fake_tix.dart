@@ -290,6 +290,21 @@ class FakeTix {
   /// The challenge kind a password sign-in answers with when set.
   String? challengeKind;
 
+  /// Accounts whose next sign-in must choose a new password.
+  final mustChangePassword = <String>{};
+
+  /// Accounts a sign-in takes through second factor enrolment.
+  final mustEnrol = <String>{};
+
+  /// Passwords chosen at sign-in, in place of the account's own.
+  final changedPasswords = <String, String>{};
+
+  /// The secret an enrol challenge hands out.
+  static const enrolSecret = 'JBSWY3DPEHPK3PXP';
+
+  /// The recovery codes an enrolment completed at sign-in returns.
+  static const recoveryCodes = ['abcd-efgh', 'ijkl-mnop'];
+
   /// The theme each tenant names, as `GET /tenants/{ref}` reports it.
   final tenantThemes = <String, String>{};
 
@@ -910,6 +925,7 @@ class FakeTix {
   }
 
   final _tickets = <String, String>{};
+  final _enrolTickets = <String>{};
 
   FakeResponse _login(Map<String, dynamic> body) {
     final ticket = body['ticket'] as String?;
@@ -919,12 +935,56 @@ class FakeTix {
         return FakeResponse(401, envelope('unauthenticated', 'bad code'));
       }
       _tickets.remove(ticket);
-      return FakeResponse(200, _session(email, accounts[email]!.tenants.first));
+      final session = _session(email, accounts[email]!.tenants.first);
+      if (_enrolTickets.remove(ticket)) {
+        mustEnrol.remove(email);
+        return FakeResponse(200, {...session, 'recovery_codes': recoveryCodes});
+      }
+      return FakeResponse(200, session);
     }
     final email = body['email'] as String?;
     final account = accounts[email];
-    if (account == null || account.password != body['password']) {
+    final password = changedPasswords[email] ?? account?.password;
+    if (account == null || password != body['password']) {
       return FakeResponse(401, envelope('unauthenticated', 'bad password'));
+    }
+    final replacement = body['new_password'] as String?;
+    if (replacement != null) {
+      if (!mustChangePassword.contains(email)) {
+        return FakeResponse(400, envelope('invalid', 'no change pending'));
+      }
+      if (replacement.length < 12 || replacement == password) {
+        return const FakeResponse(400, {
+          'error': {
+            'code': 'invalid',
+            'message': 'new password must be at least 12 characters',
+            'details': {'field': 'new_password'},
+          },
+        });
+      }
+      mustChangePassword.remove(email);
+      changedPasswords[email!] = replacement;
+    } else if (mustChangePassword.contains(email)) {
+      return const FakeResponse(200, {
+        'challenge': {'kind': 'password_change', 'ticket': ''},
+      });
+    }
+    if (mustEnrol.contains(email)) {
+      final t = 'ticket-${_tickets.length + 1}';
+      _tickets[t] = email!;
+      _enrolTickets.add(t);
+      return FakeResponse(200, {
+        'challenge': {
+          'kind': 'enrol',
+          'ticket': t,
+          'enrolment': {
+            'secret': enrolSecret,
+            'uri': 'otpauth://totp/tix:$email?secret=$enrolSecret&issuer=tix',
+            'issuer': 'tix',
+            'account': email,
+          },
+        },
+      });
     }
     final kind = challengeKind;
     if (kind != null) {

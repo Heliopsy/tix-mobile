@@ -219,7 +219,35 @@
   "errorPasswordRequired": "Enter your password.",
   "errorCodeRequired": "Enter the code from your authenticator app.",
   "errorSecondFactorSetup": "This account must set up a second factor first. Sign in once in the browser to do that.",
-  "errorPasswordChange": "This account must choose a new password first. Sign in once in the browser to do that.",
+  "errorNewPasswordRequired": "Enter a new password.",
+  "errorPasswordMismatch": "The two passwords do not match.",
+  "passwordChangeTitle": "Choose a new password",
+  "passwordChangeIntro": "Your administrator asked you to replace your password before you go on.",
+  "passwordChangeAs": "Signing in as {email}",
+  "@passwordChangeAs": {
+    "description": "Under Choose a new password: the account being signed in",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "newPasswordHelp": "At least 12 characters, and not the one you have now.",
+  "newPasswordAgainLabel": "New password again",
+  "@newPasswordAgainLabel": {
+    "description": "Label of the field repeating the new password on Choose a new password"
+  },
+  "passwordChangeSubmit": "Save and sign in",
+  "helpNewPasswordBody": "Your account was set up, or reset, with a password someone else knows, so tix asks you to choose your own before you go on.\n\nThe server decides what it accepts: at least 12 characters, and not the password you signed in with. The new one works everywhere you sign in to tix, the web included, from now on.",
+  "enrolTitle": "Set up a second factor",
+  "@enrolTitle": {
+    "description": "Heading of the sign-in step that sets up a second factor the tenant requires"
+  },
+  "enrolIntro": "This tenant asks for a second factor and this account holds none yet. Add the key below to an authenticator app, then enter the code it shows.",
+  "enrolCodeHelp": "Six digits, from the app you just added the key to.",
+  "helpSecondFactorBody": "A second factor is a time-based code from an authenticator app, asked for after your password. It changes every 30 seconds.\n\nAdd the key to an app such as Aegis, 2FAS, Google Authenticator or your password manager, or open it there straight from this device. Keep the key private: anyone holding it can make your codes.",
+  "signInCodesIntro": "You are signed in. Keep these codes somewhere safe: each one signs you in once if you lose the authenticator, and they are not shown again.",
+  "helpRecoveryCodesBody": "Each code signs you in once in place of the authenticator's code. tix keeps only a fingerprint of them, so nothing can show them again.\n\nCopy them to a password manager or somewhere offline. If you lose them, make a new set on the Security screen.",
   "errorTenantRequired": "Enter a key for the tenant.",
   "errorEngineUnavailable": "Databases on this device are not available: this build was made without the tix engine.",
   "localIntroImport": "Create a new tix database or import one. The app works on its own copy, kept inside the app; export it to take your changes elsewhere.",

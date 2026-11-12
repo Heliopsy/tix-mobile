@@ -476,8 +476,60 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ce compte doit d’abord configurer un second facteur. Connectez-vous une fois dans le navigateur pour le faire.';
 
   @override
-  String get errorPasswordChange =>
-      'Ce compte doit d’abord choisir un nouveau mot de passe. Connectez-vous une fois dans le navigateur pour le faire.';
+  String get errorNewPasswordRequired => 'Saisissez un nouveau mot de passe.';
+
+  @override
+  String get errorPasswordMismatch =>
+      'Les deux mots de passe ne correspondent pas.';
+
+  @override
+  String get passwordChangeTitle => 'Choisir un nouveau mot de passe';
+
+  @override
+  String get passwordChangeIntro =>
+      'Votre administrateur vous demande de remplacer votre mot de passe avant de continuer.';
+
+  @override
+  String passwordChangeAs(String email) {
+    return 'Connexion en tant que $email';
+  }
+
+  @override
+  String get newPasswordHelp =>
+      'Au moins 12 caractères, et pas celui que vous avez maintenant.';
+
+  @override
+  String get newPasswordAgainLabel => 'Nouveau mot de passe, à nouveau';
+
+  @override
+  String get passwordChangeSubmit => 'Enregistrer et se connecter';
+
+  @override
+  String get helpNewPasswordBody =>
+      'Votre compte a été créé, ou réinitialisé, avec un mot de passe que quelqu’un d’autre connaît. tix vous demande donc d’en choisir un à vous avant de continuer.\n\nC’est le serveur qui décide ce qu’il accepte : au moins 12 caractères, et pas le mot de passe avec lequel vous vous êtes connecté. Le nouveau vaut désormais partout où vous vous connectez à tix, le web compris.';
+
+  @override
+  String get enrolTitle => 'Configurer un second facteur';
+
+  @override
+  String get enrolIntro =>
+      'Ce tenant demande un second facteur et ce compte n’en a pas encore. Ajoutez la clé ci-dessous à une application d’authentification, puis saisissez le code qu’elle affiche.';
+
+  @override
+  String get enrolCodeHelp =>
+      'Six chiffres, depuis l’application à laquelle vous venez d’ajouter la clé.';
+
+  @override
+  String get helpSecondFactorBody =>
+      'Un second facteur est un code temporaire d’une application d’authentification, demandé après votre mot de passe. Il change toutes les 30 secondes.\n\nAjoutez la clé à une application comme Aegis, 2FAS, Google Authenticator ou votre gestionnaire de mots de passe, ou ouvrez-la directement depuis cet appareil. Gardez la clé secrète : quiconque la détient peut produire vos codes.';
+
+  @override
+  String get signInCodesIntro =>
+      'Vous êtes connecté. Gardez ces codes en lieu sûr : chacun vous connecte une fois si vous perdez l’application d’authentification, et ils ne seront plus affichés.';
+
+  @override
+  String get helpRecoveryCodesBody =>
+      'Chaque code vous connecte une fois à la place du code de l’application. tix n’en garde qu’une empreinte, donc rien ne peut les afficher à nouveau.\n\nCopiez-les dans un gestionnaire de mots de passe ou hors ligne. Si vous les perdez, créez-en de nouveaux depuis l’écran Sécurité.';
 
   @override
   String get errorTenantRequired => 'Saisissez une clé pour l’espace.';

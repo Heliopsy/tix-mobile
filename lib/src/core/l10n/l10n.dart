@@ -59,7 +59,8 @@ String errorMessage(AppLocalizations l10n, Object error) {
     TixErrorKind.passwordRequired => l10n.errorPasswordRequired,
     TixErrorKind.codeRequired => l10n.errorCodeRequired,
     TixErrorKind.secondFactorSetup => l10n.errorSecondFactorSetup,
-    TixErrorKind.passwordChange => l10n.errorPasswordChange,
+    TixErrorKind.newPasswordRequired => l10n.errorNewPasswordRequired,
+    TixErrorKind.passwordMismatch => l10n.errorPasswordMismatch,
     TixErrorKind.tenantRequired => l10n.errorTenantRequired,
     TixErrorKind.engineUnavailable => l10n.errorEngineUnavailable,
     TixErrorKind.localNotUsable => switch (error.details['reason']) {
