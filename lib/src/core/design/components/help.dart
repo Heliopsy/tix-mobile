@@ -55,3 +55,28 @@ Future<void> showHelp(
     ),
   ),
 );
+
+/// The (?) at the end of a page header that opens the documentation about
+/// the screen titled [title], outside the app. [HelpButton]'s (i) explains
+/// one field in place; this one leads to the full section.
+class ScreenHelpButton extends StatelessWidget {
+  /// Help for the screen [title], opened by [onPressed].
+  const ScreenHelpButton({
+    required this.title,
+    required this.onPressed,
+    super.key,
+  });
+
+  /// The screen's title.
+  final String title;
+
+  /// Opens the documentation.
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) => TixIconButton(
+    icon: Icons.help_outline,
+    tooltip: context.l10n.helpAbout(title),
+    onPressed: onPressed,
+  );
+}

@@ -2,6 +2,7 @@
 
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/components/buttons.dart';
+import 'package:tix_mobile/src/core/design/components/help.dart';
 import 'package:tix_mobile/src/core/design/components/list_keys.dart';
 import 'package:tix_mobile/src/core/design/components/states.dart';
 import 'package:tix_mobile/src/core/design/tokens.dart';
@@ -54,6 +55,15 @@ class TixPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final action = primaryAction;
+    final open = TixPageHelp._openFor(context);
+    final help = open == null
+        ? null
+        : ScreenHelpButton(
+            key: const Key('page.help'),
+            title: title,
+            onPressed: open,
+          );
+    final content = _InTixPage(child: TixListKeys(child: body));
     if (context.isCompact) {
       final theme = Theme.of(context);
       return Scaffold(
@@ -68,6 +78,7 @@ class TixPage extends StatelessWidget {
           ),
           actions: [
             ...actions,
+            ?help,
             const SizedBox(width: TixSpace.s1),
           ],
           bottom: subtitle == null
@@ -100,7 +111,7 @@ class TixPage extends StatelessWidget {
                 icon: Icon(action.icon ?? Icons.add),
                 label: Text(action.label),
               ),
-        body: TixListKeys(child: body),
+        body: content,
       );
     }
     return Scaffold(
@@ -116,6 +127,7 @@ class TixPage extends StatelessWidget {
               subtitleNote: subtitleNote,
               actions: [
                 ...actions,
+                ?help,
                 if (action != null)
                   TixButton.primary(
                     key: action.key,
@@ -125,12 +137,46 @@ class TixPage extends StatelessWidget {
                   ),
               ],
             ),
-            Expanded(child: TixListKeys(child: body)),
+            Expanded(child: content),
           ],
         ),
       ),
     );
   }
+}
+
+/// What pressing the (?) in a [TixPage] header below it does: [open] gives
+/// the action for the page built in a context, or null for a page whose
+/// screen has no documentation. Set once around the routes; without it,
+/// pages draw no (?).
+class TixPageHelp extends InheritedWidget {
+  /// Help for the pages in [child], as [open] finds it.
+  const TixPageHelp({required this.open, required super.child, super.key});
+
+  /// The action for the page in a context, or null for none.
+  final VoidCallback? Function(BuildContext context) open;
+
+  /// The (?) action for a page in [context]; null inside another page, so a
+  /// pane drawn as a page does not repeat its host's.
+  static VoidCallback? _openFor(BuildContext context) {
+    if (context.getInheritedWidgetOfExactType<_InTixPage>() != null) {
+      return null;
+    }
+    return context.dependOnInheritedWidgetOfExactType<TixPageHelp>()?.open(
+      context,
+    );
+  }
+
+  @override
+  bool updateShouldNotify(TixPageHelp oldWidget) => open != oldWidget.open;
+}
+
+/// Marks the body of a [TixPage].
+class _InTixPage extends InheritedWidget {
+  const _InTixPage({required super.child});
+
+  @override
+  bool updateShouldNotify(_InTixPage oldWidget) => false;
 }
 
 /// tix's page head on its own: a back button when the route can go back,

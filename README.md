@@ -177,6 +177,8 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   kinds and channels, saved filters and the board arrangement; for administrators, the tenant's own settings.
 - **About**: the app, engine and server versions, links to the site, source, roadmap and changelog, and a bug
   report with the versions filled in.
+- **Help on every screen**: the (?) in a screen's header opens the section of tix's documentation about it, for the
+  release your server runs.
 - **Administration**: tenant settings with a live theme preview, domains, the server's live connections, and for
   a global admin every tenant, its users and the global admins. Your own second factor (recovery codes shown once),
   SSH keys and active sessions (revoke any, this one included) under Settings, Security.
