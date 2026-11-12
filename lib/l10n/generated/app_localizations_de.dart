@@ -8456,7 +8456,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get keymapDefaultHelp =>
-      'Die Tasten der App und von tix web: j und k bewegen, g p öffnet Projekte, Strg 1 bis 6 wechseln den Bereich.';
+      'Die Tastenbelegung von tix web: j und k bewegen, g i öffnet den Posteingang, d erledigt, Strg 1 bis 7 wechseln den Bereich.';
 
   @override
   String get keymapVimHelp =>
@@ -8475,6 +8475,135 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsKeyBindingsOff => 'Tastenkürzel sind aus.';
+
+  @override
+  String get keyGroupNavigate => 'Navigieren';
+
+  @override
+  String get keyGroupLists => 'Listen';
+
+  @override
+  String get keyGroupTask => 'Aufgabe';
+
+  @override
+  String get keyGroupGeneral => 'Allgemein';
+
+  @override
+  String get keyHelpPalette => 'Befehlspalette öffnen';
+
+  @override
+  String get keyHelpHelp => 'Diese Hilfe anzeigen';
+
+  @override
+  String get keyHelpGoInbox => 'Zum Posteingang';
+
+  @override
+  String get keyHelpGoMyWork => 'Zu Meine Arbeit';
+
+  @override
+  String get keyHelpGoTasks => 'Zu Aufgaben';
+
+  @override
+  String get keyHelpGoProjects => 'Zu Projekten';
+
+  @override
+  String get keyHelpGoActivity => 'Zu Aktivität';
+
+  @override
+  String get keyHelpGoManage => 'Zur Verwaltung';
+
+  @override
+  String get keyHelpGoSettings => 'Zu Einstellungen';
+
+  @override
+  String get keyHelpNext => 'Auswahl nach unten';
+
+  @override
+  String get keyHelpPrevious => 'Auswahl nach oben';
+
+  @override
+  String get keyHelpFirst => 'Zur ersten Aufgabe';
+
+  @override
+  String get keyHelpLast => 'Zur letzten Aufgabe';
+
+  @override
+  String get keyHelpPageDown => 'Seite nach unten';
+
+  @override
+  String get keyHelpPageUp => 'Seite nach oben';
+
+  @override
+  String get keyHelpOpen => 'Ausgewählte Aufgabe öffnen';
+
+  @override
+  String get keyHelpBack => 'Zurück';
+
+  @override
+  String get keyHelpSelect => 'Aufgabe im Fokus aus- oder abwählen';
+
+  @override
+  String get keyHelpExtendDown => 'Auswahl nach unten erweitern';
+
+  @override
+  String get keyHelpExtendUp => 'Auswahl nach oben erweitern';
+
+  @override
+  String get keyHelpSelectAll => 'Alle Aufgaben der Liste auswählen';
+
+  @override
+  String get keyHelpClear => 'Auswahl aufheben';
+
+  @override
+  String get keyHelpFilter => 'Filterfeld fokussieren';
+
+  @override
+  String get keyHelpRefresh => 'Aktualisieren';
+
+  @override
+  String get keyHelpView => 'Ansicht wechseln';
+
+  @override
+  String get keyHelpNew => 'Neue Aufgabe';
+
+  @override
+  String get keyHelpDone => 'Als erledigt markieren';
+
+  @override
+  String get keyHelpRename => 'Titel bearbeiten';
+
+  @override
+  String get keyHelpDescribe => 'Beschreibung bearbeiten';
+
+  @override
+  String get keyHelpMove => 'In einen anderen Status verschieben';
+
+  @override
+  String get keyHelpComment => 'Kommentieren';
+
+  @override
+  String get keyHelpTag => 'Tag hinzufügen';
+
+  @override
+  String get keyHelpStar => 'Zu Favoriten hinzufügen oder entfernen';
+
+  @override
+  String get keyHelpPriority => 'Priorität setzen';
+
+  @override
+  String get keyHelpAssign => 'Zuweisen';
+
+  @override
+  String get keyHelpDue => 'Fälligkeit setzen';
+
+  @override
+  String get keyHelpSnooze => 'Zurückstellen oder fortsetzen';
+
+  @override
+  String get keyHelpCopyRef => 'Referenz kopieren';
+
+  @override
+  String get keyHelpDelete => 'Löschen';
 
   @override
   String get taskHandoff => 'An einen Agenten übergeben';

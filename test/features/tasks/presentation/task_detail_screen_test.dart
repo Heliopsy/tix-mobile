@@ -157,11 +157,72 @@ void main() {
     expect(find.text('Fix login'), findsOneWidget);
   });
 
-  testWidgets('on a desktop, m opens the move sheet', (tester) async {
+  testWidgets('on a desktop, t opens the move sheet', (tester) async {
+    await pumpTask(tester, server, size: tallDesktop);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyT);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('move.doing')), findsOneWidget);
+  });
+
+  testWidgets('on a desktop, d marks the task done', (tester) async {
+    await pumpTask(tester, server, size: tallDesktop);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyD);
+    await tester.pumpAndSettle();
+    expect(bodies(server, 'POST', '/tasks/infra-1/route'), [
+      {'to': 'done'},
+    ]);
+    expect(toast('Moved infra-1 to done.'), findsOneWidget);
+    expect(find.byKey(const Key('description.field')), findsNothing);
+  });
+
+  testWidgets('d leaves a finished task where it is', (tester) async {
+    server.tasks['infra']![0]['status'] = 'cancelled';
+    await pumpTask(tester, server, size: tallDesktop);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyD);
+    await tester.pumpAndSettle();
+    expect(count(server, 'POST', '/tasks/infra-1/route'), 0);
+    expect(count(server, 'POST', '/tasks/infra-1/transition'), 0);
+  });
+
+  testWidgets('on a desktop, E edits the description', (tester) async {
+    await pumpTask(tester, server, size: tallDesktop);
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyE);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('description.field')), findsOneWidget);
+    expect(find.byKey(const Key('title.field')), findsNothing);
+  });
+
+  testWidgets('on a desktop, m focuses the comment field', (tester) async {
     await pumpTask(tester, server, size: tallDesktop);
     await tester.sendKeyEvent(LogicalKeyboardKey.keyM);
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key('move.doing')), findsOneWidget);
+    expect(find.byKey(const Key('move.doing')), findsNothing);
+    expect(typingInField(), isTrue);
+  });
+
+  testWidgets('on a desktop, y copies the reference', (tester) async {
+    final copied = <Object?>[];
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (call) async {
+        if (call.method == 'Clipboard.setData') copied.add(call.arguments);
+        return null;
+      },
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        null,
+      ),
+    );
+    await pumpTask(tester, server, size: tallDesktop);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyY);
+    await tester.pumpAndSettle();
+    expect(copied, [
+      {'text': 'infra-1'},
+    ]);
   });
 
   testWidgets('on a desktop, s stars the task', (tester) async {

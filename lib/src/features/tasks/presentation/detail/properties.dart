@@ -39,18 +39,65 @@ extension TaskEdits on WidgetRef {
       workflow: workflow,
     );
     if (picked == null || !context.mounted) return;
+    await _sendMove(
+      context,
+      task,
+      workflow,
+      picked.to,
+      comment: picked.comment,
+    );
+  }
+
+  /// Moves [task] to its workflow's done state, as `d` does on a list; a
+  /// finished task stays where it is.
+  Future<void> completeTask(BuildContext context, Task task) async {
+    final l10n = context.l10n;
+    final Workflow workflow;
+    try {
+      workflow = await read(projectWorkflowProvider(task.projectId).future);
+    } on Object catch (e) {
+      if (context.mounted) {
+        showTixToast(context, errorMessage(l10n, e), tone: TixTone.danger);
+      }
+      return;
+    }
+    if (!context.mounted) return;
+    if (workflow.state(task.status)?.terminal ?? false) return;
+    final terminal = [
+      for (final s in workflow.definition?.states ?? const <WorkflowState>[])
+        if (s.terminal ?? false) s,
+    ];
+    final done = terminal.where(
+      (s) => statusCategoryOf(s) == StatusCategory.done,
+    );
+    final target = (done.firstOrNull ?? terminal.firstOrNull)?.id ?? '';
+    if (target.isEmpty) {
+      showTixToast(context, l10n.boardNoRoute(task.ref), tone: TixTone.danger);
+      return;
+    }
+    await _sendMove(context, task, workflow, target);
+  }
+
+  Future<void> _sendMove(
+    BuildContext context,
+    Task task,
+    Workflow workflow,
+    String to, {
+    String? comment,
+  }) async {
+    final l10n = context.l10n;
     final controller = read(taskDetailControllerProvider(task.ref).notifier);
     final from = task.status;
     final direct = workflow
         .routesFrom(task.status)
-        .any((r) => r.to.id == picked.to && r.via.isEmpty);
+        .any((r) => r.to.id == to && r.via.isEmpty);
     try {
       final result = await controller.move(
-        picked.to,
-        comment: picked.comment,
+        to,
+        comment: comment,
         direct: direct,
       );
-      final status = result.task?.status ?? picked.to;
+      final status = result.task?.status ?? to;
       final category = statusCategoryOf(workflow.state(status));
       unawaited(
         category == StatusCategory.done

@@ -13984,7 +13984,7 @@ abstract class AppLocalizations {
   /// No description provided for @keymapDefaultHelp.
   ///
   /// In en, this message translates to:
-  /// **'The app\'s keys and tix web\'s: j and k move, g p opens Projects, Ctrl 1 to 6 switch destinations.'**
+  /// **'The key table tix web shares: j and k move, g i opens Inbox, d marks done, Ctrl 1 to 7 switch destinations.'**
   String get keymapDefaultHelp;
 
   /// No description provided for @keymapVimHelp.
@@ -14016,6 +14016,264 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Keyboard shortcuts are off.'**
   String get settingsKeyBindingsOff;
+
+  /// No description provided for @keyGroupNavigate.
+  ///
+  /// In en, this message translates to:
+  /// **'Navigate'**
+  String get keyGroupNavigate;
+
+  /// No description provided for @keyGroupLists.
+  ///
+  /// In en, this message translates to:
+  /// **'Lists'**
+  String get keyGroupLists;
+
+  /// No description provided for @keyGroupTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Task'**
+  String get keyGroupTask;
+
+  /// No description provided for @keyGroupGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get keyGroupGeneral;
+
+  /// No description provided for @keyHelpPalette.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the command palette'**
+  String get keyHelpPalette;
+
+  /// No description provided for @keyHelpHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Show this help'**
+  String get keyHelpHelp;
+
+  /// No description provided for @keyHelpGoInbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Inbox'**
+  String get keyHelpGoInbox;
+
+  /// No description provided for @keyHelpGoMyWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to My work'**
+  String get keyHelpGoMyWork;
+
+  /// No description provided for @keyHelpGoTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Tasks'**
+  String get keyHelpGoTasks;
+
+  /// No description provided for @keyHelpGoProjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Projects'**
+  String get keyHelpGoProjects;
+
+  /// No description provided for @keyHelpGoActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Activity'**
+  String get keyHelpGoActivity;
+
+  /// No description provided for @keyHelpGoManage.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Manage'**
+  String get keyHelpGoManage;
+
+  /// No description provided for @keyHelpGoSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Settings'**
+  String get keyHelpGoSettings;
+
+  /// No description provided for @keyHelpNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Move selection down'**
+  String get keyHelpNext;
+
+  /// No description provided for @keyHelpPrevious.
+  ///
+  /// In en, this message translates to:
+  /// **'Move selection up'**
+  String get keyHelpPrevious;
+
+  /// No description provided for @keyHelpFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Jump to the first task'**
+  String get keyHelpFirst;
+
+  /// No description provided for @keyHelpLast.
+  ///
+  /// In en, this message translates to:
+  /// **'Jump to the last task'**
+  String get keyHelpLast;
+
+  /// No description provided for @keyHelpPageDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Page down'**
+  String get keyHelpPageDown;
+
+  /// No description provided for @keyHelpPageUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Page up'**
+  String get keyHelpPageUp;
+
+  /// No description provided for @keyHelpOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the selected task'**
+  String get keyHelpOpen;
+
+  /// No description provided for @keyHelpBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back'**
+  String get keyHelpBack;
+
+  /// No description provided for @keyHelpSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Select or unselect the focused task'**
+  String get keyHelpSelect;
+
+  /// No description provided for @keyHelpExtendDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Extend the selection down'**
+  String get keyHelpExtendDown;
+
+  /// No description provided for @keyHelpExtendUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Extend the selection up'**
+  String get keyHelpExtendUp;
+
+  /// No description provided for @keyHelpSelectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Select every task in the list'**
+  String get keyHelpSelectAll;
+
+  /// No description provided for @keyHelpClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear the selection'**
+  String get keyHelpClear;
+
+  /// No description provided for @keyHelpFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus the filter field'**
+  String get keyHelpFilter;
+
+  /// No description provided for @keyHelpRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get keyHelpRefresh;
+
+  /// No description provided for @keyHelpView.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch view'**
+  String get keyHelpView;
+
+  /// No description provided for @keyHelpNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New task'**
+  String get keyHelpNew;
+
+  /// No description provided for @keyHelpDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark done'**
+  String get keyHelpDone;
+
+  /// No description provided for @keyHelpRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit the title'**
+  String get keyHelpRename;
+
+  /// No description provided for @keyHelpDescribe.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit the description'**
+  String get keyHelpDescribe;
+
+  /// No description provided for @keyHelpMove.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to another status'**
+  String get keyHelpMove;
+
+  /// No description provided for @keyHelpComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment'**
+  String get keyHelpComment;
+
+  /// No description provided for @keyHelpTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a tag'**
+  String get keyHelpTag;
+
+  /// No description provided for @keyHelpStar.
+  ///
+  /// In en, this message translates to:
+  /// **'Star or unstar'**
+  String get keyHelpStar;
+
+  /// No description provided for @keyHelpPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Set the priority'**
+  String get keyHelpPriority;
+
+  /// No description provided for @keyHelpAssign.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign'**
+  String get keyHelpAssign;
+
+  /// No description provided for @keyHelpDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Set the due date'**
+  String get keyHelpDue;
+
+  /// No description provided for @keyHelpSnooze.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze or unsnooze'**
+  String get keyHelpSnooze;
+
+  /// No description provided for @keyHelpCopyRef.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy the reference'**
+  String get keyHelpCopyRef;
+
+  /// No description provided for @keyHelpDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get keyHelpDelete;
 
   /// No description provided for @taskHandoff.
   ///

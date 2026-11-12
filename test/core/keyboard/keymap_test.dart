@@ -55,21 +55,61 @@ void main() {
   });
 
   group('presets', () {
-    test('Default has the app keys plus tix web and the destinations', () {
+    test('Default is the key table tix web shares', () {
       final k = Keymap.of(KeymapPreset.standard);
-      expect(_labels(k, KeyActions.listNext), ['↓', 'j']);
+      expect(_labels(k, KeyActions.listNext), ['j', '↓']);
       expect(_labels(k, KeyActions.listTop), ['g', 'Home']);
-      expect(_labels(k, KeyActions.listDone), ['e', 'd']);
-      expect(_labels(k, KeyActions.navProjects), ['g p', 'Ctrl 1']);
+      expect(_labels(k, KeyActions.listDone), ['d']);
+      expect(_labels(k, KeyActions.taskRename), ['e']);
+      expect(_labels(k, KeyActions.taskDescribe), ['E']);
+      expect(_labels(k, KeyActions.taskMove), ['t']);
+      expect(_labels(k, KeyActions.taskComment), ['m']);
+      expect(_labels(k, KeyActions.taskTag), ['#']);
+      expect(_labels(k, KeyActions.taskStar), ['s', '*']);
+      expect(_labels(k, KeyActions.taskCopy), ['y']);
       expect(_labels(k, KeyActions.taskAssign), ['a']);
+    });
+
+    test('destinations follow the navigation order', () {
+      final k = Keymap.of(KeymapPreset.standard);
+      expect(_labels(k, KeyActions.navInbox), ['g i', 'Ctrl 1']);
+      expect(_labels(k, KeyActions.navMyWork), ['g m', 'Ctrl 2']);
+      expect(_labels(k, KeyActions.navTasks), ['g t', 'Ctrl 3']);
+      expect(_labels(k, KeyActions.navProjects), ['g p', 'Ctrl 4']);
+      expect(_labels(k, KeyActions.navWatch), ['g a', 'g w', 'Ctrl 5']);
+      expect(_labels(k, KeyActions.navManage), ['g M', 'Ctrl 6']);
+      expect(_labels(k, KeyActions.navSettings), ['g s', 'Ctrl 7']);
+    });
+
+    test('no key runs two actions, Esc going back and clearing aside', () {
+      const shared = {KeyActions.navBack, KeyActions.listClear};
+      for (final preset in KeymapPreset.values) {
+        final k = Keymap.of(preset);
+        final owner = <KeyBinding, String>{};
+        for (final action in k.actions) {
+          for (final b in k.bindingsFor(action)) {
+            final other = owner[b];
+            if (other != null && shared.containsAll([other, action])) continue;
+            expect(other, isNull, reason: '${preset.name} $b: $other, $action');
+            owner[b] = action;
+          }
+        }
+      }
     });
 
     test('Vim layers its keys over Default', () {
       final k = Keymap.of(KeymapPreset.vim);
       expect(_labels(k, KeyActions.listTop), ['g g', 'Home']);
       expect(_labels(k, KeyActions.listNew), ['o']);
+      expect(_labels(k, KeyActions.listDone), ['d']);
+      expect(_labels(k, KeyActions.listFilter), ['/', ':']);
+      expect(_labels(k, KeyActions.taskDescribe), ['D']);
       expect(_labels(k, KeyActions.taskDelete), ['d d', 'x', 'Delete']);
       expect(_labels(k, KeyActions.taskAssign), ['a']);
+      expect(_labels(k, KeyActions.taskComment), ['m']);
+      for (final action in k.actions) {
+        expect(_labels(k, action), isNot(contains('e')), reason: action);
+      }
     });
 
     test('Emacs moves with C-n and opens the palette on M-x', () {

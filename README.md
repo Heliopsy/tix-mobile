@@ -121,9 +121,10 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 - **Filters and search** in tix's filter language, one-tap chips (mine, starred, snoozed, blocked, due windows,
   finished), and saved filters, your own and shared ones, also opened by name from `/tasks?filter=<name>`.
 - **My work**: your open tasks under Overdue, Today, This week, Later and No date.
-- **Keyboard**: every screen works without a mouse. `j` and `k` to move, Enter to open, `x` to pick, `/` to filter,
-  `v` to switch the view, `g p` or Ctrl+1 and the like to change destination, Esc to go back. Default, Vim, Emacs
-  and Off presets, picked in Settings, where shortcuts can also be turned off.
+- **Keyboard**: every screen works without a mouse, with the same keys as tix web. `j` and `k` to move, Enter to
+  open, `x` to pick, `/` to filter, `v` to switch the view, `d` to mark done, `e` to rename, `t` to move, `m` to
+  comment, `g i` or Ctrl+1 and the like to change destination, Esc to go back, `?` for the full list. Default, Vim,
+  Emacs and Off presets, picked in Settings, where shortcuts can also be turned off.
 - **Quick add** in tix's one-line syntax: `Fix login !high #auth @raj due:fri`, from any screen (Ctrl+N or Cmd+N),
   with a live preview of what the server makes of the line, completions for projects, tags and people, and "add
   another". The server parses the line, so the app understands exactly what the CLI and the browser understand.

@@ -5,6 +5,7 @@ import 'package:tix_mobile/src/core/keyboard/keymap.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/data/repositories/settings_repository.dart';
 
+export 'package:tix_mobile/src/core/keyboard/key_help.dart';
 export 'package:tix_mobile/src/core/keyboard/keymap.dart';
 
 part 'keyboard_setting.g.dart';

@@ -220,9 +220,13 @@ routed, projects, recent tasks, task by reference, using a template), `Templates
 open task), `SettingsCommands` (theme) and `ContextCommands` in the shell (switch context). A feature adds its own
 the same way: a small widget wrapping `child` in a `CommandScope`, composed in `core/router/router.dart`.
 
-**Keys.** Use `primaryKey(LogicalKeyboardKey.keyN)` for Ctrl on Linux and Windows and Cmd on Apple platforms. Taken:
-`?`, Ctrl/Cmd K (palette), Ctrl/Cmd N (quick add), Ctrl/Cmd Shift V (quick add from the clipboard), and on the task
-list `N` and `R`.
+**Keys.** A command that does something in the shared key table names its `action` from `KeyActions` instead of a
+fixed key; the preset decides the keys and the `?` help reads the action's group and label from
+`core/keyboard/key_help.dart`. The table is shared with tix web and written down in the `unified-keys` OpenSpec
+design; a key never means two things. A fixed `shortcut` is for a command outside the table: use
+`primaryKey(LogicalKeyboardKey.keyN)` for Ctrl on Linux and Windows and Cmd on Apple platforms. Taken: `?`, Ctrl/Cmd
+K (palette), Ctrl/Cmd N (quick add), Ctrl/Cmd Shift V (quick add from the clipboard), Ctrl 1 to 7 (destinations) and
+every letter in the table.
 
 ### Share intake and launcher shortcuts
 
