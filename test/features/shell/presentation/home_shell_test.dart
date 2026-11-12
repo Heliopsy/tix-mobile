@@ -161,7 +161,7 @@ void main() {
       ),
     );
     expect(
-      find.text('projects,tasks,myWork,inbox,activity,manage,settings'),
+      find.text('projects,tasks,myWork,inbox,activity,stats,manage,settings'),
       findsOneWidget,
     );
   });

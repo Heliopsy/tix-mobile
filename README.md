@@ -190,6 +190,14 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   count of what arrived, replay from a sequence number, open the task or project and come back, read the whole
   payload or copy the event as JSON. It has its own place in the navigation, between Inbox and Manage, and the
   desktop tray opens it.
+- **Statistics**, as the web's: completed, created, median and slowest lead time over 7, 14, 30 or 90 days, for
+  every project or one, completed per day, where the work is by state, who moved the most tasks and what has
+  waited longest.
+- **Actor pages**: a person's or agent's handle, name and id, the tasks assigned to them, their API tokens and SSH
+  keys (with `token:admin`) and their last 20 audit entries (with `audit:read`). Names in comments, history,
+  Activity, audit, the leaderboard and token lists, and every `@handle`, open them.
+- **Connect an agent**: the CLI, MCP (one tab per client), SSH, API and skill commands for the active server, with
+  a token issued on the spot filled into every one and kept nowhere.
 - **Adaptive layout**: a bottom navigation bar on phones, a navigation rail and a two-pane list and detail on tablets
   and desktops.
 

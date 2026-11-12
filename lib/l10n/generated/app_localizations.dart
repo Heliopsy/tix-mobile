@@ -6985,6 +6985,168 @@ abstract class AppLocalizations {
   /// **'My API tokens'**
   String get tokensMine;
 
+  /// Line under an actor's name on their screen
+  ///
+  /// In en, this message translates to:
+  /// **'A person or an agent of this tenant'**
+  String get actorSubtitle;
+
+  /// Explanation behind the (i) of the actor screen's About section
+  ///
+  /// In en, this message translates to:
+  /// **'A person or an agent of this tenant, by the name others use for it. What it may do is not shown here.'**
+  String get actorInfo;
+
+  /// Screen reader hint on a name that opens the actor screen
+  ///
+  /// In en, this message translates to:
+  /// **'Opens their page'**
+  String get actorOpenHint;
+
+  /// Heading of who an actor is
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get actorAbout;
+
+  /// Beside an actor's name when it is the reader
+  ///
+  /// In en, this message translates to:
+  /// **'(you)'**
+  String get actorYou;
+
+  /// Badge of a person's actor
+  ///
+  /// In en, this message translates to:
+  /// **'person'**
+  String get actorKindUser;
+
+  /// Badge of an agent's actor
+  ///
+  /// In en, this message translates to:
+  /// **'agent'**
+  String get actorKindAgent;
+
+  /// Badge of the system actor
+  ///
+  /// In en, this message translates to:
+  /// **'system'**
+  String get actorKindSystem;
+
+  /// Label of an actor's handle
+  ///
+  /// In en, this message translates to:
+  /// **'Handle'**
+  String get actorHandle;
+
+  /// Label of an actor's display name
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get actorName;
+
+  /// Shown when an actor has no display name
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get actorNotSet;
+
+  /// Label of an actor's id
+  ///
+  /// In en, this message translates to:
+  /// **'Actor id'**
+  String get actorId;
+
+  /// Tooltip of the button that copies an actor's id
+  ///
+  /// In en, this message translates to:
+  /// **'Copy the actor id'**
+  String get actorCopyId;
+
+  /// Button on the reader's own actor screen that opens their account
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile'**
+  String get actorYourProfile;
+
+  /// Heading of the tasks assigned to an actor
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks assigned to {name}'**
+  String actorTasks(String name);
+
+  /// Under the assigned tasks heading when there are more
+  ///
+  /// In en, this message translates to:
+  /// **'The first 20 are shown.'**
+  String get actorTasksFirst;
+
+  /// Shown when an actor has no assigned task
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is assigned.'**
+  String get actorTasksNone;
+
+  /// Heading of an actor's API tokens
+  ///
+  /// In en, this message translates to:
+  /// **'API tokens'**
+  String get actorTokens;
+
+  /// Shown when an actor has no API token
+  ///
+  /// In en, this message translates to:
+  /// **'No API tokens.'**
+  String get actorTokensNone;
+
+  /// Heading of an actor's SSH keys
+  ///
+  /// In en, this message translates to:
+  /// **'SSH keys'**
+  String get actorKeys;
+
+  /// Shown when an actor has no SSH key
+  ///
+  /// In en, this message translates to:
+  /// **'No SSH keys.'**
+  String get actorKeysNone;
+
+  /// Badge on a revoked token or key
+  ///
+  /// In en, this message translates to:
+  /// **'Revoked'**
+  String get actorRevoked;
+
+  /// When a token was last used
+  ///
+  /// In en, this message translates to:
+  /// **'last used {date}'**
+  String actorLastUsed(String date);
+
+  /// A token that was never used
+  ///
+  /// In en, this message translates to:
+  /// **'never used'**
+  String get actorNeverUsed;
+
+  /// Heading of an actor's last audit entries
+  ///
+  /// In en, this message translates to:
+  /// **'Recent activity'**
+  String get actorRecent;
+
+  /// Shown when an actor has no audit entry
+  ///
+  /// In en, this message translates to:
+  /// **'No recorded activity.'**
+  String get actorRecentNone;
+
+  /// Shown instead of recent activity without audit:read
+  ///
+  /// In en, this message translates to:
+  /// **'Recent activity needs the audit:read scope, which you do not hold.'**
+  String get actorRecentNeedsAudit;
+
   /// No description provided for @tokensIssue.
   ///
   /// In en, this message translates to:
@@ -8160,6 +8322,450 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Credentials for scripts, the CLI and agents'**
   String get settingsTokensHelp;
+
+  /// Title of the Connect an agent screen and its Settings entry
+  ///
+  /// In en, this message translates to:
+  /// **'Connect an agent'**
+  String get connectAgentTitle;
+
+  /// Subtitle of the Connect an agent entry in Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Commands for the CLI, MCP clients, SSH, the API and the agent skill'**
+  String get connectAgentSubtitle;
+
+  /// Command palette entry that opens Connect an agent
+  ///
+  /// In en, this message translates to:
+  /// **'Connect an agent'**
+  String get goConnectAgent;
+
+  /// Line under the Connect an agent title
+  ///
+  /// In en, this message translates to:
+  /// **'Get a credential, pick how you connect, then copy the commands.'**
+  String get connectAgentIntro;
+
+  /// Explanation behind the (i) of Connect an agent
+  ///
+  /// In en, this message translates to:
+  /// **'Get a credential, pick how you connect, then copy the commands. Every command is filled in for this server and for you.'**
+  String get connectAgentInfo;
+
+  /// Label of the server address on Connect an agent
+  ///
+  /// In en, this message translates to:
+  /// **'Server'**
+  String get connectAgentServer;
+
+  /// Label of the tenant on Connect an agent
+  ///
+  /// In en, this message translates to:
+  /// **'Tenant'**
+  String get connectAgentTenant;
+
+  /// Label of the reader's handle on Connect an agent
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as'**
+  String get connectAgentSignedInAs;
+
+  /// First step heading on Connect an agent
+  ///
+  /// In en, this message translates to:
+  /// **'1. Get a credential'**
+  String get connectAgentStepCredential;
+
+  /// Second step heading on Connect an agent
+  ///
+  /// In en, this message translates to:
+  /// **'2. Pick how you connect'**
+  String get connectAgentStepPick;
+
+  /// Third step heading on Connect an agent, naming the way picked
+  ///
+  /// In en, this message translates to:
+  /// **'3. Copy the commands: {way}'**
+  String connectAgentStepCopy(String way);
+
+  /// Way to connect: the command line
+  ///
+  /// In en, this message translates to:
+  /// **'CLI'**
+  String get connectAgentCli;
+
+  /// Way to connect: an MCP client
+  ///
+  /// In en, this message translates to:
+  /// **'MCP'**
+  String get connectAgentMcp;
+
+  /// Way to connect: SSH
+  ///
+  /// In en, this message translates to:
+  /// **'SSH'**
+  String get connectAgentSsh;
+
+  /// Way to connect: the HTTP API
+  ///
+  /// In en, this message translates to:
+  /// **'API'**
+  String get connectAgentApi;
+
+  /// Way to connect: the agent skill
+  ///
+  /// In en, this message translates to:
+  /// **'Skill'**
+  String get connectAgentSkill;
+
+  /// Shown in step 1 before a token is issued
+  ///
+  /// In en, this message translates to:
+  /// **'The CLI, MCP and API commands read \$TIX_TOKEN. Issue a token here and the screen fills it in, or set TIX_TOKEN in your shell to one you already have.'**
+  String get connectAgentTokenNeeded;
+
+  /// Shown in step 1 to a reader who cannot issue tokens
+  ///
+  /// In en, this message translates to:
+  /// **'Issuing a token needs the token:admin scope, which you do not hold. Ask an administrator for one.'**
+  String get connectAgentNoTokenAdmin;
+
+  /// Note under a token issued on Connect an agent
+  ///
+  /// In en, this message translates to:
+  /// **'Every command on this screen now carries this token. It is kept nowhere: leaving the screen puts \$TIX_TOKEN back.'**
+  String get connectAgentTokenFilled;
+
+  /// Note of the export command under an issued token
+  ///
+  /// In en, this message translates to:
+  /// **'Sets TIX_TOKEN in this shell, for commands that read it.'**
+  String get connectAgentExportNote;
+
+  /// Heading of the command that mints the agent token
+  ///
+  /// In en, this message translates to:
+  /// **'From the command line'**
+  String get connectAgentFromCli;
+
+  /// Button that opens the reader's tokens
+  ///
+  /// In en, this message translates to:
+  /// **'See and revoke your tokens'**
+  String get connectAgentSeeTokens;
+
+  /// Heading of the rotate command
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate it later'**
+  String get connectAgentRotate;
+
+  /// Note of the rotate command
+  ///
+  /// In en, this message translates to:
+  /// **'Issues a new value with the same name and scopes, and keeps the old one working for ten minutes so a running agent is not cut off.'**
+  String get connectAgentRotateNote;
+
+  /// Note at the end of step 1
+  ///
+  /// In en, this message translates to:
+  /// **'The SSH tab needs no token: your enrolled SSH key is the credential.'**
+  String get connectAgentSshNoToken;
+
+  /// Button that switches to the SSH commands
+  ///
+  /// In en, this message translates to:
+  /// **'Open the SSH tab'**
+  String get connectAgentOpenSsh;
+
+  /// Heading of the install commands, and the button that opens them from MCP
+  ///
+  /// In en, this message translates to:
+  /// **'Install the CLI'**
+  String get connectAgentInstall;
+
+  /// Note under Install the CLI
+  ///
+  /// In en, this message translates to:
+  /// **'Install the version this server runs, so the CLI and the server agree.'**
+  String get connectAgentInstallNote;
+
+  /// Install choice
+  ///
+  /// In en, this message translates to:
+  /// **'Linux and macOS'**
+  String get connectAgentInstallUnix;
+
+  /// Note of the Linux and macOS install
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads the release for this OS and CPU, checks its checksum and puts tix on your PATH.'**
+  String get connectAgentInstallUnixNote;
+
+  /// Install choice
+  ///
+  /// In en, this message translates to:
+  /// **'Windows'**
+  String get connectAgentInstallWindows;
+
+  /// Note of the Windows install
+  ///
+  /// In en, this message translates to:
+  /// **'The same install in PowerShell.'**
+  String get connectAgentInstallWindowsNote;
+
+  /// Install choice
+  ///
+  /// In en, this message translates to:
+  /// **'Go'**
+  String get connectAgentInstallGo;
+
+  /// Note of the Go install
+  ///
+  /// In en, this message translates to:
+  /// **'Builds tix with your Go toolchain.'**
+  String get connectAgentInstallGoNote;
+
+  /// Install choice
+  ///
+  /// In en, this message translates to:
+  /// **'Container'**
+  String get connectAgentInstallContainer;
+
+  /// Note of the container install
+  ///
+  /// In en, this message translates to:
+  /// **'Runs one command from the published image, with nothing installed. Docker takes the same arguments.'**
+  String get connectAgentInstallContainerNote;
+
+  /// Heading of the context command
+  ///
+  /// In en, this message translates to:
+  /// **'Save a context'**
+  String get connectAgentSaveContext;
+
+  /// Note of the context command
+  ///
+  /// In en, this message translates to:
+  /// **'Stores the server, token and tenant under one name and makes it the default, so later commands need no flags.'**
+  String get connectAgentSaveContextNote;
+
+  /// Heading of the verify command
+  ///
+  /// In en, this message translates to:
+  /// **'Check the connection'**
+  String get connectAgentVerify;
+
+  /// Note of the verify command
+  ///
+  /// In en, this message translates to:
+  /// **'Lists five tasks from this server. An error names what is wrong: the address, the token or a scope.'**
+  String get connectAgentVerifyNote;
+
+  /// Note at the top of the MCP commands
+  ///
+  /// In en, this message translates to:
+  /// **'tix mcp serves the API as tools over standard input and output, so the CLI has to be installed first. A tool that deletes or cannot be undone is left out unless you add --allow-destructive after mcp.'**
+  String get connectAgentMcpNote;
+
+  /// Heading of a client's registration command
+  ///
+  /// In en, this message translates to:
+  /// **'Command line'**
+  String get connectAgentCommandLine;
+
+  /// Note of Claude Code's .mcp.json
+  ///
+  /// In en, this message translates to:
+  /// **'At the root of a project.'**
+  String get connectAgentMcpProjectRoot;
+
+  /// Note of Codex's config.toml
+  ///
+  /// In en, this message translates to:
+  /// **'Shared by the Codex CLI and IDE extension.'**
+  String get connectAgentMcpCodex;
+
+  /// Note of OpenCode's opencode.json
+  ///
+  /// In en, this message translates to:
+  /// **'The command and its arguments are one array, and the variables go under environment.'**
+  String get connectAgentMcpOpenCode;
+
+  /// Note of Gemini CLI's settings.json
+  ///
+  /// In en, this message translates to:
+  /// **'In a project, or ~/.gemini/settings.json for every project. Gemini CLI starts it only in a trusted folder.'**
+  String get connectAgentMcpGemini;
+
+  /// Note of Claude Desktop's config file
+  ///
+  /// In en, this message translates to:
+  /// **'Quit and reopen the app after editing it.'**
+  String get connectAgentMcpClaudeDesktop;
+
+  /// Note of Cursor's mcp.json
+  ///
+  /// In en, this message translates to:
+  /// **'In a project, or ~/.cursor/mcp.json for every project.'**
+  String get connectAgentMcpCursor;
+
+  /// Note of VS Code's mcp.json
+  ///
+  /// In en, this message translates to:
+  /// **'In a workspace, for GitHub Copilot\'s agent mode.'**
+  String get connectAgentMcpVscode;
+
+  /// Note of VS Code's command
+  ///
+  /// In en, this message translates to:
+  /// **'Adds the same server to your user profile.'**
+  String get connectAgentMcpVscodeCli;
+
+  /// Note of Zed's settings.json
+  ///
+  /// In en, this message translates to:
+  /// **'Zed\'s settings file, opened with zed: open settings file.'**
+  String get connectAgentMcpZed;
+
+  /// Heading of tix mcp --list
+  ///
+  /// In en, this message translates to:
+  /// **'See the tools'**
+  String get connectAgentSeeTools;
+
+  /// Note of tix mcp --list
+  ///
+  /// In en, this message translates to:
+  /// **'Prints every tool, the scope it needs and whether it is offered. It needs no server.'**
+  String get connectAgentSeeToolsNote;
+
+  /// Note at the top of the SSH commands
+  ///
+  /// In en, this message translates to:
+  /// **'Your SSH key is the credential, and nothing needs installing. The tenant goes where the user name usually does.'**
+  String get connectAgentSshNote;
+
+  /// Note on SSH commands: the app guesses the address
+  ///
+  /// In en, this message translates to:
+  /// **'The app cannot tell whether this server runs an SSH listener, or on which address. These commands use the server\'s host and port 22; an administrator names the real address with ssh.public_address.'**
+  String get connectAgentSshAddress;
+
+  /// Heading of the key enrol command
+  ///
+  /// In en, this message translates to:
+  /// **'Enrol your key'**
+  String get connectAgentSshKey;
+
+  /// Note of the key enrol command
+  ///
+  /// In en, this message translates to:
+  /// **'Once, from a configured CLI. Add --all-tenants to enrol it in every tenant you belong to. The Security screen does the same in the app.'**
+  String get connectAgentSshKeyNote;
+
+  /// Heading of the ssh command
+  ///
+  /// In en, this message translates to:
+  /// **'Open the terminal interface'**
+  String get connectAgentSshTui;
+
+  /// Heading of a command run over SSH
+  ///
+  /// In en, this message translates to:
+  /// **'Run a tix command'**
+  String get connectAgentSshCmd;
+
+  /// Note of a command run over SSH
+  ///
+  /// In en, this message translates to:
+  /// **'Runs on the server as you, with nothing installed or configured here. The server reads no file of yours: redirect with < and > instead.'**
+  String get connectAgentSshCmdNote;
+
+  /// Heading of the export over SSH
+  ///
+  /// In en, this message translates to:
+  /// **'Export over SSH'**
+  String get connectAgentSshExport;
+
+  /// Note of the export over SSH
+  ///
+  /// In en, this message translates to:
+  /// **'Streams the tenant\'s snapshot to your machine. It needs the export scope.'**
+  String get connectAgentSshExportNote;
+
+  /// Heading of the event stream over SSH
+  ///
+  /// In en, this message translates to:
+  /// **'Stream events'**
+  String get connectAgentSshWatch;
+
+  /// Note of the event stream over SSH
+  ///
+  /// In en, this message translates to:
+  /// **'One JSON event per line, for a script. Add -t after ssh for the coloured view a person reads.'**
+  String get connectAgentSshWatchNote;
+
+  /// Heading of the whoami call
+  ///
+  /// In en, this message translates to:
+  /// **'Who the token is'**
+  String get connectAgentRestWhoami;
+
+  /// Heading of the task listing call
+  ///
+  /// In en, this message translates to:
+  /// **'List tasks'**
+  String get connectAgentRestTasks;
+
+  /// Note under the API commands
+  ///
+  /// In en, this message translates to:
+  /// **'Every operation is described in the OpenAPI document at {url}, which needs no token.'**
+  String connectAgentOpenApi(String url);
+
+  /// Note at the top of the skill commands
+  ///
+  /// In en, this message translates to:
+  /// **'The skill teaches an agent the claim, lease and release loop, the exit codes and the JSON output.'**
+  String get connectAgentSkillNote;
+
+  /// Skill install choice
+  ///
+  /// In en, this message translates to:
+  /// **'Claude Code, this project'**
+  String get connectAgentSkillProject;
+
+  /// Note of the project skill install
+  ///
+  /// In en, this message translates to:
+  /// **'Run it at the root of the repository. Commit the folder so everyone working there gets it.'**
+  String get connectAgentSkillProjectNote;
+
+  /// Skill install choice
+  ///
+  /// In en, this message translates to:
+  /// **'Claude Code, every project'**
+  String get connectAgentSkillUser;
+
+  /// Note of the user skill install
+  ///
+  /// In en, this message translates to:
+  /// **'Installs it for you alone, in every project.'**
+  String get connectAgentSkillUserNote;
+
+  /// Skill install choice
+  ///
+  /// In en, this message translates to:
+  /// **'Other agents'**
+  String get connectAgentSkillOther;
+
+  /// Note of the other agents skill install
+  ///
+  /// In en, this message translates to:
+  /// **'Codex, OpenCode, Gemini CLI and most other agents read AGENTS.md. Any agent that can fetch a URL can follow the skill.'**
+  String get connectAgentSkillOtherNote;
 
   /// No description provided for @securityTitle.
   ///
@@ -13152,6 +13758,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Activity'**
   String get watchTitle;
+
+  /// Title of the Statistics screen and its navigation destination
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get statsTitle;
+
+  /// Command palette entry that opens Statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Statistics'**
+  String get goStats;
+
+  /// Line under the Statistics title
+  ///
+  /// In en, this message translates to:
+  /// **'Throughput, lead time and who moved the work, over a window that ends now.'**
+  String get statsIntro;
+
+  /// Explanation behind the (i) beside the Statistics title, as tix's web says it
+  ///
+  /// In en, this message translates to:
+  /// **'Completed counts tasks that reached a terminal state in the window, cancelled ones included; created counts tasks made in it. Lead time runs from a task\'s creation to its terminal state; slowest is the longest of those. The window always ends now.'**
+  String get statsInfo;
+
+  /// Label of the window picker on Statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Window'**
+  String get statsWindow;
+
+  /// One window choice on Statistics
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days'**
+  String statsDays(int days);
+
+  /// Label of the project picker on Statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Project'**
+  String get statsProject;
+
+  /// Project picker choice that shows the whole tenant
+  ///
+  /// In en, this message translates to:
+  /// **'Every project'**
+  String get statsEveryProject;
+
+  /// Note when the project picker could not list every project
+  ///
+  /// In en, this message translates to:
+  /// **'This picker does not list every project in this tenant, so a project missing from it cannot be chosen here. The figures below are unaffected.'**
+  String get statsShortProjects;
+
+  /// Caption under the count of completed tasks
+  ///
+  /// In en, this message translates to:
+  /// **'completed'**
+  String get statsCompleted;
+
+  /// Caption under the count of created tasks
+  ///
+  /// In en, this message translates to:
+  /// **'created'**
+  String get statsCreated;
+
+  /// Caption under the median lead time
+  ///
+  /// In en, this message translates to:
+  /// **'median lead time'**
+  String get statsMedianLead;
+
+  /// Caption under the slowest lead time
+  ///
+  /// In en, this message translates to:
+  /// **'slowest'**
+  String get statsSlowest;
+
+  /// Heading of the per-day chart
+  ///
+  /// In en, this message translates to:
+  /// **'Completed per day'**
+  String get statsPerDay;
+
+  /// Explanation behind the (i) of the per-day chart
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks that reached a terminal state, by the UTC day it happened. A task reopened since then is not counted, and only its latest completion is.'**
+  String get statsPerDayInfo;
+
+  /// Screen reader label of the per-day chart
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks completed per day'**
+  String get statsPerDayLabel;
+
+  /// Tooltip and screen reader label of one day's bar
+  ///
+  /// In en, this message translates to:
+  /// **'{day}: {count} completed'**
+  String statsDayCompleted(String day, int count);
+
+  /// Shown instead of the per-day chart when nothing was completed
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing was completed in this window.'**
+  String get statsNoneCompleted;
+
+  /// Heading of the state category breakdown
+  ///
+  /// In en, this message translates to:
+  /// **'Where the work is'**
+  String get statsWhere;
+
+  /// Explanation behind the (i) of the state category breakdown
+  ///
+  /// In en, this message translates to:
+  /// **'How many tasks sit in each state category right now, whatever the window. Done and cancelled are kept apart, so abandoned work never reads as finished work.'**
+  String get statsWhereInfo;
+
+  /// Screen reader label of the divided bar
+  ///
+  /// In en, this message translates to:
+  /// **'How the tasks are spread across states'**
+  String get statsSpread;
+
+  /// Shown instead of the breakdown when the tenant has no tasks
+  ///
+  /// In en, this message translates to:
+  /// **'No tasks yet.'**
+  String get statsNoTasks;
+
+  /// Heading of the leaderboard
+  ///
+  /// In en, this message translates to:
+  /// **'Most active'**
+  String get statsActive;
+
+  /// Explanation behind the (i) of the leaderboard
+  ///
+  /// In en, this message translates to:
+  /// **'People and agents ranked by how many tasks they moved to a terminal state, read from the audit log. It is not a measure of effort. A move older than the audit retention window counts for nobody.'**
+  String get statsActiveInfo;
+
+  /// What the leaderboard counts, under its heading
+  ///
+  /// In en, this message translates to:
+  /// **'Counting {measure}.'**
+  String statsCounting(String measure);
+
+  /// The leaderboard's measure, as tix names it
+  ///
+  /// In en, this message translates to:
+  /// **'tasks moved to a terminal state'**
+  String get statsMeasureMoved;
+
+  /// Shown instead of the leaderboard when it is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody moved a task to a terminal state in this window.'**
+  String get statsNobody;
+
+  /// Heading of the oldest open tasks
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting longest'**
+  String get statsWaiting;
+
+  /// Explanation behind the (i) of the oldest open tasks
+  ///
+  /// In en, this message translates to:
+  /// **'The oldest tasks that have not reached a terminal state, whatever the window. Age counts from when the task was created.'**
+  String get statsWaitingInfo;
+
+  /// Shown when no open task is waiting
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is waiting: every task has reached a terminal state.'**
+  String get statsNothingWaiting;
+
+  /// How old a waiting task is, in its row
+  ///
+  /// In en, this message translates to:
+  /// **'age {age}'**
+  String statsAge(String age);
 
   /// Subtitle of the Watch screen and its Manage entry
   ///

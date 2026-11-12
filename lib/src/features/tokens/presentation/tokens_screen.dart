@@ -8,6 +8,7 @@ import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/dates.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/session/people.dart';
+import 'package:tix_mobile/src/core/widgets/actor_link.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/repositories/token_repository.dart';
@@ -208,11 +209,15 @@ class TokenTile extends ConsumerWidget {
           ),
           if (showOwner) ...[
             const SizedBox(height: TixSpace.s1),
-            Text(
-              mine
-                  ? l10n.tokensOwnerYou(ownerName)
-                  : l10n.tokensOwner(ownerName),
-              style: small,
+            ActorLink(
+              key: Key('token.${token.id}.owner'),
+              actor: token.actorId,
+              child: Text(
+                mine
+                    ? l10n.tokensOwnerYou(ownerName)
+                    : l10n.tokensOwner(ownerName),
+                style: small,
+              ),
             ),
           ],
           const SizedBox(height: TixSpace.s2),

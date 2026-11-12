@@ -330,6 +330,11 @@ class _Entry extends StatelessWidget {
         subtitle: l10n.settingsTokensHelp,
         push: true,
       ),
+      'security.connectAgent' => _LinkEntry(
+        item: item,
+        subtitle: l10n.connectAgentSubtitle,
+        push: true,
+      ),
       'calendar.open' => _LinkEntry(
         item: item,
         subtitle: l10n.settingsCalendarHelp,

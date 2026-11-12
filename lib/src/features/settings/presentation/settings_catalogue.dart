@@ -407,6 +407,14 @@ List<SettingsItem> settingsCatalogue(
         icon: Icons.key_outlined,
         route: Routes.myTokens,
       ),
+    SettingsItem(
+      id: 'security.connectAgent',
+      section: SettingsSection.security,
+      label: l10n.connectAgentTitle,
+      icon: Icons.cable_outlined,
+      keywords: 'CLI MCP SSH API skill agent',
+      route: Routes.connectAgent,
+    ),
     if (can?.call(Scopes.taskRead) ?? true)
       SettingsItem(
         id: 'calendar.open',

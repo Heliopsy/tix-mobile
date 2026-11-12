@@ -4111,6 +4111,93 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tokensMine => 'My API tokens';
 
   @override
+  String get actorSubtitle => 'A person or an agent of this tenant';
+
+  @override
+  String get actorInfo =>
+      'A person or an agent of this tenant, by the name others use for it. What it may do is not shown here.';
+
+  @override
+  String get actorOpenHint => 'Opens their page';
+
+  @override
+  String get actorAbout => 'About';
+
+  @override
+  String get actorYou => '(you)';
+
+  @override
+  String get actorKindUser => 'person';
+
+  @override
+  String get actorKindAgent => 'agent';
+
+  @override
+  String get actorKindSystem => 'system';
+
+  @override
+  String get actorHandle => 'Handle';
+
+  @override
+  String get actorName => 'Name';
+
+  @override
+  String get actorNotSet => 'Not set';
+
+  @override
+  String get actorId => 'Actor id';
+
+  @override
+  String get actorCopyId => 'Copy the actor id';
+
+  @override
+  String get actorYourProfile => 'Your profile';
+
+  @override
+  String actorTasks(String name) {
+    return 'Tasks assigned to $name';
+  }
+
+  @override
+  String get actorTasksFirst => 'The first 20 are shown.';
+
+  @override
+  String get actorTasksNone => 'Nothing is assigned.';
+
+  @override
+  String get actorTokens => 'API tokens';
+
+  @override
+  String get actorTokensNone => 'No API tokens.';
+
+  @override
+  String get actorKeys => 'SSH keys';
+
+  @override
+  String get actorKeysNone => 'No SSH keys.';
+
+  @override
+  String get actorRevoked => 'Revoked';
+
+  @override
+  String actorLastUsed(String date) {
+    return 'last used $date';
+  }
+
+  @override
+  String get actorNeverUsed => 'never used';
+
+  @override
+  String get actorRecent => 'Recent activity';
+
+  @override
+  String get actorRecentNone => 'No recorded activity.';
+
+  @override
+  String get actorRecentNeedsAudit =>
+      'Recent activity needs the audit:read scope, which you do not hold.';
+
+  @override
   String get tokensIssue => 'Issue a token';
 
   @override
@@ -4799,6 +4886,267 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsTokensHelp =>
       'Credentials for scripts, the CLI and agents';
+
+  @override
+  String get connectAgentTitle => 'Connect an agent';
+
+  @override
+  String get connectAgentSubtitle =>
+      'Commands for the CLI, MCP clients, SSH, the API and the agent skill';
+
+  @override
+  String get goConnectAgent => 'Connect an agent';
+
+  @override
+  String get connectAgentIntro =>
+      'Get a credential, pick how you connect, then copy the commands.';
+
+  @override
+  String get connectAgentInfo =>
+      'Get a credential, pick how you connect, then copy the commands. Every command is filled in for this server and for you.';
+
+  @override
+  String get connectAgentServer => 'Server';
+
+  @override
+  String get connectAgentTenant => 'Tenant';
+
+  @override
+  String get connectAgentSignedInAs => 'Signed in as';
+
+  @override
+  String get connectAgentStepCredential => '1. Get a credential';
+
+  @override
+  String get connectAgentStepPick => '2. Pick how you connect';
+
+  @override
+  String connectAgentStepCopy(String way) {
+    return '3. Copy the commands: $way';
+  }
+
+  @override
+  String get connectAgentCli => 'CLI';
+
+  @override
+  String get connectAgentMcp => 'MCP';
+
+  @override
+  String get connectAgentSsh => 'SSH';
+
+  @override
+  String get connectAgentApi => 'API';
+
+  @override
+  String get connectAgentSkill => 'Skill';
+
+  @override
+  String get connectAgentTokenNeeded =>
+      'The CLI, MCP and API commands read \$TIX_TOKEN. Issue a token here and the screen fills it in, or set TIX_TOKEN in your shell to one you already have.';
+
+  @override
+  String get connectAgentNoTokenAdmin =>
+      'Issuing a token needs the token:admin scope, which you do not hold. Ask an administrator for one.';
+
+  @override
+  String get connectAgentTokenFilled =>
+      'Every command on this screen now carries this token. It is kept nowhere: leaving the screen puts \$TIX_TOKEN back.';
+
+  @override
+  String get connectAgentExportNote =>
+      'Sets TIX_TOKEN in this shell, for commands that read it.';
+
+  @override
+  String get connectAgentFromCli => 'From the command line';
+
+  @override
+  String get connectAgentSeeTokens => 'See and revoke your tokens';
+
+  @override
+  String get connectAgentRotate => 'Rotate it later';
+
+  @override
+  String get connectAgentRotateNote =>
+      'Issues a new value with the same name and scopes, and keeps the old one working for ten minutes so a running agent is not cut off.';
+
+  @override
+  String get connectAgentSshNoToken =>
+      'The SSH tab needs no token: your enrolled SSH key is the credential.';
+
+  @override
+  String get connectAgentOpenSsh => 'Open the SSH tab';
+
+  @override
+  String get connectAgentInstall => 'Install the CLI';
+
+  @override
+  String get connectAgentInstallNote =>
+      'Install the version this server runs, so the CLI and the server agree.';
+
+  @override
+  String get connectAgentInstallUnix => 'Linux and macOS';
+
+  @override
+  String get connectAgentInstallUnixNote =>
+      'Downloads the release for this OS and CPU, checks its checksum and puts tix on your PATH.';
+
+  @override
+  String get connectAgentInstallWindows => 'Windows';
+
+  @override
+  String get connectAgentInstallWindowsNote =>
+      'The same install in PowerShell.';
+
+  @override
+  String get connectAgentInstallGo => 'Go';
+
+  @override
+  String get connectAgentInstallGoNote => 'Builds tix with your Go toolchain.';
+
+  @override
+  String get connectAgentInstallContainer => 'Container';
+
+  @override
+  String get connectAgentInstallContainerNote =>
+      'Runs one command from the published image, with nothing installed. Docker takes the same arguments.';
+
+  @override
+  String get connectAgentSaveContext => 'Save a context';
+
+  @override
+  String get connectAgentSaveContextNote =>
+      'Stores the server, token and tenant under one name and makes it the default, so later commands need no flags.';
+
+  @override
+  String get connectAgentVerify => 'Check the connection';
+
+  @override
+  String get connectAgentVerifyNote =>
+      'Lists five tasks from this server. An error names what is wrong: the address, the token or a scope.';
+
+  @override
+  String get connectAgentMcpNote =>
+      'tix mcp serves the API as tools over standard input and output, so the CLI has to be installed first. A tool that deletes or cannot be undone is left out unless you add --allow-destructive after mcp.';
+
+  @override
+  String get connectAgentCommandLine => 'Command line';
+
+  @override
+  String get connectAgentMcpProjectRoot => 'At the root of a project.';
+
+  @override
+  String get connectAgentMcpCodex =>
+      'Shared by the Codex CLI and IDE extension.';
+
+  @override
+  String get connectAgentMcpOpenCode =>
+      'The command and its arguments are one array, and the variables go under environment.';
+
+  @override
+  String get connectAgentMcpGemini =>
+      'In a project, or ~/.gemini/settings.json for every project. Gemini CLI starts it only in a trusted folder.';
+
+  @override
+  String get connectAgentMcpClaudeDesktop =>
+      'Quit and reopen the app after editing it.';
+
+  @override
+  String get connectAgentMcpCursor =>
+      'In a project, or ~/.cursor/mcp.json for every project.';
+
+  @override
+  String get connectAgentMcpVscode =>
+      'In a workspace, for GitHub Copilot\'s agent mode.';
+
+  @override
+  String get connectAgentMcpVscodeCli =>
+      'Adds the same server to your user profile.';
+
+  @override
+  String get connectAgentMcpZed =>
+      'Zed\'s settings file, opened with zed: open settings file.';
+
+  @override
+  String get connectAgentSeeTools => 'See the tools';
+
+  @override
+  String get connectAgentSeeToolsNote =>
+      'Prints every tool, the scope it needs and whether it is offered. It needs no server.';
+
+  @override
+  String get connectAgentSshNote =>
+      'Your SSH key is the credential, and nothing needs installing. The tenant goes where the user name usually does.';
+
+  @override
+  String get connectAgentSshAddress =>
+      'The app cannot tell whether this server runs an SSH listener, or on which address. These commands use the server\'s host and port 22; an administrator names the real address with ssh.public_address.';
+
+  @override
+  String get connectAgentSshKey => 'Enrol your key';
+
+  @override
+  String get connectAgentSshKeyNote =>
+      'Once, from a configured CLI. Add --all-tenants to enrol it in every tenant you belong to. The Security screen does the same in the app.';
+
+  @override
+  String get connectAgentSshTui => 'Open the terminal interface';
+
+  @override
+  String get connectAgentSshCmd => 'Run a tix command';
+
+  @override
+  String get connectAgentSshCmdNote =>
+      'Runs on the server as you, with nothing installed or configured here. The server reads no file of yours: redirect with < and > instead.';
+
+  @override
+  String get connectAgentSshExport => 'Export over SSH';
+
+  @override
+  String get connectAgentSshExportNote =>
+      'Streams the tenant\'s snapshot to your machine. It needs the export scope.';
+
+  @override
+  String get connectAgentSshWatch => 'Stream events';
+
+  @override
+  String get connectAgentSshWatchNote =>
+      'One JSON event per line, for a script. Add -t after ssh for the coloured view a person reads.';
+
+  @override
+  String get connectAgentRestWhoami => 'Who the token is';
+
+  @override
+  String get connectAgentRestTasks => 'List tasks';
+
+  @override
+  String connectAgentOpenApi(String url) {
+    return 'Every operation is described in the OpenAPI document at $url, which needs no token.';
+  }
+
+  @override
+  String get connectAgentSkillNote =>
+      'The skill teaches an agent the claim, lease and release loop, the exit codes and the JSON output.';
+
+  @override
+  String get connectAgentSkillProject => 'Claude Code, this project';
+
+  @override
+  String get connectAgentSkillProjectNote =>
+      'Run it at the root of the repository. Commit the folder so everyone working there gets it.';
+
+  @override
+  String get connectAgentSkillUser => 'Claude Code, every project';
+
+  @override
+  String get connectAgentSkillUserNote =>
+      'Installs it for you alone, in every project.';
+
+  @override
+  String get connectAgentSkillOther => 'Other agents';
+
+  @override
+  String get connectAgentSkillOtherNote =>
+      'Codex, OpenCode, Gemini CLI and most other agents read AGENTS.md. Any agent that can fetch a URL can follow the skill.';
 
   @override
   String get securityTitle => 'Security';
@@ -7876,6 +8224,116 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get watchTitle => 'Activity';
+
+  @override
+  String get statsTitle => 'Statistics';
+
+  @override
+  String get goStats => 'Go to Statistics';
+
+  @override
+  String get statsIntro =>
+      'Throughput, lead time and who moved the work, over a window that ends now.';
+
+  @override
+  String get statsInfo =>
+      'Completed counts tasks that reached a terminal state in the window, cancelled ones included; created counts tasks made in it. Lead time runs from a task\'s creation to its terminal state; slowest is the longest of those. The window always ends now.';
+
+  @override
+  String get statsWindow => 'Window';
+
+  @override
+  String statsDays(int days) {
+    return '$days days';
+  }
+
+  @override
+  String get statsProject => 'Project';
+
+  @override
+  String get statsEveryProject => 'Every project';
+
+  @override
+  String get statsShortProjects =>
+      'This picker does not list every project in this tenant, so a project missing from it cannot be chosen here. The figures below are unaffected.';
+
+  @override
+  String get statsCompleted => 'completed';
+
+  @override
+  String get statsCreated => 'created';
+
+  @override
+  String get statsMedianLead => 'median lead time';
+
+  @override
+  String get statsSlowest => 'slowest';
+
+  @override
+  String get statsPerDay => 'Completed per day';
+
+  @override
+  String get statsPerDayInfo =>
+      'Tasks that reached a terminal state, by the UTC day it happened. A task reopened since then is not counted, and only its latest completion is.';
+
+  @override
+  String get statsPerDayLabel => 'Tasks completed per day';
+
+  @override
+  String statsDayCompleted(String day, int count) {
+    return '$day: $count completed';
+  }
+
+  @override
+  String get statsNoneCompleted => 'Nothing was completed in this window.';
+
+  @override
+  String get statsWhere => 'Where the work is';
+
+  @override
+  String get statsWhereInfo =>
+      'How many tasks sit in each state category right now, whatever the window. Done and cancelled are kept apart, so abandoned work never reads as finished work.';
+
+  @override
+  String get statsSpread => 'How the tasks are spread across states';
+
+  @override
+  String get statsNoTasks => 'No tasks yet.';
+
+  @override
+  String get statsActive => 'Most active';
+
+  @override
+  String get statsActiveInfo =>
+      'People and agents ranked by how many tasks they moved to a terminal state, read from the audit log. It is not a measure of effort. A move older than the audit retention window counts for nobody.';
+
+  @override
+  String statsCounting(String measure) {
+    return 'Counting $measure.';
+  }
+
+  @override
+  String get statsMeasureMoved => 'tasks moved to a terminal state';
+
+  @override
+  String get statsNobody =>
+      'Nobody moved a task to a terminal state in this window.';
+
+  @override
+  String get statsWaiting => 'Waiting longest';
+
+  @override
+  String get statsWaitingInfo =>
+      'The oldest tasks that have not reached a terminal state, whatever the window. Age counts from when the task was created.';
+
+  @override
+  String get statsNothingWaiting =>
+      'Nothing is waiting: every task has reached a terminal state.';
+
+  @override
+  String statsAge(String age) {
+    return 'age $age';
+  }
 
   @override
   String get watchSubtitle =>

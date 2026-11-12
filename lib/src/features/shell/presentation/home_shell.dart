@@ -88,6 +88,12 @@ class HomeShell extends StatelessWidget {
       label: l10n.watchTitle,
     ),
     ShellDestination(
+      id: 'stats',
+      icon: Icons.insights_outlined,
+      selectedIcon: Icons.insights,
+      label: l10n.statsTitle,
+    ),
+    ShellDestination(
       id: 'manage',
       icon: Icons.admin_panel_settings_outlined,
       selectedIcon: Icons.admin_panel_settings,
@@ -158,6 +164,13 @@ class HomeShell extends StatelessWidget {
             run: () => _select(at('activity')),
           ),
           TixCommand(
+            id: 'go.stats',
+            label: l10n.goStats,
+            group: l10n.commandsNavigate,
+            icon: Icons.insights_outlined,
+            run: () => _select(at('stats')),
+          ),
+          TixCommand(
             id: 'go.manage',
             action: KeyActions.navManage,
             label: l10n.goManage,
@@ -179,6 +192,13 @@ class HomeShell extends StatelessWidget {
             group: l10n.commandsNavigate,
             icon: Icons.dns_outlined,
             run: () => context.go(Routes.instances),
+          ),
+          TixCommand(
+            id: 'go.connectAgent',
+            label: l10n.goConnectAgent,
+            group: l10n.commandsNavigate,
+            icon: Icons.cable_outlined,
+            run: () => context.go(Routes.connectAgent),
           ),
           TixCommand(
             id: 'go.about',

@@ -5,13 +5,16 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/l10n/via_label.dart';
 import 'package:tix_mobile/src/core/platform/attachments.dart';
+import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/access.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
+import 'package:tix_mobile/src/core/widgets/actor_link.dart';
 import 'package:tix_mobile/src/core/widgets/audit_entry_detail.dart';
 import 'package:tix_mobile/src/core/widgets/copy_json.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
@@ -302,11 +305,14 @@ class _CommentTile extends ConsumerWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: TixSpace.s2),
-            child: TixAvatar(
-              label: name,
-              seed: author?.handle ?? comment.authorActorId,
-              size: 28,
-              hued: true,
+            child: ActorLink(
+              actor: comment.authorActorId,
+              child: TixAvatar(
+                label: name,
+                seed: author?.handle ?? comment.authorActorId,
+                size: 28,
+                hued: true,
+              ),
             ),
           ),
           const SizedBox(width: TixSpace.s3),
@@ -317,10 +323,14 @@ class _CommentTile extends ConsumerWidget {
                 Row(
                   children: [
                     Flexible(
-                      child: Text(
-                        name,
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                        overflow: TextOverflow.ellipsis,
+                      child: ActorLink(
+                        key: Key('comment.author.${comment.id}'),
+                        actor: comment.authorActorId,
+                        child: Text(
+                          name,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
                     if (created != null) ...[
@@ -363,6 +373,8 @@ class _CommentTile extends ConsumerWidget {
                 TixMarkdown(
                   data: comment.body,
                   onLink: (uri) => openLink(ref, uri),
+                  onMention: (handle) =>
+                      unawaited(context.push(Routes.actor(handle))),
                 ),
                 CommentReactions(task: task, comment: comment),
               ],
@@ -587,19 +599,22 @@ class _Reactor extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final actor = ref.watch(actorProvider(actorId)).value;
     final name = actor?.label ?? actorId;
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: TixSize.target),
-      child: Row(
-        children: [
-          TixAvatar(
-            label: name,
-            seed: actor?.handle ?? actorId,
-            size: 24,
-            hued: true,
-          ),
-          const SizedBox(width: TixSpace.s3),
-          Expanded(child: Text(name, overflow: TextOverflow.ellipsis)),
-        ],
+    return ActorLink(
+      actor: actorId,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: TixSize.target),
+        child: Row(
+          children: [
+            TixAvatar(
+              label: name,
+              seed: actor?.handle ?? actorId,
+              size: 24,
+              hued: true,
+            ),
+            const SizedBox(width: TixSpace.s3),
+            Expanded(child: Text(name, overflow: TextOverflow.ellipsis)),
+          ],
+        ),
       ),
     );
   }
@@ -700,15 +715,19 @@ class _HistoryTile extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: who,
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      TextSpan(text: ' $what'),
-                    ],
+                ActorLink(
+                  key: Key('history.${entry.seq}.actor'),
+                  actor: entry.actorId,
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: who,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        TextSpan(text: ' $what'),
+                      ],
+                    ),
                   ),
                 ),
                 Text(

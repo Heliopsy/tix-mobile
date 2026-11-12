@@ -5,11 +5,11 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tix_mobile/src/core/agents/handoff.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
-import 'package:tix_mobile/src/features/tasks/application/handoff.dart';
 
 /// Opens the Hand to an agent sheet for [task].
 Future<void> showHandoff(BuildContext context, Task task) =>

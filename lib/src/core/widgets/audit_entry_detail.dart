@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
+import 'package:tix_mobile/src/core/widgets/actor_link.dart';
 import 'package:tix_mobile/src/data/models/integrations.dart';
 
 /// Everything one audit entry records: when, who, through what, and the
@@ -82,7 +83,20 @@ class AuditEntryDetail extends StatelessWidget {
               spacing: TixSpace.s2,
               children: [
                 Text(label, style: theme.textTheme.bodySmall),
-                SelectableText(value),
+                if (label == l10n.auditActor && ActorLink.links(entry.actorId))
+                  ActorLink(
+                    key: const Key('audit.detail.actor'),
+                    actor: entry.actorId,
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        color: t.accent,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  )
+                else
+                  SelectableText(value),
               ],
             ),
           ),

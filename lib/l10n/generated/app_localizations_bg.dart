@@ -4116,6 +4116,93 @@ class AppLocalizationsBg extends AppLocalizations {
   String get tokensMine => 'Моите API токени';
 
   @override
+  String get actorSubtitle => 'Човек или агент от този тенант';
+
+  @override
+  String get actorInfo =>
+      'Човек или агент от този тенант, с името, с което другите го наричат. Какво може да прави не се показва тук.';
+
+  @override
+  String get actorOpenHint => 'Отваря страницата му';
+
+  @override
+  String get actorAbout => 'Сведения';
+
+  @override
+  String get actorYou => '(вие)';
+
+  @override
+  String get actorKindUser => 'човек';
+
+  @override
+  String get actorKindAgent => 'агент';
+
+  @override
+  String get actorKindSystem => 'система';
+
+  @override
+  String get actorHandle => 'Кратко име';
+
+  @override
+  String get actorName => 'Име';
+
+  @override
+  String get actorNotSet => 'Не е зададено';
+
+  @override
+  String get actorId => 'Идентификатор';
+
+  @override
+  String get actorCopyId => 'Копирайте идентификатора';
+
+  @override
+  String get actorYourProfile => 'Вашият профил';
+
+  @override
+  String actorTasks(String name) {
+    return 'Задачи, възложени на $name';
+  }
+
+  @override
+  String get actorTasksFirst => 'Показани са първите 20.';
+
+  @override
+  String get actorTasksNone => 'Нищо не е възложено.';
+
+  @override
+  String get actorTokens => 'API токени';
+
+  @override
+  String get actorTokensNone => 'Няма API токени.';
+
+  @override
+  String get actorKeys => 'SSH ключове';
+
+  @override
+  String get actorKeysNone => 'Няма SSH ключове.';
+
+  @override
+  String get actorRevoked => 'Отменен';
+
+  @override
+  String actorLastUsed(String date) {
+    return 'последно използван $date';
+  }
+
+  @override
+  String get actorNeverUsed => 'неизползван';
+
+  @override
+  String get actorRecent => 'Скорошна дейност';
+
+  @override
+  String get actorRecentNone => 'Няма записана дейност.';
+
+  @override
+  String get actorRecentNeedsAudit =>
+      'Скорошната дейност изисква правото audit:read, което нямате.';
+
+  @override
   String get tokensIssue => 'Издай токен';
 
   @override
@@ -4802,6 +4889,267 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get settingsTokensHelp => 'Токени за скриптове, CLI и агенти';
+
+  @override
+  String get connectAgentTitle => 'Свързване на агент';
+
+  @override
+  String get connectAgentSubtitle =>
+      'Команди за CLI, MCP клиенти, SSH, API и умението за агенти';
+
+  @override
+  String get goConnectAgent => 'Свързване на агент';
+
+  @override
+  String get connectAgentIntro =>
+      'Вземете идентификация, изберете как да се свържете и копирайте командите.';
+
+  @override
+  String get connectAgentInfo =>
+      'Вземете идентификация, изберете как да се свържете и копирайте командите. Всяка команда е попълнена за този сървър и за вас.';
+
+  @override
+  String get connectAgentServer => 'Сървър';
+
+  @override
+  String get connectAgentTenant => 'Тенант';
+
+  @override
+  String get connectAgentSignedInAs => 'Влезли сте като';
+
+  @override
+  String get connectAgentStepCredential => '1. Вземете идентификация';
+
+  @override
+  String get connectAgentStepPick => '2. Изберете как да се свържете';
+
+  @override
+  String connectAgentStepCopy(String way) {
+    return '3. Копирайте командите: $way';
+  }
+
+  @override
+  String get connectAgentCli => 'CLI';
+
+  @override
+  String get connectAgentMcp => 'MCP';
+
+  @override
+  String get connectAgentSsh => 'SSH';
+
+  @override
+  String get connectAgentApi => 'API';
+
+  @override
+  String get connectAgentSkill => 'Умение';
+
+  @override
+  String get connectAgentTokenNeeded =>
+      'Командите за CLI, MCP и API използват \$TIX_TOKEN. Издайте токен тук и екранът ще го попълни, или задайте TIX_TOKEN в обвивката си на токен, който вече имате.';
+
+  @override
+  String get connectAgentNoTokenAdmin =>
+      'Издаването на токен изисква обхвата token:admin, който нямате. Поискайте токен от администратор.';
+
+  @override
+  String get connectAgentTokenFilled =>
+      'Всяка команда на този екран вече съдържа този токен. Той не се пази никъде: напускането на екрана връща \$TIX_TOKEN.';
+
+  @override
+  String get connectAgentExportNote =>
+      'Задава TIX_TOKEN в тази обвивка, за командите, които го четат.';
+
+  @override
+  String get connectAgentFromCli => 'От командния ред';
+
+  @override
+  String get connectAgentSeeTokens => 'Вижте и отменете токените си';
+
+  @override
+  String get connectAgentRotate => 'Сменете го по-късно';
+
+  @override
+  String get connectAgentRotateNote =>
+      'Издава нова стойност със същото име и обхвати и оставя старата да работи десет минути, за да не бъде прекъснат работещ агент.';
+
+  @override
+  String get connectAgentSshNoToken =>
+      'Разделът SSH не изисква токен: регистрираният ви SSH ключ е идентификацията.';
+
+  @override
+  String get connectAgentOpenSsh => 'Отворете раздела SSH';
+
+  @override
+  String get connectAgentInstall => 'Инсталирайте CLI';
+
+  @override
+  String get connectAgentInstallNote =>
+      'Инсталирайте версията, с която работи този сървър, за да са съгласувани CLI и сървърът.';
+
+  @override
+  String get connectAgentInstallUnix => 'Linux и macOS';
+
+  @override
+  String get connectAgentInstallUnixNote =>
+      'Изтегля версията за тази ОС и процесор, проверява контролната ѝ сума и поставя tix в PATH.';
+
+  @override
+  String get connectAgentInstallWindows => 'Windows';
+
+  @override
+  String get connectAgentInstallWindowsNote =>
+      'Същата инсталация в PowerShell.';
+
+  @override
+  String get connectAgentInstallGo => 'Go';
+
+  @override
+  String get connectAgentInstallGoNote =>
+      'Компилира tix с вашите инструменти на Go.';
+
+  @override
+  String get connectAgentInstallContainer => 'Контейнер';
+
+  @override
+  String get connectAgentInstallContainerNote =>
+      'Изпълнява една команда от публикувания образ, без нищо инсталирано. Docker приема същите аргументи.';
+
+  @override
+  String get connectAgentSaveContext => 'Запазете контекст';
+
+  @override
+  String get connectAgentSaveContextNote =>
+      'Запазва сървъра, токена и тенанта под едно име и го прави подразбиращ се, така че следващите команди не се нуждаят от флагове.';
+
+  @override
+  String get connectAgentVerify => 'Проверете връзката';
+
+  @override
+  String get connectAgentVerifyNote =>
+      'Извежда пет задачи от този сървър. Грешката посочва какво не е наред: адресът, токенът или обхват.';
+
+  @override
+  String get connectAgentMcpNote =>
+      'tix mcp предоставя API-то като инструменти през стандартния вход и изход, затова първо трябва да инсталирате CLI. Инструмент, който изтрива или не може да бъде отменен, се пропуска, освен ако не добавите --allow-destructive след mcp.';
+
+  @override
+  String get connectAgentCommandLine => 'Команден ред';
+
+  @override
+  String get connectAgentMcpProjectRoot => 'В корена на проект.';
+
+  @override
+  String get connectAgentMcpCodex => 'Общ за Codex CLI и разширението за IDE.';
+
+  @override
+  String get connectAgentMcpOpenCode =>
+      'Командата и аргументите ѝ са един масив, а променливите са под environment.';
+
+  @override
+  String get connectAgentMcpGemini =>
+      'В проект или ~/.gemini/settings.json за всеки проект. Gemini CLI го стартира само в доверена папка.';
+
+  @override
+  String get connectAgentMcpClaudeDesktop =>
+      'Затворете и отворете отново приложението след редакцията.';
+
+  @override
+  String get connectAgentMcpCursor =>
+      'В проект или ~/.cursor/mcp.json за всеки проект.';
+
+  @override
+  String get connectAgentMcpVscode =>
+      'В работно пространство, за агентския режим на GitHub Copilot.';
+
+  @override
+  String get connectAgentMcpVscodeCli =>
+      'Добавя същия сървър към потребителския ви профил.';
+
+  @override
+  String get connectAgentMcpZed =>
+      'Файлът с настройки на Zed, отворен със zed: open settings file.';
+
+  @override
+  String get connectAgentSeeTools => 'Вижте инструментите';
+
+  @override
+  String get connectAgentSeeToolsNote =>
+      'Извежда всеки инструмент, обхвата, който му трябва, и дали се предлага. Не изисква сървър.';
+
+  @override
+  String get connectAgentSshNote =>
+      'Вашият SSH ключ е идентификацията и не е нужно нищо да се инсталира. Тенантът стои там, където обикновено е потребителското име.';
+
+  @override
+  String get connectAgentSshAddress =>
+      'Приложението не може да разбере дали този сървър слуша за SSH и на какъв адрес. Тези команди използват хоста на сървъра и порт 22; администраторът задава истинския адрес с ssh.public_address.';
+
+  @override
+  String get connectAgentSshKey => 'Регистрирайте ключа си';
+
+  @override
+  String get connectAgentSshKeyNote =>
+      'Веднъж, от настроен CLI. Добавете --all-tenants, за да го регистрирате във всеки тенант, в който сте. Екранът Сигурност прави същото в приложението.';
+
+  @override
+  String get connectAgentSshTui => 'Отворете терминалния интерфейс';
+
+  @override
+  String get connectAgentSshCmd => 'Изпълнете команда на tix';
+
+  @override
+  String get connectAgentSshCmdNote =>
+      'Изпълнява се на сървъра от ваше име, без нищо инсталирано или настроено тук. Сървърът не чете ваши файлове: пренасочете с < и >.';
+
+  @override
+  String get connectAgentSshExport => 'Експорт през SSH';
+
+  @override
+  String get connectAgentSshExportNote =>
+      'Изпраща моментната снимка на тенанта към вашата машина. Изисква обхвата export.';
+
+  @override
+  String get connectAgentSshWatch => 'Поток от събития';
+
+  @override
+  String get connectAgentSshWatchNote =>
+      'По едно JSON събитие на ред, за скрипт. Добавете -t след ssh за цветния изглед, който чете човек.';
+
+  @override
+  String get connectAgentRestWhoami => 'Чий е токенът';
+
+  @override
+  String get connectAgentRestTasks => 'Списък със задачи';
+
+  @override
+  String connectAgentOpenApi(String url) {
+    return 'Всяка операция е описана в документа OpenAPI на $url, който не изисква токен.';
+  }
+
+  @override
+  String get connectAgentSkillNote =>
+      'Умението учи агента на цикъла заемане, наем и освобождаване, на кодовете за изход и на JSON изхода.';
+
+  @override
+  String get connectAgentSkillProject => 'Claude Code, този проект';
+
+  @override
+  String get connectAgentSkillProjectNote =>
+      'Изпълнете го в корена на хранилището. Добавете папката в хранилището, за да я получи всеки, който работи там.';
+
+  @override
+  String get connectAgentSkillUser => 'Claude Code, всеки проект';
+
+  @override
+  String get connectAgentSkillUserNote =>
+      'Инсталира го само за вас, във всеки проект.';
+
+  @override
+  String get connectAgentSkillOther => 'Други агенти';
+
+  @override
+  String get connectAgentSkillOtherNote =>
+      'Codex, OpenCode, Gemini CLI и повечето други агенти четат AGENTS.md. Всеки агент, който може да изтегли URL адрес, може да следва умението.';
 
   @override
   String get securityTitle => 'Сигурност';
@@ -7886,6 +8234,116 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get watchTitle => 'Активност';
+
+  @override
+  String get statsTitle => 'Статистика';
+
+  @override
+  String get goStats => 'Към Статистика';
+
+  @override
+  String get statsIntro =>
+      'Пропускателност, време за изпълнение и кой е движил работата, за период, който свършва в момента.';
+
+  @override
+  String get statsInfo =>
+      '„Завършени“ брои задачите, достигнали крайно състояние в периода, включително отказаните; „създадени“ брои задачите, създадени в него. Времето за изпълнение тече от създаването на задачата до крайното ѝ състояние; „най-бавна“ е най-дългото от тях. Периодът винаги свършва в момента.';
+
+  @override
+  String get statsWindow => 'Период';
+
+  @override
+  String statsDays(int days) {
+    return '$days дни';
+  }
+
+  @override
+  String get statsProject => 'Проект';
+
+  @override
+  String get statsEveryProject => 'Всички проекти';
+
+  @override
+  String get statsShortProjects =>
+      'Този списък не съдържа всички проекти на тенанта, така че липсващ проект не може да бъде избран тук. Цифрите по-долу не са засегнати.';
+
+  @override
+  String get statsCompleted => 'завършени';
+
+  @override
+  String get statsCreated => 'създадени';
+
+  @override
+  String get statsMedianLead => 'медианно време за изпълнение';
+
+  @override
+  String get statsSlowest => 'най-бавна';
+
+  @override
+  String get statsPerDay => 'Завършени по дни';
+
+  @override
+  String get statsPerDayInfo =>
+      'Задачите, достигнали крайно състояние, по UTC деня, в който е станало. Задача, отворена отново след това, не се брои, а се брои само последното ѝ завършване.';
+
+  @override
+  String get statsPerDayLabel => 'Завършени задачи по дни';
+
+  @override
+  String statsDayCompleted(String day, int count) {
+    return '$day: $count завършени';
+  }
+
+  @override
+  String get statsNoneCompleted => 'Нищо не е завършено в този период.';
+
+  @override
+  String get statsWhere => 'Къде е работата';
+
+  @override
+  String get statsWhereInfo =>
+      'Колко задачи има в момента във всяка категория състояния, независимо от периода. Готовите и отказаните са отделно, за да не изглежда изоставената работа като свършена.';
+
+  @override
+  String get statsSpread => 'Как са разпределени задачите по състояния';
+
+  @override
+  String get statsNoTasks => 'Все още няма задачи.';
+
+  @override
+  String get statsActive => 'Най-активни';
+
+  @override
+  String get statsActiveInfo =>
+      'Хора и агенти, подредени по броя задачи, които са преместили в крайно състояние, според одитния журнал. Това не е мярка за усилие. Преход, по-стар от срока на съхранение на одитния журнал, не се приписва на никого.';
+
+  @override
+  String statsCounting(String measure) {
+    return 'Отчитат се $measure.';
+  }
+
+  @override
+  String get statsMeasureMoved => 'задачите, преместени в крайно състояние';
+
+  @override
+  String get statsNobody =>
+      'Никой не е преместил задача в крайно състояние в този период.';
+
+  @override
+  String get statsWaiting => 'Чакат най-дълго';
+
+  @override
+  String get statsWaitingInfo =>
+      'Най-старите задачи, които не са достигнали крайно състояние, независимо от периода. Възрастта се брои от създаването на задачата.';
+
+  @override
+  String get statsNothingWaiting =>
+      'Нищо не чака: всяка задача е достигнала крайно състояние.';
+
+  @override
+  String statsAge(String age) {
+    return 'възраст $age';
+  }
 
   @override
   String get watchSubtitle =>

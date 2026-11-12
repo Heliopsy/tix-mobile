@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -74,6 +76,8 @@ class DescriptionSection extends ConsumerWidget {
             key: const Key('task.description'),
             data: task.body,
             onLink: (uri) => openLink(ref, uri),
+            onMention: (handle) =>
+                unawaited(context.push(Routes.actor(handle))),
             onToggle: (item, {required done}) => changeTask(
               context,
               ref,
