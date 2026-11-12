@@ -46,7 +46,14 @@ void main() {
         server.gate!.complete();
         await tester.pumpAndSettle();
         expect(find.text('Default · default'), findsOneWidget);
-        for (final title in ['General', 'Theme', 'Second factor', 'Claims']) {
+        for (final title in [
+          'General',
+          'Theme',
+          'Second factor',
+          'Claims',
+          'Sessions',
+          'Artifacts',
+        ]) {
           await reveal(tester, find.widgetWithText(TixSection, title));
           expect(find.widgetWithText(TixSection, title), findsOneWidget);
         }
@@ -68,8 +75,158 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.text('Acme · acme'), findsOneWidget);
       });
+
+      testWidgets('sessions load as tix reads them, with the server greyed', (
+        tester,
+      ) async {
+        admin.tenants['default']!
+          ..['session_ttl'] = '8h0m0s'
+          ..['session_remember_off'] = true;
+        await pumpAdmin(
+          tester,
+          server,
+          const TenantSettingsScreen(),
+          size: size,
+        );
+        final ttl = find.byKey(const Key('tenant.sessionTtl'));
+        await reveal(tester, find.byKey(const Key('tenant.sessionRemember')));
+        expect(tester.widget<TextField>(ttl).controller!.text, '8h');
+        expect(
+          tester
+              .widget<TextField>(
+                find.byKey(const Key('tenant.sessionRemember')),
+              )
+              .controller!
+              .text,
+          'off',
+        );
+        final idle = tester.widget<TextField>(
+          find.byKey(const Key('tenant.sessionIdle')),
+        );
+        expect(idle.controller!.text, isEmpty);
+        expect(idle.decoration!.hintText, 'never');
+        expect(tester.widget<TextField>(ttl).decoration!.hintText, '12h');
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('a session setting saves alone, and a refusal says why', (
+        tester,
+      ) async {
+        await pumpAdmin(
+          tester,
+          server,
+          const TenantSettingsScreen(),
+          size: size,
+        );
+        final idle = find.byKey(const Key('tenant.sessionIdle'));
+        await reveal(tester, idle);
+        await tester.enterText(idle, '30m');
+        await tester.pump();
+        await tapShown(tester, find.byKey(const Key('tenant.session.save')));
+        expect(lastPatch(), {'session_idle_timeout': '30m'});
+        admin.refuse['session_ttl'] =
+            "session lifetime 48h is longer than the server's 12h";
+        final ttl = find.byKey(const Key('tenant.sessionTtl'));
+        await reveal(tester, ttl);
+        await tester.enterText(ttl, '48h');
+        await tester.pump();
+        await tapShown(tester, find.byKey(const Key('tenant.session.save')));
+        expect(lastPatch(), {'session_ttl': '48h'});
+        expect(find.textContaining('longer than the server'), findsOneWidget);
+        expect(tester.widget<TextField>(ttl).controller!.text, '48h');
+        expect(admin.tenants['default']!['session_ttl'], isNull);
+      });
+
+      testWidgets('artifact limits load, save alone, and show a refusal', (
+        tester,
+      ) async {
+        admin.tenants['default']!
+          ..['artifact_max_bytes'] = 524288
+          ..['artifact_types'] = ['image/*'];
+        await pumpAdmin(
+          tester,
+          server,
+          const TenantSettingsScreen(),
+          size: size,
+        );
+        final bytes = find.byKey(const Key('tenant.artifactMaxBytes'));
+        final types = find.byKey(const Key('tenant.artifactTypes'));
+        await reveal(tester, types);
+        expect(tester.widget<TextField>(bytes).controller!.text, '512KiB');
+        expect(tester.widget<TextField>(types).controller!.text, 'image/*');
+        expect(tester.widget<TextField>(bytes).decoration!.hintText, '1MiB');
+        await tester.enterText(types, 'image/*, application/pdf');
+        await tester.pump();
+        await tapShown(tester, find.byKey(const Key('tenant.artifact.save')));
+        expect(lastPatch(), {
+          'artifact_types': ['image/*', 'application/pdf'],
+        });
+        admin.refuse['artifact_max_bytes'] =
+            "artifact size limit 2 MiB is above the server's 1 MiB";
+        await tester.enterText(bytes, '2 MiB');
+        await tester.pump();
+        await tapShown(tester, find.byKey(const Key('tenant.artifact.save')));
+        expect(lastPatch(), {'artifact_max_bytes': 2097152});
+        expect(find.textContaining("above the server's"), findsOneWidget);
+        expect(tester.widget<TextField>(bytes).controller!.text, '2 MiB');
+      });
     });
   }
+
+  testWidgets('an unreadable size is flagged and not sent', (tester) async {
+    await pumpAdmin(
+      tester,
+      server,
+      const TenantSettingsScreen(),
+      size: desktop,
+    );
+    final bytes = find.byKey(const Key('tenant.artifactMaxBytes'));
+    await reveal(tester, bytes);
+    await tester.enterText(bytes, 'big');
+    await tester.pump();
+    expect(
+      find.text('Write a size such as 1048576, 512KiB or 5MiB.'),
+      findsOneWidget,
+    );
+    final save = find.byKey(const Key('tenant.artifact.save'));
+    expect(tester.widget<TixButton>(save).onPressed, isNull);
+  });
+
+  testWidgets('emptied session and artifact settings inherit the server', (
+    tester,
+  ) async {
+    admin.tenants['default']!
+      ..['session_ttl'] = '8h0m0s'
+      ..['session_remember_ttl'] = '168h0m0s'
+      ..['artifact_max_bytes'] = 524288
+      ..['artifact_types'] = ['image/*'];
+    await pumpAdmin(
+      tester,
+      server,
+      const TenantSettingsScreen(),
+      size: desktop,
+    );
+    final ttl = find.byKey(const Key('tenant.sessionTtl'));
+    final remember = find.byKey(const Key('tenant.sessionRemember'));
+    await reveal(tester, remember);
+    expect(tester.widget<TextField>(remember).controller!.text, '7d');
+    await tester.enterText(ttl, '');
+    await tester.enterText(remember, '');
+    await tester.pump();
+    await tapShown(tester, find.byKey(const Key('tenant.session.save')));
+    expect(lastPatch(), {'session_ttl': '0', 'session_remember_ttl': ''});
+    final bytes = find.byKey(const Key('tenant.artifactMaxBytes'));
+    final types = find.byKey(const Key('tenant.artifactTypes'));
+    await reveal(tester, types);
+    await tester.enterText(bytes, '');
+    await tester.enterText(types, '');
+    await tester.pump();
+    await tapShown(tester, find.byKey(const Key('tenant.artifact.save')));
+    expect(lastPatch(), {
+      'artifact_max_bytes': 0,
+      'artifact_types': <String>[],
+    });
+  });
 
   testWidgets('the name saves only once it changes, and only the name', (
     tester,

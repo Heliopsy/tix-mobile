@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/colour.dart' show parseHex;
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/design/theme.dart';
+import 'package:tix_mobile/src/core/l10n/durations.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/admin.dart';
@@ -28,8 +30,9 @@ const timeFormats = [
 ];
 
 /// A tenant's settings: name, theme with a live preview, the date
-/// defaults, second-factor requirements, claim leases, the trash, and
-/// deleting it. Without [tenantRef] it is the active tenant's.
+/// defaults, second-factor requirements, claim leases, sessions, artifact
+/// limits, the trash, and deleting it. Without [tenantRef] it is the
+/// active tenant's.
 class TenantSettingsScreen extends ConsumerWidget {
   /// The settings of [tenantRef], or of the active tenant.
   const TenantSettingsScreen({this.tenantRef, super.key});
@@ -135,6 +138,16 @@ class _TenantSettingsBody extends ConsumerWidget {
             ],
           ),
           _LeaseSection(tenant: tenant, save: save),
+          _SessionSection(
+            tenant: tenant,
+            server: ref.watch(serverSessionPolicyProvider).value,
+            save: save,
+          ),
+          _ArtifactSection(
+            tenant: tenant,
+            server: ref.watch(serverArtifactLimitsProvider).value,
+            save: save,
+          ),
           TixSection(
             title: l10n.tenantTrashTitle,
             children: [
@@ -661,6 +674,306 @@ class _LeaseSectionState extends State<_LeaseSection> {
           controller: _max,
           onChanged: (_) => setState(() {}),
         ),
+      ],
+    );
+  }
+}
+
+/// [goText], a duration as tix sends it ("8h0m0s"), written the way tix
+/// reads it back ("8h", "1d 12h"); empty for none or zero.
+String durationField(String goText) {
+  final d = parseGoDuration(goText);
+  if (d == null) return goText;
+  if (d <= Duration.zero) return '';
+  final parts = [
+    if (d.inDays > 0) '${d.inDays}d',
+    if (d.inHours % 24 > 0) '${d.inHours % 24}h',
+    if (d.inMinutes % 60 > 0) '${d.inMinutes % 60}m',
+    if (d.inSeconds % 60 > 0) '${d.inSeconds % 60}s',
+  ];
+  return parts.join(' ');
+}
+
+const _byteUnits = [(30, 'GiB'), (20, 'MiB'), (10, 'KiB')];
+
+/// [bytes] in the largest binary unit that divides it ("5MiB"), else as a
+/// bare count; empty for zero.
+String byteSizeField(int bytes) {
+  if (bytes <= 0) return '';
+  for (final (shift, name) in _byteUnits) {
+    final size = 1 << shift;
+    if (bytes >= size && bytes % size == 0) return '${bytes ~/ size}$name';
+  }
+  return '$bytes';
+}
+
+/// A size as tix's ParseByteSize reads one ("512KiB", "5 MiB", "2M", a bare
+/// count of bytes, binary units throughout), zero for empty, or null when
+/// [text] is not a size.
+int? parseByteSize(String text) {
+  var t = text.replaceAll(' ', '').toUpperCase();
+  if (t.isEmpty) return 0;
+  if (t.endsWith('IB')) {
+    t = t.substring(0, t.length - 2);
+  } else if (t.endsWith('B')) {
+    t = t.substring(0, t.length - 1);
+  }
+  var shift = 0;
+  for (final (unit, s) in [('K', 10), ('M', 20), ('G', 30)]) {
+    if (t.endsWith(unit)) {
+      shift = s;
+      t = t.substring(0, t.length - 1);
+    }
+  }
+  if (!RegExp(r'^\d+$').hasMatch(t)) return null;
+  final n = int.tryParse(t);
+  if (n == null || n > (1 << 62) >> shift) return null;
+  return n << shift;
+}
+
+List<String> _splitTypes(String text) => [
+  for (final p in text.split(RegExp(r'[,\s]+')))
+    if (p.isNotEmpty) p,
+];
+
+class _Note extends StatelessWidget {
+  const _Note(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(top: TixSpace.s3),
+    child: Text(
+      text,
+      style: TextStyle(fontSize: TixText.xs, color: context.tix.muted),
+    ),
+  );
+}
+
+class _SessionSection extends StatefulWidget {
+  const _SessionSection({
+    required this.tenant,
+    required this.server,
+    required this.save,
+  });
+
+  final Tenant tenant;
+
+  /// The server's own settings, the hints for empty fields; null while
+  /// unknown.
+  final SessionPolicy? server;
+  final _Save save;
+
+  @override
+  State<_SessionSection> createState() => _SessionSectionState();
+}
+
+class _SessionSectionState extends State<_SessionSection> {
+  late String _ttlSaved;
+  late String _idleSaved;
+  late String _rememberSaved;
+  final _ttl = TextEditingController();
+  final _idle = TextEditingController();
+  final _remember = TextEditingController();
+
+  static String _rememberText(Tenant t) =>
+      t.sessionRememberOff ? 'off' : durationField(t.sessionRememberTtl);
+
+  void _load(Tenant t, {Tenant? old}) {
+    final ttl = durationField(t.sessionTtl);
+    final idle = durationField(t.sessionIdleTimeout);
+    final remember = _rememberText(t);
+    if (old == null || durationField(old.sessionTtl) != ttl) _ttl.text = ttl;
+    if (old == null || durationField(old.sessionIdleTimeout) != idle) {
+      _idle.text = idle;
+    }
+    if (old == null || _rememberText(old) != remember) {
+      _remember.text = remember;
+    }
+    _ttlSaved = ttl;
+    _idleSaved = idle;
+    _rememberSaved = remember;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _load(widget.tenant);
+  }
+
+  @override
+  void didUpdateWidget(_SessionSection old) {
+    super.didUpdateWidget(old);
+    _load(widget.tenant, old: old.tenant);
+  }
+
+  @override
+  void dispose() {
+    _ttl.dispose();
+    _idle.dispose();
+    _remember.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final server = widget.server;
+    String hintOf(String? goText, {required String example, String? off}) {
+      if (goText == null) return example;
+      final text = durationField(goText);
+      return text.isNotEmpty ? text : (off ?? example);
+    }
+
+    final ttlHint = hintOf(server?.serverTtl, example: '8h');
+    final idleHint = hintOf(
+      server?.serverIdleTimeout,
+      example: '30m',
+      off: l10n.tenantSessionNever,
+    );
+    final rememberHint = hintOf(
+      server?.serverRememberTtl,
+      example: '7d',
+      off: 'off',
+    );
+    final ttl = _ttl.text.trim();
+    final idle = _idle.text.trim();
+    final remember = _remember.text.trim();
+    return _FormSection(
+      title: l10n.tenantSessionTitle,
+      info: l10n.tenantSessionInfo,
+      dirty:
+          ttl != _ttlSaved || idle != _idleSaved || remember != _rememberSaved,
+      saveKey: const Key('tenant.session.save'),
+      onSave: () => widget.save(
+        UpdateTenantInput(
+          sessionTtl: ttl == _ttlSaved ? null : (ttl.isEmpty ? '0' : ttl),
+          sessionIdleTimeout: idle == _idleSaved
+              ? null
+              : (idle.isEmpty ? '0' : idle),
+          sessionRememberTtl: remember == _rememberSaved ? null : remember,
+        ),
+      ),
+      children: [
+        TixTextField(
+          fieldKey: const Key('tenant.sessionTtl'),
+          label: l10n.tenantSessionTtl,
+          hint: ttlHint,
+          info: l10n.tenantSessionTtlInfo,
+          controller: _ttl,
+          onChanged: (_) => setState(() {}),
+        ),
+        const SizedBox(height: TixSpace.s3),
+        TixTextField(
+          fieldKey: const Key('tenant.sessionIdle'),
+          label: l10n.tenantSessionIdle,
+          hint: idleHint,
+          info: l10n.tenantSessionIdleInfo,
+          controller: _idle,
+          onChanged: (_) => setState(() {}),
+        ),
+        const SizedBox(height: TixSpace.s3),
+        TixTextField(
+          fieldKey: const Key('tenant.sessionRemember'),
+          label: l10n.tenantSessionRemember,
+          hint: rememberHint,
+          info: l10n.tenantSessionRememberInfo,
+          controller: _remember,
+          onChanged: (_) => setState(() {}),
+        ),
+        _Note(l10n.tenantSessionNote),
+      ],
+    );
+  }
+}
+
+class _ArtifactSection extends StatefulWidget {
+  const _ArtifactSection({
+    required this.tenant,
+    required this.server,
+    required this.save,
+  });
+
+  final Tenant tenant;
+
+  /// The server's own limits, the hints for empty fields; null while
+  /// unknown.
+  final ArtifactLimits? server;
+  final _Save save;
+
+  @override
+  State<_ArtifactSection> createState() => _ArtifactSectionState();
+}
+
+class _ArtifactSectionState extends State<_ArtifactSection> {
+  late final _size = TextEditingController(
+    text: byteSizeField(widget.tenant.artifactMaxBytes),
+  );
+  late final _types = TextEditingController(
+    text: widget.tenant.artifactTypes.join(', '),
+  );
+
+  @override
+  void didUpdateWidget(_ArtifactSection old) {
+    super.didUpdateWidget(old);
+    if (old.tenant.artifactMaxBytes != widget.tenant.artifactMaxBytes) {
+      _size.text = byteSizeField(widget.tenant.artifactMaxBytes);
+    }
+    if (!listEquals(old.tenant.artifactTypes, widget.tenant.artifactTypes)) {
+      _types.text = widget.tenant.artifactTypes.join(', ');
+    }
+  }
+
+  @override
+  void dispose() {
+    _size.dispose();
+    _types.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final t = widget.tenant;
+    final server = widget.server;
+    final serverSize = byteSizeField(server?.serverMaxBytes ?? 0);
+    final serverTypes = (server?.serverAllowedTypes ?? const []).join(', ');
+    final size = parseByteSize(_size.text);
+    final types = _splitTypes(_types.text);
+    final sizeChanged = size != null && size != t.artifactMaxBytes;
+    final typesChanged = !listEquals(types, t.artifactTypes);
+    return _FormSection(
+      title: l10n.tenantArtifactTitle,
+      info: l10n.tenantArtifactInfo,
+      dirty: size != null && (sizeChanged || typesChanged),
+      saveKey: const Key('tenant.artifact.save'),
+      onSave: () => widget.save(
+        UpdateTenantInput(
+          artifactMaxBytes: sizeChanged ? size : null,
+          artifactTypes: typesChanged ? types : null,
+        ),
+      ),
+      children: [
+        TixTextField(
+          fieldKey: const Key('tenant.artifactMaxBytes'),
+          label: l10n.tenantArtifactMaxBytes,
+          hint: serverSize.isEmpty ? '5MiB' : serverSize,
+          info: l10n.tenantArtifactMaxBytesInfo,
+          error: size == null ? l10n.tenantArtifactSizeBad : null,
+          controller: _size,
+          onChanged: (_) => setState(() {}),
+        ),
+        const SizedBox(height: TixSpace.s3),
+        TixTextField(
+          fieldKey: const Key('tenant.artifactTypes'),
+          label: l10n.tenantArtifactTypes,
+          hint: serverTypes.isEmpty ? 'image/*, application/pdf' : serverTypes,
+          info: l10n.tenantArtifactTypesInfo,
+          controller: _types,
+          onChanged: (_) => setState(() {}),
+        ),
+        _Note(l10n.tenantArtifactNote),
       ],
     );
   }

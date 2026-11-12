@@ -60,6 +60,36 @@ void main() {
     expect(t.theme, '#ff8800');
   });
 
+  test(
+    'session and artifact settings go in the update body as typed',
+    () async {
+      await repo.updateTenant(
+        'acme',
+        const UpdateTenantInput(
+          sessionTtl: '8h',
+          sessionIdleTimeout: '0',
+          sessionRememberTtl: 'off',
+          artifactMaxBytes: 5242880,
+          artifactTypes: ['image/*', 'application/pdf'],
+        ),
+      );
+      expect(last().body, {
+        'session_ttl': '8h',
+        'session_idle_timeout': '0',
+        'session_remember_ttl': 'off',
+        'artifact_max_bytes': 5242880,
+        'artifact_types': ['image/*', 'application/pdf'],
+      });
+    },
+  );
+
+  test("the server's session and artifact limits", () async {
+    expect((await repo.sessionPolicy()).serverTtl, '12h0m0s');
+    expect(last().uri.path, '/api/v1/auth/session-policy');
+    expect((await repo.artifactLimits()).serverMaxBytes, 1048576);
+    expect(last().uri.path, '/api/v1/artifact-limits');
+  });
+
   test('tenants page by key; deleting one removes it', () async {
     final page = await repo.tenants();
     expect(page.items.map((t) => t.key), ['default', 'acme']);
