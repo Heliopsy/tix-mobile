@@ -174,6 +174,10 @@ const tokenExpiries = [
 /// What a token form proposes: an expiry, not never.
 const defaultTokenExpiry = '90d';
 
+/// How long a rotated token may keep working, as tix's `onboard.RotateGraces`
+/// offers it, the first proposed. None passes `core.MaxTokenRotateGrace`.
+const tokenRotateGraces = ['0s', '10m', '1h', '24h'];
+
 /// The lifetimes an invite link may have, as tix's web form offers them.
 const inviteExpiries = [
   ExpiryChoice('1d', 1),

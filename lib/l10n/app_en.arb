@@ -2505,6 +2505,77 @@
   },
   "tokensValue": "Copy this token now",
   "tokensValueWarning": "Keep it somewhere safe. It is not shown again, and nothing can show it later.",
+  "tokensRetiring": "retiring",
+  "tokensStops": "Stops {when}",
+  "@tokensStops": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensRotate": "Rotate",
+  "tokensRotateTitle": "Rotate {name}?",
+  "@tokensRotateTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensRotateBody": "A new token with the same name, scopes and lifetime replaces this one, and its value is shown once.",
+  "tokensRotateOther": "This token is {name}'s, not yours, and the trail will record that you rotated somebody else's.",
+  "@tokensRotateOther": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensRotateConnection": "This is the token this app connects with, so the app keeps the new one in its place.",
+  "tokensRotateInfo": "Rotate a token on a schedule, or at once when it may have leaked. Whatever holds it has to be given the new value; a grace window keeps the old one working meanwhile, and revoking it ends that window early.",
+  "tokensRotateGrace": "Old token",
+  "tokensRotateGraceInfo": "How long the old value keeps authenticating beside the new one, up to a day, so a running agent can pick up the new value without failing a request. After a leak, stop it now.",
+  "tokensGraceNow": "Stop the old token now",
+  "tokensGrace10m": "Keep it working for 10 minutes",
+  "tokensGrace1h": "Keep it working for 1 hour",
+  "tokensGrace24h": "Keep it working for 24 hours",
+  "tokensRotateNamed": "Rotate {name}",
+  "@tokensRotateNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensRotateNamedOther": "Rotate {name} ({owner})",
+  "@tokensRotateNamedOther": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "owner": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensRotatedTitle": "Token {name} rotated",
+  "@tokensRotatedTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensRotatedConnection": "{name} rotated. This app now connects with the new token.",
+  "@tokensRotatedConnection": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensRotatedUnsaved": "Secure storage on this device refused the new token. It is shown only this once. The app uses it until it closes; after that, reconnect with it.",
   "scopeAll": "Everything but global admin and account history. Only for a credential you trust like yourself.",
   "scopeGroupTasks": "Tasks",
   "scopeGroupProjects": "Projects",

@@ -24,9 +24,184 @@ Future<void> showIssueTokenSheet(
     await showTixSheet<void>(
       context,
       dismissible: false,
-      builder: (_) => TokenValueSheet(issued: issued),
+      builder: (_) => TokenValueSheet(name: issued.name, value: issued.token),
     );
   }
+}
+
+/// Opens the sheet that rotates [token], listed under [actorId], then shows
+/// the new value once, or says the app now connects with it.
+///
+/// [owner] names whose it is when [other] says it is not the caller's.
+Future<void> showRotateTokenSheet(
+  BuildContext context, {
+  required APIToken token,
+  required String? actorId,
+  required String owner,
+  required bool other,
+}) async {
+  final navigator = Navigator.of(context);
+  final rotated = await showTixSheet<TokenRotation>(
+    context,
+    builder: (_) => RotateTokenSheet(
+      token: token,
+      actorId: actorId,
+      owner: owner,
+      other: other,
+    ),
+  );
+  if (rotated == null || !navigator.mounted) return;
+  final value = rotated.value;
+  final l10n = navigator.context.l10n;
+  if (value == null) {
+    showTixToast(navigator.context, l10n.tokensRotatedConnection(rotated.name));
+    return;
+  }
+  await showTixSheet<void>(
+    navigator.context,
+    dismissible: false,
+    builder: (_) => TokenValueSheet(
+      name: rotated.name,
+      value: value,
+      rotated: true,
+      note: rotated.connection ? l10n.tokensRotatedUnsaved : null,
+    ),
+  );
+}
+
+/// The rotate-a-token form: who it is, and how long the old value lasts.
+class RotateTokenSheet extends ConsumerStatefulWidget {
+  /// Rotates [token] in the listing of [actorId].
+  const RotateTokenSheet({
+    required this.token,
+    required this.actorId,
+    required this.owner,
+    required this.other,
+    super.key,
+  });
+
+  /// The token to replace.
+  final APIToken token;
+
+  /// The listing it is in.
+  final String? actorId;
+
+  /// Whose it is, by name.
+  final String owner;
+
+  /// Whether it is somebody else's.
+  final bool other;
+
+  @override
+  ConsumerState<RotateTokenSheet> createState() => _RotateTokenSheetState();
+}
+
+class _RotateTokenSheetState extends ConsumerState<RotateTokenSheet> {
+  String _grace = tokenRotateGraces.first;
+  var _busy = false;
+  String? _error;
+
+  Future<void> _submit() async {
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      final rotated = await ref
+          .read(tokensProvider(widget.actorId).notifier)
+          .rotate(widget.token, grace: _grace);
+      if (mounted) Navigator.of(context).pop(rotated);
+    } on TixException catch (e) {
+      if (mounted) {
+        setState(() {
+          _busy = false;
+          _error = errorMessage(context.l10n, e);
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final name = widget.token.name;
+    final mine = ref.watch(currentAccessProvider).value?.me.tokenId;
+    return TixSheetBody(
+      title: l10n.tokensRotateTitle(name),
+      actions: [
+        TixButton.quiet(
+          label: l10n.cancel,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        TixButton.primary(
+          key: const Key('tokens.rotate.submit'),
+          label: widget.other
+              ? l10n.tokensRotateNamedOther(name, widget.owner)
+              : l10n.tokensRotateNamed(name),
+          busy: _busy,
+          onPressed: _submit,
+        ),
+      ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  [
+                    l10n.tokensRotateBody,
+                    if (widget.other) l10n.tokensRotateOther(widget.owner),
+                    if (mine == widget.token.id) l10n.tokensRotateConnection,
+                  ].join(' '),
+                ),
+              ),
+              InfoTip(l10n.tokensRotateInfo, size: 32),
+            ],
+          ),
+          const SizedBox(height: TixSpace.s4),
+          Row(
+            children: [
+              Text(l10n.tokensRotateGrace, style: theme.textTheme.titleMedium),
+              InfoTip(l10n.tokensRotateGraceInfo, size: 32),
+            ],
+          ),
+          const SizedBox(height: TixSpace.s2),
+          Wrap(
+            spacing: TixSpace.s2,
+            runSpacing: TixSpace.s2,
+            children: [
+              for (final g in tokenRotateGraces)
+                ChoiceChip(
+                  key: Key('tokens.grace.$g'),
+                  label: Text(_graceLabel(l10n, g)),
+                  selected: _grace == g,
+                  onSelected: (_) => setState(() => _grace = g),
+                ),
+            ],
+          ),
+          if (_error != null) ...[
+            const SizedBox(height: TixSpace.s3),
+            Text(
+              _error!,
+              key: const Key('tokens.rotate.error'),
+              style: TextStyle(color: context.tix.danger),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  static String _graceLabel(AppLocalizations l10n, String grace) =>
+      switch (grace) {
+        '10m' => l10n.tokensGrace10m,
+        '1h' => l10n.tokensGrace1h,
+        '24h' => l10n.tokensGrace24h,
+        _ => l10n.tokensGraceNow,
+      };
 }
 
 /// The issue-a-token form: a name, scopes the caller holds, an expiry.
@@ -256,17 +431,34 @@ String scopeNote(AppLocalizations l10n, String scope) => switch (scope) {
 
 /// A token's value, shown once with Copy and a warning.
 class TokenValueSheet extends StatelessWidget {
-  /// Shows [issued]'s value.
-  const TokenValueSheet({required this.issued, super.key});
+  /// Shows [value], the token [name]'s, issued or [rotated].
+  const TokenValueSheet({
+    required this.name,
+    required this.value,
+    this.rotated = false,
+    this.note,
+    super.key,
+  });
 
-  /// The token as issued, value and all.
-  final IssuedToken issued;
+  /// The token's name.
+  final String name;
+
+  /// Its value.
+  final String value;
+
+  /// Whether it replaces a rotated token rather than being newly issued.
+  final bool rotated;
+
+  /// A warning in place of the usual one.
+  final String? note;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return TixSheetBody(
-      title: l10n.tokensIssuedTitle(issued.name),
+      title: rotated
+          ? l10n.tokensRotatedTitle(name)
+          : l10n.tokensIssuedTitle(name),
       actions: [
         TixButton.primary(
           key: const Key('secret.done'),
@@ -276,8 +468,8 @@ class TokenValueSheet extends StatelessWidget {
       ],
       child: OneTimeSecret(
         heading: l10n.tokensValue,
-        note: l10n.tokensValueWarning,
-        values: [issued.token],
+        note: note ?? l10n.tokensValueWarning,
+        values: [value],
       ),
     );
   }

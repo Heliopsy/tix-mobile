@@ -4133,6 +4133,82 @@ class AppLocalizationsBg extends AppLocalizations {
       'Пазете го на сигурно място. Няма да се покаже отново и нищо не може да го покаже по-късно.';
 
   @override
+  String get tokensRetiring => 'оттегля се';
+
+  @override
+  String tokensStops(String when) {
+    return 'Спира $when';
+  }
+
+  @override
+  String get tokensRotate => 'Смени';
+
+  @override
+  String tokensRotateTitle(String name) {
+    return 'Смяна на $name?';
+  }
+
+  @override
+  String get tokensRotateBody =>
+      'Нов токен със същото име, обхвати и срок замества този, а стойността му се показва веднъж.';
+
+  @override
+  String tokensRotateOther(String name) {
+    return 'Този токен е на $name, не ваш, и в историята ще остане, че сте сменили чужд.';
+  }
+
+  @override
+  String get tokensRotateConnection =>
+      'С този токен се свързва приложението, затова то запазва новия на негово място.';
+
+  @override
+  String get tokensRotateInfo =>
+      'Сменяйте токена по график или веднага, ако може да е изтекъл. Всичко, което го държи, трябва да получи новата стойност; гратисният период оставя стария да работи междувременно, а отмяната му прекратява периода по-рано.';
+
+  @override
+  String get tokensRotateGrace => 'Старият токен';
+
+  @override
+  String get tokensRotateGraceInfo =>
+      'Колко дълго старата стойност продължава да се удостоверява до новата, най-много един ден, за да може работещ агент да вземе новата стойност, без да провали заявка. След изтичане го спрете веднага.';
+
+  @override
+  String get tokensGraceNow => 'Спри стария токен веднага';
+
+  @override
+  String get tokensGrace10m => 'Остави го да работи още 10 минути';
+
+  @override
+  String get tokensGrace1h => 'Остави го да работи още 1 час';
+
+  @override
+  String get tokensGrace24h => 'Остави го да работи още 24 часа';
+
+  @override
+  String tokensRotateNamed(String name) {
+    return 'Смени $name';
+  }
+
+  @override
+  String tokensRotateNamedOther(String name, String owner) {
+    return 'Смени $name ($owner)';
+  }
+
+  @override
+  String tokensRotatedTitle(String name) {
+    return 'Токенът $name е сменен';
+  }
+
+  @override
+  String tokensRotatedConnection(String name) {
+    return '$name е сменен. Приложението вече се свързва с новия токен.';
+  }
+
+  @override
+  String get tokensRotatedUnsaved =>
+      'Защитеното хранилище на устройството отказа новия токен. Показва се само този път. Приложението го ползва, докато не се затвори; след това се свържете отново с него.';
+
+  @override
   String get scopeAll =>
       'Всичко без глобален администратор и история на акаунта. Само за токен, на който вярвате като на себе си.';
 

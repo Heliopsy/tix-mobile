@@ -133,6 +133,16 @@ class FakePeople {
 
   var _n = 0;
 
+  /// When a rotation happens, as the tests' clock reads it.
+  static final _rotatedAt = DateTime.utc(2026, 11, 1, 12);
+
+  /// The graces a rotation may ask for.
+  static const _graces = {
+    '10m': Duration(minutes: 10),
+    '1h': Duration(hours: 1),
+    '24h': Duration(hours: 24),
+  };
+
   String _secret(String prefix) {
     final s = '$prefix-secret-${++_n}-x9Qz';
     issued.add(s);
@@ -252,6 +262,23 @@ class FakePeople {
         };
         tokens.add(t);
         return FakeResponse(201, {...t, 'token': _secret('tix')});
+      case ('POST', ['tokens', final id, 'rotate']):
+        final old = tokens.where(
+          (t) => t['id'] == id && t['revoked_at'] == null,
+        );
+        if (old.isEmpty) return FakeResponse(404, envelope('not_found', id));
+        final retired = old.single;
+        final grace = _graces[body['grace']] ?? Duration.zero;
+        final t = {
+          ...retired,
+          'id': 't${++_n}',
+          'created_at': '2026-11-01T12:00:00Z',
+        };
+        retired['revoked_at'] = _rotatedAt.add(grace).toIso8601String();
+        tokens.add(t);
+        final value = _secret('tix');
+        server.tokens[value] = caller.tenant;
+        return FakeResponse(200, {...t, 'token': value});
       case ('DELETE', ['tokens', final id]):
         for (final t in tokens) {
           if (t['id'] == id) t['revoked_at'] = '2026-11-01T12:00:00Z';

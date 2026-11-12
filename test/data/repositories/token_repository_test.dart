@@ -35,4 +35,20 @@ void main() {
       isNotNull,
     );
   });
+
+  test('rotates a token with the grace asked for', () async {
+    final server = FakeTix();
+    final people = FakePeople.on(server);
+    final repo = TokenRepository(
+      server.factory('https://tix.example', const BearerCredential('tok')),
+    );
+    final issued = await repo.rotate('t2', grace: '1h');
+    expect(server.requests.last.method, 'POST');
+    expect(server.requests.last.uri.path, endsWith('/api/v1/tokens/t2/rotate'));
+    expect(server.requests.last.body, {'grace': '1h'});
+    expect(issued.name, 'raj-laptop');
+    expect(issued.token, people.issued.single);
+    final old = (await repo.tokens()).firstWhere((t) => t.id == 't2');
+    expect(old.revokedAt, DateTime.utc(2026, 11, 1, 13));
+  });
 }

@@ -423,14 +423,18 @@ class SessionController extends _$SessionController {
   }
 
   /// Swaps the API token of the remote connection [connectionId] for a
-  /// rotated one and keeps only the new value. Throws when secure storage
+  /// rotated one and keeps only the new value; the old one keeps working for
+  /// [grace]. Throws when secure storage
   /// refuses a write or the server refuses; the old token then stays.
   ///
   /// Returns null once the new token is stored. If storing fails after the
   /// server rotated, returns the new token instead, the only copy there is:
   /// the caller shows it once and never logs it. The active session uses it
   /// until the app closes.
-  Future<String?> rotateToken(String connectionId) async {
+  Future<String?> rotateToken(
+    String connectionId, {
+    String grace = '1m',
+  }) async {
     final repo = ref.read(instancesRepositoryProvider);
     final connection = repo.connection(connectionId);
     final instance = repo.instance(connection?.instanceId ?? '');
@@ -447,7 +451,7 @@ class SessionController extends _$SessionController {
     await repo.checkSecretsWritable(connection);
     final issued = await ref
         .read(authRepositoryProvider)
-        .rotateToken(instance.baseUrl, BearerCredential(secret));
+        .rotateToken(instance.baseUrl, BearerCredential(secret), grace: grace);
     final active = state.value;
     try {
       await repo.writeSecret(connection, issued.token);

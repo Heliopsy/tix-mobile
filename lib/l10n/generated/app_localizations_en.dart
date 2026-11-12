@@ -4130,6 +4130,82 @@ class AppLocalizationsEn extends AppLocalizations {
       'Keep it somewhere safe. It is not shown again, and nothing can show it later.';
 
   @override
+  String get tokensRetiring => 'retiring';
+
+  @override
+  String tokensStops(String when) {
+    return 'Stops $when';
+  }
+
+  @override
+  String get tokensRotate => 'Rotate';
+
+  @override
+  String tokensRotateTitle(String name) {
+    return 'Rotate $name?';
+  }
+
+  @override
+  String get tokensRotateBody =>
+      'A new token with the same name, scopes and lifetime replaces this one, and its value is shown once.';
+
+  @override
+  String tokensRotateOther(String name) {
+    return 'This token is $name\'s, not yours, and the trail will record that you rotated somebody else\'s.';
+  }
+
+  @override
+  String get tokensRotateConnection =>
+      'This is the token this app connects with, so the app keeps the new one in its place.';
+
+  @override
+  String get tokensRotateInfo =>
+      'Rotate a token on a schedule, or at once when it may have leaked. Whatever holds it has to be given the new value; a grace window keeps the old one working meanwhile, and revoking it ends that window early.';
+
+  @override
+  String get tokensRotateGrace => 'Old token';
+
+  @override
+  String get tokensRotateGraceInfo =>
+      'How long the old value keeps authenticating beside the new one, up to a day, so a running agent can pick up the new value without failing a request. After a leak, stop it now.';
+
+  @override
+  String get tokensGraceNow => 'Stop the old token now';
+
+  @override
+  String get tokensGrace10m => 'Keep it working for 10 minutes';
+
+  @override
+  String get tokensGrace1h => 'Keep it working for 1 hour';
+
+  @override
+  String get tokensGrace24h => 'Keep it working for 24 hours';
+
+  @override
+  String tokensRotateNamed(String name) {
+    return 'Rotate $name';
+  }
+
+  @override
+  String tokensRotateNamedOther(String name, String owner) {
+    return 'Rotate $name ($owner)';
+  }
+
+  @override
+  String tokensRotatedTitle(String name) {
+    return 'Token $name rotated';
+  }
+
+  @override
+  String tokensRotatedConnection(String name) {
+    return '$name rotated. This app now connects with the new token.';
+  }
+
+  @override
+  String get tokensRotatedUnsaved =>
+      'Secure storage on this device refused the new token. It is shown only this once. The app uses it until it closes; after that, reconnect with it.';
+
+  @override
   String get scopeAll =>
       'Everything but global admin and account history. Only for a credential you trust like yourself.';
 

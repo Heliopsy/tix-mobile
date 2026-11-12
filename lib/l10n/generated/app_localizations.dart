@@ -6985,6 +6985,120 @@ abstract class AppLocalizations {
   /// **'Keep it somewhere safe. It is not shown again, and nothing can show it later.'**
   String get tokensValueWarning;
 
+  /// No description provided for @tokensRetiring.
+  ///
+  /// In en, this message translates to:
+  /// **'retiring'**
+  String get tokensRetiring;
+
+  /// No description provided for @tokensStops.
+  ///
+  /// In en, this message translates to:
+  /// **'Stops {when}'**
+  String tokensStops(String when);
+
+  /// No description provided for @tokensRotate.
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate'**
+  String get tokensRotate;
+
+  /// No description provided for @tokensRotateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate {name}?'**
+  String tokensRotateTitle(String name);
+
+  /// No description provided for @tokensRotateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A new token with the same name, scopes and lifetime replaces this one, and its value is shown once.'**
+  String get tokensRotateBody;
+
+  /// No description provided for @tokensRotateOther.
+  ///
+  /// In en, this message translates to:
+  /// **'This token is {name}\'s, not yours, and the trail will record that you rotated somebody else\'s.'**
+  String tokensRotateOther(String name);
+
+  /// No description provided for @tokensRotateConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the token this app connects with, so the app keeps the new one in its place.'**
+  String get tokensRotateConnection;
+
+  /// No description provided for @tokensRotateInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate a token on a schedule, or at once when it may have leaked. Whatever holds it has to be given the new value; a grace window keeps the old one working meanwhile, and revoking it ends that window early.'**
+  String get tokensRotateInfo;
+
+  /// No description provided for @tokensRotateGrace.
+  ///
+  /// In en, this message translates to:
+  /// **'Old token'**
+  String get tokensRotateGrace;
+
+  /// No description provided for @tokensRotateGraceInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'How long the old value keeps authenticating beside the new one, up to a day, so a running agent can pick up the new value without failing a request. After a leak, stop it now.'**
+  String get tokensRotateGraceInfo;
+
+  /// No description provided for @tokensGraceNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop the old token now'**
+  String get tokensGraceNow;
+
+  /// No description provided for @tokensGrace10m.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it working for 10 minutes'**
+  String get tokensGrace10m;
+
+  /// No description provided for @tokensGrace1h.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it working for 1 hour'**
+  String get tokensGrace1h;
+
+  /// No description provided for @tokensGrace24h.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it working for 24 hours'**
+  String get tokensGrace24h;
+
+  /// No description provided for @tokensRotateNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate {name}'**
+  String tokensRotateNamed(String name);
+
+  /// No description provided for @tokensRotateNamedOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate {name} ({owner})'**
+  String tokensRotateNamedOther(String name, String owner);
+
+  /// No description provided for @tokensRotatedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Token {name} rotated'**
+  String tokensRotatedTitle(String name);
+
+  /// No description provided for @tokensRotatedConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} rotated. This app now connects with the new token.'**
+  String tokensRotatedConnection(String name);
+
+  /// No description provided for @tokensRotatedUnsaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Secure storage on this device refused the new token. It is shown only this once. The app uses it until it closes; after that, reconnect with it.'**
+  String get tokensRotatedUnsaved;
+
   /// No description provided for @scopeAll.
   ///
   /// In en, this message translates to:
