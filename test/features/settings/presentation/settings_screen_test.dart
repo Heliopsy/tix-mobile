@@ -606,6 +606,43 @@ void main() {
     );
   });
 
+  testWidgets('the bindings are grouped and worded as the help words them', (
+    tester,
+  ) async {
+    await pump(tester);
+    Finder binding(String action, String label) => find.descendant(
+      of: find.byKey(Key('settings.keyBindings.$action')),
+      matching: find.text(label),
+    );
+    Finder heading(KeyGroup g) =>
+        find.byKey(Key('settings.keyBindings.group.${g.name}'));
+    for (final (g, text) in [
+      (KeyGroup.navigate, 'Navigate'),
+      (KeyGroup.lists, 'Lists'),
+      (KeyGroup.task, 'Task'),
+      (KeyGroup.general, 'General'),
+    ]) {
+      expect(
+        find.descendant(of: heading(g), matching: find.text(text)),
+        findsOneWidget,
+      );
+    }
+    expect(binding(KeyActions.listDone, 'Mark done'), findsOneWidget);
+    expect(binding(KeyActions.listDone, 'd'), findsOneWidget);
+    expect(binding(KeyActions.taskDescribe, 'Edit the description'), findsOne);
+    expect(binding(KeyActions.taskDescribe, 'E'), findsOneWidget);
+    expect(binding(KeyActions.navSettings, 'Go to Settings'), findsOneWidget);
+    expect(binding(KeyActions.navSettings, 'Ctrl 7'), findsOneWidget);
+    double top(Finder f) => tester.getTopLeft(f).dy;
+    final done = find.byKey(const Key('settings.keyBindings.list.done'));
+    expect(top(heading(KeyGroup.task)), lessThan(top(done)));
+    expect(top(done), lessThan(top(heading(KeyGroup.general))));
+    expect(
+      top(heading(KeyGroup.navigate)),
+      lessThan(top(heading(KeyGroup.lists))),
+    );
+  });
+
   testWidgets('search finds the keyboard section by Emacs', (tester) async {
     await pump(tester);
     await tester.enterText(find.byKey(const Key('settings.search')), 'emacs');

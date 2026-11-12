@@ -478,6 +478,13 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
     );
     return [
       cmd(
+        'done',
+        l10n.markDone,
+        Icons.check_circle_outline,
+        KeyActions.listDone,
+        () => ref.completeTask(context, task),
+      ),
+      cmd(
         'rename',
         l10n.taskDetailRename,
         Icons.title,
@@ -548,11 +555,18 @@ class _TaskHubState extends ConsumerState<_TaskHub> {
         _comment,
       ),
       cmd(
-        'copy',
-        l10n.taskDetailCopyTo,
-        Icons.copy_all_outlined,
+        'ref',
+        l10n.taskDetailCopyRef,
+        Icons.tag,
         KeyActions.taskCopy,
-        _copy,
+        _copyRef,
+      ),
+      TixCommand(
+        id: 'taskDetail.copy',
+        label: l10n.taskDetailCopyTo,
+        group: group,
+        icon: Icons.copy_all_outlined,
+        run: () => unawaited(_copy()),
       ),
       if (_canMoveProject(moveSupported))
         TixCommand(

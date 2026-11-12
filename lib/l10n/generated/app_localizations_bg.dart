@@ -8195,7 +8195,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get keymapDefaultHelp =>
-      'Клавишите на приложението и на tix web: j и k местят, g p отваря Проекти, Ctrl 1 до 6 сменят раздела.';
+      'Клавишите, общи с tix web: j и k местят, g i отваря Входящи, d отбелязва готово, Ctrl 1 до 7 сменят раздела.';
 
   @override
   String get keymapVimHelp =>
@@ -8214,6 +8214,135 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get settingsKeyBindingsOff => 'Клавишните комбинации са изключени.';
+
+  @override
+  String get keyGroupNavigate => 'Навигация';
+
+  @override
+  String get keyGroupLists => 'Списъци';
+
+  @override
+  String get keyGroupTask => 'Задача';
+
+  @override
+  String get keyGroupGeneral => 'Общи';
+
+  @override
+  String get keyHelpPalette => 'Отваряне на палитрата с команди';
+
+  @override
+  String get keyHelpHelp => 'Показване на тази помощ';
+
+  @override
+  String get keyHelpGoInbox => 'Към входящите';
+
+  @override
+  String get keyHelpGoMyWork => 'Към Моята работа';
+
+  @override
+  String get keyHelpGoTasks => 'Към Задачи';
+
+  @override
+  String get keyHelpGoProjects => 'Към Проекти';
+
+  @override
+  String get keyHelpGoActivity => 'Към Активност';
+
+  @override
+  String get keyHelpGoManage => 'Към Управление';
+
+  @override
+  String get keyHelpGoSettings => 'Към Настройки';
+
+  @override
+  String get keyHelpNext => 'Избор надолу';
+
+  @override
+  String get keyHelpPrevious => 'Избор нагоре';
+
+  @override
+  String get keyHelpFirst => 'Към първата задача';
+
+  @override
+  String get keyHelpLast => 'Към последната задача';
+
+  @override
+  String get keyHelpPageDown => 'Страница надолу';
+
+  @override
+  String get keyHelpPageUp => 'Страница нагоре';
+
+  @override
+  String get keyHelpOpen => 'Отваряне на избраната задача';
+
+  @override
+  String get keyHelpBack => 'Назад';
+
+  @override
+  String get keyHelpSelect => 'Избиране или отказ на задачата на фокус';
+
+  @override
+  String get keyHelpExtendDown => 'Разширяване на избора надолу';
+
+  @override
+  String get keyHelpExtendUp => 'Разширяване на избора нагоре';
+
+  @override
+  String get keyHelpSelectAll => 'Избиране на всички задачи в списъка';
+
+  @override
+  String get keyHelpClear => 'Изчистване на избора';
+
+  @override
+  String get keyHelpFilter => 'Фокус върху полето за филтър';
+
+  @override
+  String get keyHelpRefresh => 'Опресняване';
+
+  @override
+  String get keyHelpView => 'Смяна на изгледа';
+
+  @override
+  String get keyHelpNew => 'Нова задача';
+
+  @override
+  String get keyHelpDone => 'Отбелязване като готова';
+
+  @override
+  String get keyHelpRename => 'Редактиране на заглавието';
+
+  @override
+  String get keyHelpDescribe => 'Редактиране на описанието';
+
+  @override
+  String get keyHelpMove => 'Преместване в друг статус';
+
+  @override
+  String get keyHelpComment => 'Коментар';
+
+  @override
+  String get keyHelpTag => 'Добавяне на етикет';
+
+  @override
+  String get keyHelpStar => 'Със звезда или без';
+
+  @override
+  String get keyHelpPriority => 'Задаване на приоритет';
+
+  @override
+  String get keyHelpAssign => 'Възлагане';
+
+  @override
+  String get keyHelpDue => 'Задаване на срок';
+
+  @override
+  String get keyHelpSnooze => 'Отлагане или връщане';
+
+  @override
+  String get keyHelpCopyRef => 'Копиране на референцията';
+
+  @override
+  String get keyHelpDelete => 'Изтриване';
 
   @override
   String get taskHandoff => 'Предай на агент';

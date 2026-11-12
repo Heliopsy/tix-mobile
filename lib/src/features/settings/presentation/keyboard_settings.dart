@@ -5,53 +5,6 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 
-/// What [action] does, for the Settings list of bindings.
-String keyActionLabel(AppLocalizations l10n, String action) => switch (action) {
-  KeyActions.paletteOpen => l10n.openCommandPalette,
-  KeyActions.helpShow => l10n.showShortcuts,
-  KeyActions.fieldLeave => l10n.keysLeaveField,
-  KeyActions.navBack => l10n.keysBack,
-  KeyActions.navProjects => l10n.goProjects,
-  KeyActions.navTasks => l10n.goTasks,
-  KeyActions.navMyWork => l10n.goMyWork,
-  KeyActions.navInbox => l10n.goInbox,
-  KeyActions.navManage => l10n.goManage,
-  KeyActions.navSettings => l10n.goSettings,
-  KeyActions.navWatch => l10n.goWatch,
-  KeyActions.quickAdd => l10n.quickAddTitle,
-  KeyActions.quickPaste => l10n.quickAddPaste,
-  KeyActions.listNext => l10n.keysNextRow,
-  KeyActions.listPrev => l10n.keysPreviousRow,
-  KeyActions.listTop => l10n.keysFirstRow,
-  KeyActions.listBottom => l10n.keysLastRow,
-  KeyActions.listPageDown => l10n.keysPageDown,
-  KeyActions.listPageUp => l10n.keysPageUp,
-  KeyActions.listOpen => l10n.keysOpenRow,
-  KeyActions.listSelect => l10n.bulkSelect,
-  KeyActions.listExtendDown => l10n.bulkExtendDown,
-  KeyActions.listExtendUp => l10n.bulkExtendUp,
-  KeyActions.listSelectAll => l10n.bulkSelectAll,
-  KeyActions.listClear => l10n.bulkExit,
-  KeyActions.listFilter => l10n.filterFocus,
-  KeyActions.listRefresh => l10n.refresh,
-  KeyActions.listView => l10n.viewSwitch,
-  KeyActions.listNew => l10n.newTask,
-  KeyActions.listDone => l10n.markDone,
-  KeyActions.taskRename => l10n.taskDetailRename,
-  KeyActions.taskDescribe => l10n.taskDetailEditDescription,
-  KeyActions.taskMove => l10n.taskDetailMoveTitle,
-  KeyActions.taskPriority => l10n.taskDetailPriorityTitle,
-  KeyActions.taskAssign => l10n.taskDetailAssigneeTitle,
-  KeyActions.taskDue => l10n.taskDetailDueTitle,
-  KeyActions.taskTag => l10n.taskDetailAddTag,
-  KeyActions.taskStar => l10n.taskDetailStar,
-  KeyActions.taskSnooze => l10n.taskDetailSnooze,
-  KeyActions.taskComment => l10n.taskDetailCommentLabel,
-  KeyActions.taskCopy => l10n.taskDetailCopyTo,
-  KeyActions.taskDelete => l10n.taskDetailDelete,
-  _ => action,
-};
-
 /// The name of [preset].
 String keymapPresetLabel(AppLocalizations l10n, KeymapPreset preset) =>
     switch (preset) {
@@ -126,7 +79,7 @@ class KeyBindingsEntry extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final keymap = ref.watch(activeKeymapProvider);
-    final rows = [
+    final bound = [
       for (final a in keymap.actions)
         if (keymap.bindingsFor(a).isNotEmpty) a,
     ];
@@ -139,20 +92,41 @@ class KeyBindingsEntry extends ConsumerWidget {
             l10n.settingsKeyBindingsOff,
             style: TextStyle(color: context.tix.muted),
           ),
-        for (final a in rows)
-          Padding(
-            key: Key('settings.keyBindings.$a'),
-            padding: const EdgeInsets.symmetric(vertical: TixSpace.s1),
-            child: Wrap(
-              alignment: WrapAlignment.spaceBetween,
-              spacing: TixSpace.s3,
-              runSpacing: TixSpace.s1,
-              children: [
-                Text(keyActionLabel(l10n, a)),
-                KeyBindingKeys(keymap.bindingsFor(a)),
-              ],
+        for (final group in KeyGroup.values)
+          if (bound.where((a) => keyActionGroup(a) == group).toList()
+              case final rows when rows.isNotEmpty) ...[
+            Padding(
+              key: Key('settings.keyBindings.group.${group.name}'),
+              padding: const EdgeInsets.only(
+                top: TixSpace.s3,
+                bottom: TixSpace.s1,
+              ),
+              child: Semantics(
+                header: true,
+                child: Text(
+                  keyGroupLabel(l10n, group),
+                  style: const TextStyle(
+                    fontSize: TixText.sm,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ),
-          ),
+            for (final a in rows)
+              Padding(
+                key: Key('settings.keyBindings.$a'),
+                padding: const EdgeInsets.symmetric(vertical: TixSpace.s1),
+                child: Wrap(
+                  alignment: WrapAlignment.spaceBetween,
+                  spacing: TixSpace.s3,
+                  runSpacing: TixSpace.s1,
+                  children: [
+                    Text(keyActionLabel(l10n, a)),
+                    KeyBindingKeys(keymap.bindingsFor(a)),
+                  ],
+                ),
+              ),
+          ],
       ],
     );
   }

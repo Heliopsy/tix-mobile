@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
+import 'package:tix_mobile/src/core/l10n/l10n.dart';
 
 import '../../../helpers/app.dart';
 import '../../../helpers/design.dart';
@@ -259,7 +260,7 @@ void main() {
   testWidgets('the help shows the active preset', (tester) async {
     await pump(tester);
     await question(tester);
-    expect(inHelp('Select a task'), findsOneWidget);
+    expect(inHelp('Select or unselect the focused task'), findsOneWidget);
     expect(inHelp('x'), findsOneWidget);
     expect(inHelp('v'), findsNothing);
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
@@ -276,6 +277,57 @@ void main() {
     expect(inHelp('v'), findsOneWidget);
     expect(inHelp('x'), findsNothing);
     expect(inHelp('g'), findsWidgets);
+  });
+
+  testWidgets('the help groups keys and words them as tix web does', (
+    tester,
+  ) async {
+    await pump(tester);
+    await question(tester);
+    Finder heading(KeyGroup g) => find.byKey(Key('shortcuts.help.${g.name}'));
+    expect(
+      find.descendant(
+        of: heading(KeyGroup.navigate),
+        matching: find.text('Navigate'),
+      ),
+      findsOneWidget,
+    );
+    expect(heading(KeyGroup.task), findsNothing);
+    expect(inHelp('Go to Projects'), findsOneWidget);
+    expect(inHelp('Go to projects'), findsNothing);
+    expect(inHelp('Move selection down'), findsOneWidget);
+    expect(inHelp('Next task'), findsNothing);
+    expect(inHelp('Open the command palette'), findsOneWidget);
+    expect(inHelp('Show this help'), findsOneWidget);
+    double top(Finder f) => tester.getTopLeft(f).dy;
+    expect(
+      top(heading(KeyGroup.navigate)),
+      lessThan(top(heading(KeyGroup.lists))),
+    );
+    expect(
+      top(heading(KeyGroup.lists)),
+      lessThan(top(inHelp('Move selection down'))),
+    );
+    expect(
+      top(inHelp('Move selection down')),
+      lessThan(top(heading(KeyGroup.general))),
+    );
+    expect(top(heading(KeyGroup.general)), lessThan(top(inHelp('New task'))));
+    expect(
+      top(heading(KeyGroup.general)),
+      lessThan(top(inHelp('Show this help'))),
+    );
+  });
+
+  test('a key registered by two scopes is listed once', () {
+    TixCommand c(String id) =>
+        TixCommand(id: id, label: id, action: KeyActions.navBack, run: () {});
+    final groups = shortcutGroups(lookupAppLocalizations(const Locale('en')), [
+      c('shell.back'),
+      c('page.back'),
+    ], Keymap.of(KeymapPreset.standard));
+    final rows = [for (final g in groups) ...g.rows];
+    expect(rows.where((r) => r.label == 'Go back'), hasLength(1));
   });
 
   testWidgets('a scope that is not shown answers no keys', (tester) async {

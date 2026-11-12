@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart'
     show CharacterActivator, ShortcutActivator, SingleActivator;
 
-/// The abstract actions a keymap binds, in the order the help lists them.
+/// The abstract actions a keymap binds.
 abstract final class KeyActions {
   /// Opens the command palette.
   static const paletteOpen = 'palette.open';
@@ -39,7 +39,8 @@ abstract final class KeyActions {
   /// Opens Settings.
   static const navSettings = 'nav.settings';
 
-  /// Opens Activity.
+  /// Opens Activity. The id predates the name and stays, so nothing keyed by
+  /// it changes.
   static const navWatch = 'nav.watch';
 
   /// Opens quick add.
@@ -123,13 +124,13 @@ abstract final class KeyActions {
   /// Stars or unstars.
   static const taskStar = 'task.star';
 
-  /// Snoozes or wakes.
+  /// Snoozes or unsnoozes.
   static const taskSnooze = 'task.snooze';
 
   /// Comments.
   static const taskComment = 'task.comment';
 
-  /// Copies the task.
+  /// Copies the task's reference.
   static const taskCopy = 'task.copy';
 
   /// Deletes the task, after a confirmation.
@@ -138,7 +139,7 @@ abstract final class KeyActions {
 
 /// The shipped keymaps, as tix's web and terminal interfaces name them.
 enum KeymapPreset {
-  /// The app's own keys plus tix web's.
+  /// The key table the app shares with tix web.
   standard,
 
   /// Vim reflexes over the default.
@@ -480,29 +481,28 @@ final Map<String, LogicalKeyboardKey> _parseNames = {
 
 typedef _Table = Map<String, List<String>>;
 
-/// Default: the app's keys, plus tix web's (`d` done, `g`/`G` and Home/End
-/// jump, Esc back), plus `g` sequences and Ctrl+1 to Ctrl+6 for the
-/// destinations, where tix's web and terminal interfaces have a sidebar.
+/// Default: the key table tix's web and this app share, one meaning per key
+/// on both, plus `g` sequences and Ctrl+1 to Ctrl+7 for the destinations in
+/// the order the app's navigation draws them. Listed in the order the help
+/// lists them.
 const _base = <String, List<String>>{
   KeyActions.paletteOpen: ['ctrl+k', 'meta+k'],
   KeyActions.helpShow: ['?'],
-  KeyActions.navBack: ['esc'],
-  KeyActions.navProjects: ['g p', 'ctrl+1'],
-  KeyActions.navTasks: ['g t', 'ctrl+2'],
-  KeyActions.navMyWork: ['g m', 'ctrl+3'],
-  KeyActions.navInbox: ['g i', 'ctrl+4'],
-  KeyActions.navManage: ['g a', 'ctrl+5'],
-  KeyActions.navSettings: ['g s', 'ctrl+6'],
-  KeyActions.navWatch: ['g w'],
-  KeyActions.quickAdd: ['ctrl+n', 'meta+n'],
-  KeyActions.quickPaste: ['ctrl+shift+v', 'meta+shift+v'],
-  KeyActions.listNext: ['down', 'j'],
-  KeyActions.listPrev: ['up', 'k'],
+  KeyActions.navInbox: ['g i', 'ctrl+1'],
+  KeyActions.navMyWork: ['g m', 'ctrl+2'],
+  KeyActions.navTasks: ['g t', 'ctrl+3'],
+  KeyActions.navProjects: ['g p', 'ctrl+4'],
+  KeyActions.navWatch: ['g a', 'g w', 'ctrl+5'],
+  KeyActions.navManage: ['g M', 'ctrl+6'],
+  KeyActions.navSettings: ['g s', 'ctrl+7'],
+  KeyActions.listNext: ['j', 'down'],
+  KeyActions.listPrev: ['k', 'up'],
   KeyActions.listTop: ['g', 'home'],
   KeyActions.listBottom: ['G', 'end'],
   KeyActions.listPageDown: ['pgdn'],
   KeyActions.listPageUp: ['pgup'],
   KeyActions.listOpen: ['enter'],
+  KeyActions.navBack: ['esc'],
   KeyActions.listSelect: ['x'],
   KeyActions.listExtendDown: ['shift+down'],
   KeyActions.listExtendUp: ['shift+up'],
@@ -512,19 +512,21 @@ const _base = <String, List<String>>{
   KeyActions.listRefresh: ['r'],
   KeyActions.listView: ['v'],
   KeyActions.listNew: ['n'],
-  KeyActions.listDone: ['e', 'd'],
+  KeyActions.listDone: ['d'],
   KeyActions.taskRename: ['e'],
-  KeyActions.taskDescribe: ['d'],
-  KeyActions.taskMove: ['m'],
+  KeyActions.taskDescribe: ['E'],
+  KeyActions.taskMove: ['t'],
+  KeyActions.taskComment: ['m'],
+  KeyActions.taskTag: ['#'],
+  KeyActions.taskStar: ['s', '*'],
   KeyActions.taskPriority: ['p'],
   KeyActions.taskAssign: ['a'],
   KeyActions.taskDue: ['u'],
-  KeyActions.taskTag: ['t'],
-  KeyActions.taskStar: ['s'],
   KeyActions.taskSnooze: ['z'],
-  KeyActions.taskComment: ['c'],
   KeyActions.taskCopy: ['y'],
   KeyActions.taskDelete: ['delete'],
+  KeyActions.quickAdd: ['ctrl+n', 'meta+n'],
+  KeyActions.quickPaste: ['ctrl+shift+v', 'meta+shift+v'],
 };
 
 /// Bindings that apply inside a text field as well, or only there.
@@ -553,8 +555,8 @@ const _overrides = <KeymapPreset, _Table>{
     KeyActions.listExtendDown: ['J', 'shift+down'],
     KeyActions.listExtendUp: ['K', 'shift+up'],
     KeyActions.listView: ['g v'],
+    KeyActions.listFilter: ['/', ':'],
     KeyActions.listNew: ['o'],
-    KeyActions.listDone: ['e'],
     KeyActions.taskRename: ['i'],
     KeyActions.taskDescribe: ['D'],
     KeyActions.taskDelete: ['d d', 'x', 'delete'],

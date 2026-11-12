@@ -8248,7 +8248,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get keymapDefaultHelp =>
-      'Les touches de l\'app et de tix web : j et k déplacent, g p ouvre les projets, Ctrl 1 à 6 changent de section.';
+      'Les touches partagées avec tix web : j et k déplacent, g i ouvre la boîte de réception, d termine, Ctrl 1 à 7 changent de section.';
 
   @override
   String get keymapVimHelp =>
@@ -8268,6 +8268,135 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get settingsKeyBindingsOff =>
       'Les raccourcis clavier sont désactivés.';
+
+  @override
+  String get keyGroupNavigate => 'Naviguer';
+
+  @override
+  String get keyGroupLists => 'Listes';
+
+  @override
+  String get keyGroupTask => 'Tâche';
+
+  @override
+  String get keyGroupGeneral => 'Général';
+
+  @override
+  String get keyHelpPalette => 'Ouvrir la palette de commandes';
+
+  @override
+  String get keyHelpHelp => 'Afficher cette aide';
+
+  @override
+  String get keyHelpGoInbox => 'Aller à la boîte de réception';
+
+  @override
+  String get keyHelpGoMyWork => 'Aller à Mon travail';
+
+  @override
+  String get keyHelpGoTasks => 'Aller aux tâches';
+
+  @override
+  String get keyHelpGoProjects => 'Aller aux projets';
+
+  @override
+  String get keyHelpGoActivity => 'Aller à l\'activité';
+
+  @override
+  String get keyHelpGoManage => 'Aller à la gestion';
+
+  @override
+  String get keyHelpGoSettings => 'Aller aux paramètres';
+
+  @override
+  String get keyHelpNext => 'Descendre la sélection';
+
+  @override
+  String get keyHelpPrevious => 'Monter la sélection';
+
+  @override
+  String get keyHelpFirst => 'Aller à la première tâche';
+
+  @override
+  String get keyHelpLast => 'Aller à la dernière tâche';
+
+  @override
+  String get keyHelpPageDown => 'Page suivante';
+
+  @override
+  String get keyHelpPageUp => 'Page précédente';
+
+  @override
+  String get keyHelpOpen => 'Ouvrir la tâche sélectionnée';
+
+  @override
+  String get keyHelpBack => 'Retour';
+
+  @override
+  String get keyHelpSelect => 'Sélectionner ou désélectionner la tâche active';
+
+  @override
+  String get keyHelpExtendDown => 'Étendre la sélection vers le bas';
+
+  @override
+  String get keyHelpExtendUp => 'Étendre la sélection vers le haut';
+
+  @override
+  String get keyHelpSelectAll => 'Sélectionner toutes les tâches de la liste';
+
+  @override
+  String get keyHelpClear => 'Effacer la sélection';
+
+  @override
+  String get keyHelpFilter => 'Aller au champ de filtre';
+
+  @override
+  String get keyHelpRefresh => 'Actualiser';
+
+  @override
+  String get keyHelpView => 'Changer de vue';
+
+  @override
+  String get keyHelpNew => 'Nouvelle tâche';
+
+  @override
+  String get keyHelpDone => 'Marquer comme terminée';
+
+  @override
+  String get keyHelpRename => 'Modifier le titre';
+
+  @override
+  String get keyHelpDescribe => 'Modifier la description';
+
+  @override
+  String get keyHelpMove => 'Déplacer vers un autre statut';
+
+  @override
+  String get keyHelpComment => 'Commenter';
+
+  @override
+  String get keyHelpTag => 'Ajouter une étiquette';
+
+  @override
+  String get keyHelpStar => 'Ajouter aux favoris ou les retirer';
+
+  @override
+  String get keyHelpPriority => 'Définir la priorité';
+
+  @override
+  String get keyHelpAssign => 'Assigner';
+
+  @override
+  String get keyHelpDue => 'Définir l\'échéance';
+
+  @override
+  String get keyHelpSnooze => 'Reporter ou annuler le report';
+
+  @override
+  String get keyHelpCopyRef => 'Copier la référence';
+
+  @override
+  String get keyHelpDelete => 'Supprimer';
 
   @override
   String get taskHandoff => 'Confier à un agent';

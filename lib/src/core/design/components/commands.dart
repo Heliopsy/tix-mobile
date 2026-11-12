@@ -408,30 +408,66 @@ class KeyBindingKeys extends StatelessWidget {
   );
 }
 
-/// What the `?` help lists: the palette and the help, then every command
-/// with a key under [keymap].
-List<({String label, List<KeyBinding> keys})> shortcutRows(
+/// One line of the `?` help: what a key does and its keys.
+typedef ShortcutRow = ({String label, List<KeyBinding> keys});
+
+/// What the `?` help lists under [keymap]: the palette and the help, then
+/// every command with a key, grouped Navigate, Lists, Task and General as tix
+/// web's help groups them. A command bound to a keymap action reads as that
+/// action, in the words both help overlays share, and is listed once however
+/// many scopes register it.
+List<({KeyGroup group, List<ShortcutRow> rows})> shortcutGroups(
   AppLocalizations l10n,
   List<TixCommand> commands,
   Keymap keymap,
-) => [
-  (
-    label: l10n.openCommandPalette,
-    keys: keymap.bindingsFor(KeyActions.paletteOpen),
-  ),
-  (label: l10n.showShortcuts, keys: keymap.bindingsFor(KeyActions.helpShow)),
-  for (final c in commands) (label: c.label, keys: c.keysIn(keymap)),
-].where((r) => r.keys.isNotEmpty).toList();
+) {
+  final order = keymap.actions.toList();
+  final byAction = <String, ShortcutRow>{};
+  final other = <ShortcutRow>[];
+  for (final action in [KeyActions.paletteOpen, KeyActions.helpShow]) {
+    byAction[action] = (
+      label: keyActionLabel(l10n, action),
+      keys: keymap.bindingsFor(action),
+    );
+  }
+  for (final c in commands) {
+    final keys = c.keysIn(keymap);
+    if (keys.isEmpty) continue;
+    final action = c.action;
+    if (action == null) {
+      other.add((label: c.label, keys: keys));
+    } else {
+      byAction.putIfAbsent(
+        action,
+        () => (label: keyActionLabel(l10n, action), keys: keys),
+      );
+    }
+  }
+  final actions = byAction.keys.toList()
+    ..sort((a, b) => order.indexOf(a).compareTo(order.indexOf(b)));
+  return [
+    for (final group in KeyGroup.values)
+      (
+        group: group,
+        rows: [
+          for (final a in actions)
+            if (keyActionGroup(a) == group && byAction[a]!.keys.isNotEmpty)
+              byAction[a]!,
+          if (group == KeyGroup.general) ...other,
+        ],
+      ),
+  ].where((g) => g.rows.isNotEmpty).toList();
+}
 
 /// tix's `?` overlay: every command that has a key in [keymap], with its
-/// keys.
+/// keys, under the headings of [shortcutGroups].
 Future<void> showShortcutHelp(
   BuildContext context,
   List<TixCommand> commands, {
   Keymap? keymap,
 }) {
   final l10n = context.l10n;
-  final rows = shortcutRows(
+  final groups = shortcutGroups(
     l10n,
     commands,
     keymap ?? Keymap.of(KeymapPreset.standard),
@@ -446,29 +482,28 @@ Future<void> showShortcutHelp(
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (final k in rows)
+              for (final g in groups) ...[
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: TixSpace.s1),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 136,
-                        child: Align(
-                          alignment: AlignmentDirectional.centerStart,
-                          child: KeyBindingKeys(k.keys, max: 2),
-                        ),
+                  key: Key('shortcuts.help.${g.group.name}'),
+                  padding: const EdgeInsets.only(
+                    top: TixSpace.s3,
+                    bottom: TixSpace.s1,
+                  ),
+                  child: Semantics(
+                    header: true,
+                    child: Text(
+                      keyGroupLabel(l10n, g.group),
+                      style: const TextStyle(
+                        fontSize: TixText.sm,
+                        fontWeight: FontWeight.w600,
                       ),
-                      const SizedBox(width: TixSpace.s4),
-                      Expanded(
-                        child: Text(
-                          k.label,
-                          style: TextStyle(color: context.tix.muted),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
+                for (final k in g.rows) _ShortcutHelpRow(k),
+              ],
             ],
           ),
         ),
@@ -477,6 +512,32 @@ Future<void> showShortcutHelp(
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: Text(l10n.close),
+        ),
+      ],
+    ),
+  );
+}
+
+class _ShortcutHelpRow extends StatelessWidget {
+  const _ShortcutHelpRow(this.row);
+
+  final ShortcutRow row;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: TixSpace.s1),
+    child: Row(
+      children: [
+        SizedBox(
+          width: 136,
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: KeyBindingKeys(row.keys, max: 2),
+          ),
+        ),
+        const SizedBox(width: TixSpace.s4),
+        Expanded(
+          child: Text(row.label, style: TextStyle(color: context.tix.muted)),
         ),
       ],
     ),

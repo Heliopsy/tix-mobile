@@ -710,7 +710,7 @@ void main() {
       semantics.dispose();
     });
 
-    testWidgets('x picks, Shift+Down extends, Escape leaves, e completes', (
+    testWidgets('x picks, Shift+Down extends, Escape leaves, d completes', (
       tester,
     ) async {
       await pump(tester, const TixShortcuts(child: TasksScreen()));
@@ -730,6 +730,9 @@ void main() {
       await tester.pumpAndSettle();
       expect(bar(), findsNothing);
       await tester.sendKeyEvent(LogicalKeyboardKey.keyE);
+      await tester.pumpAndSettle();
+      expect(server.requestsTo('/tasks/bulk'), isEmpty);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyD);
       await tester.pumpAndSettle();
       expect(server.requestsTo('/tasks/bulk').single.body, {
         'action': 'move',

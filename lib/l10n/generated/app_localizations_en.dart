@@ -8185,7 +8185,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get keymapDefaultHelp =>
-      'The app\'s keys and tix web\'s: j and k move, g p opens Projects, Ctrl 1 to 6 switch destinations.';
+      'The key table tix web shares: j and k move, g i opens Inbox, d marks done, Ctrl 1 to 7 switch destinations.';
 
   @override
   String get keymapVimHelp =>
@@ -8204,6 +8204,135 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsKeyBindingsOff => 'Keyboard shortcuts are off.';
+
+  @override
+  String get keyGroupNavigate => 'Navigate';
+
+  @override
+  String get keyGroupLists => 'Lists';
+
+  @override
+  String get keyGroupTask => 'Task';
+
+  @override
+  String get keyGroupGeneral => 'General';
+
+  @override
+  String get keyHelpPalette => 'Open the command palette';
+
+  @override
+  String get keyHelpHelp => 'Show this help';
+
+  @override
+  String get keyHelpGoInbox => 'Go to Inbox';
+
+  @override
+  String get keyHelpGoMyWork => 'Go to My work';
+
+  @override
+  String get keyHelpGoTasks => 'Go to Tasks';
+
+  @override
+  String get keyHelpGoProjects => 'Go to Projects';
+
+  @override
+  String get keyHelpGoActivity => 'Go to Activity';
+
+  @override
+  String get keyHelpGoManage => 'Go to Manage';
+
+  @override
+  String get keyHelpGoSettings => 'Go to Settings';
+
+  @override
+  String get keyHelpNext => 'Move selection down';
+
+  @override
+  String get keyHelpPrevious => 'Move selection up';
+
+  @override
+  String get keyHelpFirst => 'Jump to the first task';
+
+  @override
+  String get keyHelpLast => 'Jump to the last task';
+
+  @override
+  String get keyHelpPageDown => 'Page down';
+
+  @override
+  String get keyHelpPageUp => 'Page up';
+
+  @override
+  String get keyHelpOpen => 'Open the selected task';
+
+  @override
+  String get keyHelpBack => 'Go back';
+
+  @override
+  String get keyHelpSelect => 'Select or unselect the focused task';
+
+  @override
+  String get keyHelpExtendDown => 'Extend the selection down';
+
+  @override
+  String get keyHelpExtendUp => 'Extend the selection up';
+
+  @override
+  String get keyHelpSelectAll => 'Select every task in the list';
+
+  @override
+  String get keyHelpClear => 'Clear the selection';
+
+  @override
+  String get keyHelpFilter => 'Focus the filter field';
+
+  @override
+  String get keyHelpRefresh => 'Refresh';
+
+  @override
+  String get keyHelpView => 'Switch view';
+
+  @override
+  String get keyHelpNew => 'New task';
+
+  @override
+  String get keyHelpDone => 'Mark done';
+
+  @override
+  String get keyHelpRename => 'Edit the title';
+
+  @override
+  String get keyHelpDescribe => 'Edit the description';
+
+  @override
+  String get keyHelpMove => 'Move to another status';
+
+  @override
+  String get keyHelpComment => 'Comment';
+
+  @override
+  String get keyHelpTag => 'Add a tag';
+
+  @override
+  String get keyHelpStar => 'Star or unstar';
+
+  @override
+  String get keyHelpPriority => 'Set the priority';
+
+  @override
+  String get keyHelpAssign => 'Assign';
+
+  @override
+  String get keyHelpDue => 'Set the due date';
+
+  @override
+  String get keyHelpSnooze => 'Snooze or unsnooze';
+
+  @override
+  String get keyHelpCopyRef => 'Copy the reference';
+
+  @override
+  String get keyHelpDelete => 'Delete';
 
   @override
   String get taskHandoff => 'Hand to an agent';
