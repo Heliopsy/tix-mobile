@@ -6422,6 +6422,182 @@
       }
     }
   },
+  "importOpen": "Open the import",
+  "importProjectHelp": "Read a file or a pasted list into this project, choosing what its columns and values become first.",
+  "importStep": "{step, select, source{Upload} columns{Map columns} valueMap{Map values} preview{Preview} result{Result} other{Import}}",
+  "@importStep": {
+    "placeholders": {
+      "step": {
+        "type": "String"
+      }
+    }
+  },
+  "importStepOf": "Step {number} of 5: {name}",
+  "@importStepOf": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "importFewTitle": "Only a few tasks?",
+  "importFewBody": "Add them with quick add, or paste them below, one per line. No mapping needed. The mapping is optional: tix reads its own exports and the usual headers of Jira, GitHub, Trello and Linear as they are, so you can go straight to the preview.",
+  "importFileTitle": "A file",
+  "importFileHelp": "CSV, JSON or NDJSON: a tix export, an export from Jira, GitHub, Trello or Linear, or any spreadsheet saved as CSV.",
+  "importFileNone": "No file chosen",
+  "importFileRemove": "Remove the file",
+  "importPasteTitle": "Or paste a list",
+  "importPasteLabel": "Tasks, one per line",
+  "importPasteHint": "Fix login due:fri #bug !high",
+  "importPasteHelp": "Written the way quick add reads it: #tag, !priority, @person, due:date, ^parent. Used when no file is chosen.",
+  "importNextColumns": "Next: map columns",
+  "importNextValues": "Next: map values",
+  "importNextPreview": "Next: preview",
+  "importSkipToPreview": "Skip to preview",
+  "importConfidentTitle": "Every column was recognised.",
+  "importConfidentBody": "The suggested mapping works as it is, so you can go straight to the preview.",
+  "importRows": "{count, plural, =1{1 row} other{{count} rows}}",
+  "@importRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importLooksLike": "looks like a {source} export",
+  "@importLooksLike": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "importColumnsHelp": "tix chose a field for every column; change any you like.",
+  "importColumnField": "Field for {header}",
+  "@importColumnField": {
+    "placeholders": {
+      "header": {
+        "type": "String"
+      }
+    }
+  },
+  "importSuggested": "suggested",
+  "importTarget": "{target, select, title{Title} body{Description} status{Status} priority{Priority} assignee{Assignee} tags{Tags} due{Due} parent{Parent} depends_on{Depends on} recurrence{Repeat} external_id{External ID} alias{Other ID} ref{tix reference} append_body{Append to description} ignore{Ignore} other{Other}}",
+  "@importTarget": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "importValuesHelp": "Each value of the file and what it becomes. A suggestion is tix's guess; change it or leave it.",
+  "importValuesNone": "No column fills this field.",
+  "importValueBecomes": "{value} becomes",
+  "@importValueBecomes": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "importNoMapping": "No mapping",
+  "importHandleHint": "tix handle",
+  "importUnknown": "A value with no mapping",
+  "importPolicy": "{policy, select, default{Use the default} ignore{Leave it empty} skip_row{Skip the row} error{Stop with an error} other{Other}}",
+  "@importPolicy": {
+    "placeholders": {
+      "policy": {
+        "type": "String"
+      }
+    }
+  },
+  "importToCreate": "{count} to create",
+  "@importToCreate": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importToUpdate": "{count} to update",
+  "@importToUpdate": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importToSkip": "{count} to skip",
+  "@importToSkip": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importInError": "{count} in error",
+  "@importInError": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importFailedNote": "Nothing is written while any row is in error. Go back to change the mapping, or fix the file and choose it again.",
+  "importErrorsTitle": "Rows in error",
+  "importErrorsDownload": "Download the error report",
+  "importPreviewTitle": "The first rows as tix will write them",
+  "importPreviewNone": "No rows to show.",
+  "importAction": "{action, select, create{Create} update{Update} skip{Skip} error{Error} other{Other}}",
+  "@importAction": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "importLine": "Line {line}",
+  "@importLine": {
+    "placeholders": {
+      "line": {
+        "type": "int"
+      }
+    }
+  },
+  "importModeTitle": "When a row was imported before",
+  "importModeHelp": "A row is matched by the column mapped to External ID, or by a tix reference.",
+  "importMode": "{mode, select, upsert{Update tasks already imported, create the rest} create{Create every row as a new task} skip{Leave tasks already imported alone, create the rest} other{Other}}",
+  "@importMode": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "importFixFirst": "Fix the rows in error first",
+  "importNothing": "Nothing to import",
+  "importDoneTitle": "Imported.",
+  "importDoneBody": "{created} created, {updated} updated, {skipped} skipped.",
+  "@importDoneBody": {
+    "placeholders": {
+      "created": {
+        "type": "int"
+      },
+      "updated": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "importRolledBackTitle": "Nothing was imported.",
+  "importRolledBackBody": "Some rows are in error, so the whole file was rolled back.",
+  "importAnother": "Import another file",
+  "importOpenProject": "Open the project",
   "myWorkIncludeHeld": "Include tasks I hold",
   "@myWorkIncludeHeld": {
     "description": "My work filter chip: also list the tasks the reader holds a claim on"

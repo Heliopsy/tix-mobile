@@ -150,6 +150,16 @@ void main() {
     expect(name.enabled, isFalse);
     expect(find.byKey(const Key('project.archive')), findsNothing);
     expect(find.byKey(const Key('project.delete')), findsNothing);
+    expect(find.byKey(const Key('project.import')), findsNothing);
+  });
+
+  testWidgets('the import opens on this project', (tester) async {
+    await pump(tester, FakeTix());
+    await tapVisible(tester, find.byKey(const Key('project.import')));
+    expect(
+      find.text('route:/manage/transfer/import?project=infra'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('custom fields open from the settings', (tester) async {

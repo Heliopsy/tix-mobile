@@ -6,6 +6,8 @@ import 'dart:typed_data';
 import 'package:tix_mobile/src/data/api/gen/models.gen.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 
+export 'package:tix_mobile/src/data/api/gen/models.gen.dart'
+    show TaskImportColumn, TaskImportValue;
 export 'package:tix_mobile/src/data/models/people.dart';
 
 /// Tasks and snapshots out of tix as files, and tasks into it.
@@ -47,20 +49,41 @@ class TransferRepository {
     ),
   );
 
-  /// Reads [content], a file called [filename], into [project]: a dry run
-  /// unless [commit] (`task.import`).
+  /// Reads [content] into [project]: a dry run showing [preview] rows
+  /// unless [commit] (`task.import`). [filename] and [format] say how to read
+  /// it, [mapping] is a mapping file and [mode] what a matched row does; the
+  /// server decides what each means.
   Future<TaskImportResult> importTasks(
     String project, {
     required String content,
-    required String filename,
     required bool commit,
+    String? filename,
+    String? format,
+    String? mapping,
+    String? mode,
+    int preview = 20,
   }) => _api.task.import(
     project,
     TaskImportInput(
       content: content,
       filename: filename,
+      format: format,
+      mapping: mapping,
+      mode: mode,
       dryRun: !commit,
-      preview: commit ? null : 20,
+      preview: commit ? null : preview,
     ),
   );
+
+  /// The states of the workflow [key] or id, in its order, as key and label
+  /// (`workflow.get`).
+  Future<List<({String key, String label})>> workflowStates(String key) async {
+    final states = (await _api.workflow.get(key)).definition?.states;
+    if (states == null) return const [];
+    return [
+      for (final s in states)
+        if ((s.key ?? '').isNotEmpty)
+          (key: s.key!, label: (s.label ?? '').isEmpty ? s.key! : s.label!),
+    ];
+  }
 }

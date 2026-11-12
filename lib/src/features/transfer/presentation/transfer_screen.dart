@@ -1,17 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import 'dart:convert';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/attachments.dart';
+import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/people.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
 import 'package:tix_mobile/src/data/models/project.dart';
-import 'package:tix_mobile/src/data/repositories/transfer_repository.dart';
 import 'package:tix_mobile/src/features/transfer/application/transfer.dart';
 
 /// Tasks out of tix as a file, a snapshot of the whole tenant, and a file of
@@ -435,80 +434,27 @@ class _SnapshotSectionState extends ConsumerState<_SnapshotSection> {
   }
 }
 
-class _ImportSection extends ConsumerStatefulWidget {
+class _ImportSection extends StatefulWidget {
   const _ImportSection({required this.projects, required this.initialProject});
 
   final List<Project> projects;
   final String initialProject;
 
   @override
-  ConsumerState<_ImportSection> createState() => _ImportSectionState();
+  State<_ImportSection> createState() => _ImportSectionState();
 }
 
-class _ImportSectionState extends ConsumerState<_ImportSection> {
+class _ImportSectionState extends State<_ImportSection> {
   late String _project = widget.projects
       .map((p) => p.key)
       .firstWhere(
         (k) => k == widget.initialProject,
         orElse: () => widget.projects.first.key,
       );
-  PickedFile? _file;
-  TaskImportResult? _preview;
-  var _busy = false;
-  String? _error;
-
-  Future<void> _pick() async {
-    final picked = await ref.read(attachmentsProvider).pickFile();
-    if (picked == null) return;
-    setState(() {
-      _file = picked;
-      _preview = null;
-    });
-    await _run(commit: false);
-  }
-
-  Future<void> _run({required bool commit}) async {
-    final file = _file;
-    if (file == null) return;
-    final l10n = context.l10n;
-    setState(() {
-      _busy = true;
-      _error = null;
-    });
-    try {
-      final result = await ref
-          .read(transferProvider.notifier)
-          .importTasks(
-            project: _project,
-            content: utf8.decode(file.bytes, allowMalformed: true),
-            filename: file.name,
-            commit: commit,
-          );
-      if (!mounted) return;
-      if (commit) {
-        showTixToast(
-          context,
-          l10n.transferImported(result.created, result.updated),
-        );
-        setState(() {
-          _file = null;
-          _preview = null;
-        });
-      } else {
-        setState(() => _preview = result);
-      }
-    } on TixException catch (e) {
-      if (mounted) setState(() => _error = errorMessage(l10n, e));
-    } finally {
-      if (mounted) setState(() => _busy = false);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final preview = _preview;
-    final file = _file;
     return TixSection(
       key: const Key('transfer.import'),
       title: l10n.transferImportTitle,
@@ -523,61 +469,18 @@ class _ImportSectionState extends ConsumerState<_ImportSection> {
                 key: const Key('transfer.importProject'),
                 projects: widget.projects,
                 value: _project,
-                onChanged: (p) => setState(() {
-                  _project = p;
-                  _preview = null;
-                }),
+                onChanged: (p) => setState(() => _project = p),
               ),
               const SizedBox(height: TixSpace.s3),
-              Wrap(
-                spacing: TixSpace.s2,
-                runSpacing: TixSpace.s2,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  TixButton(
-                    key: const Key('transfer.pick'),
-                    label: l10n.transferPick,
-                    icon: Icons.upload_file,
-                    busy: _busy && preview == null,
-                    onPressed: _pick,
-                  ),
-                  if (file != null) Text(file.name, style: tixMono(context)),
-                ],
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: TixButton(
+                  key: const Key('transfer.openImport'),
+                  label: l10n.importOpen,
+                  icon: Icons.upload_file,
+                  onPressed: () => context.push(Routes.importTasks(_project)),
+                ),
               ),
-              if (preview != null) ...[
-                const SizedBox(height: TixSpace.s3),
-                Text(
-                  l10n.transferDryRun(
-                    preview.rows,
-                    preview.created,
-                    preview.updated,
-                    preview.skipped,
-                    preview.failed,
-                  ),
-                  key: const Key('transfer.dryRun'),
-                ),
-                for (final e in preview.errors.take(5))
-                  Text(
-                    l10n.transferImportError(e.line, e.message),
-                    style: TextStyle(color: context.tix.danger),
-                  ),
-                const SizedBox(height: TixSpace.s3),
-                TixButton(
-                  key: const Key('transfer.commit'),
-                  label: l10n.transferImportButton(
-                    preview.created + preview.updated,
-                  ),
-                  icon: Icons.check,
-                  busy: _busy,
-                  onPressed: preview.created + preview.updated == 0
-                      ? null
-                      : () => _run(commit: true),
-                ),
-              ],
-              if (_error != null) ...[
-                const SizedBox(height: TixSpace.s3),
-                Text(_error!, style: TextStyle(color: context.tix.danger)),
-              ],
             ],
           ),
         ),

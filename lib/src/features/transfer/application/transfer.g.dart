@@ -173,7 +173,7 @@ final class TransferProvider extends $NotifierProvider<Transfer, void> {
   }
 }
 
-String _$transferHash() => r'cdb7bb24ce4d0b8b2efa6cddf87c71722172c9d9';
+String _$transferHash() => r'a6bf279dc98274f944b95f963b3451d5ea2140fa';
 
 /// Writes exports and runs imports for the screens.
 

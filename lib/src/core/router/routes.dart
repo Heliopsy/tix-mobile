@@ -181,6 +181,14 @@ abstract final class Routes {
     queryParameters: {'project': project, if (query.isNotEmpty) 'q': query},
   ).toString();
 
+  /// The import wizard, on [project] when given.
+  static String importTasks([String project = '']) => project.isEmpty
+      ? '$transfer/import'
+      : Uri(
+          path: '$transfer/import',
+          queryParameters: {'project': project},
+        ).toString();
+
   /// Accept the invite [link], adding its server when it is new.
   static String acceptInvite(String link) =>
       Uri(path: connect, queryParameters: {'invite': link}).toString();
