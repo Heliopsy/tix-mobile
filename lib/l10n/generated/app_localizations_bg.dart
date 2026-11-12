@@ -2351,6 +2351,17 @@ class AppLocalizationsBg extends AppLocalizations {
   String get liveUpdated => 'Обновено';
 
   @override
+  String liveNewAbove(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count нови, покажи',
+      one: '1 нова, покажи',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get liveChangedElsewhere =>
       'Това е променено другаде. Промените ви са запазени.';
 

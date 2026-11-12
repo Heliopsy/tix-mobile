@@ -868,6 +868,8 @@ class GalleryInbox extends StatelessWidget {
         child: UpdatedMark(visible: true),
       ),
       const SizedBox(height: TixSpace.s3),
+      Center(child: NewRowsPill(count: 3, onPressed: () {})),
+      const SizedBox(height: TixSpace.s3),
       ChangedElsewhereBanner(by: 'raj', onReload: () {}, onDismiss: () {}),
     ],
   );

@@ -1418,6 +1418,15 @@
   "inboxDeliveryRedeliver": "Redeliver",
   "inboxDeliveryRequeued": "Queued again",
   "liveUpdated": "Updated",
+  "liveNewAbove": "{count} new, show",
+  "@liveNewAbove": {
+    "description": "\"3 new, show\": rows a live update put above where the reader is reading. Pressing it shows them.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "liveChangedElsewhere": "This changed elsewhere. Your edits are kept.",
   "liveChangedElsewhereBy": "@{handle} changed this. Your edits are kept.",
   "@liveChangedElsewhereBy": {

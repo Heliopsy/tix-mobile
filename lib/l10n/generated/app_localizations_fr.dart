@@ -2358,6 +2358,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get liveUpdated => 'Mis à jour';
 
   @override
+  String liveNewAbove(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nouvelles, afficher',
+      one: '1 nouvelle, afficher',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get liveChangedElsewhere =>
       'Cet élément a été modifié ailleurs. Vos modifications sont conservées.';
 

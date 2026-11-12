@@ -2346,6 +2346,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get liveUpdated => 'Updated';
 
   @override
+  String liveNewAbove(int count) {
+    return '$count new, show';
+  }
+
+  @override
   String get liveChangedElsewhere =>
       'This changed elsewhere. Your edits are kept.';
 

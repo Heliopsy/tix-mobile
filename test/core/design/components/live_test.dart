@@ -7,6 +7,20 @@ import 'package:tix_mobile/src/core/design/design.dart';
 import '../../../helpers/design.dart';
 
 void main() {
+  testWidgets('the new rows pill counts them and is one 48dp button', (
+    tester,
+  ) async {
+    var shown = 0;
+    await pumpComponent(
+      tester,
+      Center(child: NewRowsPill(count: 3, onPressed: () => shown++)),
+    );
+    expect(find.text('3 new, show'), findsOneWidget);
+    expect(tester.getSize(find.byType(NewRowsPill)).height, 48);
+    await tester.tap(find.byType(NewRowsPill));
+    expect(shown, 1);
+  });
+
   testWidgets('the updated mark fades in and out without moving anything', (
     tester,
   ) async {

@@ -17,6 +17,7 @@ class PagedListView<T> extends StatelessWidget {
     required this.empty,
     this.header,
     this.padding = EdgeInsets.zero,
+    this.controller,
     super.key,
   });
 
@@ -44,6 +45,9 @@ class PagedListView<T> extends StatelessWidget {
   /// Space round the rows; leave room for a floating button at the end.
   final EdgeInsets padding;
 
+  /// Scrolls the rows, for a caller that reads or moves the position.
+  final ScrollController? controller;
+
   @override
   Widget build(BuildContext context) {
     final items = paged.items;
@@ -66,6 +70,7 @@ class PagedListView<T> extends StatelessWidget {
               ),
             )
           : ListView.builder(
+              controller: controller,
               physics: const AlwaysScrollableScrollPhysics(),
               padding: padding,
               itemCount: lead + items.length + (footer ? 1 : 0),

@@ -4009,6 +4009,12 @@ abstract class AppLocalizations {
   /// **'Updated'**
   String get liveUpdated;
 
+  /// "3 new, show": rows a live update put above where the reader is reading. Pressing it shows them.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} new, show'**
+  String liveNewAbove(int count);
+
   /// No description provided for @liveChangedElsewhere.
   ///
   /// In en, this message translates to:

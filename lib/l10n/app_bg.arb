@@ -651,6 +651,7 @@
   "inboxDeliveryRedeliver": "Изпрати пак",
   "inboxDeliveryRequeued": "Отново е в опашката",
   "liveUpdated": "Обновено",
+  "liveNewAbove": "{count, plural, =1{1 нова, покажи} other{{count} нови, покажи}}",
   "liveChangedElsewhere": "Това е променено другаде. Промените ви са запазени.",
   "liveChangedElsewhereBy": "@{handle} промени това. Промените ви са запазени.",
   "liveKeepEditing": "Продължи",
