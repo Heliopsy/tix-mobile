@@ -104,7 +104,7 @@ class TokensScreen extends ConsumerWidget {
   }
 }
 
-/// One token: its name, scopes, dates and state, and Revoke.
+/// One token: its name, scopes, dates and state, Rotate and Revoke.
 class TokenTile extends ConsumerWidget {
   /// Draws [token], listed under [actorId].
   const TokenTile({
@@ -139,6 +139,7 @@ class TokenTile extends ConsumerWidget {
     final created = token.createdAt;
     final expires = token.expiresAt;
     final used = token.lastUsedAt;
+    final stops = state == TokenState.retiring ? token.revokedAt : null;
     final small = Theme.of(context).textTheme.bodySmall;
     return Container(
       key: Key('token.${token.id}'),
@@ -169,16 +170,33 @@ class TokenTile extends ConsumerWidget {
                         TokenState.active => l10n.tokensActive,
                         TokenState.expired => l10n.tokensExpired,
                         TokenState.revoked => l10n.tokensRevoked,
+                        TokenState.retiring => l10n.tokensRetiring,
                       },
                       tone: switch (state) {
                         TokenState.active => TixTone.ok,
                         TokenState.expired => TixTone.warn,
                         TokenState.revoked => TixTone.neutral,
+                        TokenState.retiring => TixTone.warn,
                       },
                     ),
                   ],
                 ),
               ),
+              if (state == TokenState.active) ...[
+                TixButton(
+                  key: Key('token.${token.id}.rotate'),
+                  label: l10n.tokensRotate,
+                  size: TixButtonSize.small,
+                  onPressed: () => showRotateTokenSheet(
+                    context,
+                    token: token,
+                    actorId: actorId,
+                    owner: ownerName,
+                    other: showOwner && !mine,
+                  ),
+                ),
+                const SizedBox(width: TixSpace.s2),
+              ],
               if (state != TokenState.revoked)
                 TixButton.danger(
                   key: Key('token.${token.id}.revoke'),
@@ -219,6 +237,7 @@ class TokenTile extends ConsumerWidget {
           const SizedBox(height: TixSpace.s2),
           Text(
             [
+              if (stops != null) l10n.tokensStops(formatMoment(context, stops)),
               if (created != null)
                 l10n.tokensCreated(formatDay(context, created)),
               if (expires == null)

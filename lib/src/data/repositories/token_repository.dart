@@ -5,7 +5,7 @@ import 'package:tix_mobile/src/data/api/tix_api.dart';
 
 export 'package:tix_mobile/src/data/models/people.dart';
 
-/// API tokens: listed, issued and revoked.
+/// API tokens: listed, issued, rotated and revoked.
 ///
 /// Nothing here touches the response cache. An issued token's value exists
 /// in the one answer that carries it, and listings are kept off disk too, so
@@ -36,6 +36,12 @@ class TokenRepository {
       actorId: actorId,
     ),
   );
+
+  /// Replaces the token [id] with a new one of the same name, scopes and
+  /// lifetime (`token.rotate`); the old one keeps working for [grace]. The
+  /// new value is in the answer and nowhere else.
+  Future<IssuedToken> rotate(String id, {required String grace}) =>
+      _api.token.rotate(id, body: RotateTokenInput(grace: grace));
 
   /// Revokes the token [id] (`token.revoke`).
   Future<void> revoke(String id) => _api.token.revoke(id);

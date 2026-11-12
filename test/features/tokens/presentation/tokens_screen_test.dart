@@ -51,8 +51,136 @@ void main() {
           findsOneWidget,
         );
       });
+
+      testWidgets('rotating asks how long the old token lasts', (tester) async {
+        final rig = PeopleRig();
+        await rig.pump(tester, const TokensScreen(), size: size);
+        await tapIn(tester, find.byKey(const Key('token.t2.rotate')));
+        expect(find.text('Rotate raj-laptop?'), findsOneWidget);
+        expect(find.textContaining("This token is Raj's"), findsOneWidget);
+        final now = tester.widget<ChoiceChip>(
+          find.byKey(const Key('tokens.grace.0s')),
+        );
+        expect(now.selected, isTrue);
+        await tapIn(tester, find.byKey(const Key('tokens.grace.1h')));
+        await tapIn(tester, find.byKey(const Key('tokens.rotate.submit')));
+        expect(rig.sent('POST', '/api/v1/tokens/t2/rotate').single, {
+          'grace': '1h',
+        });
+        final value = rig.people.issued.single;
+        expect(find.text('Token raj-laptop rotated'), findsOneWidget);
+        expect(
+          find.descendant(
+            of: find.byKey(const Key('secret.values')),
+            matching: find.text(value),
+          ),
+          findsOneWidget,
+        );
+        await tester.tap(find.byKey(const Key('secret.done')));
+        await tester.pumpAndSettle();
+        expect(find.text(value), findsNothing);
+        final old = find.byKey(const Key('token.t2'));
+        expect(
+          find.descendant(of: old, matching: find.text('retiring')),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(of: old, matching: find.textContaining('Stops ')),
+          findsOneWidget,
+        );
+        expect(find.byKey(const Key('token.t2.rotate')), findsNothing);
+        expect(find.byKey(const Key('token.t2.revoke')), findsOneWidget);
+      });
+
+      testWidgets('a token inside its grace window reads retiring', (
+        tester,
+      ) async {
+        final rig = PeopleRig();
+        rig.people.tokens.first['revoked_at'] = '2026-11-01T13:00:00Z';
+        await rig.pump(tester, const TokensScreen(), size: size);
+        final row = find.byKey(const Key('token.t1'));
+        expect(
+          find.descendant(of: row, matching: find.text('retiring')),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(of: row, matching: find.text('active')),
+          findsNothing,
+        );
+        expect(
+          find.descendant(of: row, matching: find.textContaining('Stops ')),
+          findsOneWidget,
+        );
+        expect(find.byKey(const Key('token.t1.rotate')), findsNothing);
+        expect(find.byKey(const Key('token.t1.revoke')), findsOneWidget);
+        expect(find.byKey(const Key('token.t2.rotate')), findsOneWidget);
+      });
     });
   }
+
+  testWidgets('a refused rotation says why and shows no value', (tester) async {
+    final rig = PeopleRig();
+    rig.server.failures['POST /api/v1/tokens/t2/rotate'] = FakeResponse(
+      403,
+      envelope('forbidden', 'no'),
+    );
+    await rig.pump(tester, const TokensScreen());
+    await tapIn(tester, find.byKey(const Key('token.t2.rotate')));
+    await tapIn(tester, find.byKey(const Key('tokens.rotate.submit')));
+    expect(rig.server.requestsTo('/api/v1/tokens/t2/rotate'), hasLength(1));
+    expect(
+      tester.widget<Text>(find.byKey(const Key('tokens.rotate.error'))).data,
+      contains('not allowed'),
+    );
+    expect(find.text('Rotate raj-laptop?'), findsOneWidget);
+    expect(find.byKey(const Key('secret.values')), findsNothing);
+  });
+
+  testWidgets('rotating now ends the old token at once', (tester) async {
+    final rig = PeopleRig();
+    await rig.pump(tester, const TokensScreen(personal: true));
+    await tapIn(tester, find.byKey(const Key('token.t1.rotate')));
+    await tapIn(tester, find.byKey(const Key('tokens.rotate.submit')));
+    expect(rig.sent('POST', '/api/v1/tokens/t1/rotate').single, {
+      'grace': '0s',
+    });
+    await tester.tap(find.byKey(const Key('secret.done')));
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('token.t1')),
+        matching: find.text('revoked'),
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets("the app's own token is swapped, not shown", (tester) async {
+    final rig = PeopleRig();
+    rig.people.me = {
+      'id': 'me',
+      'handle': 'ana',
+      'kind': 'agent',
+      'token_id': 't1',
+      'scopes': ['*'],
+    };
+    await rig.pump(tester, const TokensScreen(personal: true), size: desktop);
+    await tapIn(tester, find.byKey(const Key('token.t1.rotate')));
+    expect(
+      find.textContaining('the token this app connects with'),
+      findsOneWidget,
+    );
+    await tapIn(tester, find.byKey(const Key('tokens.grace.10m')));
+    await tapIn(tester, find.byKey(const Key('tokens.rotate.submit')));
+    expect(rig.sent('POST', '/api/v1/tokens/t1/rotate').single, {
+      'grace': '10m',
+    });
+    expect(
+      find.text('ci rotated. This app now connects with the new token.'),
+      findsOneWidget,
+    );
+    expect(find.byKey(const Key('secret.values')), findsNothing);
+  });
 
   testWidgets('personal tokens ask for mine only', (tester) async {
     final rig = PeopleRig();

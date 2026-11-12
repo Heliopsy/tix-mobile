@@ -60,12 +60,17 @@ enum TokenState {
 
   /// It was revoked.
   revoked,
+
+  /// It was rotated and still works until its `revoked_at`.
+  retiring,
 }
 
-/// The state of a token at [now].
+/// The state of a token at [now], as tix's `tokenState` names it.
 TokenState tokenState(APIToken token, DateTime now) {
-  if (token.revokedAt != null) return TokenState.revoked;
+  final revoked = token.revokedAt;
+  if (revoked != null && !revoked.isAfter(now)) return TokenState.revoked;
   final expires = token.expiresAt;
   if (expires != null && !expires.isAfter(now)) return TokenState.expired;
+  if (revoked != null) return TokenState.retiring;
   return TokenState.active;
 }

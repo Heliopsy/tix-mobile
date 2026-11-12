@@ -4270,6 +4270,82 @@ class AppLocalizationsDe extends AppLocalizations {
       'Bewahren Sie es sicher auf. Es wird nicht erneut angezeigt, und nichts kann es später zeigen.';
 
   @override
+  String get tokensRetiring => 'läuft aus';
+
+  @override
+  String tokensStops(String when) {
+    return 'Endet $when';
+  }
+
+  @override
+  String get tokensRotate => 'Erneuern';
+
+  @override
+  String tokensRotateTitle(String name) {
+    return '$name erneuern?';
+  }
+
+  @override
+  String get tokensRotateBody =>
+      'Ein neues Token mit demselben Namen, denselben Bereichen und derselben Laufzeit ersetzt dieses, und sein Wert wird einmal angezeigt.';
+
+  @override
+  String tokensRotateOther(String name) {
+    return 'Dieses Token gehört $name, nicht Ihnen, und das Protokoll hält fest, dass Sie ein fremdes Token erneuert haben.';
+  }
+
+  @override
+  String get tokensRotateConnection =>
+      'Mit diesem Token verbindet sich diese App, daher speichert sie das neue an seiner Stelle.';
+
+  @override
+  String get tokensRotateInfo =>
+      'Erneuern Sie ein Token regelmäßig oder sofort, wenn es nach außen gelangt sein könnte. Was es verwendet, braucht den neuen Wert; eine Übergangsfrist hält das alte so lange gültig, und Widerrufen beendet diese Frist vorzeitig.';
+
+  @override
+  String get tokensRotateGrace => 'Altes Token';
+
+  @override
+  String get tokensRotateGraceInfo =>
+      'Wie lange der alte Wert neben dem neuen gültig bleibt, höchstens einen Tag, damit ein laufender Agent den neuen Wert übernehmen kann, ohne dass eine Anfrage fehlschlägt. Nach einem Leck sofort beenden.';
+
+  @override
+  String get tokensGraceNow => 'Altes Token sofort beenden';
+
+  @override
+  String get tokensGrace10m => 'Noch 10 Minuten gültig lassen';
+
+  @override
+  String get tokensGrace1h => 'Noch 1 Stunde gültig lassen';
+
+  @override
+  String get tokensGrace24h => 'Noch 24 Stunden gültig lassen';
+
+  @override
+  String tokensRotateNamed(String name) {
+    return '$name erneuern';
+  }
+
+  @override
+  String tokensRotateNamedOther(String name, String owner) {
+    return '$name erneuern ($owner)';
+  }
+
+  @override
+  String tokensRotatedTitle(String name) {
+    return 'Token $name erneuert';
+  }
+
+  @override
+  String tokensRotatedConnection(String name) {
+    return '$name erneuert. Diese App verbindet sich jetzt mit dem neuen Token.';
+  }
+
+  @override
+  String get tokensRotatedUnsaved =>
+      'Der sichere Speicher dieses Geräts hat das neue Token abgelehnt. Es wird nur dieses eine Mal angezeigt. Die App verwendet es, bis sie geschlossen wird; danach verbinden Sie sich damit neu.';
+
+  @override
   String get scopeAll =>
       'Alles außer globaler Administration und Kontoverlauf. Nur für eine Anmeldeinformation, der Sie wie sich selbst vertrauen.';
 

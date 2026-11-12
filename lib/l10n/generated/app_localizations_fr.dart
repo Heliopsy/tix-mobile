@@ -4266,6 +4266,82 @@ class AppLocalizationsFr extends AppLocalizations {
       'Gardez-le en lieu sûr. Il ne sera plus affiché, et rien ne pourra le montrer plus tard.';
 
   @override
+  String get tokensRetiring => 'en retrait';
+
+  @override
+  String tokensStops(String when) {
+    return 'Prend fin $when';
+  }
+
+  @override
+  String get tokensRotate => 'Renouveler';
+
+  @override
+  String tokensRotateTitle(String name) {
+    return 'Renouveler $name ?';
+  }
+
+  @override
+  String get tokensRotateBody =>
+      'Un nouveau jeton avec le même nom, les mêmes portées et la même durée remplace celui-ci, et sa valeur est affichée une seule fois.';
+
+  @override
+  String tokensRotateOther(String name) {
+    return 'Ce jeton appartient à $name, pas à vous, et le journal indiquera que vous avez renouvelé le jeton de quelqu’un d’autre.';
+  }
+
+  @override
+  String get tokensRotateConnection =>
+      'C’est le jeton avec lequel cette application se connecte, elle garde donc le nouveau à sa place.';
+
+  @override
+  String get tokensRotateInfo =>
+      'Renouvelez un jeton régulièrement, ou tout de suite s’il a pu fuiter. Ce qui le détient doit recevoir la nouvelle valeur ; un délai de grâce garde l’ancien valide entre-temps, et le révoquer met fin à ce délai plus tôt.';
+
+  @override
+  String get tokensRotateGrace => 'Ancien jeton';
+
+  @override
+  String get tokensRotateGraceInfo =>
+      'Combien de temps l’ancienne valeur reste valide à côté de la nouvelle, un jour au plus, pour qu’un agent en cours prenne la nouvelle valeur sans faire échouer une requête. Après une fuite, arrêtez-le tout de suite.';
+
+  @override
+  String get tokensGraceNow => 'Arrêter l’ancien jeton maintenant';
+
+  @override
+  String get tokensGrace10m => 'Le garder valide 10 minutes';
+
+  @override
+  String get tokensGrace1h => 'Le garder valide 1 heure';
+
+  @override
+  String get tokensGrace24h => 'Le garder valide 24 heures';
+
+  @override
+  String tokensRotateNamed(String name) {
+    return 'Renouveler $name';
+  }
+
+  @override
+  String tokensRotateNamedOther(String name, String owner) {
+    return 'Renouveler $name ($owner)';
+  }
+
+  @override
+  String tokensRotatedTitle(String name) {
+    return 'Jeton $name renouvelé';
+  }
+
+  @override
+  String tokensRotatedConnection(String name) {
+    return '$name renouvelé. Cette application se connecte désormais avec le nouveau jeton.';
+  }
+
+  @override
+  String get tokensRotatedUnsaved =>
+      'Le stockage sécurisé de cet appareil a refusé le nouveau jeton. Il n’est affiché que cette fois. L’application l’utilise jusqu’à sa fermeture ; ensuite, reconnectez-vous avec.';
+
+  @override
   String get scopeAll =>
       'Tout sauf l’administration globale et l’historique du compte. Uniquement pour un identifiant auquel vous faites confiance comme à vous-même.';
 

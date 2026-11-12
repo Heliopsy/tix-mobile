@@ -164,10 +164,10 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 - **ADB control** on Android: `adb shell dumpsys` prints the app's state (contexts, live status, outbox, engine),
   `tix://` links open any screen, and `am broadcast` commands switch context, add tasks, sync or change the theme,
   from the shell only. See [docs/adb.md](docs/adb.md).
-- **People and access**: the tenant's users with their roles, invite links, role changes, disabling and
-  deleting; API tokens issued with scopes and an expiry, shown once, listed with their last use and revoked; your
-  account, tenants and history; the private calendar feed for Google, Apple or Outlook. Each shows only when your
-  role or token allows it.
+- **People and access**: the tenant's users with their roles, invite links, role changes, disabling and deleting; API
+  tokens issued with scopes and an expiry, shown once, listed with their last use, rotated with a grace window for
+  the old value (retiring until it ends) and revoked; your account, tenants and history; the private calendar feed
+  for Google, Apple or Outlook. Each shows only when your role or token allows it.
 - **Export and import**: a project's tasks, or a filtered part of them, as CSV, JSON, NDJSON or Markdown with the
   columns you choose, a snapshot of the whole tenant, and importing a file of tasks after a dry run.
 - **Settings**, grouped by where each is kept and searchable: on this device the theme (system, light, dark or
