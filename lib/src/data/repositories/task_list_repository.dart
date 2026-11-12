@@ -56,12 +56,15 @@ class TaskListRepository {
 
   /// The request the task screen sends for [query], read at [now] against
   /// [context]: one place, so a prefetch keeps exactly what a screen reads.
+  /// With [held], the second request My work sends when it takes in the
+  /// tasks the reader holds.
   static ListingRequest requestFor(
     TaskQuery query,
     TaskIndex context,
-    DateTime now,
-  ) => (
-    params: paramsFor(query, context, now),
+    DateTime now, {
+    bool held = false,
+  }) => (
+    params: paramsFor(query, context, now, held: held),
     sort: query.scope is MineScope && query.sort.isEmpty
         ? 'due_at'
         : query.sort.isEmpty
@@ -117,6 +120,20 @@ class TaskListRepository {
       (p) => p.toJson((e) => e.toJson()),
     );
     return merged;
+  }
+
+  /// [assigned] with the tasks of [held] it does not already list added
+  /// after it, as tix's web merges My work with the tasks the reader holds.
+  static Page<Task> withHeld(Page<Task> assigned, Page<Task> held) {
+    final seen = {for (final t in assigned.items) t.id};
+    return Page(
+      items: [
+        ...assigned.items,
+        for (final t in held.items)
+          if (!seen.contains(t.id)) t,
+      ],
+      nextCursor: assigned.nextCursor,
+    );
   }
 
   /// The first page of [listing] as last read, null when never read.

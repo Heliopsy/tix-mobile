@@ -14544,6 +14544,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Waiting on {refs}'**
   String rowWaitingTip(String refs);
+
+  /// My work filter chip: also list the tasks the reader holds a claim on
+  ///
+  /// In en, this message translates to:
+  /// **'Include tasks I hold'**
+  String get myWorkIncludeHeld;
+
+  /// Screen reader value of the My work navigation badge
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 overdue task} other{{count} overdue tasks}}'**
+  String myWorkOverdueBadge(int count);
 }
 
 class _AppLocalizationsDelegate

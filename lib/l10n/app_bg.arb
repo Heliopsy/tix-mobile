@@ -2405,5 +2405,7 @@
   "rowChecklist": "{done} от {total} точки от списъка са отметнати",
   "rowWaitingOn": "чака {ref}",
   "rowWaitingOnCount": "{count, plural, =1{чака 1 задача} other{чака {count} задачи}}",
-  "rowWaitingTip": "Чака {refs}"
+  "rowWaitingTip": "Чака {refs}",
+  "myWorkIncludeHeld": "Включи и задачите, които държа",
+  "myWorkOverdueBadge": "{count, plural, =1{1 просрочена задача} other{{count} просрочени задачи}}"
 }

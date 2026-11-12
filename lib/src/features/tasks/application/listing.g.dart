@@ -64,6 +64,50 @@ abstract class _$TaskContext extends $AsyncNotifier<TaskIndex> {
   }
 }
 
+/// How many of the reader's open assigned tasks are past their deadline, up
+/// to one more than [overdueBadgeCap]: what My work's badge shows. Asked
+/// again whenever a task changes.
+
+@ProviderFor(myOverdue)
+final myOverdueProvider = MyOverdueProvider._();
+
+/// How many of the reader's open assigned tasks are past their deadline, up
+/// to one more than [overdueBadgeCap]: what My work's badge shows. Asked
+/// again whenever a task changes.
+
+final class MyOverdueProvider
+    extends $FunctionalProvider<AsyncValue<int>, int, FutureOr<int>>
+    with $FutureModifier<int>, $FutureProvider<int> {
+  /// How many of the reader's open assigned tasks are past their deadline, up
+  /// to one more than [overdueBadgeCap]: what My work's badge shows. Asked
+  /// again whenever a task changes.
+  MyOverdueProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'myOverdueProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$myOverdueHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<int> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<int> create(Ref ref) {
+    return myOverdue(ref);
+  }
+}
+
+String _$myOverdueHash() => r'9c81f2cbbae4615675284d4d94edb13a990af275';
+
 /// The signed-in reader.
 
 @ProviderFor(me)
@@ -153,7 +197,7 @@ final class TaskListingProvider
   }
 }
 
-String _$taskListingHash() => r'e51f09145aac22a71541dfb35288b5af2adf70da';
+String _$taskListingHash() => r'7cf4595bd56fd31f2ed0788c223a564eb4d94b3a';
 
 /// The tasks one query selects, a page at a time: the cached first page at
 /// once, then the server's, again whenever a task changes, and kept for a

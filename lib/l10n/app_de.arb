@@ -2405,5 +2405,7 @@
   "rowChecklist": "{done} von {total} Checklistenpunkten erledigt",
   "rowWaitingOn": "wartet auf {ref}",
   "rowWaitingOnCount": "{count, plural, =1{wartet auf 1 Aufgabe} other{wartet auf {count} Aufgaben}}",
-  "rowWaitingTip": "Wartet auf {refs}"
+  "rowWaitingTip": "Wartet auf {refs}",
+  "myWorkIncludeHeld": "Aufgaben einbeziehen, die ich halte",
+  "myWorkOverdueBadge": "{count, plural, =1{1 überfällige Aufgabe} other{{count} überfällige Aufgaben}}"
 }

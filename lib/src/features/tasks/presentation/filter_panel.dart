@@ -97,6 +97,14 @@ class _TaskFilterPanelState extends ConsumerState<TaskFilterPanel> {
       due('overdue', l10n.filterOverdue),
       due('today', l10n.filterDueToday),
       due('week', l10n.filterDueWeek),
+      if (widget.scope is MineScope)
+        TixFilterChip(
+          key: const Key('chip.held'),
+          label: l10n.myWorkIncludeHeld,
+          icon: Icons.back_hand_outlined,
+          selected: state.includeHeld,
+          onSelected: (on) => _screen.setIncludeHeld(include: on),
+        ),
       if (state.view == TaskView.list && widget.scope is! MineScope)
         TixFilterChip(
           key: const Key('chip.finished'),

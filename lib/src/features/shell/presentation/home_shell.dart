@@ -47,13 +47,21 @@ const maxBarDestinations = 5;
 /// bottom navigation bar on phones, atop a navigation rail on anything wider.
 class HomeShell extends StatelessWidget {
   /// Frames the branch navigators of [shell].
-  const HomeShell({required this.shell, this.inboxIcon, super.key});
+  const HomeShell({
+    required this.shell,
+    this.inboxIcon,
+    this.myWorkIcon,
+    super.key,
+  });
 
   /// The shell route's navigation state.
   final StatefulNavigationShell shell;
 
   /// Draws the Inbox destination's icon, such as with its unread badge.
   final Widget Function(Widget icon)? inboxIcon;
+
+  /// Draws the My work destination's icon, such as with its overdue badge.
+  final Widget Function(Widget icon)? myWorkIcon;
 
   /// Every destination, in the shell's branch order.
   static List<ShellDestination> destinations(AppLocalizations l10n) => [
@@ -102,8 +110,12 @@ class HomeShell extends StatelessWidget {
   ];
 
   Widget _decorate(ShellDestination d, Widget icon) {
-    final decorate = inboxIcon;
-    return d.id == 'inbox' && decorate != null ? decorate(icon) : icon;
+    final decorate = switch (d.id) {
+      'inbox' => inboxIcon,
+      'myWork' => myWorkIcon,
+      _ => null,
+    };
+    return decorate == null ? icon : decorate(icon);
   }
 
   void _select(int index) =>

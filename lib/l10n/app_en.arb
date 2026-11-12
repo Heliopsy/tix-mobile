@@ -5733,5 +5733,18 @@
         "example": "AICP-12, AICP-14"
       }
     }
+  },
+  "myWorkIncludeHeld": "Include tasks I hold",
+  "@myWorkIncludeHeld": {
+    "description": "My work filter chip: also list the tasks the reader holds a claim on"
+  },
+  "myWorkOverdueBadge": "{count, plural, =1{1 overdue task} other{{count} overdue tasks}}",
+  "@myWorkOverdueBadge": {
+    "description": "Screen reader value of the My work navigation badge",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

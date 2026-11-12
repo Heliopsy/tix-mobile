@@ -88,6 +88,33 @@ class TaskContext extends _$TaskContext {
   }
 }
 
+/// The most overdue tasks My work's badge counts; past it the badge reads
+/// "99+", as the web's does.
+const overdueBadgeCap = 99;
+
+/// How many of the reader's open assigned tasks are past their deadline, up
+/// to one more than [overdueBadgeCap]: what My work's badge shows. Asked
+/// again whenever a task changes.
+@riverpod
+Future<int> myOverdue(Ref ref) async {
+  ref.watch(tasksChangedProvider);
+  refreshOn(ref, EventTopics.tasks);
+  final context = await ref.watch(taskContextProvider.future);
+  const query = TaskQuery(
+    scope: MineScope(),
+    expression: 'due:overdue',
+    openOnly: true,
+    limit: overdueBadgeCap + 1,
+  );
+  final request = TaskListRepository.requestFor(
+    query,
+    context,
+    ref.read(clockProvider)(),
+  );
+  final page = await ref.read(taskListRepositoryProvider).list(request);
+  return page.items.length;
+}
+
 /// The signed-in reader.
 @riverpod
 Future<Actor> me(Ref ref) => ref.watch(taskListRepositoryProvider).me();
@@ -118,10 +145,36 @@ class TaskListing extends _$TaskListing {
     };
     Paged<Task> shown(Page<Task> p) =>
         _paged(repo.withQueued(p, project: project));
+    final held = query.includeHeld
+        ? TaskListRepository.requestFor(
+            query,
+            context,
+            ref.read(clockProvider)(),
+            held: true,
+          )
+        : null;
+    Future<Page<Task>> fresh() async {
+      if (held == null) return await repo.list(request);
+      final heldPage = repo.list(held);
+      return TaskListRepository.withHeld(
+        await repo.list(request),
+        await heldPage,
+      );
+    }
+
+    Future<Page<Task>?> cached() async {
+      final assigned = await repo.cachedList(request);
+      if (held == null || assigned == null) return assigned;
+      final heldPage = await repo.cachedList(held);
+      return heldPage == null
+          ? null
+          : TaskListRepository.withHeld(assigned, heldPage);
+    }
+
     final page = await cachedFirst(
       ref: ref,
-      cached: repo.cachedList(request),
-      fresh: () => repo.list(request),
+      cached: cached(),
+      fresh: fresh,
       onFresh: (p) => state = AsyncData(shown(p)),
     );
     return shown(page);
