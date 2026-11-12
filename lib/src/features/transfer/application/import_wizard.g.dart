@@ -72,7 +72,7 @@ final class ImportStatesProvider
   }
 }
 
-String _$importStatesHash() => r'60cdb0814d701db857982fb03be0474147385ce2';
+String _$importStatesHash() => r'edf221b6f49e147a22065d06ff367a181291036b';
 
 /// The states of [project]'s workflow, for the values step.
 
@@ -153,7 +153,7 @@ final class ImportWizardProvider
   }
 }
 
-String _$importWizardHash() => r'7760f42d66c9026e6bcc6017b520f2e85c667418';
+String _$importWizardHash() => r'94dca107345b89ad8667f579316653e67745d6d4';
 
 /// The import wizard's state, opened on [project].
 
