@@ -5685,6 +5685,70 @@ class AppLocalizationsFr extends AppLocalizations {
       'Plafonne chaque réservation de cet espace. Elle peut abaisser le plafond du serveur, jamais le relever.';
 
   @override
+  String get tenantSessionTitle => 'Sessions';
+
+  @override
+  String get tenantSessionInfo =>
+      'Durée d’une connexion dans cet espace. Chaque réglage peut être plus court que celui du serveur, jamais plus long.';
+
+  @override
+  String get tenantSessionTtl => 'Une connexion dure';
+
+  @override
+  String get tenantSessionTtlInfo =>
+      'Durée d’une connexion dans cet espace à partir du moment où elle est faite, par exemple 8h. Elle peut être plus courte que celle du serveur, pas plus longue. Les sessions déjà ouvertes gardent leur expiration.';
+
+  @override
+  String get tenantSessionIdle => 'Déconnecter après une inactivité de';
+
+  @override
+  String get tenantSessionIdleInfo =>
+      'Termine une session que personne n’a utilisée depuis ce temps, par exemple 30m, avec ou sans Rester connecté. S’applique aux sessions déjà ouvertes dès l’enregistrement. Peut être plus court que celui du serveur, pas plus long ; vide sans réglage du serveur signifie jamais.';
+
+  @override
+  String get tenantSessionRemember => 'Rester connecté dure';
+
+  @override
+  String get tenantSessionRememberInfo =>
+      'Durée d’une connexion quand la personne coche Rester connecté, par exemple 7d, ou off pour ne plus le proposer. Peut être plus court que celui du serveur, pas plus long.';
+
+  @override
+  String get tenantSessionNever => 'jamais';
+
+  @override
+  String get tenantSessionNote =>
+      'Laissez vide pour utiliser le réglage du serveur, affiché en gris.';
+
+  @override
+  String get tenantArtifactTitle => 'Artefacts';
+
+  @override
+  String get tenantArtifactInfo =>
+      'Les fichiers qu’un artefact peut porter dans cet espace. Chaque limite peut être plus stricte que celle du serveur, jamais plus large.';
+
+  @override
+  String get tenantArtifactMaxBytes => 'Plus gros fichier d’artefact';
+
+  @override
+  String get tenantArtifactMaxBytesInfo =>
+      'Le plus gros fichier qu’un artefact peut porter dans cet espace, par exemple 512KiB ou 5MiB. Il peut être inférieur à la limite du serveur, pas supérieur. Les fichiers déjà joints restent tels quels.';
+
+  @override
+  String get tenantArtifactSizeBad =>
+      'Écrivez une taille comme 1048576, 512KiB ou 5MiB.';
+
+  @override
+  String get tenantArtifactTypes => 'Types d’artefact acceptés';
+
+  @override
+  String get tenantArtifactTypesInfo =>
+      'Les types de média qu’un fichier d’artefact peut avoir dans cet espace, séparés par des virgules, par exemple image/*, application/pdf. Seuls les types acceptés par le serveur peuvent être listés. Quel que soit le type, un fichier est toujours proposé en téléchargement et jamais ouvert dans le navigateur.';
+
+  @override
+  String get tenantArtifactNote =>
+      'Laissez vide pour utiliser la limite du serveur, affichée en gris.';
+
+  @override
   String get tenantTrashTitle => 'Corbeille';
 
   @override

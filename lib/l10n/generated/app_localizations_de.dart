@@ -5692,6 +5692,70 @@ class AppLocalizationsDe extends AppLocalizations {
       'Begrenzt jede Reservierung in diesem Mandanten. Sie kann die Obergrenze des Servers senken, nie anheben.';
 
   @override
+  String get tenantSessionTitle => 'Sitzungen';
+
+  @override
+  String get tenantSessionInfo =>
+      'Wie lange eine Anmeldung in diesem Mandanten gilt. Jede Einstellung kann kürzer sein als die des Servers, nie länger.';
+
+  @override
+  String get tenantSessionTtl => 'Anmeldung gilt';
+
+  @override
+  String get tenantSessionTtlInfo =>
+      'Wie lange eine Anmeldung in diesem Mandanten ab dem Moment gilt, in dem sie erfolgt, etwa 8h. Sie kann kürzer sein als die des Servers, aber nicht länger. Bereits angemeldete Sitzungen behalten ihren Ablauf.';
+
+  @override
+  String get tenantSessionIdle => 'Abmelden nach Leerlauf von';
+
+  @override
+  String get tenantSessionIdleInfo =>
+      'Beendet eine Sitzung, die so lange niemand benutzt hat, etwa 30m, ob angemeldet bleiben gewählt wurde oder nicht. Gilt sofort nach dem Speichern auch für bereits angemeldete Sitzungen. Kann kürzer sein als die des Servers, aber nicht länger; leer ohne Servereinstellung heißt nie.';
+
+  @override
+  String get tenantSessionRemember => 'Angemeldet bleiben gilt';
+
+  @override
+  String get tenantSessionRememberInfo =>
+      'Wie lange eine Anmeldung gilt, wenn die Person Angemeldet bleiben wählt, etwa 7d, oder off, um es nicht mehr anzubieten. Kann kürzer sein als die des Servers, aber nicht länger.';
+
+  @override
+  String get tenantSessionNever => 'nie';
+
+  @override
+  String get tenantSessionNote =>
+      'Leer lassen, um die grau angezeigte Einstellung des Servers zu verwenden.';
+
+  @override
+  String get tenantArtifactTitle => 'Artefakte';
+
+  @override
+  String get tenantArtifactInfo =>
+      'Die Dateien, die ein Artefakt in diesem Mandanten tragen darf. Jede Grenze kann enger sein als die des Servers, nie weiter.';
+
+  @override
+  String get tenantArtifactMaxBytes => 'Größte Artefaktdatei';
+
+  @override
+  String get tenantArtifactMaxBytesInfo =>
+      'Die größte Datei, die ein Artefakt in diesem Mandanten tragen darf, etwa 512KiB oder 5MiB. Sie kann unter der Grenze des Servers liegen, aber nicht darüber. Bereits angehängte Dateien bleiben, wie sie sind.';
+
+  @override
+  String get tenantArtifactSizeBad =>
+      'Schreiben Sie eine Größe wie 1048576, 512KiB oder 5MiB.';
+
+  @override
+  String get tenantArtifactTypes => 'Erlaubte Artefakttypen';
+
+  @override
+  String get tenantArtifactTypesInfo =>
+      'Die Medientypen, die eine Artefaktdatei in diesem Mandanten haben darf, durch Kommas getrennt, etwa image/*, application/pdf. Nur Typen, die der Server akzeptiert, sind möglich. Unabhängig vom Typ wird eine Datei immer zum Herunterladen angeboten und nie im Browser geöffnet.';
+
+  @override
+  String get tenantArtifactNote =>
+      'Leer lassen, um die grau angezeigte Grenze des Servers zu verwenden.';
+
+  @override
   String get tenantTrashTitle => 'Papierkorb';
 
   @override

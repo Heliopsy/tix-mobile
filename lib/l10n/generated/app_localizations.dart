@@ -9571,6 +9571,114 @@ abstract class AppLocalizations {
   /// **'Caps every claim in this tenant. It can lower the server\'s ceiling, never raise it.'**
   String get tenantLeaseMaxHelp;
 
+  /// No description provided for @tenantSessionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions'**
+  String get tenantSessionTitle;
+
+  /// No description provided for @tenantSessionInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'How long a sign-in on this tenant lasts. Each setting can be shorter than the server\'s, never longer.'**
+  String get tenantSessionInfo;
+
+  /// No description provided for @tenantSessionTtl.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in lasts'**
+  String get tenantSessionTtl;
+
+  /// No description provided for @tenantSessionTtlInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'How long a sign-in on this tenant lasts from the moment it is made, such as 8h. It can be shorter than the server\'s but not longer. Sessions already signed in keep the expiry they were given.'**
+  String get tenantSessionTtlInfo;
+
+  /// No description provided for @tenantSessionIdle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out when idle for'**
+  String get tenantSessionIdle;
+
+  /// No description provided for @tenantSessionIdleInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'End a session nobody has used for this long, such as 30m, kept signed in or not. It applies to sessions already signed in as soon as it is saved. It can be shorter than the server\'s but not longer; empty with no server setting means never.'**
+  String get tenantSessionIdleInfo;
+
+  /// No description provided for @tenantSessionRemember.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep me signed in lasts'**
+  String get tenantSessionRemember;
+
+  /// No description provided for @tenantSessionRememberInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'How long a sign-in lasts when the person ticks Keep me signed in, such as 7d, or off to stop offering it. It can be shorter than the server\'s but not longer.'**
+  String get tenantSessionRememberInfo;
+
+  /// No description provided for @tenantSessionNever.
+  ///
+  /// In en, this message translates to:
+  /// **'never'**
+  String get tenantSessionNever;
+
+  /// No description provided for @tenantSessionNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave any empty to use the server\'s setting, shown greyed.'**
+  String get tenantSessionNote;
+
+  /// No description provided for @tenantArtifactTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Artifacts'**
+  String get tenantArtifactTitle;
+
+  /// No description provided for @tenantArtifactInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The files an artifact may carry on this tenant. Each limit can be tighter than the server\'s, never looser.'**
+  String get tenantArtifactInfo;
+
+  /// No description provided for @tenantArtifactMaxBytes.
+  ///
+  /// In en, this message translates to:
+  /// **'Largest artifact file'**
+  String get tenantArtifactMaxBytes;
+
+  /// No description provided for @tenantArtifactMaxBytesInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The largest file an artifact may carry on this tenant, such as 512KiB or 5MiB. It can be lower than the server\'s limit but not higher. Files already attached stay as they are.'**
+  String get tenantArtifactMaxBytesInfo;
+
+  /// No description provided for @tenantArtifactSizeBad.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a size such as 1048576, 512KiB or 5MiB.'**
+  String get tenantArtifactSizeBad;
+
+  /// No description provided for @tenantArtifactTypes.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted artifact types'**
+  String get tenantArtifactTypes;
+
+  /// No description provided for @tenantArtifactTypesInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The media types an artifact file may have on this tenant, separated by commas, such as image/*, application/pdf. Only types the server accepts can be listed. Whatever the type, a file is always offered as a download and never opened in the browser.'**
+  String get tenantArtifactTypesInfo;
+
+  /// No description provided for @tenantArtifactNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave either empty to use the server\'s limit, shown greyed.'**
+  String get tenantArtifactNote;
+
   /// No description provided for @tenantTrashTitle.
   ///
   /// In en, this message translates to:

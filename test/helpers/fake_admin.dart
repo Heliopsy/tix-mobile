@@ -45,6 +45,27 @@ class FakeAdmin {
     },
   };
 
+  /// What `GET /auth/session-policy` answers.
+  final sessionPolicy = <String, Object?>{
+    'ttl': '12h0m0s',
+    'idle_timeout': '0s',
+    'remember_ttl': '720h0m0s',
+    'server_ttl': '12h0m0s',
+    'server_idle_timeout': '0s',
+    'server_remember_ttl': '720h0m0s',
+  };
+
+  /// What `GET /artifact-limits` answers.
+  final artifactLimits = <String, Object?>{
+    'max_bytes': 1048576,
+    'allowed_types': ['image/*', 'application/pdf', 'text/plain'],
+    'server_max_bytes': 1048576,
+    'server_allowed_types': ['image/*', 'application/pdf', 'text/plain'],
+  };
+
+  /// Tenant fields a `PATCH /tenants/{ref}` refuses, with the message.
+  final refuse = <String, String>{};
+
   /// Users per tenant key.
   final users = <String, List<Map<String, Object?>>>{
     'default': [
@@ -250,6 +271,9 @@ class FakeAdmin {
         final t = _tenant(ref);
         if (t == null) return FakeResponse(404, envelope('not_found', ref));
         if (body['name'] == '') return _bad('name must not be blank');
+        for (final field in body.keys) {
+          if (refuse[field] case final message?) return _bad(message);
+        }
         t.addAll(body);
         return _ok(t);
       case ('DELETE', ['tenants', final ref]):
@@ -366,6 +390,10 @@ class FakeAdmin {
             options.uri.queryParameters['cursor'],
           ),
         );
+      case ('GET', ['auth', 'session-policy']):
+        return _ok(sessionPolicy);
+      case ('GET', ['artifact-limits']):
+        return _ok(artifactLimits);
       case ('GET', ['connections']):
         return _ok({
           'server_id': 'srv-1',

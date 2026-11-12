@@ -40,6 +40,14 @@ class AdminRepository {
   Future<Tenant> updateTenant(String ref, UpdateTenantInput input) =>
       _api.tenant.update(ref, input);
 
+  /// The server's session settings beside the active tenant's
+  /// (`session.policy`).
+  Future<SessionPolicy> sessionPolicy() => _api.session.policy();
+
+  /// The server's artifact limits beside the active tenant's
+  /// (`artifact.limits`).
+  Future<ArtifactLimits> artifactLimits() => _api.artifact.limits();
+
   /// Deletes the tenant [ref] (`tenant.delete`).
   Future<void> deleteTenant(String ref) => _api.tenant.delete(ref);
 
