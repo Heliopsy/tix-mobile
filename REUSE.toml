@@ -86,9 +86,10 @@ precedence = "override"
 SPDX-FileCopyrightText = "tix-mobile contributors"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
-# tix's OpenAPI document, vendored byte for byte from the commit tix.lock pins.
+# tix's OpenAPI document, vendored byte for byte from the commit tix.lock pins,
+# and the headings of tix's docs at that commit.
 [[annotations]]
-path = ["api/tix-openapi.yaml"]
+path = ["api/tix-openapi.yaml", "api/tix-doc-anchors.json"]
 precedence = "override"
 SPDX-FileCopyrightText = "tix contributors"
 SPDX-License-Identifier = "AGPL-3.0-or-later"

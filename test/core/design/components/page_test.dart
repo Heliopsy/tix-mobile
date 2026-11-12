@@ -94,4 +94,76 @@ void main() {
       });
     }
   }
+
+  group('the (?) help button', () {
+    final help = find.byKey(const Key('page.help'));
+
+    for (final MapEntry(key: width, value: size) in widths.entries) {
+      testWidgets('$width: a labelled 48 dp button that opens the help', (
+        tester,
+      ) async {
+        var opened = 0;
+        await pumpComponent(
+          tester,
+          TixPageHelp(
+            open: (_) =>
+                () => opened++,
+            child: page(() {}),
+          ),
+          size: size,
+        );
+        expect(help, findsOneWidget);
+        expect(
+          find.descendant(of: help, matching: find.byIcon(Icons.help_outline)),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(of: help, matching: find.byTooltip('Help: Projects')),
+          findsOneWidget,
+        );
+        final box = tester.getSize(
+          find.descendant(of: help, matching: find.byType(IconButton)),
+        );
+        expect(box.width, greaterThanOrEqualTo(TixSize.target));
+        expect(box.height, greaterThanOrEqualTo(TixSize.target));
+        await tester.tap(help);
+        expect(opened, 1);
+      });
+    }
+
+    testWidgets('none without a scope, or when the screen has no help', (
+      tester,
+    ) async {
+      await pumpComponent(tester, page(() {}), size: desktop);
+      expect(help, findsNothing);
+      await pumpComponent(
+        tester,
+        TixPageHelp(open: (_) => null, child: page(() {})),
+        size: desktop,
+      );
+      expect(help, findsNothing);
+      expect(find.byKey(const Key('add')), findsOneWidget);
+    });
+
+    testWidgets('a page inside another page does not repeat it', (
+      tester,
+    ) async {
+      await pumpComponent(
+        tester,
+        TixPageHelp(
+          open: (_) => () {},
+          child: const TixPage(
+            title: 'Infra',
+            body: TixPage(title: 'INFRA-1', body: SizedBox.expand()),
+          ),
+        ),
+        size: desktop,
+      );
+      expect(help, findsOneWidget);
+      expect(
+        find.descendant(of: help, matching: find.byTooltip('Help: Infra')),
+        findsOneWidget,
+      );
+    });
+  });
 }

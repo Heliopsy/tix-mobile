@@ -328,6 +328,7 @@ class GalleryTasks extends StatelessWidget {
           title: 'Infra',
           subtitle: l10n.boardCount(galleryTasks.length, ''),
           subtitleNote: l10n.tasksHeldByAgent(2),
+          actions: [ScreenHelpButton(title: 'Infra', onPressed: () {})],
         ),
         DecoratedBox(
           decoration: BoxDecoration(

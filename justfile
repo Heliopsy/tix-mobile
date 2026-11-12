@@ -493,6 +493,11 @@ openapi-sync:
 openapi-check:
     dart run tool/openapi.dart check
 
+# Fetch the headings of tix's docs at the pinned commit, which screen help links land on (TIX_SOURCE as above).
+[group('api')]
+doc-anchors-sync:
+    dart run tool/doc_anchors.dart sync
+
 # How much of the tix API the app covers, per wave.
 [group('api')]
 parity:
