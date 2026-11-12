@@ -2023,6 +2023,36 @@ abstract class AppLocalizations {
   /// **'Subtasks'**
   String get taskDetailSubtasks;
 
+  /// No description provided for @taskDetailSubtasksInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The whole tree under this task. Three levels show at once, and a deeper level loads when you ask for it. The arrow beside a subtask folds its own subtasks away.'**
+  String get taskDetailSubtasksInfo;
+
+  /// No description provided for @taskDetailSubtasksOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtasks of {ref}'**
+  String taskDetailSubtasksOf(String ref);
+
+  /// No description provided for @taskDetailShowSubtasks.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Show 1 subtask} other{Show {count} subtasks}}'**
+  String taskDetailShowSubtasks(int count);
+
+  /// No description provided for @taskDetailSubtasksShallow.
+  ///
+  /// In en, this message translates to:
+  /// **'This tree is too large to draw whole, so only direct subtasks are shown.'**
+  String get taskDetailSubtasksShallow;
+
+  /// No description provided for @taskDetailDeleteAllSubtasksBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Its subtasks are deleted with it, at every level.'**
+  String get taskDetailDeleteAllSubtasksBody;
+
   /// No description provided for @taskDetailSystem.
   ///
   /// In en, this message translates to:

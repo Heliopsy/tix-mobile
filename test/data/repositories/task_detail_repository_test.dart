@@ -124,14 +124,49 @@ void main() {
     expect(server.trash, isEmpty);
   });
 
-  test('subtasks read the tree one level deep, the task left out', () async {
+  test('subtasks read the tree a level deeper than drawn', () async {
+    server.tasks['infra']!.addAll([
+      taskJson('infra-3', title: 'Child', parentId: 'id-infra-1'),
+      taskJson('infra-4', title: 'Grandchild', parentId: 'id-infra-3'),
+    ]);
+    final tree = await repo.subtasks('infra-1');
+    expect(last().uri.path, '/api/v1/tasks/infra-1/tree');
+    expect(last().uri.queryParameters, {'depth': '4'});
+    expect(tree.tasks.map((t) => t.ref), ['infra-3', 'infra-4']);
+    expect(tree.nodes.single.children.single.task.ref, 'infra-4');
+    expect(tree.shallow, isFalse);
+    final cached = await repo.cachedSubtasks('infra-1');
+    expect(cached!.tasks.map((t) => t.ref), ['infra-3', 'infra-4']);
+  });
+
+  test('a tree too large to walk is read one level deep', () async {
     server.tasks['infra']!.add(
       taskJson('infra-3', title: 'Child', parentId: 'id-infra-1'),
     );
-    final subs = await repo.subtasks('infra-1');
-    expect(last().uri.path, '/api/v1/tasks/infra-1/tree');
+    server.routes.add(
+      (o, path, _) async =>
+          path.endsWith('/tree') && o.uri.queryParameters['depth'] == '4'
+          ? FakeResponse(
+              422,
+              envelope('precondition_failed', 'more than 10000 descendants'),
+            )
+          : null,
+    );
+    final tree = await repo.subtasks('infra-1');
     expect(last().uri.queryParameters, {'depth': '1'});
-    expect(subs.map((t) => t.ref), ['infra-3']);
+    expect(tree.tasks.single.ref, 'infra-3');
+    expect(tree.shallow, isTrue);
+    expect(tree.complete, isFalse);
+    expect((await repo.cachedSubtasks('infra-1'))!.shallow, isTrue);
+  });
+
+  test('any other refusal of the tree is not retried', () async {
+    server.failing['/api/v1/tasks/infra-1/tree'] = FakeResponse(
+      500,
+      envelope('internal', 'boom'),
+    );
+    await expectLater(repo.subtasks('infra-1'), throwsA(isA<TixException>()));
+    expect(server.requestsTo('/api/v1/tasks/infra-1/tree'), hasLength(1));
   });
 
   test('addSubtask creates with the parent', () async {

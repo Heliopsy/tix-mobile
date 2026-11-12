@@ -1338,13 +1338,19 @@ class FakeTix {
         list.add(copy);
         return FakeResponse(201, copy);
       case ('GET', ['tree']):
+        final depth = int.tryParse(o.uri.queryParameters['depth'] ?? '') ?? 0;
+        Iterable<Map<String, Object?>> under(String parent, int level) sync* {
+          if (depth > 0 && level > depth) return;
+          for (final list in tasks.values) {
+            for (final x in list) {
+              if (x['parent_id'] != parent) continue;
+              yield x;
+              yield* under(x['id']! as String, level + 1);
+            }
+          }
+        }
         return FakeResponse(200, {
-          'items': [
-            t,
-            for (final list in tasks.values)
-              for (final x in list)
-                if (x['parent_id'] == id) x,
-          ],
+          'items': [t, ...under(id, 1)],
         });
       case ('GET', ['audit']):
         final actions = o.uri.queryParametersAll['action'];

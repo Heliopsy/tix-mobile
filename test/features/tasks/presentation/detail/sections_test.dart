@@ -161,6 +161,110 @@ void main() {
     });
   });
 
+  group('subtask tree', () {
+    void chain(List<String> refs) {
+      var parent = 'id-infra-1';
+      for (final ref in refs) {
+        server.tasks['infra']!.add(taskJson(ref, parentId: parent));
+        parent = 'id-$ref';
+      }
+    }
+
+    Finder row(String ref) => find.byKey(Key('related.$ref'));
+
+    for (final (name, size) in [
+      ('compact', tallPhone),
+      ('expanded', tallDesktop),
+    ]) {
+      testWidgets('draws every level indented under its parent, $name', (
+        tester,
+      ) async {
+        chain(['infra-3', 'infra-4', 'infra-5']);
+        await pumpTask(tester, server, size: size);
+        expect(find.text('1 task'), findsOneWidget);
+        final x = [
+          for (final ref in ['infra-3', 'infra-4', 'infra-5'])
+            tester.getTopLeft(row(ref)).dx,
+        ];
+        expect(x[1], greaterThan(x[0]));
+        expect(x[2], greaterThan(x[1]));
+        expect(find.byKey(const Key('subtask.fold.infra-5')), findsNothing);
+      });
+    }
+
+    testWidgets('a fold hides the subtasks under a node and brings them back', (
+      tester,
+    ) async {
+      chain(['infra-3', 'infra-4', 'infra-5']);
+      await pumpTask(tester, server);
+      await press(tester, find.byKey(const Key('subtask.fold.infra-3')));
+      expect(row('infra-3'), findsOneWidget);
+      expect(row('infra-4'), findsNothing);
+      expect(row('infra-5'), findsNothing);
+      await press(tester, find.byKey(const Key('subtask.fold.infra-3')));
+      expect(row('infra-4'), findsOneWidget);
+      expect(row('infra-5'), findsOneWidget);
+    });
+
+    testWidgets('a level past the third is offered and loaded in place', (
+      tester,
+    ) async {
+      chain(['infra-3', 'infra-4', 'infra-5', 'infra-6', 'infra-7']);
+      await pumpTask(tester, server);
+      expect(row('infra-5'), findsOneWidget);
+      expect(row('infra-6'), findsNothing);
+      final more = find.byKey(const Key('subtask.more.infra-5'));
+      expect(
+        find.descendant(of: more, matching: find.text('Show 1 subtask')),
+        findsOneWidget,
+      );
+      await press(tester, more);
+      expect(server.requestsTo('/api/v1/tasks/infra-5/tree'), isNotEmpty);
+      expect(row('infra-6'), findsOneWidget);
+      expect(row('infra-7'), findsOneWidget);
+      expect(
+        tester.getTopLeft(row('infra-6')).dx,
+        greaterThan(tester.getTopLeft(row('infra-5')).dx),
+      );
+      expect(more, findsNothing);
+    });
+
+    testWidgets('a tree too large to walk shows direct subtasks and says so', (
+      tester,
+    ) async {
+      chain(['infra-3', 'infra-4']);
+      server.routes.add(
+        (o, path, _) async =>
+            path.endsWith('/tree') && o.uri.queryParameters['depth'] == '4'
+            ? FakeResponse(422, envelope('precondition_failed', 'too many'))
+            : null,
+      );
+      await pumpTask(tester, server);
+      expect(find.byKey(const Key('subtask.shallow')), findsOneWidget);
+      expect(row('infra-3'), findsOneWidget);
+      expect(row('infra-4'), findsNothing);
+    });
+
+    testWidgets('a tree that fails to load offers a retry', (tester) async {
+      chain(['infra-3']);
+      server.failing['/api/v1/tasks/infra-1/tree'] = FakeResponse(
+        500,
+        envelope('internal', 'boom'),
+      );
+      await pumpTask(tester, server);
+      expect(find.byType(ErrorState), findsOneWidget);
+      server.failing.clear();
+      await press(
+        tester,
+        find.descendant(
+          of: find.byType(ErrorState),
+          matching: find.byKey(const Key('error.retry')),
+        ),
+      );
+      expect(row('infra-3'), findsOneWidget);
+    });
+  });
+
   group('dependencies', () {
     testWidgets('are listed with title and removed', (tester) async {
       server.deps['id-infra-1'] = ['id-infra-2'];

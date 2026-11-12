@@ -440,15 +440,18 @@ class TaskDependencies extends _$TaskDependencies {
   }
 }
 
-/// A task's direct subtasks.
+/// The subtask tree under a task, with its offline drafts as direct
+/// subtasks.
 @riverpod
 class TaskSubtasks extends _$TaskSubtasks {
   @override
-  Future<List<Task>> build(String taskRef) async {
+  Future<SubtaskTree> build(String taskRef) async {
     final repo = ref.watch(taskDetailRepositoryProvider);
-    if (isDraftRef(taskRef)) return repo.draftSubtasks(taskRef);
-    List<Task> shown(List<Task> v) => [...v, ...repo.draftSubtasks(taskRef)];
-    final subtasks = shown(
+    if (isDraftRef(taskRef)) {
+      return SubtaskTree(tasks: repo.draftSubtasks(taskRef));
+    }
+    SubtaskTree shown(SubtaskTree v) => v.plus(repo.draftSubtasks(taskRef));
+    final tree = shown(
       await cachedFirst(
         ref: ref,
         cached: repo.cachedSubtasks(taskRef),
@@ -457,7 +460,7 @@ class TaskSubtasks extends _$TaskSubtasks {
       ),
     );
     if (ref.mounted) refreshOn(ref, EventTopics.tasks);
-    return subtasks;
+    return tree;
   }
 
   /// Creates a subtask titled [title] in [project].
@@ -465,7 +468,7 @@ class TaskSubtasks extends _$TaskSubtasks {
     final task = await ref
         .read(taskDetailRepositoryProvider)
         .addSubtask(project, taskRef, title);
-    state = AsyncData([...?state.value, task]);
+    state = AsyncData((state.value ?? SubtaskTree()).plus([task]));
     return task;
   }
 }
