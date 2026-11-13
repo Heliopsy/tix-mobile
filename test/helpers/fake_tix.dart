@@ -45,6 +45,16 @@ class FakeAdapter implements HttpClientAdapter {
     requests.add(options);
     final r = await handler(options);
     final body = r.body;
+    if (body is Uint8List) {
+      return ResponseBody.fromBytes(
+        body,
+        r.status,
+        headers: {
+          Headers.contentTypeHeader: [r.contentType],
+          'x-request-id': ['req-1'],
+        },
+      );
+    }
     return ResponseBody.fromString(
       body is String ? body : jsonEncode(body),
       r.status,
@@ -272,6 +282,37 @@ class FakeTix {
   final tenants = <String, ({String name, String host})>{
     'default': (name: 'Default', host: ''),
   };
+
+  /// The version `/healthz` reports.
+  String version = 'v1.2.3';
+
+  /// Each tenant's icon by key, as `icon`, `icon_name` or `icon_image`:
+  /// what `GET /tenants/{ref}` and each membership in `whoami` report, and
+  /// `whoami` for the caller's tenant with a `tenant_` prefix.
+  final tenantIcons = <String, Map<String, String>>{};
+
+  /// Each tenant's uploaded icon image by key, served to its members at
+  /// `GET /tenants/{ref}/icon`.
+  final tenantIconImages = <String, Uint8List>{};
+
+  /// Applies the icon fields of a `PATCH /tenants/{ref}` [body] to tenant
+  /// [key], as tix does: naming one kind replaces the whole icon.
+  void setTenantIcon(String key, Map<String, dynamic> body) {
+    if (body['icon_file'] case final Map<dynamic, dynamic> file) {
+      tenantIconImages[key] = base64Decode(file['data'] as String);
+      tenantIcons[key] = {'icon_image': 'digest-$key-${++_ids}'};
+    } else if (body['icon_name'] case final String name when name.isNotEmpty) {
+      tenantIconImages.remove(key);
+      tenantIcons[key] = {'icon_name': name};
+    } else if (body['icon'] case final String text) {
+      tenantIconImages.remove(key);
+      if (text.isEmpty) {
+        tenantIcons.remove(key);
+      } else {
+        tenantIcons[key] = {'icon': text};
+      }
+    }
+  }
 
   /// Projects per tenant; a tenant not listed sees [projects].
   final tenantProjects = <String, List<Map<String, Object?>>>{};
@@ -601,6 +642,7 @@ class FakeTix {
     'handle': handle,
     'role': 'admin',
     'host': tenants[key]?.host ?? '',
+    ...?tenantIcons[key],
   };
 
   /// Who the request is, or a refusal.
@@ -633,7 +675,7 @@ class FakeTix {
       '',
     );
     if (path == '/healthz') {
-      return const FakeResponse(200, {'status': 'ok', 'version': 'v1.2.3'});
+      return FakeResponse(200, {'status': 'ok', 'version': version});
     }
     if (o.method == 'POST' && path == '/api/v1/auth/login') {
       return _login(o.data as Map<String, dynamic>);
@@ -698,6 +740,8 @@ class FakeTix {
           'tenant_id': 'id-${caller.tenant}',
           'tenant_key': caller.tenant,
           'tenant_name': tenants[caller.tenant]?.name ?? caller.tenant,
+          for (final f in (tenantIcons[caller.tenant] ?? const {}).entries)
+            'tenant_${f.key}': f.value,
           'email': caller.email,
           'memberships': [
             for (final t in account.tenants) _membership(t, account.handle),
@@ -772,6 +816,19 @@ class FakeTix {
     final detail = _detail(o, path);
     if (detail != null) return detail;
     final segments = path.substring(1).split('/');
+    if (o.method == 'GET' &&
+        segments.length == 5 &&
+        segments[2] == 'tenants' &&
+        segments[4] == 'icon') {
+      final key = segments[3].replaceFirst(RegExp('^id-'), '');
+      final member =
+          accounts[caller.email]?.tenants.contains(key) ?? key == caller.tenant;
+      final bytes = tenantIconImages[key];
+      if (!member || bytes == null) {
+        return FakeResponse(404, envelope('not_found', 'tenant icon'));
+      }
+      return FakeResponse(200, bytes, 'image/png');
+    }
     final more = _more(o, segments);
     if (more != null) return more;
     if (o.method == 'GET' && segments.length == 4) {
@@ -788,6 +845,7 @@ class FakeTix {
           'key': caller.tenant,
           'name': tenants[caller.tenant]?.name ?? caller.tenant,
           'theme': tenantThemes[caller.tenant] ?? '',
+          ...?tenantIcons[caller.tenant],
         });
       }
       if (segments[2] == 'tasks') {

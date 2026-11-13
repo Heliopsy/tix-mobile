@@ -5643,6 +5643,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tenantGeneralTitle => 'General';
 
   @override
+  String get tenantIconTitle => 'Icon';
+
+  @override
+  String get tenantIconInfo =>
+      'Shown beside the tenant\'s name in the switcher, so tenants are easy to tell apart. With none, the switcher shows the first letters of the name.';
+
+  @override
   String get tenantName => 'Name';
 
   @override

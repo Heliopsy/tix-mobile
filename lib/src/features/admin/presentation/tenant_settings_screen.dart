@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,10 +11,15 @@ import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/design/theme.dart';
 import 'package:tix_mobile/src/core/l10n/durations.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/platform/attachments.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/admin.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/session/tenant_icons.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
+import 'package:tix_mobile/src/core/widgets/tenant_mark.dart';
+import 'package:tix_mobile/src/data/models/project_admin.dart'
+    show projectIconNames;
 import 'package:tix_mobile/src/features/admin/application/tenant_admin.dart';
 
 /// The date formats a tenant can choose, as tix names them; empty
@@ -29,7 +36,7 @@ const timeFormats = [
   'relative',
 ];
 
-/// A tenant's settings: name, theme with a live preview, the date
+/// A tenant's settings: name, theme with a live preview, icon, the date
 /// defaults, second-factor requirements, claim leases, sessions, artifact
 /// limits, the trash, and deleting it. Without [tenantRef] it is the
 /// active tenant's.
@@ -91,6 +98,9 @@ class _TenantSettingsBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    if (ref.watch(tenantIconsSupportedProvider).value ?? false) {
+      ref.watch(tenantIconSettingProvider(tenantRef));
+    }
     Future<void> save(UpdateTenantInput input, {String? done}) async {
       try {
         await ref.read(tenantSettingsProvider(tenantRef).notifier).save(input);
@@ -110,6 +120,7 @@ class _TenantSettingsBody extends ConsumerWidget {
         children: [
           _GeneralSection(tenant: tenant, save: save),
           _ThemeSection(tenant: tenant, save: save),
+          _IconSection(tenantRef: tenantRef, tenant: tenant),
           TixSection(
             title: l10n.tenantTotpTitle,
             info: l10n.tenantTotpInfo,
@@ -371,6 +382,134 @@ class _GeneralSectionState extends State<_GeneralSection> {
             ],
             onChanged: (v) => setState(() => _format = v ?? ''),
           ),
+        ),
+      ],
+    );
+  }
+}
+
+/// The icon the switcher shows for the tenant, offered only by a tix that
+/// has tenant icons.
+class _IconSection extends ConsumerStatefulWidget {
+  const _IconSection({required this.tenantRef, required this.tenant});
+
+  final String tenantRef;
+  final Tenant tenant;
+
+  @override
+  ConsumerState<_IconSection> createState() => _IconSectionState();
+}
+
+class _IconSectionState extends ConsumerState<_IconSection> {
+  ProjectIconValue? _draft;
+  PickedIcon? _image;
+
+  static ProjectIconValue _valueOf(TenantIcon icon) => icon.image.isNotEmpty
+      ? const ProjectIconValue(kind: ProjectIconKind.image)
+      : icon.name.isNotEmpty
+      ? ProjectIconValue(kind: ProjectIconKind.builtin, name: icon.name)
+      : icon.text.isNotEmpty
+      ? ProjectIconValue(kind: ProjectIconKind.text, text: icon.text)
+      : const ProjectIconValue();
+
+  TenantIconChange? _change(TenantIcon saved) {
+    final draft = _draft;
+    final image = _image;
+    if (draft == null || (draft == _valueOf(saved) && image == null)) {
+      return null;
+    }
+    return switch (draft.kind) {
+      ProjectIconKind.none => const TenantIconChange.text(''),
+      ProjectIconKind.text => TenantIconChange.text(draft.text),
+      ProjectIconKind.builtin => TenantIconChange.builtin(draft.name),
+      ProjectIconKind.image =>
+        image == null
+            ? null
+            : TenantIconChange.image(
+                ProjectIconFile(
+                  contentType: image.contentType,
+                  data: image.data,
+                ),
+              ),
+    };
+  }
+
+  Future<void> _save(TenantIconChange change) async {
+    final l10n = context.l10n;
+    try {
+      await ref
+          .read(tenantIconSettingProvider(widget.tenantRef).notifier)
+          .save(change, tenantKey: widget.tenant.key);
+      if (!mounted) return;
+      setState(() {
+        _draft = null;
+        _image = null;
+      });
+      showTixToast(context, l10n.tenantSaved);
+    } on Object catch (e) {
+      if (mounted) {
+        showTixToast(context, errorMessage(l10n, e), tone: TixTone.danger);
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> _pick() async {
+    final picked = await pickIconImage(ref.read(attachmentsProvider));
+    if (picked == null || !mounted) return;
+    setState(() {
+      _image = picked;
+      _draft = const ProjectIconValue(kind: ProjectIconKind.image);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    if (ref.watch(tenantIconsSupportedProvider).value != true) {
+      return const SizedBox.shrink();
+    }
+    final saved = ref.watch(tenantIconSettingProvider(widget.tenantRef));
+    final icon = saved.value;
+    if (icon == null) {
+      return saved.hasError
+          ? TixSection(
+              title: l10n.tenantIconTitle,
+              children: [
+                ListTile(
+                  key: const Key('tenant.icon.error'),
+                  title: Text(errorMessage(l10n, saved.error!)),
+                ),
+              ],
+            )
+          : const SizedBox.shrink();
+    }
+    final change = _change(icon);
+    final image = _image;
+    return _FormSection(
+      title: l10n.tenantIconTitle,
+      info: l10n.tenantIconInfo,
+      dirty: change != null,
+      saveKey: const Key('tenant.icon.save'),
+      onSave: () => _save(change!),
+      children: [
+        ProjectIconPicker(
+          key: const Key('tenant.icon'),
+          value: _draft ?? _valueOf(icon),
+          names: projectIconNames,
+          onChanged: (v) => setState(() => _draft = v),
+          image: image != null
+              ? Image.memory(base64Decode(image.data), fit: BoxFit.cover)
+              : icon.image.isEmpty
+              ? null
+              : TenantMark(
+                  name: widget.tenant.name,
+                  icon: TenantIcon(image: icon.image),
+                  tenantRef: widget.tenantRef,
+                  size: TixSize.target,
+                ),
+          imageName: image?.name,
+          onUpload: _pick,
         ),
       ],
     );

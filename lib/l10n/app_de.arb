@@ -1571,6 +1571,8 @@
   "tenantSettingsSubtitle": "Name, Design, zweiter Faktor, Reservierungen und Papierkorb",
   "tenantSaved": "Gespeichert.",
   "tenantGeneralTitle": "Allgemein",
+  "tenantIconTitle": "Symbol",
+  "tenantIconInfo": "Erscheint neben dem Namen des Mandanten im Umschalter, damit sich Mandanten leicht auseinanderhalten lassen. Ohne Symbol zeigt der Umschalter die ersten Buchstaben des Namens.",
   "tenantName": "Name",
   "tenantKey": "Schlüssel",
   "tenantKeyHelp": "Kurz und eindeutig: Buchstaben, Ziffern, Binde- und Unterstriche, beginnend mit einem Buchstaben. Er lässt sich später nicht ändern.",
