@@ -14,6 +14,7 @@ import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/core/widgets/confirm.dart';
 import 'package:tix_mobile/src/core/widgets/live_details.dart';
 import 'package:tix_mobile/src/core/widgets/live_status.dart';
+import 'package:tix_mobile/src/core/widgets/tenant_mark.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
 
@@ -84,7 +85,16 @@ class ContextSwitcherButton extends ConsumerWidget {
     if (session == null) return const SizedBox.shrink();
     final title = contextTitle(session);
     final handle = session.connection.handle;
-    final avatar = _ContextAvatar(session.instance);
+    final connection = session.connection;
+    final avatar = connection.tenantIcon.isEmpty
+        ? _ContextAvatar(session.instance)
+        : TenantMark(
+            key: const Key('switcher.mark'),
+            name: connection.tenantLabel,
+            icon: connection.tenantIcon,
+            tenantRef: connection.tenantKey,
+            size: 36,
+          );
     final badged = Stack(
       clipBehavior: Clip.none,
       children: [
@@ -270,6 +280,7 @@ class ContextSwitcherSheet extends ConsumerWidget {
                 key: Key('switcher.recent.${e.connection.id}.${e.tenantKey}'),
                 entry: e,
                 active: isActiveEntry(e, session),
+                readImage: e.connection.id == session?.connection.id,
                 showInstance: true,
               ),
           ],
@@ -280,6 +291,7 @@ class ContextSwitcherSheet extends ConsumerWidget {
                 key: Key('switcher.entry.${e.connection.id}.${e.tenantKey}'),
                 entry: e,
                 active: isActiveEntry(e, session),
+                readImage: e.connection.id == session?.connection.id,
               ),
           ],
           const Divider(),
@@ -341,12 +353,14 @@ class _EntryTile extends StatelessWidget {
   const _EntryTile({
     required this.entry,
     required this.active,
+    this.readImage = false,
     this.showInstance = false,
     super.key,
   });
 
   final ContextEntry entry;
   final bool active;
+  final bool readImage;
   final bool showInstance;
 
   @override
@@ -370,7 +384,12 @@ class _EntryTile extends StatelessWidget {
               l10n.pinned,
           ].join(' · ');
     return ListTile(
-      leading: TixAvatar(label: tenant, size: 32),
+      leading: TenantMark(
+        name: tenant,
+        icon: entry.icon,
+        tenantRef: entry.tenantKey,
+        readImage: readImage,
+      ),
       title: Text(tenant),
       subtitle: Text(details, maxLines: 1, overflow: TextOverflow.ellipsis),
       selected: active,

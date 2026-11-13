@@ -16,6 +16,9 @@ _Membership _$MembershipFromJson(Map<String, dynamic> json) => _Membership(
   handle: json['handle'] as String? ?? '',
   role: json['role'] as String? ?? '',
   host: json['host'] as String? ?? '',
+  icon: json['icon'] == null
+      ? const TenantIcon()
+      : TenantIcon.fromJson(json['icon'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$MembershipToJson(_Membership instance) =>
@@ -27,4 +30,5 @@ Map<String, dynamic> _$MembershipToJson(_Membership instance) =>
       'handle': instance.handle,
       'role': instance.role,
       'host': instance.host,
+      'icon': instance.icon.toJson(),
     };

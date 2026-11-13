@@ -85,7 +85,7 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 - **Invite links**: paste one, or share it to tix, see what it admits you to, accept it, and the server and the
   sign-in are added for you.
 - **Token rotation** for a token connection: one tap swaps its API token for a new one and keeps only the new value.
-- **A switcher on every screen** showing Instance › Tenant, recent ones first.
+- **A switcher on every screen** showing Instance › Tenant, recent ones first, each tenant with its icon.
 - **Connection details** behind the live status: why updates are live, polling or offline, the last error with
   what it may mean (a proxy timing out idle connections, one that drops WebSocket upgrades, a certificate), the
   recent history, Reconnect now and a redacted report to copy.
@@ -191,9 +191,9 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   report with the versions filled in.
 - **Help on every screen**: the (?) in a screen's header opens the section of tix's documentation about it, for the
   release your server runs.
-- **Administration**: tenant settings with a live theme preview, how long sign-ins last and when idle ones end,
-  Keep me signed in, artifact size and type limits, domains, the server's live connections, and for a global admin
-  every tenant, its users and the global admins. Your own second factor (recovery codes shown once),
+- **Administration**: tenant settings with a live theme preview and the tenant's icon, how long sign-ins last and
+  when idle ones end, Keep me signed in, artifact size and type limits, domains, the server's live connections, and
+  for a global admin every tenant, its users and the global admins. Your own second factor (recovery codes shown once),
   SSH keys and active sessions (revoke any, this one included) under Settings, Security.
 - **Integrations and upkeep** for tenant admins: webhook endpoints with a test event and their delivery log with
   Redeliver, external sync sources from Jira, OpenProject or a file (check, run, preview, history), retention and

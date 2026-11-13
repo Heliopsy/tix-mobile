@@ -266,7 +266,7 @@ class FakeAdmin {
       case ('GET', ['tenants', final ref]):
         final t = _tenant(ref);
         if (t == null) return FakeResponse(404, envelope('not_found', ref));
-        return _ok(t);
+        return _ok({...t, ...?server.tenantIcons[t['key']]});
       case ('PATCH', ['tenants', final ref]):
         final t = _tenant(ref);
         if (t == null) return FakeResponse(404, envelope('not_found', ref));
@@ -274,8 +274,15 @@ class FakeAdmin {
         for (final field in body.keys) {
           if (refuse[field] case final message?) return _bad(message);
         }
-        t.addAll(body);
-        return _ok(t);
+        const iconFields = {'icon', 'icon_name', 'icon_file'};
+        if (body.keys.any(iconFields.contains)) {
+          server.setTenantIcon(t['key']! as String, body);
+        }
+        t.addAll({
+          for (final MapEntry(:key, :value) in body.entries)
+            if (!iconFields.contains(key)) key: value,
+        });
+        return _ok({...t, ...?server.tenantIcons[t['key']]});
       case ('DELETE', ['tenants', final ref]):
         final t = _tenant(ref);
         if (t == null) return FakeResponse(404, envelope('not_found', ref));

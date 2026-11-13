@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Membership {
 
- String get tenantKey; String get tenantName; String get tenantId; String get actorId; String get handle; String get role; String get host;
+ String get tenantKey; String get tenantName; String get tenantId; String get actorId; String get handle; String get role; String get host; TenantIcon get icon;
 /// Create a copy of Membership
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $MembershipCopyWith<Membership> get copyWith => _$MembershipCopyWithImpl<Members
 @override
 bool operator ==(Object other) {
   final _this = this as Membership;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Membership&&(identical(other.tenantKey, _this.tenantKey) || other.tenantKey == _this.tenantKey)&&(identical(other.tenantName, _this.tenantName) || other.tenantName == _this.tenantName)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.actorId, _this.actorId) || other.actorId == _this.actorId)&&(identical(other.handle, _this.handle) || other.handle == _this.handle)&&(identical(other.role, _this.role) || other.role == _this.role)&&(identical(other.host, _this.host) || other.host == _this.host));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Membership&&(identical(other.tenantKey, _this.tenantKey) || other.tenantKey == _this.tenantKey)&&(identical(other.tenantName, _this.tenantName) || other.tenantName == _this.tenantName)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.actorId, _this.actorId) || other.actorId == _this.actorId)&&(identical(other.handle, _this.handle) || other.handle == _this.handle)&&(identical(other.role, _this.role) || other.role == _this.role)&&(identical(other.host, _this.host) || other.host == _this.host)&&(identical(other.icon, _this.icon) || other.icon == _this.icon));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Membership;
-  return Object.hash(runtimeType,_this.tenantKey,_this.tenantName,_this.tenantId,_this.actorId,_this.handle,_this.role,_this.host);
+  return Object.hash(runtimeType,_this.tenantKey,_this.tenantName,_this.tenantId,_this.actorId,_this.handle,_this.role,_this.host,_this.icon);
 }
 
 @override
 String toString() {
   final _this = this as Membership;
-  return 'Membership(tenantKey: ${_this.tenantKey}, tenantName: ${_this.tenantName}, tenantId: ${_this.tenantId}, actorId: ${_this.actorId}, handle: ${_this.handle}, role: ${_this.role}, host: ${_this.host})';
+  return 'Membership(tenantKey: ${_this.tenantKey}, tenantName: ${_this.tenantName}, tenantId: ${_this.tenantId}, actorId: ${_this.actorId}, handle: ${_this.handle}, role: ${_this.role}, host: ${_this.host}, icon: ${_this.icon})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $MembershipCopyWith<$Res>  {
   factory $MembershipCopyWith(Membership value, $Res Function(Membership) _then) = _$MembershipCopyWithImpl;
 @useResult
 $Res call({
- String tenantKey, String tenantName, String tenantId, String actorId, String handle, String role, String host
+ String tenantKey, String tenantName, String tenantId, String actorId, String handle, String role, String host, TenantIcon icon
 });
 
 
@@ -71,7 +71,7 @@ class _$MembershipCopyWithImpl<$Res>
 
 /// Create a copy of Membership
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? tenantKey = null,Object? tenantName = null,Object? tenantId = null,Object? actorId = null,Object? handle = null,Object? role = null,Object? host = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? tenantKey = null,Object? tenantName = null,Object? tenantId = null,Object? actorId = null,Object? handle = null,Object? role = null,Object? host = null,Object? icon = null,}) {
   return _then(Membership(
 tenantKey: null == tenantKey ? _self.tenantKey : tenantKey // ignore: cast_nullable_to_non_nullable
 as String,tenantName: null == tenantName ? _self.tenantName : tenantName // ignore: cast_nullable_to_non_nullable
@@ -80,7 +80,8 @@ as String,actorId: null == actorId ? _self.actorId : actorId // ignore: cast_nul
 as String,handle: null == handle ? _self.handle : handle // ignore: cast_nullable_to_non_nullable
 as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as String,host: null == host ? _self.host : host // ignore: cast_nullable_to_non_nullable
-as String,
+as String,icon: null == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
+as TenantIcon,
   ));
 }
 
@@ -165,10 +166,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String tenantKey,  String tenantName,  String tenantId,  String actorId,  String handle,  String role,  String host)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String tenantKey,  String tenantName,  String tenantId,  String actorId,  String handle,  String role,  String host,  TenantIcon icon)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Membership() when $default != null:
-return $default(_that.tenantKey,_that.tenantName,_that.tenantId,_that.actorId,_that.handle,_that.role,_that.host);case _:
+return $default(_that.tenantKey,_that.tenantName,_that.tenantId,_that.actorId,_that.handle,_that.role,_that.host,_that.icon);case _:
   return orElse();
 
 }
@@ -186,10 +187,10 @@ return $default(_that.tenantKey,_that.tenantName,_that.tenantId,_that.actorId,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String tenantKey,  String tenantName,  String tenantId,  String actorId,  String handle,  String role,  String host)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String tenantKey,  String tenantName,  String tenantId,  String actorId,  String handle,  String role,  String host,  TenantIcon icon)  $default,) {final _that = this;
 switch (_that) {
 case _Membership():
-return $default(_that.tenantKey,_that.tenantName,_that.tenantId,_that.actorId,_that.handle,_that.role,_that.host);case _:
+return $default(_that.tenantKey,_that.tenantName,_that.tenantId,_that.actorId,_that.handle,_that.role,_that.host,_that.icon);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -206,10 +207,10 @@ return $default(_that.tenantKey,_that.tenantName,_that.tenantId,_that.actorId,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String tenantKey,  String tenantName,  String tenantId,  String actorId,  String handle,  String role,  String host)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String tenantKey,  String tenantName,  String tenantId,  String actorId,  String handle,  String role,  String host,  TenantIcon icon)?  $default,) {final _that = this;
 switch (_that) {
 case _Membership() when $default != null:
-return $default(_that.tenantKey,_that.tenantName,_that.tenantId,_that.actorId,_that.handle,_that.role,_that.host);case _:
+return $default(_that.tenantKey,_that.tenantName,_that.tenantId,_that.actorId,_that.handle,_that.role,_that.host,_that.icon);case _:
   return null;
 
 }
@@ -221,7 +222,7 @@ return $default(_that.tenantKey,_that.tenantName,_that.tenantId,_that.actorId,_t
 @JsonSerializable()
 
 class _Membership extends Membership {
-  const _Membership({required this.tenantKey, this.tenantName = '', this.tenantId = '', this.actorId = '', this.handle = '', this.role = '', this.host = ''}): super._();
+  const _Membership({required this.tenantKey, this.tenantName = '', this.tenantId = '', this.actorId = '', this.handle = '', this.role = '', this.host = '', this.icon = const TenantIcon()}): super._();
   factory _Membership.fromJson(Map<String, dynamic> json) => _$MembershipFromJson(json);
 
 @override final  String tenantKey;
@@ -231,6 +232,7 @@ class _Membership extends Membership {
 @override@JsonKey() final  String handle;
 @override@JsonKey() final  String role;
 @override@JsonKey() final  String host;
+@override@JsonKey() final  TenantIcon icon;
 
 /// Create a copy of Membership
 /// with the given fields replaced by the non-null parameter values.
@@ -245,18 +247,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Membership&&(identical(other.tenantKey, tenantKey) || other.tenantKey == tenantKey)&&(identical(other.tenantName, tenantName) || other.tenantName == tenantName)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.actorId, actorId) || other.actorId == actorId)&&(identical(other.handle, handle) || other.handle == handle)&&(identical(other.role, role) || other.role == role)&&(identical(other.host, host) || other.host == host));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Membership&&(identical(other.tenantKey, tenantKey) || other.tenantKey == tenantKey)&&(identical(other.tenantName, tenantName) || other.tenantName == tenantName)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.actorId, actorId) || other.actorId == actorId)&&(identical(other.handle, handle) || other.handle == handle)&&(identical(other.role, role) || other.role == role)&&(identical(other.host, host) || other.host == host)&&(identical(other.icon, icon) || other.icon == icon));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,tenantKey,tenantName,tenantId,actorId,handle,role,host);
+    return Object.hash(runtimeType,tenantKey,tenantName,tenantId,actorId,handle,role,host,icon);
 }
 
 @override
 String toString() {
-    return 'Membership(tenantKey: $tenantKey, tenantName: $tenantName, tenantId: $tenantId, actorId: $actorId, handle: $handle, role: $role, host: $host)';
+    return 'Membership(tenantKey: $tenantKey, tenantName: $tenantName, tenantId: $tenantId, actorId: $actorId, handle: $handle, role: $role, host: $host, icon: $icon)';
 }
 
 
@@ -267,7 +269,7 @@ abstract mixin class _$MembershipCopyWith<$Res> implements $MembershipCopyWith<$
   factory _$MembershipCopyWith(_Membership value, $Res Function(_Membership) _then) = __$MembershipCopyWithImpl;
 @override @useResult
 $Res call({
- String tenantKey, String tenantName, String tenantId, String actorId, String handle, String role, String host
+ String tenantKey, String tenantName, String tenantId, String actorId, String handle, String role, String host, TenantIcon icon
 });
 
 
@@ -284,7 +286,7 @@ class __$MembershipCopyWithImpl<$Res>
 
 /// Create a copy of Membership
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? tenantKey = null,Object? tenantName = null,Object? tenantId = null,Object? actorId = null,Object? handle = null,Object? role = null,Object? host = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? tenantKey = null,Object? tenantName = null,Object? tenantId = null,Object? actorId = null,Object? handle = null,Object? role = null,Object? host = null,Object? icon = null,}) {
   return _then(_Membership(
 tenantKey: null == tenantKey ? _self.tenantKey : tenantKey // ignore: cast_nullable_to_non_nullable
 as String,tenantName: null == tenantName ? _self.tenantName : tenantName // ignore: cast_nullable_to_non_nullable
@@ -293,7 +295,8 @@ as String,actorId: null == actorId ? _self.actorId : actorId // ignore: cast_nul
 as String,handle: null == handle ? _self.handle : handle // ignore: cast_nullable_to_non_nullable
 as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as String,host: null == host ? _self.host : host // ignore: cast_nullable_to_non_nullable
-as String,
+as String,icon: null == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
+as TenantIcon,
   ));
 }
 

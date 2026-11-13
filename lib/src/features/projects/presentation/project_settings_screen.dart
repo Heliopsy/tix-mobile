@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/durations.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
+import 'package:tix_mobile/src/core/platform/attachments.dart' show PickedIcon;
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/access.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
