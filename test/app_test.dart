@@ -417,6 +417,7 @@ void main() {
         'Tasks': Routes.tasks,
         'Projects': Routes.projects,
         'Activity': Routes.activity,
+        'Statistics': Routes.stats,
         'Manage': Routes.manage,
         'Settings': Routes.settings,
       };
