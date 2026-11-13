@@ -35,11 +35,55 @@ platform :android do
   end
 end
 
+require "open3"
+require "plist"
+require "tmpdir"
+require "xcodeproj"
+
+# Each signed target with its bundle id and the variable holding its App Store
+# profile. Both carry the App Group the widgets read the app's data through.
+IOS_SIGNING = {
+  "Runner" => { bundle_id: "red.tix.tixMobile", profile: "IOS_PROFILE_PATH" },
+  "TixWidgets" => { bundle_id: "red.tix.tixMobile.TixWidgets", profile: "IOS_WIDGETS_PROFILE_PATH" }
+}.freeze
+IOS_APP_GROUP = "group.red.tix.tixMobile"
+
+# Fails before the build when a profile is for another team or bundle id, is
+# not an App Store profile, or lacks the App Group.
+def check_ios_profile(path, team, bundle_id)
+  profile = FastlaneCore::ProvisioningProfile.parse(path)
+  ent = profile.fetch("Entitlements", {})
+  name = profile["Name"]
+  problems = []
+  problems << "is not for team #{team}" unless Array(profile["TeamIdentifier"]).include?(team)
+  problems << "is not for #{bundle_id}" unless ent["application-identifier"] == "#{team}.#{bundle_id}"
+  problems << "lists devices, so it is not an App Store profile" if profile.key?("ProvisionedDevices")
+  problems << "lacks the App Group #{IOS_APP_GROUP}" unless Array(ent["com.apple.security.application-groups"]).include?(IOS_APP_GROUP)
+  UI.user_error!("Profile \"#{name}\" #{problems.join(", ")}") unless problems.empty?
+  name
+end
+
+# Signing entitlements of a bundle, as codesign reports them.
+def signed_entitlements(path)
+  out, err, status = Open3.capture3("codesign", "-d", "--entitlements", "-", "--xml", path)
+  UI.user_error!("codesign could not read #{path}: #{err}") unless status.success?
+  Plist.parse_xml(out) || {}
+end
+
 platform :ios do
-  desc "Build an App Store signed IPA from the distribution certificate and profile in the environment"
+  desc "Build an App Store signed IPA, app and widget extension, from the certificate and profiles in the environment"
   lane :ipa do
     team = ENV.fetch("APPLE_TEAM_ID")
-    profile = ENV.fetch("IOS_PROFILE_PATH")
+    project = File.join(ROOT, "ios/Runner.xcodeproj")
+
+    # The entitlements name the group as $(TIX_APP_GROUP); a different value
+    # in either target would be signed in and break the widgets' shared data.
+    targets = Xcodeproj::Project.open(project).targets
+    IOS_SIGNING.each_key do |name|
+      target = targets.find { |t| t.name == name } || UI.user_error!("No #{name} target in #{project}")
+      group = target.build_configurations.find { |c| c.name == "Release" }&.build_settings&.fetch("TIX_APP_GROUP", nil)
+      UI.user_error!("#{name} Release has TIX_APP_GROUP #{group.inspect}, not #{IOS_APP_GROUP}") unless group == IOS_APP_GROUP
+    end
 
     # A throwaway keychain, deleted with the runner. Only acts on CI.
     setup_ci
@@ -49,29 +93,51 @@ platform :ios do
       keychain_name: "fastlane_tmp_keychain",
       keychain_password: ""
     )
-    install_provisioning_profile(path: profile)
-    profile_name = FastlaneCore::ProvisioningProfile.name(profile)
 
-    # The project keeps automatic signing for people building on their own
-    # Mac. CI has no Apple ID to sign in with, so the Runner target's Release
-    # configuration is switched to the installed profile for this build only.
-    update_code_signing_settings(
-      path: File.join(ROOT, "ios/Runner.xcodeproj"),
-      use_automatic_signing: false,
-      targets: ["Runner"],
-      build_configurations: ["Release"],
-      team_id: team,
-      code_sign_identity: "Apple Distribution",
-      profile_name: profile_name
-    )
-
-    # ios/ExportOptions.plist is committed without a team or profile, which
+    # ios/ExportOptions.plist is committed without a team or profiles, which
     # are account details; they are filled in on the runner's copy.
     plist = File.join(ROOT, "ios/ExportOptions.plist")
-    sh("/usr/libexec/PlistBuddy", "-c", "Set :teamID #{team}", plist)
-    sh("/usr/libexec/PlistBuddy", "-c", "Add :provisioningProfiles:red.tix.tixMobile string #{profile_name}", plist)
+    options = Plist.parse_xml(plist)
+    options["teamID"] = team
+    options["provisioningProfiles"] = {}
+
+    # The project keeps automatic signing for people building on their own
+    # Mac. CI has no Apple ID to sign in with, so each target's Release
+    # configuration is switched to its installed profile for this build only.
+    IOS_SIGNING.each do |target, spec|
+      path = ENV.fetch(spec[:profile])
+      profile_name = check_ios_profile(path, team, spec[:bundle_id])
+      install_provisioning_profile(path: path)
+      update_code_signing_settings(
+        path: project,
+        use_automatic_signing: false,
+        targets: [target],
+        build_configurations: ["Release"],
+        team_id: team,
+        code_sign_identity: "Apple Distribution",
+        profile_name: profile_name
+      )
+      options["provisioningProfiles"][spec[:bundle_id]] = profile_name
+    end
+    File.write(plist, Plist::Emit.dump(options))
 
     Dir.chdir(ROOT) { sh("just", "build-ipa") }
+
+    # What TestFlight gets: the IPA, with the extension inside it and both
+    # signed for their bundle id and the App Group.
+    ipa = Dir[File.join(ROOT, "build/ios/ipa/*.ipa")].first || UI.user_error!("No IPA under build/ios/ipa")
+    Dir.mktmpdir do |dir|
+      sh("ditto", "-x", "-k", ipa, dir)
+      app = Dir[File.join(dir, "Payload/*.app")].first || UI.user_error!("No app in #{ipa}")
+      bundles = { app => IOS_SIGNING["Runner"], File.join(app, "PlugIns/TixWidgets.appex") => IOS_SIGNING["TixWidgets"] }
+      bundles.each do |bundle, spec|
+        UI.user_error!("#{File.basename(bundle)} is missing from #{ipa}") unless File.directory?(bundle)
+        ent = signed_entitlements(bundle)
+        UI.user_error!("#{File.basename(bundle)} is not signed for #{spec[:bundle_id]}") unless ent["application-identifier"] == "#{team}.#{spec[:bundle_id]}"
+        UI.user_error!("#{File.basename(bundle)} is signed without #{IOS_APP_GROUP}") unless Array(ent["com.apple.security.application-groups"]).include?(IOS_APP_GROUP)
+        UI.success("#{File.basename(bundle)}: #{spec[:bundle_id]}, #{IOS_APP_GROUP}")
+      end
+    end
   end
 
   desc "Upload an IPA to TestFlight with the App Store Connect API key in the environment"

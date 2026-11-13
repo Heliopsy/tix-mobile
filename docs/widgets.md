@@ -275,7 +275,8 @@ follow the tenant.
   it queues and then runs `tixwidget://drain` in a headless engine (`widgetHeadlessMain` in `lib/main.dart`), which
   signals `done` on `tix/widgets/headless`.
 - Release signing needs the extension's bundle id (`red.tix.tixMobile.TixWidgets`) and the App Group on the
-  provisioning profiles. CI builds unsigned (iOS) and ad hoc (macOS).
+  provisioning profiles, one App Store profile per target. The release signs both for TestFlight once its secrets
+  exist ([releasing.md](releasing.md#testflight-ios)); until then iOS builds unsigned and macOS ad hoc.
 
 ### Windows and Linux
 
