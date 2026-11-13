@@ -4,8 +4,10 @@
   Export options for `just build-ipa` (flutter build ipa), App Store Connect
   distribution with manual signing. teamID and provisioningProfiles are left
   empty on purpose: they are account details, and the release workflow's
-  fastlane lane (fastlane/Fastfile, `ios ipa`) fills them in on the runner.
-  To build a store IPA on your own Mac, set both here without committing them.
+  fastlane lane (fastlane/Fastfile, `ios ipa`) fills them in on the runner,
+  with one profile for red.tix.tixMobile and one for the widget extension,
+  red.tix.tixMobile.TixWidgets. To build a store IPA on your own Mac, set
+  them here without committing them.
 -->
 <plist version="1.0">
 <dict>

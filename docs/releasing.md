@@ -231,7 +231,7 @@ Secrets go in **Settings → Secrets and variables → Actions → Secrets**. To
 | --- | --- | --- |
 | [Release App](#the-release-github-app) | Checks approved by hand | A GitHub App |
 | [Google Play](#google-play) | Skipped | Play Console account, app, service account |
-| [TestFlight](#testflight-ios) | Unsigned iOS build only | Apple Developer account, App ID, certificate, profile, API key |
+| [TestFlight](#testflight-ios) | Unsigned iOS build only | Apple Developer account, App Group, two App IDs, certificate, two profiles, API key |
 | [macOS notarisation](#macos-notarisation) | Ad-hoc signed zip | Developer ID Application certificate (same Apple account) |
 | [F-Droid](#f-droid) | Recipe in `fdroid/`, not submitted | A merge request to fdroiddata |
 | [Flathub](#flathub) | Manifest in `flatpak/`, not submitted | A submission pull request to Flathub |
@@ -283,16 +283,22 @@ fails that job, because Play takes a version code once; that is expected.
 
 ### TestFlight (iOS)
 
-Bundle id `red.tix.tixMobile` (from `ios/Runner.xcodeproj`). Android's id is `red.tix.tix_mobile`; they stay
-different because both are already in use.
+Bundle id `red.tix.tixMobile` (from `ios/Runner.xcodeproj`), and `red.tix.tixMobile.TixWidgets` for the home
+screen widget extension embedded in it. Android's id is `red.tix.tix_mobile`; they stay different because both are
+already in use. The app and the extension share their data through the App Group `group.red.tix.tixMobile`
+(`TIX_APP_GROUP` in both targets), so both App IDs and both profiles carry it.
 
 Owner, once:
 
 1. An Apple Developer Program membership. Note the **Team ID** (Membership details).
-2. **Certificates, Identifiers & Profiles → Identifiers**: register the App ID `red.tix.tixMobile`.
+2. **Certificates, Identifiers & Profiles → Identifiers**: register the App Group `group.red.tix.tixMobile`, then
+   the App IDs `red.tix.tixMobile` and `red.tix.tixMobile.TixWidgets`, each with the **App Groups** capability
+   assigned to that group.
 3. **Certificates**: an **Apple Distribution** certificate. Create the CSR in Keychain Access, download the
    certificate, and export it with its private key as a `.p12` with a password.
-4. **Profiles**: an **App Store Connect** distribution profile for `red.tix.tixMobile` with that certificate.
+4. **Profiles**: two **App Store Connect** distribution profiles with that certificate, one for
+   `red.tix.tixMobile` and one for `red.tix.tixMobile.TixWidgets`. Create them after the App Group is assigned, or
+   regenerate them, so the group is in their entitlements.
 5. App Store Connect → **Apps → New App**: iOS, name `tix`, bundle id `red.tix.tixMobile`. Answer export
    compliance on the first build (the app uses HTTPS and the Go standard library's TLS).
 6. App Store Connect → **Users and Access → Integrations → App Store Connect API**: a **Team** key with the
@@ -307,20 +313,25 @@ the Android keystore.
 | `APPLE_TEAM_ID` | The 10-character Team ID |
 | `IOS_CERT_P12_BASE64` | The distribution `.p12`, base64 |
 | `IOS_CERT_PASSWORD` | Its export password |
-| `IOS_PROFILE_BASE64` | The `.mobileprovision`, base64 |
+| `IOS_PROFILE_BASE64` | The app's `.mobileprovision` (`red.tix.tixMobile`), base64 |
+| `IOS_WIDGETS_PROFILE_BASE64` | The widget extension's `.mobileprovision` (`red.tix.tixMobile.TixWidgets`), base64 |
 | `APP_STORE_CONNECT_KEY_ID` | The API key's Key ID |
 | `APP_STORE_CONNECT_ISSUER_ID` | The Issuer ID |
 | `APP_STORE_CONNECT_KEY_BASE64` | The `.p8` file, base64 |
 
-What runs: the iOS job imports the certificate and profile into a throwaway keychain, switches the Runner
-target's Release configuration to manual signing on the runner (the committed project keeps automatic signing),
-fills the team and profile into `ios/ExportOptions.plist`, runs `just build-ipa`, checks libtix is in the archive
-and uploads to TestFlight (`fastlane/Fastfile`, lanes `ios ipa` and `ios testflight`).
+What runs: the iOS job imports the certificate and both profiles into a throwaway keychain, checks each profile is
+an App Store profile for the team, its bundle id and the App Group, and that both targets still set
+`TIX_APP_GROUP` to `group.red.tix.tixMobile`. It switches the Release configuration of `Runner` and `TixWidgets` to
+manual signing with their own profile on the runner (the committed project keeps automatic signing), fills the team
+and both profiles into `ios/ExportOptions.plist`, and runs `just build-ipa`. It fails unless the IPA holds
+`TixWidgets.appex` and both bundles are signed for their bundle id with the App Group, checks libtix is in the
+archive, and uploads to TestFlight (`fastlane/Fastfile`, lanes `ios ipa` and `ios testflight`). Missing
+`IOS_WIDGETS_PROFILE_BASE64` with the other iOS secrets set is a warning, and the job builds unsigned.
 
 Verify: the iOS job's log shows `Successfully uploaded`, and the build appears in App Store Connect → TestFlight
 after processing. Before an App Store submission the app also needs a privacy manifest; see the
-[roadmap](../ROADMAP.md#store-releases). The certificate expires after a year and the profile with it; replace both
-secrets when Apple says so.
+[roadmap](../ROADMAP.md#store-releases). The certificate expires after a year and the profiles with it; replace the
+certificate and both profile secrets when Apple says so.
 
 ### macOS notarisation
 

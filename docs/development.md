@@ -45,8 +45,8 @@ Then `just doctor` runs `flutter doctor` against the pinned toolchain and says w
 
 - macOS with Xcode and its command-line tools, plus an iOS Simulator runtime for iOS work.
 - CocoaPods for plugins that still need it.
-- Signing for a real device needs an Apple developer team set in Xcode. CI does not sign iOS builds yet; see
-  [releasing.md](releasing.md#ios).
+- Signing for a real device needs an Apple developer team set in Xcode. The release signs the app and its widget
+  extension for TestFlight; see [releasing.md](releasing.md#testflight-ios).
 
 ### Linux
 
