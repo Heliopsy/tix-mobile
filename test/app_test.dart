@@ -474,7 +474,7 @@ void main() {
           tester
               .widget<NavigationRail>(find.byType(NavigationRail))
               .selectedIndex,
-          5,
+          6,
         );
       });
     }
