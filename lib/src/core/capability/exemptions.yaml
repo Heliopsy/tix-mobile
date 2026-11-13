@@ -56,4 +56,5 @@ pending:
     - workflow.template.list
     - workflow.template.apply
   # Wave 3, admin: tenants, global admin, domains, webhooks, sync, retention, audit, second factor, SSH keys.
-  wave3: []
+  wave3:
+    - server.release

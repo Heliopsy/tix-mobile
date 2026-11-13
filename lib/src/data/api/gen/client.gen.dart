@@ -1449,6 +1449,7 @@ class InboxOps {
     String? sort,
     String? direction,
     bool? unread,
+    List<String>? kind,
   }) async {
     return Page.fromJson(
       await _t.json(
@@ -1460,6 +1461,7 @@ class InboxOps {
           'sort': sort,
           'direction': direction,
           'unread': unread,
+          'kind': kind,
         },
       ),
       (e) => InboxItem.fromJson(e! as Map<String, dynamic>),
@@ -1475,6 +1477,7 @@ class InboxOps {
     String? sort,
     String? direction,
     bool? unread,
+    List<String>? kind,
   }) => _t
       .ndjson(
         'GET',
@@ -1484,6 +1487,7 @@ class InboxOps {
           'sort': sort,
           'direction': direction,
           'unread': unread,
+          'kind': kind,
         },
       )
       .map((e) => InboxItem.fromJson(e! as Map<String, dynamic>));
@@ -1970,6 +1974,15 @@ class ServerOps {
   /// `GET /readyz` (`server.ready`).
   Future<ReadyBody> ready() async {
     return ReadyBody.fromJson(await _t.json('GET', '/readyz'));
+  }
+
+  /// The running version, the newest published release with its notes and upgrade
+  /// commands when it is newer, and the bundled changelog around the running
+  /// version.
+  ///
+  /// `GET /api/v1/release` (`server.release`).
+  Future<ReleaseBody> release() async {
+    return ReleaseBody.fromJson(await _t.json('GET', '/api/v1/release'));
   }
 }
 
@@ -2617,6 +2630,7 @@ class TaskOps {
     String? sort,
     String? direction,
     int? page,
+    bool? tally,
     List<String>? project,
     List<String>? projectId,
     List<String>? status,
@@ -2660,6 +2674,7 @@ class TaskOps {
           'sort': sort,
           'direction': direction,
           'page': page,
+          'tally': tally,
           'project': project,
           'project_id': projectId,
           'status': status,
@@ -2708,6 +2723,7 @@ class TaskOps {
     String? sort,
     String? direction,
     int? page,
+    bool? tally,
     List<String>? project,
     List<String>? projectId,
     List<String>? status,
@@ -2749,6 +2765,7 @@ class TaskOps {
           'sort': sort,
           'direction': direction,
           'page': page,
+          'tally': tally,
           'project': project,
           'project_id': projectId,
           'status': status,
@@ -2796,6 +2813,7 @@ class TaskOps {
     String? sort,
     String? direction,
     int? page,
+    bool? tally,
     List<String>? project,
     List<String>? projectId,
     List<String>? status,
@@ -2838,6 +2856,7 @@ class TaskOps {
         'sort': sort,
         'direction': direction,
         'page': page,
+        'tally': tally,
         'project': project,
         'project_id': projectId,
         'status': status,
