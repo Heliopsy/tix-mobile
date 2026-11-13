@@ -11,7 +11,7 @@ list adds up to.
 
 ### Requirement: The task screen sums up the list
 
-Under the filter, in every drawing, the task screen SHALL say what the loaded tasks add up to as tix's web does:
+Under the filter, in every drawing, the task screen SHALL say what the listed tasks add up to as tix's web does:
 the open count in bold then "to go", ", N done" when some are done, "· across N projects" outside a project,
 "· N held by an agent" in the accent for live leases, and "· N waiting on other tasks" for tasks waiting on an
 unfinished dependency.
@@ -26,6 +26,21 @@ unfinished dependency.
 
 - **WHEN** one loaded task's lease has already expired and another is claimed with no lease
 - **THEN** neither counts as held
+
+### Requirement: The summary line counts every page
+
+While more pages follow the loaded ones, the summary line SHALL count tix's tally of the whole selection, asked
+for with `tally=true`, and SHALL count the loaded rows once the list is loaded in full, or when no tally comes.
+
+#### Scenario: A list longer than a page
+
+- **WHEN** two of three open tasks in two projects are loaded and more pages follow
+- **THEN** the line reads `3 to go · across 2 projects`, from the server's tally
+
+#### Scenario: A list loaded in full
+
+- **WHEN** every task the list selects is loaded
+- **THEN** the line counts the loaded rows and asks the server for no tally
 
 ### Requirement: The summary line says when there is nothing to count
 

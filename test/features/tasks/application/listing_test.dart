@@ -555,9 +555,25 @@ void main() {
           task('web-2', {'status': 'done'}),
         ],
         fixedNow,
-        isDone: (Task t) => t.status == 'done',
+        isDone: (t) => t.status == 'done',
       );
       expect(s, (open: 3, done: 1, projects: 2, held: 1, waiting: 2));
+    });
+
+    test('a tally counts every page by project and status', () {
+      final s = summariseTally(
+        const TaskTally(
+          states: [
+            StateCount(projectId: 'infra', status: 'todo', count: 7),
+            StateCount(projectId: 'infra', status: 'done', count: 2),
+            StateCount(projectId: 'web', status: 'doing', count: 5),
+          ],
+          blocked: 4,
+          held: 1,
+        ),
+        isDone: (_, status) => status == 'done',
+      );
+      expect(s, (open: 12, done: 2, projects: 2, held: 1, waiting: 4));
     });
 
     test('nothing counts nothing', () {

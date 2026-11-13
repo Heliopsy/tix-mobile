@@ -81,6 +81,51 @@ TaskSummary summariseTasks(
   );
 }
 
+/// Sums up [tally], tix's counts over a whole selection, the way
+/// [summariseTasks] sums up loaded rows, with [isDone] deciding by project
+/// and status.
+TaskSummary summariseTally(
+  TaskTally tally, {
+  required bool Function(String projectId, String status) isDone,
+}) {
+  var open = 0;
+  var done = 0;
+  final projects = <String>{};
+  for (final s in tally.states) {
+    if (s.count == 0) continue;
+    if (isDone(s.projectId, s.status)) {
+      done += s.count;
+    } else {
+      open += s.count;
+    }
+    if (s.projectId.isNotEmpty) projects.add(s.projectId);
+  }
+  return (
+    open: open,
+    done: done,
+    projects: projects.length,
+    held: tally.held,
+    waiting: tally.blocked,
+  );
+}
+
+/// tix's counts over every task [query] selects, not only the loaded page,
+/// asked again whenever a task changes. Null for My work, which merges two
+/// listings no single tally covers, and from a server that answers none.
+@riverpod
+Future<TaskTally?> taskTally(Ref ref, TaskQuery query) async {
+  if (query.includeHeld) return null;
+  ref.watch(tasksChangedProvider);
+  refreshOn(ref, EventTopics.tasks);
+  final context = await ref.watch(taskContextProvider.future);
+  final request = TaskListRepository.requestFor(
+    query,
+    context,
+    ref.read(clockProvider)(),
+  );
+  return await ref.read(taskListRepositoryProvider).tally(request);
+}
+
 void _keepFor(Ref ref, Duration duration) {
   final link = ref.keepAlive();
   Timer? timer;

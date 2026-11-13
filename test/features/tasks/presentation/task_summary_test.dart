@@ -84,6 +84,41 @@ void main() {
         );
       });
 
+      testWidgets('a list with more pages counts what the server tallies', (
+        tester,
+      ) async {
+        server
+          ..pageSize = 2
+          ..tasks['web']![0]['blocked'] = true
+          ..routes.add(
+            (o, path, _) =>
+                path == '/api/v1/tasks' &&
+                    o.uri.queryParameters.containsKey('cursor')
+                ? FakeResponse(503, envelope('unavailable', 'later'))
+                : null,
+          );
+        await pump(tester, size);
+        expect(summary('3 to go · across 2 projects'), findsOneWidget);
+        expect(find.text('1 waiting on another task'), findsOneWidget);
+        expect(
+          server
+              .requestsTo('/api/v1/tasks')
+              .where((r) => r.uri.queryParameters['tally'] == 'true'),
+          isNotEmpty,
+        );
+      });
+
+      testWidgets('a list loaded in full asks for no tally', (tester) async {
+        await pump(tester, size);
+        expect(summary('3 to go · across 2 projects'), findsOneWidget);
+        expect(
+          server
+              .requestsTo('/api/v1/tasks')
+              .where((r) => r.uri.queryParameters.containsKey('tally')),
+          isEmpty,
+        );
+      });
+
       testWidgets('an empty open list says nothing is open', (tester) async {
         server.tasks
           ..['infra'] = [taskJson('infra-3', title: 'Old', status: 'done')]

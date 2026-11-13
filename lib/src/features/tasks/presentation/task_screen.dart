@@ -298,7 +298,12 @@ class _TaskScreenViewState extends ConsumerState<TaskScreenView> {
       children: [
         TaskFilterPanel(scope: scope, focusNode: _filterFocus),
         if (paged != null)
-          TaskSummaryLine(query: query, tasks: paged.items, view: view),
+          TaskSummaryLine(
+            query: query,
+            tasks: paged.items,
+            view: view,
+            partial: paged.hasMore,
+          ),
         if (layout is BoardRefused) BoardRefusedNotice(layout: layout),
         Expanded(
           child: Listener(onPointerDown: _dropCursor, child: content),

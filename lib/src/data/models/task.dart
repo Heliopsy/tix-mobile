@@ -4,4 +4,10 @@
 library;
 
 export 'package:tix_mobile/src/data/api/gen/models.gen.dart'
-    show Checklist, CreateTaskRequest, Task, UpdateTaskInput;
+    show
+        Checklist,
+        CreateTaskRequest,
+        StateCount,
+        Task,
+        TaskTally,
+        UpdateTaskInput;

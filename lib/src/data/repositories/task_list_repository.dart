@@ -141,7 +141,20 @@ class TaskListRepository {
   Future<Page<Task>?> cachedList(ListingRequest listing) =>
       _cache.peek(_key(listing), _tasks);
 
-  Future<Page<Task>> _send(ListingRequest l, String? cursor) {
+  /// tix's counts over everything [listing] selects, every page of it, or
+  /// null from a server that does not answer them.
+  Future<TaskTally?> tally(ListingRequest listing) async {
+    final page = await _send(listing, null, limit: 1, tally: true);
+    final raw = page.tally;
+    return raw == null ? null : TaskTally.fromJson(raw);
+  }
+
+  Future<Page<Task>> _send(
+    ListingRequest l,
+    String? cursor, {
+    int? limit,
+    bool? tally,
+  }) {
     final p = l.params;
     List<String>? all(String k) => p[k];
     String? one(String k) => p[k]?.last;
@@ -154,8 +167,9 @@ class TaskListRepository {
         if (e.key.startsWith('field.')) e.key.substring(6): e.value.last,
     };
     return _api.task.list(
-      limit: int.tryParse(one('limit') ?? '') ?? l.limit,
+      limit: limit ?? int.tryParse(one('limit') ?? '') ?? l.limit,
       cursor: cursor,
+      tally: tally,
       sort: one('sort') ?? l.sort,
       direction: l.direction,
       project: all('project'),

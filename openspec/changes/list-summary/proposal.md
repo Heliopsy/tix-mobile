@@ -15,6 +15,6 @@ holds, so a reader could not tell how much was waiting or that the list was hidi
 - "N waiting on other tasks" is a button that adds `is:waiting-on` to the filter.
 - A list hiding finished work says "open work only" and offers "show finished too".
 - The filter language takes `is:waiting-on`, tix's alias of `is:blocked` since v0.57.0.
-- The counts are of the loaded rows, as the web counts a page it has no tally for. heliopsy/tix#323 lets the
-  listing return the whole selection's tally; once a release carrying it is pinned, the line reads that
-  instead.
+- While more pages follow, the counts are tix's tally of the whole selection (`GET /api/v1/tasks?tally=true`,
+  heliopsy/tix#323, in v0.60.0); a list loaded in full, My work, or a server that answers no tally counts
+  the loaded rows, as the web counts a page it has no tally for.
