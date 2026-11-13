@@ -33,6 +33,54 @@ platform :android do
       skip_upload_screenshots: true
     )
   end
+
+  desc "Promote a version code from the internal track to production, or with dry_run:true only check that it could be"
+  lane :promote do |options|
+    code = Integer(options.fetch(:code).to_s, 10)
+    rollout = Float(options.fetch(:rollout, 100).to_s)
+    dry_run = options[:dry_run].to_s == "true"
+    UI.user_error!("rollout is a percentage above 0 and at most 100, not #{rollout}") unless rollout > 0 && rollout <= 100
+    json = ENV.fetch("PLAY_SERVICE_ACCOUNT_JSON")
+
+    # Reading the tracks is also the credentials check: a bad key fails here.
+    internal = google_play_track_version_codes(track: "internal", json_key_data: json)
+    production = google_play_track_version_codes(track: "production", json_key_data: json)
+    promote_report("Play internal track: #{internal.empty? ? "empty" : internal.join(", ")}")
+    promote_report("Play production track: #{production.empty? ? "empty" : production.join(", ")}")
+    unless internal.include?(code)
+      promote_stop("Version code #{code} is not on the internal track, so there is nothing to promote", dry_run)
+      next
+    end
+
+    # Same rule as the internal upload: "draft" until the app has passed its
+    # first review. A draft has no user fraction, so a rollout waits for that.
+    status = ENV["PLAY_RELEASE_STATUS"].to_s
+    status = "draft" if status.empty?
+    fraction = rollout < 100 ? rollout / 100 : nil
+    if fraction && status == "draft"
+      promote_warn("PLAY_RELEASE_STATUS is draft, so the #{rollout}% rollout is ignored; the release goes to production as a draft")
+      fraction = nil
+    end
+    promote_report("#{dry_run ? "Would promote" : "Promoting"} version code #{code} to production: " \
+                   "#{fraction ? "#{rollout}% staged rollout" : status}")
+
+    # validate_only builds the whole edit and has Play check it, then drops it.
+    upload_to_play_store(
+      track: "internal",
+      track_promote_to: "production",
+      version_code: code,
+      track_promote_release_status: status,
+      rollout: fraction&.to_s,
+      json_key_data: json,
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      validate_only: dry_run
+    )
+  end
 end
 
 require "open3"
@@ -156,4 +204,98 @@ platform :ios do
       skip_waiting_for_build_processing: true
     )
   end
+
+  desc "Submit a version's newest processed TestFlight build for App Store review, or with dry_run:true only check that it could be"
+  lane :promote do |options|
+    version = options.fetch(:version).to_s
+    dry_run = options[:dry_run].to_s == "true"
+    api_key = app_store_connect_api_key(
+      key_id: ENV.fetch("APP_STORE_CONNECT_KEY_ID"),
+      issuer_id: ENV.fetch("APP_STORE_CONNECT_ISSUER_ID"),
+      key_content: ENV.fetch("APP_STORE_CONNECT_KEY_BASE64"),
+      is_key_content_base64: true
+    )
+
+    # Looking the app up is also the credentials check: a bad key fails here.
+    app = Spaceship::ConnectAPI::App.get(app_id: APP_STORE_APP_ID)
+    unless app&.bundle_id == "red.tix.tixMobile"
+      UI.user_error!("App Store Connect app #{APP_STORE_APP_ID} is not red.tix.tixMobile")
+    end
+    platform = Spaceship::ConnectAPI::Platform::IOS
+    states = Spaceship::ConnectAPI::AppStoreVersion::AppVersionState
+    live = app.get_live_app_store_version(platform: platform)
+    edit = app.get_edit_app_store_version(platform: platform)
+    promote_report("App Store: live #{live ? live.version_string : "none"}, " \
+                   "in progress #{edit ? "#{edit.version_string} (#{edit.app_version_state})" : "none"}")
+
+    if live&.version_string == version
+      promote_stop("#{version} is already on the App Store, so there is nothing to submit", dry_run)
+      next
+    end
+    if app.get_in_progress_review_submission(platform: platform)
+      promote_stop("A review submission is already in progress; wait for it or cancel it in App Store Connect", dry_run)
+      next
+    end
+    # deliver cannot answer App Review: a rejected version goes back from the
+    # website, with a reply in Resolution Center.
+    if edit && [states::REJECTED, states::METADATA_REJECTED].include?(edit.app_version_state)
+      promote_stop("#{edit.version_string} was rejected; resubmit it from App Store Connect", dry_run)
+      next
+    end
+
+    builds = Spaceship::ConnectAPI::Build.all(
+      app_id: app.id,
+      version: version,
+      processing_states: Spaceship::ConnectAPI::Build::ProcessingState::VALID,
+      platform: platform
+    ).reject(&:expired)
+    build = builds.max_by { |b| b.version.to_i }
+    unless build
+      promote_stop("No processed TestFlight build of #{version}, so there is nothing to submit", dry_run)
+      next
+    end
+    promote_report("#{dry_run ? "Would submit" : "Submitting"} #{version} build #{build.version} for App Store review")
+    next if dry_run
+
+    upload_to_app_store(
+      api_key: api_key,
+      app_version: version,
+      build_number: build.version,
+      skip_binary_upload: true,
+      skip_screenshots: true,
+      # The App Store text and screenshots are kept in App Store Connect,
+      # not in the repository.
+      skip_metadata: true,
+      submit_for_review: true,
+      force: true,
+      # precheck cannot read in-app purchases with an API key, and App Review
+      # checks the listing anyway.
+      run_precheck_before_submit: false,
+      # HTTPS and the Go standard library's TLS only, which is exempt.
+      submission_information: { export_compliance_uses_encryption: false }
+    )
+  end
+end
+
+APP_STORE_APP_ID = "6834556706"
+
+# A line for the log and for the run's summary page.
+def promote_report(line)
+  UI.message(line)
+  summary = ENV["GITHUB_STEP_SUMMARY"].to_s
+  File.write(summary, "#{line}\n", mode: "a") unless summary.empty?
+end
+
+def promote_warn(line)
+  # $stdout, because fastlane routes a bare puts through its timestamped logger
+  # and GitHub only reads a workflow command at the start of a line.
+  $stdout.puts("::warning::#{line}") if ENV["GITHUB_ACTIONS"] == "true"
+  promote_report(line)
+end
+
+# Nothing to promote: a warning on a dry run, which only reports, and a
+# failure on a real one, which was asked to change something.
+def promote_stop(line, dry_run)
+  UI.user_error!(line) unless dry_run
+  promote_warn(line)
 end

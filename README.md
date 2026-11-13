@@ -390,7 +390,7 @@ client maps tix's error envelope and keyset pagination.
 | [docs/widgets.md](docs/widgets.md) | Home screen widgets: platforms, data flow, the snapshot contract |
 | [docs/adb.md](docs/adb.md) | ADB control: dumpsys sections, `tix://` links, shell commands and their security |
 | [docs/testing.md](docs/testing.md) | Unit, widget and golden tests, the coverage floor, watching a guard fail |
-| [docs/releasing.md](docs/releasing.md) | release-please, release artifacts, signing secrets |
+| [docs/releasing.md](docs/releasing.md) | release-please, release artifacts, signing secrets, promoting to production |
 
 | | |
 | --- | --- |

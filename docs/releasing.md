@@ -13,6 +13,9 @@ Releases are cut by [release-please](https://github.com/googleapis/release-pleas
    and creates the GitHub release as a draft.
 4. The `release` workflow builds every artifact for that tag, attaches them, publishes the release, and then
    hands the builds to whichever stores are set up (see [Store channels](#store-channels)).
+5. When a version should reach everyone, the `promote` workflow, started by hand, moves it from Google Play's
+   internal track to production and submits its TestFlight build for App Store review (see
+   [Promoting to production](#promoting-to-production)).
 
 Merge agent branches with `--ff-only` so their commits land on `main` individually. release-please reads only a
 merge commit's own subject, so the commits inside a `--no-ff` merge never reach the changelog.
@@ -266,7 +269,9 @@ Owner, once:
    the name) and add it to an internal testing release.
 5. A service account: in Google Cloud, create a project, enable the **Google Play Android Developer API**, create a
    service account and a JSON key for it. In the Play Console, **Users and permissions → Invite new users**, the
-   service account's email, with **Release apps to testing tracks** and **Manage store presence** for this app.
+   service account's email, with **Release apps to testing tracks** and **Manage store presence** for this app,
+   and **Release to production, exclude devices, and use Play App Signing** for the
+   [promote](#promoting-to-production) workflow.
 
 | Secret or variable | Value |
 | --- | --- |
@@ -275,7 +280,8 @@ Owner, once:
 | `PLAY_RELEASE_STATUS` (variable, optional) | `draft` (default) until the app has passed its first review, then `completed` |
 
 What runs: after the release is published, the `play` job uploads the bundle to the **internal** track with the
-store text and the changelog. Promote to closed, open or production testing in the Play Console.
+store text and the changelog. The [promote](#promoting-to-production) workflow moves it on to production;
+closed and open testing are left to the Play Console.
 
 Verify: the release's `Google Play (internal track)` job is green and the Play Console shows the version code
 (`MAJOR*1000000 + MINOR*1000 + PATCH`) under internal testing. Re-running a release after a successful upload
@@ -425,5 +431,61 @@ flatpak/red.tix.tix_mobile.yml`) passes.
 
 ### Not wired yet
 
-- **App Store** (beyond TestFlight): a privacy manifest, screenshots and the review.
+- **App Store** listing: a privacy manifest, the store text and screenshots, entered in App Store Connect before the
+  first [promotion](#promoting-to-production). The repository keeps no App Store metadata.
 - **Windows** signing: needs a code-signing certificate; nothing is wired.
+
+## Promoting to production
+
+A release stops at Google Play's internal track and TestFlight. The `promote` workflow (`promote.yaml`) takes it
+further, and only when someone starts it: **Actions → Promote → Run workflow**, or
+
+```sh
+gh workflow run promote.yaml --repo heliopsy/tix-mobile -f store=both -f version=0.15.0 -f dry_run=true
+```
+
+| Input | Meaning |
+| --- | --- |
+| `store` | `both`, `google` or `apple` |
+| `version` | `X.Y.Z`. Empty takes the newest published release; a draft release is refused |
+| `rollout` | Google Play staged rollout in percent, `100` (default) for everyone |
+| `dry_run` | Check the credentials and that the build is there, print what would be promoted, change nothing |
+
+It builds and uploads nothing, runs on GitHub-hosted Ubuntu runners for both stores, and uses the secrets the
+release already has: `PLAY_SERVICE_ACCOUNT_JSON` for Google, the three `APP_STORE_CONNECT_*` for Apple. A store
+whose secrets are missing is skipped with a notice, as in `release.yaml`. Each job writes what it found and what it
+did to the run's summary page. Try a dry run first.
+
+**Google Play** (`fastlane android promote`): the version code `release.yaml` gave the tag
+(`MAJOR*1000000 + MINOR*1000 + PATCH`) has to be on the internal track; it is moved to production with its release
+notes. `PLAY_RELEASE_STATUS` decides the state as for the internal upload: unset, the production release is a
+draft (Play refuses anything else before the app's first review) and `rollout` is ignored with a warning; set to
+`completed`, a `rollout` under 100 makes it a staged rollout and 100 releases it to everyone. To widen a staged
+rollout, run it again for the same version with a higher `rollout`. The dry run sends the same change to Play as a
+validate-only edit, so Play checks it without keeping it.
+
+**App Store** (`fastlane ios promote`): the newest processed, unexpired TestFlight build of the version is attached
+to App Store version `X.Y.Z` (created, or the version being prepared renamed to it) and submitted for review, with
+export compliance answered as exempt: the app uses HTTPS and the Go standard library's TLS only. The store text,
+screenshots and the release option (after approval or manual) come from App Store Connect as they are. The dry run
+only reads: the live and in-progress versions, any review in progress, and the build it would pick.
+
+Nothing to promote (the version code is not on the internal track, there is no processed build, the version is
+already live, a review is in progress) is a warning on a dry run and fails a real one.
+
+Apple's limits, which the workflow cannot get round:
+
+- The first submission needs everything App Store Connect asks for on the version page and the app's settings:
+  description, keywords, support URL, screenshots, age rating, App Privacy, content rights and a privacy policy.
+  Submitting reports what is missing. An app's first in-app purchase can only be submitted from the website; tix
+  has none.
+- A rejected version goes back to App Review from App Store Connect, with a reply in the Resolution Center. The
+  workflow stops on a rejected version rather than submitting it again.
+
+Owner, once: give the Play service account **Release to production, exclude devices, and use Play App Signing**
+(see [Google Play](#google-play)), and set `PLAY_RELEASE_STATUS` to `completed` after the first review. The App
+Store Connect key's **App Manager** role already covers submitting.
+
+Verify: a dry run's summary names the version code on the internal track and the TestFlight build it would submit.
+After a real run, the Play Console lists the version code under Production, and App Store Connect shows the version
+as Waiting for Review.

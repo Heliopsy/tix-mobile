@@ -15,7 +15,7 @@ For the server, its API and its CLI, see [tix's documentation](https://github.co
 | [testing.md](testing.md) | Unit, widget and golden tests, watching a guard fail, the coverage floor |
 | [widgets.md](widgets.md) | Home screen widgets: platforms, data flow, the snapshot contract |
 | [adb.md](adb.md) | ADB control: dumpsys sections, `tix://` links, shell commands and their security model |
-| [releasing.md](releasing.md) | release-please, version numbers, artifacts and provenance, signing secrets, recovering a failed release |
+| [releasing.md](releasing.md) | release-please, version numbers, artifacts and provenance, signing secrets, recovering a failed release, promoting to production |
 
 ## Where to start
 
