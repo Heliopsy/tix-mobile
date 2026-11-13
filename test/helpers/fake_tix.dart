@@ -720,7 +720,11 @@ class FakeTix {
           ),
         );
       case ('GET', '/api/v1/tasks'):
-        return FakeResponse(200, _page(_list(o.uri), q['cursor']));
+        final rows = _list(o.uri);
+        return FakeResponse(200, {
+          ..._page(rows, q['cursor']),
+          if (q['tally'] == 'true') 'tally': _tally(rows),
+        });
       case ('POST', '/api/v1/tasks/bulk'):
         return FakeResponse(200, _bulk(o.data as Map<String, dynamic>));
       case ('GET', '/api/v1/workflows'):
@@ -1957,6 +1961,30 @@ class FakeTix {
 
   /// The last body a workflow was saved with.
   Map<String, dynamic>? lastWorkflowPut;
+
+  /// tix's tally of [rows]: tasks per project and status, the ones blocked,
+  /// and the ones claimed with a lease.
+  Map<String, Object?> _tally(List<Map<String, Object?>> rows) {
+    final states = <(Object?, Object?), int>{};
+    for (final r in rows) {
+      final key = (r['project_id'], r['status']);
+      states[key] = (states[key] ?? 0) + 1;
+    }
+    return {
+      'states': [
+        for (final MapEntry(key: (p, s), value: n) in states.entries)
+          {'project_id': p, 'status': s, 'count': n},
+      ],
+      'blocked': rows.where((r) => r['blocked'] == true).length,
+      'held': rows
+          .where(
+            (r) =>
+                (r['claimed_by_actor_id'] as String? ?? '').isNotEmpty &&
+                r['lease_expires_at'] != null,
+          )
+          .length,
+    };
+  }
 
   Map<String, Object?> _page(List<Map<String, Object?>> rows, String? cursor) {
     final start = cursor == null ? 0 : int.parse(cursor);

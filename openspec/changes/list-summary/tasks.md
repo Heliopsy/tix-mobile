@@ -6,4 +6,4 @@
 - [x] `is:waiting-on` in the filter language
 - [x] Strings in English, Bulgarian, German and French
 - [x] Tests: the counts, the empty variants, both links, the alias
-- [ ] Read the listing's tally once tix.lock pins a release with heliopsy/tix#323
+- [x] Read the listing's tally once tix.lock pins a release with heliopsy/tix#323

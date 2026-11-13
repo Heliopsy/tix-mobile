@@ -10,6 +10,99 @@ part of 'listing.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// tix's counts over every task [query] selects, not only the loaded page,
+/// asked again whenever a task changes. Null for My work, which merges two
+/// listings no single tally covers, and from a server that answers none.
+
+@ProviderFor(taskTally)
+final taskTallyProvider = TaskTallyFamily._();
+
+/// tix's counts over every task [query] selects, not only the loaded page,
+/// asked again whenever a task changes. Null for My work, which merges two
+/// listings no single tally covers, and from a server that answers none.
+
+final class TaskTallyProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<TaskTally?>,
+          TaskTally?,
+          FutureOr<TaskTally?>
+        >
+    with $FutureModifier<TaskTally?>, $FutureProvider<TaskTally?> {
+  /// tix's counts over every task [query] selects, not only the loaded page,
+  /// asked again whenever a task changes. Null for My work, which merges two
+  /// listings no single tally covers, and from a server that answers none.
+  TaskTallyProvider._({
+    required TaskTallyFamily super.from,
+    required TaskQuery super.argument,
+  }) : super(
+         retry: null,
+         name: r'taskTallyProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$taskTallyHash();
+
+  @override
+  String toString() {
+    return r'taskTallyProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<TaskTally?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<TaskTally?> create(Ref ref) {
+    final argument = this.argument as TaskQuery;
+    return taskTally(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TaskTallyProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$taskTallyHash() => r'1ed17d1711c081461ad8ba6fec7a17fc379cf5d9';
+
+/// tix's counts over every task [query] selects, not only the loaded page,
+/// asked again whenever a task changes. Null for My work, which merges two
+/// listings no single tally covers, and from a server that answers none.
+
+final class TaskTallyFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<TaskTally?>, TaskQuery> {
+  TaskTallyFamily._()
+    : super(
+        retry: null,
+        name: r'taskTallyProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// tix's counts over every task [query] selects, not only the loaded page,
+  /// asked again whenever a task changes. Null for My work, which merges two
+  /// listings no single tally covers, and from a server that answers none.
+
+  TaskTallyProvider call(TaskQuery query) =>
+      TaskTallyProvider._(argument: query, from: this);
+
+  @override
+  String toString() => r'taskTallyProvider';
+}
+
 /// The projects and workflows of the active session: the cached copies at
 /// once, then the server's, and again when a project or workflow changes.
 

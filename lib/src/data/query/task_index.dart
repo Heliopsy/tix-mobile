@@ -50,6 +50,11 @@ class TaskIndex {
       task.completedAt != null ||
       (workflowOf(task)?.state(task.status)?.terminal ?? false);
 
+  /// Whether [status] is a terminal state of the workflow project [projectId]
+  /// runs.
+  bool isTerminal(String projectId, String status) =>
+      workflowOfProject(_byId[projectId])?.state(status)?.terminal ?? false;
+
   /// The keys of every unfinished state any workflow has.
   List<String> get openStates =>
       {for (final w in workflows) ...w.openStates}.toList();

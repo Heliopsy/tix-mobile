@@ -10,17 +10,19 @@ import 'package:tix_mobile/src/data/query/filter_expression.dart';
 import 'package:tix_mobile/src/features/tasks/application/listing.dart';
 import 'package:tix_mobile/src/features/tasks/application/screen.dart';
 
-/// The line under the task screen's filter that says what the loaded tasks
-/// add up to, as tix's web summary does: "12 to go, 3 done · across 4
-/// projects · 2 held by an agent · 5 waiting on other tasks". The waiting
-/// count narrows the list to those tasks, and a list hiding finished work
-/// says so and offers them back.
+/// The line under the task screen's filter that says what the list adds up
+/// to, as tix's web summary does: "12 to go, 3 done · across 4 projects · 2
+/// held by an agent · 5 waiting on other tasks". It counts the loaded rows,
+/// or tix's tally of the whole selection while more pages follow. The
+/// waiting count narrows the list to those tasks, and a list hiding finished
+/// work says so and offers them back.
 class TaskSummaryLine extends ConsumerWidget {
   /// Sums up [tasks], the loaded rows of [query].
   const TaskSummaryLine({
     required this.query,
     required this.tasks,
     required this.view,
+    this.partial = false,
     super.key,
   });
 
@@ -33,17 +35,23 @@ class TaskSummaryLine extends ConsumerWidget {
   /// The drawing in force; only the list hides finished work.
   final TaskView view;
 
+  /// Whether more rows follow [tasks], so the server's tally counts instead.
+  final bool partial;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final t = context.tix;
     final index = ref.watch(taskContextProvider).value;
     final now = ref.watch(clockProvider)();
-    final s = summariseTasks(
-      tasks,
-      now,
-      isDone: (Task task) => index?.isFinished(task) ?? isTaskDone(task),
-    );
+    final tally = partial ? ref.watch(taskTallyProvider(query)).value : null;
+    final s = tally != null && index != null
+        ? summariseTally(tally, isDone: index.isTerminal)
+        : summariseTasks(
+            tasks,
+            now,
+            isDone: (task) => index?.isFinished(task) ?? isTaskDone(task),
+          );
     final scope = query.scope;
     final screen = ref.read(taskScreenProvider(scope).notifier);
     final style = TextStyle(fontSize: TixText.sm, color: t.muted);
