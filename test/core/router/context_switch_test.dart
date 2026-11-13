@@ -139,7 +139,7 @@ void main() {
     expect(since, contains(endsWith('/auth/switch')));
     expect(since.where((u) => u.contains('infra')), isEmpty);
 
-    await openTab(tester, 5);
+    await openTab(tester, 6);
     expect(location(c), Routes.manage);
     expect(find.byType(ManageScreen), findsOneWidget);
     expect(find.byType(WorkflowEditorScreen), findsNothing);
@@ -171,7 +171,7 @@ void main() {
     expect(find.byType(TaskDetailScreen), findsNothing);
     expect(requestsSince(before).where((u) => u.contains('infra')), isEmpty);
 
-    await openTab(tester, 5);
+    await openTab(tester, 6);
     expect(find.byType(WorkflowEditorScreen), findsNothing);
     expect(find.byType(ManageScreen), findsOneWidget);
   });
@@ -194,7 +194,7 @@ void main() {
     expect(tenant(c), 'default');
     expect(location(c), Routes.task('infra', 'infra-1'));
     expect(find.byType(TaskDetailScreen), findsOneWidget);
-    await openTab(tester, 5);
+    await openTab(tester, 6);
     expect(find.byType(WorkflowEditorScreen), findsOneWidget);
   });
 

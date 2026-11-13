@@ -400,6 +400,7 @@ void main() {
           'My work',
           'Inbox',
           'Activity',
+          'Statistics',
           'Manage',
           'Settings',
         ],
