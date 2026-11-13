@@ -75,7 +75,7 @@ final class TaskTallyProvider
   }
 }
 
-String _$taskTallyHash() => r'1ed17d1711c081461ad8ba6fec7a17fc379cf5d9';
+String _$taskTallyHash() => r'131a7f58d14d4d650a3da9fc0112afe611356de5';
 
 /// tix's counts over every task [query] selects, not only the loaded page,
 /// asked again whenever a task changes. Null for My work, which merges two
