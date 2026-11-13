@@ -1,0 +1,167 @@
+name: Promote
+
+# Moves a released version to the stores' production channels, by hand only:
+# Google Play from the internal track (where release.yaml's play job put it)
+# to production, and the App Store from TestFlight to App Review. Nothing is
+# built or uploaded here. A dry run checks the credentials and that the build
+# is there, prints what would happen, and changes nothing. docs/releasing.md
+# has the details.
+#
+# GitHub-hosted runners only: this repository is public. Ubuntu for both
+# stores, since App Store Connect is an HTTPS API and needs no Xcode.
+on:
+  workflow_dispatch:
+    inputs:
+      store:
+        description: Which store to promote in.
+        required: true
+        type: choice
+        options: [both, google, apple]
+        default: both
+      version:
+        description: The version, e.g. 0.15.0. Empty takes the newest published release.
+        required: false
+        type: string
+        default: ''
+      rollout:
+        description: Google Play staged rollout in percent; 100 releases to everyone.
+        required: false
+        type: number
+        default: 100
+      dry_run:
+        description: Only check and print what would be promoted.
+        required: false
+        type: boolean
+        default: false
+
+permissions: read-all
+
+# One promotion at a time; a second waits rather than racing the first.
+concurrency:
+  group: promote
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  resolve:
+    name: Resolve the version
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      tag: ${{ steps.names.outputs.tag }}
+      version: ${{ steps.names.outputs.version }}
+      code: ${{ steps.names.outputs.code }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Only a published release counts: a draft is a release whose build has
+      # not finished, so the stores may not have it yet. The build number is
+      # the one release.yaml stamped on the tag's mobile builds.
+      - name: Resolve the tag and the build number
+        id: names
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ inputs.version }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          STORE: ${{ inputs.store }}
+          ROLLOUT: ${{ inputs.rollout }}
+        run: |
+          set -euo pipefail
+          if [ -z "$VERSION" ]; then
+            tag=$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq .tagName)
+          else
+            tag="v${VERSION#v}"
+            draft=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json isDraft --jq .isDraft) || {
+              echo "::error::No release for $tag"
+              exit 1
+            }
+            if [ "$draft" = "true" ]; then
+              echo "::error::$tag is still a draft; wait for its release run to publish it"
+              exit 1
+            fi
+          fi
+          code=$(scripts/build-version.sh "$tag" mobile | sed -E 's/.*--build-number=([0-9]+).*/\1/')
+          {
+            echo "tag=$tag"
+            echo "version=${tag#v}"
+            echo "code=$code"
+          } >> "$GITHUB_OUTPUT"
+          mode=$([ "$DRY_RUN" = "true" ] && echo "dry run" || echo "for real")
+          summary="Promote $tag (build $code) in $STORE, $mode, Play rollout $ROLLOUT%"
+          echo "$summary"
+          echo "$summary" >> "$GITHUB_STEP_SUMMARY"
+
+  google:
+    name: Google Play (internal to production)
+    needs: resolve
+    if: inputs.store == 'both' || inputs.store == 'google'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check for the Play credentials
+        id: creds
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        run: scripts/release-secrets.sh play PLAY_SERVICE_ACCOUNT_JSON
+
+      - if: steps.creds.outputs.play == 'true'
+        uses: ./.github/actions/fastlane
+
+      - name: Promote to production
+        if: steps.creds.outputs.play == 'true'
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          PLAY_RELEASE_STATUS: ${{ vars.PLAY_RELEASE_STATUS }}
+          CODE: ${{ needs.resolve.outputs.code }}
+          ROLLOUT: ${{ inputs.rollout }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: bundle exec fastlane android promote code:"$CODE" rollout:"$ROLLOUT" dry_run:"$DRY_RUN"
+
+  apple:
+    name: App Store (TestFlight to review)
+    needs: resolve
+    if: inputs.store == 'both' || inputs.store == 'apple'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check for the App Store Connect key
+        id: creds
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_KEY_BASE64 }}
+        run: |
+          scripts/release-secrets.sh appstore APP_STORE_CONNECT_KEY_ID APP_STORE_CONNECT_ISSUER_ID \
+            APP_STORE_CONNECT_KEY_BASE64
+
+      - if: steps.creds.outputs.appstore == 'true'
+        uses: ./.github/actions/fastlane
+
+      - name: Submit for App Store review
+        if: steps.creds.outputs.appstore == 'true'
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_KEY_BASE64 }}
+          VERSION: ${{ needs.resolve.outputs.version }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: bundle exec fastlane ios promote version:"$VERSION" dry_run:"$DRY_RUN"

@@ -73,8 +73,8 @@ each still needs from the maintainer.
 
 | Store | In the repository | Still needs |
 | --- | --- | --- |
-| Google Play | Store text in four languages, internal-track upload | A developer account, the listing's forms, screenshots, the review |
-| App Store | Signed IPA and TestFlight upload | An Apple developer account, a privacy manifest, screenshots, the review |
+| Google Play | Store text in four languages, internal-track upload, promotion to production | A developer account, the listing's forms, screenshots, the review |
+| App Store | Signed IPA, TestFlight upload, submission for review | An Apple developer account, a privacy manifest, screenshots, the review |
 | macOS (direct download) | Developer ID signing and notarisation | The Developer ID certificate |
 | F-Droid | Recipe, tix srclib, a CI check for non-free code | Submission to fdroiddata |
 | Flathub | Manifest, AppStream metainfo | Generated offline sources, a test build, screenshots, the submission |
