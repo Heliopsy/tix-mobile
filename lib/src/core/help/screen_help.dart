@@ -66,6 +66,10 @@ const Map<String, DocSection?> screenDocs = {
     'import-export.md',
     'project-import-and-export',
   ),
+  '/manage/transfer/import': DocSection(
+    'web-ui.md',
+    'importing-into-a-project',
+  ),
   '/manage/webhooks': DocSection('api.md', 'webhooks'),
   '/manage/sync': DocSection(
     'migrating.md',
