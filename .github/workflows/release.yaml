@@ -339,6 +339,16 @@ jobs:
         with:
           ref: ${{ needs.prepare.outputs.tag }}
           persist-credentials: false
+      # App Store Connect only takes builds made with the iOS 26 SDK; the image's default
+      # Xcode on macos-15 is older, so pick the newest Xcode 26 it has.
+      - name: Select Xcode 26
+        run: |
+          xcode="$(find /Applications -maxdepth 1 -name 'Xcode_26*.app' | sort -V | tail -1)"
+          if [ -z "$xcode" ]; then
+            echo "::error::no Xcode 26 on this runner"; find /Applications -maxdepth 1 -name 'Xcode*'; exit 1
+          fi
+          sudo xcode-select -s "$xcode/Contents/Developer"
+          xcodebuild -version
       - uses: ./.github/actions/flutter
       - uses: ./.github/actions/libtix
         with:
