@@ -72,11 +72,11 @@ final serverReleaseProvider = ServerReleaseProvider._();
 final class ServerReleaseProvider
     extends
         $FunctionalProvider<
-          AsyncValue<ServerRelease>,
-          ServerRelease,
-          FutureOr<ServerRelease>
+          AsyncValue<ReleaseBody>,
+          ReleaseBody,
+          FutureOr<ReleaseBody>
         >
-    with $FutureModifier<ServerRelease>, $FutureProvider<ServerRelease> {
+    with $FutureModifier<ReleaseBody>, $FutureProvider<ReleaseBody> {
   /// What the active server knows about its version and the newest release.
   ServerReleaseProvider._()
     : super(
@@ -94,14 +94,14 @@ final class ServerReleaseProvider
 
   @$internal
   @override
-  $FutureProviderElement<ServerRelease> $createElement(
+  $FutureProviderElement<ReleaseBody> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<ServerRelease> create(Ref ref) {
+  FutureOr<ReleaseBody> create(Ref ref) {
     return serverRelease(ref);
   }
 }
 
-String _$serverReleaseHash() => r'80ec7b555412404ab991abfdcb174834f9d75b2b';
+String _$serverReleaseHash() => r'79118bf874a1725c2ed6e6cfc8652d41c6ce2259';

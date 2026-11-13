@@ -16,6 +16,7 @@ was not in the API; Heliopsy/tix#328 adds `GET /api/v1/release` for any signed-i
 ## Impact
 
 - Capabilities: `server-release` (new).
-- Code: `data/models/release.dart` and `data/repositories/release_repository.dart` (hand-written until the pinned
-  tix carries the route), `features/release`, router, Settings, palette, l10n, README.
-- Waits for the tix release that ships Heliopsy/tix#328; then `tix.lock` and `api/tix-openapi.yaml` move to it.
+- Code: `data/models/release.dart` (the generated `ReleaseBody` and friends) and
+  `data/repositories/release_repository.dart`, `features/release`, router, Settings, palette, screen help, l10n,
+  README. `server.release` is bound in the capability registry.
+- Needs tix v0.60.0, which ships Heliopsy/tix#328 and which `tix.lock` pins.

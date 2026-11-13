@@ -15,5 +15,5 @@ ReleaseRepository releaseRepository(Ref ref) =>
 
 /// What the active server knows about its version and the newest release.
 @riverpod
-Future<ServerRelease> serverRelease(Ref ref) =>
+Future<ReleaseBody> serverRelease(Ref ref) =>
     ref.watch(releaseRepositoryProvider).read();

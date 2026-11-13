@@ -14,7 +14,5 @@ class ReleaseRepository {
 
   /// What the server knows about its version and the newest release
   /// (`server.release`).
-  Future<ServerRelease> read() async => ServerRelease.fromJson(
-    await _api.transport.json('GET', '/api/v1/release'),
-  );
+  Future<ReleaseBody> read() => _api.server.release();
 }
