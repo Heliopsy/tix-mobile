@@ -1,5 +1,5 @@
 {
-  "commit": "5bc99dec83dd23a31cf74abfb83686911eaaac19",
+  "commit": "e42c6c68819d96143f08090237dbc82f2b8a07db",
   "pages": {
     "README.md": [
       "documentation",
@@ -114,6 +114,7 @@
       "housekeeping",
       "password-hashing",
       "the-public-web-address",
+      "sign-in-sessions",
       "the-ssh-listener",
       "the-default-project",
       "how-a-timestamp-is-shown",
@@ -340,6 +341,7 @@
       "first-admins",
       "global-admins",
       "the-second-factor-policy",
+      "how-long-a-sign-in-lasts",
       "the-trash",
       "members-and-roles",
       "invites-and-first-passwords",
