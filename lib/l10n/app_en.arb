@@ -3629,6 +3629,8 @@
   "tenantSettingsTitle": "Tenant settings",
   "tenantSaved": "Saved.",
   "tenantGeneralTitle": "General",
+  "tenantIconTitle": "Icon",
+  "tenantIconInfo": "Shown beside the tenant's name in the switcher, so tenants are easy to tell apart. With none, the switcher shows the first letters of the name.",
   "tenantName": "Name",
   "tenantKey": "Key",
   "tenantKeyHelp": "Short and unique: letters, digits, hyphens and underscores, starting with a letter. It cannot change later.",

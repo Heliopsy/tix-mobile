@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' show Rect;
@@ -31,6 +32,21 @@ class PickedFile {
 
   /// Its media type, `application/octet-stream` when unknown.
   final String mimeType;
+}
+
+/// An image a person picked for an icon, base64 encoded as tix takes it.
+typedef PickedIcon = ({String name, String contentType, String data});
+
+/// Asks [attachments] for an image file for a project or tenant icon; null
+/// when cancelled.
+Future<PickedIcon?> pickIconImage(Attachments attachments) async {
+  final file = await attachments.pickFile();
+  if (file == null) return null;
+  return (
+    name: file.name,
+    contentType: file.mimeType,
+    data: base64Encode(file.bytes),
+  );
 }
 
 /// Files in and out of the app, and links out to the browser, behind an

@@ -5690,6 +5690,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tenantGeneralTitle => 'Allgemein';
 
   @override
+  String get tenantIconTitle => 'Symbol';
+
+  @override
+  String get tenantIconInfo =>
+      'Erscheint neben dem Namen des Mandanten im Umschalter, damit sich Mandanten leicht auseinanderhalten lassen. Ohne Symbol zeigt der Umschalter die ersten Buchstaben des Namens.';
+
+  @override
   String get tenantName => 'Name';
 
   @override

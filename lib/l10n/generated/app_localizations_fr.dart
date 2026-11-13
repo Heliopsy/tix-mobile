@@ -5684,6 +5684,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tenantGeneralTitle => 'Général';
 
   @override
+  String get tenantIconTitle => 'Icône';
+
+  @override
+  String get tenantIconInfo =>
+      'Affichée à côté du nom de l’espace dans le sélecteur, pour distinguer les espaces d’un coup d’œil. Sans icône, le sélecteur montre les premières lettres du nom.';
+
+  @override
   String get tenantName => 'Nom';
 
   @override

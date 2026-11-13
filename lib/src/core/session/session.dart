@@ -25,6 +25,7 @@ import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
 import 'package:tix_mobile/src/data/models/membership.dart';
+import 'package:tix_mobile/src/data/models/tenant_icon.dart';
 import 'package:tix_mobile/src/data/offline/connection_jobs.dart';
 import 'package:tix_mobile/src/data/offline/outbox.dart';
 import 'package:tix_mobile/src/data/repositories/auth_repository.dart';
@@ -201,11 +202,11 @@ class SessionController extends _$SessionController {
 
   Future<void> _refresh(Session session) async {
     if (!ref.mounted) return;
-    final Actor me;
+    final Identity who;
     try {
-      me = await ref
+      who = await ref
           .read(authRepositoryProvider)
-          .whoami(session.baseUrl, session.credential);
+          .identity(session.baseUrl, session.credential);
     } on TixException {
       // Best effort: offline, the lists report the failure themselves.
       return;
@@ -214,7 +215,7 @@ class SessionController extends _$SessionController {
     final repo = ref.read(instancesRepositoryProvider);
     final current = repo.connection(session.connection.id);
     if (current == null) return;
-    final updated = _withIdentity(current, me);
+    final updated = _withIdentity(current, who);
     if (updated == current) return;
     await repo.update(updated);
     if (repo.active()?.connectionId == updated.id) {
@@ -225,14 +226,56 @@ class SessionController extends _$SessionController {
     }
   }
 
-  static Connection _withIdentity(Connection c, Actor me) => c.copyWith(
-    handle: me.handle.isEmpty ? c.handle : me.handle,
-    tenantKey: me.tenantKey.isEmpty ? c.tenantKey : me.tenantKey,
-    tenantName: me.tenantName.isEmpty ? c.tenantName : me.tenantName,
-    memberships: me.memberships.isEmpty
-        ? c.memberships
-        : [for (final m in me.memberships) Membership.fromAccount(m)],
-  );
+  /// [c] as [who] describes it, each tenant wearing its icon.
+  static Connection _withIdentity(Connection c, Identity who) {
+    final Identity(:me, :icons) = who;
+    final tenantKey = me.tenantKey.isEmpty ? c.tenantKey : me.tenantKey;
+    return c.copyWith(
+      handle: me.handle.isEmpty ? c.handle : me.handle,
+      tenantKey: tenantKey,
+      tenantName: me.tenantName.isEmpty ? c.tenantName : me.tenantName,
+      tenantIcon: icons[tenantKey] ?? who.icon,
+      memberships: me.memberships.isEmpty
+          ? c.memberships
+          : [
+              for (final m in me.memberships)
+                Membership.fromAccount(
+                  m,
+                  icon:
+                      icons[m.tenantKey] ?? _iconOf(c.memberships, m.tenantKey),
+                ),
+            ],
+    );
+  }
+
+  static TenantIcon _iconOf(List<Membership> memberships, String key) {
+    for (final m in memberships) {
+      if (m.tenantKey == key) return m.icon;
+    }
+    return const TenantIcon();
+  }
+
+  /// Records that tenant [tenantKey] now wears [icon] on the active
+  /// connection, so the switcher shows it before the next `whoami`.
+  Future<void> noteTenantIcon(String tenantKey, TenantIcon icon) async {
+    final session = state.value;
+    if (session == null) return;
+    final repo = ref.read(instancesRepositoryProvider);
+    final current = repo.connection(session.connection.id);
+    if (current == null) return;
+    final updated = current.copyWith(
+      tenantIcon: current.tenantKey == tenantKey ? icon : current.tenantIcon,
+      memberships: [
+        for (final m in current.memberships)
+          if (m.tenantKey == tenantKey) m.copyWith(icon: icon) else m,
+      ],
+    );
+    if (updated == current) return;
+    await repo.update(updated);
+    if (ref.mounted && state.value?.connection.id == updated.id) {
+      state = AsyncData(state.value!.withConnection(updated));
+    }
+  }
 
   /// Checks that [url] is a tix server that accepts [token], then saves a
   /// token connection on its instance and makes it active. With [instanceId]
@@ -252,7 +295,7 @@ class SessionController extends _$SessionController {
     final secret = token.trim();
     if (secret.isEmpty) throw const TixException(TixErrorKind.tokenRequired);
     final baseUrl = await auth.checkServer(address);
-    final me = await auth.whoami(baseUrl, BearerCredential(secret));
+    final who = await auth.identity(baseUrl, BearerCredential(secret));
     final instance = existing ?? _remoteInstance(baseUrl, name);
     final saved = await repo.save(
       instance: instance,
@@ -264,7 +307,7 @@ class SessionController extends _$SessionController {
           label: name.trim(),
           createdAt: DateTime.now(),
         ),
-        me,
+        who,
       ),
       secret: secret,
     );
@@ -300,7 +343,7 @@ class SessionController extends _$SessionController {
       instance: instance,
       connection: _withIdentity(
         base.copyWith(email: email.trim(), pinned: pinned),
-        me,
+        (me: me, icon: base.tenantIcon, icons: const {}),
       ),
       secret: session,
     );
@@ -386,11 +429,11 @@ class SessionController extends _$SessionController {
     final session = result.session;
     if (session == null) throw const TixException(TixErrorKind.codeRequired);
     await repo.writeSecret(connection, session.token);
-    final me = await auth.whoami(
+    final who = await auth.identity(
       instance.baseUrl,
       SessionCredential(session.token),
     );
-    final updated = _withIdentity(connection, me);
+    final updated = _withIdentity(connection, who);
     await repo.update(updated);
     await _move(updated.ref, landing);
   }
@@ -614,6 +657,7 @@ class ContextEntry {
     required this.connection,
     required this.tenantKey,
     required this.tenantName,
+    this.icon = const TenantIcon(),
     this.elsewhere = '',
   });
 
@@ -628,6 +672,9 @@ class ContextEntry {
 
   /// The tenant's name, its key when unknown.
   final String tenantName;
+
+  /// The tenant's icon; none draws the monogram of its name.
+  final TenantIcon icon;
 
   /// The tenant's own address when it is served there and not here.
   final String elsewhere;
@@ -680,6 +727,7 @@ List<ContextEntry> entriesOf(Instance instance, Connection connection) {
         connection: connection,
         tenantKey: connection.tenantKey,
         tenantName: connection.tenantLabel,
+        icon: connection.tenantIcon,
       ),
     ];
   }
@@ -690,6 +738,7 @@ List<ContextEntry> entriesOf(Instance instance, Connection connection) {
         connection: connection,
         tenantKey: m.tenantKey,
         tenantName: m.tenantName.isEmpty ? m.tenantKey : m.tenantName,
+        icon: m.icon,
         elsewhere: m.servedElsewhere(instance.host) ? m.host : '',
       ),
   ];

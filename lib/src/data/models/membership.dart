@@ -3,6 +3,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tix_mobile/src/data/api/gen/models.gen.dart'
     show AccountMembership;
+import 'package:tix_mobile/src/data/models/tenant_icon.dart';
 
 part 'membership.freezed.dart';
 part 'membership.g.dart';
@@ -18,12 +19,16 @@ abstract class Membership with _$Membership {
     @Default('') String handle,
     @Default('') String role,
     @Default('') String host,
+    @Default(TenantIcon()) TenantIcon icon,
   }) = _Membership;
 
   const Membership._();
 
-  /// The membership `whoami` reported as [m].
-  factory Membership.fromAccount(AccountMembership m) => Membership(
+  /// The membership `whoami` reported as [m], wearing [icon].
+  factory Membership.fromAccount(
+    AccountMembership m, {
+    TenantIcon icon = const TenantIcon(),
+  }) => Membership(
     tenantKey: m.tenantKey,
     tenantName: m.tenantName,
     tenantId: m.tenantId,
@@ -31,6 +36,7 @@ abstract class Membership with _$Membership {
     handle: m.handle,
     role: m.role?.value ?? '',
     host: m.host,
+    icon: icon,
   );
 
   factory Membership.fromJson(Map<String, dynamic> json) =>

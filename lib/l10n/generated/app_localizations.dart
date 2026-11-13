@@ -9529,6 +9529,18 @@ abstract class AppLocalizations {
   /// **'General'**
   String get tenantGeneralTitle;
 
+  /// No description provided for @tenantIconTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get tenantIconTitle;
+
+  /// No description provided for @tenantIconInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Shown beside the tenant\'s name in the switcher, so tenants are easy to tell apart. With none, the switcher shows the first letters of the name.'**
+  String get tenantIconInfo;
+
   /// No description provided for @tenantName.
   ///
   /// In en, this message translates to:

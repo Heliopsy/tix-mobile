@@ -1571,6 +1571,8 @@
   "tenantSettingsSubtitle": "Nom, thème, second facteur, réservations et corbeille",
   "tenantSaved": "Enregistré.",
   "tenantGeneralTitle": "Général",
+  "tenantIconTitle": "Icône",
+  "tenantIconInfo": "Affichée à côté du nom de l’espace dans le sélecteur, pour distinguer les espaces d’un coup d’œil. Sans icône, le sélecteur montre les premières lettres du nom.",
   "tenantName": "Nom",
   "tenantKey": "Clé",
   "tenantKeyHelp": "Courte et unique : lettres, chiffres, tirets et tirets bas, commençant par une lettre. Elle ne pourra plus changer.",
