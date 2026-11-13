@@ -5798,6 +5798,13 @@ class AppLocalizationsBg extends AppLocalizations {
   String get tenantGeneralTitle => 'Общи';
 
   @override
+  String get tenantIconTitle => 'Икона';
+
+  @override
+  String get tenantIconInfo =>
+      'Показва се до името на наемателя в превключвателя, за да се различават наемателите лесно. Без икона превключвателят показва първите букви от името.';
+
+  @override
   String get tenantName => 'Име';
 
   @override

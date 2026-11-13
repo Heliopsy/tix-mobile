@@ -18,6 +18,9 @@ _Connection _$ConnectionFromJson(Map<String, dynamic> json) => _Connection(
   email: json['email'] as String? ?? '',
   tenantKey: json['tenant_key'] as String? ?? '',
   tenantName: json['tenant_name'] as String? ?? '',
+  tenantIcon: json['tenant_icon'] == null
+      ? const TenantIcon()
+      : TenantIcon.fromJson(json['tenant_icon'] as Map<String, dynamic>),
   pinned: json['pinned'] as bool? ?? true,
   memberships:
       (json['memberships'] as List<dynamic>?)
@@ -40,6 +43,7 @@ Map<String, dynamic> _$ConnectionToJson(_Connection instance) =>
       'email': instance.email,
       'tenant_key': instance.tenantKey,
       'tenant_name': instance.tenantName,
+      'tenant_icon': instance.tenantIcon.toJson(),
       'pinned': instance.pinned,
       'memberships': instance.memberships.map((e) => e.toJson()).toList(),
       'last_used_at': ?instance.lastUsedAt?.toIso8601String(),

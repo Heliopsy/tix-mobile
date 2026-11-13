@@ -4,10 +4,16 @@ import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/data/api/gen/models.gen.dart'
     show IssuedToken, RotateTokenInput;
+import 'package:tix_mobile/src/data/api/tenant_icon_shim.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/auth.dart';
 import 'package:tix_mobile/src/data/models/invite_link.dart';
+import 'package:tix_mobile/src/data/models/tenant_icon.dart';
+
+/// Who a credential is, with the icon of its tenant and of each tenant it
+/// belongs to by key.
+typedef Identity = ({Actor me, TenantIcon icon, Map<String, TenantIcon> icons});
 
 /// Checking servers, signing in and switching tenant.
 class AuthRepository {
@@ -45,18 +51,30 @@ class AuthRepository {
   /// token answers as an agent with the tenant's id alone. The key and name
   /// are then read from `GET /tenants/{id}`, which a token with
   /// `tenant:admin` (or `*`) may read; any other token stays unnamed.
-  Future<Actor> whoami(String baseUrl, Credential credential) async {
+  Future<Actor> whoami(String baseUrl, Credential credential) async =>
+      (await identity(baseUrl, credential)).me;
+
+  /// [whoami], with the icon of the caller's tenant (`icon`) and of
+  /// each tenant it belongs to, by tenant key. A tix without tenant icons
+  /// reports none.
+  Future<Identity> identity(String baseUrl, Credential credential) async {
     final api = _build(baseUrl, credential);
-    final me = await api.identity.whoami();
-    if (me.tenantKey.isNotEmpty || me.tenantId.isEmpty) return me;
+    final (me, icon, icons) = await api.whoamiWithTenantIcons();
+    if (me.tenantKey.isNotEmpty || me.tenantId.isEmpty) {
+      return (me: me, icon: icon, icons: icons);
+    }
     try {
       final t = await api.tenant.show(me.tenantId);
-      return me.copyWith(tenantKey: t.key, tenantName: t.name);
+      return (
+        me: me.copyWith(tenantKey: t.key, tenantName: t.name),
+        icon: icon,
+        icons: icons,
+      );
     } on TixException catch (e) {
       if (e.kind != TixErrorKind.forbidden && e.kind != TixErrorKind.notFound) {
         rethrow;
       }
-      return me;
+      return (me: me, icon: icon, icons: icons);
     }
   }
 

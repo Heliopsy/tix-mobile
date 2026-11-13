@@ -1,15 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/design/theme.dart';
+import 'package:tix_mobile/src/core/platform/attachments.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/data/models/tenant_icon.dart';
 import 'package:tix_mobile/src/features/admin/presentation/tenant_settings_screen.dart';
 
 import '../../../helpers/app.dart';
+import '../../../helpers/attachments.dart';
 import '../../../helpers/fake_admin.dart';
 import '../../../helpers/fake_tix.dart';
 import 'harness.dart';
@@ -49,6 +53,7 @@ void main() {
         for (final title in [
           'General',
           'Theme',
+          'Icon',
           'Second factor',
           'Claims',
           'Sessions',
@@ -360,5 +365,125 @@ void main() {
     await tester.pumpAndSettle();
     expect(admin.tenants, isNot(contains('default')));
     expect(await c.read(sessionControllerProvider.future), isNull);
+  });
+
+  group('icon', () {
+    Finder section() => find.byKey(const Key('tenant.icon'));
+    Finder inSection(Finder f) => find.descendant(of: section(), matching: f);
+
+    for (final MapEntry(key: width, value: size) in widths.entries) {
+      testWidgets('$width: a built-in icon saves alone and shows in the '
+          'switcher', (tester) async {
+        final container = await pumpAdmin(
+          tester,
+          server,
+          const TenantSettingsScreen(),
+          size: size,
+        );
+        await reveal(tester, section());
+        final save = find.byKey(const Key('tenant.icon.save'));
+        expect(tester.widget<TixButton>(save).onPressed, isNull);
+        await tapShown(tester, inSection(find.text('Icon')));
+        await tapShown(tester, find.byKey(const Key('icon.rocket')));
+        await tapShown(tester, save);
+        expect(lastPatch(), {'icon_name': 'rocket'});
+        expect(server.tenantIcons['default'], {'icon_name': 'rocket'});
+        expect(
+          container
+              .read(sessionControllerProvider)
+              .value!
+              .connection
+              .tenantIcon,
+          const TenantIcon(name: 'rocket'),
+        );
+        expect(tester.widget<TixButton>(save).onPressed, isNull);
+      });
+    }
+
+    testWidgets('None clears the icon', (tester) async {
+      server.tenantIcons['default'] = {'icon': '🚀'};
+      await pumpAdmin(
+        tester,
+        server,
+        const TenantSettingsScreen(),
+        size: desktop,
+      );
+      await reveal(tester, section());
+      expect(
+        tester
+            .widget<TextField>(find.byKey(const Key('icon.text')))
+            .controller!
+            .text,
+        '🚀',
+      );
+      await tapShown(tester, inSection(find.text('None')));
+      await tapShown(tester, find.byKey(const Key('tenant.icon.save')));
+      expect(lastPatch(), {'icon': ''});
+      expect(server.tenantIcons['default'], isNull);
+    });
+
+    testWidgets('an uploaded image is sent as icon_file', (tester) async {
+      final stores = signedInStores();
+      final attachments = FakeAttachments(
+        picked: PickedFile(
+          name: 'logo.png',
+          bytes: Uint8List.fromList([1, 2, 3]),
+          mimeType: 'image/png',
+        ),
+      );
+      await pumpScreen(
+        tester,
+        const TenantSettingsScreen(),
+        size: desktop,
+        overrides: [
+          ...fakeOverrides(
+            server,
+            settings: stores.settings,
+            secrets: stores.secrets,
+          ),
+          attachments.asOverride,
+        ],
+      );
+      await reveal(tester, section());
+      await tapShown(tester, inSection(find.text('Image')));
+      await tapShown(tester, find.byKey(const Key('icon.upload')));
+      expect(find.text('logo.png'), findsOneWidget);
+      await tapShown(tester, find.byKey(const Key('tenant.icon.save')));
+      expect(lastPatch(), {
+        'icon_file': {'content_type': 'image/png', 'data': 'AQID'},
+      });
+      expect(server.tenantIconImages['default'], [1, 2, 3]);
+    });
+
+    testWidgets('a refused icon says why', (tester) async {
+      admin.refuse['icon_name'] = 'tenant icon name "x" is not a built-in';
+      await pumpAdmin(
+        tester,
+        server,
+        const TenantSettingsScreen(),
+        size: desktop,
+      );
+      await reveal(tester, section());
+      await tapShown(tester, inSection(find.text('Icon')));
+      await tapShown(tester, find.byKey(const Key('tenant.icon.save')));
+      expect(find.textContaining('is not a built-in'), findsOneWidget);
+      expect(server.tenantIcons['default'], isNull);
+    });
+
+    testWidgets('an older server offers no icon', (tester) async {
+      server.version = 'v0.60.0';
+      await pumpAdmin(
+        tester,
+        server,
+        const TenantSettingsScreen(),
+        size: desktop,
+      );
+      await reveal(tester, find.widgetWithText(TixSection, 'Second factor'));
+      expect(find.byKey(const Key('tenant.icon.save')), findsNothing);
+      expect(
+        server.requests.where((r) => r.uri.path.endsWith('/icon')),
+        isEmpty,
+      );
+    });
   });
 }

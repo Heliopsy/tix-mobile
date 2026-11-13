@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -278,5 +279,75 @@ void main() {
       overrides: fakeOverrides(server),
     );
     expect(find.byKey(const Key('switcher.open')), findsNothing);
+  });
+
+  group('tenant icons', () {
+    final png = Uint8List.fromList(
+      base64Decode(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9Q'
+        'DwADhgGAWjR9awAAAABJRU5ErkJggg==',
+      ),
+    );
+
+    Finder inEntry(String key, Finder f) =>
+        find.descendant(of: find.byKey(Key(key)), matching: f);
+
+    bool asked(String path) => server.requests.any((r) => r.uri.path == path);
+
+    testWidgets('rows wear each tenant icon, the rest their monogram', (
+      tester,
+    ) async {
+      server.tenantIcons['acme'] = {'icon_name': 'rocket'};
+      await pump(tester);
+      await open(tester);
+      expect(
+        inEntry(
+          'switcher.entry.s1.acme',
+          find.byIcon(Icons.rocket_launch_outlined),
+        ),
+        findsOneWidget,
+      );
+      expect(inEntry('switcher.entry.s1.own', find.text('OW')), findsOneWidget);
+      expect(find.byKey(const Key('switcher.mark')), findsNothing);
+    });
+
+    testWidgets('the button wears the active tenant icon', (tester) async {
+      server.tenantIcons['default'] = {'icon': '🚀'};
+      await pump(tester);
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('switcher.mark')),
+          matching: find.text('🚀'),
+        ),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('an image is read with the active session only', (
+      tester,
+    ) async {
+      server
+        ..tenantIcons['acme'] = {'icon_image': 'd1'}
+        ..tenantIconImages['acme'] = png;
+      final connections =
+          jsonDecode(stores.settings.values['connections']!) as List<dynamic>;
+      (connections.last as Map<String, dynamic>)['tenant_icon'] = {
+        'icon_image': 'd2',
+      };
+      stores.settings.values['connections'] = jsonEncode(connections);
+      await pump(tester);
+      await open(tester);
+      expect(asked('/api/v1/tenants/acme/icon'), isTrue);
+      expect(
+        inEntry('switcher.entry.s1.acme', find.byType(Image)),
+        findsOneWidget,
+      );
+      expect(
+        inEntry('switcher.entry.t2.default', find.text('DE')),
+        findsOneWidget,
+        reason: 'another connection keeps its monogram',
+      );
+      expect(asked('/api/v1/tenants/default/icon'), isFalse);
+    });
   });
 }

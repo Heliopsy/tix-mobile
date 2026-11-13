@@ -52,6 +52,30 @@ class TenantSettings extends _$TenantSettings {
       ref.read(adminRepositoryProvider).deleteTenant(tenantRef);
 }
 
+/// The icon of tenant [tenantRef].
+@riverpod
+class TenantIconSetting extends _$TenantIconSetting {
+  @override
+  Future<TenantIcon> build(String tenantRef) =>
+      ref.watch(adminRepositoryProvider).tenantIcon(tenantRef);
+
+  /// Sends [change] alone, shows the answer, and gives the tenant keyed
+  /// [tenantKey] its new icon in the switcher at once.
+  Future<void> save(
+    TenantIconChange change, {
+    required String tenantKey,
+  }) async {
+    final saved = await ref
+        .read(adminRepositoryProvider)
+        .setTenantIcon(tenantRef, change);
+    if (!ref.mounted) return;
+    state = AsyncData(saved);
+    await ref
+        .read(sessionControllerProvider.notifier)
+        .noteTenantIcon(tenantKey, saved);
+  }
+}
+
 /// The server's own session settings, which a tenant may only tighten.
 @riverpod
 Future<SessionPolicy> serverSessionPolicy(Ref ref) =>

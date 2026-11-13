@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import 'dart:convert';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
@@ -21,19 +19,9 @@ ProjectIconValue iconValueOf(Project p) => p.iconImage.isNotEmpty
     ? ProjectIconValue(kind: ProjectIconKind.text, text: p.icon)
     : const ProjectIconValue();
 
-/// The image a person picked for a project's icon.
-typedef PickedIcon = ({String name, String contentType, String data});
-
 /// Asks for an image file for a project icon; null when cancelled.
-Future<PickedIcon?> pickProjectIcon(WidgetRef ref) async {
-  final file = await ref.read(attachmentsProvider).pickFile();
-  if (file == null) return null;
-  return (
-    name: file.name,
-    contentType: file.mimeType,
-    data: base64Encode(file.bytes),
-  );
-}
+Future<PickedIcon?> pickProjectIcon(WidgetRef ref) =>
+    pickIconImage(ref.read(attachmentsProvider));
 
 /// The workflow picker of a project form: the tenant's workflows when the
 /// credential may read them, else nothing (tix then keeps or picks its

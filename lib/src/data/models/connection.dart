@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tix_mobile/src/data/models/membership.dart';
+import 'package:tix_mobile/src/data/models/tenant_icon.dart';
 
 part 'connection.freezed.dart';
 part 'connection.g.dart';
@@ -29,6 +30,7 @@ abstract class Connection with _$Connection {
     @Default('') String email,
     @Default('') String tenantKey,
     @Default('') String tenantName,
+    @Default(TenantIcon()) TenantIcon tenantIcon,
     @Default(true) bool pinned,
     @Default(<Membership>[]) List<Membership> memberships,
     DateTime? lastUsedAt,
