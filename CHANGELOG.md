@@ -1,5 +1,53 @@
 # Changelog
 
+## [0.16.0](https://github.com/Heliopsy/tix-mobile/compare/v0.15.0...v0.16.0) (2026-11-13)
+
+
+### Features
+
+* a (?) on every screen that opens its section of the tix docs ([d8ff6b5](https://github.com/Heliopsy/tix-mobile/commit/d8ff6b5e246a4904b2fb04559362c90da725dee0))
+* **admin:** tenant session and artifact limits ([e23dab5](https://github.com/Heliopsy/tix-mobile/commit/e23dab5742c44bb0de9cf1493729ce6c48538d27))
+* **connect:** choose a new password and set up a second factor at sign-in ([7a9a70b](https://github.com/Heliopsy/tix-mobile/commit/7a9a70b275cbe678dc3dff3548c7363ee7a05e2a))
+* **connect:** explain each field with an (i), and tidy server addresses ([378fbff](https://github.com/Heliopsy/tix-mobile/commit/378fbfffb98e7a49a0bd18715917ea454c755ca3))
+* **connect:** stay signed in ([4397e85](https://github.com/Heliopsy/tix-mobile/commit/4397e85fd17396bf61fa22fb9f88ae418bb58bdf))
+* **keyboard:** share one key table with tix web ([73a0763](https://github.com/Heliopsy/tix-mobile/commit/73a076325b200a00865250d1edd3a12ca7f1cdea))
+* name things as tix web does and follow its nav order ([91029b9](https://github.com/Heliopsy/tix-mobile/commit/91029b96b3685834c31adfeeb99af1f4cc6ae987))
+* **quick:** add with details, a form with a field per attribute ([1e5a6c9](https://github.com/Heliopsy/tix-mobile/commit/1e5a6c9bf93f796377f52833c5aadb33b5e819a8))
+* statistics, actor pages and connect an agent, as on the web ([24a8f8e](https://github.com/Heliopsy/tix-mobile/commit/24a8f8ebe05f537a08f2696702db66b8b0d6f28f))
+* **tasks:** a summary line under the filter, as the web's task heading ([72f9d9d](https://github.com/Heliopsy/tix-mobile/commit/72f9d9de10f6f092fb59723d15b028eb6b90ac56))
+* **tasks:** claim, waiting, repeat and checklist marks on rows and cards ([ad11e52](https://github.com/Heliopsy/tix-mobile/commit/ad11e52be97b029b06fdd751d3f20a4a46546f87))
+* **tasks:** count the whole selection from tix's tally ([0c1477d](https://github.com/Heliopsy/tix-mobile/commit/0c1477d28fe9f58003cfd6a49f7fc852d77f9861))
+* **tasks:** draw the whole subtask tree with folding ([82ad9fe](https://github.com/Heliopsy/tix-mobile/commit/82ad9fe50046efbb411603399f0f35a67a11dc0b))
+* **tasks:** group lanes by assignee, priority, tag or due ([5abb00a](https://github.com/Heliopsy/tix-mobile/commit/5abb00ab5bb2525bdd00ce852cd65a4f92beabbf))
+* **tasks:** hold rows that arrive above the reader behind an "N new, show" pill ([97089dc](https://github.com/Heliopsy/tix-mobile/commit/97089dcec894d0c46fdc2273d4a2ce48e695a405))
+* **tasks:** include the tasks I hold in My work, and badge its overdue count ([34a645c](https://github.com/Heliopsy/tix-mobile/commit/34a645c3c8e5d73e126b86ec6772dc4880359691))
+* **tasks:** share a task, and Raw and Copy JSON on history rows ([f82f218](https://github.com/Heliopsy/tix-mobile/commit/f82f21871bd7aa9d641a7d1ecfd51ce84b2de77c))
+* **tasks:** suggest filter keys and values as you type, with pickers and a chip per term ([fac9faa](https://github.com/Heliopsy/tix-mobile/commit/fac9faae54149c395018c02b5e161f038124a840))
+* **tasks:** tick along the workflow's routes, and Pick a date in row snooze ([6226b5e](https://github.com/Heliopsy/tix-mobile/commit/6226b5e3bdbd980b1e988ea657fbfd19a1a6f778))
+* **tokens:** rotate any active token with a grace window, and mark retiring ones ([a11e90e](https://github.com/Heliopsy/tix-mobile/commit/a11e90ead8b8936dbb348b7c2cc39f169afab8e6))
+* **transfer:** import in five steps with column and value mapping ([7e0045e](https://github.com/Heliopsy/tix-mobile/commit/7e0045ee5c02f65fafa337f2ea23429c39f450f9))
+
+
+### Bug Fixes
+
+* **help:** a docs section for Statistics, actor pages, Connect an agent, Live events and project import ([974a5ae](https://github.com/Heliopsy/tix-mobile/commit/974a5ae1035def48f77b15c62838fd29f5c52ca0))
+* **help:** the import wizard opens the web's import section ([b844918](https://github.com/Heliopsy/tix-mobile/commit/b844918d11a8e950a544a60c574f0b656316ed2e))
+* **l10n:** count claims in Bulgarian with a plural, like the other languages ([94fca76](https://github.com/Heliopsy/tix-mobile/commit/94fca761ebe836d599615c9c99cfe92ba314e601))
+* **l10n:** make the new-rows pill a plural in every language, so Bulgarian and French can agree ([bd2406b](https://github.com/Heliopsy/tix-mobile/commit/bd2406b553e5f3947343e5a0d3d8d49c7c04f8df))
+
+
+### Dependencies
+
+* pin tix at v0.58.0 ([b17978f](https://github.com/Heliopsy/tix-mobile/commit/b17978feadc0df6b3ccebe33ee9cc6d3615c92ec))
+* pin tix at v0.60.0 ([95a3838](https://github.com/Heliopsy/tix-mobile/commit/95a38389aea672a27f4f768315d7441d8885d090))
+* read the doc anchors from tix v0.58.0, which main now pins ([b891ecf](https://github.com/Heliopsy/tix-mobile/commit/b891ecf8851f6e5828bd02d7157fa13414674a18))
+* read the doc anchors from tix v0.60.0 ([821f185](https://github.com/Heliopsy/tix-mobile/commit/821f18542ce6f09d0080ff23d51f43af96cb7bcb))
+* regenerate the filter suggestions provider ([1310335](https://github.com/Heliopsy/tix-mobile/commit/131033593b08bfb78aea5c23543b322ab808758d))
+* regenerate the listing provider ([e7fabc2](https://github.com/Heliopsy/tix-mobile/commit/e7fabc2f484a37cd5f8fb987bb872c40fb9b2703))
+* regenerate the quick add providers ([cc63cbd](https://github.com/Heliopsy/tix-mobile/commit/cc63cbd1b61e59071b345497aa4535f177022134))
+* regenerate the router ([20cba4b](https://github.com/Heliopsy/tix-mobile/commit/20cba4bcdd36ef916b4e681321a44439c1fc3d30))
+* regenerate the tasks screen provider ([e29493b](https://github.com/Heliopsy/tix-mobile/commit/e29493bb12c2348f34577e14d2d07557460ef8dc))
+
 ## [0.15.0](https://github.com/Heliopsy/tix-mobile/compare/v0.14.0...v0.15.0) (2026-11-12)
 
 
