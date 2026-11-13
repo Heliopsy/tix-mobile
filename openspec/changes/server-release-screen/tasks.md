@@ -14,5 +14,5 @@
 
 ## 3. Once tix ships the route
 
-- [ ] 3.1 Pin tix at that release in `tix.lock` and regenerate the client from its OpenAPI document
-- [ ] 3.2 Swap the hand-written model for the generated `ReleaseBody`
+- [x] 3.1 Pin tix at that release in `tix.lock` and regenerate the client from its OpenAPI document
+- [x] 3.2 Swap the hand-written model for the generated `ReleaseBody`

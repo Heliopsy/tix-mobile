@@ -59,7 +59,7 @@ class ReleaseScreen extends ConsumerWidget {
 class _Status extends StatelessWidget {
   const _Status({required this.release});
 
-  final ServerRelease release;
+  final ReleaseBody release;
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +152,7 @@ class _Status extends StatelessWidget {
 class _Upgrade extends StatelessWidget {
   const _Upgrade({required this.methods});
 
-  final List<UpgradeMethod> methods;
+  final List<ReleaseMethod> methods;
 
   @override
   Widget build(BuildContext context) {
@@ -223,14 +223,14 @@ class _Upgrade extends StatelessWidget {
     );
   }
 
-  static String _name(AppLocalizations l10n, UpgradeMethod m) => switch (m.id) {
+  static String _name(AppLocalizations l10n, ReleaseMethod m) => switch (m.id) {
     'binary' => l10n.releaseMethodBinary,
     'container' => l10n.releaseMethodContainer,
     'go' => l10n.releaseMethodGo,
     _ => m.name,
   };
 
-  static String _help(AppLocalizations l10n, UpgradeMethod m) => switch (m.id) {
+  static String _help(AppLocalizations l10n, ReleaseMethod m) => switch (m.id) {
     'binary' => l10n.releaseMethodBinaryHelp,
     'container' => l10n.releaseMethodContainerHelp,
     'go' => l10n.releaseMethodGoHelp,
@@ -241,12 +241,12 @@ class _Upgrade extends StatelessWidget {
 class _Changes extends StatelessWidget {
   const _Changes({required this.release});
 
-  final ServerRelease release;
+  final ReleaseBody release;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final c = release.changes;
+    final c = release.changes ?? const ReleaseChanges();
     final running = c.running;
     final String lead;
     if (running != null) {

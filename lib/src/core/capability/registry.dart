@@ -32,6 +32,11 @@ class Binding {
 /// Every operationId the app performs, and where.
 const bindings = <String, Binding>{
   'server.health': Binding(feature: 'connect', action: 'check-server', wave: 0),
+  'server.release': Binding(
+    feature: 'release',
+    action: 'server-release',
+    wave: 3,
+  ),
   'identity.whoami': Binding(feature: 'connect', action: 'identify', wave: 0),
   'tenant.show': Binding(feature: 'connect', action: 'name-tenant', wave: 0),
   'session.login': Binding(feature: 'connect', action: 'sign-in', wave: 0),

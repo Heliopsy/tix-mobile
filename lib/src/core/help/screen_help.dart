@@ -99,6 +99,7 @@ const Map<String, DocSection?> screenDocs = {
     'notification-channels',
   ),
   '/settings/about': DocSection('README.md', 'documentation'),
+  '/settings/release': DocSection('web-ui.md', 'the-release-screen'),
   '/settings/account': DocSection('tenancy.md', 'account-history'),
   '/settings/calendar': DocSection('calendar.md', 'getting-the-address'),
   '/settings/tokens': DocSection('agents.md', 'tokens-and-scopes'),
