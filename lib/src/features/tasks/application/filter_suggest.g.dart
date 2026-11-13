@@ -84,7 +84,7 @@ final class FilterSuggestDataProvider
   }
 }
 
-String _$filterSuggestDataHash() => r'e8b86e02ff63e80786a874e8a00039e1cc94f203';
+String _$filterSuggestDataHash() => r'bb89a23ca122a18733dbfb52fb5024a1602d8232';
 
 /// What the filter field over [scope] suggests from: the projects, tags,
 /// people and workflow states loaded so far. A list still loading or failed
