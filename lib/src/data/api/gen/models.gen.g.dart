@@ -195,6 +195,10 @@ _Actor _$ActorFromJson(Map<String, dynamic> json) => _Actor(
   ),
   secondFactorEnrollmentRequired:
       json['second_factor_enrollment_required'] as bool? ?? false,
+  sessionExpiresAt: _$JsonConverterFromJson<String, DateTime>(
+    json['session_expires_at'],
+    const TixDateTime().fromJson,
+  ),
   tenantId: json['tenant_id'] as String? ?? '',
   tenantKey: json['tenant_key'] as String? ?? '',
   tenantName: json['tenant_name'] as String? ?? '',
@@ -221,6 +225,10 @@ Map<String, dynamic> _$ActorToJson(_Actor instance) => <String, dynamic>{
     const TixDateTime().toJson,
   ),
   'second_factor_enrollment_required': instance.secondFactorEnrollmentRequired,
+  'session_expires_at': ?_$JsonConverterToJson<String, DateTime>(
+    instance.sessionExpiresAt,
+    const TixDateTime().toJson,
+  ),
   'tenant_id': instance.tenantId,
   'tenant_key': instance.tenantKey,
   'tenant_name': instance.tenantName,
@@ -716,6 +724,7 @@ _Claim _$ClaimFromJson(Map<String, dynamic> json) => _Claim(
     const TixDateTime().fromJson,
   ),
   leaseToken: json['lease_token'] as String? ?? '',
+  startedFrom: json['started_from'] as String? ?? '',
   task: json['task'] == null
       ? null
       : Task.fromJson(json['task'] as Map<String, dynamic>),
@@ -728,16 +737,24 @@ Map<String, dynamic> _$ClaimToJson(_Claim instance) => <String, dynamic>{
     const TixDateTime().toJson,
   ),
   'lease_token': instance.leaseToken,
+  'started_from': instance.startedFrom,
   'task': ?instance.task?.toJson(),
 };
 
 _ClaimInput _$ClaimInputFromJson(Map<String, dynamic> json) => _ClaimInput(
   actorId: json['actor_id'] as String?,
+  start: json['start'] as bool?,
+  startStatus: json['start_status'] as String?,
   ttl: json['ttl'] as String?,
 );
 
 Map<String, dynamic> _$ClaimInputToJson(_ClaimInput instance) =>
-    <String, dynamic>{'actor_id': ?instance.actorId, 'ttl': ?instance.ttl};
+    <String, dynamic>{
+      'actor_id': ?instance.actorId,
+      'start': ?instance.start,
+      'start_status': ?instance.startStatus,
+      'ttl': ?instance.ttl,
+    };
 
 _ClaimNextInput _$ClaimNextInputFromJson(Map<String, dynamic> json) =>
     _ClaimNextInput(
@@ -745,6 +762,8 @@ _ClaimNextInput _$ClaimNextInputFromJson(Map<String, dynamic> json) =>
       projectRefs: (json['project_refs'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      start: json['start'] as bool?,
+      startStatus: json['start_status'] as String?,
       statuses: (json['statuses'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -756,6 +775,8 @@ Map<String, dynamic> _$ClaimNextInputToJson(_ClaimNextInput instance) =>
     <String, dynamic>{
       'actor_id': ?instance.actorId,
       'project_refs': ?instance.projectRefs,
+      'start': ?instance.start,
+      'start_status': ?instance.startStatus,
       'statuses': ?instance.statuses,
       'tags': ?instance.tags,
       'ttl': ?instance.ttl,
@@ -2566,6 +2587,87 @@ _ReissueInviteInput _$ReissueInviteInputFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$ReissueInviteInputToJson(_ReissueInviteInput instance) =>
     <String, dynamic>{'expires_in': ?instance.expiresIn};
 
+_ReleaseBody _$ReleaseBodyFromJson(Map<String, dynamic> json) => _ReleaseBody(
+  changes: json['changes'] == null
+      ? null
+      : ReleaseChanges.fromJson(json['changes'] as Map<String, dynamic>),
+  checked: json['checked'] as bool? ?? false,
+  failed: json['failed'] as bool? ?? false,
+  latest: json['latest'] as String? ?? '',
+  methods:
+      (json['methods'] as List<dynamic>?)
+          ?.map((e) => ReleaseMethod.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const <ReleaseMethod>[],
+  newer: json['newer'] as bool? ?? false,
+  notes: json['notes'] as String? ?? '',
+  running: json['running'] as String? ?? '',
+  status: json['status'] as String? ?? '',
+);
+
+Map<String, dynamic> _$ReleaseBodyToJson(_ReleaseBody instance) =>
+    <String, dynamic>{
+      'changes': ?instance.changes?.toJson(),
+      'checked': instance.checked,
+      'failed': instance.failed,
+      'latest': instance.latest,
+      'methods': instance.methods.map((e) => e.toJson()).toList(),
+      'newer': instance.newer,
+      'notes': instance.notes,
+      'running': instance.running,
+      'status': instance.status,
+    };
+
+_ReleaseChanges _$ReleaseChangesFromJson(Map<String, dynamic> json) =>
+    _ReleaseChanges(
+      earlier:
+          (json['earlier'] as List<dynamic>?)
+              ?.map((e) => ReleaseEntry.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <ReleaseEntry>[],
+      running: json['running'] == null
+          ? null
+          : ReleaseEntry.fromJson(json['running'] as Map<String, dynamic>),
+      untagged: json['untagged'] as bool? ?? false,
+    );
+
+Map<String, dynamic> _$ReleaseChangesToJson(_ReleaseChanges instance) =>
+    <String, dynamic>{
+      'earlier': instance.earlier.map((e) => e.toJson()).toList(),
+      'running': ?instance.running?.toJson(),
+      'untagged': instance.untagged,
+    };
+
+_ReleaseEntry _$ReleaseEntryFromJson(Map<String, dynamic> json) =>
+    _ReleaseEntry(
+      date: json['date'] as String? ?? '',
+      notes: json['notes'] as String? ?? '',
+      version: json['version'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$ReleaseEntryToJson(_ReleaseEntry instance) =>
+    <String, dynamic>{
+      'date': instance.date,
+      'notes': instance.notes,
+      'version': instance.version,
+    };
+
+_ReleaseMethod _$ReleaseMethodFromJson(Map<String, dynamic> json) =>
+    _ReleaseMethod(
+      command: json['command'] as String? ?? '',
+      help: json['help'] as String? ?? '',
+      id: json['id'] as String? ?? '',
+      name: json['name'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$ReleaseMethodToJson(_ReleaseMethod instance) =>
+    <String, dynamic>{
+      'command': instance.command,
+      'help': instance.help,
+      'id': instance.id,
+      'name': instance.name,
+    };
+
 _ReleaseRequest _$ReleaseRequestFromJson(Map<String, dynamic> json) =>
     _ReleaseRequest(
       comment: json['comment'] as String?,
@@ -2616,6 +2718,7 @@ Map<String, dynamic> _$RotateTokenInputToJson(_RotateTokenInput instance) =>
 _RouteInput _$RouteInputFromJson(Map<String, dynamic> json) => _RouteInput(
   comment: json['comment'] as String?,
   customFields: json['custom_fields'] as Map<String, dynamic>?,
+  dryRun: json['dry_run'] as bool?,
   leaseToken: json['lease_token'] as String?,
   route: (json['route'] as List<dynamic>?)?.map((e) => e as String).toList(),
   to: json['to'] as String?,
@@ -2626,6 +2729,7 @@ Map<String, dynamic> _$RouteInputToJson(_RouteInput instance) =>
     <String, dynamic>{
       'comment': ?instance.comment,
       'custom_fields': ?instance.customFields,
+      'dry_run': ?instance.dryRun,
       'lease_token': ?instance.leaseToken,
       'route': ?instance.route,
       'to': ?instance.to,
@@ -2636,6 +2740,7 @@ _RouteResult _$RouteResultFromJson(Map<String, dynamic> json) => _RouteResult(
   applied:
       (json['applied'] as List<dynamic>?)?.map((e) => e as String).toList() ??
       const <String>[],
+  dryRun: json['dry_run'] as bool? ?? false,
   from: json['from'] as String? ?? '',
   reason: json['reason'] as String? ?? '',
   route:
@@ -2650,6 +2755,7 @@ _RouteResult _$RouteResultFromJson(Map<String, dynamic> json) => _RouteResult(
 Map<String, dynamic> _$RouteResultToJson(_RouteResult instance) =>
     <String, dynamic>{
       'applied': instance.applied,
+      'dry_run': instance.dryRun,
       'from': instance.from,
       'reason': instance.reason,
       'route': instance.route,
@@ -2977,6 +3083,8 @@ Map<String, dynamic> _$SessionInfoToJson(_SessionInfo instance) =>
 _SessionPolicy _$SessionPolicyFromJson(Map<String, dynamic> json) =>
     _SessionPolicy(
       idleTimeout: json['idle_timeout'] as String? ?? '',
+      maxLifetime: json['max_lifetime'] as String? ?? '',
+      rememberMaxLifetime: json['remember_max_lifetime'] as String? ?? '',
       rememberTtl: json['remember_ttl'] as String? ?? '',
       serverIdleTimeout: json['server_idle_timeout'] as String? ?? '',
       serverRememberTtl: json['server_remember_ttl'] as String? ?? '',
@@ -2987,6 +3095,8 @@ _SessionPolicy _$SessionPolicyFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$SessionPolicyToJson(_SessionPolicy instance) =>
     <String, dynamic>{
       'idle_timeout': instance.idleTimeout,
+      'max_lifetime': instance.maxLifetime,
+      'remember_max_lifetime': instance.rememberMaxLifetime,
       'remember_ttl': instance.rememberTtl,
       'server_idle_timeout': instance.serverIdleTimeout,
       'server_remember_ttl': instance.serverRememberTtl,
@@ -3039,6 +3149,19 @@ const _$StateCategoryEnumMap = {
   StateCategory.done: 'done',
   StateCategory.cancelled: 'cancelled',
 };
+
+_StateCount _$StateCountFromJson(Map<String, dynamic> json) => _StateCount(
+  count: (json['count'] as num?)?.toInt() ?? 0,
+  projectId: json['project_id'] as String? ?? '',
+  status: json['status'] as String? ?? '',
+);
+
+Map<String, dynamic> _$StateCountToJson(_StateCount instance) =>
+    <String, dynamic>{
+      'count': instance.count,
+      'project_id': instance.projectId,
+      'status': instance.status,
+    };
 
 _Stats _$StatsFromJson(Map<String, dynamic> json) => _Stats(
   byCategory:
@@ -4008,6 +4131,23 @@ Map<String, dynamic> _$TaskMoveToJson(_TaskMove instance) => <String, dynamic>{
   'task': ?instance.task?.toJson(),
 };
 
+_TaskTally _$TaskTallyFromJson(Map<String, dynamic> json) => _TaskTally(
+  blocked: (json['blocked'] as num?)?.toInt() ?? 0,
+  held: (json['held'] as num?)?.toInt() ?? 0,
+  states:
+      (json['states'] as List<dynamic>?)
+          ?.map((e) => StateCount.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const <StateCount>[],
+);
+
+Map<String, dynamic> _$TaskTallyToJson(_TaskTally instance) =>
+    <String, dynamic>{
+      'blocked': instance.blocked,
+      'held': instance.held,
+      'states': instance.states.map((e) => e.toJson()).toList(),
+    };
+
 _TaskTemplate _$TaskTemplateFromJson(Map<String, dynamic> json) =>
     _TaskTemplate(
       createdAt: _$JsonConverterFromJson<String, DateTime>(
@@ -4360,6 +4500,7 @@ _TransitionInput _$TransitionInputFromJson(Map<String, dynamic> json) =>
     _TransitionInput(
       comment: json['comment'] as String?,
       customFields: json['custom_fields'] as Map<String, dynamic>?,
+      dryRun: json['dry_run'] as bool?,
       leaseToken: json['lease_token'] as String?,
       to: json['to'] as String?,
       version: (json['version'] as num?)?.toInt(),
@@ -4369,6 +4510,7 @@ Map<String, dynamic> _$TransitionInputToJson(_TransitionInput instance) =>
     <String, dynamic>{
       'comment': ?instance.comment,
       'custom_fields': ?instance.customFields,
+      'dry_run': ?instance.dryRun,
       'lease_token': ?instance.leaseToken,
       'to': ?instance.to,
       'version': ?instance.version,

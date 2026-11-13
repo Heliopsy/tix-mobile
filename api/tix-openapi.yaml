@@ -105,6 +105,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -196,6 +198,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -345,6 +349,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -438,6 +444,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -691,6 +699,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -2044,6 +2054,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -2340,6 +2352,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -2959,6 +2973,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -3431,6 +3447,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -3582,6 +3600,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -3837,6 +3857,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -4305,6 +4327,14 @@ paths:
           name: unread
           schema:
             type: boolean
+        - description: 'Kind keeps items of one kind: mention, assigned, status or
+            comment; repeat it for several.'
+          in: query
+          name: kind
+          schema:
+            items:
+              type: string
+            type: array
       responses:
         "200":
           content:
@@ -4321,6 +4351,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -4730,6 +4762,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -4995,6 +5029,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -5166,6 +5202,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -5423,6 +5461,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -5830,6 +5870,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -6408,6 +6450,47 @@ paths:
         - retention
       x-tix-openspec:
         - http-api
+  /api/v1/release:
+    get:
+      description: The running version, the newest published release with its notes
+        and upgrade commands when it is newer, and the bundled changelog around the
+        running version. Notes are Markdown with links removed.
+      operationId: server.release
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseBody'
+          description: 'ReleaseBody is the running version, the newest published release
+            and what the bundled changelog says: the browser''s release screen as
+            data.'
+        "400":
+          $ref: '#/components/responses/Error400'
+        "401":
+          $ref: '#/components/responses/Error401'
+        "403":
+          $ref: '#/components/responses/Error403'
+        "404":
+          $ref: '#/components/responses/Error404'
+        "409":
+          $ref: '#/components/responses/Error409'
+        "422":
+          $ref: '#/components/responses/Error422'
+        "500":
+          $ref: '#/components/responses/Error500'
+        "502":
+          $ref: '#/components/responses/Error502'
+        "504":
+          $ref: '#/components/responses/Error504'
+      security:
+        - bearer: []
+        - session: []
+      summary: The running version, the newest published release with its notes and
+        upgrade commands when it is newer, and the bundled changelog around the running
+        version
+      tags:
+        - server
   /api/v1/retention:
     get:
       description: |-
@@ -6613,6 +6696,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -6986,6 +7071,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -7171,6 +7258,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -7254,6 +7343,13 @@ paths:
           name: page
           schema:
             type: integer
+        - description: 'Tally is true to have the response count the whole selection,
+            every page of it, in tally: tasks per project and status, tasks waiting
+            on a dependency and tasks under a live claim. It costs one grouped count.'
+          in: query
+          name: tally
+          schema:
+            type: boolean
         - description: Project keeps tasks in a project, named by key, not case sensitive;
             repeat it for several. An unknown key is an error.
           in: query
@@ -7499,6 +7595,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -7905,6 +8003,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -8128,6 +8228,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -8551,6 +8653,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -8763,6 +8867,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -9481,6 +9587,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -9810,6 +9918,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -9909,6 +10019,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -10311,6 +10423,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -10630,6 +10744,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -10811,6 +10927,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -11094,6 +11212,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -11430,6 +11550,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -11860,6 +11982,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -12034,6 +12158,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -12101,6 +12227,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -12267,6 +12395,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -12548,6 +12678,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -12681,6 +12813,8 @@ paths:
                     type: string
                   page:
                     type: integer
+                  tally:
+                    $ref: '#/components/schemas/TaskTally'
                   total:
                     type:
                       - "null"
@@ -13305,6 +13439,13 @@ components:
           description: SecondFactorEnrollmentRequired is true, on the answer to WhoAmI,
             while the policy refuses this person everything but enrolment.
           type: boolean
+        session_expires_at:
+          description: SessionExpiresAt is when the session the request authenticated
+            with ends unless it is used again, on the answer to WhoAmI.
+          format: date-time
+          type:
+            - "null"
+            - string
         tenant_id:
           description: TenantID is the tenant the actor acts in.
           type: string
@@ -13825,6 +13966,10 @@ components:
           description: LeaseToken proves the claim. Renewing, releasing and writing
             artifacts need it; keep it secret.
           type: string
+        started_from:
+          description: StartedFrom is the status the task was in before a claim that
+            starts it moved it; empty when the claim did not move the task.
+          type: string
         task:
           $ref: '#/components/schemas/Task'
           description: Task is the claimed task as it stands after the claim.
@@ -13835,6 +13980,15 @@ components:
         actor_id:
           description: ActorID claims on behalf of another actor, by identifier or
             handle; empty claims for the caller.
+          type: string
+        start:
+          description: Start moves the task, in the claim's own transaction, to the
+            first in-progress state its workflow allows from where it is. A task already
+            in progress stays put; no such state refuses the claim.
+          type: boolean
+        start_status:
+          description: StartStatus names the state Start moves the task to, and implies
+            Start.
           type: string
         ttl:
           description: TTL is how long the lease holds, a duration such as "30m".
@@ -13855,6 +14009,15 @@ components:
           items:
             type: string
           type: array
+        start:
+          description: Start moves the task, in the claim's own transaction, to the
+            first in-progress state its workflow allows from where it is. A task already
+            in progress stays put; no such state refuses the claim.
+          type: boolean
+        start_status:
+          description: StartStatus names the state Start moves the task to, and implies
+            Start.
+          type: string
         statuses:
           description: Statuses restricts the queue to tasks in any of these statuses;
             empty means every status that is not terminal.
@@ -15922,6 +16085,99 @@ components:
             and 30 days; omitted means 7 days.
           type: string
       type: object
+    ReleaseBody:
+      description: 'ReleaseBody is the running version, the newest published release
+        and what the bundled changelog says: the browser''s release screen as data.'
+      properties:
+        changes:
+          $ref: '#/components/schemas/ReleaseChanges'
+          description: Changes is the bundled changelog around the running version.
+        checked:
+          description: Checked reports whether a check has finished, whatever it answered.
+          type: boolean
+        failed:
+          description: Failed reports whether the most recent check got no usable
+            answer.
+          type: boolean
+        latest:
+          description: Latest is the newest published release, empty until a check
+            succeeds.
+          type: string
+        methods:
+          description: Methods are the commands that upgrade each install method to
+            Latest. Empty unless Newer.
+          items:
+            $ref: '#/components/schemas/ReleaseMethod'
+          type:
+            - array
+            - "null"
+        newer:
+          description: Newer reports whether Latest is ahead of Running.
+          type: boolean
+        notes:
+          description: Notes are the newest release's notes as Markdown with every
+            link taken out and the heading naming the release dropped. Empty unless
+            Newer.
+          type: string
+        running:
+          description: Running is this binary's version, without a leading v.
+          type: string
+        status:
+          description: Status is newer, current, unknown when the versions cannot
+            be compared, failed when the feed could not be read, or pending when nothing
+            has been asked yet.
+          type: string
+      type: object
+    ReleaseChanges:
+      description: ReleaseChanges is the "What's new" selection from the bundled changelog.
+      properties:
+        earlier:
+          description: Earlier are up to ten entries before Running, or the eleven
+            newest when Running is left out.
+          items:
+            $ref: '#/components/schemas/ReleaseEntry'
+          type:
+            - array
+            - "null"
+        running:
+          $ref: '#/components/schemas/ReleaseEntry'
+          description: Running is the running version's own entry, left out unless
+            this build is a tagged release the changelog has an entry for.
+        untagged:
+          description: Untagged reports that the running version is not a plain major.minor.patch,
+            so the build is not a tagged release.
+          type: boolean
+      type: object
+    ReleaseEntry:
+      description: ReleaseEntry is one changelog entry.
+      properties:
+        date:
+          description: Date is the release date, YYYY-MM-DD, or empty.
+          type: string
+        notes:
+          description: Notes is the entry as Markdown with every link taken out.
+          type: string
+        version:
+          description: Version is the release, without a leading v.
+          type: string
+      type: object
+    ReleaseMethod:
+      description: ReleaseMethod is one way tix is installed and the command that
+        upgrades it.
+      properties:
+        command:
+          description: Command upgrades that install to Latest.
+          type: string
+        help:
+          description: Help says when the method applies.
+          type: string
+        id:
+          description: ID is binary, container or go.
+          type: string
+        name:
+          description: Name names the install method.
+          type: string
+      type: object
     ReleaseRequest:
       description: ReleaseRequest gives up a lease held under a token.
       properties:
@@ -16009,6 +16265,11 @@ components:
           description: CustomFields are custom field values set on the last hop, keyed
             by field definition key.
           type: object
+        dry_run:
+          description: 'DryRun walks the route in one transaction and rolls it back:
+            each hop is judged against the state the hops before it would leave, and
+            nothing is written.'
+          type: boolean
         lease_token:
           description: LeaseToken proves the caller's claim when the task is leased.
           type: string
@@ -16039,6 +16300,9 @@ components:
           type:
             - array
             - "null"
+        dry_run:
+          description: DryRun is true when the route was judged and nothing was written.
+          type: boolean
         from:
           description: From is the status the task started in.
           type: string
@@ -16456,6 +16720,15 @@ components:
         idle_timeout:
           description: IdleTimeout ends a session unused for this long; zero is off.
           type: string
+        max_lifetime:
+          description: MaxLifetime is how long after the sign-in a session in use
+            may be renewed to; zero means a session ends TTL after the sign-in, used
+            or not.
+          type: string
+        remember_max_lifetime:
+          description: RememberMaxLifetime is MaxLifetime for a "keep me signed in"
+            sign-in, which is renewed by RememberTTL.
+          type: string
         remember_ttl:
           description: RememberTTL is how long a "keep me signed in" sign-in lasts;
             zero means the choice is not offered.
@@ -16473,7 +16746,8 @@ components:
             shorten.
           type: string
         ttl:
-          description: TTL is how long a sign-in lasts from the moment it is made.
+          description: TTL is how long a sign-in lasts from the moment it is made,
+            and again from each use while MaxLifetime allows.
           type: string
       type: object
     SnoozeInput:
@@ -16536,6 +16810,20 @@ components:
         - done
         - cancelled
       type: string
+    StateCount:
+      description: StateCount is how many selected tasks of one project sit in one
+        status.
+      properties:
+        count:
+          description: Count is how many of them there are.
+          type: integer
+        project_id:
+          description: ProjectID is the project the tasks belong to.
+          type: string
+        status:
+          description: Status is the workflow state they sit in.
+          type: string
+      type: object
     Stats:
       description: Stats is one tenant's throughput, ageing and leaderboard over a
         window. Every count is zero and every list empty when nothing happened, which
@@ -17676,6 +17964,24 @@ components:
           $ref: '#/components/schemas/Task'
           description: Task is the moved task under its new reference.
       type: object
+    TaskTally:
+      description: TaskTally counts every task a filter selects, not one page of them.
+      properties:
+        blocked:
+          description: Blocked counts the tasks waiting on an unfinished dependency.
+          type: integer
+        held:
+          description: Held counts the tasks under a live claim.
+          type: integer
+        states:
+          description: States counts the selection per project and status. A state
+            is done or open by its project's workflow, which the reader already holds.
+          items:
+            $ref: '#/components/schemas/StateCount'
+          type:
+            - array
+            - "null"
+      type: object
     TaskTemplate:
       description: 'TaskTemplate is a named shape of a task that is not itself work:
         it never appears where tasks do, and using it creates tasks.'
@@ -18075,6 +18381,11 @@ components:
           description: CustomFields merges values over the stored ones by field key;
             a null value clears that field.
           type: object
+        dry_run:
+          description: DryRun runs every check the move runs and writes nothing; the
+            answer is the task as the move would leave it, and a refusal is the move's
+            own.
+          type: boolean
         lease_token:
           description: LeaseToken is the claim's token, required while the task is
             claimed.

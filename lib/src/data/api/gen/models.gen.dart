@@ -232,6 +232,12 @@ abstract class Actor with _$Actor {
     @Default(false)
     bool secondFactorEnrollmentRequired,
 
+    /// SessionExpiresAt is when the session the request authenticated with ends
+    /// unless it is used again, on the answer to WhoAmI.
+    @JsonKey(name: 'session_expires_at')
+    @TixDateTime()
+    DateTime? sessionExpiresAt,
+
     /// TenantID is the tenant the actor acts in.
     @JsonKey(name: 'tenant_id') @Default('') String tenantId,
 
@@ -900,6 +906,10 @@ abstract class Claim with _$Claim {
     /// it; keep it secret.
     @JsonKey(name: 'lease_token') @Default('') String leaseToken,
 
+    /// StartedFrom is the status the task was in before a claim that starts it
+    /// moved it; empty when the claim did not move the task.
+    @JsonKey(name: 'started_from') @Default('') String startedFrom,
+
     /// Task is the claimed task as it stands after the claim.
     @JsonKey(name: 'task') Task? task,
   }) = _Claim;
@@ -916,6 +926,14 @@ abstract class ClaimInput with _$ClaimInput {
     /// ActorID claims on behalf of another actor, by identifier or handle; empty
     /// claims for the caller.
     @JsonKey(name: 'actor_id') String? actorId,
+
+    /// Start moves the task, in the claim's own transaction, to the first
+    /// in-progress state its workflow allows from where it is. A task already in
+    /// progress stays put; no such state refuses the claim.
+    @JsonKey(name: 'start') bool? start,
+
+    /// StartStatus names the state Start moves the task to, and implies Start.
+    @JsonKey(name: 'start_status') String? startStatus,
 
     /// TTL is how long the lease holds, a duration such as "30m". Omitted takes the
     /// task, project, workflow or tenant default; a value above the maximum is
@@ -940,6 +958,14 @@ abstract class ClaimNextInput with _$ClaimNextInput {
     /// ProjectRefs restricts the queue to these projects, by key or identifier;
     /// empty means every project the caller may claim in.
     @JsonKey(name: 'project_refs') List<String>? projectRefs,
+
+    /// Start moves the task, in the claim's own transaction, to the first
+    /// in-progress state its workflow allows from where it is. A task already in
+    /// progress stays put; no such state refuses the claim.
+    @JsonKey(name: 'start') bool? start,
+
+    /// StartStatus names the state Start moves the task to, and implies Start.
+    @JsonKey(name: 'start_status') String? startStatus,
 
     /// Statuses restricts the queue to tasks in any of these statuses; empty means
     /// every status that is not terminal.
@@ -3410,6 +3436,119 @@ abstract class ReissueInviteInput with _$ReissueInviteInput {
       _$ReissueInviteInputFromJson(json);
 }
 
+/// ReleaseBody is the running version, the newest published release and what
+/// the bundled changelog says: the browser's release screen as data.
+@freezed
+abstract class ReleaseBody with _$ReleaseBody {
+  /// Creates a [ReleaseBody].
+  const factory ReleaseBody({
+    /// Changes is the bundled changelog around the running version.
+    @JsonKey(name: 'changes') ReleaseChanges? changes,
+
+    /// Checked reports whether a check has finished, whatever it answered.
+    @JsonKey(name: 'checked') @Default(false) bool checked,
+
+    /// Failed reports whether the most recent check got no usable answer.
+    @JsonKey(name: 'failed') @Default(false) bool failed,
+
+    /// Latest is the newest published release, empty until a check succeeds.
+    @JsonKey(name: 'latest') @Default('') String latest,
+
+    /// Methods are the commands that upgrade each install method to Latest. Empty
+    /// unless Newer.
+    @JsonKey(name: 'methods')
+    @Default(<ReleaseMethod>[])
+    List<ReleaseMethod> methods,
+
+    /// Newer reports whether Latest is ahead of Running.
+    @JsonKey(name: 'newer') @Default(false) bool newer,
+
+    /// Notes are the newest release's notes as Markdown with every link taken out
+    /// and the heading naming the release dropped. Empty unless Newer.
+    @JsonKey(name: 'notes') @Default('') String notes,
+
+    /// Running is this binary's version, without a leading v.
+    @JsonKey(name: 'running') @Default('') String running,
+
+    /// Status is newer, current, unknown when the versions cannot be compared,
+    /// failed when the feed could not be read, or pending when nothing has been
+    /// asked yet.
+    @JsonKey(name: 'status') @Default('') String status,
+  }) = _ReleaseBody;
+
+  /// Reads a [ReleaseBody] from its JSON object.
+  factory ReleaseBody.fromJson(Map<String, dynamic> json) =>
+      _$ReleaseBodyFromJson(json);
+}
+
+/// ReleaseChanges is the "What's new" selection from the bundled changelog.
+@freezed
+abstract class ReleaseChanges with _$ReleaseChanges {
+  /// Creates a [ReleaseChanges].
+  const factory ReleaseChanges({
+    /// Earlier are up to ten entries before Running, or the eleven newest when
+    /// Running is left out.
+    @JsonKey(name: 'earlier')
+    @Default(<ReleaseEntry>[])
+    List<ReleaseEntry> earlier,
+
+    /// Running is the running version's own entry, left out unless this build is a
+    /// tagged release the changelog has an entry for.
+    @JsonKey(name: 'running') ReleaseEntry? running,
+
+    /// Untagged reports that the running version is not a plain major.minor.patch,
+    /// so the build is not a tagged release.
+    @JsonKey(name: 'untagged') @Default(false) bool untagged,
+  }) = _ReleaseChanges;
+
+  /// Reads a [ReleaseChanges] from its JSON object.
+  factory ReleaseChanges.fromJson(Map<String, dynamic> json) =>
+      _$ReleaseChangesFromJson(json);
+}
+
+/// ReleaseEntry is one changelog entry.
+@freezed
+abstract class ReleaseEntry with _$ReleaseEntry {
+  /// Creates a [ReleaseEntry].
+  const factory ReleaseEntry({
+    /// Date is the release date, YYYY-MM-DD, or empty.
+    @JsonKey(name: 'date') @Default('') String date,
+
+    /// Notes is the entry as Markdown with every link taken out.
+    @JsonKey(name: 'notes') @Default('') String notes,
+
+    /// Version is the release, without a leading v.
+    @JsonKey(name: 'version') @Default('') String version,
+  }) = _ReleaseEntry;
+
+  /// Reads a [ReleaseEntry] from its JSON object.
+  factory ReleaseEntry.fromJson(Map<String, dynamic> json) =>
+      _$ReleaseEntryFromJson(json);
+}
+
+/// ReleaseMethod is one way tix is installed and the command that upgrades it.
+@freezed
+abstract class ReleaseMethod with _$ReleaseMethod {
+  /// Creates a [ReleaseMethod].
+  const factory ReleaseMethod({
+    /// Command upgrades that install to Latest.
+    @JsonKey(name: 'command') @Default('') String command,
+
+    /// Help says when the method applies.
+    @JsonKey(name: 'help') @Default('') String help,
+
+    /// ID is binary, container or go.
+    @JsonKey(name: 'id') @Default('') String id,
+
+    /// Name names the install method.
+    @JsonKey(name: 'name') @Default('') String name,
+  }) = _ReleaseMethod;
+
+  /// Reads a [ReleaseMethod] from its JSON object.
+  factory ReleaseMethod.fromJson(Map<String, dynamic> json) =>
+      _$ReleaseMethodFromJson(json);
+}
+
 /// ReleaseRequest gives up a lease held under a token.
 @freezed
 abstract class ReleaseRequest with _$ReleaseRequest {
@@ -3528,6 +3667,11 @@ abstract class RouteInput with _$RouteInput {
     /// definition key.
     @JsonKey(name: 'custom_fields') Map<String, Object?>? customFields,
 
+    /// DryRun walks the route in one transaction and rolls it back: each hop is
+    /// judged against the state the hops before it would leave, and nothing is
+    /// written.
+    @JsonKey(name: 'dry_run') bool? dryRun,
+
     /// LeaseToken proves the caller's claim when the task is leased.
     @JsonKey(name: 'lease_token') String? leaseToken,
 
@@ -3558,6 +3702,9 @@ abstract class RouteResult with _$RouteResult {
   const factory RouteResult({
     /// Applied lists the states the task actually entered, in order.
     @JsonKey(name: 'applied') @Default(<String>[]) List<String> applied,
+
+    /// DryRun is true when the route was judged and nothing was written.
+    @JsonKey(name: 'dry_run') @Default(false) bool dryRun,
 
     /// From is the status the task started in.
     @JsonKey(name: 'from') @Default('') String from,
@@ -4038,6 +4185,16 @@ abstract class SessionPolicy with _$SessionPolicy {
     /// IdleTimeout ends a session unused for this long; zero is off.
     @JsonKey(name: 'idle_timeout') @Default('') String idleTimeout,
 
+    /// MaxLifetime is how long after the sign-in a session in use may be renewed
+    /// to; zero means a session ends TTL after the sign-in, used or not.
+    @JsonKey(name: 'max_lifetime') @Default('') String maxLifetime,
+
+    /// RememberMaxLifetime is MaxLifetime for a "keep me signed in" sign-in, which
+    /// is renewed by RememberTTL.
+    @JsonKey(name: 'remember_max_lifetime')
+    @Default('')
+    String rememberMaxLifetime,
+
     /// RememberTTL is how long a "keep me signed in" sign-in lasts; zero means the
     /// choice is not offered.
     @JsonKey(name: 'remember_ttl') @Default('') String rememberTtl,
@@ -4051,7 +4208,8 @@ abstract class SessionPolicy with _$SessionPolicy {
     /// ServerTTL is the server's session.ttl, which a tenant may only shorten.
     @JsonKey(name: 'server_ttl') @Default('') String serverTtl,
 
-    /// TTL is how long a sign-in lasts from the moment it is made.
+    /// TTL is how long a sign-in lasts from the moment it is made, and again from
+    /// each use while MaxLifetime allows.
     @JsonKey(name: 'ttl') @Default('') String ttl,
   }) = _SessionPolicy;
 
@@ -4153,6 +4311,26 @@ enum StateCategory {
 
   /// The value on the wire.
   final String value;
+}
+
+/// StateCount is how many selected tasks of one project sit in one status.
+@freezed
+abstract class StateCount with _$StateCount {
+  /// Creates a [StateCount].
+  const factory StateCount({
+    /// Count is how many of them there are.
+    @JsonKey(name: 'count') @Default(0) int count,
+
+    /// ProjectID is the project the tasks belong to.
+    @JsonKey(name: 'project_id') @Default('') String projectId,
+
+    /// Status is the workflow state they sit in.
+    @JsonKey(name: 'status') @Default('') String status,
+  }) = _StateCount;
+
+  /// Reads a [StateCount] from its JSON object.
+  factory StateCount.fromJson(Map<String, dynamic> json) =>
+      _$StateCountFromJson(json);
 }
 
 /// Stats is one tenant's throughput, ageing and leaderboard over a window.
@@ -5421,6 +5599,27 @@ abstract class TaskMove with _$TaskMove {
       _$TaskMoveFromJson(json);
 }
 
+/// TaskTally counts every task a filter selects, not one page of them.
+@freezed
+abstract class TaskTally with _$TaskTally {
+  /// Creates a [TaskTally].
+  const factory TaskTally({
+    /// Blocked counts the tasks waiting on an unfinished dependency.
+    @JsonKey(name: 'blocked') @Default(0) int blocked,
+
+    /// Held counts the tasks under a live claim.
+    @JsonKey(name: 'held') @Default(0) int held,
+
+    /// States counts the selection per project and status. A state is done or open
+    /// by its project's workflow, which the reader already holds.
+    @JsonKey(name: 'states') @Default(<StateCount>[]) List<StateCount> states,
+  }) = _TaskTally;
+
+  /// Reads a [TaskTally] from its JSON object.
+  factory TaskTally.fromJson(Map<String, dynamic> json) =>
+      _$TaskTallyFromJson(json);
+}
+
 /// TaskTemplate is a named shape of a task that is not itself work: it never
 /// appears where tasks do, and using it creates tasks.
 @freezed
@@ -5868,6 +6067,10 @@ abstract class TransitionInput with _$TransitionInput {
     /// CustomFields merges values over the stored ones by field key; a null value
     /// clears that field.
     @JsonKey(name: 'custom_fields') Map<String, Object?>? customFields,
+
+    /// DryRun runs every check the move runs and writes nothing; the answer is the
+    /// task as the move would leave it, and a refusal is the move's own.
+    @JsonKey(name: 'dry_run') bool? dryRun,
 
     /// LeaseToken is the claim's token, required while the task is claimed.
     @JsonKey(name: 'lease_token') String? leaseToken,

@@ -1307,7 +1307,9 @@ mixin _$Actor {
 /// it.
 @JsonKey(name: 'second_factor_due')@TixDateTime() DateTime? get secondFactorDue;/// SecondFactorEnrollmentRequired is true, on the answer to WhoAmI, while the
 /// policy refuses this person everything but enrolment.
-@JsonKey(name: 'second_factor_enrollment_required') bool get secondFactorEnrollmentRequired;/// TenantID is the tenant the actor acts in.
+@JsonKey(name: 'second_factor_enrollment_required') bool get secondFactorEnrollmentRequired;/// SessionExpiresAt is when the session the request authenticated with ends
+/// unless it is used again, on the answer to WhoAmI.
+@JsonKey(name: 'session_expires_at')@TixDateTime() DateTime? get sessionExpiresAt;/// TenantID is the tenant the actor acts in.
 @JsonKey(name: 'tenant_id') String get tenantId;/// TenantKey and TenantName name the actor's tenant, on the answer to WhoAmI.
 @JsonKey(name: 'tenant_key') String get tenantKey;@JsonKey(name: 'tenant_name') String get tenantName;/// Theme is the palette the actor's tenant resolves to, as the browser renders
 /// it, on the answer to WhoAmI.
@@ -1326,20 +1328,20 @@ $ActorCopyWith<Actor> get copyWith => _$ActorCopyWithImpl<Actor>(this as Actor, 
 @override
 bool operator ==(Object other) {
   final _this = this as Actor;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Actor&&(identical(other.accountId, _this.accountId) || other.accountId == _this.accountId)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.globalAdmin, _this.globalAdmin) || other.globalAdmin == _this.globalAdmin)&&(identical(other.handle, _this.handle) || other.handle == _this.handle)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.kind, _this.kind) || other.kind == _this.kind)&&const DeepCollectionEquality().equals(other.memberships, _this.memberships)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.role, _this.role) || other.role == _this.role)&&const DeepCollectionEquality().equals(other.scopes, _this.scopes)&&(identical(other.secondFactorDue, _this.secondFactorDue) || other.secondFactorDue == _this.secondFactorDue)&&(identical(other.secondFactorEnrollmentRequired, _this.secondFactorEnrollmentRequired) || other.secondFactorEnrollmentRequired == _this.secondFactorEnrollmentRequired)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.tenantKey, _this.tenantKey) || other.tenantKey == _this.tenantKey)&&(identical(other.tenantName, _this.tenantName) || other.tenantName == _this.tenantName)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.tokenId, _this.tokenId) || other.tokenId == _this.tokenId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Actor&&(identical(other.accountId, _this.accountId) || other.accountId == _this.accountId)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.globalAdmin, _this.globalAdmin) || other.globalAdmin == _this.globalAdmin)&&(identical(other.handle, _this.handle) || other.handle == _this.handle)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.kind, _this.kind) || other.kind == _this.kind)&&const DeepCollectionEquality().equals(other.memberships, _this.memberships)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.role, _this.role) || other.role == _this.role)&&const DeepCollectionEquality().equals(other.scopes, _this.scopes)&&(identical(other.secondFactorDue, _this.secondFactorDue) || other.secondFactorDue == _this.secondFactorDue)&&(identical(other.secondFactorEnrollmentRequired, _this.secondFactorEnrollmentRequired) || other.secondFactorEnrollmentRequired == _this.secondFactorEnrollmentRequired)&&(identical(other.sessionExpiresAt, _this.sessionExpiresAt) || other.sessionExpiresAt == _this.sessionExpiresAt)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.tenantKey, _this.tenantKey) || other.tenantKey == _this.tenantKey)&&(identical(other.tenantName, _this.tenantName) || other.tenantName == _this.tenantName)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.tokenId, _this.tokenId) || other.tokenId == _this.tokenId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Actor;
-  return Object.hash(runtimeType,_this.accountId,_this.displayName,_this.email,_this.globalAdmin,_this.handle,_this.id,_this.kind,const DeepCollectionEquality().hash(_this.memberships),_this.projectId,_this.role,const DeepCollectionEquality().hash(_this.scopes),_this.secondFactorDue,_this.secondFactorEnrollmentRequired,_this.tenantId,_this.tenantKey,_this.tenantName,_this.theme,_this.tokenId);
+  return Object.hashAll([runtimeType,_this.accountId,_this.displayName,_this.email,_this.globalAdmin,_this.handle,_this.id,_this.kind,const DeepCollectionEquality().hash(_this.memberships),_this.projectId,_this.role,const DeepCollectionEquality().hash(_this.scopes),_this.secondFactorDue,_this.secondFactorEnrollmentRequired,_this.sessionExpiresAt,_this.tenantId,_this.tenantKey,_this.tenantName,_this.theme,_this.tokenId]);
 }
 
 @override
 String toString() {
   final _this = this as Actor;
-  return 'Actor(accountId: ${_this.accountId}, displayName: ${_this.displayName}, email: ${_this.email}, globalAdmin: ${_this.globalAdmin}, handle: ${_this.handle}, id: ${_this.id}, kind: ${_this.kind}, memberships: ${_this.memberships}, projectId: ${_this.projectId}, role: ${_this.role}, scopes: ${_this.scopes}, secondFactorDue: ${_this.secondFactorDue}, secondFactorEnrollmentRequired: ${_this.secondFactorEnrollmentRequired}, tenantId: ${_this.tenantId}, tenantKey: ${_this.tenantKey}, tenantName: ${_this.tenantName}, theme: ${_this.theme}, tokenId: ${_this.tokenId})';
+  return 'Actor(accountId: ${_this.accountId}, displayName: ${_this.displayName}, email: ${_this.email}, globalAdmin: ${_this.globalAdmin}, handle: ${_this.handle}, id: ${_this.id}, kind: ${_this.kind}, memberships: ${_this.memberships}, projectId: ${_this.projectId}, role: ${_this.role}, scopes: ${_this.scopes}, secondFactorDue: ${_this.secondFactorDue}, secondFactorEnrollmentRequired: ${_this.secondFactorEnrollmentRequired}, sessionExpiresAt: ${_this.sessionExpiresAt}, tenantId: ${_this.tenantId}, tenantKey: ${_this.tenantKey}, tenantName: ${_this.tenantName}, theme: ${_this.theme}, tokenId: ${_this.tokenId})';
 }
 
 
@@ -1350,7 +1352,7 @@ abstract mixin class $ActorCopyWith<$Res>  {
   factory $ActorCopyWith(Actor value, $Res Function(Actor) _then) = _$ActorCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'account_id') String accountId,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'handle') String handle,@JsonKey(name: 'id') String id,@JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) ActorKind? kind,@JsonKey(name: 'memberships') List<AccountMembership> memberships,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'scopes') List<String> scopes,@JsonKey(name: 'second_factor_due')@TixDateTime() DateTime? secondFactorDue,@JsonKey(name: 'second_factor_enrollment_required') bool secondFactorEnrollmentRequired,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'tenant_key') String tenantKey,@JsonKey(name: 'tenant_name') String tenantName,@JsonKey(name: 'theme') Theme? theme,@JsonKey(name: 'token_id') String tokenId
+@JsonKey(name: 'account_id') String accountId,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'handle') String handle,@JsonKey(name: 'id') String id,@JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) ActorKind? kind,@JsonKey(name: 'memberships') List<AccountMembership> memberships,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'scopes') List<String> scopes,@JsonKey(name: 'second_factor_due')@TixDateTime() DateTime? secondFactorDue,@JsonKey(name: 'second_factor_enrollment_required') bool secondFactorEnrollmentRequired,@JsonKey(name: 'session_expires_at')@TixDateTime() DateTime? sessionExpiresAt,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'tenant_key') String tenantKey,@JsonKey(name: 'tenant_name') String tenantName,@JsonKey(name: 'theme') Theme? theme,@JsonKey(name: 'token_id') String tokenId
 });
 
 
@@ -1367,7 +1369,7 @@ class _$ActorCopyWithImpl<$Res>
 
 /// Create a copy of Actor
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? accountId = null,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? handle = null,Object? id = null,Object? kind = freezed,Object? memberships = null,Object? projectId = null,Object? role = freezed,Object? scopes = null,Object? secondFactorDue = freezed,Object? secondFactorEnrollmentRequired = null,Object? tenantId = null,Object? tenantKey = null,Object? tenantName = null,Object? theme = freezed,Object? tokenId = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? accountId = null,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? handle = null,Object? id = null,Object? kind = freezed,Object? memberships = null,Object? projectId = null,Object? role = freezed,Object? scopes = null,Object? secondFactorDue = freezed,Object? secondFactorEnrollmentRequired = null,Object? sessionExpiresAt = freezed,Object? tenantId = null,Object? tenantKey = null,Object? tenantName = null,Object? theme = freezed,Object? tokenId = null,}) {
   return _then(Actor(
 accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
@@ -1382,7 +1384,8 @@ as String,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_
 as Role?,scopes: null == scopes ? _self.scopes : scopes // ignore: cast_nullable_to_non_nullable
 as List<String>,secondFactorDue: freezed == secondFactorDue ? _self.secondFactorDue : secondFactorDue // ignore: cast_nullable_to_non_nullable
 as DateTime?,secondFactorEnrollmentRequired: null == secondFactorEnrollmentRequired ? _self.secondFactorEnrollmentRequired : secondFactorEnrollmentRequired // ignore: cast_nullable_to_non_nullable
-as bool,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as bool,sessionExpiresAt: freezed == sessionExpiresAt ? _self.sessionExpiresAt : sessionExpiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
 as String,tenantKey: null == tenantKey ? _self.tenantKey : tenantKey // ignore: cast_nullable_to_non_nullable
 as String,tenantName: null == tenantName ? _self.tenantName : tenantName // ignore: cast_nullable_to_non_nullable
 as String,theme: freezed == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
@@ -1484,10 +1487,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'second_factor_due')@TixDateTime()  DateTime? secondFactorDue, @JsonKey(name: 'second_factor_enrollment_required')  bool secondFactorEnrollmentRequired, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'theme')  Theme? theme, @JsonKey(name: 'token_id')  String tokenId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'second_factor_due')@TixDateTime()  DateTime? secondFactorDue, @JsonKey(name: 'second_factor_enrollment_required')  bool secondFactorEnrollmentRequired, @JsonKey(name: 'session_expires_at')@TixDateTime()  DateTime? sessionExpiresAt, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'theme')  Theme? theme, @JsonKey(name: 'token_id')  String tokenId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Actor() when $default != null:
-return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.secondFactorDue,_that.secondFactorEnrollmentRequired,_that.tenantId,_that.tenantKey,_that.tenantName,_that.theme,_that.tokenId);case _:
+return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.secondFactorDue,_that.secondFactorEnrollmentRequired,_that.sessionExpiresAt,_that.tenantId,_that.tenantKey,_that.tenantName,_that.theme,_that.tokenId);case _:
   return orElse();
 
 }
@@ -1505,10 +1508,10 @@ return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'second_factor_due')@TixDateTime()  DateTime? secondFactorDue, @JsonKey(name: 'second_factor_enrollment_required')  bool secondFactorEnrollmentRequired, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'theme')  Theme? theme, @JsonKey(name: 'token_id')  String tokenId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'second_factor_due')@TixDateTime()  DateTime? secondFactorDue, @JsonKey(name: 'second_factor_enrollment_required')  bool secondFactorEnrollmentRequired, @JsonKey(name: 'session_expires_at')@TixDateTime()  DateTime? sessionExpiresAt, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'theme')  Theme? theme, @JsonKey(name: 'token_id')  String tokenId)  $default,) {final _that = this;
 switch (_that) {
 case _Actor():
-return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.secondFactorDue,_that.secondFactorEnrollmentRequired,_that.tenantId,_that.tenantKey,_that.tenantName,_that.theme,_that.tokenId);case _:
+return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.secondFactorDue,_that.secondFactorEnrollmentRequired,_that.sessionExpiresAt,_that.tenantId,_that.tenantKey,_that.tenantName,_that.theme,_that.tokenId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1525,10 +1528,10 @@ return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'second_factor_due')@TixDateTime()  DateTime? secondFactorDue, @JsonKey(name: 'second_factor_enrollment_required')  bool secondFactorEnrollmentRequired, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'theme')  Theme? theme, @JsonKey(name: 'token_id')  String tokenId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'second_factor_due')@TixDateTime()  DateTime? secondFactorDue, @JsonKey(name: 'second_factor_enrollment_required')  bool secondFactorEnrollmentRequired, @JsonKey(name: 'session_expires_at')@TixDateTime()  DateTime? sessionExpiresAt, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'theme')  Theme? theme, @JsonKey(name: 'token_id')  String tokenId)?  $default,) {final _that = this;
 switch (_that) {
 case _Actor() when $default != null:
-return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.secondFactorDue,_that.secondFactorEnrollmentRequired,_that.tenantId,_that.tenantKey,_that.tenantName,_that.theme,_that.tokenId);case _:
+return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.secondFactorDue,_that.secondFactorEnrollmentRequired,_that.sessionExpiresAt,_that.tenantId,_that.tenantKey,_that.tenantName,_that.theme,_that.tokenId);case _:
   return null;
 
 }
@@ -1540,7 +1543,7 @@ return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,
 @JsonSerializable()
 
 class _Actor implements Actor {
-  const _Actor({@JsonKey(name: 'account_id') this.accountId = '', @JsonKey(name: 'display_name') this.displayName = '', @JsonKey(name: 'email') this.email = '', @JsonKey(name: 'global_admin') this.globalAdmin = false, @JsonKey(name: 'handle') this.handle = '', @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships = const <AccountMembership>[], @JsonKey(name: 'project_id') this.projectId = '', @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.role, @JsonKey(name: 'scopes')  List<String> scopes = const <String>[], @JsonKey(name: 'second_factor_due')@TixDateTime() this.secondFactorDue, @JsonKey(name: 'second_factor_enrollment_required') this.secondFactorEnrollmentRequired = false, @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'tenant_key') this.tenantKey = '', @JsonKey(name: 'tenant_name') this.tenantName = '', @JsonKey(name: 'theme') this.theme, @JsonKey(name: 'token_id') this.tokenId = ''}): _memberships = memberships,_scopes = scopes;
+  const _Actor({@JsonKey(name: 'account_id') this.accountId = '', @JsonKey(name: 'display_name') this.displayName = '', @JsonKey(name: 'email') this.email = '', @JsonKey(name: 'global_admin') this.globalAdmin = false, @JsonKey(name: 'handle') this.handle = '', @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships = const <AccountMembership>[], @JsonKey(name: 'project_id') this.projectId = '', @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.role, @JsonKey(name: 'scopes')  List<String> scopes = const <String>[], @JsonKey(name: 'second_factor_due')@TixDateTime() this.secondFactorDue, @JsonKey(name: 'second_factor_enrollment_required') this.secondFactorEnrollmentRequired = false, @JsonKey(name: 'session_expires_at')@TixDateTime() this.sessionExpiresAt, @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'tenant_key') this.tenantKey = '', @JsonKey(name: 'tenant_name') this.tenantName = '', @JsonKey(name: 'theme') this.theme, @JsonKey(name: 'token_id') this.tokenId = ''}): _memberships = memberships,_scopes = scopes;
   factory _Actor.fromJson(Map<String, dynamic> json) => _$ActorFromJson(json);
 
 /// AccountID is the account behind a user actor, on the answer to WhoAmI.
@@ -1593,6 +1596,9 @@ class _Actor implements Actor {
 /// SecondFactorEnrollmentRequired is true, on the answer to WhoAmI, while the
 /// policy refuses this person everything but enrolment.
 @override@JsonKey(name: 'second_factor_enrollment_required') final  bool secondFactorEnrollmentRequired;
+/// SessionExpiresAt is when the session the request authenticated with ends
+/// unless it is used again, on the answer to WhoAmI.
+@override@JsonKey(name: 'session_expires_at')@TixDateTime() final  DateTime? sessionExpiresAt;
 /// TenantID is the tenant the actor acts in.
 @override@JsonKey(name: 'tenant_id') final  String tenantId;
 /// TenantKey and TenantName name the actor's tenant, on the answer to WhoAmI.
@@ -1617,18 +1623,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Actor&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.email, email) || other.email == email)&&(identical(other.globalAdmin, globalAdmin) || other.globalAdmin == globalAdmin)&&(identical(other.handle, handle) || other.handle == handle)&&(identical(other.id, id) || other.id == id)&&(identical(other.kind, kind) || other.kind == kind)&&const DeepCollectionEquality().equals(other.memberships, _memberships)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.role, role) || other.role == role)&&const DeepCollectionEquality().equals(other.scopes, _scopes)&&(identical(other.secondFactorDue, secondFactorDue) || other.secondFactorDue == secondFactorDue)&&(identical(other.secondFactorEnrollmentRequired, secondFactorEnrollmentRequired) || other.secondFactorEnrollmentRequired == secondFactorEnrollmentRequired)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.tenantKey, tenantKey) || other.tenantKey == tenantKey)&&(identical(other.tenantName, tenantName) || other.tenantName == tenantName)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.tokenId, tokenId) || other.tokenId == tokenId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Actor&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.email, email) || other.email == email)&&(identical(other.globalAdmin, globalAdmin) || other.globalAdmin == globalAdmin)&&(identical(other.handle, handle) || other.handle == handle)&&(identical(other.id, id) || other.id == id)&&(identical(other.kind, kind) || other.kind == kind)&&const DeepCollectionEquality().equals(other.memberships, _memberships)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.role, role) || other.role == role)&&const DeepCollectionEquality().equals(other.scopes, _scopes)&&(identical(other.secondFactorDue, secondFactorDue) || other.secondFactorDue == secondFactorDue)&&(identical(other.secondFactorEnrollmentRequired, secondFactorEnrollmentRequired) || other.secondFactorEnrollmentRequired == secondFactorEnrollmentRequired)&&(identical(other.sessionExpiresAt, sessionExpiresAt) || other.sessionExpiresAt == sessionExpiresAt)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.tenantKey, tenantKey) || other.tenantKey == tenantKey)&&(identical(other.tenantName, tenantName) || other.tenantName == tenantName)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.tokenId, tokenId) || other.tokenId == tokenId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,accountId,displayName,email,globalAdmin,handle,id,kind,const DeepCollectionEquality().hash(_memberships),projectId,role,const DeepCollectionEquality().hash(_scopes),secondFactorDue,secondFactorEnrollmentRequired,tenantId,tenantKey,tenantName,theme,tokenId);
+    return Object.hashAll([runtimeType,accountId,displayName,email,globalAdmin,handle,id,kind,const DeepCollectionEquality().hash(_memberships),projectId,role,const DeepCollectionEquality().hash(_scopes),secondFactorDue,secondFactorEnrollmentRequired,sessionExpiresAt,tenantId,tenantKey,tenantName,theme,tokenId]);
 }
 
 @override
 String toString() {
-    return 'Actor(accountId: $accountId, displayName: $displayName, email: $email, globalAdmin: $globalAdmin, handle: $handle, id: $id, kind: $kind, memberships: $memberships, projectId: $projectId, role: $role, scopes: $scopes, secondFactorDue: $secondFactorDue, secondFactorEnrollmentRequired: $secondFactorEnrollmentRequired, tenantId: $tenantId, tenantKey: $tenantKey, tenantName: $tenantName, theme: $theme, tokenId: $tokenId)';
+    return 'Actor(accountId: $accountId, displayName: $displayName, email: $email, globalAdmin: $globalAdmin, handle: $handle, id: $id, kind: $kind, memberships: $memberships, projectId: $projectId, role: $role, scopes: $scopes, secondFactorDue: $secondFactorDue, secondFactorEnrollmentRequired: $secondFactorEnrollmentRequired, sessionExpiresAt: $sessionExpiresAt, tenantId: $tenantId, tenantKey: $tenantKey, tenantName: $tenantName, theme: $theme, tokenId: $tokenId)';
 }
 
 
@@ -1639,7 +1645,7 @@ abstract mixin class _$ActorCopyWith<$Res> implements $ActorCopyWith<$Res> {
   factory _$ActorCopyWith(_Actor value, $Res Function(_Actor) _then) = __$ActorCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'account_id') String accountId,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'handle') String handle,@JsonKey(name: 'id') String id,@JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) ActorKind? kind,@JsonKey(name: 'memberships') List<AccountMembership> memberships,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'scopes') List<String> scopes,@JsonKey(name: 'second_factor_due')@TixDateTime() DateTime? secondFactorDue,@JsonKey(name: 'second_factor_enrollment_required') bool secondFactorEnrollmentRequired,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'tenant_key') String tenantKey,@JsonKey(name: 'tenant_name') String tenantName,@JsonKey(name: 'theme') Theme? theme,@JsonKey(name: 'token_id') String tokenId
+@JsonKey(name: 'account_id') String accountId,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'handle') String handle,@JsonKey(name: 'id') String id,@JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) ActorKind? kind,@JsonKey(name: 'memberships') List<AccountMembership> memberships,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'scopes') List<String> scopes,@JsonKey(name: 'second_factor_due')@TixDateTime() DateTime? secondFactorDue,@JsonKey(name: 'second_factor_enrollment_required') bool secondFactorEnrollmentRequired,@JsonKey(name: 'session_expires_at')@TixDateTime() DateTime? sessionExpiresAt,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'tenant_key') String tenantKey,@JsonKey(name: 'tenant_name') String tenantName,@JsonKey(name: 'theme') Theme? theme,@JsonKey(name: 'token_id') String tokenId
 });
 
 
@@ -1656,7 +1662,7 @@ class __$ActorCopyWithImpl<$Res>
 
 /// Create a copy of Actor
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? accountId = null,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? handle = null,Object? id = null,Object? kind = freezed,Object? memberships = null,Object? projectId = null,Object? role = freezed,Object? scopes = null,Object? secondFactorDue = freezed,Object? secondFactorEnrollmentRequired = null,Object? tenantId = null,Object? tenantKey = null,Object? tenantName = null,Object? theme = freezed,Object? tokenId = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? accountId = null,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? handle = null,Object? id = null,Object? kind = freezed,Object? memberships = null,Object? projectId = null,Object? role = freezed,Object? scopes = null,Object? secondFactorDue = freezed,Object? secondFactorEnrollmentRequired = null,Object? sessionExpiresAt = freezed,Object? tenantId = null,Object? tenantKey = null,Object? tenantName = null,Object? theme = freezed,Object? tokenId = null,}) {
   return _then(_Actor(
 accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
@@ -1671,7 +1677,8 @@ as String,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_
 as Role?,scopes: null == scopes ? _self._scopes : scopes // ignore: cast_nullable_to_non_nullable
 as List<String>,secondFactorDue: freezed == secondFactorDue ? _self.secondFactorDue : secondFactorDue // ignore: cast_nullable_to_non_nullable
 as DateTime?,secondFactorEnrollmentRequired: null == secondFactorEnrollmentRequired ? _self.secondFactorEnrollmentRequired : secondFactorEnrollmentRequired // ignore: cast_nullable_to_non_nullable
-as bool,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as bool,sessionExpiresAt: freezed == sessionExpiresAt ? _self.sessionExpiresAt : sessionExpiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
 as String,tenantKey: null == tenantKey ? _self.tenantKey : tenantKey // ignore: cast_nullable_to_non_nullable
 as String,tenantName: null == tenantName ? _self.tenantName : tenantName // ignore: cast_nullable_to_non_nullable
 as String,theme: freezed == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
@@ -7408,7 +7415,9 @@ mixin _$Claim {
 @JsonKey(name: 'lease') LeaseGrant? get lease;/// LeaseExpiresAt is when the claim runs out unless renewed, RFC 3339.
 @JsonKey(name: 'lease_expires_at')@TixDateTime() DateTime? get leaseExpiresAt;/// LeaseToken proves the claim. Renewing, releasing and writing artifacts need
 /// it; keep it secret.
-@JsonKey(name: 'lease_token') String get leaseToken;/// Task is the claimed task as it stands after the claim.
+@JsonKey(name: 'lease_token') String get leaseToken;/// StartedFrom is the status the task was in before a claim that starts it
+/// moved it; empty when the claim did not move the task.
+@JsonKey(name: 'started_from') String get startedFrom;/// Task is the claimed task as it stands after the claim.
 @JsonKey(name: 'task') Task? get task;
 /// Create a copy of Claim
 /// with the given fields replaced by the non-null parameter values.
@@ -7423,20 +7432,20 @@ $ClaimCopyWith<Claim> get copyWith => _$ClaimCopyWithImpl<Claim>(this as Claim, 
 @override
 bool operator ==(Object other) {
   final _this = this as Claim;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Claim&&(identical(other.lease, _this.lease) || other.lease == _this.lease)&&(identical(other.leaseExpiresAt, _this.leaseExpiresAt) || other.leaseExpiresAt == _this.leaseExpiresAt)&&(identical(other.leaseToken, _this.leaseToken) || other.leaseToken == _this.leaseToken)&&(identical(other.task, _this.task) || other.task == _this.task));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Claim&&(identical(other.lease, _this.lease) || other.lease == _this.lease)&&(identical(other.leaseExpiresAt, _this.leaseExpiresAt) || other.leaseExpiresAt == _this.leaseExpiresAt)&&(identical(other.leaseToken, _this.leaseToken) || other.leaseToken == _this.leaseToken)&&(identical(other.startedFrom, _this.startedFrom) || other.startedFrom == _this.startedFrom)&&(identical(other.task, _this.task) || other.task == _this.task));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Claim;
-  return Object.hash(runtimeType,_this.lease,_this.leaseExpiresAt,_this.leaseToken,_this.task);
+  return Object.hash(runtimeType,_this.lease,_this.leaseExpiresAt,_this.leaseToken,_this.startedFrom,_this.task);
 }
 
 @override
 String toString() {
   final _this = this as Claim;
-  return 'Claim(lease: ${_this.lease}, leaseExpiresAt: ${_this.leaseExpiresAt}, leaseToken: ${_this.leaseToken}, task: ${_this.task})';
+  return 'Claim(lease: ${_this.lease}, leaseExpiresAt: ${_this.leaseExpiresAt}, leaseToken: ${_this.leaseToken}, startedFrom: ${_this.startedFrom}, task: ${_this.task})';
 }
 
 
@@ -7447,7 +7456,7 @@ abstract mixin class $ClaimCopyWith<$Res>  {
   factory $ClaimCopyWith(Claim value, $Res Function(Claim) _then) = _$ClaimCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'lease') LeaseGrant? lease,@JsonKey(name: 'lease_expires_at')@TixDateTime() DateTime? leaseExpiresAt,@JsonKey(name: 'lease_token') String leaseToken,@JsonKey(name: 'task') Task? task
+@JsonKey(name: 'lease') LeaseGrant? lease,@JsonKey(name: 'lease_expires_at')@TixDateTime() DateTime? leaseExpiresAt,@JsonKey(name: 'lease_token') String leaseToken,@JsonKey(name: 'started_from') String startedFrom,@JsonKey(name: 'task') Task? task
 });
 
 
@@ -7464,11 +7473,12 @@ class _$ClaimCopyWithImpl<$Res>
 
 /// Create a copy of Claim
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? lease = freezed,Object? leaseExpiresAt = freezed,Object? leaseToken = null,Object? task = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? lease = freezed,Object? leaseExpiresAt = freezed,Object? leaseToken = null,Object? startedFrom = null,Object? task = freezed,}) {
   return _then(Claim(
 lease: freezed == lease ? _self.lease : lease // ignore: cast_nullable_to_non_nullable
 as LeaseGrant?,leaseExpiresAt: freezed == leaseExpiresAt ? _self.leaseExpiresAt : leaseExpiresAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,leaseToken: null == leaseToken ? _self.leaseToken : leaseToken // ignore: cast_nullable_to_non_nullable
+as String,startedFrom: null == startedFrom ? _self.startedFrom : startedFrom // ignore: cast_nullable_to_non_nullable
 as String,task: freezed == task ? _self.task : task // ignore: cast_nullable_to_non_nullable
 as Task?,
   ));
@@ -7579,10 +7589,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'lease')  LeaseGrant? lease, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'lease_token')  String leaseToken, @JsonKey(name: 'task')  Task? task)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'lease')  LeaseGrant? lease, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'lease_token')  String leaseToken, @JsonKey(name: 'started_from')  String startedFrom, @JsonKey(name: 'task')  Task? task)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Claim() when $default != null:
-return $default(_that.lease,_that.leaseExpiresAt,_that.leaseToken,_that.task);case _:
+return $default(_that.lease,_that.leaseExpiresAt,_that.leaseToken,_that.startedFrom,_that.task);case _:
   return orElse();
 
 }
@@ -7600,10 +7610,10 @@ return $default(_that.lease,_that.leaseExpiresAt,_that.leaseToken,_that.task);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'lease')  LeaseGrant? lease, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'lease_token')  String leaseToken, @JsonKey(name: 'task')  Task? task)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'lease')  LeaseGrant? lease, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'lease_token')  String leaseToken, @JsonKey(name: 'started_from')  String startedFrom, @JsonKey(name: 'task')  Task? task)  $default,) {final _that = this;
 switch (_that) {
 case _Claim():
-return $default(_that.lease,_that.leaseExpiresAt,_that.leaseToken,_that.task);case _:
+return $default(_that.lease,_that.leaseExpiresAt,_that.leaseToken,_that.startedFrom,_that.task);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -7620,10 +7630,10 @@ return $default(_that.lease,_that.leaseExpiresAt,_that.leaseToken,_that.task);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'lease')  LeaseGrant? lease, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'lease_token')  String leaseToken, @JsonKey(name: 'task')  Task? task)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'lease')  LeaseGrant? lease, @JsonKey(name: 'lease_expires_at')@TixDateTime()  DateTime? leaseExpiresAt, @JsonKey(name: 'lease_token')  String leaseToken, @JsonKey(name: 'started_from')  String startedFrom, @JsonKey(name: 'task')  Task? task)?  $default,) {final _that = this;
 switch (_that) {
 case _Claim() when $default != null:
-return $default(_that.lease,_that.leaseExpiresAt,_that.leaseToken,_that.task);case _:
+return $default(_that.lease,_that.leaseExpiresAt,_that.leaseToken,_that.startedFrom,_that.task);case _:
   return null;
 
 }
@@ -7635,7 +7645,7 @@ return $default(_that.lease,_that.leaseExpiresAt,_that.leaseToken,_that.task);ca
 @JsonSerializable()
 
 class _Claim implements Claim {
-  const _Claim({@JsonKey(name: 'lease') this.lease, @JsonKey(name: 'lease_expires_at')@TixDateTime() this.leaseExpiresAt, @JsonKey(name: 'lease_token') this.leaseToken = '', @JsonKey(name: 'task') this.task});
+  const _Claim({@JsonKey(name: 'lease') this.lease, @JsonKey(name: 'lease_expires_at')@TixDateTime() this.leaseExpiresAt, @JsonKey(name: 'lease_token') this.leaseToken = '', @JsonKey(name: 'started_from') this.startedFrom = '', @JsonKey(name: 'task') this.task});
   factory _Claim.fromJson(Map<String, dynamic> json) => _$ClaimFromJson(json);
 
 /// Lease is how long the lease granted runs and which level decided it.
@@ -7645,6 +7655,9 @@ class _Claim implements Claim {
 /// LeaseToken proves the claim. Renewing, releasing and writing artifacts need
 /// it; keep it secret.
 @override@JsonKey(name: 'lease_token') final  String leaseToken;
+/// StartedFrom is the status the task was in before a claim that starts it
+/// moved it; empty when the claim did not move the task.
+@override@JsonKey(name: 'started_from') final  String startedFrom;
 /// Task is the claimed task as it stands after the claim.
 @override@JsonKey(name: 'task') final  Task? task;
 
@@ -7661,18 +7674,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Claim&&(identical(other.lease, lease) || other.lease == lease)&&(identical(other.leaseExpiresAt, leaseExpiresAt) || other.leaseExpiresAt == leaseExpiresAt)&&(identical(other.leaseToken, leaseToken) || other.leaseToken == leaseToken)&&(identical(other.task, task) || other.task == task));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Claim&&(identical(other.lease, lease) || other.lease == lease)&&(identical(other.leaseExpiresAt, leaseExpiresAt) || other.leaseExpiresAt == leaseExpiresAt)&&(identical(other.leaseToken, leaseToken) || other.leaseToken == leaseToken)&&(identical(other.startedFrom, startedFrom) || other.startedFrom == startedFrom)&&(identical(other.task, task) || other.task == task));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,lease,leaseExpiresAt,leaseToken,task);
+    return Object.hash(runtimeType,lease,leaseExpiresAt,leaseToken,startedFrom,task);
 }
 
 @override
 String toString() {
-    return 'Claim(lease: $lease, leaseExpiresAt: $leaseExpiresAt, leaseToken: $leaseToken, task: $task)';
+    return 'Claim(lease: $lease, leaseExpiresAt: $leaseExpiresAt, leaseToken: $leaseToken, startedFrom: $startedFrom, task: $task)';
 }
 
 
@@ -7683,7 +7696,7 @@ abstract mixin class _$ClaimCopyWith<$Res> implements $ClaimCopyWith<$Res> {
   factory _$ClaimCopyWith(_Claim value, $Res Function(_Claim) _then) = __$ClaimCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'lease') LeaseGrant? lease,@JsonKey(name: 'lease_expires_at')@TixDateTime() DateTime? leaseExpiresAt,@JsonKey(name: 'lease_token') String leaseToken,@JsonKey(name: 'task') Task? task
+@JsonKey(name: 'lease') LeaseGrant? lease,@JsonKey(name: 'lease_expires_at')@TixDateTime() DateTime? leaseExpiresAt,@JsonKey(name: 'lease_token') String leaseToken,@JsonKey(name: 'started_from') String startedFrom,@JsonKey(name: 'task') Task? task
 });
 
 
@@ -7700,11 +7713,12 @@ class __$ClaimCopyWithImpl<$Res>
 
 /// Create a copy of Claim
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? lease = freezed,Object? leaseExpiresAt = freezed,Object? leaseToken = null,Object? task = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? lease = freezed,Object? leaseExpiresAt = freezed,Object? leaseToken = null,Object? startedFrom = null,Object? task = freezed,}) {
   return _then(_Claim(
 lease: freezed == lease ? _self.lease : lease // ignore: cast_nullable_to_non_nullable
 as LeaseGrant?,leaseExpiresAt: freezed == leaseExpiresAt ? _self.leaseExpiresAt : leaseExpiresAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,leaseToken: null == leaseToken ? _self.leaseToken : leaseToken // ignore: cast_nullable_to_non_nullable
+as String,startedFrom: null == startedFrom ? _self.startedFrom : startedFrom // ignore: cast_nullable_to_non_nullable
 as String,task: freezed == task ? _self.task : task // ignore: cast_nullable_to_non_nullable
 as Task?,
   ));
@@ -7743,7 +7757,11 @@ mixin _$ClaimInput {
 
 /// ActorID claims on behalf of another actor, by identifier or handle; empty
 /// claims for the caller.
-@JsonKey(name: 'actor_id') String? get actorId;/// TTL is how long the lease holds, a duration such as "30m". Omitted takes the
+@JsonKey(name: 'actor_id') String? get actorId;/// Start moves the task, in the claim's own transaction, to the first
+/// in-progress state its workflow allows from where it is. A task already in
+/// progress stays put; no such state refuses the claim.
+@JsonKey(name: 'start') bool? get start;/// StartStatus names the state Start moves the task to, and implies Start.
+@JsonKey(name: 'start_status') String? get startStatus;/// TTL is how long the lease holds, a duration such as "30m". Omitted takes the
 /// task, project, workflow or tenant default; a value above the maximum is
 /// refused.
 @JsonKey(name: 'ttl') String? get ttl;
@@ -7760,20 +7778,20 @@ $ClaimInputCopyWith<ClaimInput> get copyWith => _$ClaimInputCopyWithImpl<ClaimIn
 @override
 bool operator ==(Object other) {
   final _this = this as ClaimInput;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClaimInput&&(identical(other.actorId, _this.actorId) || other.actorId == _this.actorId)&&(identical(other.ttl, _this.ttl) || other.ttl == _this.ttl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClaimInput&&(identical(other.actorId, _this.actorId) || other.actorId == _this.actorId)&&(identical(other.start, _this.start) || other.start == _this.start)&&(identical(other.startStatus, _this.startStatus) || other.startStatus == _this.startStatus)&&(identical(other.ttl, _this.ttl) || other.ttl == _this.ttl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as ClaimInput;
-  return Object.hash(runtimeType,_this.actorId,_this.ttl);
+  return Object.hash(runtimeType,_this.actorId,_this.start,_this.startStatus,_this.ttl);
 }
 
 @override
 String toString() {
   final _this = this as ClaimInput;
-  return 'ClaimInput(actorId: ${_this.actorId}, ttl: ${_this.ttl})';
+  return 'ClaimInput(actorId: ${_this.actorId}, start: ${_this.start}, startStatus: ${_this.startStatus}, ttl: ${_this.ttl})';
 }
 
 
@@ -7784,7 +7802,7 @@ abstract mixin class $ClaimInputCopyWith<$Res>  {
   factory $ClaimInputCopyWith(ClaimInput value, $Res Function(ClaimInput) _then) = _$ClaimInputCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'actor_id') String? actorId,@JsonKey(name: 'ttl') String? ttl
+@JsonKey(name: 'actor_id') String? actorId,@JsonKey(name: 'start') bool? start,@JsonKey(name: 'start_status') String? startStatus,@JsonKey(name: 'ttl') String? ttl
 });
 
 
@@ -7801,9 +7819,11 @@ class _$ClaimInputCopyWithImpl<$Res>
 
 /// Create a copy of ClaimInput
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? actorId = freezed,Object? ttl = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? actorId = freezed,Object? start = freezed,Object? startStatus = freezed,Object? ttl = freezed,}) {
   return _then(ClaimInput(
 actorId: freezed == actorId ? _self.actorId : actorId // ignore: cast_nullable_to_non_nullable
+as String?,start: freezed == start ? _self.start : start // ignore: cast_nullable_to_non_nullable
+as bool?,startStatus: freezed == startStatus ? _self.startStatus : startStatus // ignore: cast_nullable_to_non_nullable
 as String?,ttl: freezed == ttl ? _self.ttl : ttl // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -7890,10 +7910,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String? actorId, @JsonKey(name: 'ttl')  String? ttl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String? actorId, @JsonKey(name: 'start')  bool? start, @JsonKey(name: 'start_status')  String? startStatus, @JsonKey(name: 'ttl')  String? ttl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ClaimInput() when $default != null:
-return $default(_that.actorId,_that.ttl);case _:
+return $default(_that.actorId,_that.start,_that.startStatus,_that.ttl);case _:
   return orElse();
 
 }
@@ -7911,10 +7931,10 @@ return $default(_that.actorId,_that.ttl);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String? actorId, @JsonKey(name: 'ttl')  String? ttl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String? actorId, @JsonKey(name: 'start')  bool? start, @JsonKey(name: 'start_status')  String? startStatus, @JsonKey(name: 'ttl')  String? ttl)  $default,) {final _that = this;
 switch (_that) {
 case _ClaimInput():
-return $default(_that.actorId,_that.ttl);case _:
+return $default(_that.actorId,_that.start,_that.startStatus,_that.ttl);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -7931,10 +7951,10 @@ return $default(_that.actorId,_that.ttl);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'actor_id')  String? actorId, @JsonKey(name: 'ttl')  String? ttl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'actor_id')  String? actorId, @JsonKey(name: 'start')  bool? start, @JsonKey(name: 'start_status')  String? startStatus, @JsonKey(name: 'ttl')  String? ttl)?  $default,) {final _that = this;
 switch (_that) {
 case _ClaimInput() when $default != null:
-return $default(_that.actorId,_that.ttl);case _:
+return $default(_that.actorId,_that.start,_that.startStatus,_that.ttl);case _:
   return null;
 
 }
@@ -7946,12 +7966,18 @@ return $default(_that.actorId,_that.ttl);case _:
 @JsonSerializable()
 
 class _ClaimInput implements ClaimInput {
-  const _ClaimInput({@JsonKey(name: 'actor_id') this.actorId, @JsonKey(name: 'ttl') this.ttl});
+  const _ClaimInput({@JsonKey(name: 'actor_id') this.actorId, @JsonKey(name: 'start') this.start, @JsonKey(name: 'start_status') this.startStatus, @JsonKey(name: 'ttl') this.ttl});
   factory _ClaimInput.fromJson(Map<String, dynamic> json) => _$ClaimInputFromJson(json);
 
 /// ActorID claims on behalf of another actor, by identifier or handle; empty
 /// claims for the caller.
 @override@JsonKey(name: 'actor_id') final  String? actorId;
+/// Start moves the task, in the claim's own transaction, to the first
+/// in-progress state its workflow allows from where it is. A task already in
+/// progress stays put; no such state refuses the claim.
+@override@JsonKey(name: 'start') final  bool? start;
+/// StartStatus names the state Start moves the task to, and implies Start.
+@override@JsonKey(name: 'start_status') final  String? startStatus;
 /// TTL is how long the lease holds, a duration such as "30m". Omitted takes the
 /// task, project, workflow or tenant default; a value above the maximum is
 /// refused.
@@ -7970,18 +7996,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClaimInput&&(identical(other.actorId, actorId) || other.actorId == actorId)&&(identical(other.ttl, ttl) || other.ttl == ttl));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClaimInput&&(identical(other.actorId, actorId) || other.actorId == actorId)&&(identical(other.start, start) || other.start == start)&&(identical(other.startStatus, startStatus) || other.startStatus == startStatus)&&(identical(other.ttl, ttl) || other.ttl == ttl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,actorId,ttl);
+    return Object.hash(runtimeType,actorId,start,startStatus,ttl);
 }
 
 @override
 String toString() {
-    return 'ClaimInput(actorId: $actorId, ttl: $ttl)';
+    return 'ClaimInput(actorId: $actorId, start: $start, startStatus: $startStatus, ttl: $ttl)';
 }
 
 
@@ -7992,7 +8018,7 @@ abstract mixin class _$ClaimInputCopyWith<$Res> implements $ClaimInputCopyWith<$
   factory _$ClaimInputCopyWith(_ClaimInput value, $Res Function(_ClaimInput) _then) = __$ClaimInputCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'actor_id') String? actorId,@JsonKey(name: 'ttl') String? ttl
+@JsonKey(name: 'actor_id') String? actorId,@JsonKey(name: 'start') bool? start,@JsonKey(name: 'start_status') String? startStatus,@JsonKey(name: 'ttl') String? ttl
 });
 
 
@@ -8009,9 +8035,11 @@ class __$ClaimInputCopyWithImpl<$Res>
 
 /// Create a copy of ClaimInput
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? actorId = freezed,Object? ttl = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? actorId = freezed,Object? start = freezed,Object? startStatus = freezed,Object? ttl = freezed,}) {
   return _then(_ClaimInput(
 actorId: freezed == actorId ? _self.actorId : actorId // ignore: cast_nullable_to_non_nullable
+as String?,start: freezed == start ? _self.start : start // ignore: cast_nullable_to_non_nullable
+as bool?,startStatus: freezed == startStatus ? _self.startStatus : startStatus // ignore: cast_nullable_to_non_nullable
 as String?,ttl: freezed == ttl ? _self.ttl : ttl // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -8028,7 +8056,11 @@ mixin _$ClaimNextInput {
 /// claims for the caller.
 @JsonKey(name: 'actor_id') String? get actorId;/// ProjectRefs restricts the queue to these projects, by key or identifier;
 /// empty means every project the caller may claim in.
-@JsonKey(name: 'project_refs') List<String>? get projectRefs;/// Statuses restricts the queue to tasks in any of these statuses; empty means
+@JsonKey(name: 'project_refs') List<String>? get projectRefs;/// Start moves the task, in the claim's own transaction, to the first
+/// in-progress state its workflow allows from where it is. A task already in
+/// progress stays put; no such state refuses the claim.
+@JsonKey(name: 'start') bool? get start;/// StartStatus names the state Start moves the task to, and implies Start.
+@JsonKey(name: 'start_status') String? get startStatus;/// Statuses restricts the queue to tasks in any of these statuses; empty means
 /// every status that is not terminal.
 @JsonKey(name: 'statuses') List<String>? get statuses;/// Tags restricts the queue to tasks carrying any of these tags.
 @JsonKey(name: 'tags') List<String>? get tags;/// TTL is how long the lease holds, a duration such as "30m". Omitted takes the
@@ -8047,20 +8079,20 @@ $ClaimNextInputCopyWith<ClaimNextInput> get copyWith => _$ClaimNextInputCopyWith
 @override
 bool operator ==(Object other) {
   final _this = this as ClaimNextInput;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClaimNextInput&&(identical(other.actorId, _this.actorId) || other.actorId == _this.actorId)&&const DeepCollectionEquality().equals(other.projectRefs, _this.projectRefs)&&const DeepCollectionEquality().equals(other.statuses, _this.statuses)&&const DeepCollectionEquality().equals(other.tags, _this.tags)&&(identical(other.ttl, _this.ttl) || other.ttl == _this.ttl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClaimNextInput&&(identical(other.actorId, _this.actorId) || other.actorId == _this.actorId)&&const DeepCollectionEquality().equals(other.projectRefs, _this.projectRefs)&&(identical(other.start, _this.start) || other.start == _this.start)&&(identical(other.startStatus, _this.startStatus) || other.startStatus == _this.startStatus)&&const DeepCollectionEquality().equals(other.statuses, _this.statuses)&&const DeepCollectionEquality().equals(other.tags, _this.tags)&&(identical(other.ttl, _this.ttl) || other.ttl == _this.ttl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as ClaimNextInput;
-  return Object.hash(runtimeType,_this.actorId,const DeepCollectionEquality().hash(_this.projectRefs),const DeepCollectionEquality().hash(_this.statuses),const DeepCollectionEquality().hash(_this.tags),_this.ttl);
+  return Object.hash(runtimeType,_this.actorId,const DeepCollectionEquality().hash(_this.projectRefs),_this.start,_this.startStatus,const DeepCollectionEquality().hash(_this.statuses),const DeepCollectionEquality().hash(_this.tags),_this.ttl);
 }
 
 @override
 String toString() {
   final _this = this as ClaimNextInput;
-  return 'ClaimNextInput(actorId: ${_this.actorId}, projectRefs: ${_this.projectRefs}, statuses: ${_this.statuses}, tags: ${_this.tags}, ttl: ${_this.ttl})';
+  return 'ClaimNextInput(actorId: ${_this.actorId}, projectRefs: ${_this.projectRefs}, start: ${_this.start}, startStatus: ${_this.startStatus}, statuses: ${_this.statuses}, tags: ${_this.tags}, ttl: ${_this.ttl})';
 }
 
 
@@ -8071,7 +8103,7 @@ abstract mixin class $ClaimNextInputCopyWith<$Res>  {
   factory $ClaimNextInputCopyWith(ClaimNextInput value, $Res Function(ClaimNextInput) _then) = _$ClaimNextInputCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'actor_id') String? actorId,@JsonKey(name: 'project_refs') List<String>? projectRefs,@JsonKey(name: 'statuses') List<String>? statuses,@JsonKey(name: 'tags') List<String>? tags,@JsonKey(name: 'ttl') String? ttl
+@JsonKey(name: 'actor_id') String? actorId,@JsonKey(name: 'project_refs') List<String>? projectRefs,@JsonKey(name: 'start') bool? start,@JsonKey(name: 'start_status') String? startStatus,@JsonKey(name: 'statuses') List<String>? statuses,@JsonKey(name: 'tags') List<String>? tags,@JsonKey(name: 'ttl') String? ttl
 });
 
 
@@ -8088,11 +8120,13 @@ class _$ClaimNextInputCopyWithImpl<$Res>
 
 /// Create a copy of ClaimNextInput
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? actorId = freezed,Object? projectRefs = freezed,Object? statuses = freezed,Object? tags = freezed,Object? ttl = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? actorId = freezed,Object? projectRefs = freezed,Object? start = freezed,Object? startStatus = freezed,Object? statuses = freezed,Object? tags = freezed,Object? ttl = freezed,}) {
   return _then(ClaimNextInput(
 actorId: freezed == actorId ? _self.actorId : actorId // ignore: cast_nullable_to_non_nullable
 as String?,projectRefs: freezed == projectRefs ? _self.projectRefs : projectRefs // ignore: cast_nullable_to_non_nullable
-as List<String>?,statuses: freezed == statuses ? _self.statuses : statuses // ignore: cast_nullable_to_non_nullable
+as List<String>?,start: freezed == start ? _self.start : start // ignore: cast_nullable_to_non_nullable
+as bool?,startStatus: freezed == startStatus ? _self.startStatus : startStatus // ignore: cast_nullable_to_non_nullable
+as String?,statuses: freezed == statuses ? _self.statuses : statuses // ignore: cast_nullable_to_non_nullable
 as List<String>?,tags: freezed == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
 as List<String>?,ttl: freezed == ttl ? _self.ttl : ttl // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -8180,10 +8214,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String? actorId, @JsonKey(name: 'project_refs')  List<String>? projectRefs, @JsonKey(name: 'statuses')  List<String>? statuses, @JsonKey(name: 'tags')  List<String>? tags, @JsonKey(name: 'ttl')  String? ttl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String? actorId, @JsonKey(name: 'project_refs')  List<String>? projectRefs, @JsonKey(name: 'start')  bool? start, @JsonKey(name: 'start_status')  String? startStatus, @JsonKey(name: 'statuses')  List<String>? statuses, @JsonKey(name: 'tags')  List<String>? tags, @JsonKey(name: 'ttl')  String? ttl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ClaimNextInput() when $default != null:
-return $default(_that.actorId,_that.projectRefs,_that.statuses,_that.tags,_that.ttl);case _:
+return $default(_that.actorId,_that.projectRefs,_that.start,_that.startStatus,_that.statuses,_that.tags,_that.ttl);case _:
   return orElse();
 
 }
@@ -8201,10 +8235,10 @@ return $default(_that.actorId,_that.projectRefs,_that.statuses,_that.tags,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String? actorId, @JsonKey(name: 'project_refs')  List<String>? projectRefs, @JsonKey(name: 'statuses')  List<String>? statuses, @JsonKey(name: 'tags')  List<String>? tags, @JsonKey(name: 'ttl')  String? ttl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String? actorId, @JsonKey(name: 'project_refs')  List<String>? projectRefs, @JsonKey(name: 'start')  bool? start, @JsonKey(name: 'start_status')  String? startStatus, @JsonKey(name: 'statuses')  List<String>? statuses, @JsonKey(name: 'tags')  List<String>? tags, @JsonKey(name: 'ttl')  String? ttl)  $default,) {final _that = this;
 switch (_that) {
 case _ClaimNextInput():
-return $default(_that.actorId,_that.projectRefs,_that.statuses,_that.tags,_that.ttl);case _:
+return $default(_that.actorId,_that.projectRefs,_that.start,_that.startStatus,_that.statuses,_that.tags,_that.ttl);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -8221,10 +8255,10 @@ return $default(_that.actorId,_that.projectRefs,_that.statuses,_that.tags,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'actor_id')  String? actorId, @JsonKey(name: 'project_refs')  List<String>? projectRefs, @JsonKey(name: 'statuses')  List<String>? statuses, @JsonKey(name: 'tags')  List<String>? tags, @JsonKey(name: 'ttl')  String? ttl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'actor_id')  String? actorId, @JsonKey(name: 'project_refs')  List<String>? projectRefs, @JsonKey(name: 'start')  bool? start, @JsonKey(name: 'start_status')  String? startStatus, @JsonKey(name: 'statuses')  List<String>? statuses, @JsonKey(name: 'tags')  List<String>? tags, @JsonKey(name: 'ttl')  String? ttl)?  $default,) {final _that = this;
 switch (_that) {
 case _ClaimNextInput() when $default != null:
-return $default(_that.actorId,_that.projectRefs,_that.statuses,_that.tags,_that.ttl);case _:
+return $default(_that.actorId,_that.projectRefs,_that.start,_that.startStatus,_that.statuses,_that.tags,_that.ttl);case _:
   return null;
 
 }
@@ -8236,7 +8270,7 @@ return $default(_that.actorId,_that.projectRefs,_that.statuses,_that.tags,_that.
 @JsonSerializable()
 
 class _ClaimNextInput implements ClaimNextInput {
-  const _ClaimNextInput({@JsonKey(name: 'actor_id') this.actorId, @JsonKey(name: 'project_refs')  List<String>? projectRefs, @JsonKey(name: 'statuses')  List<String>? statuses, @JsonKey(name: 'tags')  List<String>? tags, @JsonKey(name: 'ttl') this.ttl}): _projectRefs = projectRefs,_statuses = statuses,_tags = tags;
+  const _ClaimNextInput({@JsonKey(name: 'actor_id') this.actorId, @JsonKey(name: 'project_refs')  List<String>? projectRefs, @JsonKey(name: 'start') this.start, @JsonKey(name: 'start_status') this.startStatus, @JsonKey(name: 'statuses')  List<String>? statuses, @JsonKey(name: 'tags')  List<String>? tags, @JsonKey(name: 'ttl') this.ttl}): _projectRefs = projectRefs,_statuses = statuses,_tags = tags;
   factory _ClaimNextInput.fromJson(Map<String, dynamic> json) => _$ClaimNextInputFromJson(json);
 
 /// ActorID claims on behalf of another actor, by identifier or handle; empty
@@ -8255,6 +8289,12 @@ class _ClaimNextInput implements ClaimNextInput {
   return EqualUnmodifiableListView(value);
 }
 
+/// Start moves the task, in the claim's own transaction, to the first
+/// in-progress state its workflow allows from where it is. A task already in
+/// progress stays put; no such state refuses the claim.
+@override@JsonKey(name: 'start') final  bool? start;
+/// StartStatus names the state Start moves the task to, and implies Start.
+@override@JsonKey(name: 'start_status') final  String? startStatus;
 /// Statuses restricts the queue to tasks in any of these statuses; empty means
 /// every status that is not terminal.
  final  List<String>? _statuses;
@@ -8296,18 +8336,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClaimNextInput&&(identical(other.actorId, actorId) || other.actorId == actorId)&&const DeepCollectionEquality().equals(other.projectRefs, _projectRefs)&&const DeepCollectionEquality().equals(other.statuses, _statuses)&&const DeepCollectionEquality().equals(other.tags, _tags)&&(identical(other.ttl, ttl) || other.ttl == ttl));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClaimNextInput&&(identical(other.actorId, actorId) || other.actorId == actorId)&&const DeepCollectionEquality().equals(other.projectRefs, _projectRefs)&&(identical(other.start, start) || other.start == start)&&(identical(other.startStatus, startStatus) || other.startStatus == startStatus)&&const DeepCollectionEquality().equals(other.statuses, _statuses)&&const DeepCollectionEquality().equals(other.tags, _tags)&&(identical(other.ttl, ttl) || other.ttl == ttl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,actorId,const DeepCollectionEquality().hash(_projectRefs),const DeepCollectionEquality().hash(_statuses),const DeepCollectionEquality().hash(_tags),ttl);
+    return Object.hash(runtimeType,actorId,const DeepCollectionEquality().hash(_projectRefs),start,startStatus,const DeepCollectionEquality().hash(_statuses),const DeepCollectionEquality().hash(_tags),ttl);
 }
 
 @override
 String toString() {
-    return 'ClaimNextInput(actorId: $actorId, projectRefs: $projectRefs, statuses: $statuses, tags: $tags, ttl: $ttl)';
+    return 'ClaimNextInput(actorId: $actorId, projectRefs: $projectRefs, start: $start, startStatus: $startStatus, statuses: $statuses, tags: $tags, ttl: $ttl)';
 }
 
 
@@ -8318,7 +8358,7 @@ abstract mixin class _$ClaimNextInputCopyWith<$Res> implements $ClaimNextInputCo
   factory _$ClaimNextInputCopyWith(_ClaimNextInput value, $Res Function(_ClaimNextInput) _then) = __$ClaimNextInputCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'actor_id') String? actorId,@JsonKey(name: 'project_refs') List<String>? projectRefs,@JsonKey(name: 'statuses') List<String>? statuses,@JsonKey(name: 'tags') List<String>? tags,@JsonKey(name: 'ttl') String? ttl
+@JsonKey(name: 'actor_id') String? actorId,@JsonKey(name: 'project_refs') List<String>? projectRefs,@JsonKey(name: 'start') bool? start,@JsonKey(name: 'start_status') String? startStatus,@JsonKey(name: 'statuses') List<String>? statuses,@JsonKey(name: 'tags') List<String>? tags,@JsonKey(name: 'ttl') String? ttl
 });
 
 
@@ -8335,11 +8375,13 @@ class __$ClaimNextInputCopyWithImpl<$Res>
 
 /// Create a copy of ClaimNextInput
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? actorId = freezed,Object? projectRefs = freezed,Object? statuses = freezed,Object? tags = freezed,Object? ttl = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? actorId = freezed,Object? projectRefs = freezed,Object? start = freezed,Object? startStatus = freezed,Object? statuses = freezed,Object? tags = freezed,Object? ttl = freezed,}) {
   return _then(_ClaimNextInput(
 actorId: freezed == actorId ? _self.actorId : actorId // ignore: cast_nullable_to_non_nullable
 as String?,projectRefs: freezed == projectRefs ? _self._projectRefs : projectRefs // ignore: cast_nullable_to_non_nullable
-as List<String>?,statuses: freezed == statuses ? _self._statuses : statuses // ignore: cast_nullable_to_non_nullable
+as List<String>?,start: freezed == start ? _self.start : start // ignore: cast_nullable_to_non_nullable
+as bool?,startStatus: freezed == startStatus ? _self.startStatus : startStatus // ignore: cast_nullable_to_non_nullable
+as String?,statuses: freezed == statuses ? _self._statuses : statuses // ignore: cast_nullable_to_non_nullable
 as List<String>?,tags: freezed == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
 as List<String>?,ttl: freezed == ttl ? _self.ttl : ttl // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -29807,6 +29849,1247 @@ as String?,
 
 
 /// @nodoc
+mixin _$ReleaseBody {
+
+/// Changes is the bundled changelog around the running version.
+@JsonKey(name: 'changes') ReleaseChanges? get changes;/// Checked reports whether a check has finished, whatever it answered.
+@JsonKey(name: 'checked') bool get checked;/// Failed reports whether the most recent check got no usable answer.
+@JsonKey(name: 'failed') bool get failed;/// Latest is the newest published release, empty until a check succeeds.
+@JsonKey(name: 'latest') String get latest;/// Methods are the commands that upgrade each install method to Latest. Empty
+/// unless Newer.
+@JsonKey(name: 'methods') List<ReleaseMethod> get methods;/// Newer reports whether Latest is ahead of Running.
+@JsonKey(name: 'newer') bool get newer;/// Notes are the newest release's notes as Markdown with every link taken out
+/// and the heading naming the release dropped. Empty unless Newer.
+@JsonKey(name: 'notes') String get notes;/// Running is this binary's version, without a leading v.
+@JsonKey(name: 'running') String get running;/// Status is newer, current, unknown when the versions cannot be compared,
+/// failed when the feed could not be read, or pending when nothing has been
+/// asked yet.
+@JsonKey(name: 'status') String get status;
+/// Create a copy of ReleaseBody
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ReleaseBodyCopyWith<ReleaseBody> get copyWith => _$ReleaseBodyCopyWithImpl<ReleaseBody>(this as ReleaseBody, _$identity);
+
+  /// Serializes this ReleaseBody to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as ReleaseBody;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReleaseBody&&(identical(other.changes, _this.changes) || other.changes == _this.changes)&&(identical(other.checked, _this.checked) || other.checked == _this.checked)&&(identical(other.failed, _this.failed) || other.failed == _this.failed)&&(identical(other.latest, _this.latest) || other.latest == _this.latest)&&const DeepCollectionEquality().equals(other.methods, _this.methods)&&(identical(other.newer, _this.newer) || other.newer == _this.newer)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.running, _this.running) || other.running == _this.running)&&(identical(other.status, _this.status) || other.status == _this.status));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as ReleaseBody;
+  return Object.hash(runtimeType,_this.changes,_this.checked,_this.failed,_this.latest,const DeepCollectionEquality().hash(_this.methods),_this.newer,_this.notes,_this.running,_this.status);
+}
+
+@override
+String toString() {
+  final _this = this as ReleaseBody;
+  return 'ReleaseBody(changes: ${_this.changes}, checked: ${_this.checked}, failed: ${_this.failed}, latest: ${_this.latest}, methods: ${_this.methods}, newer: ${_this.newer}, notes: ${_this.notes}, running: ${_this.running}, status: ${_this.status})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ReleaseBodyCopyWith<$Res>  {
+  factory $ReleaseBodyCopyWith(ReleaseBody value, $Res Function(ReleaseBody) _then) = _$ReleaseBodyCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'changes') ReleaseChanges? changes,@JsonKey(name: 'checked') bool checked,@JsonKey(name: 'failed') bool failed,@JsonKey(name: 'latest') String latest,@JsonKey(name: 'methods') List<ReleaseMethod> methods,@JsonKey(name: 'newer') bool newer,@JsonKey(name: 'notes') String notes,@JsonKey(name: 'running') String running,@JsonKey(name: 'status') String status
+});
+
+
+$ReleaseChangesCopyWith<$Res>? get changes;
+
+}
+/// @nodoc
+class _$ReleaseBodyCopyWithImpl<$Res>
+    implements $ReleaseBodyCopyWith<$Res> {
+  _$ReleaseBodyCopyWithImpl(this._self, this._then);
+
+  final ReleaseBody _self;
+  final $Res Function(ReleaseBody) _then;
+
+/// Create a copy of ReleaseBody
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? changes = freezed,Object? checked = null,Object? failed = null,Object? latest = null,Object? methods = null,Object? newer = null,Object? notes = null,Object? running = null,Object? status = null,}) {
+  return _then(ReleaseBody(
+changes: freezed == changes ? _self.changes : changes // ignore: cast_nullable_to_non_nullable
+as ReleaseChanges?,checked: null == checked ? _self.checked : checked // ignore: cast_nullable_to_non_nullable
+as bool,failed: null == failed ? _self.failed : failed // ignore: cast_nullable_to_non_nullable
+as bool,latest: null == latest ? _self.latest : latest // ignore: cast_nullable_to_non_nullable
+as String,methods: null == methods ? _self.methods : methods // ignore: cast_nullable_to_non_nullable
+as List<ReleaseMethod>,newer: null == newer ? _self.newer : newer // ignore: cast_nullable_to_non_nullable
+as bool,notes: null == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
+as String,running: null == running ? _self.running : running // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+/// Create a copy of ReleaseBody
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ReleaseChangesCopyWith<$Res>? get changes {
+    if (_self.changes == null) {
+    return null;
+  }
+
+  return $ReleaseChangesCopyWith<$Res>(_self.changes!, (value) {
+    return _then(_self.copyWith(changes: value));
+  });
+}
+}
+
+
+/// Adds pattern-matching-related methods to [ReleaseBody].
+extension ReleaseBodyPatterns on ReleaseBody {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ReleaseBody value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ReleaseBody() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ReleaseBody value)  $default,){
+final _that = this;
+switch (_that) {
+case _ReleaseBody():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ReleaseBody value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ReleaseBody() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'changes')  ReleaseChanges? changes, @JsonKey(name: 'checked')  bool checked, @JsonKey(name: 'failed')  bool failed, @JsonKey(name: 'latest')  String latest, @JsonKey(name: 'methods')  List<ReleaseMethod> methods, @JsonKey(name: 'newer')  bool newer, @JsonKey(name: 'notes')  String notes, @JsonKey(name: 'running')  String running, @JsonKey(name: 'status')  String status)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ReleaseBody() when $default != null:
+return $default(_that.changes,_that.checked,_that.failed,_that.latest,_that.methods,_that.newer,_that.notes,_that.running,_that.status);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'changes')  ReleaseChanges? changes, @JsonKey(name: 'checked')  bool checked, @JsonKey(name: 'failed')  bool failed, @JsonKey(name: 'latest')  String latest, @JsonKey(name: 'methods')  List<ReleaseMethod> methods, @JsonKey(name: 'newer')  bool newer, @JsonKey(name: 'notes')  String notes, @JsonKey(name: 'running')  String running, @JsonKey(name: 'status')  String status)  $default,) {final _that = this;
+switch (_that) {
+case _ReleaseBody():
+return $default(_that.changes,_that.checked,_that.failed,_that.latest,_that.methods,_that.newer,_that.notes,_that.running,_that.status);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'changes')  ReleaseChanges? changes, @JsonKey(name: 'checked')  bool checked, @JsonKey(name: 'failed')  bool failed, @JsonKey(name: 'latest')  String latest, @JsonKey(name: 'methods')  List<ReleaseMethod> methods, @JsonKey(name: 'newer')  bool newer, @JsonKey(name: 'notes')  String notes, @JsonKey(name: 'running')  String running, @JsonKey(name: 'status')  String status)?  $default,) {final _that = this;
+switch (_that) {
+case _ReleaseBody() when $default != null:
+return $default(_that.changes,_that.checked,_that.failed,_that.latest,_that.methods,_that.newer,_that.notes,_that.running,_that.status);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _ReleaseBody implements ReleaseBody {
+  const _ReleaseBody({@JsonKey(name: 'changes') this.changes, @JsonKey(name: 'checked') this.checked = false, @JsonKey(name: 'failed') this.failed = false, @JsonKey(name: 'latest') this.latest = '', @JsonKey(name: 'methods')  List<ReleaseMethod> methods = const <ReleaseMethod>[], @JsonKey(name: 'newer') this.newer = false, @JsonKey(name: 'notes') this.notes = '', @JsonKey(name: 'running') this.running = '', @JsonKey(name: 'status') this.status = ''}): _methods = methods;
+  factory _ReleaseBody.fromJson(Map<String, dynamic> json) => _$ReleaseBodyFromJson(json);
+
+/// Changes is the bundled changelog around the running version.
+@override@JsonKey(name: 'changes') final  ReleaseChanges? changes;
+/// Checked reports whether a check has finished, whatever it answered.
+@override@JsonKey(name: 'checked') final  bool checked;
+/// Failed reports whether the most recent check got no usable answer.
+@override@JsonKey(name: 'failed') final  bool failed;
+/// Latest is the newest published release, empty until a check succeeds.
+@override@JsonKey(name: 'latest') final  String latest;
+/// Methods are the commands that upgrade each install method to Latest. Empty
+/// unless Newer.
+ final  List<ReleaseMethod> _methods;
+/// Methods are the commands that upgrade each install method to Latest. Empty
+/// unless Newer.
+@override@JsonKey(name: 'methods') List<ReleaseMethod> get methods {
+  if (_methods is EqualUnmodifiableListView) return _methods;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_methods);
+}
+
+/// Newer reports whether Latest is ahead of Running.
+@override@JsonKey(name: 'newer') final  bool newer;
+/// Notes are the newest release's notes as Markdown with every link taken out
+/// and the heading naming the release dropped. Empty unless Newer.
+@override@JsonKey(name: 'notes') final  String notes;
+/// Running is this binary's version, without a leading v.
+@override@JsonKey(name: 'running') final  String running;
+/// Status is newer, current, unknown when the versions cannot be compared,
+/// failed when the feed could not be read, or pending when nothing has been
+/// asked yet.
+@override@JsonKey(name: 'status') final  String status;
+
+/// Create a copy of ReleaseBody
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ReleaseBodyCopyWith<_ReleaseBody> get copyWith => __$ReleaseBodyCopyWithImpl<_ReleaseBody>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$ReleaseBodyToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReleaseBody&&(identical(other.changes, changes) || other.changes == changes)&&(identical(other.checked, checked) || other.checked == checked)&&(identical(other.failed, failed) || other.failed == failed)&&(identical(other.latest, latest) || other.latest == latest)&&const DeepCollectionEquality().equals(other.methods, _methods)&&(identical(other.newer, newer) || other.newer == newer)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.running, running) || other.running == running)&&(identical(other.status, status) || other.status == status));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,changes,checked,failed,latest,const DeepCollectionEquality().hash(_methods),newer,notes,running,status);
+}
+
+@override
+String toString() {
+    return 'ReleaseBody(changes: $changes, checked: $checked, failed: $failed, latest: $latest, methods: $methods, newer: $newer, notes: $notes, running: $running, status: $status)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ReleaseBodyCopyWith<$Res> implements $ReleaseBodyCopyWith<$Res> {
+  factory _$ReleaseBodyCopyWith(_ReleaseBody value, $Res Function(_ReleaseBody) _then) = __$ReleaseBodyCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'changes') ReleaseChanges? changes,@JsonKey(name: 'checked') bool checked,@JsonKey(name: 'failed') bool failed,@JsonKey(name: 'latest') String latest,@JsonKey(name: 'methods') List<ReleaseMethod> methods,@JsonKey(name: 'newer') bool newer,@JsonKey(name: 'notes') String notes,@JsonKey(name: 'running') String running,@JsonKey(name: 'status') String status
+});
+
+
+@override $ReleaseChangesCopyWith<$Res>? get changes;
+
+}
+/// @nodoc
+class __$ReleaseBodyCopyWithImpl<$Res>
+    implements _$ReleaseBodyCopyWith<$Res> {
+  __$ReleaseBodyCopyWithImpl(this._self, this._then);
+
+  final _ReleaseBody _self;
+  final $Res Function(_ReleaseBody) _then;
+
+/// Create a copy of ReleaseBody
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? changes = freezed,Object? checked = null,Object? failed = null,Object? latest = null,Object? methods = null,Object? newer = null,Object? notes = null,Object? running = null,Object? status = null,}) {
+  return _then(_ReleaseBody(
+changes: freezed == changes ? _self.changes : changes // ignore: cast_nullable_to_non_nullable
+as ReleaseChanges?,checked: null == checked ? _self.checked : checked // ignore: cast_nullable_to_non_nullable
+as bool,failed: null == failed ? _self.failed : failed // ignore: cast_nullable_to_non_nullable
+as bool,latest: null == latest ? _self.latest : latest // ignore: cast_nullable_to_non_nullable
+as String,methods: null == methods ? _self._methods : methods // ignore: cast_nullable_to_non_nullable
+as List<ReleaseMethod>,newer: null == newer ? _self.newer : newer // ignore: cast_nullable_to_non_nullable
+as bool,notes: null == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
+as String,running: null == running ? _self.running : running // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+/// Create a copy of ReleaseBody
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ReleaseChangesCopyWith<$Res>? get changes {
+    if (_self.changes == null) {
+    return null;
+  }
+
+  return $ReleaseChangesCopyWith<$Res>(_self.changes!, (value) {
+    return _then(_self.copyWith(changes: value));
+  });
+}
+}
+
+
+/// @nodoc
+mixin _$ReleaseChanges {
+
+/// Earlier are up to ten entries before Running, or the eleven newest when
+/// Running is left out.
+@JsonKey(name: 'earlier') List<ReleaseEntry> get earlier;/// Running is the running version's own entry, left out unless this build is a
+/// tagged release the changelog has an entry for.
+@JsonKey(name: 'running') ReleaseEntry? get running;/// Untagged reports that the running version is not a plain major.minor.patch,
+/// so the build is not a tagged release.
+@JsonKey(name: 'untagged') bool get untagged;
+/// Create a copy of ReleaseChanges
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ReleaseChangesCopyWith<ReleaseChanges> get copyWith => _$ReleaseChangesCopyWithImpl<ReleaseChanges>(this as ReleaseChanges, _$identity);
+
+  /// Serializes this ReleaseChanges to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as ReleaseChanges;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReleaseChanges&&const DeepCollectionEquality().equals(other.earlier, _this.earlier)&&(identical(other.running, _this.running) || other.running == _this.running)&&(identical(other.untagged, _this.untagged) || other.untagged == _this.untagged));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as ReleaseChanges;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.earlier),_this.running,_this.untagged);
+}
+
+@override
+String toString() {
+  final _this = this as ReleaseChanges;
+  return 'ReleaseChanges(earlier: ${_this.earlier}, running: ${_this.running}, untagged: ${_this.untagged})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ReleaseChangesCopyWith<$Res>  {
+  factory $ReleaseChangesCopyWith(ReleaseChanges value, $Res Function(ReleaseChanges) _then) = _$ReleaseChangesCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'earlier') List<ReleaseEntry> earlier,@JsonKey(name: 'running') ReleaseEntry? running,@JsonKey(name: 'untagged') bool untagged
+});
+
+
+$ReleaseEntryCopyWith<$Res>? get running;
+
+}
+/// @nodoc
+class _$ReleaseChangesCopyWithImpl<$Res>
+    implements $ReleaseChangesCopyWith<$Res> {
+  _$ReleaseChangesCopyWithImpl(this._self, this._then);
+
+  final ReleaseChanges _self;
+  final $Res Function(ReleaseChanges) _then;
+
+/// Create a copy of ReleaseChanges
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? earlier = null,Object? running = freezed,Object? untagged = null,}) {
+  return _then(ReleaseChanges(
+earlier: null == earlier ? _self.earlier : earlier // ignore: cast_nullable_to_non_nullable
+as List<ReleaseEntry>,running: freezed == running ? _self.running : running // ignore: cast_nullable_to_non_nullable
+as ReleaseEntry?,untagged: null == untagged ? _self.untagged : untagged // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+/// Create a copy of ReleaseChanges
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ReleaseEntryCopyWith<$Res>? get running {
+    if (_self.running == null) {
+    return null;
+  }
+
+  return $ReleaseEntryCopyWith<$Res>(_self.running!, (value) {
+    return _then(_self.copyWith(running: value));
+  });
+}
+}
+
+
+/// Adds pattern-matching-related methods to [ReleaseChanges].
+extension ReleaseChangesPatterns on ReleaseChanges {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ReleaseChanges value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ReleaseChanges() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ReleaseChanges value)  $default,){
+final _that = this;
+switch (_that) {
+case _ReleaseChanges():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ReleaseChanges value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ReleaseChanges() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'earlier')  List<ReleaseEntry> earlier, @JsonKey(name: 'running')  ReleaseEntry? running, @JsonKey(name: 'untagged')  bool untagged)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ReleaseChanges() when $default != null:
+return $default(_that.earlier,_that.running,_that.untagged);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'earlier')  List<ReleaseEntry> earlier, @JsonKey(name: 'running')  ReleaseEntry? running, @JsonKey(name: 'untagged')  bool untagged)  $default,) {final _that = this;
+switch (_that) {
+case _ReleaseChanges():
+return $default(_that.earlier,_that.running,_that.untagged);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'earlier')  List<ReleaseEntry> earlier, @JsonKey(name: 'running')  ReleaseEntry? running, @JsonKey(name: 'untagged')  bool untagged)?  $default,) {final _that = this;
+switch (_that) {
+case _ReleaseChanges() when $default != null:
+return $default(_that.earlier,_that.running,_that.untagged);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _ReleaseChanges implements ReleaseChanges {
+  const _ReleaseChanges({@JsonKey(name: 'earlier')  List<ReleaseEntry> earlier = const <ReleaseEntry>[], @JsonKey(name: 'running') this.running, @JsonKey(name: 'untagged') this.untagged = false}): _earlier = earlier;
+  factory _ReleaseChanges.fromJson(Map<String, dynamic> json) => _$ReleaseChangesFromJson(json);
+
+/// Earlier are up to ten entries before Running, or the eleven newest when
+/// Running is left out.
+ final  List<ReleaseEntry> _earlier;
+/// Earlier are up to ten entries before Running, or the eleven newest when
+/// Running is left out.
+@override@JsonKey(name: 'earlier') List<ReleaseEntry> get earlier {
+  if (_earlier is EqualUnmodifiableListView) return _earlier;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_earlier);
+}
+
+/// Running is the running version's own entry, left out unless this build is a
+/// tagged release the changelog has an entry for.
+@override@JsonKey(name: 'running') final  ReleaseEntry? running;
+/// Untagged reports that the running version is not a plain major.minor.patch,
+/// so the build is not a tagged release.
+@override@JsonKey(name: 'untagged') final  bool untagged;
+
+/// Create a copy of ReleaseChanges
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ReleaseChangesCopyWith<_ReleaseChanges> get copyWith => __$ReleaseChangesCopyWithImpl<_ReleaseChanges>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$ReleaseChangesToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReleaseChanges&&const DeepCollectionEquality().equals(other.earlier, _earlier)&&(identical(other.running, running) || other.running == running)&&(identical(other.untagged, untagged) || other.untagged == untagged));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_earlier),running,untagged);
+}
+
+@override
+String toString() {
+    return 'ReleaseChanges(earlier: $earlier, running: $running, untagged: $untagged)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ReleaseChangesCopyWith<$Res> implements $ReleaseChangesCopyWith<$Res> {
+  factory _$ReleaseChangesCopyWith(_ReleaseChanges value, $Res Function(_ReleaseChanges) _then) = __$ReleaseChangesCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'earlier') List<ReleaseEntry> earlier,@JsonKey(name: 'running') ReleaseEntry? running,@JsonKey(name: 'untagged') bool untagged
+});
+
+
+@override $ReleaseEntryCopyWith<$Res>? get running;
+
+}
+/// @nodoc
+class __$ReleaseChangesCopyWithImpl<$Res>
+    implements _$ReleaseChangesCopyWith<$Res> {
+  __$ReleaseChangesCopyWithImpl(this._self, this._then);
+
+  final _ReleaseChanges _self;
+  final $Res Function(_ReleaseChanges) _then;
+
+/// Create a copy of ReleaseChanges
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? earlier = null,Object? running = freezed,Object? untagged = null,}) {
+  return _then(_ReleaseChanges(
+earlier: null == earlier ? _self._earlier : earlier // ignore: cast_nullable_to_non_nullable
+as List<ReleaseEntry>,running: freezed == running ? _self.running : running // ignore: cast_nullable_to_non_nullable
+as ReleaseEntry?,untagged: null == untagged ? _self.untagged : untagged // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+/// Create a copy of ReleaseChanges
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ReleaseEntryCopyWith<$Res>? get running {
+    if (_self.running == null) {
+    return null;
+  }
+
+  return $ReleaseEntryCopyWith<$Res>(_self.running!, (value) {
+    return _then(_self.copyWith(running: value));
+  });
+}
+}
+
+
+/// @nodoc
+mixin _$ReleaseEntry {
+
+/// Date is the release date, YYYY-MM-DD, or empty.
+@JsonKey(name: 'date') String get date;/// Notes is the entry as Markdown with every link taken out.
+@JsonKey(name: 'notes') String get notes;/// Version is the release, without a leading v.
+@JsonKey(name: 'version') String get version;
+/// Create a copy of ReleaseEntry
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ReleaseEntryCopyWith<ReleaseEntry> get copyWith => _$ReleaseEntryCopyWithImpl<ReleaseEntry>(this as ReleaseEntry, _$identity);
+
+  /// Serializes this ReleaseEntry to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as ReleaseEntry;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReleaseEntry&&(identical(other.date, _this.date) || other.date == _this.date)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.version, _this.version) || other.version == _this.version));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as ReleaseEntry;
+  return Object.hash(runtimeType,_this.date,_this.notes,_this.version);
+}
+
+@override
+String toString() {
+  final _this = this as ReleaseEntry;
+  return 'ReleaseEntry(date: ${_this.date}, notes: ${_this.notes}, version: ${_this.version})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ReleaseEntryCopyWith<$Res>  {
+  factory $ReleaseEntryCopyWith(ReleaseEntry value, $Res Function(ReleaseEntry) _then) = _$ReleaseEntryCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'date') String date,@JsonKey(name: 'notes') String notes,@JsonKey(name: 'version') String version
+});
+
+
+
+
+}
+/// @nodoc
+class _$ReleaseEntryCopyWithImpl<$Res>
+    implements $ReleaseEntryCopyWith<$Res> {
+  _$ReleaseEntryCopyWithImpl(this._self, this._then);
+
+  final ReleaseEntry _self;
+  final $Res Function(ReleaseEntry) _then;
+
+/// Create a copy of ReleaseEntry
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? notes = null,Object? version = null,}) {
+  return _then(ReleaseEntry(
+date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+as String,notes: null == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
+as String,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [ReleaseEntry].
+extension ReleaseEntryPatterns on ReleaseEntry {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ReleaseEntry value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ReleaseEntry() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ReleaseEntry value)  $default,){
+final _that = this;
+switch (_that) {
+case _ReleaseEntry():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ReleaseEntry value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ReleaseEntry() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'date')  String date, @JsonKey(name: 'notes')  String notes, @JsonKey(name: 'version')  String version)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ReleaseEntry() when $default != null:
+return $default(_that.date,_that.notes,_that.version);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'date')  String date, @JsonKey(name: 'notes')  String notes, @JsonKey(name: 'version')  String version)  $default,) {final _that = this;
+switch (_that) {
+case _ReleaseEntry():
+return $default(_that.date,_that.notes,_that.version);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'date')  String date, @JsonKey(name: 'notes')  String notes, @JsonKey(name: 'version')  String version)?  $default,) {final _that = this;
+switch (_that) {
+case _ReleaseEntry() when $default != null:
+return $default(_that.date,_that.notes,_that.version);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _ReleaseEntry implements ReleaseEntry {
+  const _ReleaseEntry({@JsonKey(name: 'date') this.date = '', @JsonKey(name: 'notes') this.notes = '', @JsonKey(name: 'version') this.version = ''});
+  factory _ReleaseEntry.fromJson(Map<String, dynamic> json) => _$ReleaseEntryFromJson(json);
+
+/// Date is the release date, YYYY-MM-DD, or empty.
+@override@JsonKey(name: 'date') final  String date;
+/// Notes is the entry as Markdown with every link taken out.
+@override@JsonKey(name: 'notes') final  String notes;
+/// Version is the release, without a leading v.
+@override@JsonKey(name: 'version') final  String version;
+
+/// Create a copy of ReleaseEntry
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ReleaseEntryCopyWith<_ReleaseEntry> get copyWith => __$ReleaseEntryCopyWithImpl<_ReleaseEntry>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$ReleaseEntryToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReleaseEntry&&(identical(other.date, date) || other.date == date)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.version, version) || other.version == version));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,date,notes,version);
+}
+
+@override
+String toString() {
+    return 'ReleaseEntry(date: $date, notes: $notes, version: $version)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ReleaseEntryCopyWith<$Res> implements $ReleaseEntryCopyWith<$Res> {
+  factory _$ReleaseEntryCopyWith(_ReleaseEntry value, $Res Function(_ReleaseEntry) _then) = __$ReleaseEntryCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'date') String date,@JsonKey(name: 'notes') String notes,@JsonKey(name: 'version') String version
+});
+
+
+
+
+}
+/// @nodoc
+class __$ReleaseEntryCopyWithImpl<$Res>
+    implements _$ReleaseEntryCopyWith<$Res> {
+  __$ReleaseEntryCopyWithImpl(this._self, this._then);
+
+  final _ReleaseEntry _self;
+  final $Res Function(_ReleaseEntry) _then;
+
+/// Create a copy of ReleaseEntry
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? notes = null,Object? version = null,}) {
+  return _then(_ReleaseEntry(
+date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+as String,notes: null == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
+as String,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$ReleaseMethod {
+
+/// Command upgrades that install to Latest.
+@JsonKey(name: 'command') String get command;/// Help says when the method applies.
+@JsonKey(name: 'help') String get help;/// ID is binary, container or go.
+@JsonKey(name: 'id') String get id;/// Name names the install method.
+@JsonKey(name: 'name') String get name;
+/// Create a copy of ReleaseMethod
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ReleaseMethodCopyWith<ReleaseMethod> get copyWith => _$ReleaseMethodCopyWithImpl<ReleaseMethod>(this as ReleaseMethod, _$identity);
+
+  /// Serializes this ReleaseMethod to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as ReleaseMethod;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReleaseMethod&&(identical(other.command, _this.command) || other.command == _this.command)&&(identical(other.help, _this.help) || other.help == _this.help)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as ReleaseMethod;
+  return Object.hash(runtimeType,_this.command,_this.help,_this.id,_this.name);
+}
+
+@override
+String toString() {
+  final _this = this as ReleaseMethod;
+  return 'ReleaseMethod(command: ${_this.command}, help: ${_this.help}, id: ${_this.id}, name: ${_this.name})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ReleaseMethodCopyWith<$Res>  {
+  factory $ReleaseMethodCopyWith(ReleaseMethod value, $Res Function(ReleaseMethod) _then) = _$ReleaseMethodCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'command') String command,@JsonKey(name: 'help') String help,@JsonKey(name: 'id') String id,@JsonKey(name: 'name') String name
+});
+
+
+
+
+}
+/// @nodoc
+class _$ReleaseMethodCopyWithImpl<$Res>
+    implements $ReleaseMethodCopyWith<$Res> {
+  _$ReleaseMethodCopyWithImpl(this._self, this._then);
+
+  final ReleaseMethod _self;
+  final $Res Function(ReleaseMethod) _then;
+
+/// Create a copy of ReleaseMethod
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? command = null,Object? help = null,Object? id = null,Object? name = null,}) {
+  return _then(ReleaseMethod(
+command: null == command ? _self.command : command // ignore: cast_nullable_to_non_nullable
+as String,help: null == help ? _self.help : help // ignore: cast_nullable_to_non_nullable
+as String,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [ReleaseMethod].
+extension ReleaseMethodPatterns on ReleaseMethod {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ReleaseMethod value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ReleaseMethod() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ReleaseMethod value)  $default,){
+final _that = this;
+switch (_that) {
+case _ReleaseMethod():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ReleaseMethod value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ReleaseMethod() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'command')  String command, @JsonKey(name: 'help')  String help, @JsonKey(name: 'id')  String id, @JsonKey(name: 'name')  String name)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ReleaseMethod() when $default != null:
+return $default(_that.command,_that.help,_that.id,_that.name);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'command')  String command, @JsonKey(name: 'help')  String help, @JsonKey(name: 'id')  String id, @JsonKey(name: 'name')  String name)  $default,) {final _that = this;
+switch (_that) {
+case _ReleaseMethod():
+return $default(_that.command,_that.help,_that.id,_that.name);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'command')  String command, @JsonKey(name: 'help')  String help, @JsonKey(name: 'id')  String id, @JsonKey(name: 'name')  String name)?  $default,) {final _that = this;
+switch (_that) {
+case _ReleaseMethod() when $default != null:
+return $default(_that.command,_that.help,_that.id,_that.name);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _ReleaseMethod implements ReleaseMethod {
+  const _ReleaseMethod({@JsonKey(name: 'command') this.command = '', @JsonKey(name: 'help') this.help = '', @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'name') this.name = ''});
+  factory _ReleaseMethod.fromJson(Map<String, dynamic> json) => _$ReleaseMethodFromJson(json);
+
+/// Command upgrades that install to Latest.
+@override@JsonKey(name: 'command') final  String command;
+/// Help says when the method applies.
+@override@JsonKey(name: 'help') final  String help;
+/// ID is binary, container or go.
+@override@JsonKey(name: 'id') final  String id;
+/// Name names the install method.
+@override@JsonKey(name: 'name') final  String name;
+
+/// Create a copy of ReleaseMethod
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ReleaseMethodCopyWith<_ReleaseMethod> get copyWith => __$ReleaseMethodCopyWithImpl<_ReleaseMethod>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$ReleaseMethodToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReleaseMethod&&(identical(other.command, command) || other.command == command)&&(identical(other.help, help) || other.help == help)&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,command,help,id,name);
+}
+
+@override
+String toString() {
+    return 'ReleaseMethod(command: $command, help: $help, id: $id, name: $name)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ReleaseMethodCopyWith<$Res> implements $ReleaseMethodCopyWith<$Res> {
+  factory _$ReleaseMethodCopyWith(_ReleaseMethod value, $Res Function(_ReleaseMethod) _then) = __$ReleaseMethodCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'command') String command,@JsonKey(name: 'help') String help,@JsonKey(name: 'id') String id,@JsonKey(name: 'name') String name
+});
+
+
+
+
+}
+/// @nodoc
+class __$ReleaseMethodCopyWithImpl<$Res>
+    implements _$ReleaseMethodCopyWith<$Res> {
+  __$ReleaseMethodCopyWithImpl(this._self, this._then);
+
+  final _ReleaseMethod _self;
+  final $Res Function(_ReleaseMethod) _then;
+
+/// Create a copy of ReleaseMethod
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? command = null,Object? help = null,Object? id = null,Object? name = null,}) {
+  return _then(_ReleaseMethod(
+command: null == command ? _self.command : command // ignore: cast_nullable_to_non_nullable
+as String,help: null == help ? _self.help : help // ignore: cast_nullable_to_non_nullable
+as String,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$ReleaseRequest {
 
 /// Comment is added to the task as a comment.
@@ -30963,7 +32246,10 @@ mixin _$RouteInput {
 /// Comment is attached to every hop's transition.
 @JsonKey(name: 'comment') String? get comment;/// CustomFields are custom field values set on the last hop, keyed by field
 /// definition key.
-@JsonKey(name: 'custom_fields') Map<String, Object?>? get customFields;/// LeaseToken proves the caller's claim when the task is leased.
+@JsonKey(name: 'custom_fields') Map<String, Object?>? get customFields;/// DryRun walks the route in one transaction and rolls it back: each hop is
+/// judged against the state the hops before it would leave, and nothing is
+/// written.
+@JsonKey(name: 'dry_run') bool? get dryRun;/// LeaseToken proves the caller's claim when the task is leased.
 @JsonKey(name: 'lease_token') String? get leaseToken;/// Route lists the states to pass through in order, the current one left out,
 /// each once; set this or To.
 @JsonKey(name: 'route') List<String>? get route;/// To is the destination state, reached by the route the workflow finds; set
@@ -30984,20 +32270,20 @@ $RouteInputCopyWith<RouteInput> get copyWith => _$RouteInputCopyWithImpl<RouteIn
 @override
 bool operator ==(Object other) {
   final _this = this as RouteInput;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RouteInput&&(identical(other.comment, _this.comment) || other.comment == _this.comment)&&const DeepCollectionEquality().equals(other.customFields, _this.customFields)&&(identical(other.leaseToken, _this.leaseToken) || other.leaseToken == _this.leaseToken)&&const DeepCollectionEquality().equals(other.route, _this.route)&&(identical(other.to, _this.to) || other.to == _this.to)&&(identical(other.version, _this.version) || other.version == _this.version));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RouteInput&&(identical(other.comment, _this.comment) || other.comment == _this.comment)&&const DeepCollectionEquality().equals(other.customFields, _this.customFields)&&(identical(other.dryRun, _this.dryRun) || other.dryRun == _this.dryRun)&&(identical(other.leaseToken, _this.leaseToken) || other.leaseToken == _this.leaseToken)&&const DeepCollectionEquality().equals(other.route, _this.route)&&(identical(other.to, _this.to) || other.to == _this.to)&&(identical(other.version, _this.version) || other.version == _this.version));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as RouteInput;
-  return Object.hash(runtimeType,_this.comment,const DeepCollectionEquality().hash(_this.customFields),_this.leaseToken,const DeepCollectionEquality().hash(_this.route),_this.to,_this.version);
+  return Object.hash(runtimeType,_this.comment,const DeepCollectionEquality().hash(_this.customFields),_this.dryRun,_this.leaseToken,const DeepCollectionEquality().hash(_this.route),_this.to,_this.version);
 }
 
 @override
 String toString() {
   final _this = this as RouteInput;
-  return 'RouteInput(comment: ${_this.comment}, customFields: ${_this.customFields}, leaseToken: ${_this.leaseToken}, route: ${_this.route}, to: ${_this.to}, version: ${_this.version})';
+  return 'RouteInput(comment: ${_this.comment}, customFields: ${_this.customFields}, dryRun: ${_this.dryRun}, leaseToken: ${_this.leaseToken}, route: ${_this.route}, to: ${_this.to}, version: ${_this.version})';
 }
 
 
@@ -31008,7 +32294,7 @@ abstract mixin class $RouteInputCopyWith<$Res>  {
   factory $RouteInputCopyWith(RouteInput value, $Res Function(RouteInput) _then) = _$RouteInputCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'comment') String? comment,@JsonKey(name: 'custom_fields') Map<String, Object?>? customFields,@JsonKey(name: 'lease_token') String? leaseToken,@JsonKey(name: 'route') List<String>? route,@JsonKey(name: 'to') String? to,@JsonKey(name: 'version') int? version
+@JsonKey(name: 'comment') String? comment,@JsonKey(name: 'custom_fields') Map<String, Object?>? customFields,@JsonKey(name: 'dry_run') bool? dryRun,@JsonKey(name: 'lease_token') String? leaseToken,@JsonKey(name: 'route') List<String>? route,@JsonKey(name: 'to') String? to,@JsonKey(name: 'version') int? version
 });
 
 
@@ -31025,11 +32311,12 @@ class _$RouteInputCopyWithImpl<$Res>
 
 /// Create a copy of RouteInput
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? comment = freezed,Object? customFields = freezed,Object? leaseToken = freezed,Object? route = freezed,Object? to = freezed,Object? version = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? comment = freezed,Object? customFields = freezed,Object? dryRun = freezed,Object? leaseToken = freezed,Object? route = freezed,Object? to = freezed,Object? version = freezed,}) {
   return _then(RouteInput(
 comment: freezed == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
 as String?,customFields: freezed == customFields ? _self.customFields : customFields // ignore: cast_nullable_to_non_nullable
-as Map<String, Object?>?,leaseToken: freezed == leaseToken ? _self.leaseToken : leaseToken // ignore: cast_nullable_to_non_nullable
+as Map<String, Object?>?,dryRun: freezed == dryRun ? _self.dryRun : dryRun // ignore: cast_nullable_to_non_nullable
+as bool?,leaseToken: freezed == leaseToken ? _self.leaseToken : leaseToken // ignore: cast_nullable_to_non_nullable
 as String?,route: freezed == route ? _self.route : route // ignore: cast_nullable_to_non_nullable
 as List<String>?,to: freezed == to ? _self.to : to // ignore: cast_nullable_to_non_nullable
 as String?,version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
@@ -31118,10 +32405,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'comment')  String? comment, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'lease_token')  String? leaseToken, @JsonKey(name: 'route')  List<String>? route, @JsonKey(name: 'to')  String? to, @JsonKey(name: 'version')  int? version)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'comment')  String? comment, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'dry_run')  bool? dryRun, @JsonKey(name: 'lease_token')  String? leaseToken, @JsonKey(name: 'route')  List<String>? route, @JsonKey(name: 'to')  String? to, @JsonKey(name: 'version')  int? version)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RouteInput() when $default != null:
-return $default(_that.comment,_that.customFields,_that.leaseToken,_that.route,_that.to,_that.version);case _:
+return $default(_that.comment,_that.customFields,_that.dryRun,_that.leaseToken,_that.route,_that.to,_that.version);case _:
   return orElse();
 
 }
@@ -31139,10 +32426,10 @@ return $default(_that.comment,_that.customFields,_that.leaseToken,_that.route,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'comment')  String? comment, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'lease_token')  String? leaseToken, @JsonKey(name: 'route')  List<String>? route, @JsonKey(name: 'to')  String? to, @JsonKey(name: 'version')  int? version)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'comment')  String? comment, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'dry_run')  bool? dryRun, @JsonKey(name: 'lease_token')  String? leaseToken, @JsonKey(name: 'route')  List<String>? route, @JsonKey(name: 'to')  String? to, @JsonKey(name: 'version')  int? version)  $default,) {final _that = this;
 switch (_that) {
 case _RouteInput():
-return $default(_that.comment,_that.customFields,_that.leaseToken,_that.route,_that.to,_that.version);case _:
+return $default(_that.comment,_that.customFields,_that.dryRun,_that.leaseToken,_that.route,_that.to,_that.version);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -31159,10 +32446,10 @@ return $default(_that.comment,_that.customFields,_that.leaseToken,_that.route,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'comment')  String? comment, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'lease_token')  String? leaseToken, @JsonKey(name: 'route')  List<String>? route, @JsonKey(name: 'to')  String? to, @JsonKey(name: 'version')  int? version)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'comment')  String? comment, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'dry_run')  bool? dryRun, @JsonKey(name: 'lease_token')  String? leaseToken, @JsonKey(name: 'route')  List<String>? route, @JsonKey(name: 'to')  String? to, @JsonKey(name: 'version')  int? version)?  $default,) {final _that = this;
 switch (_that) {
 case _RouteInput() when $default != null:
-return $default(_that.comment,_that.customFields,_that.leaseToken,_that.route,_that.to,_that.version);case _:
+return $default(_that.comment,_that.customFields,_that.dryRun,_that.leaseToken,_that.route,_that.to,_that.version);case _:
   return null;
 
 }
@@ -31174,7 +32461,7 @@ return $default(_that.comment,_that.customFields,_that.leaseToken,_that.route,_t
 @JsonSerializable()
 
 class _RouteInput implements RouteInput {
-  const _RouteInput({@JsonKey(name: 'comment') this.comment, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'lease_token') this.leaseToken, @JsonKey(name: 'route')  List<String>? route, @JsonKey(name: 'to') this.to, @JsonKey(name: 'version') this.version}): _customFields = customFields,_route = route;
+  const _RouteInput({@JsonKey(name: 'comment') this.comment, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'dry_run') this.dryRun, @JsonKey(name: 'lease_token') this.leaseToken, @JsonKey(name: 'route')  List<String>? route, @JsonKey(name: 'to') this.to, @JsonKey(name: 'version') this.version}): _customFields = customFields,_route = route;
   factory _RouteInput.fromJson(Map<String, dynamic> json) => _$RouteInputFromJson(json);
 
 /// Comment is attached to every hop's transition.
@@ -31192,6 +32479,10 @@ class _RouteInput implements RouteInput {
   return EqualUnmodifiableMapView(value);
 }
 
+/// DryRun walks the route in one transaction and rolls it back: each hop is
+/// judged against the state the hops before it would leave, and nothing is
+/// written.
+@override@JsonKey(name: 'dry_run') final  bool? dryRun;
 /// LeaseToken proves the caller's claim when the task is leased.
 @override@JsonKey(name: 'lease_token') final  String? leaseToken;
 /// Route lists the states to pass through in order, the current one left out,
@@ -31227,18 +32518,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RouteInput&&(identical(other.comment, comment) || other.comment == comment)&&const DeepCollectionEquality().equals(other.customFields, _customFields)&&(identical(other.leaseToken, leaseToken) || other.leaseToken == leaseToken)&&const DeepCollectionEquality().equals(other.route, _route)&&(identical(other.to, to) || other.to == to)&&(identical(other.version, version) || other.version == version));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RouteInput&&(identical(other.comment, comment) || other.comment == comment)&&const DeepCollectionEquality().equals(other.customFields, _customFields)&&(identical(other.dryRun, dryRun) || other.dryRun == dryRun)&&(identical(other.leaseToken, leaseToken) || other.leaseToken == leaseToken)&&const DeepCollectionEquality().equals(other.route, _route)&&(identical(other.to, to) || other.to == to)&&(identical(other.version, version) || other.version == version));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,comment,const DeepCollectionEquality().hash(_customFields),leaseToken,const DeepCollectionEquality().hash(_route),to,version);
+    return Object.hash(runtimeType,comment,const DeepCollectionEquality().hash(_customFields),dryRun,leaseToken,const DeepCollectionEquality().hash(_route),to,version);
 }
 
 @override
 String toString() {
-    return 'RouteInput(comment: $comment, customFields: $customFields, leaseToken: $leaseToken, route: $route, to: $to, version: $version)';
+    return 'RouteInput(comment: $comment, customFields: $customFields, dryRun: $dryRun, leaseToken: $leaseToken, route: $route, to: $to, version: $version)';
 }
 
 
@@ -31249,7 +32540,7 @@ abstract mixin class _$RouteInputCopyWith<$Res> implements $RouteInputCopyWith<$
   factory _$RouteInputCopyWith(_RouteInput value, $Res Function(_RouteInput) _then) = __$RouteInputCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'comment') String? comment,@JsonKey(name: 'custom_fields') Map<String, Object?>? customFields,@JsonKey(name: 'lease_token') String? leaseToken,@JsonKey(name: 'route') List<String>? route,@JsonKey(name: 'to') String? to,@JsonKey(name: 'version') int? version
+@JsonKey(name: 'comment') String? comment,@JsonKey(name: 'custom_fields') Map<String, Object?>? customFields,@JsonKey(name: 'dry_run') bool? dryRun,@JsonKey(name: 'lease_token') String? leaseToken,@JsonKey(name: 'route') List<String>? route,@JsonKey(name: 'to') String? to,@JsonKey(name: 'version') int? version
 });
 
 
@@ -31266,11 +32557,12 @@ class __$RouteInputCopyWithImpl<$Res>
 
 /// Create a copy of RouteInput
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? comment = freezed,Object? customFields = freezed,Object? leaseToken = freezed,Object? route = freezed,Object? to = freezed,Object? version = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? comment = freezed,Object? customFields = freezed,Object? dryRun = freezed,Object? leaseToken = freezed,Object? route = freezed,Object? to = freezed,Object? version = freezed,}) {
   return _then(_RouteInput(
 comment: freezed == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
 as String?,customFields: freezed == customFields ? _self._customFields : customFields // ignore: cast_nullable_to_non_nullable
-as Map<String, Object?>?,leaseToken: freezed == leaseToken ? _self.leaseToken : leaseToken // ignore: cast_nullable_to_non_nullable
+as Map<String, Object?>?,dryRun: freezed == dryRun ? _self.dryRun : dryRun // ignore: cast_nullable_to_non_nullable
+as bool?,leaseToken: freezed == leaseToken ? _self.leaseToken : leaseToken // ignore: cast_nullable_to_non_nullable
 as String?,route: freezed == route ? _self._route : route // ignore: cast_nullable_to_non_nullable
 as List<String>?,to: freezed == to ? _self.to : to // ignore: cast_nullable_to_non_nullable
 as String?,version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
@@ -31286,7 +32578,8 @@ as int?,
 mixin _$RouteResult {
 
 /// Applied lists the states the task actually entered, in order.
-@JsonKey(name: 'applied') List<String> get applied;/// From is the status the task started in.
+@JsonKey(name: 'applied') List<String> get applied;/// DryRun is true when the route was judged and nothing was written.
+@JsonKey(name: 'dry_run') bool get dryRun;/// From is the status the task started in.
 @JsonKey(name: 'from') String get from;/// Reason is why that hop was refused.
 @JsonKey(name: 'reason') String get reason;/// Route is the full list of states the move set out to pass through.
 @JsonKey(name: 'route') List<String> get route;/// Stopped is the state a hop was refused for, empty when the route completed.
@@ -31305,20 +32598,20 @@ $RouteResultCopyWith<RouteResult> get copyWith => _$RouteResultCopyWithImpl<Rout
 @override
 bool operator ==(Object other) {
   final _this = this as RouteResult;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RouteResult&&const DeepCollectionEquality().equals(other.applied, _this.applied)&&(identical(other.from, _this.from) || other.from == _this.from)&&(identical(other.reason, _this.reason) || other.reason == _this.reason)&&const DeepCollectionEquality().equals(other.route, _this.route)&&(identical(other.stopped, _this.stopped) || other.stopped == _this.stopped)&&(identical(other.task, _this.task) || other.task == _this.task));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RouteResult&&const DeepCollectionEquality().equals(other.applied, _this.applied)&&(identical(other.dryRun, _this.dryRun) || other.dryRun == _this.dryRun)&&(identical(other.from, _this.from) || other.from == _this.from)&&(identical(other.reason, _this.reason) || other.reason == _this.reason)&&const DeepCollectionEquality().equals(other.route, _this.route)&&(identical(other.stopped, _this.stopped) || other.stopped == _this.stopped)&&(identical(other.task, _this.task) || other.task == _this.task));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as RouteResult;
-  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.applied),_this.from,_this.reason,const DeepCollectionEquality().hash(_this.route),_this.stopped,_this.task);
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.applied),_this.dryRun,_this.from,_this.reason,const DeepCollectionEquality().hash(_this.route),_this.stopped,_this.task);
 }
 
 @override
 String toString() {
   final _this = this as RouteResult;
-  return 'RouteResult(applied: ${_this.applied}, from: ${_this.from}, reason: ${_this.reason}, route: ${_this.route}, stopped: ${_this.stopped}, task: ${_this.task})';
+  return 'RouteResult(applied: ${_this.applied}, dryRun: ${_this.dryRun}, from: ${_this.from}, reason: ${_this.reason}, route: ${_this.route}, stopped: ${_this.stopped}, task: ${_this.task})';
 }
 
 
@@ -31329,7 +32622,7 @@ abstract mixin class $RouteResultCopyWith<$Res>  {
   factory $RouteResultCopyWith(RouteResult value, $Res Function(RouteResult) _then) = _$RouteResultCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'applied') List<String> applied,@JsonKey(name: 'from') String from,@JsonKey(name: 'reason') String reason,@JsonKey(name: 'route') List<String> route,@JsonKey(name: 'stopped') String stopped,@JsonKey(name: 'task') Task? task
+@JsonKey(name: 'applied') List<String> applied,@JsonKey(name: 'dry_run') bool dryRun,@JsonKey(name: 'from') String from,@JsonKey(name: 'reason') String reason,@JsonKey(name: 'route') List<String> route,@JsonKey(name: 'stopped') String stopped,@JsonKey(name: 'task') Task? task
 });
 
 
@@ -31346,10 +32639,11 @@ class _$RouteResultCopyWithImpl<$Res>
 
 /// Create a copy of RouteResult
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? applied = null,Object? from = null,Object? reason = null,Object? route = null,Object? stopped = null,Object? task = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? applied = null,Object? dryRun = null,Object? from = null,Object? reason = null,Object? route = null,Object? stopped = null,Object? task = freezed,}) {
   return _then(RouteResult(
 applied: null == applied ? _self.applied : applied // ignore: cast_nullable_to_non_nullable
-as List<String>,from: null == from ? _self.from : from // ignore: cast_nullable_to_non_nullable
+as List<String>,dryRun: null == dryRun ? _self.dryRun : dryRun // ignore: cast_nullable_to_non_nullable
+as bool,from: null == from ? _self.from : from // ignore: cast_nullable_to_non_nullable
 as String,reason: null == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
 as String,route: null == route ? _self.route : route // ignore: cast_nullable_to_non_nullable
 as List<String>,stopped: null == stopped ? _self.stopped : stopped // ignore: cast_nullable_to_non_nullable
@@ -31451,10 +32745,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'applied')  List<String> applied, @JsonKey(name: 'from')  String from, @JsonKey(name: 'reason')  String reason, @JsonKey(name: 'route')  List<String> route, @JsonKey(name: 'stopped')  String stopped, @JsonKey(name: 'task')  Task? task)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'applied')  List<String> applied, @JsonKey(name: 'dry_run')  bool dryRun, @JsonKey(name: 'from')  String from, @JsonKey(name: 'reason')  String reason, @JsonKey(name: 'route')  List<String> route, @JsonKey(name: 'stopped')  String stopped, @JsonKey(name: 'task')  Task? task)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RouteResult() when $default != null:
-return $default(_that.applied,_that.from,_that.reason,_that.route,_that.stopped,_that.task);case _:
+return $default(_that.applied,_that.dryRun,_that.from,_that.reason,_that.route,_that.stopped,_that.task);case _:
   return orElse();
 
 }
@@ -31472,10 +32766,10 @@ return $default(_that.applied,_that.from,_that.reason,_that.route,_that.stopped,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'applied')  List<String> applied, @JsonKey(name: 'from')  String from, @JsonKey(name: 'reason')  String reason, @JsonKey(name: 'route')  List<String> route, @JsonKey(name: 'stopped')  String stopped, @JsonKey(name: 'task')  Task? task)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'applied')  List<String> applied, @JsonKey(name: 'dry_run')  bool dryRun, @JsonKey(name: 'from')  String from, @JsonKey(name: 'reason')  String reason, @JsonKey(name: 'route')  List<String> route, @JsonKey(name: 'stopped')  String stopped, @JsonKey(name: 'task')  Task? task)  $default,) {final _that = this;
 switch (_that) {
 case _RouteResult():
-return $default(_that.applied,_that.from,_that.reason,_that.route,_that.stopped,_that.task);case _:
+return $default(_that.applied,_that.dryRun,_that.from,_that.reason,_that.route,_that.stopped,_that.task);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -31492,10 +32786,10 @@ return $default(_that.applied,_that.from,_that.reason,_that.route,_that.stopped,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'applied')  List<String> applied, @JsonKey(name: 'from')  String from, @JsonKey(name: 'reason')  String reason, @JsonKey(name: 'route')  List<String> route, @JsonKey(name: 'stopped')  String stopped, @JsonKey(name: 'task')  Task? task)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'applied')  List<String> applied, @JsonKey(name: 'dry_run')  bool dryRun, @JsonKey(name: 'from')  String from, @JsonKey(name: 'reason')  String reason, @JsonKey(name: 'route')  List<String> route, @JsonKey(name: 'stopped')  String stopped, @JsonKey(name: 'task')  Task? task)?  $default,) {final _that = this;
 switch (_that) {
 case _RouteResult() when $default != null:
-return $default(_that.applied,_that.from,_that.reason,_that.route,_that.stopped,_that.task);case _:
+return $default(_that.applied,_that.dryRun,_that.from,_that.reason,_that.route,_that.stopped,_that.task);case _:
   return null;
 
 }
@@ -31507,7 +32801,7 @@ return $default(_that.applied,_that.from,_that.reason,_that.route,_that.stopped,
 @JsonSerializable()
 
 class _RouteResult implements RouteResult {
-  const _RouteResult({@JsonKey(name: 'applied')  List<String> applied = const <String>[], @JsonKey(name: 'from') this.from = '', @JsonKey(name: 'reason') this.reason = '', @JsonKey(name: 'route')  List<String> route = const <String>[], @JsonKey(name: 'stopped') this.stopped = '', @JsonKey(name: 'task') this.task}): _applied = applied,_route = route;
+  const _RouteResult({@JsonKey(name: 'applied')  List<String> applied = const <String>[], @JsonKey(name: 'dry_run') this.dryRun = false, @JsonKey(name: 'from') this.from = '', @JsonKey(name: 'reason') this.reason = '', @JsonKey(name: 'route')  List<String> route = const <String>[], @JsonKey(name: 'stopped') this.stopped = '', @JsonKey(name: 'task') this.task}): _applied = applied,_route = route;
   factory _RouteResult.fromJson(Map<String, dynamic> json) => _$RouteResultFromJson(json);
 
 /// Applied lists the states the task actually entered, in order.
@@ -31519,6 +32813,8 @@ class _RouteResult implements RouteResult {
   return EqualUnmodifiableListView(_applied);
 }
 
+/// DryRun is true when the route was judged and nothing was written.
+@override@JsonKey(name: 'dry_run') final  bool dryRun;
 /// From is the status the task started in.
 @override@JsonKey(name: 'from') final  String from;
 /// Reason is why that hop was refused.
@@ -31550,18 +32846,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RouteResult&&const DeepCollectionEquality().equals(other.applied, _applied)&&(identical(other.from, from) || other.from == from)&&(identical(other.reason, reason) || other.reason == reason)&&const DeepCollectionEquality().equals(other.route, _route)&&(identical(other.stopped, stopped) || other.stopped == stopped)&&(identical(other.task, task) || other.task == task));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RouteResult&&const DeepCollectionEquality().equals(other.applied, _applied)&&(identical(other.dryRun, dryRun) || other.dryRun == dryRun)&&(identical(other.from, from) || other.from == from)&&(identical(other.reason, reason) || other.reason == reason)&&const DeepCollectionEquality().equals(other.route, _route)&&(identical(other.stopped, stopped) || other.stopped == stopped)&&(identical(other.task, task) || other.task == task));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_applied),from,reason,const DeepCollectionEquality().hash(_route),stopped,task);
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_applied),dryRun,from,reason,const DeepCollectionEquality().hash(_route),stopped,task);
 }
 
 @override
 String toString() {
-    return 'RouteResult(applied: $applied, from: $from, reason: $reason, route: $route, stopped: $stopped, task: $task)';
+    return 'RouteResult(applied: $applied, dryRun: $dryRun, from: $from, reason: $reason, route: $route, stopped: $stopped, task: $task)';
 }
 
 
@@ -31572,7 +32868,7 @@ abstract mixin class _$RouteResultCopyWith<$Res> implements $RouteResultCopyWith
   factory _$RouteResultCopyWith(_RouteResult value, $Res Function(_RouteResult) _then) = __$RouteResultCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'applied') List<String> applied,@JsonKey(name: 'from') String from,@JsonKey(name: 'reason') String reason,@JsonKey(name: 'route') List<String> route,@JsonKey(name: 'stopped') String stopped,@JsonKey(name: 'task') Task? task
+@JsonKey(name: 'applied') List<String> applied,@JsonKey(name: 'dry_run') bool dryRun,@JsonKey(name: 'from') String from,@JsonKey(name: 'reason') String reason,@JsonKey(name: 'route') List<String> route,@JsonKey(name: 'stopped') String stopped,@JsonKey(name: 'task') Task? task
 });
 
 
@@ -31589,10 +32885,11 @@ class __$RouteResultCopyWithImpl<$Res>
 
 /// Create a copy of RouteResult
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? applied = null,Object? from = null,Object? reason = null,Object? route = null,Object? stopped = null,Object? task = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? applied = null,Object? dryRun = null,Object? from = null,Object? reason = null,Object? route = null,Object? stopped = null,Object? task = freezed,}) {
   return _then(_RouteResult(
 applied: null == applied ? _self._applied : applied // ignore: cast_nullable_to_non_nullable
-as List<String>,from: null == from ? _self.from : from // ignore: cast_nullable_to_non_nullable
+as List<String>,dryRun: null == dryRun ? _self.dryRun : dryRun // ignore: cast_nullable_to_non_nullable
+as bool,from: null == from ? _self.from : from // ignore: cast_nullable_to_non_nullable
 as String,reason: null == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
 as String,route: null == route ? _self._route : route // ignore: cast_nullable_to_non_nullable
 as List<String>,stopped: null == stopped ? _self.stopped : stopped // ignore: cast_nullable_to_non_nullable
@@ -35265,12 +36562,17 @@ as String,
 mixin _$SessionPolicy {
 
 /// IdleTimeout ends a session unused for this long; zero is off.
-@JsonKey(name: 'idle_timeout') String get idleTimeout;/// RememberTTL is how long a "keep me signed in" sign-in lasts; zero means the
+@JsonKey(name: 'idle_timeout') String get idleTimeout;/// MaxLifetime is how long after the sign-in a session in use may be renewed
+/// to; zero means a session ends TTL after the sign-in, used or not.
+@JsonKey(name: 'max_lifetime') String get maxLifetime;/// RememberMaxLifetime is MaxLifetime for a "keep me signed in" sign-in, which
+/// is renewed by RememberTTL.
+@JsonKey(name: 'remember_max_lifetime') String get rememberMaxLifetime;/// RememberTTL is how long a "keep me signed in" sign-in lasts; zero means the
 /// choice is not offered.
 @JsonKey(name: 'remember_ttl') String get rememberTtl;/// ServerIdleTimeout is the server's session.idle_timeout, zero when off.
 @JsonKey(name: 'server_idle_timeout') String get serverIdleTimeout;/// ServerRememberTTL is the server's session.remember_ttl, zero when off.
 @JsonKey(name: 'server_remember_ttl') String get serverRememberTtl;/// ServerTTL is the server's session.ttl, which a tenant may only shorten.
-@JsonKey(name: 'server_ttl') String get serverTtl;/// TTL is how long a sign-in lasts from the moment it is made.
+@JsonKey(name: 'server_ttl') String get serverTtl;/// TTL is how long a sign-in lasts from the moment it is made, and again from
+/// each use while MaxLifetime allows.
 @JsonKey(name: 'ttl') String get ttl;
 /// Create a copy of SessionPolicy
 /// with the given fields replaced by the non-null parameter values.
@@ -35285,20 +36587,20 @@ $SessionPolicyCopyWith<SessionPolicy> get copyWith => _$SessionPolicyCopyWithImp
 @override
 bool operator ==(Object other) {
   final _this = this as SessionPolicy;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SessionPolicy&&(identical(other.idleTimeout, _this.idleTimeout) || other.idleTimeout == _this.idleTimeout)&&(identical(other.rememberTtl, _this.rememberTtl) || other.rememberTtl == _this.rememberTtl)&&(identical(other.serverIdleTimeout, _this.serverIdleTimeout) || other.serverIdleTimeout == _this.serverIdleTimeout)&&(identical(other.serverRememberTtl, _this.serverRememberTtl) || other.serverRememberTtl == _this.serverRememberTtl)&&(identical(other.serverTtl, _this.serverTtl) || other.serverTtl == _this.serverTtl)&&(identical(other.ttl, _this.ttl) || other.ttl == _this.ttl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SessionPolicy&&(identical(other.idleTimeout, _this.idleTimeout) || other.idleTimeout == _this.idleTimeout)&&(identical(other.maxLifetime, _this.maxLifetime) || other.maxLifetime == _this.maxLifetime)&&(identical(other.rememberMaxLifetime, _this.rememberMaxLifetime) || other.rememberMaxLifetime == _this.rememberMaxLifetime)&&(identical(other.rememberTtl, _this.rememberTtl) || other.rememberTtl == _this.rememberTtl)&&(identical(other.serverIdleTimeout, _this.serverIdleTimeout) || other.serverIdleTimeout == _this.serverIdleTimeout)&&(identical(other.serverRememberTtl, _this.serverRememberTtl) || other.serverRememberTtl == _this.serverRememberTtl)&&(identical(other.serverTtl, _this.serverTtl) || other.serverTtl == _this.serverTtl)&&(identical(other.ttl, _this.ttl) || other.ttl == _this.ttl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as SessionPolicy;
-  return Object.hash(runtimeType,_this.idleTimeout,_this.rememberTtl,_this.serverIdleTimeout,_this.serverRememberTtl,_this.serverTtl,_this.ttl);
+  return Object.hash(runtimeType,_this.idleTimeout,_this.maxLifetime,_this.rememberMaxLifetime,_this.rememberTtl,_this.serverIdleTimeout,_this.serverRememberTtl,_this.serverTtl,_this.ttl);
 }
 
 @override
 String toString() {
   final _this = this as SessionPolicy;
-  return 'SessionPolicy(idleTimeout: ${_this.idleTimeout}, rememberTtl: ${_this.rememberTtl}, serverIdleTimeout: ${_this.serverIdleTimeout}, serverRememberTtl: ${_this.serverRememberTtl}, serverTtl: ${_this.serverTtl}, ttl: ${_this.ttl})';
+  return 'SessionPolicy(idleTimeout: ${_this.idleTimeout}, maxLifetime: ${_this.maxLifetime}, rememberMaxLifetime: ${_this.rememberMaxLifetime}, rememberTtl: ${_this.rememberTtl}, serverIdleTimeout: ${_this.serverIdleTimeout}, serverRememberTtl: ${_this.serverRememberTtl}, serverTtl: ${_this.serverTtl}, ttl: ${_this.ttl})';
 }
 
 
@@ -35309,7 +36611,7 @@ abstract mixin class $SessionPolicyCopyWith<$Res>  {
   factory $SessionPolicyCopyWith(SessionPolicy value, $Res Function(SessionPolicy) _then) = _$SessionPolicyCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'idle_timeout') String idleTimeout,@JsonKey(name: 'remember_ttl') String rememberTtl,@JsonKey(name: 'server_idle_timeout') String serverIdleTimeout,@JsonKey(name: 'server_remember_ttl') String serverRememberTtl,@JsonKey(name: 'server_ttl') String serverTtl,@JsonKey(name: 'ttl') String ttl
+@JsonKey(name: 'idle_timeout') String idleTimeout,@JsonKey(name: 'max_lifetime') String maxLifetime,@JsonKey(name: 'remember_max_lifetime') String rememberMaxLifetime,@JsonKey(name: 'remember_ttl') String rememberTtl,@JsonKey(name: 'server_idle_timeout') String serverIdleTimeout,@JsonKey(name: 'server_remember_ttl') String serverRememberTtl,@JsonKey(name: 'server_ttl') String serverTtl,@JsonKey(name: 'ttl') String ttl
 });
 
 
@@ -35326,9 +36628,11 @@ class _$SessionPolicyCopyWithImpl<$Res>
 
 /// Create a copy of SessionPolicy
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? idleTimeout = null,Object? rememberTtl = null,Object? serverIdleTimeout = null,Object? serverRememberTtl = null,Object? serverTtl = null,Object? ttl = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? idleTimeout = null,Object? maxLifetime = null,Object? rememberMaxLifetime = null,Object? rememberTtl = null,Object? serverIdleTimeout = null,Object? serverRememberTtl = null,Object? serverTtl = null,Object? ttl = null,}) {
   return _then(SessionPolicy(
 idleTimeout: null == idleTimeout ? _self.idleTimeout : idleTimeout // ignore: cast_nullable_to_non_nullable
+as String,maxLifetime: null == maxLifetime ? _self.maxLifetime : maxLifetime // ignore: cast_nullable_to_non_nullable
+as String,rememberMaxLifetime: null == rememberMaxLifetime ? _self.rememberMaxLifetime : rememberMaxLifetime // ignore: cast_nullable_to_non_nullable
 as String,rememberTtl: null == rememberTtl ? _self.rememberTtl : rememberTtl // ignore: cast_nullable_to_non_nullable
 as String,serverIdleTimeout: null == serverIdleTimeout ? _self.serverIdleTimeout : serverIdleTimeout // ignore: cast_nullable_to_non_nullable
 as String,serverRememberTtl: null == serverRememberTtl ? _self.serverRememberTtl : serverRememberTtl // ignore: cast_nullable_to_non_nullable
@@ -35419,10 +36723,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'idle_timeout')  String idleTimeout, @JsonKey(name: 'remember_ttl')  String rememberTtl, @JsonKey(name: 'server_idle_timeout')  String serverIdleTimeout, @JsonKey(name: 'server_remember_ttl')  String serverRememberTtl, @JsonKey(name: 'server_ttl')  String serverTtl, @JsonKey(name: 'ttl')  String ttl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'idle_timeout')  String idleTimeout, @JsonKey(name: 'max_lifetime')  String maxLifetime, @JsonKey(name: 'remember_max_lifetime')  String rememberMaxLifetime, @JsonKey(name: 'remember_ttl')  String rememberTtl, @JsonKey(name: 'server_idle_timeout')  String serverIdleTimeout, @JsonKey(name: 'server_remember_ttl')  String serverRememberTtl, @JsonKey(name: 'server_ttl')  String serverTtl, @JsonKey(name: 'ttl')  String ttl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SessionPolicy() when $default != null:
-return $default(_that.idleTimeout,_that.rememberTtl,_that.serverIdleTimeout,_that.serverRememberTtl,_that.serverTtl,_that.ttl);case _:
+return $default(_that.idleTimeout,_that.maxLifetime,_that.rememberMaxLifetime,_that.rememberTtl,_that.serverIdleTimeout,_that.serverRememberTtl,_that.serverTtl,_that.ttl);case _:
   return orElse();
 
 }
@@ -35440,10 +36744,10 @@ return $default(_that.idleTimeout,_that.rememberTtl,_that.serverIdleTimeout,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'idle_timeout')  String idleTimeout, @JsonKey(name: 'remember_ttl')  String rememberTtl, @JsonKey(name: 'server_idle_timeout')  String serverIdleTimeout, @JsonKey(name: 'server_remember_ttl')  String serverRememberTtl, @JsonKey(name: 'server_ttl')  String serverTtl, @JsonKey(name: 'ttl')  String ttl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'idle_timeout')  String idleTimeout, @JsonKey(name: 'max_lifetime')  String maxLifetime, @JsonKey(name: 'remember_max_lifetime')  String rememberMaxLifetime, @JsonKey(name: 'remember_ttl')  String rememberTtl, @JsonKey(name: 'server_idle_timeout')  String serverIdleTimeout, @JsonKey(name: 'server_remember_ttl')  String serverRememberTtl, @JsonKey(name: 'server_ttl')  String serverTtl, @JsonKey(name: 'ttl')  String ttl)  $default,) {final _that = this;
 switch (_that) {
 case _SessionPolicy():
-return $default(_that.idleTimeout,_that.rememberTtl,_that.serverIdleTimeout,_that.serverRememberTtl,_that.serverTtl,_that.ttl);case _:
+return $default(_that.idleTimeout,_that.maxLifetime,_that.rememberMaxLifetime,_that.rememberTtl,_that.serverIdleTimeout,_that.serverRememberTtl,_that.serverTtl,_that.ttl);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -35460,10 +36764,10 @@ return $default(_that.idleTimeout,_that.rememberTtl,_that.serverIdleTimeout,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'idle_timeout')  String idleTimeout, @JsonKey(name: 'remember_ttl')  String rememberTtl, @JsonKey(name: 'server_idle_timeout')  String serverIdleTimeout, @JsonKey(name: 'server_remember_ttl')  String serverRememberTtl, @JsonKey(name: 'server_ttl')  String serverTtl, @JsonKey(name: 'ttl')  String ttl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'idle_timeout')  String idleTimeout, @JsonKey(name: 'max_lifetime')  String maxLifetime, @JsonKey(name: 'remember_max_lifetime')  String rememberMaxLifetime, @JsonKey(name: 'remember_ttl')  String rememberTtl, @JsonKey(name: 'server_idle_timeout')  String serverIdleTimeout, @JsonKey(name: 'server_remember_ttl')  String serverRememberTtl, @JsonKey(name: 'server_ttl')  String serverTtl, @JsonKey(name: 'ttl')  String ttl)?  $default,) {final _that = this;
 switch (_that) {
 case _SessionPolicy() when $default != null:
-return $default(_that.idleTimeout,_that.rememberTtl,_that.serverIdleTimeout,_that.serverRememberTtl,_that.serverTtl,_that.ttl);case _:
+return $default(_that.idleTimeout,_that.maxLifetime,_that.rememberMaxLifetime,_that.rememberTtl,_that.serverIdleTimeout,_that.serverRememberTtl,_that.serverTtl,_that.ttl);case _:
   return null;
 
 }
@@ -35475,11 +36779,17 @@ return $default(_that.idleTimeout,_that.rememberTtl,_that.serverIdleTimeout,_tha
 @JsonSerializable()
 
 class _SessionPolicy implements SessionPolicy {
-  const _SessionPolicy({@JsonKey(name: 'idle_timeout') this.idleTimeout = '', @JsonKey(name: 'remember_ttl') this.rememberTtl = '', @JsonKey(name: 'server_idle_timeout') this.serverIdleTimeout = '', @JsonKey(name: 'server_remember_ttl') this.serverRememberTtl = '', @JsonKey(name: 'server_ttl') this.serverTtl = '', @JsonKey(name: 'ttl') this.ttl = ''});
+  const _SessionPolicy({@JsonKey(name: 'idle_timeout') this.idleTimeout = '', @JsonKey(name: 'max_lifetime') this.maxLifetime = '', @JsonKey(name: 'remember_max_lifetime') this.rememberMaxLifetime = '', @JsonKey(name: 'remember_ttl') this.rememberTtl = '', @JsonKey(name: 'server_idle_timeout') this.serverIdleTimeout = '', @JsonKey(name: 'server_remember_ttl') this.serverRememberTtl = '', @JsonKey(name: 'server_ttl') this.serverTtl = '', @JsonKey(name: 'ttl') this.ttl = ''});
   factory _SessionPolicy.fromJson(Map<String, dynamic> json) => _$SessionPolicyFromJson(json);
 
 /// IdleTimeout ends a session unused for this long; zero is off.
 @override@JsonKey(name: 'idle_timeout') final  String idleTimeout;
+/// MaxLifetime is how long after the sign-in a session in use may be renewed
+/// to; zero means a session ends TTL after the sign-in, used or not.
+@override@JsonKey(name: 'max_lifetime') final  String maxLifetime;
+/// RememberMaxLifetime is MaxLifetime for a "keep me signed in" sign-in, which
+/// is renewed by RememberTTL.
+@override@JsonKey(name: 'remember_max_lifetime') final  String rememberMaxLifetime;
 /// RememberTTL is how long a "keep me signed in" sign-in lasts; zero means the
 /// choice is not offered.
 @override@JsonKey(name: 'remember_ttl') final  String rememberTtl;
@@ -35489,7 +36799,8 @@ class _SessionPolicy implements SessionPolicy {
 @override@JsonKey(name: 'server_remember_ttl') final  String serverRememberTtl;
 /// ServerTTL is the server's session.ttl, which a tenant may only shorten.
 @override@JsonKey(name: 'server_ttl') final  String serverTtl;
-/// TTL is how long a sign-in lasts from the moment it is made.
+/// TTL is how long a sign-in lasts from the moment it is made, and again from
+/// each use while MaxLifetime allows.
 @override@JsonKey(name: 'ttl') final  String ttl;
 
 /// Create a copy of SessionPolicy
@@ -35505,18 +36816,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionPolicy&&(identical(other.idleTimeout, idleTimeout) || other.idleTimeout == idleTimeout)&&(identical(other.rememberTtl, rememberTtl) || other.rememberTtl == rememberTtl)&&(identical(other.serverIdleTimeout, serverIdleTimeout) || other.serverIdleTimeout == serverIdleTimeout)&&(identical(other.serverRememberTtl, serverRememberTtl) || other.serverRememberTtl == serverRememberTtl)&&(identical(other.serverTtl, serverTtl) || other.serverTtl == serverTtl)&&(identical(other.ttl, ttl) || other.ttl == ttl));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionPolicy&&(identical(other.idleTimeout, idleTimeout) || other.idleTimeout == idleTimeout)&&(identical(other.maxLifetime, maxLifetime) || other.maxLifetime == maxLifetime)&&(identical(other.rememberMaxLifetime, rememberMaxLifetime) || other.rememberMaxLifetime == rememberMaxLifetime)&&(identical(other.rememberTtl, rememberTtl) || other.rememberTtl == rememberTtl)&&(identical(other.serverIdleTimeout, serverIdleTimeout) || other.serverIdleTimeout == serverIdleTimeout)&&(identical(other.serverRememberTtl, serverRememberTtl) || other.serverRememberTtl == serverRememberTtl)&&(identical(other.serverTtl, serverTtl) || other.serverTtl == serverTtl)&&(identical(other.ttl, ttl) || other.ttl == ttl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,idleTimeout,rememberTtl,serverIdleTimeout,serverRememberTtl,serverTtl,ttl);
+    return Object.hash(runtimeType,idleTimeout,maxLifetime,rememberMaxLifetime,rememberTtl,serverIdleTimeout,serverRememberTtl,serverTtl,ttl);
 }
 
 @override
 String toString() {
-    return 'SessionPolicy(idleTimeout: $idleTimeout, rememberTtl: $rememberTtl, serverIdleTimeout: $serverIdleTimeout, serverRememberTtl: $serverRememberTtl, serverTtl: $serverTtl, ttl: $ttl)';
+    return 'SessionPolicy(idleTimeout: $idleTimeout, maxLifetime: $maxLifetime, rememberMaxLifetime: $rememberMaxLifetime, rememberTtl: $rememberTtl, serverIdleTimeout: $serverIdleTimeout, serverRememberTtl: $serverRememberTtl, serverTtl: $serverTtl, ttl: $ttl)';
 }
 
 
@@ -35527,7 +36838,7 @@ abstract mixin class _$SessionPolicyCopyWith<$Res> implements $SessionPolicyCopy
   factory _$SessionPolicyCopyWith(_SessionPolicy value, $Res Function(_SessionPolicy) _then) = __$SessionPolicyCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'idle_timeout') String idleTimeout,@JsonKey(name: 'remember_ttl') String rememberTtl,@JsonKey(name: 'server_idle_timeout') String serverIdleTimeout,@JsonKey(name: 'server_remember_ttl') String serverRememberTtl,@JsonKey(name: 'server_ttl') String serverTtl,@JsonKey(name: 'ttl') String ttl
+@JsonKey(name: 'idle_timeout') String idleTimeout,@JsonKey(name: 'max_lifetime') String maxLifetime,@JsonKey(name: 'remember_max_lifetime') String rememberMaxLifetime,@JsonKey(name: 'remember_ttl') String rememberTtl,@JsonKey(name: 'server_idle_timeout') String serverIdleTimeout,@JsonKey(name: 'server_remember_ttl') String serverRememberTtl,@JsonKey(name: 'server_ttl') String serverTtl,@JsonKey(name: 'ttl') String ttl
 });
 
 
@@ -35544,9 +36855,11 @@ class __$SessionPolicyCopyWithImpl<$Res>
 
 /// Create a copy of SessionPolicy
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? idleTimeout = null,Object? rememberTtl = null,Object? serverIdleTimeout = null,Object? serverRememberTtl = null,Object? serverTtl = null,Object? ttl = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? idleTimeout = null,Object? maxLifetime = null,Object? rememberMaxLifetime = null,Object? rememberTtl = null,Object? serverIdleTimeout = null,Object? serverRememberTtl = null,Object? serverTtl = null,Object? ttl = null,}) {
   return _then(_SessionPolicy(
 idleTimeout: null == idleTimeout ? _self.idleTimeout : idleTimeout // ignore: cast_nullable_to_non_nullable
+as String,maxLifetime: null == maxLifetime ? _self.maxLifetime : maxLifetime // ignore: cast_nullable_to_non_nullable
+as String,rememberMaxLifetime: null == rememberMaxLifetime ? _self.rememberMaxLifetime : rememberMaxLifetime // ignore: cast_nullable_to_non_nullable
 as String,rememberTtl: null == rememberTtl ? _self.rememberTtl : rememberTtl // ignore: cast_nullable_to_non_nullable
 as String,serverIdleTimeout: null == serverIdleTimeout ? _self.serverIdleTimeout : serverIdleTimeout // ignore: cast_nullable_to_non_nullable
 as String,serverRememberTtl: null == serverRememberTtl ? _self.serverRememberTtl : serverRememberTtl // ignore: cast_nullable_to_non_nullable
@@ -36132,6 +37445,288 @@ as String?,revertOnLeaseExpiry: freezed == revertOnLeaseExpiry ? _self.revertOnL
 as bool?,revertTo: freezed == revertTo ? _self.revertTo : revertTo // ignore: cast_nullable_to_non_nullable
 as String?,terminal: freezed == terminal ? _self.terminal : terminal // ignore: cast_nullable_to_non_nullable
 as bool?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$StateCount {
+
+/// Count is how many of them there are.
+@JsonKey(name: 'count') int get count;/// ProjectID is the project the tasks belong to.
+@JsonKey(name: 'project_id') String get projectId;/// Status is the workflow state they sit in.
+@JsonKey(name: 'status') String get status;
+/// Create a copy of StateCount
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$StateCountCopyWith<StateCount> get copyWith => _$StateCountCopyWithImpl<StateCount>(this as StateCount, _$identity);
+
+  /// Serializes this StateCount to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as StateCount;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StateCount&&(identical(other.count, _this.count) || other.count == _this.count)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.status, _this.status) || other.status == _this.status));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as StateCount;
+  return Object.hash(runtimeType,_this.count,_this.projectId,_this.status);
+}
+
+@override
+String toString() {
+  final _this = this as StateCount;
+  return 'StateCount(count: ${_this.count}, projectId: ${_this.projectId}, status: ${_this.status})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $StateCountCopyWith<$Res>  {
+  factory $StateCountCopyWith(StateCount value, $Res Function(StateCount) _then) = _$StateCountCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'count') int count,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'status') String status
+});
+
+
+
+
+}
+/// @nodoc
+class _$StateCountCopyWithImpl<$Res>
+    implements $StateCountCopyWith<$Res> {
+  _$StateCountCopyWithImpl(this._self, this._then);
+
+  final StateCount _self;
+  final $Res Function(StateCount) _then;
+
+/// Create a copy of StateCount
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? count = null,Object? projectId = null,Object? status = null,}) {
+  return _then(StateCount(
+count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,projectId: null == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [StateCount].
+extension StateCountPatterns on StateCount {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StateCount value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _StateCount() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StateCount value)  $default,){
+final _that = this;
+switch (_that) {
+case _StateCount():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StateCount value)?  $default,){
+final _that = this;
+switch (_that) {
+case _StateCount() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'count')  int count, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'status')  String status)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _StateCount() when $default != null:
+return $default(_that.count,_that.projectId,_that.status);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'count')  int count, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'status')  String status)  $default,) {final _that = this;
+switch (_that) {
+case _StateCount():
+return $default(_that.count,_that.projectId,_that.status);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'count')  int count, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'status')  String status)?  $default,) {final _that = this;
+switch (_that) {
+case _StateCount() when $default != null:
+return $default(_that.count,_that.projectId,_that.status);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _StateCount implements StateCount {
+  const _StateCount({@JsonKey(name: 'count') this.count = 0, @JsonKey(name: 'project_id') this.projectId = '', @JsonKey(name: 'status') this.status = ''});
+  factory _StateCount.fromJson(Map<String, dynamic> json) => _$StateCountFromJson(json);
+
+/// Count is how many of them there are.
+@override@JsonKey(name: 'count') final  int count;
+/// ProjectID is the project the tasks belong to.
+@override@JsonKey(name: 'project_id') final  String projectId;
+/// Status is the workflow state they sit in.
+@override@JsonKey(name: 'status') final  String status;
+
+/// Create a copy of StateCount
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$StateCountCopyWith<_StateCount> get copyWith => __$StateCountCopyWithImpl<_StateCount>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$StateCountToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StateCount&&(identical(other.count, count) || other.count == count)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.status, status) || other.status == status));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,count,projectId,status);
+}
+
+@override
+String toString() {
+    return 'StateCount(count: $count, projectId: $projectId, status: $status)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$StateCountCopyWith<$Res> implements $StateCountCopyWith<$Res> {
+  factory _$StateCountCopyWith(_StateCount value, $Res Function(_StateCount) _then) = __$StateCountCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'count') int count,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'status') String status
+});
+
+
+
+
+}
+/// @nodoc
+class __$StateCountCopyWithImpl<$Res>
+    implements _$StateCountCopyWith<$Res> {
+  __$StateCountCopyWithImpl(this._self, this._then);
+
+  final _StateCount _self;
+  final $Res Function(_StateCount) _then;
+
+/// Create a copy of StateCount
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? count = null,Object? projectId = null,Object? status = null,}) {
+  return _then(_StateCount(
+count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,projectId: null == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -47321,6 +48916,298 @@ $TaskCopyWith<$Res>? get task {
 
 
 /// @nodoc
+mixin _$TaskTally {
+
+/// Blocked counts the tasks waiting on an unfinished dependency.
+@JsonKey(name: 'blocked') int get blocked;/// Held counts the tasks under a live claim.
+@JsonKey(name: 'held') int get held;/// States counts the selection per project and status. A state is done or open
+/// by its project's workflow, which the reader already holds.
+@JsonKey(name: 'states') List<StateCount> get states;
+/// Create a copy of TaskTally
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TaskTallyCopyWith<TaskTally> get copyWith => _$TaskTallyCopyWithImpl<TaskTally>(this as TaskTally, _$identity);
+
+  /// Serializes this TaskTally to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as TaskTally;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TaskTally&&(identical(other.blocked, _this.blocked) || other.blocked == _this.blocked)&&(identical(other.held, _this.held) || other.held == _this.held)&&const DeepCollectionEquality().equals(other.states, _this.states));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as TaskTally;
+  return Object.hash(runtimeType,_this.blocked,_this.held,const DeepCollectionEquality().hash(_this.states));
+}
+
+@override
+String toString() {
+  final _this = this as TaskTally;
+  return 'TaskTally(blocked: ${_this.blocked}, held: ${_this.held}, states: ${_this.states})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TaskTallyCopyWith<$Res>  {
+  factory $TaskTallyCopyWith(TaskTally value, $Res Function(TaskTally) _then) = _$TaskTallyCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'blocked') int blocked,@JsonKey(name: 'held') int held,@JsonKey(name: 'states') List<StateCount> states
+});
+
+
+
+
+}
+/// @nodoc
+class _$TaskTallyCopyWithImpl<$Res>
+    implements $TaskTallyCopyWith<$Res> {
+  _$TaskTallyCopyWithImpl(this._self, this._then);
+
+  final TaskTally _self;
+  final $Res Function(TaskTally) _then;
+
+/// Create a copy of TaskTally
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? blocked = null,Object? held = null,Object? states = null,}) {
+  return _then(TaskTally(
+blocked: null == blocked ? _self.blocked : blocked // ignore: cast_nullable_to_non_nullable
+as int,held: null == held ? _self.held : held // ignore: cast_nullable_to_non_nullable
+as int,states: null == states ? _self.states : states // ignore: cast_nullable_to_non_nullable
+as List<StateCount>,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [TaskTally].
+extension TaskTallyPatterns on TaskTally {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TaskTally value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TaskTally() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TaskTally value)  $default,){
+final _that = this;
+switch (_that) {
+case _TaskTally():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TaskTally value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TaskTally() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'blocked')  int blocked, @JsonKey(name: 'held')  int held, @JsonKey(name: 'states')  List<StateCount> states)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TaskTally() when $default != null:
+return $default(_that.blocked,_that.held,_that.states);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'blocked')  int blocked, @JsonKey(name: 'held')  int held, @JsonKey(name: 'states')  List<StateCount> states)  $default,) {final _that = this;
+switch (_that) {
+case _TaskTally():
+return $default(_that.blocked,_that.held,_that.states);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'blocked')  int blocked, @JsonKey(name: 'held')  int held, @JsonKey(name: 'states')  List<StateCount> states)?  $default,) {final _that = this;
+switch (_that) {
+case _TaskTally() when $default != null:
+return $default(_that.blocked,_that.held,_that.states);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _TaskTally implements TaskTally {
+  const _TaskTally({@JsonKey(name: 'blocked') this.blocked = 0, @JsonKey(name: 'held') this.held = 0, @JsonKey(name: 'states')  List<StateCount> states = const <StateCount>[]}): _states = states;
+  factory _TaskTally.fromJson(Map<String, dynamic> json) => _$TaskTallyFromJson(json);
+
+/// Blocked counts the tasks waiting on an unfinished dependency.
+@override@JsonKey(name: 'blocked') final  int blocked;
+/// Held counts the tasks under a live claim.
+@override@JsonKey(name: 'held') final  int held;
+/// States counts the selection per project and status. A state is done or open
+/// by its project's workflow, which the reader already holds.
+ final  List<StateCount> _states;
+/// States counts the selection per project and status. A state is done or open
+/// by its project's workflow, which the reader already holds.
+@override@JsonKey(name: 'states') List<StateCount> get states {
+  if (_states is EqualUnmodifiableListView) return _states;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_states);
+}
+
+
+/// Create a copy of TaskTally
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TaskTallyCopyWith<_TaskTally> get copyWith => __$TaskTallyCopyWithImpl<_TaskTally>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$TaskTallyToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TaskTally&&(identical(other.blocked, blocked) || other.blocked == blocked)&&(identical(other.held, held) || other.held == held)&&const DeepCollectionEquality().equals(other.states, _states));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,blocked,held,const DeepCollectionEquality().hash(_states));
+}
+
+@override
+String toString() {
+    return 'TaskTally(blocked: $blocked, held: $held, states: $states)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TaskTallyCopyWith<$Res> implements $TaskTallyCopyWith<$Res> {
+  factory _$TaskTallyCopyWith(_TaskTally value, $Res Function(_TaskTally) _then) = __$TaskTallyCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'blocked') int blocked,@JsonKey(name: 'held') int held,@JsonKey(name: 'states') List<StateCount> states
+});
+
+
+
+
+}
+/// @nodoc
+class __$TaskTallyCopyWithImpl<$Res>
+    implements _$TaskTallyCopyWith<$Res> {
+  __$TaskTallyCopyWithImpl(this._self, this._then);
+
+  final _TaskTally _self;
+  final $Res Function(_TaskTally) _then;
+
+/// Create a copy of TaskTally
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? blocked = null,Object? held = null,Object? states = null,}) {
+  return _then(_TaskTally(
+blocked: null == blocked ? _self.blocked : blocked // ignore: cast_nullable_to_non_nullable
+as int,held: null == held ? _self.held : held // ignore: cast_nullable_to_non_nullable
+as int,states: null == states ? _self._states : states // ignore: cast_nullable_to_non_nullable
+as List<StateCount>,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$TaskTemplate {
 
 /// CreatedAt is when the template was saved, RFC 3339.
@@ -50657,7 +52544,9 @@ mixin _$TransitionInput {
 /// demands one.
 @JsonKey(name: 'comment') String? get comment;/// CustomFields merges values over the stored ones by field key; a null value
 /// clears that field.
-@JsonKey(name: 'custom_fields') Map<String, Object?>? get customFields;/// LeaseToken is the claim's token, required while the task is claimed.
+@JsonKey(name: 'custom_fields') Map<String, Object?>? get customFields;/// DryRun runs every check the move runs and writes nothing; the answer is the
+/// task as the move would leave it, and a refusal is the move's own.
+@JsonKey(name: 'dry_run') bool? get dryRun;/// LeaseToken is the claim's token, required while the task is claimed.
 @JsonKey(name: 'lease_token') String? get leaseToken;/// To is the target status, which the workflow must allow from the current one.
 /// Required.
 @JsonKey(name: 'to') String? get to;/// Version is the task version the caller last read. When set and stale the
@@ -50676,20 +52565,20 @@ $TransitionInputCopyWith<TransitionInput> get copyWith => _$TransitionInputCopyW
 @override
 bool operator ==(Object other) {
   final _this = this as TransitionInput;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TransitionInput&&(identical(other.comment, _this.comment) || other.comment == _this.comment)&&const DeepCollectionEquality().equals(other.customFields, _this.customFields)&&(identical(other.leaseToken, _this.leaseToken) || other.leaseToken == _this.leaseToken)&&(identical(other.to, _this.to) || other.to == _this.to)&&(identical(other.version, _this.version) || other.version == _this.version));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TransitionInput&&(identical(other.comment, _this.comment) || other.comment == _this.comment)&&const DeepCollectionEquality().equals(other.customFields, _this.customFields)&&(identical(other.dryRun, _this.dryRun) || other.dryRun == _this.dryRun)&&(identical(other.leaseToken, _this.leaseToken) || other.leaseToken == _this.leaseToken)&&(identical(other.to, _this.to) || other.to == _this.to)&&(identical(other.version, _this.version) || other.version == _this.version));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as TransitionInput;
-  return Object.hash(runtimeType,_this.comment,const DeepCollectionEquality().hash(_this.customFields),_this.leaseToken,_this.to,_this.version);
+  return Object.hash(runtimeType,_this.comment,const DeepCollectionEquality().hash(_this.customFields),_this.dryRun,_this.leaseToken,_this.to,_this.version);
 }
 
 @override
 String toString() {
   final _this = this as TransitionInput;
-  return 'TransitionInput(comment: ${_this.comment}, customFields: ${_this.customFields}, leaseToken: ${_this.leaseToken}, to: ${_this.to}, version: ${_this.version})';
+  return 'TransitionInput(comment: ${_this.comment}, customFields: ${_this.customFields}, dryRun: ${_this.dryRun}, leaseToken: ${_this.leaseToken}, to: ${_this.to}, version: ${_this.version})';
 }
 
 
@@ -50700,7 +52589,7 @@ abstract mixin class $TransitionInputCopyWith<$Res>  {
   factory $TransitionInputCopyWith(TransitionInput value, $Res Function(TransitionInput) _then) = _$TransitionInputCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'comment') String? comment,@JsonKey(name: 'custom_fields') Map<String, Object?>? customFields,@JsonKey(name: 'lease_token') String? leaseToken,@JsonKey(name: 'to') String? to,@JsonKey(name: 'version') int? version
+@JsonKey(name: 'comment') String? comment,@JsonKey(name: 'custom_fields') Map<String, Object?>? customFields,@JsonKey(name: 'dry_run') bool? dryRun,@JsonKey(name: 'lease_token') String? leaseToken,@JsonKey(name: 'to') String? to,@JsonKey(name: 'version') int? version
 });
 
 
@@ -50717,11 +52606,12 @@ class _$TransitionInputCopyWithImpl<$Res>
 
 /// Create a copy of TransitionInput
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? comment = freezed,Object? customFields = freezed,Object? leaseToken = freezed,Object? to = freezed,Object? version = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? comment = freezed,Object? customFields = freezed,Object? dryRun = freezed,Object? leaseToken = freezed,Object? to = freezed,Object? version = freezed,}) {
   return _then(TransitionInput(
 comment: freezed == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
 as String?,customFields: freezed == customFields ? _self.customFields : customFields // ignore: cast_nullable_to_non_nullable
-as Map<String, Object?>?,leaseToken: freezed == leaseToken ? _self.leaseToken : leaseToken // ignore: cast_nullable_to_non_nullable
+as Map<String, Object?>?,dryRun: freezed == dryRun ? _self.dryRun : dryRun // ignore: cast_nullable_to_non_nullable
+as bool?,leaseToken: freezed == leaseToken ? _self.leaseToken : leaseToken // ignore: cast_nullable_to_non_nullable
 as String?,to: freezed == to ? _self.to : to // ignore: cast_nullable_to_non_nullable
 as String?,version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as int?,
@@ -50809,10 +52699,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'comment')  String? comment, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'lease_token')  String? leaseToken, @JsonKey(name: 'to')  String? to, @JsonKey(name: 'version')  int? version)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'comment')  String? comment, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'dry_run')  bool? dryRun, @JsonKey(name: 'lease_token')  String? leaseToken, @JsonKey(name: 'to')  String? to, @JsonKey(name: 'version')  int? version)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TransitionInput() when $default != null:
-return $default(_that.comment,_that.customFields,_that.leaseToken,_that.to,_that.version);case _:
+return $default(_that.comment,_that.customFields,_that.dryRun,_that.leaseToken,_that.to,_that.version);case _:
   return orElse();
 
 }
@@ -50830,10 +52720,10 @@ return $default(_that.comment,_that.customFields,_that.leaseToken,_that.to,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'comment')  String? comment, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'lease_token')  String? leaseToken, @JsonKey(name: 'to')  String? to, @JsonKey(name: 'version')  int? version)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'comment')  String? comment, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'dry_run')  bool? dryRun, @JsonKey(name: 'lease_token')  String? leaseToken, @JsonKey(name: 'to')  String? to, @JsonKey(name: 'version')  int? version)  $default,) {final _that = this;
 switch (_that) {
 case _TransitionInput():
-return $default(_that.comment,_that.customFields,_that.leaseToken,_that.to,_that.version);case _:
+return $default(_that.comment,_that.customFields,_that.dryRun,_that.leaseToken,_that.to,_that.version);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -50850,10 +52740,10 @@ return $default(_that.comment,_that.customFields,_that.leaseToken,_that.to,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'comment')  String? comment, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'lease_token')  String? leaseToken, @JsonKey(name: 'to')  String? to, @JsonKey(name: 'version')  int? version)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'comment')  String? comment, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'dry_run')  bool? dryRun, @JsonKey(name: 'lease_token')  String? leaseToken, @JsonKey(name: 'to')  String? to, @JsonKey(name: 'version')  int? version)?  $default,) {final _that = this;
 switch (_that) {
 case _TransitionInput() when $default != null:
-return $default(_that.comment,_that.customFields,_that.leaseToken,_that.to,_that.version);case _:
+return $default(_that.comment,_that.customFields,_that.dryRun,_that.leaseToken,_that.to,_that.version);case _:
   return null;
 
 }
@@ -50865,7 +52755,7 @@ return $default(_that.comment,_that.customFields,_that.leaseToken,_that.to,_that
 @JsonSerializable()
 
 class _TransitionInput implements TransitionInput {
-  const _TransitionInput({@JsonKey(name: 'comment') this.comment, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'lease_token') this.leaseToken, @JsonKey(name: 'to') this.to, @JsonKey(name: 'version') this.version}): _customFields = customFields;
+  const _TransitionInput({@JsonKey(name: 'comment') this.comment, @JsonKey(name: 'custom_fields')  Map<String, Object?>? customFields, @JsonKey(name: 'dry_run') this.dryRun, @JsonKey(name: 'lease_token') this.leaseToken, @JsonKey(name: 'to') this.to, @JsonKey(name: 'version') this.version}): _customFields = customFields;
   factory _TransitionInput.fromJson(Map<String, dynamic> json) => _$TransitionInputFromJson(json);
 
 /// Comment is added to the task as a comment; required when the transition
@@ -50884,6 +52774,9 @@ class _TransitionInput implements TransitionInput {
   return EqualUnmodifiableMapView(value);
 }
 
+/// DryRun runs every check the move runs and writes nothing; the answer is the
+/// task as the move would leave it, and a refusal is the move's own.
+@override@JsonKey(name: 'dry_run') final  bool? dryRun;
 /// LeaseToken is the claim's token, required while the task is claimed.
 @override@JsonKey(name: 'lease_token') final  String? leaseToken;
 /// To is the target status, which the workflow must allow from the current one.
@@ -50906,18 +52799,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TransitionInput&&(identical(other.comment, comment) || other.comment == comment)&&const DeepCollectionEquality().equals(other.customFields, _customFields)&&(identical(other.leaseToken, leaseToken) || other.leaseToken == leaseToken)&&(identical(other.to, to) || other.to == to)&&(identical(other.version, version) || other.version == version));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TransitionInput&&(identical(other.comment, comment) || other.comment == comment)&&const DeepCollectionEquality().equals(other.customFields, _customFields)&&(identical(other.dryRun, dryRun) || other.dryRun == dryRun)&&(identical(other.leaseToken, leaseToken) || other.leaseToken == leaseToken)&&(identical(other.to, to) || other.to == to)&&(identical(other.version, version) || other.version == version));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,comment,const DeepCollectionEquality().hash(_customFields),leaseToken,to,version);
+    return Object.hash(runtimeType,comment,const DeepCollectionEquality().hash(_customFields),dryRun,leaseToken,to,version);
 }
 
 @override
 String toString() {
-    return 'TransitionInput(comment: $comment, customFields: $customFields, leaseToken: $leaseToken, to: $to, version: $version)';
+    return 'TransitionInput(comment: $comment, customFields: $customFields, dryRun: $dryRun, leaseToken: $leaseToken, to: $to, version: $version)';
 }
 
 
@@ -50928,7 +52821,7 @@ abstract mixin class _$TransitionInputCopyWith<$Res> implements $TransitionInput
   factory _$TransitionInputCopyWith(_TransitionInput value, $Res Function(_TransitionInput) _then) = __$TransitionInputCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'comment') String? comment,@JsonKey(name: 'custom_fields') Map<String, Object?>? customFields,@JsonKey(name: 'lease_token') String? leaseToken,@JsonKey(name: 'to') String? to,@JsonKey(name: 'version') int? version
+@JsonKey(name: 'comment') String? comment,@JsonKey(name: 'custom_fields') Map<String, Object?>? customFields,@JsonKey(name: 'dry_run') bool? dryRun,@JsonKey(name: 'lease_token') String? leaseToken,@JsonKey(name: 'to') String? to,@JsonKey(name: 'version') int? version
 });
 
 
@@ -50945,11 +52838,12 @@ class __$TransitionInputCopyWithImpl<$Res>
 
 /// Create a copy of TransitionInput
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? comment = freezed,Object? customFields = freezed,Object? leaseToken = freezed,Object? to = freezed,Object? version = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? comment = freezed,Object? customFields = freezed,Object? dryRun = freezed,Object? leaseToken = freezed,Object? to = freezed,Object? version = freezed,}) {
   return _then(_TransitionInput(
 comment: freezed == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
 as String?,customFields: freezed == customFields ? _self._customFields : customFields // ignore: cast_nullable_to_non_nullable
-as Map<String, Object?>?,leaseToken: freezed == leaseToken ? _self.leaseToken : leaseToken // ignore: cast_nullable_to_non_nullable
+as Map<String, Object?>?,dryRun: freezed == dryRun ? _self.dryRun : dryRun // ignore: cast_nullable_to_non_nullable
+as bool?,leaseToken: freezed == leaseToken ? _self.leaseToken : leaseToken // ignore: cast_nullable_to_non_nullable
 as String?,to: freezed == to ? _self.to : to // ignore: cast_nullable_to_non_nullable
 as String?,version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as int?,
