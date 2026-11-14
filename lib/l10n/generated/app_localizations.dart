@@ -12655,6 +12655,30 @@ abstract class AppLocalizations {
   /// **'Shared with you; only its owner and administrators can change it.'**
   String get savedFilterTheirs;
 
+  /// No description provided for @savedFilterView.
+  ///
+  /// In en, this message translates to:
+  /// **'View: {view}'**
+  String savedFilterView(String view);
+
+  /// No description provided for @savedFilterDrag.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to reorder {name}'**
+  String savedFilterDrag(String name);
+
+  /// No description provided for @savedFiltersOrderHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag your filters by the handle to set their order, or use Move up and Move down in a filter\'s menu. Shared filters follow, by name.'**
+  String get savedFiltersOrderHelp;
+
+  /// No description provided for @filterSaveKeeps.
+  ///
+  /// In en, this message translates to:
+  /// **'It keeps this filter, its sort and the {view} view.'**
+  String filterSaveKeeps(String view);
+
   /// No description provided for @durationDays.
   ///
   /// In en, this message translates to:

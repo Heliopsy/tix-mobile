@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/data/models/task.dart';
+import 'package:tix_mobile/src/features/tasks/presentation/lanes_view.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_list_screen.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_screen.dart';
@@ -115,6 +116,39 @@ void main() {
           'doing',
           'blocked',
         ]);
+      });
+
+      testWidgets('a saved filter brings back the view it was saved in', (
+        tester,
+      ) async {
+        server.filters.add({
+          'id': 'f9',
+          'name': 'Infra lanes',
+          'query': 'project:infra',
+          'view': 'lanes',
+          'mine': true,
+          'editable': true,
+        });
+        await pump(tester, const TasksScreen(), size: size);
+        expect(find.byType(LanesView), findsNothing);
+        await tester.tap(find.byKey(const Key('saved.f9')));
+        await tester.pumpAndSettle();
+        expect(find.byType(LanesView), findsOneWidget);
+        expect(find.byKey(const ValueKey(('lane', 'infra'))), findsOneWidget);
+      });
+
+      testWidgets('the save sheet names the view the filter keeps', (
+        tester,
+      ) async {
+        await pump(tester, const TasksScreen(), size: size);
+        await tester.tap(find.byKey(const Key('chip.starred')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('saved.save')));
+        await tester.pumpAndSettle();
+        expect(
+          tester.widget<Text>(find.byKey(const Key('save.keeps'))).data,
+          'It keeps this filter, its sort and the List view.',
+        );
       });
 
       testWidgets('a filter that matches nothing says so', (tester) async {
@@ -1088,6 +1122,27 @@ void main() {
     );
     expect(find.byKey(const Key('saved.f1')), findsOneWidget);
     expect(find.text('Saved Stars'), findsOneWidget);
+  });
+
+  testWidgets('saving while lanes are drawn keeps lanes', (tester) async {
+    await pump(tester, const TasksScreen(), size: desktop);
+    await tester.tap(find.byKey(const Key('view.lanes')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('chip.starred')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('saved.save')));
+    await tester.pumpAndSettle();
+    expect(
+      find.text('It keeps this filter, its sort and the Lanes view.'),
+      findsOneWidget,
+    );
+    await tester.enterText(find.byKey(const Key('save.name')), 'Star lanes');
+    await tester.tap(find.byKey(const Key('save.ok')));
+    await tester.pumpAndSettle();
+    final post = server
+        .requestsTo('/api/v1/filters')
+        .firstWhere((r) => r.method == 'POST');
+    expect(post.body['view'], 'lanes');
   });
 
   testWidgets('a project switches from its title', (tester) async {

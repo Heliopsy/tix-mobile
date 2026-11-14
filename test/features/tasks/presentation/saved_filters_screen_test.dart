@@ -41,10 +41,12 @@ void main() {
     String name, {
     bool mine = true,
     bool shared = false,
+    String view = '',
   }) => {
     'id': id,
     'name': name,
     'query': 'status:todo',
+    'view': view,
     'mine': mine,
     'editable': mine,
     'shared': shared,
@@ -59,6 +61,124 @@ void main() {
       expect(find.text('route:/tasks'), findsOneWidget);
     });
   }
+
+  List<Object?> sentOrder() => [
+    for (final r in server.requestsTo('/api/v1/filters/order'))
+      r.body['filters'],
+  ];
+
+  Finder tileOf(String id) => find.byKey(Key('savedFilter.$id'));
+
+  for (final MapEntry(key: width, value: size) in widths.entries) {
+    group(width, () {
+      testWidgets('dragging an own filter to the top stores the order', (
+        tester,
+      ) async {
+        server.filters.addAll([
+          filter('a', 'Alpha'),
+          filter('b', 'Bravo'),
+          filter('c', 'Charlie'),
+          filter('s', 'Team', mine: false, shared: true),
+        ]);
+        await pump(tester, size: size);
+        expect(find.textContaining('Drag your filters'), findsOneWidget);
+        expect(find.byKey(const Key('savedFilter.drag.s')), findsNothing);
+        final handle = find.byKey(const Key('savedFilter.drag.c'));
+        final gesture = await tester.startGesture(tester.getCenter(handle));
+        await tester.pump();
+        final distance =
+            tester.getTopLeft(tileOf('a')).dy - tester.getCenter(handle).dy;
+        for (var i = 0; i < 10; i++) {
+          await gesture.moveBy(Offset(0, distance / 10 - 2));
+          await tester.pump(const Duration(milliseconds: 50));
+        }
+        await gesture.up();
+        await tester.pumpAndSettle();
+        expect(sentOrder(), [
+          ['c', 'a', 'b'],
+        ]);
+        expect(
+          tester.getTopLeft(tileOf('c')).dy,
+          lessThan(tester.getTopLeft(tileOf('a')).dy),
+        );
+        expect(
+          tester.getTopLeft(tileOf('s')).dy,
+          greaterThan(tester.getTopLeft(tileOf('b')).dy),
+        );
+      });
+
+      testWidgets('the menu moves a filter only where it has a neighbour', (
+        tester,
+      ) async {
+        server.filters.addAll([filter('a', 'Alpha'), filter('b', 'Bravo')]);
+        await pump(tester, size: size);
+        await tester.tap(find.text('Alpha'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('saved.earlier')), findsNothing);
+        await tester.tap(find.byKey(const Key('saved.later')));
+        await tester.pumpAndSettle();
+        expect(sentOrder(), [
+          ['b', 'a'],
+        ]);
+        await tester.tap(find.text('Alpha'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('saved.later')), findsNothing);
+        expect(find.byKey(const Key('saved.earlier')), findsOneWidget);
+      });
+    });
+  }
+
+  testWidgets('a single own filter has no handle and no drag help', (
+    tester,
+  ) async {
+    server.filters.add(filter('a', 'Alpha'));
+    await pump(tester);
+    expect(find.byKey(const Key('savedFilter.drag.a')), findsNothing);
+    expect(find.textContaining('Drag your filters'), findsNothing);
+    await tester.tap(find.text('Alpha'));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('saved.earlier')), findsNothing);
+    expect(find.byKey(const Key('saved.later')), findsNothing);
+  });
+
+  testWidgets('a refused drag says so and keeps the server order', (
+    tester,
+  ) async {
+    server.filters.addAll([filter('a', 'Alpha'), filter('b', 'Bravo')]);
+    server.failing['/api/v1/filters/order'] = FakeResponse(
+      400,
+      envelope('invalid', 'not yours'),
+    );
+    await pump(tester);
+    await tester.tap(find.text('Bravo'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('saved.earlier')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('not yours'), findsOneWidget);
+    expect(
+      tester.getTopLeft(tileOf('a')).dy,
+      lessThan(tester.getTopLeft(tileOf('b')).dy),
+    );
+  });
+
+  testWidgets('a row names the view its filter opens in', (tester) async {
+    server.filters.addAll([
+      filter('a', 'Alpha', view: 'lanes'),
+      filter('b', 'Bravo'),
+    ]);
+    await pump(tester);
+    expect(
+      find.descendant(
+        of: tileOf('a'),
+        matching: find.textContaining('View: Lanes'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: tileOf('b'), matching: find.textContaining('View:')),
+      findsNothing,
+    );
+  });
 
   testWidgets('lists own and shared filters; only own ones open a menu', (
     tester,

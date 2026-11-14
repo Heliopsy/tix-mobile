@@ -126,7 +126,8 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 - **Filters and search** in tix's filter language, with suggestions for keys and values as you type (arrows, Enter,
   Tab and Escape on a keyboard), pickers for status, priority, assignee and tag, a removable chip per term, one-tap
   chips (mine, starred, snoozed, blocked, due windows, finished), and saved filters, your own and shared ones, also
-  opened by name from `/tasks?filter=<name>`.
+  opened by name from `/tasks?filter=<name>`. A saved filter keeps its sort and view (list, board or lanes), and
+  your own drag into order under Settings, Saved filters, or move up and down from their menu, shared with the web.
 - **My work**: your open tasks under Overdue, Today, This week, Later and No date.
 - **Keyboard**: every screen works without a mouse, with the same keys as tix web. `j` and `k` to move, Enter to
   open, `x` to pick, `/` to filter, `v` to switch the view, `d` to mark done, `e` to rename, `t` to move, `m` to

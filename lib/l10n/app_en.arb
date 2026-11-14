@@ -4801,6 +4801,31 @@
   "savedFiltersEmptyBody": "Save a filter from the task list and it shows here, on every device.",
   "savedFilterSharedBadge": "Shared",
   "savedFilterTheirs": "Shared with you; only its owner and administrators can change it.",
+  "savedFilterView": "View: {view}",
+  "@savedFilterView": {
+    "placeholders": {
+      "view": {
+        "type": "String"
+      }
+    }
+  },
+  "savedFilterDrag": "Drag to reorder {name}",
+  "@savedFilterDrag": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "savedFiltersOrderHelp": "Drag your filters by the handle to set their order, or use Move up and Move down in a filter's menu. Shared filters follow, by name.",
+  "filterSaveKeeps": "It keeps this filter, its sort and the {view} view.",
+  "@filterSaveKeeps": {
+    "placeholders": {
+      "view": {
+        "type": "String"
+      }
+    }
+  },
   "durationDays": "{n} d",
   "@durationDays": {
     "placeholders": {

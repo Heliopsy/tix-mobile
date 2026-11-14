@@ -381,11 +381,14 @@ class _ViewSwitch extends ConsumerWidget {
     final l10n = context.l10n;
     final view = ref.watch(taskScreenProvider(scope).select((s) => s.view));
     final views = viewsFor(scope);
-    (IconData, String) look(TaskView v) => switch (v) {
-      TaskView.list => (Icons.view_list_outlined, l10n.viewList),
-      TaskView.board => (Icons.view_column_outlined, l10n.viewBoard),
-      TaskView.lanes => (Icons.view_week_outlined, l10n.viewLanes),
-    };
+    (IconData, String) look(TaskView v) => (
+      switch (v) {
+        TaskView.list => Icons.view_list_outlined,
+        TaskView.board => Icons.view_column_outlined,
+        TaskView.lanes => Icons.view_week_outlined,
+      },
+      taskViewLabel(l10n, v),
+    );
     void pick(TaskView v) =>
         ref.read(taskScreenProvider(scope).notifier).setView(v);
     if (context.isCompact) {
@@ -573,7 +576,14 @@ class _SavedFilterRow extends ConsumerWidget {
   }
 }
 
-/// Asks for a name and whether to share, then saves the screen's filter.
+/// The name of [view] as the view switch shows it.
+String taskViewLabel(AppLocalizations l10n, TaskView view) => switch (view) {
+  TaskView.list => l10n.viewList,
+  TaskView.board => l10n.viewBoard,
+  TaskView.lanes => l10n.viewLanes,
+};
+
+/// Applies [filter] at once, then takes the server's copy when it changed.
 Future<void> _openSaved(
   BuildContext context,
   WidgetRef ref,
@@ -623,6 +633,8 @@ Future<void> openSavedFilterNamed(
   }
 }
 
+/// Asks for a name and whether to share, then saves the screen's filter
+/// with its sort and view.
 Future<void> saveCurrentFilter(
   BuildContext context,
   WidgetRef ref,
@@ -631,7 +643,7 @@ Future<void> saveCurrentFilter(
   final state = ref.read(taskScreenProvider(scope));
   final answer = await showTixSheet<(String, bool)>(
     context,
-    builder: (_) => const _SaveSheet(),
+    builder: (_) => _SaveSheet(view: state.view),
   );
   if (answer == null || !context.mounted) return;
   final l10n = context.l10n;
@@ -655,7 +667,9 @@ Future<void> saveCurrentFilter(
 }
 
 class _SaveSheet extends StatefulWidget {
-  const _SaveSheet();
+  const _SaveSheet({required this.view});
+
+  final TaskView view;
 
   @override
   State<_SaveSheet> createState() => _SaveSheetState();
@@ -702,6 +716,12 @@ class _SaveSheetState extends State<_SaveSheet> {
             fieldKey: const Key('save.name'),
             onSubmitted: (_) => _submit(),
           ),
+          const SizedBox(height: TixSpace.s2),
+          Text(
+            l10n.filterSaveKeeps(taskViewLabel(l10n, widget.view)),
+            key: const Key('save.keeps'),
+            style: TextStyle(fontSize: TixText.sm, color: context.tix.muted),
+          ),
           const SizedBox(height: TixSpace.s3),
           TixSwitchRow(
             key: const Key('save.shared'),
@@ -736,6 +756,12 @@ Future<void> manageSavedFilter(
 ) async {
   final l10n = context.l10n;
   final pinnable = ref.read(pinSupportedProvider).value == true;
+  final own = [
+    for (final f
+        in ref.read(savedFiltersProvider).value ?? const <SavedFilter>[])
+      if (f.mine) f.id,
+  ];
+  final at = own.indexOf(filter.id);
   final action = await showActionSheet<_FilterAction>(
     context,
     title: filter.name,
@@ -760,20 +786,20 @@ Future<void> manageSavedFilter(
           label: filter.shared ? l10n.filterUnshare : l10n.filterShare,
           icon: filter.shared ? Icons.person_outline : Icons.group_outlined,
         ),
-        if (filter.mine) ...[
+        if (filter.mine && at > 0)
           TixSheetAction(
             key: const Key('saved.earlier'),
             value: _FilterAction.earlier,
             label: l10n.boardMoveUp,
             icon: Icons.arrow_upward,
           ),
+        if (filter.mine && at >= 0 && at < own.length - 1)
           TixSheetAction(
             key: const Key('saved.later'),
             value: _FilterAction.later,
             label: l10n.boardMoveDown,
             icon: Icons.arrow_downward,
           ),
-        ],
         TixSheetAction(
           key: const Key('saved.delete'),
           value: _FilterAction.delete,
