@@ -3,11 +3,9 @@
 import 'dart:typed_data';
 
 import 'package:tix_mobile/src/data/api/gen/models.gen.dart';
-import 'package:tix_mobile/src/data/api/tenant_icon_shim.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/cache/response_cache.dart';
 import 'package:tix_mobile/src/data/models/page.dart';
-import 'package:tix_mobile/src/data/models/tenant_icon.dart';
 
 export 'package:tix_mobile/src/data/models/admin.dart';
 export 'package:tix_mobile/src/data/models/tenant_icon.dart';
@@ -45,16 +43,8 @@ class AdminRepository {
   Future<Tenant> updateTenant(String ref, UpdateTenantInput input) =>
       _api.tenant.update(ref, input);
 
-  /// The icon of tenant [ref].
-  Future<TenantIcon> tenantIcon(String ref) => _api.tenantIconOf(ref);
-
-  /// Gives tenant [ref] the icon [change] names, and returns the icon it now
-  /// has.
-  Future<TenantIcon> setTenantIcon(String ref, TenantIconChange change) =>
-      _api.setTenantIcon(ref, change);
-
   /// The uploaded icon image of tenant [ref].
-  Future<Uint8List> tenantIconImage(String ref) => _api.tenantIconImage(ref);
+  Future<Uint8List> tenantIconImage(String ref) => _api.tenant.icon(ref);
 
   /// The server's session settings beside the active tenant's
   /// (`session.policy`).

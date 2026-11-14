@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'dart:async';
-import 'dart:typed_data';
+import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -50,17 +50,18 @@ void main() {
         server.gate!.complete();
         await tester.pumpAndSettle();
         expect(find.text('Default · default'), findsOneWidget);
-        for (final title in [
-          'General',
-          'Theme',
-          'Icon',
-          'Second factor',
-          'Claims',
-          'Sessions',
-          'Artifacts',
+        Finder titled(String title) => find.widgetWithText(TixSection, title);
+        for (final section in [
+          titled('General'),
+          titled('Theme'),
+          find.byKey(const Key('tenant.icon')),
+          titled('Second factor'),
+          titled('Claims'),
+          titled('Sessions'),
+          titled('Artifacts'),
         ]) {
-          await reveal(tester, find.widgetWithText(TixSection, title));
-          expect(find.widgetWithText(TixSection, title), findsOneWidget);
+          await reveal(tester, section);
+          expect(section, findsOneWidget);
         }
         expect(tester.takeException(), isNull);
       });
@@ -424,10 +425,13 @@ void main() {
 
     testWidgets('an uploaded image is sent as icon_file', (tester) async {
       final stores = signedInStores();
+      const png =
+          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9Q'
+          'DwADhgGAWjR9awAAAABJRU5ErkJggg==';
       final attachments = FakeAttachments(
         picked: PickedFile(
           name: 'logo.png',
-          bytes: Uint8List.fromList([1, 2, 3]),
+          bytes: base64Decode(png),
           mimeType: 'image/png',
         ),
       );
@@ -450,9 +454,9 @@ void main() {
       expect(find.text('logo.png'), findsOneWidget);
       await tapShown(tester, find.byKey(const Key('tenant.icon.save')));
       expect(lastPatch(), {
-        'icon_file': {'content_type': 'image/png', 'data': 'AQID'},
+        'icon_file': {'content_type': 'image/png', 'data': png},
       });
-      expect(server.tenantIconImages['default'], [1, 2, 3]);
+      expect(server.tenantIconImages['default'], base64Decode(png));
     });
 
     testWidgets('a refused icon says why', (tester) async {

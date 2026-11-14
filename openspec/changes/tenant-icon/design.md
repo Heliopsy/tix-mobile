@@ -13,23 +13,18 @@ tix mirrors the project icon on the tenant:
 - `GET /api/v1/tenants/{ref}/icon` (`tenant.icon`) returns the image to any member of that tenant, also from a
   session in another tenant.
 
-## Shim until the tix bump
+## Client
 
-The vendored spec is tix's at `tix.lock`, which predates the icon, so the generated `Tenant`, `UpdateTenantInput`
-and `AccountMembership` drop the new fields. `tenant_icon_shim.dart` adds four calls on `TixClient` that use its
-transport directly: the raw `whoami` (to read the membership icons beside the generated `Actor`), the tenant's icon
-fields, a PATCH of only the icon fields, and the image bytes. `TenantIcon` is the app's own value for one tenant's
-icon; it is stored on `Membership` and `Connection` so the switcher draws icons offline.
-
-After the bump: `TenantIcon` is built from the generated fields, the shim file goes, `tenant.icon` is bound in the
-capability registry, and `tenantIconsSince` becomes the release that shipped it.
+`tix.lock` pins tix v0.61.0, so the generated `Tenant`, `UpdateTenantInput`, `Actor` and `AccountMembership` carry
+the icon fields and `tenant.icon` is bound in the capability registry. `TenantIcon` is the app's own value for one
+tenant's icon, built from those models and stored on `Membership` and `Connection` so the switcher draws icons
+offline. A token connection that learns its tenant from `tenant.show` takes the icon from there too.
 
 ## Capability
 
-The operation cannot be listed in `exemptions.yaml` or bound in `registry.dart` until the vendored spec has it (the
-parity test calls an unknown operation stale). The run-time gate is the server's version from `/healthz`:
-`supportsTenantIcons` is true from `tenantIconsSince` on, and for a version the app cannot read (a development
-build). An older server never sends the fields, so drawing needs no gate; only the editor is hidden.
+A server older than v0.61.0 never sends the fields, so drawing needs no gate; every tenant keeps its monogram. The
+editor is gated on the server's version from `/healthz`: `supportsTenantIcons` is true from `tenantIconsSince`
+(v0.61.0) on, and for a version the app cannot read (a development build).
 
 ## Images
 

@@ -99,7 +99,7 @@ final class TenantSettingsProvider
   }
 }
 
-String _$tenantSettingsHash() => r'65da77da9332e52609fd6f877c0bb2fcff3d9812';
+String _$tenantSettingsHash() => r'845e6615b897911d6443ab25964916c0bd9c547f';
 
 /// The settings of tenant [tenantRef]: the cached copy at once, then the
 /// server's.
@@ -149,105 +149,6 @@ abstract class _$TenantSettings extends $AsyncNotifier<Tenant> {
             as $ClassProviderElement<
               AnyNotifier<AsyncValue<Tenant>, Tenant>,
               AsyncValue<Tenant>,
-              Object?,
-              Object?
-            >;
-    return element.handleCreate(ref, () => build(_$args));
-  }
-}
-
-/// The icon of tenant [tenantRef].
-
-@ProviderFor(TenantIconSetting)
-final tenantIconSettingProvider = TenantIconSettingFamily._();
-
-/// The icon of tenant [tenantRef].
-final class TenantIconSettingProvider
-    extends $AsyncNotifierProvider<TenantIconSetting, TenantIcon> {
-  /// The icon of tenant [tenantRef].
-  TenantIconSettingProvider._({
-    required TenantIconSettingFamily super.from,
-    required String super.argument,
-  }) : super(
-         retry: null,
-         name: r'tenantIconSettingProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
-
-  @override
-  String debugGetCreateSourceHash() => _$tenantIconSettingHash();
-
-  @override
-  String toString() {
-    return r'tenantIconSettingProvider'
-        ''
-        '($argument)';
-  }
-
-  @$internal
-  @override
-  TenantIconSetting create() => TenantIconSetting();
-
-  @override
-  bool operator ==(Object other) {
-    return other is TenantIconSettingProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
-}
-
-String _$tenantIconSettingHash() => r'f154d591d593324fc534f258a9874f197768ab8f';
-
-/// The icon of tenant [tenantRef].
-
-final class TenantIconSettingFamily extends $Family
-    with
-        $ClassFamilyOverride<
-          TenantIconSetting,
-          AsyncValue<TenantIcon>,
-          TenantIcon,
-          FutureOr<TenantIcon>,
-          String
-        > {
-  TenantIconSettingFamily._()
-    : super(
-        retry: null,
-        name: r'tenantIconSettingProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
-
-  /// The icon of tenant [tenantRef].
-
-  TenantIconSettingProvider call(String tenantRef) =>
-      TenantIconSettingProvider._(argument: tenantRef, from: this);
-
-  @override
-  String toString() => r'tenantIconSettingProvider';
-}
-
-/// The icon of tenant [tenantRef].
-
-abstract class _$TenantIconSetting extends $AsyncNotifier<TenantIcon> {
-  late final _$args = ref.$arg as String;
-  String get tenantRef => _$args;
-
-  FutureOr<TenantIcon> build(String tenantRef);
-  @$mustCallSuper
-  @override
-  WhenComplete runBuild() {
-    final ref = this.ref as $Ref<AsyncValue<TenantIcon>, TenantIcon>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<TenantIcon>, TenantIcon>,
-              AsyncValue<TenantIcon>,
               Object?,
               Object?
             >;

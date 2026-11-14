@@ -37,7 +37,8 @@ class TenantSettings extends _$TenantSettings {
   }
 
   /// Sends [input], which names only what changes, and shows the answer.
-  /// A new theme on the active tenant recolours the app at once.
+  /// A new theme on the active tenant recolours the app at once, and a new
+  /// icon shows in the switcher at once.
   Future<void> save(UpdateTenantInput input) async {
     final saved = await ref
         .read(adminRepositoryProvider)
@@ -45,35 +46,18 @@ class TenantSettings extends _$TenantSettings {
     if (!ref.mounted) return;
     state = AsyncData(saved);
     if (input.theme != null) ref.invalidate(tenantAccentProvider);
+    if (input.icon != null ||
+        input.iconName != null ||
+        input.iconFile != null) {
+      await ref
+          .read(sessionControllerProvider.notifier)
+          .noteTenantIcon(saved.key, TenantIcon.ofTenant(saved));
+    }
   }
 
   /// Deletes the tenant.
   Future<void> delete() =>
       ref.read(adminRepositoryProvider).deleteTenant(tenantRef);
-}
-
-/// The icon of tenant [tenantRef].
-@riverpod
-class TenantIconSetting extends _$TenantIconSetting {
-  @override
-  Future<TenantIcon> build(String tenantRef) =>
-      ref.watch(adminRepositoryProvider).tenantIcon(tenantRef);
-
-  /// Sends [change] alone, shows the answer, and gives the tenant keyed
-  /// [tenantKey] its new icon in the switcher at once.
-  Future<void> save(
-    TenantIconChange change, {
-    required String tenantKey,
-  }) async {
-    final saved = await ref
-        .read(adminRepositoryProvider)
-        .setTenantIcon(tenantRef, change);
-    if (!ref.mounted) return;
-    state = AsyncData(saved);
-    await ref
-        .read(sessionControllerProvider.notifier)
-        .noteTenantIcon(tenantKey, saved);
-  }
 }
 
 /// The server's own session settings, which a tenant may only tighten.

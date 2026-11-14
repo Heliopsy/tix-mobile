@@ -98,9 +98,6 @@ class _TenantSettingsBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    if (ref.watch(tenantIconsSupportedProvider).value ?? false) {
-      ref.watch(tenantIconSettingProvider(tenantRef));
-    }
     Future<void> save(UpdateTenantInput input, {String? done}) async {
       try {
         await ref.read(tenantSettingsProvider(tenantRef).notifier).save(input);
@@ -120,7 +117,7 @@ class _TenantSettingsBody extends ConsumerWidget {
         children: [
           _GeneralSection(tenant: tenant, save: save),
           _ThemeSection(tenant: tenant, save: save),
-          _IconSection(tenantRef: tenantRef, tenant: tenant),
+          _IconSection(tenantRef: tenantRef, tenant: tenant, save: save),
           TixSection(
             title: l10n.tenantTotpTitle,
             info: l10n.tenantTotpInfo,
@@ -391,10 +388,15 @@ class _GeneralSectionState extends State<_GeneralSection> {
 /// The icon the switcher shows for the tenant, offered only by a tix that
 /// has tenant icons.
 class _IconSection extends ConsumerStatefulWidget {
-  const _IconSection({required this.tenantRef, required this.tenant});
+  const _IconSection({
+    required this.tenantRef,
+    required this.tenant,
+    required this.save,
+  });
 
   final String tenantRef;
   final Tenant tenant;
+  final _Save save;
 
   @override
   ConsumerState<_IconSection> createState() => _IconSectionState();
@@ -404,29 +406,30 @@ class _IconSectionState extends ConsumerState<_IconSection> {
   ProjectIconValue? _draft;
   PickedIcon? _image;
 
-  static ProjectIconValue _valueOf(TenantIcon icon) => icon.image.isNotEmpty
+  static ProjectIconValue _valueOf(Tenant t) => t.iconImage.isNotEmpty
       ? const ProjectIconValue(kind: ProjectIconKind.image)
-      : icon.name.isNotEmpty
-      ? ProjectIconValue(kind: ProjectIconKind.builtin, name: icon.name)
-      : icon.text.isNotEmpty
-      ? ProjectIconValue(kind: ProjectIconKind.text, text: icon.text)
+      : t.iconName.isNotEmpty
+      ? ProjectIconValue(kind: ProjectIconKind.builtin, name: t.iconName)
+      : t.icon.isNotEmpty
+      ? ProjectIconValue(kind: ProjectIconKind.text, text: t.icon)
       : const ProjectIconValue();
 
-  TenantIconChange? _change(TenantIcon saved) {
+  /// Only the icon field the draft names, or null when nothing changed.
+  UpdateTenantInput? get _input {
     final draft = _draft;
     final image = _image;
-    if (draft == null || (draft == _valueOf(saved) && image == null)) {
+    if (draft == null || (draft == _valueOf(widget.tenant) && image == null)) {
       return null;
     }
     return switch (draft.kind) {
-      ProjectIconKind.none => const TenantIconChange.text(''),
-      ProjectIconKind.text => TenantIconChange.text(draft.text),
-      ProjectIconKind.builtin => TenantIconChange.builtin(draft.name),
+      ProjectIconKind.none => const UpdateTenantInput(icon: ''),
+      ProjectIconKind.text => UpdateTenantInput(icon: draft.text),
+      ProjectIconKind.builtin => UpdateTenantInput(iconName: draft.name),
       ProjectIconKind.image =>
         image == null
             ? null
-            : TenantIconChange.image(
-                ProjectIconFile(
+            : UpdateTenantInput(
+                iconFile: ProjectIconFile(
                   contentType: image.contentType,
                   data: image.data,
                 ),
@@ -434,24 +437,13 @@ class _IconSectionState extends ConsumerState<_IconSection> {
     };
   }
 
-  Future<void> _save(TenantIconChange change) async {
-    final l10n = context.l10n;
-    try {
-      await ref
-          .read(tenantIconSettingProvider(widget.tenantRef).notifier)
-          .save(change, tenantKey: widget.tenant.key);
-      if (!mounted) return;
-      setState(() {
-        _draft = null;
-        _image = null;
-      });
-      showTixToast(context, l10n.tenantSaved);
-    } on Object catch (e) {
-      if (mounted) {
-        showTixToast(context, errorMessage(l10n, e), tone: TixTone.danger);
-      }
-      rethrow;
-    }
+  Future<void> _save(UpdateTenantInput input) async {
+    await widget.save(input);
+    if (!mounted) return;
+    setState(() {
+      _draft = null;
+      _image = null;
+    });
   }
 
   Future<void> _pick() async {
@@ -469,42 +461,28 @@ class _IconSectionState extends ConsumerState<_IconSection> {
     if (ref.watch(tenantIconsSupportedProvider).value != true) {
       return const SizedBox.shrink();
     }
-    final saved = ref.watch(tenantIconSettingProvider(widget.tenantRef));
-    final icon = saved.value;
-    if (icon == null) {
-      return saved.hasError
-          ? TixSection(
-              title: l10n.tenantIconTitle,
-              children: [
-                ListTile(
-                  key: const Key('tenant.icon.error'),
-                  title: Text(errorMessage(l10n, saved.error!)),
-                ),
-              ],
-            )
-          : const SizedBox.shrink();
-    }
-    final change = _change(icon);
+    final t = widget.tenant;
+    final input = _input;
     final image = _image;
     return _FormSection(
       title: l10n.tenantIconTitle,
       info: l10n.tenantIconInfo,
-      dirty: change != null,
+      dirty: input != null,
       saveKey: const Key('tenant.icon.save'),
-      onSave: () => _save(change!),
+      onSave: () => _save(input!),
       children: [
         ProjectIconPicker(
           key: const Key('tenant.icon'),
-          value: _draft ?? _valueOf(icon),
+          value: _draft ?? _valueOf(t),
           names: projectIconNames,
           onChanged: (v) => setState(() => _draft = v),
           image: image != null
               ? Image.memory(base64Decode(image.data), fit: BoxFit.cover)
-              : icon.image.isEmpty
+              : t.iconImage.isEmpty
               ? null
               : TenantMark(
-                  name: widget.tenant.name,
-                  icon: TenantIcon(image: icon.image),
+                  name: t.name,
+                  icon: TenantIcon(image: t.iconImage),
                   tenantRef: widget.tenantRef,
                   size: TixSize.target,
                 ),

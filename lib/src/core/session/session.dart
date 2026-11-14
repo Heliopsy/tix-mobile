@@ -202,11 +202,11 @@ class SessionController extends _$SessionController {
 
   Future<void> _refresh(Session session) async {
     if (!ref.mounted) return;
-    final Identity who;
+    final Actor me;
     try {
-      who = await ref
+      me = await ref
           .read(authRepositoryProvider)
-          .identity(session.baseUrl, session.credential);
+          .whoami(session.baseUrl, session.credential);
     } on TixException {
       // Best effort: offline, the lists report the failure themselves.
       return;
@@ -215,7 +215,7 @@ class SessionController extends _$SessionController {
     final repo = ref.read(instancesRepositoryProvider);
     final current = repo.connection(session.connection.id);
     if (current == null) return;
-    final updated = _withIdentity(current, who);
+    final updated = _withIdentity(current, me);
     if (updated == current) return;
     await repo.update(updated);
     if (repo.active()?.connectionId == updated.id) {
@@ -226,34 +226,16 @@ class SessionController extends _$SessionController {
     }
   }
 
-  /// [c] as [who] describes it, each tenant wearing its icon.
-  static Connection _withIdentity(Connection c, Identity who) {
-    final Identity(:me, :icons) = who;
-    final tenantKey = me.tenantKey.isEmpty ? c.tenantKey : me.tenantKey;
-    return c.copyWith(
-      handle: me.handle.isEmpty ? c.handle : me.handle,
-      tenantKey: tenantKey,
-      tenantName: me.tenantName.isEmpty ? c.tenantName : me.tenantName,
-      tenantIcon: icons[tenantKey] ?? who.icon,
-      memberships: me.memberships.isEmpty
-          ? c.memberships
-          : [
-              for (final m in me.memberships)
-                Membership.fromAccount(
-                  m,
-                  icon:
-                      icons[m.tenantKey] ?? _iconOf(c.memberships, m.tenantKey),
-                ),
-            ],
-    );
-  }
-
-  static TenantIcon _iconOf(List<Membership> memberships, String key) {
-    for (final m in memberships) {
-      if (m.tenantKey == key) return m.icon;
-    }
-    return const TenantIcon();
-  }
+  /// [c] as [me] describes it, each tenant wearing its icon.
+  static Connection _withIdentity(Connection c, Actor me) => c.copyWith(
+    handle: me.handle.isEmpty ? c.handle : me.handle,
+    tenantKey: me.tenantKey.isEmpty ? c.tenantKey : me.tenantKey,
+    tenantName: me.tenantName.isEmpty ? c.tenantName : me.tenantName,
+    tenantIcon: TenantIcon.ofActor(me),
+    memberships: me.memberships.isEmpty
+        ? c.memberships
+        : [for (final m in me.memberships) Membership.fromAccount(m)],
+  );
 
   /// Records that tenant [tenantKey] now wears [icon] on the active
   /// connection, so the switcher shows it before the next `whoami`.
@@ -295,7 +277,7 @@ class SessionController extends _$SessionController {
     final secret = token.trim();
     if (secret.isEmpty) throw const TixException(TixErrorKind.tokenRequired);
     final baseUrl = await auth.checkServer(address);
-    final who = await auth.identity(baseUrl, BearerCredential(secret));
+    final me = await auth.whoami(baseUrl, BearerCredential(secret));
     final instance = existing ?? _remoteInstance(baseUrl, name);
     final saved = await repo.save(
       instance: instance,
@@ -307,7 +289,7 @@ class SessionController extends _$SessionController {
           label: name.trim(),
           createdAt: DateTime.now(),
         ),
-        who,
+        me,
       ),
       secret: secret,
     );
@@ -343,7 +325,7 @@ class SessionController extends _$SessionController {
       instance: instance,
       connection: _withIdentity(
         base.copyWith(email: email.trim(), pinned: pinned),
-        (me: me, icon: base.tenantIcon, icons: const {}),
+        me,
       ),
       secret: session,
     );
@@ -429,11 +411,11 @@ class SessionController extends _$SessionController {
     final session = result.session;
     if (session == null) throw const TixException(TixErrorKind.codeRequired);
     await repo.writeSecret(connection, session.token);
-    final who = await auth.identity(
+    final me = await auth.whoami(
       instance.baseUrl,
       SessionCredential(session.token),
     );
-    final updated = _withIdentity(connection, who);
+    final updated = _withIdentity(connection, me);
     await repo.update(updated);
     await _move(updated.ref, landing);
   }

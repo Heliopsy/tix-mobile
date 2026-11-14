@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-/// What a tix server offers by the version it reports, for operations the
-/// vendored spec does not have yet and so cannot be bound in registry.dart.
+/// What a tix server offers by the version it reports, so the app degrades
+/// against a server older than the one tix.lock pins.
 library;
 
 /// The first tix release with tenant icons (`tenant.icon` and the icon
-/// fields of `tenant.update`). Set to the release that ships them when
-/// `tix.lock` is bumped to it.
+/// fields of `tenant.update`).
 const tenantIconsSince = (0, 61, 0);
 
 /// Whether a server reporting [version] has tenant icons. A version the

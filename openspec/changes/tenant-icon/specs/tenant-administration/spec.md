@@ -24,8 +24,8 @@ for an image. A refusal SHALL be shown with the server's message. A saved icon S
 
 ### Requirement: The icon editor needs a server that has tenant icons
 
-The Icon section SHALL be offered only when the server's version from `/healthz` is at least the tix release
-that added tenant icons, or is a version the app cannot read. Against an older server the section SHALL be absent.
+The Icon section SHALL be offered only when the server's version from `/healthz` is at least v0.61.0, the tix
+release that added tenant icons, or is a version the app cannot read. Against an older server the section SHALL be absent.
 
 #### Scenario: Older server
 

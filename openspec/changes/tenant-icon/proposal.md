@@ -19,6 +19,4 @@ should show it wherever a tenant is named and let a tenant admin set it.
 
 ## Depends on
 
-The tix release that adds tenant icons. Until `tix.lock` pins it, the icon fields and the image route are read and
-written by a small hand-written shim (`lib/src/data/api/tenant_icon_shim.dart`); the bump replaces it with the
-generated client.
+tix v0.61.0, which adds tenant icons; `tix.lock` pins it and the client is generated from its spec.
