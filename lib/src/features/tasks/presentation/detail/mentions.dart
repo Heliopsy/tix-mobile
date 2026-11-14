@@ -46,6 +46,7 @@ class MentionTextField extends ConsumerStatefulWidget {
     this.onSubmit,
     this.focusNode,
     this.fieldKey,
+    this.inputFormatters,
     super.key,
   });
 
@@ -75,6 +76,9 @@ class MentionTextField extends ConsumerStatefulWidget {
 
   /// The text field's key, for tests.
   final Key? fieldKey;
+
+  /// Input formatters, such as Markdown list continuation.
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   ConsumerState<MentionTextField> createState() => _MentionTextFieldState();
@@ -147,6 +151,7 @@ class _MentionTextFieldState extends ConsumerState<MentionTextField> {
             minLines: widget.minLines,
             maxLines: widget.maxLines,
             keyboardType: TextInputType.multiline,
+            inputFormatters: widget.inputFormatters,
             textCapitalization: TextCapitalization.sentences,
             decoration: InputDecoration(
               labelText: widget.label,

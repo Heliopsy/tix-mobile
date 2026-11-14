@@ -19,6 +19,7 @@ export 'components/list_keys.dart';
 export 'components/live.dart';
 export 'components/live_status.dart';
 export 'components/markdown.dart';
+export 'components/markdown_toolbar.dart';
 export 'components/marks.dart';
 export 'components/motion.dart';
 export 'components/notice.dart';

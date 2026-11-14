@@ -103,6 +103,24 @@ void main() {
     });
   }
 
+  for (final MapEntry(key: width, value: size) in widths.entries) {
+    testWidgets('$width: the description toolbar writes Markdown that is '
+        'sent as is', (tester) async {
+      await pump(tester, size: size, project: 'web');
+      await fill(tester, 'title', 'Plan');
+      await fill(tester, 'body', 'one');
+      final tool = find.descendant(
+        of: find.byKey(const Key('markdown.toolbar')),
+        matching: find.byKey(const Key('markdown.checklist')),
+      );
+      await tester.ensureVisible(tool);
+      await tester.tap(tool);
+      await tester.pump();
+      await create(tester);
+      expect(creates().single['body'], '- [ ] one');
+    });
+  }
+
   testWidgets('the priority picked is the one sent', (tester) async {
     await pump(tester, title: 'Ship it', project: 'infra');
     await tester.tap(field('priority'));

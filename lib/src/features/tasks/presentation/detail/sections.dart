@@ -105,12 +105,14 @@ class _DescriptionEditor extends ConsumerStatefulWidget {
 
 class _DescriptionEditorState extends ConsumerState<_DescriptionEditor> {
   late final _controller = TextEditingController(text: widget.task.body);
+  final _focus = FocusNode();
   late Task _base = widget.task;
   var _preview = false;
 
   @override
   void dispose() {
     _controller.dispose();
+    _focus.dispose();
     super.dispose();
   }
 
@@ -172,15 +174,21 @@ class _DescriptionEditorState extends ConsumerState<_DescriptionEditor> {
           else if (_preview)
             TixMarkdown(data: _controller.text)
           else
-            MentionTextField(
-              fieldKey: const Key('description.field'),
+            MarkdownEditor(
               controller: _controller,
-              label: l10n.fieldDescription,
-              hint: l10n.taskDetailDescriptionHint,
-              minLines: 6,
-              maxLines: 16,
-              autofocus: true,
-              onSubmit: _save,
+              focusNode: _focus,
+              field: MentionTextField(
+                fieldKey: const Key('description.field'),
+                controller: _controller,
+                focusNode: _focus,
+                label: l10n.fieldDescription,
+                hint: l10n.taskDetailDescriptionHint,
+                minLines: 6,
+                maxLines: 16,
+                autofocus: true,
+                onSubmit: _save,
+                inputFormatters: const [MarkdownListFormatter()],
+              ),
             ),
         ],
       ),

@@ -2707,5 +2707,19 @@
   "importAnother": "Weitere Datei importieren",
   "importOpenProject": "Projekt öffnen",
   "myWorkIncludeHeld": "Aufgaben einbeziehen, die ich halte",
-  "myWorkOverdueBadge": "{count, plural, =1{1 überfällige Aufgabe} other{{count} überfällige Aufgaben}}"
+  "myWorkOverdueBadge": "{count, plural, =1{1 überfällige Aufgabe} other{{count} überfällige Aufgaben}}",
+  "markdownFormatting": "Formatierung",
+  "markdownBold": "Fett",
+  "markdownItalic": "Kursiv",
+  "markdownStrike": "Durchgestrichen",
+  "markdownHeading": "Überschrift",
+  "markdownBullets": "Aufzählung",
+  "markdownNumbers": "Nummerierte Liste",
+  "markdownChecklist": "Checkliste",
+  "markdownQuote": "Zitat",
+  "markdownCode": "Code",
+  "markdownLink": "Link",
+  "markdownTable": "Tabelle",
+  "markdownLinkAddress": "Linkadresse",
+  "markdownLinkAdd": "Link hinzufügen"
 }

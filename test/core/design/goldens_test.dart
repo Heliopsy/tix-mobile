@@ -98,6 +98,7 @@ void main() {
         GalleryBlock(title: 'States', child: GalleryStates()),
       ],
     ),
+    'editor': () => const GalleryBlock(title: 'Editor', child: GalleryEditor()),
     'record': () => const GalleryBlock(title: 'Record', child: GalleryRecord()),
     'manage': () => const GalleryBlock(title: 'Manage', child: GalleryManage()),
     'live': () => const GalleryBlock(title: 'Live', child: GalleryLive()),

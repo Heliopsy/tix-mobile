@@ -107,6 +107,35 @@ void main() {
       ]);
     });
 
+    for (final (width, size) in [
+      ('compact', tallPhone),
+      ('expanded', tallDesktop),
+    ]) {
+      testWidgets('$width: the toolbar formats the text that is saved', (
+        tester,
+      ) async {
+        await pumpTask(tester, server, size: size);
+        await press(tester, find.byKey(const Key('description.edit')));
+        final field = find.byKey(const Key('description.field'));
+        await tester.enterText(field, 'Ship it');
+        tester.widget<TextField>(field).controller!.selection =
+            const TextSelection(baseOffset: 0, extentOffset: 4);
+        await press(
+          tester,
+          find.descendant(
+            of: find.byKey(const Key('markdown.toolbar')),
+            matching: find.byKey(const Key('markdown.bold')),
+          ),
+        );
+        await press(tester, find.text('Preview'));
+        expect(find.byKey(const Key('markdown.toolbar')), findsNothing);
+        await press(tester, find.byKey(const Key('description.save')));
+        expect(bodies(server, 'PATCH', '/tasks/infra-1'), [
+          {'body': '**Ship** it', 'version': 1},
+        ]);
+      });
+    }
+
     testWidgets('an empty one opens the editor when pressed', (tester) async {
       await pumpTask(tester, server, ref: 'infra-2');
       await press(tester, find.text('No description.'));

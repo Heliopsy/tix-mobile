@@ -9903,4 +9903,46 @@ class AppLocalizationsBg extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get markdownFormatting => 'Форматиране';
+
+  @override
+  String get markdownBold => 'Удебелен';
+
+  @override
+  String get markdownItalic => 'Курсив';
+
+  @override
+  String get markdownStrike => 'Зачертан';
+
+  @override
+  String get markdownHeading => 'Заглавие';
+
+  @override
+  String get markdownBullets => 'Списък с точки';
+
+  @override
+  String get markdownNumbers => 'Номериран списък';
+
+  @override
+  String get markdownChecklist => 'Списък за отметки';
+
+  @override
+  String get markdownQuote => 'Цитат';
+
+  @override
+  String get markdownCode => 'Код';
+
+  @override
+  String get markdownLink => 'Връзка';
+
+  @override
+  String get markdownTable => 'Таблица';
+
+  @override
+  String get markdownLinkAddress => 'Адрес на връзката';
+
+  @override
+  String get markdownLinkAdd => 'Добавяне на връзка';
 }

@@ -9887,4 +9887,46 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get markdownFormatting => 'Formatting';
+
+  @override
+  String get markdownBold => 'Bold';
+
+  @override
+  String get markdownItalic => 'Italic';
+
+  @override
+  String get markdownStrike => 'Strikethrough';
+
+  @override
+  String get markdownHeading => 'Heading';
+
+  @override
+  String get markdownBullets => 'Bulleted list';
+
+  @override
+  String get markdownNumbers => 'Numbered list';
+
+  @override
+  String get markdownChecklist => 'Checklist';
+
+  @override
+  String get markdownQuote => 'Quote';
+
+  @override
+  String get markdownCode => 'Code';
+
+  @override
+  String get markdownLink => 'Link';
+
+  @override
+  String get markdownTable => 'Table';
+
+  @override
+  String get markdownLinkAddress => 'Link address';
+
+  @override
+  String get markdownLinkAdd => 'Add link';
 }
