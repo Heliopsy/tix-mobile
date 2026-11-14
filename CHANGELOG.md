@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.17.0](https://github.com/Heliopsy/tix-mobile/compare/v0.16.0...v0.17.0) (2026-11-14)
+
+
+### Features
+
+* **release:** read the release check through the generated client ([a6e5dfe](https://github.com/Heliopsy/tix-mobile/commit/a6e5dfe07febfe77a7b4c0516feef4d96831f841))
+* **release:** show the server's version, its upgrade commands and release notes ([1479425](https://github.com/Heliopsy/tix-mobile/commit/1479425756f92e95d541177e90ea388274b4931d))
+
+
+### Bug Fixes
+
+* **ios:** declare standard encryption so TestFlight builds are installable ([48d77fd](https://github.com/Heliopsy/tix-mobile/commit/48d77fd208dc84dee7fe2d35e791ab393a6c16ff))
+
 ## [0.16.0](https://github.com/Heliopsy/tix-mobile/compare/v0.15.0...v0.16.0) (2026-11-13)
 
 
