@@ -22,6 +22,7 @@ export 'package:tix_mobile/src/data/api/gen/models.gen.dart'
         HealthBody,
         InitialCredential,
         LiveConnection,
+        ProjectIconFile,
         Role,
         SessionPolicy,
         Tenant,

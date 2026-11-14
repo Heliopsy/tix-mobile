@@ -24,11 +24,8 @@ abstract class Membership with _$Membership {
 
   const Membership._();
 
-  /// The membership `whoami` reported as [m], wearing [icon].
-  factory Membership.fromAccount(
-    AccountMembership m, {
-    TenantIcon icon = const TenantIcon(),
-  }) => Membership(
+  /// The membership `whoami` reported as [m].
+  factory Membership.fromAccount(AccountMembership m) => Membership(
     tenantKey: m.tenantKey,
     tenantName: m.tenantName,
     tenantId: m.tenantId,
@@ -36,7 +33,7 @@ abstract class Membership with _$Membership {
     handle: m.handle,
     role: m.role?.value ?? '',
     host: m.host,
-    icon: icon,
+    icon: TenantIcon.ofMembership(m),
   );
 
   factory Membership.fromJson(Map<String, dynamic> json) =>

@@ -1,39 +1,39 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-/// A tenant's icon, and what changing it sends.
+/// A tenant's icon as the app keeps it beside a connection.
 library;
 
 import 'package:meta/meta.dart';
 import 'package:tix_mobile/src/data/api/gen/models.gen.dart'
-    show ProjectIconFile;
-
-export 'package:tix_mobile/src/data/api/gen/models.gen.dart'
-    show ProjectIconFile;
+    show AccountMembership, Actor, Tenant;
 
 /// The icon a tenant wears: at most one of [text], [name] and [image].
-///
-/// Read by hand until `tix.lock` pins the tix release with tenant icons;
-/// then it is built from the generated `Tenant`, `Actor` and
-/// `AccountMembership`.
 @immutable
 class TenantIcon {
   /// An icon of [text], built-in [name] or uploaded [image]; none by default.
   const TenantIcon({this.text = '', this.name = '', this.image = ''});
 
-  /// The icon fields of a tenant as `GET /tenants/{ref}` reports them, and
-  /// of a membership in `whoami`.
+  /// The icon as it was stored with a connection.
   factory TenantIcon.fromJson(Map<String, dynamic> json) => TenantIcon(
     text: json['icon'] as String? ?? '',
     name: json['icon_name'] as String? ?? '',
     image: json['icon_image'] as String? ?? '',
   );
 
-  /// The icon of the caller's own tenant as `whoami` reports it.
-  factory TenantIcon.ofActor(Map<String, dynamic> json) => TenantIcon(
-    text: json['tenant_icon'] as String? ?? '',
-    name: json['tenant_icon_name'] as String? ?? '',
-    image: json['tenant_icon_image'] as String? ?? '',
+  /// The icon of tenant [t].
+  factory TenantIcon.ofTenant(Tenant t) =>
+      TenantIcon(text: t.icon, name: t.iconName, image: t.iconImage);
+
+  /// The icon of the tenant [me] is in, as `whoami` reports it.
+  factory TenantIcon.ofActor(Actor me) => TenantIcon(
+    text: me.tenantIcon,
+    name: me.tenantIconName,
+    image: me.tenantIconImage,
   );
+
+  /// The icon of the tenant of membership [m].
+  factory TenantIcon.ofMembership(AccountMembership m) =>
+      TenantIcon(text: m.icon, name: m.iconName, image: m.iconImage);
 
   /// One emoji or a one or two letter monogram.
   final String text;
@@ -63,39 +63,4 @@ class TenantIcon {
 
   @override
   int get hashCode => Object.hash(text, name, image);
-}
-
-/// A new icon for a tenant: exactly one field is set, as the icon fields of
-/// `PATCH /tenants/{ref}` take it. An empty [icon] clears the icon.
-@immutable
-class TenantIconChange {
-  /// Sets an emoji or monogram; empty clears the icon.
-  const TenantIconChange.text(String this.icon) : iconName = null, file = null;
-
-  /// Sets the built-in icon [name].
-  const TenantIconChange.builtin(String name)
-    : icon = null,
-      iconName = name,
-      file = null;
-
-  /// Uploads [file] as the icon.
-  const TenantIconChange.image(ProjectIconFile this.file)
-    : icon = null,
-      iconName = null;
-
-  /// The text icon, or empty for none.
-  final String? icon;
-
-  /// The built-in icon.
-  final String? iconName;
-
-  /// The uploaded image.
-  final ProjectIconFile? file;
-
-  /// The request body.
-  Map<String, dynamic> toJson() => {
-    if (icon != null) 'icon': icon,
-    if (iconName != null) 'icon_name': iconName,
-    if (file != null) 'icon_file': file!.toJson(),
-  };
 }

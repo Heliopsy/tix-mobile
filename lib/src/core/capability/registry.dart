@@ -39,6 +39,7 @@ const bindings = <String, Binding>{
   ),
   'identity.whoami': Binding(feature: 'connect', action: 'identify', wave: 0),
   'tenant.show': Binding(feature: 'connect', action: 'name-tenant', wave: 0),
+  'tenant.icon': Binding(feature: 'shell', action: 'tenant-icon', wave: 3),
   'session.login': Binding(feature: 'connect', action: 'sign-in', wave: 0),
   'session.policy': Binding(
     feature: 'connect',
