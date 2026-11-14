@@ -2711,5 +2711,19 @@
   "importAnother": "Внеси друг файл",
   "importOpenProject": "Отвори проекта",
   "myWorkIncludeHeld": "Включи и задачите, които държа",
-  "myWorkOverdueBadge": "{count, plural, =1{1 просрочена задача} other{{count} просрочени задачи}}"
+  "myWorkOverdueBadge": "{count, plural, =1{1 просрочена задача} other{{count} просрочени задачи}}",
+  "markdownFormatting": "Форматиране",
+  "markdownBold": "Удебелен",
+  "markdownItalic": "Курсив",
+  "markdownStrike": "Зачертан",
+  "markdownHeading": "Заглавие",
+  "markdownBullets": "Списък с точки",
+  "markdownNumbers": "Номериран списък",
+  "markdownChecklist": "Списък за отметки",
+  "markdownQuote": "Цитат",
+  "markdownCode": "Код",
+  "markdownLink": "Връзка",
+  "markdownTable": "Таблица",
+  "markdownLinkAddress": "Адрес на връзката",
+  "markdownLinkAdd": "Добавяне на връзка"
 }

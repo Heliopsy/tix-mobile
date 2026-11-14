@@ -106,8 +106,9 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 - **Workflows**: states reordered by drag, categories, terminal and revert rules, "can move to" chips with comment
   and scope rules, the route from the initial state to each state, migrations for removed states.
 - **Custom fields** per project, every type, with a default entered as its type.
-- **Task detail** where every attribute the web edits is edited in place: title, Markdown description with a
-  checklist you tick, workflow moves, priority, assignee, due date, tags, custom fields and the repeat rule;
+- **Task detail** where every attribute the web edits is edited in place: title, Markdown description with the
+  web's formatting toolbar (Ctrl+B, Ctrl+I, Ctrl+\`, lists that continue on Enter) and a checklist you tick,
+  workflow moves, priority, assignee, due date, tags, custom fields and the repeat rule;
   the subtask tree with folding, dependencies, comments with `@` mentions, history and attached files; star,
   snooze, copy and delete with Undo. How long a claim on the task lasts, and which level decides it. Hand a task
   to a coding agent with the same copy-ready prompt and client commands the web gives. Share a task through the

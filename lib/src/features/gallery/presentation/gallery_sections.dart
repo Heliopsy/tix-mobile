@@ -530,6 +530,39 @@ class _GalleryFormsState extends State<GalleryForms> {
   );
 }
 
+/// The Markdown editor: the formatting toolbar over a description field.
+class GalleryEditor extends StatefulWidget {
+  /// Creates the sample.
+  const GalleryEditor({super.key});
+
+  @override
+  State<GalleryEditor> createState() => _GalleryEditorState();
+}
+
+class _GalleryEditorState extends State<GalleryEditor> {
+  final _body = TextEditingController(
+    text: '## Plan\n\n- [ ] **Rotate** the keys\n- [ ] Tell `ops`',
+  );
+
+  @override
+  void dispose() {
+    _body.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => MarkdownEditor(
+    controller: _body,
+    field: TixTextField(
+      label: 'Description',
+      controller: _body,
+      maxLines: 6,
+      keyboardType: TextInputType.multiline,
+      inputFormatters: const [MarkdownListFormatter()],
+    ),
+  );
+}
+
 /// Pick-one settings drawn as wrapping chips.
 class GalleryChoices extends StatefulWidget {
   /// Creates the samples.

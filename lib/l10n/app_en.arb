@@ -6940,5 +6940,22 @@
         "type": "int"
       }
     }
+  },
+  "markdownFormatting": "Formatting",
+  "markdownBold": "Bold",
+  "markdownItalic": "Italic",
+  "markdownStrike": "Strikethrough",
+  "markdownHeading": "Heading",
+  "markdownBullets": "Bulleted list",
+  "markdownNumbers": "Numbered list",
+  "markdownChecklist": "Checklist",
+  "markdownQuote": "Quote",
+  "markdownCode": "Code",
+  "markdownLink": "Link",
+  "markdownTable": "Table",
+  "markdownLinkAddress": "Link address",
+  "markdownLinkAdd": "Add link",
+  "@markdownFormatting": {
+    "description": "Label of the formatting toolbar over a Markdown field, as tix's web names it."
   }
 }

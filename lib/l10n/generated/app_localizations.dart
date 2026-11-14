@@ -16380,6 +16380,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 overdue task} other{{count} overdue tasks}}'**
   String myWorkOverdueBadge(int count);
+
+  /// Label of the formatting toolbar over a Markdown field, as tix's web names it.
+  ///
+  /// In en, this message translates to:
+  /// **'Formatting'**
+  String get markdownFormatting;
+
+  /// No description provided for @markdownBold.
+  ///
+  /// In en, this message translates to:
+  /// **'Bold'**
+  String get markdownBold;
+
+  /// No description provided for @markdownItalic.
+  ///
+  /// In en, this message translates to:
+  /// **'Italic'**
+  String get markdownItalic;
+
+  /// No description provided for @markdownStrike.
+  ///
+  /// In en, this message translates to:
+  /// **'Strikethrough'**
+  String get markdownStrike;
+
+  /// No description provided for @markdownHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Heading'**
+  String get markdownHeading;
+
+  /// No description provided for @markdownBullets.
+  ///
+  /// In en, this message translates to:
+  /// **'Bulleted list'**
+  String get markdownBullets;
+
+  /// No description provided for @markdownNumbers.
+  ///
+  /// In en, this message translates to:
+  /// **'Numbered list'**
+  String get markdownNumbers;
+
+  /// No description provided for @markdownChecklist.
+  ///
+  /// In en, this message translates to:
+  /// **'Checklist'**
+  String get markdownChecklist;
+
+  /// No description provided for @markdownQuote.
+  ///
+  /// In en, this message translates to:
+  /// **'Quote'**
+  String get markdownQuote;
+
+  /// No description provided for @markdownCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get markdownCode;
+
+  /// No description provided for @markdownLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Link'**
+  String get markdownLink;
+
+  /// No description provided for @markdownTable.
+  ///
+  /// In en, this message translates to:
+  /// **'Table'**
+  String get markdownTable;
+
+  /// No description provided for @markdownLinkAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Link address'**
+  String get markdownLinkAddress;
+
+  /// No description provided for @markdownLinkAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add link'**
+  String get markdownLinkAdd;
 }
 
 class _AppLocalizationsDelegate

@@ -235,14 +235,18 @@ class _TaskCreateFormState extends ConsumerState<TaskCreateForm> {
             textInputAction: TextInputAction.next,
           ),
           gap,
-          TixTextField(
-            fieldKey: const Key('addDetails.body'),
-            label: l10n.addDetailsBody,
+          MarkdownEditor(
             controller: _body,
-            hint: l10n.addDetailsBodyHint,
-            maxLines: 6,
-            keyboardType: TextInputType.multiline,
-            error: _on('body'),
+            field: TixTextField(
+              fieldKey: const Key('addDetails.body'),
+              label: l10n.addDetailsBody,
+              controller: _body,
+              hint: l10n.addDetailsBodyHint,
+              maxLines: 6,
+              keyboardType: TextInputType.multiline,
+              inputFormatters: const [MarkdownListFormatter()],
+              error: _on('body'),
+            ),
           ),
           gap,
           TixSelectField<String>(

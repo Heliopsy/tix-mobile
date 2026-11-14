@@ -161,6 +161,7 @@ All in `lib/src/core/design/components/`. Each has a doc comment saying when to 
 | `TixChoices` | A pick-one setting (theme, language): chips that wrap, so a long label or 200% text never hides an option |
 | `TixPropertyList`, `TixPropertyRow` | A record's attributes, each a 48 dp row that opens its editor; the label moves above the value at large text |
 | `TixMarkdown` | Descriptions and comments: images become links, only `http`, `https` and `mailto` open, and checklist items are ticks |
+| `MarkdownEditor`, `MarkdownToolbar`, `MarkdownShortcuts` | A description field with the web's formatting tools: over the field when wide, under it (above the keyboard) on a phone; Ctrl+B, Ctrl+I, Ctrl+\` inside it; give the field a `MarkdownListFormatter` so lists continue on Enter |
 | `TixFilterBar`, `TixFilterChip` | A list's query and toggles |
 | `TixSuggestionList`, `TixTermChip` | What the word being typed completes to; one removable term of a query |
 | `TixSelectField`, `TixFieldLabel` | A labelled choice from a short list; the label above a control without one |
