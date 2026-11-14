@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.18.0](https://github.com/Heliopsy/tix-mobile/compare/v0.17.0...v0.18.0) (2026-11-14)
+
+
+### Features
+
+* **tenants:** read tenant icons through the generated client ([9022469](https://github.com/Heliopsy/tix-mobile/commit/9022469e273afa2901fce8fb0832ced4d39f66b3))
+* **tenants:** show tenant icons in the switcher and set them in tenant settings ([7c49886](https://github.com/Heliopsy/tix-mobile/commit/7c498863f3733230c67ec2743ad8e7d56ee1760b))
+
+
+### Dependencies
+
+* pin tix at v0.61.0 ([42d5379](https://github.com/Heliopsy/tix-mobile/commit/42d5379d834392f2949185236a4862513be8da0b))
+
 ## [0.17.0](https://github.com/Heliopsy/tix-mobile/compare/v0.16.0...v0.17.0) (2026-11-14)
 
 
