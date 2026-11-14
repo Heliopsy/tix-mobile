@@ -136,6 +136,9 @@ _AccountMembership _$AccountMembershipFromJson(Map<String, dynamic> json) =>
       actorId: json['actor_id'] as String? ?? '',
       handle: json['handle'] as String? ?? '',
       host: json['host'] as String? ?? '',
+      icon: json['icon'] as String? ?? '',
+      iconImage: json['icon_image'] as String? ?? '',
+      iconName: json['icon_name'] as String? ?? '',
       role: $enumDecodeNullable(
         _$RoleEnumMap,
         json['role'],
@@ -151,6 +154,9 @@ Map<String, dynamic> _$AccountMembershipToJson(_AccountMembership instance) =>
       'actor_id': instance.actorId,
       'handle': instance.handle,
       'host': instance.host,
+      'icon': instance.icon,
+      'icon_image': instance.iconImage,
+      'icon_name': instance.iconName,
       'role': ?_$RoleEnumMap[instance.role],
       'tenant_id': instance.tenantId,
       'tenant_key': instance.tenantKey,
@@ -199,6 +205,9 @@ _Actor _$ActorFromJson(Map<String, dynamic> json) => _Actor(
     json['session_expires_at'],
     const TixDateTime().fromJson,
   ),
+  tenantIcon: json['tenant_icon'] as String? ?? '',
+  tenantIconImage: json['tenant_icon_image'] as String? ?? '',
+  tenantIconName: json['tenant_icon_name'] as String? ?? '',
   tenantId: json['tenant_id'] as String? ?? '',
   tenantKey: json['tenant_key'] as String? ?? '',
   tenantName: json['tenant_name'] as String? ?? '',
@@ -229,6 +238,9 @@ Map<String, dynamic> _$ActorToJson(_Actor instance) => <String, dynamic>{
     instance.sessionExpiresAt,
     const TixDateTime().toJson,
   ),
+  'tenant_icon': instance.tenantIcon,
+  'tenant_icon_image': instance.tenantIconImage,
+  'tenant_icon_name': instance.tenantIconName,
   'tenant_id': instance.tenantId,
   'tenant_key': instance.tenantKey,
   'tenant_name': instance.tenantName,
@@ -1169,6 +1181,9 @@ _CreatedTenant _$CreatedTenantFromJson(Map<String, dynamic> json) =>
         json['deleted_at'],
         const TixDateTime().fromJson,
       ),
+      icon: json['icon'] as String? ?? '',
+      iconImage: json['icon_image'] as String? ?? '',
+      iconName: json['icon_name'] as String? ?? '',
       id: json['id'] as String? ?? '',
       initialCredentials:
           (json['initial_credentials'] as List<dynamic>?)
@@ -1217,6 +1232,9 @@ Map<String, dynamic> _$CreatedTenantToJson(_CreatedTenant instance) =>
         instance.deletedAt,
         const TixDateTime().toJson,
       ),
+      'icon': instance.icon,
+      'icon_image': instance.iconImage,
+      'icon_name': instance.iconName,
       'id': instance.id,
       'initial_credentials': instance.initialCredentials
           .map((e) => e.toJson())
@@ -4239,6 +4257,9 @@ _Tenant _$TenantFromJson(Map<String, dynamic> json) => _Tenant(
     json['deleted_at'],
     const TixDateTime().fromJson,
   ),
+  icon: json['icon'] as String? ?? '',
+  iconImage: json['icon_image'] as String? ?? '',
+  iconName: json['icon_name'] as String? ?? '',
   id: json['id'] as String? ?? '',
   key: json['key'] as String? ?? '',
   leaseDefault: json['lease_default'] as String? ?? '',
@@ -4278,6 +4299,9 @@ Map<String, dynamic> _$TenantToJson(_Tenant instance) => <String, dynamic>{
     instance.deletedAt,
     const TixDateTime().toJson,
   ),
+  'icon': instance.icon,
+  'icon_image': instance.iconImage,
+  'icon_name': instance.iconName,
   'id': instance.id,
   'key': instance.key,
   'lease_default': instance.leaseDefault,
@@ -4621,6 +4645,11 @@ _UpdateTenantInput _$UpdateTenantInputFromJson(Map<String, dynamic> json) =>
       artifactTypes: (json['artifact_types'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      icon: json['icon'] as String?,
+      iconFile: json['icon_file'] == null
+          ? null
+          : ProjectIconFile.fromJson(json['icon_file'] as Map<String, dynamic>),
+      iconName: json['icon_name'] as String?,
       leaseDefault: json['lease_default'] as String?,
       leaseMax: json['lease_max'] as String?,
       mfaGrace: json['mfa_grace'] as String?,
@@ -4642,6 +4671,9 @@ Map<String, dynamic> _$UpdateTenantInputToJson(_UpdateTenantInput instance) =>
     <String, dynamic>{
       'artifact_max_bytes': ?instance.artifactMaxBytes,
       'artifact_types': ?instance.artifactTypes,
+      'icon': ?instance.icon,
+      'icon_file': ?instance.iconFile?.toJson(),
+      'icon_name': ?instance.iconName,
       'lease_default': ?instance.leaseDefault,
       'lease_max': ?instance.leaseMax,
       'mfa_grace': ?instance.mfaGrace,

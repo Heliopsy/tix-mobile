@@ -3301,6 +3301,14 @@ class TenantOps {
       .ndjson('GET', '/api/v1/tenants/${_t.segment(ref)}/domains')
       .map((e) => Domain.fromJson(e! as Map<String, dynamic>));
 
+  /// GetTenantIcon returns a tenant's uploaded icon image, by identifier or key;
+  /// an empty reference means the caller's tenant.
+  ///
+  /// `GET /api/v1/tenants/{ref}/icon` (`tenant.icon`).
+  Future<Uint8List> icon(String ref) async {
+    return _t.bytes('GET', '/api/v1/tenants/${_t.segment(ref)}/icon');
+  }
+
   /// ListTenants lists the tenants the caller can see: every live tenant for a
   /// global admin, and only its own for anybody else, since an actor is bound to
   /// one tenant.
@@ -3371,7 +3379,8 @@ class TenantOps {
   }
 
   /// UpdateTenant changes the caller's tenant, or for a global admin any tenant:
-  /// its name, theme, lease bounds, second-factor requirements and trash setting.
+  /// its name, theme, icon, lease bounds, second-factor requirements and trash
+  /// setting.
   ///
   /// `PATCH /api/v1/tenants/{ref}` (`tenant.update`), scope `tenant:admin`.
   Future<Tenant> update(
