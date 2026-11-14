@@ -369,7 +369,7 @@ final class SavedFiltersProvider
   SavedFilters create() => SavedFilters();
 }
 
-String _$savedFiltersHash() => r'3125b7269010c965ff696d9f0faacc59b6e4b093';
+String _$savedFiltersHash() => r'7cd33622905a99150fd0992fff8fdc4d3715c562';
 
 /// The reader's saved filters, then the ones shared with them.
 

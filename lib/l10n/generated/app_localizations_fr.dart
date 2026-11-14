@@ -7597,6 +7597,25 @@ class AppLocalizationsFr extends AppLocalizations {
       'Partagé avec vous ; seuls son propriétaire et les administrateurs peuvent le modifier.';
 
   @override
+  String savedFilterView(String view) {
+    return 'Vue : $view';
+  }
+
+  @override
+  String savedFilterDrag(String name) {
+    return 'Faire glisser pour déplacer $name';
+  }
+
+  @override
+  String get savedFiltersOrderHelp =>
+      'Faites glisser vos filtres par la poignée pour les ordonner, ou utilisez Monter et Descendre dans le menu d\'un filtre. Les filtres partagés suivent, par nom.';
+
+  @override
+  String filterSaveKeeps(String view) {
+    return 'Il garde ce filtre, son tri et la vue $view.';
+  }
+
+  @override
   String durationDays(int n) {
     return '$n j';
   }

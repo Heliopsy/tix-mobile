@@ -231,6 +231,65 @@ void main() {
     expect((await c.read(p.future)).map((f) => f.name), ['B']);
   });
 
+  group('reordering saved filters', () {
+    Map<String, Object?> own(String id) => {
+      'id': id,
+      'name': id.toUpperCase(),
+      'query': 'tag:$id',
+      'mine': true,
+      'editable': true,
+    };
+
+    test('moves an own filter and sends the whole own order', () async {
+      server.filters.addAll([
+        own('a'),
+        own('b'),
+        own('c'),
+        {'id': 's', 'name': 'S', 'query': '', 'mine': false, 'shared': true},
+      ]);
+      final c = await signedInContainer(server);
+      final p = savedFiltersProvider;
+      final sub = c.listen(p, (_, _) {});
+      addTearDown(sub.close);
+      await c.read(p.future);
+      await c.read(p.notifier).reorder(2, 0);
+      final put = server.requestsTo('/api/v1/filters/order').single;
+      expect((put.data as Map)['filters'], ['c', 'a', 'b']);
+      expect(c.read(p).value!.where((f) => f.mine).map((f) => f.id), [
+        'c',
+        'a',
+        'b',
+      ]);
+    });
+
+    test('a move past either end sends nothing', () async {
+      server.filters.addAll([own('a'), own('b')]);
+      final c = await signedInContainer(server);
+      final p = savedFiltersProvider;
+      final sub = c.listen(p, (_, _) {});
+      addTearDown(sub.close);
+      final filters = await c.read(p.future);
+      await c.read(p.notifier).move(filters.first, -1);
+      await c.read(p.notifier).move(filters.last, 1);
+      expect(server.requestsTo('/api/v1/filters/order'), isEmpty);
+    });
+
+    test('a refused order puts back the server order and says so', () async {
+      server.filters.addAll([own('a'), own('b')]);
+      server.failing['/api/v1/filters/order'] = FakeResponse(
+        403,
+        envelope('forbidden', 'no'),
+      );
+      final c = await signedInContainer(server);
+      final p = savedFiltersProvider;
+      final sub = c.listen(p, (_, _) {});
+      addTearDown(sub.close);
+      await c.read(p.future);
+      await expectLater(c.read(p.notifier).reorder(1, 0), throwsA(anything));
+      expect((await c.read(p.future)).map((f) => f.id), ['a', 'b']);
+    });
+  });
+
   test('due dates fall under My work headings', () {
     final now = DateTime(2026, 11, 4, 10);
     expect(dueBucket(null, now), DueBucket.none);

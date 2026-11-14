@@ -453,20 +453,40 @@ class SavedFilters extends _$SavedFilters {
 
   /// Moves [filter] [by] places among the reader's own.
   Future<void> move(SavedFilter filter, int by) async {
-    final own = [
-      for (final f in state.value ?? const <SavedFilter>[])
-        if (f.mine) f,
-    ];
-    final at = own.indexWhere((f) => f.id == filter.id);
-    final to = at + by;
-    if (at < 0 || to < 0 || to >= own.length) return;
-    final ids = [for (final f in own) f.id];
-    ids[at] = own[to].id;
-    ids[to] = filter.id;
-    state = AsyncData(
-      await ref.read(viewPrefsRepositoryProvider).orderFilters(ids),
-    );
+    final at = _own().indexWhere((f) => f.id == filter.id);
+    if (at < 0) return;
+    await reorder(at, at + by);
   }
+
+  /// Moves the reader's own filter at [from] so it ends at [to], both
+  /// indexes among their own filters, at once, then stores the whole order.
+  Future<void> reorder(int from, int to) async {
+    final own = _own();
+    if (from < 0 || from >= own.length || to < 0 || to >= own.length) return;
+    if (from == to) return;
+    final moved = [...own];
+    moved.insert(to, moved.removeAt(from));
+    final shared = [
+      for (final f in state.value ?? const <SavedFilter>[])
+        if (!f.mine) f,
+    ];
+    state = AsyncData([...moved, ...shared]);
+    try {
+      state = AsyncData(
+        await ref.read(viewPrefsRepositoryProvider).orderFilters([
+          for (final f in moved) f.id,
+        ]),
+      );
+    } on Object {
+      if (ref.mounted) ref.invalidateSelf();
+      rethrow;
+    }
+  }
+
+  List<SavedFilter> _own() => [
+    for (final f in state.value ?? const <SavedFilter>[])
+      if (f.mine) f,
+  ];
 }
 
 /// The deadline headings of My work, in the order they are drawn.
