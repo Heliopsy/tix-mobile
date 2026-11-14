@@ -100,5 +100,7 @@
 		<string>Take a photo to attach to a task.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>Pick a photo to attach to a task.</string>
+		<key>ITSAppUsesNonExemptEncryption</key>
+		<false/>
 	</dict>
 </plist>
