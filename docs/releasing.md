@@ -249,12 +249,18 @@ F-Droid reads it from the tagged source. Keep it to what the README says.
 `changelogs/<versionCode>.txt` is not committed. The `play` job writes it at upload time from the version's
 `CHANGELOG.md` section (`just store-changelog VERSION CODE`), links and hashes dropped, cut at 500 characters.
 
-`images/icon.png` is the 512 px icon. Screenshots are not committed yet. Real ones go in
-`images/phoneScreenshots/` and `images/tenInchScreenshots/` (PNG or JPEG, 2 to 8 each, named `1.png`, `2.png`,
-...) and are used by F-Droid at once; Play needs at least two phone screenshots and a 1024 x 500
-`images/featureGraphic.png`, uploaded by hand in the Play Console until the upload step stops skipping images
-(`skip_upload_images` in `fastlane/Fastfile`). Take them from a build against a throwaway server
-(`tix demo seed`), never real work.
+`images/icon.png` is the 512 px icon. `images/phoneScreenshots/1.png` to `6.png` (1080 x 1920) and
+`images/featureGraphic.png` (1024 x 500) are the Play listing images, and F-Droid uses the screenshots too. The App
+Store ones live in `fastlane/screenshots/en-US/`: `iphone-1.png` to `iphone-6.png` (1320 x 2868, the 6.9" display)
+and `ipad-1.png` to `ipad-6.png` (2064 x 2752, the 13" display). All of them are 24-bit PNGs without alpha, which
+both stores require.
+
+`just store-screenshots` renders every one of them on Linux from the real screens, with the app's own theme and
+Roboto, against an in-memory tix server holding a fictional team (`test/store/demo_team.dart`) at a fixed clock. The
+test is tagged `screenshots`, so `just test` skips it. Rerun it after a change to a screen they show and look at
+every image before committing. They are uploaded by hand (App Store Connect, or the Play Console and the Play
+Developer API's edits images endpoints) while the upload step skips images (`skip_upload_images` in
+`fastlane/Fastfile`).
 
 ### Google Play
 

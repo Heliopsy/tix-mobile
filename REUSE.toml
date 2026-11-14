@@ -100,10 +100,10 @@ path = ["lib/**/*.yaml"]
 SPDX-FileCopyrightText = "tix-mobile contributors"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
-# Store listing text and images, which F-Droid and Google Play read as plain
-# files and which cannot hold a header.
+# Store listing text and images, which F-Droid, Google Play and the App Store
+# read as plain files and which cannot hold a header.
 [[annotations]]
-path = ["fastlane/metadata/**"]
+path = ["fastlane/metadata/**", "fastlane/screenshots/**"]
 SPDX-FileCopyrightText = "tix-mobile contributors"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
