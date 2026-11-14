@@ -166,6 +166,15 @@ goldens:
     flutter test --update-goldens --tags golden
     git status --short -- '*.png'
 
+# Render the store screenshots and the Play feature graphic from the real screens (Linux only); look at every image.
+[group('test')]
+store-screenshots:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    [ "$(uname -s)" = Linux ] || { echo "store screenshots are rendered on Linux only; see docs/releasing.md" >&2; exit 1; }
+    TZ=UTC flutter test test/store/store_screenshots_test.dart --run-skipped --tags screenshots
+    git status --short -- fastlane/metadata fastlane/screenshots
+
 # Tests with coverage, generated code excluded, into coverage/lcov.info.
 [group('test')]
 cover:

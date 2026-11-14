@@ -1,3 +1,6 @@
-# Test tags. `just goldens` runs the golden tests alone.
+# Test tags. `just goldens` runs the golden tests alone; `just store-screenshots`
+# runs the screenshot tool, which the ordinary suite skips.
 tags:
   golden:
+  screenshots:
+    skip: "writes the store screenshots; run with `just store-screenshots`"
