@@ -986,7 +986,13 @@ mixin _$AccountMembership {
 @JsonKey(name: 'actor_id') String get actorId;/// Handle is that actor's handle.
 @JsonKey(name: 'handle') String get handle;/// Host is the tenant's own address, a domain not marked shared; empty when it
 /// is served only on a shared host.
-@JsonKey(name: 'host') String get host;/// Role is the role the membership grants.
+@JsonKey(name: 'host') String get host;/// Icon is the tenant's text icon, one emoji or a one or two letter monogram.
+/// At most one of Icon, IconName and IconImage is set; with none a surface
+/// draws a monogram of the tenant's name.
+@JsonKey(name: 'icon') String get icon;/// IconImage is the digest of the tenant's uploaded icon image, whose bytes are
+/// read from GET /api/v1/tenants/{ref}/icon.
+@JsonKey(name: 'icon_image') String get iconImage;/// IconName names the tenant's built-in icon, from the set projects use.
+@JsonKey(name: 'icon_name') String get iconName;/// Role is the role the membership grants.
 @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? get role;/// TenantID is the tenant.
 @JsonKey(name: 'tenant_id') String get tenantId;/// TenantKey is the tenant's key.
 @JsonKey(name: 'tenant_key') String get tenantKey;/// TenantName is the tenant's name.
@@ -1004,20 +1010,20 @@ $AccountMembershipCopyWith<AccountMembership> get copyWith => _$AccountMembershi
 @override
 bool operator ==(Object other) {
   final _this = this as AccountMembership;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountMembership&&(identical(other.actorId, _this.actorId) || other.actorId == _this.actorId)&&(identical(other.handle, _this.handle) || other.handle == _this.handle)&&(identical(other.host, _this.host) || other.host == _this.host)&&(identical(other.role, _this.role) || other.role == _this.role)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.tenantKey, _this.tenantKey) || other.tenantKey == _this.tenantKey)&&(identical(other.tenantName, _this.tenantName) || other.tenantName == _this.tenantName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountMembership&&(identical(other.actorId, _this.actorId) || other.actorId == _this.actorId)&&(identical(other.handle, _this.handle) || other.handle == _this.handle)&&(identical(other.host, _this.host) || other.host == _this.host)&&(identical(other.icon, _this.icon) || other.icon == _this.icon)&&(identical(other.iconImage, _this.iconImage) || other.iconImage == _this.iconImage)&&(identical(other.iconName, _this.iconName) || other.iconName == _this.iconName)&&(identical(other.role, _this.role) || other.role == _this.role)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.tenantKey, _this.tenantKey) || other.tenantKey == _this.tenantKey)&&(identical(other.tenantName, _this.tenantName) || other.tenantName == _this.tenantName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as AccountMembership;
-  return Object.hash(runtimeType,_this.actorId,_this.handle,_this.host,_this.role,_this.tenantId,_this.tenantKey,_this.tenantName);
+  return Object.hash(runtimeType,_this.actorId,_this.handle,_this.host,_this.icon,_this.iconImage,_this.iconName,_this.role,_this.tenantId,_this.tenantKey,_this.tenantName);
 }
 
 @override
 String toString() {
   final _this = this as AccountMembership;
-  return 'AccountMembership(actorId: ${_this.actorId}, handle: ${_this.handle}, host: ${_this.host}, role: ${_this.role}, tenantId: ${_this.tenantId}, tenantKey: ${_this.tenantKey}, tenantName: ${_this.tenantName})';
+  return 'AccountMembership(actorId: ${_this.actorId}, handle: ${_this.handle}, host: ${_this.host}, icon: ${_this.icon}, iconImage: ${_this.iconImage}, iconName: ${_this.iconName}, role: ${_this.role}, tenantId: ${_this.tenantId}, tenantKey: ${_this.tenantKey}, tenantName: ${_this.tenantName})';
 }
 
 
@@ -1028,7 +1034,7 @@ abstract mixin class $AccountMembershipCopyWith<$Res>  {
   factory $AccountMembershipCopyWith(AccountMembership value, $Res Function(AccountMembership) _then) = _$AccountMembershipCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'actor_id') String actorId,@JsonKey(name: 'handle') String handle,@JsonKey(name: 'host') String host,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'tenant_key') String tenantKey,@JsonKey(name: 'tenant_name') String tenantName
+@JsonKey(name: 'actor_id') String actorId,@JsonKey(name: 'handle') String handle,@JsonKey(name: 'host') String host,@JsonKey(name: 'icon') String icon,@JsonKey(name: 'icon_image') String iconImage,@JsonKey(name: 'icon_name') String iconName,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'tenant_key') String tenantKey,@JsonKey(name: 'tenant_name') String tenantName
 });
 
 
@@ -1045,11 +1051,14 @@ class _$AccountMembershipCopyWithImpl<$Res>
 
 /// Create a copy of AccountMembership
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? actorId = null,Object? handle = null,Object? host = null,Object? role = freezed,Object? tenantId = null,Object? tenantKey = null,Object? tenantName = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? actorId = null,Object? handle = null,Object? host = null,Object? icon = null,Object? iconImage = null,Object? iconName = null,Object? role = freezed,Object? tenantId = null,Object? tenantKey = null,Object? tenantName = null,}) {
   return _then(AccountMembership(
 actorId: null == actorId ? _self.actorId : actorId // ignore: cast_nullable_to_non_nullable
 as String,handle: null == handle ? _self.handle : handle // ignore: cast_nullable_to_non_nullable
 as String,host: null == host ? _self.host : host // ignore: cast_nullable_to_non_nullable
+as String,icon: null == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
+as String,iconImage: null == iconImage ? _self.iconImage : iconImage // ignore: cast_nullable_to_non_nullable
+as String,iconName: null == iconName ? _self.iconName : iconName // ignore: cast_nullable_to_non_nullable
 as String,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as Role?,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
 as String,tenantKey: null == tenantKey ? _self.tenantKey : tenantKey // ignore: cast_nullable_to_non_nullable
@@ -1139,10 +1148,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String actorId, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'host')  String host, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String actorId, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'host')  String host, @JsonKey(name: 'icon')  String icon, @JsonKey(name: 'icon_image')  String iconImage, @JsonKey(name: 'icon_name')  String iconName, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AccountMembership() when $default != null:
-return $default(_that.actorId,_that.handle,_that.host,_that.role,_that.tenantId,_that.tenantKey,_that.tenantName);case _:
+return $default(_that.actorId,_that.handle,_that.host,_that.icon,_that.iconImage,_that.iconName,_that.role,_that.tenantId,_that.tenantKey,_that.tenantName);case _:
   return orElse();
 
 }
@@ -1160,10 +1169,10 @@ return $default(_that.actorId,_that.handle,_that.host,_that.role,_that.tenantId,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String actorId, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'host')  String host, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'actor_id')  String actorId, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'host')  String host, @JsonKey(name: 'icon')  String icon, @JsonKey(name: 'icon_image')  String iconImage, @JsonKey(name: 'icon_name')  String iconName, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName)  $default,) {final _that = this;
 switch (_that) {
 case _AccountMembership():
-return $default(_that.actorId,_that.handle,_that.host,_that.role,_that.tenantId,_that.tenantKey,_that.tenantName);case _:
+return $default(_that.actorId,_that.handle,_that.host,_that.icon,_that.iconImage,_that.iconName,_that.role,_that.tenantId,_that.tenantKey,_that.tenantName);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1180,10 +1189,10 @@ return $default(_that.actorId,_that.handle,_that.host,_that.role,_that.tenantId,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'actor_id')  String actorId, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'host')  String host, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'actor_id')  String actorId, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'host')  String host, @JsonKey(name: 'icon')  String icon, @JsonKey(name: 'icon_image')  String iconImage, @JsonKey(name: 'icon_name')  String iconName, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName)?  $default,) {final _that = this;
 switch (_that) {
 case _AccountMembership() when $default != null:
-return $default(_that.actorId,_that.handle,_that.host,_that.role,_that.tenantId,_that.tenantKey,_that.tenantName);case _:
+return $default(_that.actorId,_that.handle,_that.host,_that.icon,_that.iconImage,_that.iconName,_that.role,_that.tenantId,_that.tenantKey,_that.tenantName);case _:
   return null;
 
 }
@@ -1195,7 +1204,7 @@ return $default(_that.actorId,_that.handle,_that.host,_that.role,_that.tenantId,
 @JsonSerializable()
 
 class _AccountMembership implements AccountMembership {
-  const _AccountMembership({@JsonKey(name: 'actor_id') this.actorId = '', @JsonKey(name: 'handle') this.handle = '', @JsonKey(name: 'host') this.host = '', @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.role, @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'tenant_key') this.tenantKey = '', @JsonKey(name: 'tenant_name') this.tenantName = ''});
+  const _AccountMembership({@JsonKey(name: 'actor_id') this.actorId = '', @JsonKey(name: 'handle') this.handle = '', @JsonKey(name: 'host') this.host = '', @JsonKey(name: 'icon') this.icon = '', @JsonKey(name: 'icon_image') this.iconImage = '', @JsonKey(name: 'icon_name') this.iconName = '', @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.role, @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'tenant_key') this.tenantKey = '', @JsonKey(name: 'tenant_name') this.tenantName = ''});
   factory _AccountMembership.fromJson(Map<String, dynamic> json) => _$AccountMembershipFromJson(json);
 
 /// ActorID is the account's actor in the tenant.
@@ -1205,6 +1214,15 @@ class _AccountMembership implements AccountMembership {
 /// Host is the tenant's own address, a domain not marked shared; empty when it
 /// is served only on a shared host.
 @override@JsonKey(name: 'host') final  String host;
+/// Icon is the tenant's text icon, one emoji or a one or two letter monogram.
+/// At most one of Icon, IconName and IconImage is set; with none a surface
+/// draws a monogram of the tenant's name.
+@override@JsonKey(name: 'icon') final  String icon;
+/// IconImage is the digest of the tenant's uploaded icon image, whose bytes are
+/// read from GET /api/v1/tenants/{ref}/icon.
+@override@JsonKey(name: 'icon_image') final  String iconImage;
+/// IconName names the tenant's built-in icon, from the set projects use.
+@override@JsonKey(name: 'icon_name') final  String iconName;
 /// Role is the role the membership grants.
 @override@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) final  Role? role;
 /// TenantID is the tenant.
@@ -1227,18 +1245,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountMembership&&(identical(other.actorId, actorId) || other.actorId == actorId)&&(identical(other.handle, handle) || other.handle == handle)&&(identical(other.host, host) || other.host == host)&&(identical(other.role, role) || other.role == role)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.tenantKey, tenantKey) || other.tenantKey == tenantKey)&&(identical(other.tenantName, tenantName) || other.tenantName == tenantName));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountMembership&&(identical(other.actorId, actorId) || other.actorId == actorId)&&(identical(other.handle, handle) || other.handle == handle)&&(identical(other.host, host) || other.host == host)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage)&&(identical(other.iconName, iconName) || other.iconName == iconName)&&(identical(other.role, role) || other.role == role)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.tenantKey, tenantKey) || other.tenantKey == tenantKey)&&(identical(other.tenantName, tenantName) || other.tenantName == tenantName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,actorId,handle,host,role,tenantId,tenantKey,tenantName);
+    return Object.hash(runtimeType,actorId,handle,host,icon,iconImage,iconName,role,tenantId,tenantKey,tenantName);
 }
 
 @override
 String toString() {
-    return 'AccountMembership(actorId: $actorId, handle: $handle, host: $host, role: $role, tenantId: $tenantId, tenantKey: $tenantKey, tenantName: $tenantName)';
+    return 'AccountMembership(actorId: $actorId, handle: $handle, host: $host, icon: $icon, iconImage: $iconImage, iconName: $iconName, role: $role, tenantId: $tenantId, tenantKey: $tenantKey, tenantName: $tenantName)';
 }
 
 
@@ -1249,7 +1267,7 @@ abstract mixin class _$AccountMembershipCopyWith<$Res> implements $AccountMember
   factory _$AccountMembershipCopyWith(_AccountMembership value, $Res Function(_AccountMembership) _then) = __$AccountMembershipCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'actor_id') String actorId,@JsonKey(name: 'handle') String handle,@JsonKey(name: 'host') String host,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'tenant_key') String tenantKey,@JsonKey(name: 'tenant_name') String tenantName
+@JsonKey(name: 'actor_id') String actorId,@JsonKey(name: 'handle') String handle,@JsonKey(name: 'host') String host,@JsonKey(name: 'icon') String icon,@JsonKey(name: 'icon_image') String iconImage,@JsonKey(name: 'icon_name') String iconName,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'tenant_key') String tenantKey,@JsonKey(name: 'tenant_name') String tenantName
 });
 
 
@@ -1266,11 +1284,14 @@ class __$AccountMembershipCopyWithImpl<$Res>
 
 /// Create a copy of AccountMembership
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? actorId = null,Object? handle = null,Object? host = null,Object? role = freezed,Object? tenantId = null,Object? tenantKey = null,Object? tenantName = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? actorId = null,Object? handle = null,Object? host = null,Object? icon = null,Object? iconImage = null,Object? iconName = null,Object? role = freezed,Object? tenantId = null,Object? tenantKey = null,Object? tenantName = null,}) {
   return _then(_AccountMembership(
 actorId: null == actorId ? _self.actorId : actorId // ignore: cast_nullable_to_non_nullable
 as String,handle: null == handle ? _self.handle : handle // ignore: cast_nullable_to_non_nullable
 as String,host: null == host ? _self.host : host // ignore: cast_nullable_to_non_nullable
+as String,icon: null == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
+as String,iconImage: null == iconImage ? _self.iconImage : iconImage // ignore: cast_nullable_to_non_nullable
+as String,iconName: null == iconName ? _self.iconName : iconName // ignore: cast_nullable_to_non_nullable
 as String,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as Role?,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
 as String,tenantKey: null == tenantKey ? _self.tenantKey : tenantKey // ignore: cast_nullable_to_non_nullable
@@ -1309,7 +1330,13 @@ mixin _$Actor {
 /// policy refuses this person everything but enrolment.
 @JsonKey(name: 'second_factor_enrollment_required') bool get secondFactorEnrollmentRequired;/// SessionExpiresAt is when the session the request authenticated with ends
 /// unless it is used again, on the answer to WhoAmI.
-@JsonKey(name: 'session_expires_at')@TixDateTime() DateTime? get sessionExpiresAt;/// TenantID is the tenant the actor acts in.
+@JsonKey(name: 'session_expires_at')@TixDateTime() DateTime? get sessionExpiresAt;/// TenantIcon is the text icon of the actor's tenant, on the answer to WhoAmI.
+/// At most one of the three tenant icon fields is set.
+@JsonKey(name: 'tenant_icon') String get tenantIcon;/// TenantIconImage is the digest of the uploaded icon image of the actor's
+/// tenant, on the answer to WhoAmI, read from GET /api/v1/tenants/{ref}/icon.
+@JsonKey(name: 'tenant_icon_image') String get tenantIconImage;/// TenantIconName is the built-in icon of the actor's tenant, on the answer to
+/// WhoAmI.
+@JsonKey(name: 'tenant_icon_name') String get tenantIconName;/// TenantID is the tenant the actor acts in.
 @JsonKey(name: 'tenant_id') String get tenantId;/// TenantKey and TenantName name the actor's tenant, on the answer to WhoAmI.
 @JsonKey(name: 'tenant_key') String get tenantKey;@JsonKey(name: 'tenant_name') String get tenantName;/// Theme is the palette the actor's tenant resolves to, as the browser renders
 /// it, on the answer to WhoAmI.
@@ -1328,20 +1355,20 @@ $ActorCopyWith<Actor> get copyWith => _$ActorCopyWithImpl<Actor>(this as Actor, 
 @override
 bool operator ==(Object other) {
   final _this = this as Actor;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Actor&&(identical(other.accountId, _this.accountId) || other.accountId == _this.accountId)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.globalAdmin, _this.globalAdmin) || other.globalAdmin == _this.globalAdmin)&&(identical(other.handle, _this.handle) || other.handle == _this.handle)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.kind, _this.kind) || other.kind == _this.kind)&&const DeepCollectionEquality().equals(other.memberships, _this.memberships)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.role, _this.role) || other.role == _this.role)&&const DeepCollectionEquality().equals(other.scopes, _this.scopes)&&(identical(other.secondFactorDue, _this.secondFactorDue) || other.secondFactorDue == _this.secondFactorDue)&&(identical(other.secondFactorEnrollmentRequired, _this.secondFactorEnrollmentRequired) || other.secondFactorEnrollmentRequired == _this.secondFactorEnrollmentRequired)&&(identical(other.sessionExpiresAt, _this.sessionExpiresAt) || other.sessionExpiresAt == _this.sessionExpiresAt)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.tenantKey, _this.tenantKey) || other.tenantKey == _this.tenantKey)&&(identical(other.tenantName, _this.tenantName) || other.tenantName == _this.tenantName)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.tokenId, _this.tokenId) || other.tokenId == _this.tokenId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Actor&&(identical(other.accountId, _this.accountId) || other.accountId == _this.accountId)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.globalAdmin, _this.globalAdmin) || other.globalAdmin == _this.globalAdmin)&&(identical(other.handle, _this.handle) || other.handle == _this.handle)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.kind, _this.kind) || other.kind == _this.kind)&&const DeepCollectionEquality().equals(other.memberships, _this.memberships)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.role, _this.role) || other.role == _this.role)&&const DeepCollectionEquality().equals(other.scopes, _this.scopes)&&(identical(other.secondFactorDue, _this.secondFactorDue) || other.secondFactorDue == _this.secondFactorDue)&&(identical(other.secondFactorEnrollmentRequired, _this.secondFactorEnrollmentRequired) || other.secondFactorEnrollmentRequired == _this.secondFactorEnrollmentRequired)&&(identical(other.sessionExpiresAt, _this.sessionExpiresAt) || other.sessionExpiresAt == _this.sessionExpiresAt)&&(identical(other.tenantIcon, _this.tenantIcon) || other.tenantIcon == _this.tenantIcon)&&(identical(other.tenantIconImage, _this.tenantIconImage) || other.tenantIconImage == _this.tenantIconImage)&&(identical(other.tenantIconName, _this.tenantIconName) || other.tenantIconName == _this.tenantIconName)&&(identical(other.tenantId, _this.tenantId) || other.tenantId == _this.tenantId)&&(identical(other.tenantKey, _this.tenantKey) || other.tenantKey == _this.tenantKey)&&(identical(other.tenantName, _this.tenantName) || other.tenantName == _this.tenantName)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.tokenId, _this.tokenId) || other.tokenId == _this.tokenId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Actor;
-  return Object.hashAll([runtimeType,_this.accountId,_this.displayName,_this.email,_this.globalAdmin,_this.handle,_this.id,_this.kind,const DeepCollectionEquality().hash(_this.memberships),_this.projectId,_this.role,const DeepCollectionEquality().hash(_this.scopes),_this.secondFactorDue,_this.secondFactorEnrollmentRequired,_this.sessionExpiresAt,_this.tenantId,_this.tenantKey,_this.tenantName,_this.theme,_this.tokenId]);
+  return Object.hashAll([runtimeType,_this.accountId,_this.displayName,_this.email,_this.globalAdmin,_this.handle,_this.id,_this.kind,const DeepCollectionEquality().hash(_this.memberships),_this.projectId,_this.role,const DeepCollectionEquality().hash(_this.scopes),_this.secondFactorDue,_this.secondFactorEnrollmentRequired,_this.sessionExpiresAt,_this.tenantIcon,_this.tenantIconImage,_this.tenantIconName,_this.tenantId,_this.tenantKey,_this.tenantName,_this.theme,_this.tokenId]);
 }
 
 @override
 String toString() {
   final _this = this as Actor;
-  return 'Actor(accountId: ${_this.accountId}, displayName: ${_this.displayName}, email: ${_this.email}, globalAdmin: ${_this.globalAdmin}, handle: ${_this.handle}, id: ${_this.id}, kind: ${_this.kind}, memberships: ${_this.memberships}, projectId: ${_this.projectId}, role: ${_this.role}, scopes: ${_this.scopes}, secondFactorDue: ${_this.secondFactorDue}, secondFactorEnrollmentRequired: ${_this.secondFactorEnrollmentRequired}, sessionExpiresAt: ${_this.sessionExpiresAt}, tenantId: ${_this.tenantId}, tenantKey: ${_this.tenantKey}, tenantName: ${_this.tenantName}, theme: ${_this.theme}, tokenId: ${_this.tokenId})';
+  return 'Actor(accountId: ${_this.accountId}, displayName: ${_this.displayName}, email: ${_this.email}, globalAdmin: ${_this.globalAdmin}, handle: ${_this.handle}, id: ${_this.id}, kind: ${_this.kind}, memberships: ${_this.memberships}, projectId: ${_this.projectId}, role: ${_this.role}, scopes: ${_this.scopes}, secondFactorDue: ${_this.secondFactorDue}, secondFactorEnrollmentRequired: ${_this.secondFactorEnrollmentRequired}, sessionExpiresAt: ${_this.sessionExpiresAt}, tenantIcon: ${_this.tenantIcon}, tenantIconImage: ${_this.tenantIconImage}, tenantIconName: ${_this.tenantIconName}, tenantId: ${_this.tenantId}, tenantKey: ${_this.tenantKey}, tenantName: ${_this.tenantName}, theme: ${_this.theme}, tokenId: ${_this.tokenId})';
 }
 
 
@@ -1352,7 +1379,7 @@ abstract mixin class $ActorCopyWith<$Res>  {
   factory $ActorCopyWith(Actor value, $Res Function(Actor) _then) = _$ActorCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'account_id') String accountId,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'handle') String handle,@JsonKey(name: 'id') String id,@JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) ActorKind? kind,@JsonKey(name: 'memberships') List<AccountMembership> memberships,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'scopes') List<String> scopes,@JsonKey(name: 'second_factor_due')@TixDateTime() DateTime? secondFactorDue,@JsonKey(name: 'second_factor_enrollment_required') bool secondFactorEnrollmentRequired,@JsonKey(name: 'session_expires_at')@TixDateTime() DateTime? sessionExpiresAt,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'tenant_key') String tenantKey,@JsonKey(name: 'tenant_name') String tenantName,@JsonKey(name: 'theme') Theme? theme,@JsonKey(name: 'token_id') String tokenId
+@JsonKey(name: 'account_id') String accountId,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'handle') String handle,@JsonKey(name: 'id') String id,@JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) ActorKind? kind,@JsonKey(name: 'memberships') List<AccountMembership> memberships,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'scopes') List<String> scopes,@JsonKey(name: 'second_factor_due')@TixDateTime() DateTime? secondFactorDue,@JsonKey(name: 'second_factor_enrollment_required') bool secondFactorEnrollmentRequired,@JsonKey(name: 'session_expires_at')@TixDateTime() DateTime? sessionExpiresAt,@JsonKey(name: 'tenant_icon') String tenantIcon,@JsonKey(name: 'tenant_icon_image') String tenantIconImage,@JsonKey(name: 'tenant_icon_name') String tenantIconName,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'tenant_key') String tenantKey,@JsonKey(name: 'tenant_name') String tenantName,@JsonKey(name: 'theme') Theme? theme,@JsonKey(name: 'token_id') String tokenId
 });
 
 
@@ -1369,7 +1396,7 @@ class _$ActorCopyWithImpl<$Res>
 
 /// Create a copy of Actor
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? accountId = null,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? handle = null,Object? id = null,Object? kind = freezed,Object? memberships = null,Object? projectId = null,Object? role = freezed,Object? scopes = null,Object? secondFactorDue = freezed,Object? secondFactorEnrollmentRequired = null,Object? sessionExpiresAt = freezed,Object? tenantId = null,Object? tenantKey = null,Object? tenantName = null,Object? theme = freezed,Object? tokenId = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? accountId = null,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? handle = null,Object? id = null,Object? kind = freezed,Object? memberships = null,Object? projectId = null,Object? role = freezed,Object? scopes = null,Object? secondFactorDue = freezed,Object? secondFactorEnrollmentRequired = null,Object? sessionExpiresAt = freezed,Object? tenantIcon = null,Object? tenantIconImage = null,Object? tenantIconName = null,Object? tenantId = null,Object? tenantKey = null,Object? tenantName = null,Object? theme = freezed,Object? tokenId = null,}) {
   return _then(Actor(
 accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
@@ -1385,7 +1412,10 @@ as Role?,scopes: null == scopes ? _self.scopes : scopes // ignore: cast_nullable
 as List<String>,secondFactorDue: freezed == secondFactorDue ? _self.secondFactorDue : secondFactorDue // ignore: cast_nullable_to_non_nullable
 as DateTime?,secondFactorEnrollmentRequired: null == secondFactorEnrollmentRequired ? _self.secondFactorEnrollmentRequired : secondFactorEnrollmentRequired // ignore: cast_nullable_to_non_nullable
 as bool,sessionExpiresAt: freezed == sessionExpiresAt ? _self.sessionExpiresAt : sessionExpiresAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as DateTime?,tenantIcon: null == tenantIcon ? _self.tenantIcon : tenantIcon // ignore: cast_nullable_to_non_nullable
+as String,tenantIconImage: null == tenantIconImage ? _self.tenantIconImage : tenantIconImage // ignore: cast_nullable_to_non_nullable
+as String,tenantIconName: null == tenantIconName ? _self.tenantIconName : tenantIconName // ignore: cast_nullable_to_non_nullable
+as String,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
 as String,tenantKey: null == tenantKey ? _self.tenantKey : tenantKey // ignore: cast_nullable_to_non_nullable
 as String,tenantName: null == tenantName ? _self.tenantName : tenantName // ignore: cast_nullable_to_non_nullable
 as String,theme: freezed == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
@@ -1487,10 +1517,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'second_factor_due')@TixDateTime()  DateTime? secondFactorDue, @JsonKey(name: 'second_factor_enrollment_required')  bool secondFactorEnrollmentRequired, @JsonKey(name: 'session_expires_at')@TixDateTime()  DateTime? sessionExpiresAt, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'theme')  Theme? theme, @JsonKey(name: 'token_id')  String tokenId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'second_factor_due')@TixDateTime()  DateTime? secondFactorDue, @JsonKey(name: 'second_factor_enrollment_required')  bool secondFactorEnrollmentRequired, @JsonKey(name: 'session_expires_at')@TixDateTime()  DateTime? sessionExpiresAt, @JsonKey(name: 'tenant_icon')  String tenantIcon, @JsonKey(name: 'tenant_icon_image')  String tenantIconImage, @JsonKey(name: 'tenant_icon_name')  String tenantIconName, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'theme')  Theme? theme, @JsonKey(name: 'token_id')  String tokenId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Actor() when $default != null:
-return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.secondFactorDue,_that.secondFactorEnrollmentRequired,_that.sessionExpiresAt,_that.tenantId,_that.tenantKey,_that.tenantName,_that.theme,_that.tokenId);case _:
+return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.secondFactorDue,_that.secondFactorEnrollmentRequired,_that.sessionExpiresAt,_that.tenantIcon,_that.tenantIconImage,_that.tenantIconName,_that.tenantId,_that.tenantKey,_that.tenantName,_that.theme,_that.tokenId);case _:
   return orElse();
 
 }
@@ -1508,10 +1538,10 @@ return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'second_factor_due')@TixDateTime()  DateTime? secondFactorDue, @JsonKey(name: 'second_factor_enrollment_required')  bool secondFactorEnrollmentRequired, @JsonKey(name: 'session_expires_at')@TixDateTime()  DateTime? sessionExpiresAt, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'theme')  Theme? theme, @JsonKey(name: 'token_id')  String tokenId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'second_factor_due')@TixDateTime()  DateTime? secondFactorDue, @JsonKey(name: 'second_factor_enrollment_required')  bool secondFactorEnrollmentRequired, @JsonKey(name: 'session_expires_at')@TixDateTime()  DateTime? sessionExpiresAt, @JsonKey(name: 'tenant_icon')  String tenantIcon, @JsonKey(name: 'tenant_icon_image')  String tenantIconImage, @JsonKey(name: 'tenant_icon_name')  String tenantIconName, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'theme')  Theme? theme, @JsonKey(name: 'token_id')  String tokenId)  $default,) {final _that = this;
 switch (_that) {
 case _Actor():
-return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.secondFactorDue,_that.secondFactorEnrollmentRequired,_that.sessionExpiresAt,_that.tenantId,_that.tenantKey,_that.tenantName,_that.theme,_that.tokenId);case _:
+return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.secondFactorDue,_that.secondFactorEnrollmentRequired,_that.sessionExpiresAt,_that.tenantIcon,_that.tenantIconImage,_that.tenantIconName,_that.tenantId,_that.tenantKey,_that.tenantName,_that.theme,_that.tokenId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1528,10 +1558,10 @@ return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'second_factor_due')@TixDateTime()  DateTime? secondFactorDue, @JsonKey(name: 'second_factor_enrollment_required')  bool secondFactorEnrollmentRequired, @JsonKey(name: 'session_expires_at')@TixDateTime()  DateTime? sessionExpiresAt, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'theme')  Theme? theme, @JsonKey(name: 'token_id')  String tokenId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'account_id')  String accountId, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'email')  String email, @JsonKey(name: 'global_admin')  bool globalAdmin, @JsonKey(name: 'handle')  String handle, @JsonKey(name: 'id')  String id, @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  ActorKind? kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships, @JsonKey(name: 'project_id')  String projectId, @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  Role? role, @JsonKey(name: 'scopes')  List<String> scopes, @JsonKey(name: 'second_factor_due')@TixDateTime()  DateTime? secondFactorDue, @JsonKey(name: 'second_factor_enrollment_required')  bool secondFactorEnrollmentRequired, @JsonKey(name: 'session_expires_at')@TixDateTime()  DateTime? sessionExpiresAt, @JsonKey(name: 'tenant_icon')  String tenantIcon, @JsonKey(name: 'tenant_icon_image')  String tenantIconImage, @JsonKey(name: 'tenant_icon_name')  String tenantIconName, @JsonKey(name: 'tenant_id')  String tenantId, @JsonKey(name: 'tenant_key')  String tenantKey, @JsonKey(name: 'tenant_name')  String tenantName, @JsonKey(name: 'theme')  Theme? theme, @JsonKey(name: 'token_id')  String tokenId)?  $default,) {final _that = this;
 switch (_that) {
 case _Actor() when $default != null:
-return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.secondFactorDue,_that.secondFactorEnrollmentRequired,_that.sessionExpiresAt,_that.tenantId,_that.tenantKey,_that.tenantName,_that.theme,_that.tokenId);case _:
+return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,_that.handle,_that.id,_that.kind,_that.memberships,_that.projectId,_that.role,_that.scopes,_that.secondFactorDue,_that.secondFactorEnrollmentRequired,_that.sessionExpiresAt,_that.tenantIcon,_that.tenantIconImage,_that.tenantIconName,_that.tenantId,_that.tenantKey,_that.tenantName,_that.theme,_that.tokenId);case _:
   return null;
 
 }
@@ -1543,7 +1573,7 @@ return $default(_that.accountId,_that.displayName,_that.email,_that.globalAdmin,
 @JsonSerializable()
 
 class _Actor implements Actor {
-  const _Actor({@JsonKey(name: 'account_id') this.accountId = '', @JsonKey(name: 'display_name') this.displayName = '', @JsonKey(name: 'email') this.email = '', @JsonKey(name: 'global_admin') this.globalAdmin = false, @JsonKey(name: 'handle') this.handle = '', @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships = const <AccountMembership>[], @JsonKey(name: 'project_id') this.projectId = '', @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.role, @JsonKey(name: 'scopes')  List<String> scopes = const <String>[], @JsonKey(name: 'second_factor_due')@TixDateTime() this.secondFactorDue, @JsonKey(name: 'second_factor_enrollment_required') this.secondFactorEnrollmentRequired = false, @JsonKey(name: 'session_expires_at')@TixDateTime() this.sessionExpiresAt, @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'tenant_key') this.tenantKey = '', @JsonKey(name: 'tenant_name') this.tenantName = '', @JsonKey(name: 'theme') this.theme, @JsonKey(name: 'token_id') this.tokenId = ''}): _memberships = memberships,_scopes = scopes;
+  const _Actor({@JsonKey(name: 'account_id') this.accountId = '', @JsonKey(name: 'display_name') this.displayName = '', @JsonKey(name: 'email') this.email = '', @JsonKey(name: 'global_admin') this.globalAdmin = false, @JsonKey(name: 'handle') this.handle = '', @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.kind, @JsonKey(name: 'memberships')  List<AccountMembership> memberships = const <AccountMembership>[], @JsonKey(name: 'project_id') this.projectId = '', @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.role, @JsonKey(name: 'scopes')  List<String> scopes = const <String>[], @JsonKey(name: 'second_factor_due')@TixDateTime() this.secondFactorDue, @JsonKey(name: 'second_factor_enrollment_required') this.secondFactorEnrollmentRequired = false, @JsonKey(name: 'session_expires_at')@TixDateTime() this.sessionExpiresAt, @JsonKey(name: 'tenant_icon') this.tenantIcon = '', @JsonKey(name: 'tenant_icon_image') this.tenantIconImage = '', @JsonKey(name: 'tenant_icon_name') this.tenantIconName = '', @JsonKey(name: 'tenant_id') this.tenantId = '', @JsonKey(name: 'tenant_key') this.tenantKey = '', @JsonKey(name: 'tenant_name') this.tenantName = '', @JsonKey(name: 'theme') this.theme, @JsonKey(name: 'token_id') this.tokenId = ''}): _memberships = memberships,_scopes = scopes;
   factory _Actor.fromJson(Map<String, dynamic> json) => _$ActorFromJson(json);
 
 /// AccountID is the account behind a user actor, on the answer to WhoAmI.
@@ -1599,6 +1629,15 @@ class _Actor implements Actor {
 /// SessionExpiresAt is when the session the request authenticated with ends
 /// unless it is used again, on the answer to WhoAmI.
 @override@JsonKey(name: 'session_expires_at')@TixDateTime() final  DateTime? sessionExpiresAt;
+/// TenantIcon is the text icon of the actor's tenant, on the answer to WhoAmI.
+/// At most one of the three tenant icon fields is set.
+@override@JsonKey(name: 'tenant_icon') final  String tenantIcon;
+/// TenantIconImage is the digest of the uploaded icon image of the actor's
+/// tenant, on the answer to WhoAmI, read from GET /api/v1/tenants/{ref}/icon.
+@override@JsonKey(name: 'tenant_icon_image') final  String tenantIconImage;
+/// TenantIconName is the built-in icon of the actor's tenant, on the answer to
+/// WhoAmI.
+@override@JsonKey(name: 'tenant_icon_name') final  String tenantIconName;
 /// TenantID is the tenant the actor acts in.
 @override@JsonKey(name: 'tenant_id') final  String tenantId;
 /// TenantKey and TenantName name the actor's tenant, on the answer to WhoAmI.
@@ -1623,18 +1662,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Actor&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.email, email) || other.email == email)&&(identical(other.globalAdmin, globalAdmin) || other.globalAdmin == globalAdmin)&&(identical(other.handle, handle) || other.handle == handle)&&(identical(other.id, id) || other.id == id)&&(identical(other.kind, kind) || other.kind == kind)&&const DeepCollectionEquality().equals(other.memberships, _memberships)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.role, role) || other.role == role)&&const DeepCollectionEquality().equals(other.scopes, _scopes)&&(identical(other.secondFactorDue, secondFactorDue) || other.secondFactorDue == secondFactorDue)&&(identical(other.secondFactorEnrollmentRequired, secondFactorEnrollmentRequired) || other.secondFactorEnrollmentRequired == secondFactorEnrollmentRequired)&&(identical(other.sessionExpiresAt, sessionExpiresAt) || other.sessionExpiresAt == sessionExpiresAt)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.tenantKey, tenantKey) || other.tenantKey == tenantKey)&&(identical(other.tenantName, tenantName) || other.tenantName == tenantName)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.tokenId, tokenId) || other.tokenId == tokenId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Actor&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.email, email) || other.email == email)&&(identical(other.globalAdmin, globalAdmin) || other.globalAdmin == globalAdmin)&&(identical(other.handle, handle) || other.handle == handle)&&(identical(other.id, id) || other.id == id)&&(identical(other.kind, kind) || other.kind == kind)&&const DeepCollectionEquality().equals(other.memberships, _memberships)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.role, role) || other.role == role)&&const DeepCollectionEquality().equals(other.scopes, _scopes)&&(identical(other.secondFactorDue, secondFactorDue) || other.secondFactorDue == secondFactorDue)&&(identical(other.secondFactorEnrollmentRequired, secondFactorEnrollmentRequired) || other.secondFactorEnrollmentRequired == secondFactorEnrollmentRequired)&&(identical(other.sessionExpiresAt, sessionExpiresAt) || other.sessionExpiresAt == sessionExpiresAt)&&(identical(other.tenantIcon, tenantIcon) || other.tenantIcon == tenantIcon)&&(identical(other.tenantIconImage, tenantIconImage) || other.tenantIconImage == tenantIconImage)&&(identical(other.tenantIconName, tenantIconName) || other.tenantIconName == tenantIconName)&&(identical(other.tenantId, tenantId) || other.tenantId == tenantId)&&(identical(other.tenantKey, tenantKey) || other.tenantKey == tenantKey)&&(identical(other.tenantName, tenantName) || other.tenantName == tenantName)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.tokenId, tokenId) || other.tokenId == tokenId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hashAll([runtimeType,accountId,displayName,email,globalAdmin,handle,id,kind,const DeepCollectionEquality().hash(_memberships),projectId,role,const DeepCollectionEquality().hash(_scopes),secondFactorDue,secondFactorEnrollmentRequired,sessionExpiresAt,tenantId,tenantKey,tenantName,theme,tokenId]);
+    return Object.hashAll([runtimeType,accountId,displayName,email,globalAdmin,handle,id,kind,const DeepCollectionEquality().hash(_memberships),projectId,role,const DeepCollectionEquality().hash(_scopes),secondFactorDue,secondFactorEnrollmentRequired,sessionExpiresAt,tenantIcon,tenantIconImage,tenantIconName,tenantId,tenantKey,tenantName,theme,tokenId]);
 }
 
 @override
 String toString() {
-    return 'Actor(accountId: $accountId, displayName: $displayName, email: $email, globalAdmin: $globalAdmin, handle: $handle, id: $id, kind: $kind, memberships: $memberships, projectId: $projectId, role: $role, scopes: $scopes, secondFactorDue: $secondFactorDue, secondFactorEnrollmentRequired: $secondFactorEnrollmentRequired, sessionExpiresAt: $sessionExpiresAt, tenantId: $tenantId, tenantKey: $tenantKey, tenantName: $tenantName, theme: $theme, tokenId: $tokenId)';
+    return 'Actor(accountId: $accountId, displayName: $displayName, email: $email, globalAdmin: $globalAdmin, handle: $handle, id: $id, kind: $kind, memberships: $memberships, projectId: $projectId, role: $role, scopes: $scopes, secondFactorDue: $secondFactorDue, secondFactorEnrollmentRequired: $secondFactorEnrollmentRequired, sessionExpiresAt: $sessionExpiresAt, tenantIcon: $tenantIcon, tenantIconImage: $tenantIconImage, tenantIconName: $tenantIconName, tenantId: $tenantId, tenantKey: $tenantKey, tenantName: $tenantName, theme: $theme, tokenId: $tokenId)';
 }
 
 
@@ -1645,7 +1684,7 @@ abstract mixin class _$ActorCopyWith<$Res> implements $ActorCopyWith<$Res> {
   factory _$ActorCopyWith(_Actor value, $Res Function(_Actor) _then) = __$ActorCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'account_id') String accountId,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'handle') String handle,@JsonKey(name: 'id') String id,@JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) ActorKind? kind,@JsonKey(name: 'memberships') List<AccountMembership> memberships,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'scopes') List<String> scopes,@JsonKey(name: 'second_factor_due')@TixDateTime() DateTime? secondFactorDue,@JsonKey(name: 'second_factor_enrollment_required') bool secondFactorEnrollmentRequired,@JsonKey(name: 'session_expires_at')@TixDateTime() DateTime? sessionExpiresAt,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'tenant_key') String tenantKey,@JsonKey(name: 'tenant_name') String tenantName,@JsonKey(name: 'theme') Theme? theme,@JsonKey(name: 'token_id') String tokenId
+@JsonKey(name: 'account_id') String accountId,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'email') String email,@JsonKey(name: 'global_admin') bool globalAdmin,@JsonKey(name: 'handle') String handle,@JsonKey(name: 'id') String id,@JsonKey(name: 'kind', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) ActorKind? kind,@JsonKey(name: 'memberships') List<AccountMembership> memberships,@JsonKey(name: 'project_id') String projectId,@JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue) Role? role,@JsonKey(name: 'scopes') List<String> scopes,@JsonKey(name: 'second_factor_due')@TixDateTime() DateTime? secondFactorDue,@JsonKey(name: 'second_factor_enrollment_required') bool secondFactorEnrollmentRequired,@JsonKey(name: 'session_expires_at')@TixDateTime() DateTime? sessionExpiresAt,@JsonKey(name: 'tenant_icon') String tenantIcon,@JsonKey(name: 'tenant_icon_image') String tenantIconImage,@JsonKey(name: 'tenant_icon_name') String tenantIconName,@JsonKey(name: 'tenant_id') String tenantId,@JsonKey(name: 'tenant_key') String tenantKey,@JsonKey(name: 'tenant_name') String tenantName,@JsonKey(name: 'theme') Theme? theme,@JsonKey(name: 'token_id') String tokenId
 });
 
 
@@ -1662,7 +1701,7 @@ class __$ActorCopyWithImpl<$Res>
 
 /// Create a copy of Actor
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? accountId = null,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? handle = null,Object? id = null,Object? kind = freezed,Object? memberships = null,Object? projectId = null,Object? role = freezed,Object? scopes = null,Object? secondFactorDue = freezed,Object? secondFactorEnrollmentRequired = null,Object? sessionExpiresAt = freezed,Object? tenantId = null,Object? tenantKey = null,Object? tenantName = null,Object? theme = freezed,Object? tokenId = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? accountId = null,Object? displayName = null,Object? email = null,Object? globalAdmin = null,Object? handle = null,Object? id = null,Object? kind = freezed,Object? memberships = null,Object? projectId = null,Object? role = freezed,Object? scopes = null,Object? secondFactorDue = freezed,Object? secondFactorEnrollmentRequired = null,Object? sessionExpiresAt = freezed,Object? tenantIcon = null,Object? tenantIconImage = null,Object? tenantIconName = null,Object? tenantId = null,Object? tenantKey = null,Object? tenantName = null,Object? theme = freezed,Object? tokenId = null,}) {
   return _then(_Actor(
 accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
@@ -1678,7 +1717,10 @@ as Role?,scopes: null == scopes ? _self._scopes : scopes // ignore: cast_nullabl
 as List<String>,secondFactorDue: freezed == secondFactorDue ? _self.secondFactorDue : secondFactorDue // ignore: cast_nullable_to_non_nullable
 as DateTime?,secondFactorEnrollmentRequired: null == secondFactorEnrollmentRequired ? _self.secondFactorEnrollmentRequired : secondFactorEnrollmentRequired // ignore: cast_nullable_to_non_nullable
 as bool,sessionExpiresAt: freezed == sessionExpiresAt ? _self.sessionExpiresAt : sessionExpiresAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
+as DateTime?,tenantIcon: null == tenantIcon ? _self.tenantIcon : tenantIcon // ignore: cast_nullable_to_non_nullable
+as String,tenantIconImage: null == tenantIconImage ? _self.tenantIconImage : tenantIconImage // ignore: cast_nullable_to_non_nullable
+as String,tenantIconName: null == tenantIconName ? _self.tenantIconName : tenantIconName // ignore: cast_nullable_to_non_nullable
+as String,tenantId: null == tenantId ? _self.tenantId : tenantId // ignore: cast_nullable_to_non_nullable
 as String,tenantKey: null == tenantKey ? _self.tenantKey : tenantKey // ignore: cast_nullable_to_non_nullable
 as String,tenantName: null == tenantName ? _self.tenantName : tenantName // ignore: cast_nullable_to_non_nullable
 as String,theme: freezed == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
@@ -12738,7 +12780,14 @@ mixin _$CreatedTenant {
 /// this tenant, within the server's artifacts.allowed_types; empty inherits.
 @JsonKey(name: 'artifact_types') List<String> get artifactTypes;/// CreatedAt is when the tenant was created, RFC 3339.
 @JsonKey(name: 'created_at')@TixDateTime() DateTime? get createdAt;/// DeletedAt is when the tenant was deleted, RFC 3339. Absent on a live tenant.
-@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? get deletedAt;/// ID is the tenant's unique identifier.
+@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? get deletedAt;/// Icon is a text icon, one emoji or a one or two letter monogram, drawn beside
+/// the tenant's name wherever tenants are listed to switch between. At most one
+/// of Icon, IconName and IconImage is set; with none, a surface draws a
+/// monogram of the name.
+@JsonKey(name: 'icon') String get icon;/// IconImage is the digest of an uploaded icon image, whose bytes are read from
+/// GET /api/v1/tenants/{ref}/icon.
+@JsonKey(name: 'icon_image') String get iconImage;/// IconName names one of the built-in icons, the same set a project offers.
+@JsonKey(name: 'icon_name') String get iconName;/// ID is the tenant's unique identifier.
 @JsonKey(name: 'id') String get id;/// InitialCredentials carries every password the server generated, in plain
 /// text, exactly once. Nothing stores it and no later call returns it; a caller
 /// that discards it has to set a new password.
@@ -12794,20 +12843,20 @@ $CreatedTenantCopyWith<CreatedTenant> get copyWith => _$CreatedTenantCopyWithImp
 @override
 bool operator ==(Object other) {
   final _this = this as CreatedTenant;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreatedTenant&&const DeepCollectionEquality().equals(other.admins, _this.admins)&&(identical(other.artifactMaxBytes, _this.artifactMaxBytes) || other.artifactMaxBytes == _this.artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _this.artifactTypes)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&const DeepCollectionEquality().equals(other.initialCredentials, _this.initialCredentials)&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.mfaRequiredAt, _this.mfaRequiredAt) || other.mfaRequiredAt == _this.mfaRequiredAt)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.sessionIdleTimeout, _this.sessionIdleTimeout) || other.sessionIdleTimeout == _this.sessionIdleTimeout)&&(identical(other.sessionRememberOff, _this.sessionRememberOff) || other.sessionRememberOff == _this.sessionRememberOff)&&(identical(other.sessionRememberTtl, _this.sessionRememberTtl) || other.sessionRememberTtl == _this.sessionRememberTtl)&&(identical(other.sessionTtl, _this.sessionTtl) || other.sessionTtl == _this.sessionTtl)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreatedTenant&&const DeepCollectionEquality().equals(other.admins, _this.admins)&&(identical(other.artifactMaxBytes, _this.artifactMaxBytes) || other.artifactMaxBytes == _this.artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _this.artifactTypes)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&(identical(other.icon, _this.icon) || other.icon == _this.icon)&&(identical(other.iconImage, _this.iconImage) || other.iconImage == _this.iconImage)&&(identical(other.iconName, _this.iconName) || other.iconName == _this.iconName)&&(identical(other.id, _this.id) || other.id == _this.id)&&const DeepCollectionEquality().equals(other.initialCredentials, _this.initialCredentials)&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.mfaRequiredAt, _this.mfaRequiredAt) || other.mfaRequiredAt == _this.mfaRequiredAt)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.sessionIdleTimeout, _this.sessionIdleTimeout) || other.sessionIdleTimeout == _this.sessionIdleTimeout)&&(identical(other.sessionRememberOff, _this.sessionRememberOff) || other.sessionRememberOff == _this.sessionRememberOff)&&(identical(other.sessionRememberTtl, _this.sessionRememberTtl) || other.sessionRememberTtl == _this.sessionRememberTtl)&&(identical(other.sessionTtl, _this.sessionTtl) || other.sessionTtl == _this.sessionTtl)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as CreatedTenant;
-  return Object.hashAll([runtimeType,const DeepCollectionEquality().hash(_this.admins),_this.artifactMaxBytes,const DeepCollectionEquality().hash(_this.artifactTypes),_this.createdAt,_this.deletedAt,_this.id,const DeepCollectionEquality().hash(_this.initialCredentials),_this.key,_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.mfaRequiredAt,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.sessionIdleTimeout,_this.sessionRememberOff,_this.sessionRememberTtl,_this.sessionTtl,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff,_this.updatedAt]);
+  return Object.hashAll([runtimeType,const DeepCollectionEquality().hash(_this.admins),_this.artifactMaxBytes,const DeepCollectionEquality().hash(_this.artifactTypes),_this.createdAt,_this.deletedAt,_this.icon,_this.iconImage,_this.iconName,_this.id,const DeepCollectionEquality().hash(_this.initialCredentials),_this.key,_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.mfaRequiredAt,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.sessionIdleTimeout,_this.sessionRememberOff,_this.sessionRememberTtl,_this.sessionTtl,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff,_this.updatedAt]);
 }
 
 @override
 String toString() {
   final _this = this as CreatedTenant;
-  return 'CreatedTenant(admins: ${_this.admins}, artifactMaxBytes: ${_this.artifactMaxBytes}, artifactTypes: ${_this.artifactTypes}, createdAt: ${_this.createdAt}, deletedAt: ${_this.deletedAt}, id: ${_this.id}, initialCredentials: ${_this.initialCredentials}, key: ${_this.key}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, mfaRequiredAt: ${_this.mfaRequiredAt}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, sessionIdleTimeout: ${_this.sessionIdleTimeout}, sessionRememberOff: ${_this.sessionRememberOff}, sessionRememberTtl: ${_this.sessionRememberTtl}, sessionTtl: ${_this.sessionTtl}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff}, updatedAt: ${_this.updatedAt})';
+  return 'CreatedTenant(admins: ${_this.admins}, artifactMaxBytes: ${_this.artifactMaxBytes}, artifactTypes: ${_this.artifactTypes}, createdAt: ${_this.createdAt}, deletedAt: ${_this.deletedAt}, icon: ${_this.icon}, iconImage: ${_this.iconImage}, iconName: ${_this.iconName}, id: ${_this.id}, initialCredentials: ${_this.initialCredentials}, key: ${_this.key}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, mfaRequiredAt: ${_this.mfaRequiredAt}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, sessionIdleTimeout: ${_this.sessionIdleTimeout}, sessionRememberOff: ${_this.sessionRememberOff}, sessionRememberTtl: ${_this.sessionRememberTtl}, sessionTtl: ${_this.sessionTtl}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -12818,7 +12867,7 @@ abstract mixin class $CreatedTenantCopyWith<$Res>  {
   factory $CreatedTenantCopyWith(CreatedTenant value, $Res Function(CreatedTenant) _then) = _$CreatedTenantCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'admins') List<CreatedAdmin> admins,@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'initial_credentials') List<InitialCredential> initialCredentials,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String sessionIdleTimeout,@JsonKey(name: 'session_remember_off') bool sessionRememberOff,@JsonKey(name: 'session_remember_ttl') String sessionRememberTtl,@JsonKey(name: 'session_ttl') String sessionTtl,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'admins') List<CreatedAdmin> admins,@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'icon') String icon,@JsonKey(name: 'icon_image') String iconImage,@JsonKey(name: 'icon_name') String iconName,@JsonKey(name: 'id') String id,@JsonKey(name: 'initial_credentials') List<InitialCredential> initialCredentials,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String sessionIdleTimeout,@JsonKey(name: 'session_remember_off') bool sessionRememberOff,@JsonKey(name: 'session_remember_ttl') String sessionRememberTtl,@JsonKey(name: 'session_ttl') String sessionTtl,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -12835,14 +12884,17 @@ class _$CreatedTenantCopyWithImpl<$Res>
 
 /// Create a copy of CreatedTenant
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? admins = null,Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? initialCredentials = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? sessionIdleTimeout = null,Object? sessionRememberOff = null,Object? sessionRememberTtl = null,Object? sessionTtl = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? admins = null,Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? icon = null,Object? iconImage = null,Object? iconName = null,Object? id = null,Object? initialCredentials = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? sessionIdleTimeout = null,Object? sessionRememberOff = null,Object? sessionRememberTtl = null,Object? sessionTtl = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
   return _then(CreatedTenant(
 admins: null == admins ? _self.admins : admins // ignore: cast_nullable_to_non_nullable
 as List<CreatedAdmin>,artifactMaxBytes: null == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
 as int,artifactTypes: null == artifactTypes ? _self.artifactTypes : artifactTypes // ignore: cast_nullable_to_non_nullable
 as List<String>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as DateTime?,icon: null == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
+as String,iconImage: null == iconImage ? _self.iconImage : iconImage // ignore: cast_nullable_to_non_nullable
+as String,iconName: null == iconName ? _self.iconName : iconName // ignore: cast_nullable_to_non_nullable
+as String,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,initialCredentials: null == initialCredentials ? _self.initialCredentials : initialCredentials // ignore: cast_nullable_to_non_nullable
 as List<InitialCredential>,key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
 as String,leaseDefault: null == leaseDefault ? _self.leaseDefault : leaseDefault // ignore: cast_nullable_to_non_nullable
@@ -12948,10 +13000,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'icon')  String icon, @JsonKey(name: 'icon_image')  String iconImage, @JsonKey(name: 'icon_name')  String iconName, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CreatedTenant() when $default != null:
-return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.icon,_that.iconImage,_that.iconName,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -12969,10 +13021,10 @@ return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.cr
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'icon')  String icon, @JsonKey(name: 'icon_image')  String iconImage, @JsonKey(name: 'icon_name')  String iconName, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _CreatedTenant():
-return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.icon,_that.iconImage,_that.iconName,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -12989,10 +13041,10 @@ return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.cr
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'admins')  List<CreatedAdmin> admins, @JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'icon')  String icon, @JsonKey(name: 'icon_image')  String iconImage, @JsonKey(name: 'icon_name')  String iconName, @JsonKey(name: 'id')  String id, @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _CreatedTenant() when $default != null:
-return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.icon,_that.iconImage,_that.iconName,_that.id,_that.initialCredentials,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   return null;
 
 }
@@ -13004,7 +13056,7 @@ return $default(_that.admins,_that.artifactMaxBytes,_that.artifactTypes,_that.cr
 @JsonSerializable()
 
 class _CreatedTenant implements CreatedTenant {
-  const _CreatedTenant({@JsonKey(name: 'admins')  List<CreatedAdmin> admins = const <CreatedAdmin>[], @JsonKey(name: 'artifact_max_bytes') this.artifactMaxBytes = 0, @JsonKey(name: 'artifact_types')  List<String> artifactTypes = const <String>[], @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials = const <InitialCredential>[], @JsonKey(name: 'key') this.key = '', @JsonKey(name: 'lease_default') this.leaseDefault = '', @JsonKey(name: 'lease_max') this.leaseMax = '', @JsonKey(name: 'mfa_grace') this.mfaGrace = '', @JsonKey(name: 'mfa_policy') this.mfaPolicy = '', @JsonKey(name: 'mfa_required_at')@TixDateTime() this.mfaRequiredAt, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'require_totp_cli') this.requireTotpCli = false, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh = false, @JsonKey(name: 'require_totp_web') this.requireTotpWeb = false, @JsonKey(name: 'session_idle_timeout') this.sessionIdleTimeout = '', @JsonKey(name: 'session_remember_off') this.sessionRememberOff = false, @JsonKey(name: 'session_remember_ttl') this.sessionRememberTtl = '', @JsonKey(name: 'session_ttl') this.sessionTtl = '', @JsonKey(name: 'theme') this.theme = '', @JsonKey(name: 'time_format') this.timeFormat = '', @JsonKey(name: 'timezone') this.timezone = '', @JsonKey(name: 'trash_off') this.trashOff = false, @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt}): _admins = admins,_artifactTypes = artifactTypes,_initialCredentials = initialCredentials;
+  const _CreatedTenant({@JsonKey(name: 'admins')  List<CreatedAdmin> admins = const <CreatedAdmin>[], @JsonKey(name: 'artifact_max_bytes') this.artifactMaxBytes = 0, @JsonKey(name: 'artifact_types')  List<String> artifactTypes = const <String>[], @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'icon') this.icon = '', @JsonKey(name: 'icon_image') this.iconImage = '', @JsonKey(name: 'icon_name') this.iconName = '', @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'initial_credentials')  List<InitialCredential> initialCredentials = const <InitialCredential>[], @JsonKey(name: 'key') this.key = '', @JsonKey(name: 'lease_default') this.leaseDefault = '', @JsonKey(name: 'lease_max') this.leaseMax = '', @JsonKey(name: 'mfa_grace') this.mfaGrace = '', @JsonKey(name: 'mfa_policy') this.mfaPolicy = '', @JsonKey(name: 'mfa_required_at')@TixDateTime() this.mfaRequiredAt, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'require_totp_cli') this.requireTotpCli = false, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh = false, @JsonKey(name: 'require_totp_web') this.requireTotpWeb = false, @JsonKey(name: 'session_idle_timeout') this.sessionIdleTimeout = '', @JsonKey(name: 'session_remember_off') this.sessionRememberOff = false, @JsonKey(name: 'session_remember_ttl') this.sessionRememberTtl = '', @JsonKey(name: 'session_ttl') this.sessionTtl = '', @JsonKey(name: 'theme') this.theme = '', @JsonKey(name: 'time_format') this.timeFormat = '', @JsonKey(name: 'timezone') this.timezone = '', @JsonKey(name: 'trash_off') this.trashOff = false, @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt}): _admins = admins,_artifactTypes = artifactTypes,_initialCredentials = initialCredentials;
   factory _CreatedTenant.fromJson(Map<String, dynamic> json) => _$CreatedTenantFromJson(json);
 
 /// Admins are the administrators created with the tenant, in the order they
@@ -13036,6 +13088,16 @@ class _CreatedTenant implements CreatedTenant {
 @override@JsonKey(name: 'created_at')@TixDateTime() final  DateTime? createdAt;
 /// DeletedAt is when the tenant was deleted, RFC 3339. Absent on a live tenant.
 @override@JsonKey(name: 'deleted_at')@TixDateTime() final  DateTime? deletedAt;
+/// Icon is a text icon, one emoji or a one or two letter monogram, drawn beside
+/// the tenant's name wherever tenants are listed to switch between. At most one
+/// of Icon, IconName and IconImage is set; with none, a surface draws a
+/// monogram of the name.
+@override@JsonKey(name: 'icon') final  String icon;
+/// IconImage is the digest of an uploaded icon image, whose bytes are read from
+/// GET /api/v1/tenants/{ref}/icon.
+@override@JsonKey(name: 'icon_image') final  String iconImage;
+/// IconName names one of the built-in icons, the same set a project offers.
+@override@JsonKey(name: 'icon_name') final  String iconName;
 /// ID is the tenant's unique identifier.
 @override@JsonKey(name: 'id') final  String id;
 /// InitialCredentials carries every password the server generated, in plain
@@ -13122,18 +13184,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreatedTenant&&const DeepCollectionEquality().equals(other.admins, _admins)&&(identical(other.artifactMaxBytes, artifactMaxBytes) || other.artifactMaxBytes == artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _artifactTypes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.initialCredentials, _initialCredentials)&&(identical(other.key, key) || other.key == key)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.mfaRequiredAt, mfaRequiredAt) || other.mfaRequiredAt == mfaRequiredAt)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.sessionIdleTimeout, sessionIdleTimeout) || other.sessionIdleTimeout == sessionIdleTimeout)&&(identical(other.sessionRememberOff, sessionRememberOff) || other.sessionRememberOff == sessionRememberOff)&&(identical(other.sessionRememberTtl, sessionRememberTtl) || other.sessionRememberTtl == sessionRememberTtl)&&(identical(other.sessionTtl, sessionTtl) || other.sessionTtl == sessionTtl)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreatedTenant&&const DeepCollectionEquality().equals(other.admins, _admins)&&(identical(other.artifactMaxBytes, artifactMaxBytes) || other.artifactMaxBytes == artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _artifactTypes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage)&&(identical(other.iconName, iconName) || other.iconName == iconName)&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.initialCredentials, _initialCredentials)&&(identical(other.key, key) || other.key == key)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.mfaRequiredAt, mfaRequiredAt) || other.mfaRequiredAt == mfaRequiredAt)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.sessionIdleTimeout, sessionIdleTimeout) || other.sessionIdleTimeout == sessionIdleTimeout)&&(identical(other.sessionRememberOff, sessionRememberOff) || other.sessionRememberOff == sessionRememberOff)&&(identical(other.sessionRememberTtl, sessionRememberTtl) || other.sessionRememberTtl == sessionRememberTtl)&&(identical(other.sessionTtl, sessionTtl) || other.sessionTtl == sessionTtl)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hashAll([runtimeType,const DeepCollectionEquality().hash(_admins),artifactMaxBytes,const DeepCollectionEquality().hash(_artifactTypes),createdAt,deletedAt,id,const DeepCollectionEquality().hash(_initialCredentials),key,leaseDefault,leaseMax,mfaGrace,mfaPolicy,mfaRequiredAt,name,requireTotpCli,requireTotpSsh,requireTotpWeb,sessionIdleTimeout,sessionRememberOff,sessionRememberTtl,sessionTtl,theme,timeFormat,timezone,trashOff,updatedAt]);
+    return Object.hashAll([runtimeType,const DeepCollectionEquality().hash(_admins),artifactMaxBytes,const DeepCollectionEquality().hash(_artifactTypes),createdAt,deletedAt,icon,iconImage,iconName,id,const DeepCollectionEquality().hash(_initialCredentials),key,leaseDefault,leaseMax,mfaGrace,mfaPolicy,mfaRequiredAt,name,requireTotpCli,requireTotpSsh,requireTotpWeb,sessionIdleTimeout,sessionRememberOff,sessionRememberTtl,sessionTtl,theme,timeFormat,timezone,trashOff,updatedAt]);
 }
 
 @override
 String toString() {
-    return 'CreatedTenant(admins: $admins, artifactMaxBytes: $artifactMaxBytes, artifactTypes: $artifactTypes, createdAt: $createdAt, deletedAt: $deletedAt, id: $id, initialCredentials: $initialCredentials, key: $key, leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, mfaRequiredAt: $mfaRequiredAt, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, sessionIdleTimeout: $sessionIdleTimeout, sessionRememberOff: $sessionRememberOff, sessionRememberTtl: $sessionRememberTtl, sessionTtl: $sessionTtl, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff, updatedAt: $updatedAt)';
+    return 'CreatedTenant(admins: $admins, artifactMaxBytes: $artifactMaxBytes, artifactTypes: $artifactTypes, createdAt: $createdAt, deletedAt: $deletedAt, icon: $icon, iconImage: $iconImage, iconName: $iconName, id: $id, initialCredentials: $initialCredentials, key: $key, leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, mfaRequiredAt: $mfaRequiredAt, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, sessionIdleTimeout: $sessionIdleTimeout, sessionRememberOff: $sessionRememberOff, sessionRememberTtl: $sessionRememberTtl, sessionTtl: $sessionTtl, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff, updatedAt: $updatedAt)';
 }
 
 
@@ -13144,7 +13206,7 @@ abstract mixin class _$CreatedTenantCopyWith<$Res> implements $CreatedTenantCopy
   factory _$CreatedTenantCopyWith(_CreatedTenant value, $Res Function(_CreatedTenant) _then) = __$CreatedTenantCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'admins') List<CreatedAdmin> admins,@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'initial_credentials') List<InitialCredential> initialCredentials,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String sessionIdleTimeout,@JsonKey(name: 'session_remember_off') bool sessionRememberOff,@JsonKey(name: 'session_remember_ttl') String sessionRememberTtl,@JsonKey(name: 'session_ttl') String sessionTtl,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'admins') List<CreatedAdmin> admins,@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'icon') String icon,@JsonKey(name: 'icon_image') String iconImage,@JsonKey(name: 'icon_name') String iconName,@JsonKey(name: 'id') String id,@JsonKey(name: 'initial_credentials') List<InitialCredential> initialCredentials,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String sessionIdleTimeout,@JsonKey(name: 'session_remember_off') bool sessionRememberOff,@JsonKey(name: 'session_remember_ttl') String sessionRememberTtl,@JsonKey(name: 'session_ttl') String sessionTtl,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -13161,14 +13223,17 @@ class __$CreatedTenantCopyWithImpl<$Res>
 
 /// Create a copy of CreatedTenant
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? admins = null,Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? initialCredentials = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? sessionIdleTimeout = null,Object? sessionRememberOff = null,Object? sessionRememberTtl = null,Object? sessionTtl = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? admins = null,Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? icon = null,Object? iconImage = null,Object? iconName = null,Object? id = null,Object? initialCredentials = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? sessionIdleTimeout = null,Object? sessionRememberOff = null,Object? sessionRememberTtl = null,Object? sessionTtl = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
   return _then(_CreatedTenant(
 admins: null == admins ? _self._admins : admins // ignore: cast_nullable_to_non_nullable
 as List<CreatedAdmin>,artifactMaxBytes: null == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
 as int,artifactTypes: null == artifactTypes ? _self._artifactTypes : artifactTypes // ignore: cast_nullable_to_non_nullable
 as List<String>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as DateTime?,icon: null == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
+as String,iconImage: null == iconImage ? _self.iconImage : iconImage // ignore: cast_nullable_to_non_nullable
+as String,iconName: null == iconName ? _self.iconName : iconName // ignore: cast_nullable_to_non_nullable
+as String,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,initialCredentials: null == initialCredentials ? _self._initialCredentials : initialCredentials // ignore: cast_nullable_to_non_nullable
 as List<InitialCredential>,key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
 as String,leaseDefault: null == leaseDefault ? _self.leaseDefault : leaseDefault // ignore: cast_nullable_to_non_nullable
@@ -49900,7 +49965,14 @@ mixin _$Tenant {
 /// this tenant, within the server's artifacts.allowed_types; empty inherits.
 @JsonKey(name: 'artifact_types') List<String> get artifactTypes;/// CreatedAt is when the tenant was created, RFC 3339.
 @JsonKey(name: 'created_at')@TixDateTime() DateTime? get createdAt;/// DeletedAt is when the tenant was deleted, RFC 3339. Absent on a live tenant.
-@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? get deletedAt;/// ID is the tenant's unique identifier.
+@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? get deletedAt;/// Icon is a text icon, one emoji or a one or two letter monogram, drawn beside
+/// the tenant's name wherever tenants are listed to switch between. At most one
+/// of Icon, IconName and IconImage is set; with none, a surface draws a
+/// monogram of the name.
+@JsonKey(name: 'icon') String get icon;/// IconImage is the digest of an uploaded icon image, whose bytes are read from
+/// GET /api/v1/tenants/{ref}/icon.
+@JsonKey(name: 'icon_image') String get iconImage;/// IconName names one of the built-in icons, the same set a project offers.
+@JsonKey(name: 'icon_name') String get iconName;/// ID is the tenant's unique identifier.
 @JsonKey(name: 'id') String get id;/// Key is the tenant's short, unique, human-readable key, used to refer to it
 /// in place of the ID.
 @JsonKey(name: 'key') String get key;/// LeaseDefault is how long a claim on this tenant's tasks holds when the
@@ -49953,20 +50025,20 @@ $TenantCopyWith<Tenant> get copyWith => _$TenantCopyWithImpl<Tenant>(this as Ten
 @override
 bool operator ==(Object other) {
   final _this = this as Tenant;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Tenant&&(identical(other.artifactMaxBytes, _this.artifactMaxBytes) || other.artifactMaxBytes == _this.artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _this.artifactTypes)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.mfaRequiredAt, _this.mfaRequiredAt) || other.mfaRequiredAt == _this.mfaRequiredAt)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.sessionIdleTimeout, _this.sessionIdleTimeout) || other.sessionIdleTimeout == _this.sessionIdleTimeout)&&(identical(other.sessionRememberOff, _this.sessionRememberOff) || other.sessionRememberOff == _this.sessionRememberOff)&&(identical(other.sessionRememberTtl, _this.sessionRememberTtl) || other.sessionRememberTtl == _this.sessionRememberTtl)&&(identical(other.sessionTtl, _this.sessionTtl) || other.sessionTtl == _this.sessionTtl)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Tenant&&(identical(other.artifactMaxBytes, _this.artifactMaxBytes) || other.artifactMaxBytes == _this.artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _this.artifactTypes)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt)&&(identical(other.icon, _this.icon) || other.icon == _this.icon)&&(identical(other.iconImage, _this.iconImage) || other.iconImage == _this.iconImage)&&(identical(other.iconName, _this.iconName) || other.iconName == _this.iconName)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.mfaRequiredAt, _this.mfaRequiredAt) || other.mfaRequiredAt == _this.mfaRequiredAt)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.sessionIdleTimeout, _this.sessionIdleTimeout) || other.sessionIdleTimeout == _this.sessionIdleTimeout)&&(identical(other.sessionRememberOff, _this.sessionRememberOff) || other.sessionRememberOff == _this.sessionRememberOff)&&(identical(other.sessionRememberTtl, _this.sessionRememberTtl) || other.sessionRememberTtl == _this.sessionRememberTtl)&&(identical(other.sessionTtl, _this.sessionTtl) || other.sessionTtl == _this.sessionTtl)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Tenant;
-  return Object.hashAll([runtimeType,_this.artifactMaxBytes,const DeepCollectionEquality().hash(_this.artifactTypes),_this.createdAt,_this.deletedAt,_this.id,_this.key,_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.mfaRequiredAt,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.sessionIdleTimeout,_this.sessionRememberOff,_this.sessionRememberTtl,_this.sessionTtl,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff,_this.updatedAt]);
+  return Object.hashAll([runtimeType,_this.artifactMaxBytes,const DeepCollectionEquality().hash(_this.artifactTypes),_this.createdAt,_this.deletedAt,_this.icon,_this.iconImage,_this.iconName,_this.id,_this.key,_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.mfaRequiredAt,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.sessionIdleTimeout,_this.sessionRememberOff,_this.sessionRememberTtl,_this.sessionTtl,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff,_this.updatedAt]);
 }
 
 @override
 String toString() {
   final _this = this as Tenant;
-  return 'Tenant(artifactMaxBytes: ${_this.artifactMaxBytes}, artifactTypes: ${_this.artifactTypes}, createdAt: ${_this.createdAt}, deletedAt: ${_this.deletedAt}, id: ${_this.id}, key: ${_this.key}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, mfaRequiredAt: ${_this.mfaRequiredAt}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, sessionIdleTimeout: ${_this.sessionIdleTimeout}, sessionRememberOff: ${_this.sessionRememberOff}, sessionRememberTtl: ${_this.sessionRememberTtl}, sessionTtl: ${_this.sessionTtl}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff}, updatedAt: ${_this.updatedAt})';
+  return 'Tenant(artifactMaxBytes: ${_this.artifactMaxBytes}, artifactTypes: ${_this.artifactTypes}, createdAt: ${_this.createdAt}, deletedAt: ${_this.deletedAt}, icon: ${_this.icon}, iconImage: ${_this.iconImage}, iconName: ${_this.iconName}, id: ${_this.id}, key: ${_this.key}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, mfaRequiredAt: ${_this.mfaRequiredAt}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, sessionIdleTimeout: ${_this.sessionIdleTimeout}, sessionRememberOff: ${_this.sessionRememberOff}, sessionRememberTtl: ${_this.sessionRememberTtl}, sessionTtl: ${_this.sessionTtl}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -49977,7 +50049,7 @@ abstract mixin class $TenantCopyWith<$Res>  {
   factory $TenantCopyWith(Tenant value, $Res Function(Tenant) _then) = _$TenantCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String sessionIdleTimeout,@JsonKey(name: 'session_remember_off') bool sessionRememberOff,@JsonKey(name: 'session_remember_ttl') String sessionRememberTtl,@JsonKey(name: 'session_ttl') String sessionTtl,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'icon') String icon,@JsonKey(name: 'icon_image') String iconImage,@JsonKey(name: 'icon_name') String iconName,@JsonKey(name: 'id') String id,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String sessionIdleTimeout,@JsonKey(name: 'session_remember_off') bool sessionRememberOff,@JsonKey(name: 'session_remember_ttl') String sessionRememberTtl,@JsonKey(name: 'session_ttl') String sessionTtl,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -49994,13 +50066,16 @@ class _$TenantCopyWithImpl<$Res>
 
 /// Create a copy of Tenant
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? sessionIdleTimeout = null,Object? sessionRememberOff = null,Object? sessionRememberTtl = null,Object? sessionTtl = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? icon = null,Object? iconImage = null,Object? iconName = null,Object? id = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? sessionIdleTimeout = null,Object? sessionRememberOff = null,Object? sessionRememberTtl = null,Object? sessionTtl = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
   return _then(Tenant(
 artifactMaxBytes: null == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
 as int,artifactTypes: null == artifactTypes ? _self.artifactTypes : artifactTypes // ignore: cast_nullable_to_non_nullable
 as List<String>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as DateTime?,icon: null == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
+as String,iconImage: null == iconImage ? _self.iconImage : iconImage // ignore: cast_nullable_to_non_nullable
+as String,iconName: null == iconName ? _self.iconName : iconName // ignore: cast_nullable_to_non_nullable
+as String,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
 as String,leaseDefault: null == leaseDefault ? _self.leaseDefault : leaseDefault // ignore: cast_nullable_to_non_nullable
 as String,leaseMax: null == leaseMax ? _self.leaseMax : leaseMax // ignore: cast_nullable_to_non_nullable
@@ -50105,10 +50180,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'icon')  String icon, @JsonKey(name: 'icon_image')  String iconImage, @JsonKey(name: 'icon_name')  String iconName, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Tenant() when $default != null:
-return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.icon,_that.iconImage,_that.iconName,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -50126,10 +50201,10 @@ return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'icon')  String icon, @JsonKey(name: 'icon_image')  String iconImage, @JsonKey(name: 'icon_name')  String iconName, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Tenant():
-return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.icon,_that.iconImage,_that.iconName,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -50146,10 +50221,10 @@ return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'artifact_max_bytes')  int artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String> artifactTypes, @JsonKey(name: 'created_at')@TixDateTime()  DateTime? createdAt, @JsonKey(name: 'deleted_at')@TixDateTime()  DateTime? deletedAt, @JsonKey(name: 'icon')  String icon, @JsonKey(name: 'icon_image')  String iconImage, @JsonKey(name: 'icon_name')  String iconName, @JsonKey(name: 'id')  String id, @JsonKey(name: 'key')  String key, @JsonKey(name: 'lease_default')  String leaseDefault, @JsonKey(name: 'lease_max')  String leaseMax, @JsonKey(name: 'mfa_grace')  String mfaGrace, @JsonKey(name: 'mfa_policy')  String mfaPolicy, @JsonKey(name: 'mfa_required_at')@TixDateTime()  DateTime? mfaRequiredAt, @JsonKey(name: 'name')  String name, @JsonKey(name: 'require_totp_cli')  bool requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String sessionIdleTimeout, @JsonKey(name: 'session_remember_off')  bool sessionRememberOff, @JsonKey(name: 'session_remember_ttl')  String sessionRememberTtl, @JsonKey(name: 'session_ttl')  String sessionTtl, @JsonKey(name: 'theme')  String theme, @JsonKey(name: 'time_format')  String timeFormat, @JsonKey(name: 'timezone')  String timezone, @JsonKey(name: 'trash_off')  bool trashOff, @JsonKey(name: 'updated_at')@TixDateTime()  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Tenant() when $default != null:
-return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that.deletedAt,_that.icon,_that.iconImage,_that.iconName,_that.id,_that.key,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.mfaRequiredAt,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberOff,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff,_that.updatedAt);case _:
   return null;
 
 }
@@ -50161,7 +50236,7 @@ return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.createdAt,_that
 @JsonSerializable()
 
 class _Tenant implements Tenant {
-  const _Tenant({@JsonKey(name: 'artifact_max_bytes') this.artifactMaxBytes = 0, @JsonKey(name: 'artifact_types')  List<String> artifactTypes = const <String>[], @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'key') this.key = '', @JsonKey(name: 'lease_default') this.leaseDefault = '', @JsonKey(name: 'lease_max') this.leaseMax = '', @JsonKey(name: 'mfa_grace') this.mfaGrace = '', @JsonKey(name: 'mfa_policy') this.mfaPolicy = '', @JsonKey(name: 'mfa_required_at')@TixDateTime() this.mfaRequiredAt, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'require_totp_cli') this.requireTotpCli = false, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh = false, @JsonKey(name: 'require_totp_web') this.requireTotpWeb = false, @JsonKey(name: 'session_idle_timeout') this.sessionIdleTimeout = '', @JsonKey(name: 'session_remember_off') this.sessionRememberOff = false, @JsonKey(name: 'session_remember_ttl') this.sessionRememberTtl = '', @JsonKey(name: 'session_ttl') this.sessionTtl = '', @JsonKey(name: 'theme') this.theme = '', @JsonKey(name: 'time_format') this.timeFormat = '', @JsonKey(name: 'timezone') this.timezone = '', @JsonKey(name: 'trash_off') this.trashOff = false, @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt}): _artifactTypes = artifactTypes;
+  const _Tenant({@JsonKey(name: 'artifact_max_bytes') this.artifactMaxBytes = 0, @JsonKey(name: 'artifact_types')  List<String> artifactTypes = const <String>[], @JsonKey(name: 'created_at')@TixDateTime() this.createdAt, @JsonKey(name: 'deleted_at')@TixDateTime() this.deletedAt, @JsonKey(name: 'icon') this.icon = '', @JsonKey(name: 'icon_image') this.iconImage = '', @JsonKey(name: 'icon_name') this.iconName = '', @JsonKey(name: 'id') this.id = '', @JsonKey(name: 'key') this.key = '', @JsonKey(name: 'lease_default') this.leaseDefault = '', @JsonKey(name: 'lease_max') this.leaseMax = '', @JsonKey(name: 'mfa_grace') this.mfaGrace = '', @JsonKey(name: 'mfa_policy') this.mfaPolicy = '', @JsonKey(name: 'mfa_required_at')@TixDateTime() this.mfaRequiredAt, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'require_totp_cli') this.requireTotpCli = false, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh = false, @JsonKey(name: 'require_totp_web') this.requireTotpWeb = false, @JsonKey(name: 'session_idle_timeout') this.sessionIdleTimeout = '', @JsonKey(name: 'session_remember_off') this.sessionRememberOff = false, @JsonKey(name: 'session_remember_ttl') this.sessionRememberTtl = '', @JsonKey(name: 'session_ttl') this.sessionTtl = '', @JsonKey(name: 'theme') this.theme = '', @JsonKey(name: 'time_format') this.timeFormat = '', @JsonKey(name: 'timezone') this.timezone = '', @JsonKey(name: 'trash_off') this.trashOff = false, @JsonKey(name: 'updated_at')@TixDateTime() this.updatedAt}): _artifactTypes = artifactTypes;
   factory _Tenant.fromJson(Map<String, dynamic> json) => _$TenantFromJson(json);
 
 /// ArtifactMaxBytes is the largest artifact blob this tenant accepts. It can
@@ -50182,6 +50257,16 @@ class _Tenant implements Tenant {
 @override@JsonKey(name: 'created_at')@TixDateTime() final  DateTime? createdAt;
 /// DeletedAt is when the tenant was deleted, RFC 3339. Absent on a live tenant.
 @override@JsonKey(name: 'deleted_at')@TixDateTime() final  DateTime? deletedAt;
+/// Icon is a text icon, one emoji or a one or two letter monogram, drawn beside
+/// the tenant's name wherever tenants are listed to switch between. At most one
+/// of Icon, IconName and IconImage is set; with none, a surface draws a
+/// monogram of the name.
+@override@JsonKey(name: 'icon') final  String icon;
+/// IconImage is the digest of an uploaded icon image, whose bytes are read from
+/// GET /api/v1/tenants/{ref}/icon.
+@override@JsonKey(name: 'icon_image') final  String iconImage;
+/// IconName names one of the built-in icons, the same set a project offers.
+@override@JsonKey(name: 'icon_name') final  String iconName;
 /// ID is the tenant's unique identifier.
 @override@JsonKey(name: 'id') final  String id;
 /// Key is the tenant's short, unique, human-readable key, used to refer to it
@@ -50255,18 +50340,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Tenant&&(identical(other.artifactMaxBytes, artifactMaxBytes) || other.artifactMaxBytes == artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _artifactTypes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.id, id) || other.id == id)&&(identical(other.key, key) || other.key == key)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.mfaRequiredAt, mfaRequiredAt) || other.mfaRequiredAt == mfaRequiredAt)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.sessionIdleTimeout, sessionIdleTimeout) || other.sessionIdleTimeout == sessionIdleTimeout)&&(identical(other.sessionRememberOff, sessionRememberOff) || other.sessionRememberOff == sessionRememberOff)&&(identical(other.sessionRememberTtl, sessionRememberTtl) || other.sessionRememberTtl == sessionRememberTtl)&&(identical(other.sessionTtl, sessionTtl) || other.sessionTtl == sessionTtl)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Tenant&&(identical(other.artifactMaxBytes, artifactMaxBytes) || other.artifactMaxBytes == artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _artifactTypes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage)&&(identical(other.iconName, iconName) || other.iconName == iconName)&&(identical(other.id, id) || other.id == id)&&(identical(other.key, key) || other.key == key)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.mfaRequiredAt, mfaRequiredAt) || other.mfaRequiredAt == mfaRequiredAt)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.sessionIdleTimeout, sessionIdleTimeout) || other.sessionIdleTimeout == sessionIdleTimeout)&&(identical(other.sessionRememberOff, sessionRememberOff) || other.sessionRememberOff == sessionRememberOff)&&(identical(other.sessionRememberTtl, sessionRememberTtl) || other.sessionRememberTtl == sessionRememberTtl)&&(identical(other.sessionTtl, sessionTtl) || other.sessionTtl == sessionTtl)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hashAll([runtimeType,artifactMaxBytes,const DeepCollectionEquality().hash(_artifactTypes),createdAt,deletedAt,id,key,leaseDefault,leaseMax,mfaGrace,mfaPolicy,mfaRequiredAt,name,requireTotpCli,requireTotpSsh,requireTotpWeb,sessionIdleTimeout,sessionRememberOff,sessionRememberTtl,sessionTtl,theme,timeFormat,timezone,trashOff,updatedAt]);
+    return Object.hashAll([runtimeType,artifactMaxBytes,const DeepCollectionEquality().hash(_artifactTypes),createdAt,deletedAt,icon,iconImage,iconName,id,key,leaseDefault,leaseMax,mfaGrace,mfaPolicy,mfaRequiredAt,name,requireTotpCli,requireTotpSsh,requireTotpWeb,sessionIdleTimeout,sessionRememberOff,sessionRememberTtl,sessionTtl,theme,timeFormat,timezone,trashOff,updatedAt]);
 }
 
 @override
 String toString() {
-    return 'Tenant(artifactMaxBytes: $artifactMaxBytes, artifactTypes: $artifactTypes, createdAt: $createdAt, deletedAt: $deletedAt, id: $id, key: $key, leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, mfaRequiredAt: $mfaRequiredAt, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, sessionIdleTimeout: $sessionIdleTimeout, sessionRememberOff: $sessionRememberOff, sessionRememberTtl: $sessionRememberTtl, sessionTtl: $sessionTtl, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff, updatedAt: $updatedAt)';
+    return 'Tenant(artifactMaxBytes: $artifactMaxBytes, artifactTypes: $artifactTypes, createdAt: $createdAt, deletedAt: $deletedAt, icon: $icon, iconImage: $iconImage, iconName: $iconName, id: $id, key: $key, leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, mfaRequiredAt: $mfaRequiredAt, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, sessionIdleTimeout: $sessionIdleTimeout, sessionRememberOff: $sessionRememberOff, sessionRememberTtl: $sessionRememberTtl, sessionTtl: $sessionTtl, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff, updatedAt: $updatedAt)';
 }
 
 
@@ -50277,7 +50362,7 @@ abstract mixin class _$TenantCopyWith<$Res> implements $TenantCopyWith<$Res> {
   factory _$TenantCopyWith(_Tenant value, $Res Function(_Tenant) _then) = __$TenantCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'id') String id,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String sessionIdleTimeout,@JsonKey(name: 'session_remember_off') bool sessionRememberOff,@JsonKey(name: 'session_remember_ttl') String sessionRememberTtl,@JsonKey(name: 'session_ttl') String sessionTtl,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
+@JsonKey(name: 'artifact_max_bytes') int artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String> artifactTypes,@JsonKey(name: 'created_at')@TixDateTime() DateTime? createdAt,@JsonKey(name: 'deleted_at')@TixDateTime() DateTime? deletedAt,@JsonKey(name: 'icon') String icon,@JsonKey(name: 'icon_image') String iconImage,@JsonKey(name: 'icon_name') String iconName,@JsonKey(name: 'id') String id,@JsonKey(name: 'key') String key,@JsonKey(name: 'lease_default') String leaseDefault,@JsonKey(name: 'lease_max') String leaseMax,@JsonKey(name: 'mfa_grace') String mfaGrace,@JsonKey(name: 'mfa_policy') String mfaPolicy,@JsonKey(name: 'mfa_required_at')@TixDateTime() DateTime? mfaRequiredAt,@JsonKey(name: 'name') String name,@JsonKey(name: 'require_totp_cli') bool requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool requireTotpSsh,@JsonKey(name: 'require_totp_web') bool requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String sessionIdleTimeout,@JsonKey(name: 'session_remember_off') bool sessionRememberOff,@JsonKey(name: 'session_remember_ttl') String sessionRememberTtl,@JsonKey(name: 'session_ttl') String sessionTtl,@JsonKey(name: 'theme') String theme,@JsonKey(name: 'time_format') String timeFormat,@JsonKey(name: 'timezone') String timezone,@JsonKey(name: 'trash_off') bool trashOff,@JsonKey(name: 'updated_at')@TixDateTime() DateTime? updatedAt
 });
 
 
@@ -50294,13 +50379,16 @@ class __$TenantCopyWithImpl<$Res>
 
 /// Create a copy of Tenant
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? id = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? sessionIdleTimeout = null,Object? sessionRememberOff = null,Object? sessionRememberTtl = null,Object? sessionTtl = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? artifactMaxBytes = null,Object? artifactTypes = null,Object? createdAt = freezed,Object? deletedAt = freezed,Object? icon = null,Object? iconImage = null,Object? iconName = null,Object? id = null,Object? key = null,Object? leaseDefault = null,Object? leaseMax = null,Object? mfaGrace = null,Object? mfaPolicy = null,Object? mfaRequiredAt = freezed,Object? name = null,Object? requireTotpCli = null,Object? requireTotpSsh = null,Object? requireTotpWeb = null,Object? sessionIdleTimeout = null,Object? sessionRememberOff = null,Object? sessionRememberTtl = null,Object? sessionTtl = null,Object? theme = null,Object? timeFormat = null,Object? timezone = null,Object? trashOff = null,Object? updatedAt = freezed,}) {
   return _then(_Tenant(
 artifactMaxBytes: null == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
 as int,artifactTypes: null == artifactTypes ? _self._artifactTypes : artifactTypes // ignore: cast_nullable_to_non_nullable
 as List<String>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as DateTime?,icon: null == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
+as String,iconImage: null == iconImage ? _self.iconImage : iconImage // ignore: cast_nullable_to_non_nullable
+as String,iconName: null == iconName ? _self.iconName : iconName // ignore: cast_nullable_to_non_nullable
+as String,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
 as String,leaseDefault: null == leaseDefault ? _self.leaseDefault : leaseDefault // ignore: cast_nullable_to_non_nullable
 as String,leaseMax: null == leaseMax ? _self.leaseMax : leaseMax // ignore: cast_nullable_to_non_nullable
@@ -54471,7 +54559,14 @@ mixin _$UpdateTenantInput {
 @JsonKey(name: 'artifact_max_bytes') int? get artifactMaxBytes;/// ArtifactTypes narrows the media types an artifact blob may carry, such as
 /// ["image/*", "application/pdf"]. An empty list inherits the server's and
 /// omitted leaves it; a type the server does not accept is refused.
-@JsonKey(name: 'artifact_types') List<String>? get artifactTypes;/// LeaseDefault is the lease a claim on this tenant gets when nothing more
+@JsonKey(name: 'artifact_types') List<String>? get artifactTypes;/// Icon sets a text icon, one emoji or a one or two letter monogram, replacing
+/// any icon; empty clears the icon and omitted leaves it. At most one of Icon,
+/// IconName and IconFile may be set.
+@JsonKey(name: 'icon') String? get icon;/// IconFile sets an uploaded image icon, replacing any icon; omitted leaves the
+/// icon alone.
+@JsonKey(name: 'icon_file') ProjectIconFile? get iconFile;/// IconName sets a built-in icon, the same set a project offers, replacing any
+/// icon; empty clears the icon and omitted leaves it.
+@JsonKey(name: 'icon_name') String? get iconName;/// LeaseDefault is the lease a claim on this tenant gets when nothing more
 /// specific names one, a duration such as "30m". Zero clears it back to the
 /// deployment configuration and omitted leaves it alone. A default longer than
 /// the maximum the tenant would hold, sent or stored, is refused.
@@ -54527,20 +54622,20 @@ $UpdateTenantInputCopyWith<UpdateTenantInput> get copyWith => _$UpdateTenantInpu
 @override
 bool operator ==(Object other) {
   final _this = this as UpdateTenantInput;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateTenantInput&&(identical(other.artifactMaxBytes, _this.artifactMaxBytes) || other.artifactMaxBytes == _this.artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _this.artifactTypes)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.sessionIdleTimeout, _this.sessionIdleTimeout) || other.sessionIdleTimeout == _this.sessionIdleTimeout)&&(identical(other.sessionRememberTtl, _this.sessionRememberTtl) || other.sessionRememberTtl == _this.sessionRememberTtl)&&(identical(other.sessionTtl, _this.sessionTtl) || other.sessionTtl == _this.sessionTtl)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateTenantInput&&(identical(other.artifactMaxBytes, _this.artifactMaxBytes) || other.artifactMaxBytes == _this.artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _this.artifactTypes)&&(identical(other.icon, _this.icon) || other.icon == _this.icon)&&(identical(other.iconFile, _this.iconFile) || other.iconFile == _this.iconFile)&&(identical(other.iconName, _this.iconName) || other.iconName == _this.iconName)&&(identical(other.leaseDefault, _this.leaseDefault) || other.leaseDefault == _this.leaseDefault)&&(identical(other.leaseMax, _this.leaseMax) || other.leaseMax == _this.leaseMax)&&(identical(other.mfaGrace, _this.mfaGrace) || other.mfaGrace == _this.mfaGrace)&&(identical(other.mfaPolicy, _this.mfaPolicy) || other.mfaPolicy == _this.mfaPolicy)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.requireTotpCli, _this.requireTotpCli) || other.requireTotpCli == _this.requireTotpCli)&&(identical(other.requireTotpSsh, _this.requireTotpSsh) || other.requireTotpSsh == _this.requireTotpSsh)&&(identical(other.requireTotpWeb, _this.requireTotpWeb) || other.requireTotpWeb == _this.requireTotpWeb)&&(identical(other.sessionIdleTimeout, _this.sessionIdleTimeout) || other.sessionIdleTimeout == _this.sessionIdleTimeout)&&(identical(other.sessionRememberTtl, _this.sessionRememberTtl) || other.sessionRememberTtl == _this.sessionRememberTtl)&&(identical(other.sessionTtl, _this.sessionTtl) || other.sessionTtl == _this.sessionTtl)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.timeFormat, _this.timeFormat) || other.timeFormat == _this.timeFormat)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.trashOff, _this.trashOff) || other.trashOff == _this.trashOff));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as UpdateTenantInput;
-  return Object.hash(runtimeType,_this.artifactMaxBytes,const DeepCollectionEquality().hash(_this.artifactTypes),_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.sessionIdleTimeout,_this.sessionRememberTtl,_this.sessionTtl,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff);
+  return Object.hashAll([runtimeType,_this.artifactMaxBytes,const DeepCollectionEquality().hash(_this.artifactTypes),_this.icon,_this.iconFile,_this.iconName,_this.leaseDefault,_this.leaseMax,_this.mfaGrace,_this.mfaPolicy,_this.name,_this.requireTotpCli,_this.requireTotpSsh,_this.requireTotpWeb,_this.sessionIdleTimeout,_this.sessionRememberTtl,_this.sessionTtl,_this.theme,_this.timeFormat,_this.timezone,_this.trashOff]);
 }
 
 @override
 String toString() {
   final _this = this as UpdateTenantInput;
-  return 'UpdateTenantInput(artifactMaxBytes: ${_this.artifactMaxBytes}, artifactTypes: ${_this.artifactTypes}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, sessionIdleTimeout: ${_this.sessionIdleTimeout}, sessionRememberTtl: ${_this.sessionRememberTtl}, sessionTtl: ${_this.sessionTtl}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff})';
+  return 'UpdateTenantInput(artifactMaxBytes: ${_this.artifactMaxBytes}, artifactTypes: ${_this.artifactTypes}, icon: ${_this.icon}, iconFile: ${_this.iconFile}, iconName: ${_this.iconName}, leaseDefault: ${_this.leaseDefault}, leaseMax: ${_this.leaseMax}, mfaGrace: ${_this.mfaGrace}, mfaPolicy: ${_this.mfaPolicy}, name: ${_this.name}, requireTotpCli: ${_this.requireTotpCli}, requireTotpSsh: ${_this.requireTotpSsh}, requireTotpWeb: ${_this.requireTotpWeb}, sessionIdleTimeout: ${_this.sessionIdleTimeout}, sessionRememberTtl: ${_this.sessionRememberTtl}, sessionTtl: ${_this.sessionTtl}, theme: ${_this.theme}, timeFormat: ${_this.timeFormat}, timezone: ${_this.timezone}, trashOff: ${_this.trashOff})';
 }
 
 
@@ -54551,11 +54646,11 @@ abstract mixin class $UpdateTenantInputCopyWith<$Res>  {
   factory $UpdateTenantInputCopyWith(UpdateTenantInput value, $Res Function(UpdateTenantInput) _then) = _$UpdateTenantInputCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'artifact_max_bytes') int? artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String>? artifactTypes,@JsonKey(name: 'lease_default') String? leaseDefault,@JsonKey(name: 'lease_max') String? leaseMax,@JsonKey(name: 'mfa_grace') String? mfaGrace,@JsonKey(name: 'mfa_policy') String? mfaPolicy,@JsonKey(name: 'name') String? name,@JsonKey(name: 'require_totp_cli') bool? requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool? requireTotpSsh,@JsonKey(name: 'require_totp_web') bool? requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String? sessionIdleTimeout,@JsonKey(name: 'session_remember_ttl') String? sessionRememberTtl,@JsonKey(name: 'session_ttl') String? sessionTtl,@JsonKey(name: 'theme') String? theme,@JsonKey(name: 'time_format') String? timeFormat,@JsonKey(name: 'timezone') String? timezone,@JsonKey(name: 'trash_off') bool? trashOff
+@JsonKey(name: 'artifact_max_bytes') int? artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String>? artifactTypes,@JsonKey(name: 'icon') String? icon,@JsonKey(name: 'icon_file') ProjectIconFile? iconFile,@JsonKey(name: 'icon_name') String? iconName,@JsonKey(name: 'lease_default') String? leaseDefault,@JsonKey(name: 'lease_max') String? leaseMax,@JsonKey(name: 'mfa_grace') String? mfaGrace,@JsonKey(name: 'mfa_policy') String? mfaPolicy,@JsonKey(name: 'name') String? name,@JsonKey(name: 'require_totp_cli') bool? requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool? requireTotpSsh,@JsonKey(name: 'require_totp_web') bool? requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String? sessionIdleTimeout,@JsonKey(name: 'session_remember_ttl') String? sessionRememberTtl,@JsonKey(name: 'session_ttl') String? sessionTtl,@JsonKey(name: 'theme') String? theme,@JsonKey(name: 'time_format') String? timeFormat,@JsonKey(name: 'timezone') String? timezone,@JsonKey(name: 'trash_off') bool? trashOff
 });
 
 
-
+$ProjectIconFileCopyWith<$Res>? get iconFile;
 
 }
 /// @nodoc
@@ -54568,11 +54663,14 @@ class _$UpdateTenantInputCopyWithImpl<$Res>
 
 /// Create a copy of UpdateTenantInput
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? artifactMaxBytes = freezed,Object? artifactTypes = freezed,Object? leaseDefault = freezed,Object? leaseMax = freezed,Object? mfaGrace = freezed,Object? mfaPolicy = freezed,Object? name = freezed,Object? requireTotpCli = freezed,Object? requireTotpSsh = freezed,Object? requireTotpWeb = freezed,Object? sessionIdleTimeout = freezed,Object? sessionRememberTtl = freezed,Object? sessionTtl = freezed,Object? theme = freezed,Object? timeFormat = freezed,Object? timezone = freezed,Object? trashOff = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? artifactMaxBytes = freezed,Object? artifactTypes = freezed,Object? icon = freezed,Object? iconFile = freezed,Object? iconName = freezed,Object? leaseDefault = freezed,Object? leaseMax = freezed,Object? mfaGrace = freezed,Object? mfaPolicy = freezed,Object? name = freezed,Object? requireTotpCli = freezed,Object? requireTotpSsh = freezed,Object? requireTotpWeb = freezed,Object? sessionIdleTimeout = freezed,Object? sessionRememberTtl = freezed,Object? sessionTtl = freezed,Object? theme = freezed,Object? timeFormat = freezed,Object? timezone = freezed,Object? trashOff = freezed,}) {
   return _then(UpdateTenantInput(
 artifactMaxBytes: freezed == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
 as int?,artifactTypes: freezed == artifactTypes ? _self.artifactTypes : artifactTypes // ignore: cast_nullable_to_non_nullable
-as List<String>?,leaseDefault: freezed == leaseDefault ? _self.leaseDefault : leaseDefault // ignore: cast_nullable_to_non_nullable
+as List<String>?,icon: freezed == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
+as String?,iconFile: freezed == iconFile ? _self.iconFile : iconFile // ignore: cast_nullable_to_non_nullable
+as ProjectIconFile?,iconName: freezed == iconName ? _self.iconName : iconName // ignore: cast_nullable_to_non_nullable
+as String?,leaseDefault: freezed == leaseDefault ? _self.leaseDefault : leaseDefault // ignore: cast_nullable_to_non_nullable
 as String?,leaseMax: freezed == leaseMax ? _self.leaseMax : leaseMax // ignore: cast_nullable_to_non_nullable
 as String?,mfaGrace: freezed == mfaGrace ? _self.mfaGrace : mfaGrace // ignore: cast_nullable_to_non_nullable
 as String?,mfaPolicy: freezed == mfaPolicy ? _self.mfaPolicy : mfaPolicy // ignore: cast_nullable_to_non_nullable
@@ -54590,7 +54688,19 @@ as String?,trashOff: freezed == trashOff ? _self.trashOff : trashOff // ignore: 
 as bool?,
   ));
 }
+/// Create a copy of UpdateTenantInput
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ProjectIconFileCopyWith<$Res>? get iconFile {
+    if (_self.iconFile == null) {
+    return null;
+  }
 
+  return $ProjectIconFileCopyWith<$Res>(_self.iconFile!, (value) {
+    return _then(_self.copyWith(iconFile: value));
+  });
+}
 }
 
 
@@ -54672,10 +54782,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int? artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String? sessionIdleTimeout, @JsonKey(name: 'session_remember_ttl')  String? sessionRememberTtl, @JsonKey(name: 'session_ttl')  String? sessionTtl, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int? artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'icon')  String? icon, @JsonKey(name: 'icon_file')  ProjectIconFile? iconFile, @JsonKey(name: 'icon_name')  String? iconName, @JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String? sessionIdleTimeout, @JsonKey(name: 'session_remember_ttl')  String? sessionRememberTtl, @JsonKey(name: 'session_ttl')  String? sessionTtl, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UpdateTenantInput() when $default != null:
-return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.icon,_that.iconFile,_that.iconName,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
   return orElse();
 
 }
@@ -54693,10 +54803,10 @@ return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int? artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String? sessionIdleTimeout, @JsonKey(name: 'session_remember_ttl')  String? sessionRememberTtl, @JsonKey(name: 'session_ttl')  String? sessionTtl, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'artifact_max_bytes')  int? artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'icon')  String? icon, @JsonKey(name: 'icon_file')  ProjectIconFile? iconFile, @JsonKey(name: 'icon_name')  String? iconName, @JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String? sessionIdleTimeout, @JsonKey(name: 'session_remember_ttl')  String? sessionRememberTtl, @JsonKey(name: 'session_ttl')  String? sessionTtl, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)  $default,) {final _that = this;
 switch (_that) {
 case _UpdateTenantInput():
-return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.icon,_that.iconFile,_that.iconName,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -54713,10 +54823,10 @@ return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'artifact_max_bytes')  int? artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String? sessionIdleTimeout, @JsonKey(name: 'session_remember_ttl')  String? sessionRememberTtl, @JsonKey(name: 'session_ttl')  String? sessionTtl, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'artifact_max_bytes')  int? artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'icon')  String? icon, @JsonKey(name: 'icon_file')  ProjectIconFile? iconFile, @JsonKey(name: 'icon_name')  String? iconName, @JsonKey(name: 'lease_default')  String? leaseDefault, @JsonKey(name: 'lease_max')  String? leaseMax, @JsonKey(name: 'mfa_grace')  String? mfaGrace, @JsonKey(name: 'mfa_policy')  String? mfaPolicy, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'require_totp_cli')  bool? requireTotpCli, @JsonKey(name: 'require_totp_ssh')  bool? requireTotpSsh, @JsonKey(name: 'require_totp_web')  bool? requireTotpWeb, @JsonKey(name: 'session_idle_timeout')  String? sessionIdleTimeout, @JsonKey(name: 'session_remember_ttl')  String? sessionRememberTtl, @JsonKey(name: 'session_ttl')  String? sessionTtl, @JsonKey(name: 'theme')  String? theme, @JsonKey(name: 'time_format')  String? timeFormat, @JsonKey(name: 'timezone')  String? timezone, @JsonKey(name: 'trash_off')  bool? trashOff)?  $default,) {final _that = this;
 switch (_that) {
 case _UpdateTenantInput() when $default != null:
-return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
+return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.icon,_that.iconFile,_that.iconName,_that.leaseDefault,_that.leaseMax,_that.mfaGrace,_that.mfaPolicy,_that.name,_that.requireTotpCli,_that.requireTotpSsh,_that.requireTotpWeb,_that.sessionIdleTimeout,_that.sessionRememberTtl,_that.sessionTtl,_that.theme,_that.timeFormat,_that.timezone,_that.trashOff);case _:
   return null;
 
 }
@@ -54728,7 +54838,7 @@ return $default(_that.artifactMaxBytes,_that.artifactTypes,_that.leaseDefault,_t
 @JsonSerializable()
 
 class _UpdateTenantInput implements UpdateTenantInput {
-  const _UpdateTenantInput({@JsonKey(name: 'artifact_max_bytes') this.artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'lease_default') this.leaseDefault, @JsonKey(name: 'lease_max') this.leaseMax, @JsonKey(name: 'mfa_grace') this.mfaGrace, @JsonKey(name: 'mfa_policy') this.mfaPolicy, @JsonKey(name: 'name') this.name, @JsonKey(name: 'require_totp_cli') this.requireTotpCli, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh, @JsonKey(name: 'require_totp_web') this.requireTotpWeb, @JsonKey(name: 'session_idle_timeout') this.sessionIdleTimeout, @JsonKey(name: 'session_remember_ttl') this.sessionRememberTtl, @JsonKey(name: 'session_ttl') this.sessionTtl, @JsonKey(name: 'theme') this.theme, @JsonKey(name: 'time_format') this.timeFormat, @JsonKey(name: 'timezone') this.timezone, @JsonKey(name: 'trash_off') this.trashOff}): _artifactTypes = artifactTypes;
+  const _UpdateTenantInput({@JsonKey(name: 'artifact_max_bytes') this.artifactMaxBytes, @JsonKey(name: 'artifact_types')  List<String>? artifactTypes, @JsonKey(name: 'icon') this.icon, @JsonKey(name: 'icon_file') this.iconFile, @JsonKey(name: 'icon_name') this.iconName, @JsonKey(name: 'lease_default') this.leaseDefault, @JsonKey(name: 'lease_max') this.leaseMax, @JsonKey(name: 'mfa_grace') this.mfaGrace, @JsonKey(name: 'mfa_policy') this.mfaPolicy, @JsonKey(name: 'name') this.name, @JsonKey(name: 'require_totp_cli') this.requireTotpCli, @JsonKey(name: 'require_totp_ssh') this.requireTotpSsh, @JsonKey(name: 'require_totp_web') this.requireTotpWeb, @JsonKey(name: 'session_idle_timeout') this.sessionIdleTimeout, @JsonKey(name: 'session_remember_ttl') this.sessionRememberTtl, @JsonKey(name: 'session_ttl') this.sessionTtl, @JsonKey(name: 'theme') this.theme, @JsonKey(name: 'time_format') this.timeFormat, @JsonKey(name: 'timezone') this.timezone, @JsonKey(name: 'trash_off') this.trashOff}): _artifactTypes = artifactTypes;
   factory _UpdateTenantInput.fromJson(Map<String, dynamic> json) => _$UpdateTenantInputFromJson(json);
 
 /// ArtifactMaxBytes lowers the largest artifact blob this tenant accepts below
@@ -54750,6 +54860,16 @@ class _UpdateTenantInput implements UpdateTenantInput {
   return EqualUnmodifiableListView(value);
 }
 
+/// Icon sets a text icon, one emoji or a one or two letter monogram, replacing
+/// any icon; empty clears the icon and omitted leaves it. At most one of Icon,
+/// IconName and IconFile may be set.
+@override@JsonKey(name: 'icon') final  String? icon;
+/// IconFile sets an uploaded image icon, replacing any icon; omitted leaves the
+/// icon alone.
+@override@JsonKey(name: 'icon_file') final  ProjectIconFile? iconFile;
+/// IconName sets a built-in icon, the same set a project offers, replacing any
+/// icon; empty clears the icon and omitted leaves it.
+@override@JsonKey(name: 'icon_name') final  String? iconName;
 /// LeaseDefault is the lease a claim on this tenant gets when nothing more
 /// specific names one, a duration such as "30m". Zero clears it back to the
 /// deployment configuration and omitted leaves it alone. A default longer than
@@ -54821,18 +54941,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateTenantInput&&(identical(other.artifactMaxBytes, artifactMaxBytes) || other.artifactMaxBytes == artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _artifactTypes)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.sessionIdleTimeout, sessionIdleTimeout) || other.sessionIdleTimeout == sessionIdleTimeout)&&(identical(other.sessionRememberTtl, sessionRememberTtl) || other.sessionRememberTtl == sessionRememberTtl)&&(identical(other.sessionTtl, sessionTtl) || other.sessionTtl == sessionTtl)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateTenantInput&&(identical(other.artifactMaxBytes, artifactMaxBytes) || other.artifactMaxBytes == artifactMaxBytes)&&const DeepCollectionEquality().equals(other.artifactTypes, _artifactTypes)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.iconFile, iconFile) || other.iconFile == iconFile)&&(identical(other.iconName, iconName) || other.iconName == iconName)&&(identical(other.leaseDefault, leaseDefault) || other.leaseDefault == leaseDefault)&&(identical(other.leaseMax, leaseMax) || other.leaseMax == leaseMax)&&(identical(other.mfaGrace, mfaGrace) || other.mfaGrace == mfaGrace)&&(identical(other.mfaPolicy, mfaPolicy) || other.mfaPolicy == mfaPolicy)&&(identical(other.name, name) || other.name == name)&&(identical(other.requireTotpCli, requireTotpCli) || other.requireTotpCli == requireTotpCli)&&(identical(other.requireTotpSsh, requireTotpSsh) || other.requireTotpSsh == requireTotpSsh)&&(identical(other.requireTotpWeb, requireTotpWeb) || other.requireTotpWeb == requireTotpWeb)&&(identical(other.sessionIdleTimeout, sessionIdleTimeout) || other.sessionIdleTimeout == sessionIdleTimeout)&&(identical(other.sessionRememberTtl, sessionRememberTtl) || other.sessionRememberTtl == sessionRememberTtl)&&(identical(other.sessionTtl, sessionTtl) || other.sessionTtl == sessionTtl)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.timeFormat, timeFormat) || other.timeFormat == timeFormat)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.trashOff, trashOff) || other.trashOff == trashOff));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,artifactMaxBytes,const DeepCollectionEquality().hash(_artifactTypes),leaseDefault,leaseMax,mfaGrace,mfaPolicy,name,requireTotpCli,requireTotpSsh,requireTotpWeb,sessionIdleTimeout,sessionRememberTtl,sessionTtl,theme,timeFormat,timezone,trashOff);
+    return Object.hashAll([runtimeType,artifactMaxBytes,const DeepCollectionEquality().hash(_artifactTypes),icon,iconFile,iconName,leaseDefault,leaseMax,mfaGrace,mfaPolicy,name,requireTotpCli,requireTotpSsh,requireTotpWeb,sessionIdleTimeout,sessionRememberTtl,sessionTtl,theme,timeFormat,timezone,trashOff]);
 }
 
 @override
 String toString() {
-    return 'UpdateTenantInput(artifactMaxBytes: $artifactMaxBytes, artifactTypes: $artifactTypes, leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, sessionIdleTimeout: $sessionIdleTimeout, sessionRememberTtl: $sessionRememberTtl, sessionTtl: $sessionTtl, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff)';
+    return 'UpdateTenantInput(artifactMaxBytes: $artifactMaxBytes, artifactTypes: $artifactTypes, icon: $icon, iconFile: $iconFile, iconName: $iconName, leaseDefault: $leaseDefault, leaseMax: $leaseMax, mfaGrace: $mfaGrace, mfaPolicy: $mfaPolicy, name: $name, requireTotpCli: $requireTotpCli, requireTotpSsh: $requireTotpSsh, requireTotpWeb: $requireTotpWeb, sessionIdleTimeout: $sessionIdleTimeout, sessionRememberTtl: $sessionRememberTtl, sessionTtl: $sessionTtl, theme: $theme, timeFormat: $timeFormat, timezone: $timezone, trashOff: $trashOff)';
 }
 
 
@@ -54843,11 +54963,11 @@ abstract mixin class _$UpdateTenantInputCopyWith<$Res> implements $UpdateTenantI
   factory _$UpdateTenantInputCopyWith(_UpdateTenantInput value, $Res Function(_UpdateTenantInput) _then) = __$UpdateTenantInputCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'artifact_max_bytes') int? artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String>? artifactTypes,@JsonKey(name: 'lease_default') String? leaseDefault,@JsonKey(name: 'lease_max') String? leaseMax,@JsonKey(name: 'mfa_grace') String? mfaGrace,@JsonKey(name: 'mfa_policy') String? mfaPolicy,@JsonKey(name: 'name') String? name,@JsonKey(name: 'require_totp_cli') bool? requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool? requireTotpSsh,@JsonKey(name: 'require_totp_web') bool? requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String? sessionIdleTimeout,@JsonKey(name: 'session_remember_ttl') String? sessionRememberTtl,@JsonKey(name: 'session_ttl') String? sessionTtl,@JsonKey(name: 'theme') String? theme,@JsonKey(name: 'time_format') String? timeFormat,@JsonKey(name: 'timezone') String? timezone,@JsonKey(name: 'trash_off') bool? trashOff
+@JsonKey(name: 'artifact_max_bytes') int? artifactMaxBytes,@JsonKey(name: 'artifact_types') List<String>? artifactTypes,@JsonKey(name: 'icon') String? icon,@JsonKey(name: 'icon_file') ProjectIconFile? iconFile,@JsonKey(name: 'icon_name') String? iconName,@JsonKey(name: 'lease_default') String? leaseDefault,@JsonKey(name: 'lease_max') String? leaseMax,@JsonKey(name: 'mfa_grace') String? mfaGrace,@JsonKey(name: 'mfa_policy') String? mfaPolicy,@JsonKey(name: 'name') String? name,@JsonKey(name: 'require_totp_cli') bool? requireTotpCli,@JsonKey(name: 'require_totp_ssh') bool? requireTotpSsh,@JsonKey(name: 'require_totp_web') bool? requireTotpWeb,@JsonKey(name: 'session_idle_timeout') String? sessionIdleTimeout,@JsonKey(name: 'session_remember_ttl') String? sessionRememberTtl,@JsonKey(name: 'session_ttl') String? sessionTtl,@JsonKey(name: 'theme') String? theme,@JsonKey(name: 'time_format') String? timeFormat,@JsonKey(name: 'timezone') String? timezone,@JsonKey(name: 'trash_off') bool? trashOff
 });
 
 
-
+@override $ProjectIconFileCopyWith<$Res>? get iconFile;
 
 }
 /// @nodoc
@@ -54860,11 +54980,14 @@ class __$UpdateTenantInputCopyWithImpl<$Res>
 
 /// Create a copy of UpdateTenantInput
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? artifactMaxBytes = freezed,Object? artifactTypes = freezed,Object? leaseDefault = freezed,Object? leaseMax = freezed,Object? mfaGrace = freezed,Object? mfaPolicy = freezed,Object? name = freezed,Object? requireTotpCli = freezed,Object? requireTotpSsh = freezed,Object? requireTotpWeb = freezed,Object? sessionIdleTimeout = freezed,Object? sessionRememberTtl = freezed,Object? sessionTtl = freezed,Object? theme = freezed,Object? timeFormat = freezed,Object? timezone = freezed,Object? trashOff = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? artifactMaxBytes = freezed,Object? artifactTypes = freezed,Object? icon = freezed,Object? iconFile = freezed,Object? iconName = freezed,Object? leaseDefault = freezed,Object? leaseMax = freezed,Object? mfaGrace = freezed,Object? mfaPolicy = freezed,Object? name = freezed,Object? requireTotpCli = freezed,Object? requireTotpSsh = freezed,Object? requireTotpWeb = freezed,Object? sessionIdleTimeout = freezed,Object? sessionRememberTtl = freezed,Object? sessionTtl = freezed,Object? theme = freezed,Object? timeFormat = freezed,Object? timezone = freezed,Object? trashOff = freezed,}) {
   return _then(_UpdateTenantInput(
 artifactMaxBytes: freezed == artifactMaxBytes ? _self.artifactMaxBytes : artifactMaxBytes // ignore: cast_nullable_to_non_nullable
 as int?,artifactTypes: freezed == artifactTypes ? _self._artifactTypes : artifactTypes // ignore: cast_nullable_to_non_nullable
-as List<String>?,leaseDefault: freezed == leaseDefault ? _self.leaseDefault : leaseDefault // ignore: cast_nullable_to_non_nullable
+as List<String>?,icon: freezed == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
+as String?,iconFile: freezed == iconFile ? _self.iconFile : iconFile // ignore: cast_nullable_to_non_nullable
+as ProjectIconFile?,iconName: freezed == iconName ? _self.iconName : iconName // ignore: cast_nullable_to_non_nullable
+as String?,leaseDefault: freezed == leaseDefault ? _self.leaseDefault : leaseDefault // ignore: cast_nullable_to_non_nullable
 as String?,leaseMax: freezed == leaseMax ? _self.leaseMax : leaseMax // ignore: cast_nullable_to_non_nullable
 as String?,mfaGrace: freezed == mfaGrace ? _self.mfaGrace : mfaGrace // ignore: cast_nullable_to_non_nullable
 as String?,mfaPolicy: freezed == mfaPolicy ? _self.mfaPolicy : mfaPolicy // ignore: cast_nullable_to_non_nullable
@@ -54883,7 +55006,19 @@ as bool?,
   ));
 }
 
+/// Create a copy of UpdateTenantInput
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ProjectIconFileCopyWith<$Res>? get iconFile {
+    if (_self.iconFile == null) {
+    return null;
+  }
 
+  return $ProjectIconFileCopyWith<$Res>(_self.iconFile!, (value) {
+    return _then(_self.copyWith(iconFile: value));
+  });
+}
 }
 
 

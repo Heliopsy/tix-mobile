@@ -1,5 +1,5 @@
 {
-  "commit": "522e5cecdc5f9f7de779c683cb85961e4dd6c341",
+  "commit": "27923cb573ce465cca676f736f98c06b58f23093",
   "pages": {
     "README.md": [
       "documentation",
@@ -44,6 +44,7 @@
       "routes",
       "calendar-feed",
       "project-appearance",
+      "tenant-icons",
       "deleting-a-project",
       "changing-a-projects-key",
       "updating-a-task",
@@ -343,6 +344,7 @@
     "tenancy.md": [
       "tenancy",
       "tenants",
+      "tenant-icon",
       "first-admins",
       "global-admins",
       "the-second-factor-policy",

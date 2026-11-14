@@ -153,6 +153,18 @@ abstract class AccountMembership with _$AccountMembership {
     /// is served only on a shared host.
     @JsonKey(name: 'host') @Default('') String host,
 
+    /// Icon is the tenant's text icon, one emoji or a one or two letter monogram.
+    /// At most one of Icon, IconName and IconImage is set; with none a surface
+    /// draws a monogram of the tenant's name.
+    @JsonKey(name: 'icon') @Default('') String icon,
+
+    /// IconImage is the digest of the tenant's uploaded icon image, whose bytes are
+    /// read from GET /api/v1/tenants/{ref}/icon.
+    @JsonKey(name: 'icon_image') @Default('') String iconImage,
+
+    /// IconName names the tenant's built-in icon, from the set projects use.
+    @JsonKey(name: 'icon_name') @Default('') String iconName,
+
     /// Role is the role the membership grants.
     @JsonKey(name: 'role', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
     Role? role,
@@ -237,6 +249,18 @@ abstract class Actor with _$Actor {
     @JsonKey(name: 'session_expires_at')
     @TixDateTime()
     DateTime? sessionExpiresAt,
+
+    /// TenantIcon is the text icon of the actor's tenant, on the answer to WhoAmI.
+    /// At most one of the three tenant icon fields is set.
+    @JsonKey(name: 'tenant_icon') @Default('') String tenantIcon,
+
+    /// TenantIconImage is the digest of the uploaded icon image of the actor's
+    /// tenant, on the answer to WhoAmI, read from GET /api/v1/tenants/{ref}/icon.
+    @JsonKey(name: 'tenant_icon_image') @Default('') String tenantIconImage,
+
+    /// TenantIconName is the built-in icon of the actor's tenant, on the answer to
+    /// WhoAmI.
+    @JsonKey(name: 'tenant_icon_name') @Default('') String tenantIconName,
 
     /// TenantID is the tenant the actor acts in.
     @JsonKey(name: 'tenant_id') @Default('') String tenantId,
@@ -1534,6 +1558,19 @@ abstract class CreatedTenant with _$CreatedTenant {
 
     /// DeletedAt is when the tenant was deleted, RFC 3339. Absent on a live tenant.
     @JsonKey(name: 'deleted_at') @TixDateTime() DateTime? deletedAt,
+
+    /// Icon is a text icon, one emoji or a one or two letter monogram, drawn beside
+    /// the tenant's name wherever tenants are listed to switch between. At most one
+    /// of Icon, IconName and IconImage is set; with none, a surface draws a
+    /// monogram of the name.
+    @JsonKey(name: 'icon') @Default('') String icon,
+
+    /// IconImage is the digest of an uploaded icon image, whose bytes are read from
+    /// GET /api/v1/tenants/{ref}/icon.
+    @JsonKey(name: 'icon_image') @Default('') String iconImage,
+
+    /// IconName names one of the built-in icons, the same set a project offers.
+    @JsonKey(name: 'icon_name') @Default('') String iconName,
 
     /// ID is the tenant's unique identifier.
     @JsonKey(name: 'id') @Default('') String id,
@@ -5730,6 +5767,19 @@ abstract class Tenant with _$Tenant {
     /// DeletedAt is when the tenant was deleted, RFC 3339. Absent on a live tenant.
     @JsonKey(name: 'deleted_at') @TixDateTime() DateTime? deletedAt,
 
+    /// Icon is a text icon, one emoji or a one or two letter monogram, drawn beside
+    /// the tenant's name wherever tenants are listed to switch between. At most one
+    /// of Icon, IconName and IconImage is set; with none, a surface draws a
+    /// monogram of the name.
+    @JsonKey(name: 'icon') @Default('') String icon,
+
+    /// IconImage is the digest of an uploaded icon image, whose bytes are read from
+    /// GET /api/v1/tenants/{ref}/icon.
+    @JsonKey(name: 'icon_image') @Default('') String iconImage,
+
+    /// IconName names one of the built-in icons, the same set a project offers.
+    @JsonKey(name: 'icon_name') @Default('') String iconName,
+
     /// ID is the tenant's unique identifier.
     @JsonKey(name: 'id') @Default('') String id,
 
@@ -6295,6 +6345,19 @@ abstract class UpdateTenantInput with _$UpdateTenantInput {
     /// ["image/*", "application/pdf"]. An empty list inherits the server's and
     /// omitted leaves it; a type the server does not accept is refused.
     @JsonKey(name: 'artifact_types') List<String>? artifactTypes,
+
+    /// Icon sets a text icon, one emoji or a one or two letter monogram, replacing
+    /// any icon; empty clears the icon and omitted leaves it. At most one of Icon,
+    /// IconName and IconFile may be set.
+    @JsonKey(name: 'icon') String? icon,
+
+    /// IconFile sets an uploaded image icon, replacing any icon; omitted leaves the
+    /// icon alone.
+    @JsonKey(name: 'icon_file') ProjectIconFile? iconFile,
+
+    /// IconName sets a built-in icon, the same set a project offers, replacing any
+    /// icon; empty clears the icon and omitted leaves it.
+    @JsonKey(name: 'icon_name') String? iconName,
 
     /// LeaseDefault is the lease a claim on this tenant gets when nothing more
     /// specific names one, a duration such as "30m". Zero clears it back to the
