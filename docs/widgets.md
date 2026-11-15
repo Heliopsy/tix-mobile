@@ -299,7 +299,8 @@ iOS 18 adds two system entry points beside the home screen, both in the `TixWidg
   one. The app asks iOS to reload the controls after any change to its defaults (debounced), when it goes to the
   background and after a background refresh.
 - Control names and intent titles are in `Localizable.xcstrings`, which both targets copy. Siri phrases must live in
-  `ios/Runner/AppShortcuts.xcstrings`; each names the app (`${applicationName}`) in every language.
+  `ios/Runner/<lang>.lproj/AppShortcuts.strings` (Xcode takes `AppShortcuts.xcstrings` only from an iOS 17
+  deployment target, and the app's is iOS 15); each names the app (`${applicationName}`) in every language.
 - There is no Live Activity. One updated only by the running app would freeze on the Lock Screen as soon as the app
   leaves the foreground; it needs ActivityKit push updates from the tix server first.
 

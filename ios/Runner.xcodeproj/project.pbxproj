@@ -11,7 +11,7 @@
 		F64893078D68FBA1F5304471 /* OpenIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16573CF204DA2FC163806668 /* OpenIntents.swift */; };
 		C241D598D6D45C45764BB075 /* Controls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D9B022738CD682F2A08E16 /* Controls.swift */; };
 		0EEF4404554E34BBF6371703 /* TixAppShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95CBEA72D4E7F76D01E81DA1 /* TixAppShortcuts.swift */; };
-		CA5BA3BC795E31CB4317A13C /* AppShortcuts.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = CFF2036AAE5A36FEAA3CCC07 /* AppShortcuts.xcstrings */; };
+		CA5BA3BC795E31CB4317A13C /* AppShortcuts.strings in Resources */ = {isa = PBXBuildFile; fileRef = CFF2036AAE5A36FEAA3CCC07 /* AppShortcuts.strings */; };
 		186BF15B4A3AE9B53BE1CAC0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 065607BD1F93E2AC969E8BB7 /* Localizable.xcstrings */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		222EF7D53E231D4BAD23E95C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A60FF478504C0FA8410A79 /* Theme.swift */; };
@@ -83,10 +83,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		678C1C320A5EFE7A6A3CBFF1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AppShortcuts.strings; sourceTree = "<group>"; };
+		5EF9749E5479F6F480C7C585 /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/AppShortcuts.strings; sourceTree = "<group>"; };
+		B7A5BE8DE93413E7FBC69F4E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/AppShortcuts.strings; sourceTree = "<group>"; };
+		968D89F8264D4B6C650631F6 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/AppShortcuts.strings; sourceTree = "<group>"; };
 		16573CF204DA2FC163806668 /* OpenIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenIntents.swift; sourceTree = "<group>"; };
 		15D9B022738CD682F2A08E16 /* Controls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Controls.swift; sourceTree = "<group>"; };
 		95CBEA72D4E7F76D01E81DA1 /* TixAppShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TixAppShortcuts.swift; sourceTree = "<group>"; };
-		CFF2036AAE5A36FEAA3CCC07 /* AppShortcuts.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = AppShortcuts.xcstrings; sourceTree = "<group>"; };
 		065607BD1F93E2AC969E8BB7 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		0923EE3DFBC6D7FB5E1B0607 /* Providers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Providers.swift; sourceTree = "<group>"; };
 		13B23A8772F9C1399112B295 /* TixWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TixWidgets.entitlements; sourceTree = "<group>"; };
@@ -199,7 +202,7 @@
 				EF6B5B162D5CBF65A061E999 /* WidgetHeadless.swift */,
 				84DA5EB1BD509DF027FE1C2C /* Runner.entitlements */,
 				95CBEA72D4E7F76D01E81DA1 /* TixAppShortcuts.swift */,
-				CFF2036AAE5A36FEAA3CCC07 /* AppShortcuts.xcstrings */,
+				CFF2036AAE5A36FEAA3CCC07 /* AppShortcuts.strings */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -364,7 +367,7 @@
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
-				CA5BA3BC795E31CB4317A13C /* AppShortcuts.xcstrings in Resources */,
+				CA5BA3BC795E31CB4317A13C /* AppShortcuts.strings in Resources */,
 				186BF15B4A3AE9B53BE1CAC0 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -467,6 +470,17 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		CFF2036AAE5A36FEAA3CCC07 /* AppShortcuts.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				678C1C320A5EFE7A6A3CBFF1 /* en */,
+				5EF9749E5479F6F480C7C585 /* bg */,
+				B7A5BE8DE93413E7FBC69F4E /* de */,
+				968D89F8264D4B6C650631F6 /* fr */,
+			);
+			name = AppShortcuts.strings;
+			sourceTree = "<group>";
+		};
 		97C146FA1CF9000F007C117D /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

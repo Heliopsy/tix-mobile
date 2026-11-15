@@ -12,10 +12,9 @@ const _languages = ['en', 'bg', 'fr', 'de'];
 /// notification follow-up's.
 const _androidFiles = ['widget_strings.xml', 'app_strings.xml'];
 
-/// The String Catalogs: widget and control text, and the Siri phrases.
+/// The String Catalogs: widget, control and intent text.
 const _catalogs = [
   ('iOS and macOS widget text', 'ios/TixWidgets/Localizable.xcstrings'),
-  ('iOS Siri phrases', 'ios/Runner/AppShortcuts.xcstrings'),
 ];
 
 Map<String, String> _androidStrings(String dir, String file) {
@@ -63,22 +62,21 @@ void main() {
     });
   }
 
-  test('every Siri phrase names the app in every language', () {
-    final catalog = jsonDecode(
-      File('ios/Runner/AppShortcuts.xcstrings').readAsStringSync(),
-    ) as Map<String, dynamic>;
-    final strings = catalog['strings'] as Map<String, dynamic>;
-    for (final MapEntry(:key, :value) in strings.entries) {
-      expect(key, contains(r'${applicationName}'));
-      final local =
-          (value as Map<String, dynamic>)['localizations']
-              as Map<String, dynamic>;
-      for (final MapEntry(key: lang, value: unit) in local.entries) {
-        final text =
-            ((unit as Map<String, dynamic>)['stringUnit']
-                    as Map<String, dynamic>)['value']
-                as String;
-        expect(text, contains(r'${applicationName}'), reason: '$key in $lang');
+  test('every Siri phrase is translated and names the app', () {
+    Map<String, String> phrases(String lang) => {
+      for (final m in RegExp(r'^"(.+)" = "(.*)";$', multiLine: true).allMatches(
+        File('ios/Runner/$lang.lproj/AppShortcuts.strings').readAsStringSync(),
+      ))
+        m.group(1)!: m.group(2)!,
+    };
+    final en = phrases('en');
+    expect(en, isNotEmpty);
+    for (final lang in _languages) {
+      final local = phrases(lang);
+      expect(local.keys.toSet(), en.keys.toSet(), reason: lang);
+      for (final MapEntry(:key, :value) in local.entries) {
+        expect(key, contains(r'${applicationName}'));
+        expect(value, contains(r'${applicationName}'), reason: '$key in $lang');
       }
     }
   });

@@ -36,8 +36,9 @@ snapshot. With no snapshot the control reads just "Inbox".
 ## Localization
 
 Control names, intent titles and parameter titles are in `ios/TixWidgets/Localizable.xcstrings`, which the app
-target now also copies so intent metadata resolves in both bundles. Siri phrases must be in a catalog named
-`AppShortcuts.xcstrings` in the app target. The native strings test checks both in all four languages.
+target now also copies so intent metadata resolves in both bundles. Siri phrases must be in a table named
+`AppShortcuts` in the app target. A String Catalog for it needs an iOS 17 deployment target and the app's is iOS 15,
+so the phrases are `<lang>.lproj/AppShortcuts.strings` files. The native strings test checks both in all four languages.
 
 ## Live Activity: not built
 

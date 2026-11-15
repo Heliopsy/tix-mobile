@@ -1,0 +1,10 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+/* Siri phrases for TixAppShortcuts. Each names the app. */
+
+"Add a task in ${applicationName}" = "Добави задача в ${applicationName}";
+"New ${applicationName} task" = "Нова задача в ${applicationName}";
+"Open my ${applicationName} inbox" = "Отвори входящите в ${applicationName}";
+"Open my work in ${applicationName}" = "Отвори моята работа в ${applicationName}";
+"Quick add in ${applicationName}" = "Бързо добавяне в ${applicationName}";
+"Show my inbox in ${applicationName}" = "Покажи входящите ми в ${applicationName}";
+"Show my work in ${applicationName}" = "Покажи моята работа в ${applicationName}";

@@ -30,7 +30,7 @@ Spotlight can run.
 ## Impact
 
 - `ios/TixWidgets/`: `Controls.swift`, `OpenIntents.swift`; `Links` moves into `WidgetStore.swift`.
-- `ios/Runner/`: `TixAppShortcuts.swift`, `AppShortcuts.xcstrings`, control reloads in `AppDelegate.swift`.
+- `ios/Runner/`: `TixAppShortcuts.swift`, `AppShortcuts.strings`, control reloads in `AppDelegate.swift`.
 - `ios/Runner.xcodeproj`: target membership for the new files.
 - `lib/src/features/widgets/application/widget_sync.dart`: `text` on the quickadd link.
 - Docs: `docs/widgets.md`.
