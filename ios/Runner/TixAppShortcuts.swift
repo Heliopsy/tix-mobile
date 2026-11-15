@@ -3,7 +3,7 @@
 import AppIntents
 
 /// What Siri, Spotlight, Shortcuts and the Action Button offer without setup. Every phrase names the app; the
-/// translations are in AppShortcuts.xcstrings.
+/// translations are in <lang>.lproj/AppShortcuts.strings, since the app's iOS 15 floor rules out a String Catalog.
 @available(iOS 18.0, *)
 struct TixAppShortcuts: AppShortcutsProvider {
   static var appShortcuts: [AppShortcut] {

@@ -5,8 +5,8 @@
 - [x] `Links` moved into `WidgetStore.swift` so the app target can build links; `quickAdd` takes `text`
 - [x] `OpenQuickAddIntent`, `OpenInboxIntent`, `OpenMyWorkIntent` returning `OpenURLIntent`, in both targets
 - [x] `QuickAddControl` and `InboxControl` (with the unread count) in the widget bundle on iOS 18
-- [x] `TixAppShortcuts` with phrases that name the app, and `AppShortcuts.xcstrings` in en, bg, de and fr
+- [x] `TixAppShortcuts` with phrases that name the app, and `AppShortcuts.strings` in en, bg, de and fr
 - [x] Control reloads from the app when widget storage changes, on background and after a background refresh
 - [x] Xcode project: target membership for the new Swift files and catalogs
-- [x] Native strings test covers `AppShortcuts.xcstrings`
+- [x] Native strings test covers `AppShortcuts.strings`
 - [x] docs/widgets.md: controls, shortcuts, the `text` parameter
