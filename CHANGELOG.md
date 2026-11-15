@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.19.0](https://github.com/Heliopsy/tix-mobile/compare/v0.18.0...v0.19.0) (2026-11-15)
+
+
+### Features
+
+* **tasks:** drag saved filters into order and say which view they keep ([7cddf99](https://github.com/Heliopsy/tix-mobile/commit/7cddf99ff9b40aa626f00413ec8470c2e3c8b665))
+* **tasks:** format descriptions with the web's Markdown toolbar ([ee8b20c](https://github.com/Heliopsy/tix-mobile/commit/ee8b20c54d813174adaabcb7e286052c9b57e769))
+
 ## [0.18.0](https://github.com/Heliopsy/tix-mobile/compare/v0.17.0...v0.18.0) (2026-11-14)
 
 
