@@ -163,5 +163,12 @@ jobs:
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_KEY_BASE64 }}
           VERSION: ${{ needs.resolve.outputs.version }}
+          CODE: ${{ needs.resolve.outputs.code }}
           DRY_RUN: ${{ inputs.dry_run }}
-        run: bundle exec fastlane ios promote version:"$VERSION" dry_run:"$DRY_RUN"
+        # App Review refuses a version without "What's New"; it is the same
+        # text Google Play gets, from this version's CHANGELOG.md section.
+        run: |
+          set -euo pipefail
+          scripts/store-changelog.sh "$VERSION" "$CODE"
+          bundle exec fastlane ios promote version:"$VERSION" \
+            notes:"fastlane/metadata/android/en-US/changelogs/$CODE.txt" dry_run:"$DRY_RUN"
