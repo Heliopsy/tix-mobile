@@ -473,8 +473,13 @@ validate-only edit, so Play checks it without keeping it.
 **App Store** (`fastlane ios promote`): the newest processed, unexpired TestFlight build of the version is attached
 to App Store version `X.Y.Z` (created, or the version being prepared renamed to it) and submitted for review, with
 export compliance answered as exempt: the app uses HTTPS and the Go standard library's TLS only. The store text,
-screenshots and the release option (after approval or manual) come from App Store Connect as they are. The dry run
-only reads: the live and in-progress versions, any review in progress, and the build it would pick.
+screenshots and the release option (after approval or manual) come from App Store Connect as they are, with one
+exception: App Review refuses an update without What's New, so once a version is live, every locale of the new one
+whose What's New is empty gets the user-facing `CHANGELOG.md` entries (features, fixes, performance, reverts) since
+the live version, in English, without scopes, hashes or links, cut at 4000 characters
+(`just store-whatsnew VERSION LIVE` prints it). What's New already written in App Store Connect is kept; to word it
+yourself, enter it there before promoting. The dry run only reads: the live and in-progress versions, any review in
+progress, the build it would pick, and the What's New text with the locales it would be set on.
 
 Nothing to promote (the version code is not on the internal track, there is no processed build, the version is
 already live, a review is in progress) is a warning on a dry run and fails a real one.

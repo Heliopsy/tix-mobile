@@ -200,7 +200,7 @@ cover-floor:
 
 # Every lint: Dart formatting and analysis, workflows, YAML, Markdown, shell.
 [group('gates')]
-lint: fmt-check analyze actionlint yamllint mdlint shellcheck store-text
+lint: fmt-check analyze actionlint yamllint mdlint shellcheck store-text store-whatsnew-test
 
 # Lint the GitHub workflows (shellchecks their run: blocks too).
 [group('gates')]
@@ -237,6 +237,11 @@ shellcheck:
 [group('gates')]
 store-text:
     scripts/store-text-check.sh
+
+# The App Store What's New builder against its own fixture CHANGELOG.
+[group('gates')]
+store-whatsnew-test:
+    scripts/store-whatsnew.sh --self-test
 
 # REUSE compliance: every file has a licence, via its header or REUSE.toml.
 [group('gates')]
@@ -426,6 +431,11 @@ package-ios:
 store-changelog VERSION CODE:
     scripts/store-changelog.sh {{VERSION}} {{CODE}}
 
+# Print the App Store What's New for VERSION from CHANGELOG.md: the user-facing changes since SINCE, or VERSION's alone.
+[group('package')]
+store-whatsnew VERSION SINCE="":
+    scripts/store-whatsnew.sh {{VERSION}} {{SINCE}}
+
 # Regenerate the <releases> of the Linux AppStream metainfo from CHANGELOG.md, and validate it.
 [group('package')]
 metainfo:
@@ -538,4 +548,4 @@ check: fmt-check analyze test spec
 
 # Everything CI runs that this host can run.
 [group('aggregate')]
-ci: fmt-check analyze gen-check openapi-check spec actionlint yamllint mdlint shellcheck store-text reuse secrets release-files-check cover-check build-all
+ci: fmt-check analyze gen-check openapi-check spec actionlint yamllint mdlint shellcheck store-text store-whatsnew-test reuse secrets release-files-check cover-check build-all

@@ -91,6 +91,9 @@ jobs:
       - name: Store listing text
         if: (success() || failure()) && steps.tools.outcome == 'success'
         run: just store-text
+      - name: App Store What's New
+        if: (success() || failure()) && steps.tools.outcome == 'success'
+        run: just store-whatsnew-test
       - name: REUSE
         if: (success() || failure()) && steps.tools.outcome == 'success'
         run: just reuse

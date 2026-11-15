@@ -255,6 +255,19 @@ platform :ios do
       next
     end
     promote_report("#{dry_run ? "Would submit" : "Submitting"} #{version} build #{build.version} for App Store review")
+
+    # App Review refuses an update without What's New. The first version
+    # cannot have one, so it is only filled in once a version is live.
+    if live
+      notes = app_store_whats_new(version, live.version_string)
+      promote_report("What's New, the changes since #{live.version_string}:\n\n#{notes}\n")
+      unless dry_run
+        app.ensure_version!(version, platform: platform)
+        edit = app.get_edit_app_store_version(platform: platform)
+        UI.user_error!("App Store Connect has no version #{version} being prepared") unless edit&.version_string == version
+      end
+      fill_whats_new(edit, notes, dry_run)
+    end
     next if dry_run
 
     upload_to_app_store(
@@ -278,6 +291,36 @@ platform :ios do
 end
 
 APP_STORE_APP_ID = "6834556706"
+
+# What's New for a version from CHANGELOG.md: its user-facing changes since
+# the version live on the App Store.
+def app_store_whats_new(version, since)
+  out, err, status = Open3.capture3(File.join(ROOT, "scripts/store-whatsnew.sh"), version, since.to_s)
+  UI.user_error!("No What's New for #{version}: #{err.strip}") unless status.success? && !out.strip.empty?
+  out.strip
+end
+
+# Sets What's New on every locale of the version that has none. Text already
+# there, typed in App Store Connect or by an earlier run, is kept. On a dry run,
+# or before the version exists, it only reports.
+def fill_whats_new(edit, notes, dry_run)
+  unless edit
+    promote_report("What's New: would be set on every locale of the new version")
+    return
+  end
+  locales = edit.get_app_store_version_localizations
+  promote_warn("#{edit.version_string} has no localizations to set What's New on") if locales.empty?
+  locales.each do |loc|
+    if !loc.whats_new.to_s.strip.empty?
+      promote_report("What's New for #{loc.locale}: kept as it is")
+    elsif dry_run
+      promote_report("What's New for #{loc.locale}: would be set")
+    else
+      loc.update(attributes: { whats_new: notes })
+      promote_report("What's New for #{loc.locale}: set")
+    end
+  end
+end
 
 # A line for the log and for the run's summary page.
 def promote_report(line)
