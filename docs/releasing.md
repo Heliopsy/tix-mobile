@@ -472,9 +472,12 @@ validate-only edit, so Play checks it without keeping it.
 
 **App Store** (`fastlane ios promote`): the newest processed, unexpired TestFlight build of the version is attached
 to App Store version `X.Y.Z` (created, or the version being prepared renamed to it) and submitted for review, with
-export compliance answered as exempt: the app uses HTTPS and the Go standard library's TLS only. The store text,
+export compliance answered as exempt: the app uses HTTPS and the Go standard library's TLS only. "What's New" is
+set on every localization of the version to the text Google Play gets, made from the version's `CHANGELOG.md`
+section by `scripts/store-changelog.sh`; App Review refuses a version without it. The rest of the store text,
 screenshots and the release option (after approval or manual) come from App Store Connect as they are. The dry run
-only reads: the live and in-progress versions, any review in progress, and the build it would pick.
+only reads: the live and in-progress versions, any review in progress, and the build it would pick, and it fails
+when there is no "What's New" text.
 
 Nothing to promote (the version code is not on the internal track, there is no processed build, the version is
 already live, a review is in progress) is a warning on a dry run and fails a real one.

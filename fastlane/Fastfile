@@ -254,26 +254,46 @@ platform :ios do
       promote_stop("No processed TestFlight build of #{version}, so there is nothing to submit", dry_run)
       next
     end
-    promote_report("#{dry_run ? "Would submit" : "Submitting"} #{version} build #{build.version} for App Store review")
+    # App Review refuses a version without "What's New". The text is the one
+    # Google Play gets (scripts/store-changelog.sh), for every localization.
+    notes_path = File.expand_path(options.fetch(:notes).to_s, ROOT)
+    notes = File.exist?(notes_path) ? File.read(notes_path).strip : ""
+    UI.user_error!("No \"What's New\" text at #{notes_path}") if notes.empty?
+    promote_report("#{dry_run ? "Would submit" : "Submitting"} #{version} build #{build.version} for App Store review, " \
+                   "with #{notes.length} characters of \"What's New\"")
     next if dry_run
 
-    upload_to_app_store(
+    deliver_options = {
       api_key: api_key,
       app_version: version,
       build_number: build.version,
       skip_binary_upload: true,
       skip_screenshots: true,
       # The App Store text and screenshots are kept in App Store Connect,
-      # not in the repository.
+      # not in the repository; only "What's New" is set, below.
       skip_metadata: true,
-      submit_for_review: true,
       force: true,
       # precheck cannot read in-app purchases with an API key, and App Review
       # checks the listing anyway.
       run_precheck_before_submit: false,
       # HTTPS and the Go standard library's TLS only, which is exempt.
       submission_information: { export_compliance_uses_encryption: false }
-    )
+    }
+    # First make sure the version exists with this build attached, then set
+    # its notes, then submit: deliver creates the version, and the notes can
+    # only be written to a version that exists.
+    upload_to_app_store(**deliver_options, submit_for_review: false)
+    target = app.get_edit_app_store_version(platform: platform)
+    unless target&.version_string == version
+      UI.user_error!("App Store Connect has no editable #{version} to put \"What's New\" on")
+    end
+    localizations = target.get_app_store_version_localizations
+    UI.user_error!("#{version} has no localizations in App Store Connect") if localizations.empty?
+    localizations.each do |localization|
+      localization.update(attributes: { "whatsNew" => notes })
+      promote_report("What's New set for #{localization.locale}")
+    end
+    upload_to_app_store(**deliver_options, submit_for_review: true)
   end
 end
 
