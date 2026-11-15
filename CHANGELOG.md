@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.1](https://github.com/Heliopsy/tix-mobile/compare/v0.20.0...v0.20.1) (2026-11-15)
+
+
+### Bug Fixes
+
+* **ios:** start the headless widget engine before setting its channel handler ([570d166](https://github.com/Heliopsy/tix-mobile/commit/570d166f17caf85568d918e6660c91f911d548d9))
+
 ## [0.20.0](https://github.com/Heliopsy/tix-mobile/compare/v0.19.0...v0.20.0) (2026-11-15)
 
 
