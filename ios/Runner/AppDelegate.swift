@@ -15,10 +15,12 @@ import UserNotifications
     // app is in the foreground and hear taps on them.
     UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     WidgetRefresh.register()
+    ControlReload.start()
     NotificationCenter.default.addObserver(
       forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main
     ) { _ in
       WidgetRefresh.schedule()
+      ControlReload.now()
     }
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

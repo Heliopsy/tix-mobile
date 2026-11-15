@@ -323,6 +323,18 @@ void main() {
       expect(c.read(quickAddDraftsProvider)?.project, 'ops');
     });
 
+    test('quick add fills in the line a shortcut gave it', () async {
+      final c = await synced();
+      await c
+          .read(widgetSyncProvider.notifier)
+          .open(
+            Uri.parse('tixwidget://quickadd?ctx=active&text=Call%20the%20bank'),
+          );
+      final draft = c.read(quickAddDraftsProvider);
+      expect(draft?.text, 'Call the bank');
+      expect(draft?.project, isNull);
+    });
+
     test('a pinned widget switches to its context first', () async {
       final c = await synced();
       await c

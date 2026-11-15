@@ -237,7 +237,7 @@ Keyed by widget: `android:<appWidgetId>` on Android, `<kind>:<ctx>:<project>` on
 | URI | Opens |
 | --- | --- |
 | `tixwidget://open?ctx=<ctx>&route=<route>[&item=<inbox id>]` | `route` in `ctx` (switching when needed); marks the inbox item read |
-| `tixwidget://quickadd?ctx=<ctx>[&project=<KEY>]` | The quick add sheet |
+| `tixwidget://quickadd?ctx=<ctx>[&project=<KEY>][&text=<line>]` | The quick add sheet, with `text` in the line, unsent |
 | `tixwidget://app?ctx=<ctx>` | The app, in `ctx` |
 | `tixwidget://drain` | Background only: run the queue |
 | `tixwidget://refresh` | Background only: rewrite every snapshot the runner can reach |
@@ -278,6 +278,31 @@ follow the tenant.
   provisioning profiles, one App Store profile per target. The release signs both for TestFlight once its secrets
   exist ([releasing.md](releasing.md#testflight-ios)); until then iOS builds unsigned and macOS ad hoc.
 
+### Controls and App Shortcuts (iOS)
+
+iOS 18 adds two system entry points beside the home screen, both in the `TixWidgets` extension and the app:
+
+| Entry | Where | Opens |
+| --- | --- | --- |
+| Quick add control | Control Center, Lock Screen, Action Button | `tixwidget://quickadd?ctx=active` |
+| Inbox control, "Inbox · 5" | Control Center, Lock Screen, Action Button | `tixwidget://open?ctx=active&route=/inbox` |
+| Add a task (optional title) | Siri, Spotlight, Shortcuts, Action Button | `tixwidget://quickadd?ctx=active[&text=<title>]` |
+| Open inbox | Siri, Spotlight, Shortcuts, Action Button | `tixwidget://open?ctx=active&route=/inbox` |
+| Open my work | Siri, Spotlight, Shortcuts, Action Button | `tixwidget://open?ctx=active&route=/mine` |
+
+- `Controls.swift` holds `QuickAddControl` and `InboxControl`; `OpenIntents.swift` the three intents, compiled into
+  the app and the extension; `ios/Runner/TixAppShortcuts.swift` the `AppShortcutsProvider`. All are
+  `@available(iOS 18.0, *)`, because controls and `OpenURLIntent` are; on iOS 17 the widgets work as before.
+- Each intent returns `OpenURLIntent` with the link, so the system opens it and a cold start still sees it as the
+  launch link. Add a task never sends anything itself: its title only fills in quick add.
+- The Inbox control reads the active context's inbox snapshot, like the Inbox widget, and shows only "Inbox" without
+  one. The app asks iOS to reload the controls after any change to its defaults (debounced), when it goes to the
+  background and after a background refresh.
+- Control names and intent titles are in `Localizable.xcstrings`, which both targets copy. Siri phrases must live in
+  `ios/Runner/AppShortcuts.xcstrings`; each names the app (`${applicationName}`) in every language.
+- There is no Live Activity. One updated only by the running app would freeze on the Lock Screen as soon as the app
+  leaves the foreground; it needs ActivityKit push updates from the tix server first.
+
 ### Windows and Linux
 
 Not offered. Windows 11's widgets board takes Adaptive Cards from a Widget Provider, a packaged COM server that
@@ -297,4 +322,7 @@ the desktop answer there: the tray menu shows the inbox's unread count and opens
 - `test/core/l10n/native_strings_test.dart` keeps the native widget text (Android resources, the iOS and macOS
   String Catalog) complete in English, Bulgarian, French and German.
 - `android/app/src/test/` has JVM tests for the snapshot reader and the overdue rule.
-- iOS and macOS widgets are compiled by CI; they have not been run on a device by CI.
+- `test/core/l10n/native_strings_test.dart` also checks the Siri phrases: translated, and naming the app.
+- `test/features/shell/presentation/iphone_layout_test.dart` checks the in-app quick add button and a project's New
+  task button at iPhone size on iOS, clear of the notch, the home indicator and the bar.
+- iOS and macOS widgets, controls and App Shortcuts are compiled by CI; they have not been run on a device by CI.

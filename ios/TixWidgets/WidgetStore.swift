@@ -121,3 +121,31 @@ enum WidgetStore {
     return String(data: data, encoding: .utf8)
   }
 }
+
+/// The `tixwidget://` links of docs/widgets.md. Each carries `homeWidget`, which home_widget looks for on iOS.
+enum Links {
+  static func open(ctx: String, route: String, item: String? = nil) -> URL {
+    var query = [URLQueryItem(name: "ctx", value: ctx), URLQueryItem(name: "route", value: route)]
+    if let item { query.append(URLQueryItem(name: "item", value: item)) }
+    return build("open", query)
+  }
+
+  static func quickAdd(ctx: String, project: String?, text: String? = nil) -> URL {
+    var query = [URLQueryItem(name: "ctx", value: ctx)]
+    if let project { query.append(URLQueryItem(name: "project", value: project)) }
+    if let text, !text.isEmpty { query.append(URLQueryItem(name: "text", value: text)) }
+    return build("quickadd", query)
+  }
+
+  static func app(ctx: String?) -> URL {
+    build("app", ctx.map { [URLQueryItem(name: "ctx", value: $0)] } ?? [])
+  }
+
+  private static func build(_ host: String, _ query: [URLQueryItem]) -> URL {
+    var components = URLComponents()
+    components.scheme = "tixwidget"
+    components.host = host
+    components.queryItems = query + [URLQueryItem(name: "homeWidget", value: nil)]
+    return components.url ?? URL(fileURLWithPath: "/")
+  }
+}
