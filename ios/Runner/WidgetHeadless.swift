@@ -29,6 +29,14 @@ enum WidgetHeadless {
 
   private static func runOnce(_ url: String) async {
     let engine = FlutterEngine(name: "tix_widget_headless", project: nil, allowHeadlessExecution: true)
+    // A channel handler can only be set on a running engine: setting it first aborts the app (seen from the
+    // background refresh on iOS 18.5). Dart's `done` is delivered on this main thread, so it cannot arrive
+    // between run() returning and the handler being set below.
+    guard engine.run(withEntrypoint: entrypoint, libraryURI: nil, initialRoute: nil, entrypointArgs: [url]) else {
+      engine.destroyContext()
+      return
+    }
+    GeneratedPluginRegistrant.register(with: engine)
     let channel = FlutterMethodChannel(name: channelName, binaryMessenger: engine.binaryMessenger)
     await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
       var finished = false
@@ -45,12 +53,6 @@ enum WidgetHeadless {
         result(nil)
         finish()
       }
-      guard engine.run(withEntrypoint: entrypoint, libraryURI: nil, initialRoute: nil, entrypointArgs: [url])
-      else {
-        finish()
-        return
-      }
-      GeneratedPluginRegistrant.register(with: engine)
       DispatchQueue.main.asyncAfter(deadline: .now() + timeout) { finish() }
     }
     channel.setMethodCallHandler(nil)
