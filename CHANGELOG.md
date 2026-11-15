@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.20.0](https://github.com/Heliopsy/tix-mobile/compare/v0.19.0...v0.20.0) (2026-11-15)
+
+
+### Features
+
+* **ios:** Control Center controls and Siri shortcuts for quick add and the inbox ([3f971b3](https://github.com/Heliopsy/tix-mobile/commit/3f971b31d110a2f9951403fbf8b5fb5470c6774a))
+
+
+### Bug Fixes
+
+* **ios:** ship the Siri phrases as .strings, which an iOS 15 app target accepts ([46726ea](https://github.com/Heliopsy/tix-mobile/commit/46726ead5314e1cbee93a1e399e34e686a6cebee))
+
 ## [0.19.0](https://github.com/Heliopsy/tix-mobile/compare/v0.18.0...v0.19.0) (2026-11-15)
 
 
