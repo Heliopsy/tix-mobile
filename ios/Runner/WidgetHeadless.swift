@@ -89,7 +89,36 @@ enum WidgetRefresh {
     Task { @MainActor in
       await WidgetHeadless.run("tixwidget://refresh")
       WidgetCenter.shared.reloadAllTimelines()
+      ControlReload.now()
       completion.finish(success: true)
+    }
+  }
+}
+
+/// Asks iOS 18 and later to redraw tix's controls, whose Inbox count reads the widget snapshots.
+enum ControlReload {
+  private static var pending: DispatchWorkItem?
+
+  /// Reloads the controls shortly after any defaults change in this process, which includes every snapshot the app
+  /// writes to the App Group. Bursts are gathered into one reload.
+  static func start() {
+    NotificationCenter.default.addObserver(
+      forName: UserDefaults.didChangeNotification, object: nil, queue: .main
+    ) { _ in
+      schedule()
+    }
+  }
+
+  static func schedule() {
+    pending?.cancel()
+    let work = DispatchWorkItem { now() }
+    pending = work
+    DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: work)
+  }
+
+  static func now() {
+    if #available(iOS 18.0, *) {
+      ControlCenter.shared.reloadAllControls()
     }
   }
 }

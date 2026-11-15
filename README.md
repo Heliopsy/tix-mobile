@@ -146,6 +146,9 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   Inbox and My work on Android and iOS.
 - **Quick Settings tiles** on Android: Quick add opens the sheet over the app, and Inbox shows the unread count and
   opens the inbox.
+- **Controls and Siri** on iOS 18: Quick add and Inbox (with the unread count) in Control Center, on the Lock
+  Screen and on the Action Button, and "Add a task", "Open inbox" and "Open my work" as App Shortcuts for Siri,
+  Spotlight and Shortcuts. See [docs/widgets.md](docs/widgets.md#controls-and-app-shortcuts-ios).
 - **Add to home screen** on a project or a saved filter, on Android launchers that pin shortcuts. The shortcut
   opens it in the context it was made in.
 - **Tray and menu bar** on Linux, Windows and macOS: Open tix, Quick add, Inbox with the unread count, Activity, the

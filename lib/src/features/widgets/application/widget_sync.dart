@@ -163,7 +163,9 @@ class WidgetSync extends _$WidgetSync {
         if (item.isNotEmpty) await _markRead(item);
         return landing;
       case 'quickadd':
-        ref.read(quickAddDraftsProvider.notifier).open(project: q['project']);
+        ref
+            .read(quickAddDraftsProvider.notifier)
+            .open(text: q['text'] ?? '', project: q['project']);
         return null;
       default:
         return null;

@@ -12,6 +12,12 @@ const _languages = ['en', 'bg', 'fr', 'de'];
 /// notification follow-up's.
 const _androidFiles = ['widget_strings.xml', 'app_strings.xml'];
 
+/// The String Catalogs: widget and control text, and the Siri phrases.
+const _catalogs = [
+  ('iOS and macOS widget text', 'ios/TixWidgets/Localizable.xcstrings'),
+  ('iOS Siri phrases', 'ios/Runner/AppShortcuts.xcstrings'),
+];
+
 Map<String, String> _androidStrings(String dir, String file) {
   final text = File('android/app/src/main/res/$dir/$file').readAsStringSync();
   return {
@@ -35,23 +41,44 @@ void main() {
     });
   }
 
-  test('iOS and macOS widget text is translated into every language', () {
+  for (final (name, path) in _catalogs) {
+    test('$name is translated into every language', () {
+      final catalog =
+          jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
+      final strings = catalog['strings'] as Map<String, dynamic>;
+      expect(strings, isNotEmpty);
+      for (final MapEntry(:key, :value) in strings.entries) {
+        final local =
+            (value as Map<String, dynamic>)['localizations']
+                as Map<String, dynamic>? ??
+            const {};
+        for (final lang in _languages) {
+          final unit =
+              (local[lang] as Map<String, dynamic>?)?['stringUnit']
+                  as Map<String, dynamic>?;
+          if (lang == 'en' && unit == null) continue;
+          expect(unit?['value'], isNotEmpty, reason: '$key in $lang');
+        }
+      }
+    });
+  }
+
+  test('every Siri phrase names the app in every language', () {
     final catalog = jsonDecode(
-      File('ios/TixWidgets/Localizable.xcstrings').readAsStringSync(),
+      File('ios/Runner/AppShortcuts.xcstrings').readAsStringSync(),
     ) as Map<String, dynamic>;
     final strings = catalog['strings'] as Map<String, dynamic>;
-    expect(strings, isNotEmpty);
     for (final MapEntry(:key, :value) in strings.entries) {
+      expect(key, contains(r'${applicationName}'));
       final local =
           (value as Map<String, dynamic>)['localizations']
-              as Map<String, dynamic>? ??
-          const {};
-      for (final lang in _languages) {
-        final unit =
-            (local[lang] as Map<String, dynamic>?)?['stringUnit']
-                as Map<String, dynamic>?;
-        if (lang == 'en' && unit == null) continue;
-        expect(unit?['value'], isNotEmpty, reason: '$key in $lang');
+              as Map<String, dynamic>;
+      for (final MapEntry(key: lang, value: unit) in local.entries) {
+        final text =
+            ((unit as Map<String, dynamic>)['stringUnit']
+                    as Map<String, dynamic>)['value']
+                as String;
+        expect(text, contains(r'${applicationName}'), reason: '$key in $lang');
       }
     }
   });
