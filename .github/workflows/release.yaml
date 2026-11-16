@@ -147,7 +147,7 @@ jobs:
         with:
           name: dist-android
           path: dist/
-          retention-days: 7
+          retention-days: 1
           if-no-files-found: error
 
   linux:
@@ -217,7 +217,7 @@ jobs:
         with:
           name: dist-linux-${{ matrix.arch }}
           path: dist/
-          retention-days: 7
+          retention-days: 1
           if-no-files-found: error
 
   macos:
@@ -282,7 +282,7 @@ jobs:
         with:
           name: dist-macos
           path: dist/
-          retention-days: 7
+          retention-days: 1
           if-no-files-found: error
 
   windows:
@@ -311,7 +311,7 @@ jobs:
         with:
           name: dist-windows
           path: dist/
-          retention-days: 7
+          retention-days: 1
           if-no-files-found: error
 
   # With the iOS signing secrets and the App Store Connect API key, a signed
