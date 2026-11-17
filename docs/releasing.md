@@ -375,8 +375,13 @@ metadata, which F-Droid also rejects (`dependenciesInfo` in `android/app/build.g
 
 - `fdroid/red.tix.tix_mobile.yml` is the recipe for fdroiddata's `metadata/`, and `fdroid/srclibs/tix.yml` the
   srclib for the engine. The embedded engine is tix, AGPL Go, built from the commit `tix.lock` pins: the recipe
-  checks that commit out as the `tix` srclib, places it where `hook/build.dart` looks for a cached checkout, and
-  installs Go from go.dev with its checksum, so the build fetches nothing unpinned apart from Go modules.
+  checks the `tix` srclib out at the commit it reads from `tix.lock` and places it where `hook/build.dart` looks
+  for a cached checkout. Go comes from fdroiddata's `go` srclib at the version `.tool-versions` pins, built from
+  source with Debian's `golang-go` as bootstrap, the same way other Go apps there get it. The build fetches
+  nothing unpinned apart from Go modules, and fails if the APK lacks `libtix.so`.
+- The recipe's body is what `fdroid rewritemeta` writes and lines stay short enough that it does not refold them,
+  so `metadata/red.tix.tix_mobile.yml` in fdroiddata is the file minus its comment header. `commit:` is the full
+  hash the release tag points at, which fdroiddata asks for instead of the tag name.
 - Three builds per release, one per ABI, with version codes from the `+N` release-please increments in
   `pubspec.yaml` plus Flutter's per-ABI offset (1000+N, 2000+N, 4000+N), which F-Droid's update checker reads
   from the tag (`VercodeOperation`). `just build-fdroid` runs the same build locally.
@@ -385,10 +390,21 @@ metadata, which F-Droid also rejects (`dependenciesInfo` in `android/app/build.g
   would mean F-Droid building the GitHub APK's exact inputs and `Binaries:` plus `AllowedAPKSigningKeys` in the
   recipe; worth doing once a release has been compared byte for byte.
 
-Owner, once: replace the placeholder version in the recipe (v0.4.0 predates this) with the first release that
-carries it, check it with `fdroid lint` and `fdroid build -v -l red.tix.tix_mobile` in a clone of fdroiddata,
-and open a merge request to <https://gitlab.com/fdroid/fdroiddata> with both files. After that, F-Droid picks up
-new tags on its own.
+Submitting, or resubmitting after a change to the recipe:
+
+1. Point the three builds at the newest release: `versionName`, `versionCode` (1000, 2000 and 4000 plus the `+N`
+   in `pubspec.yaml` at the tag), `commit` (`git rev-parse vX.Y.Z^{commit}`), the `tix@` srclib (`commit` in
+   `tix.lock`), `flutter@` and `go@` (`.tool-versions`), `ndk` (Flutter's `ndkVersion` for that Flutter version,
+   which `android/app/build.gradle.kts` uses), and `CurrentVersion`/`CurrentVersionCode`.
+2. Run `just fdroid-check` and `just engine-check android` on that release's APKs.
+3. In a clone of fdroiddata, copy the recipe without its header to `metadata/` and `fdroid/srclibs/tix.yml` to
+   `srclibs/`, then run `fdroid rewritemeta red.tix.tix_mobile` (it must change nothing) and
+   `fdroid lint red.tix.tix_mobile`. `pip install fdroidserver` in a venv is enough for both; the full
+   `fdroid build` runs in the merge request's pipeline.
+4. Open the merge request to <https://gitlab.com/fdroid/fdroiddata> with both files, titled `New app: tix`, and
+   fill in its template.
+
+After the merge, F-Droid picks up new tags on its own.
 
 Verify: the app appears at `https://f-droid.org/packages/red.tix.tix_mobile/` a few days after the merge request
 lands.
