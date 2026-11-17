@@ -20,7 +20,15 @@
 # where the hook looks instead of fetched. Reading the commit from tix.lock
 # keeps builds that checkupdates copies forward right when the engine moves.
 # A build without Go on PATH would quietly ship no engine, so each build ends
-# by checking the APK carries libtix.so.
+# by checking the APK carries libtix.so. Debian's go is only the bootstrap
+# and is taken off PATH afterwards: the hook runs whichever go it finds, and
+# libtix's licence notices need a GOROOT that carries Go's LICENSE file,
+# which Debian's does not.
+#
+# `compileSdk = 37` makes AGP look for an android-37 platform, but the SDK
+# ships it as android-37.0, so the prebuild names the minor level the way
+# most recipes in fdroiddata do, in the app and in the plugins that set 37
+# (flutter_local_notifications).
 #
 # fdroiddata wants a full hash in `commit:`; it is the commit v0.20.1 tags.
 # The body below is what `fdroid rewritemeta` writes, so it can be copied to
@@ -47,6 +55,7 @@ Builds:
     sudo:
       - apt-get update
       - apt-get install -y -t trixie-backports golang-go
+      - rm -f /usr/bin/go /usr/bin/gofmt
     output: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
     srclibs:
       - flutter@3.47.9
@@ -58,6 +67,9 @@ Builds:
       - macos
       - windows
     prebuild:
+      - sdkmanager "platforms;android-37.0"
+      - sdk='compileSdk { version = release(37) { minorApiLevel = 0 } }'
+      - sed -i -e "/compileSdk = /c $sdk" android/app/build.gradle.kts
       - export PUB_CACHE=$(pwd)/.pub-cache
       - tixc=$(sed -n 's/^commit = //p' tix.lock)
       - git -C $$tix$$ checkout -q $tixc
@@ -65,11 +77,13 @@ Builds:
       - cp -a $$tix$$ $HOME/.cache/tix-mobile/libtix/src/$tixc
       - $$flutter$$/bin/flutter config --no-analytics
       - $$flutter$$/bin/flutter pub get --enforce-lockfile
+      - plugins=.pub-cache/hosted/pub.dev/*/android/build.gradle.kts
+      - sed -i -e "/compileSdk = 37$/c $sdk" $plugins
     scandelete:
       - .pub-cache
     build:
       - pushd $$go$$/src
-      - ./make.bash
+      - GOROOT_BOOTSTRAP=/usr/lib/go ./make.bash
       - popd
       - export PATH=$$flutter$$/bin:$$go$$/bin:$PATH GOROOT=$$go$$
       - export ANDROID_NDK_HOME=$$NDK$$ PUB_CACHE=$(pwd)/.pub-cache
@@ -85,6 +99,7 @@ Builds:
     sudo:
       - apt-get update
       - apt-get install -y -t trixie-backports golang-go
+      - rm -f /usr/bin/go /usr/bin/gofmt
     output: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
     srclibs:
       - flutter@3.47.9
@@ -96,6 +111,9 @@ Builds:
       - macos
       - windows
     prebuild:
+      - sdkmanager "platforms;android-37.0"
+      - sdk='compileSdk { version = release(37) { minorApiLevel = 0 } }'
+      - sed -i -e "/compileSdk = /c $sdk" android/app/build.gradle.kts
       - export PUB_CACHE=$(pwd)/.pub-cache
       - tixc=$(sed -n 's/^commit = //p' tix.lock)
       - git -C $$tix$$ checkout -q $tixc
@@ -103,11 +121,13 @@ Builds:
       - cp -a $$tix$$ $HOME/.cache/tix-mobile/libtix/src/$tixc
       - $$flutter$$/bin/flutter config --no-analytics
       - $$flutter$$/bin/flutter pub get --enforce-lockfile
+      - plugins=.pub-cache/hosted/pub.dev/*/android/build.gradle.kts
+      - sed -i -e "/compileSdk = 37$/c $sdk" $plugins
     scandelete:
       - .pub-cache
     build:
       - pushd $$go$$/src
-      - ./make.bash
+      - GOROOT_BOOTSTRAP=/usr/lib/go ./make.bash
       - popd
       - export PATH=$$flutter$$/bin:$$go$$/bin:$PATH GOROOT=$$go$$
       - export ANDROID_NDK_HOME=$$NDK$$ PUB_CACHE=$(pwd)/.pub-cache
@@ -123,6 +143,7 @@ Builds:
     sudo:
       - apt-get update
       - apt-get install -y -t trixie-backports golang-go
+      - rm -f /usr/bin/go /usr/bin/gofmt
     output: build/app/outputs/flutter-apk/app-x86_64-release.apk
     srclibs:
       - flutter@3.47.9
@@ -134,6 +155,9 @@ Builds:
       - macos
       - windows
     prebuild:
+      - sdkmanager "platforms;android-37.0"
+      - sdk='compileSdk { version = release(37) { minorApiLevel = 0 } }'
+      - sed -i -e "/compileSdk = /c $sdk" android/app/build.gradle.kts
       - export PUB_CACHE=$(pwd)/.pub-cache
       - tixc=$(sed -n 's/^commit = //p' tix.lock)
       - git -C $$tix$$ checkout -q $tixc
@@ -141,11 +165,13 @@ Builds:
       - cp -a $$tix$$ $HOME/.cache/tix-mobile/libtix/src/$tixc
       - $$flutter$$/bin/flutter config --no-analytics
       - $$flutter$$/bin/flutter pub get --enforce-lockfile
+      - plugins=.pub-cache/hosted/pub.dev/*/android/build.gradle.kts
+      - sed -i -e "/compileSdk = 37$/c $sdk" $plugins
     scandelete:
       - .pub-cache
     build:
       - pushd $$go$$/src
-      - ./make.bash
+      - GOROOT_BOOTSTRAP=/usr/lib/go ./make.bash
       - popd
       - export PATH=$$flutter$$/bin:$$go$$/bin:$PATH GOROOT=$$go$$
       - export ANDROID_NDK_HOME=$$NDK$$ PUB_CACHE=$(pwd)/.pub-cache
