@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.0](https://github.com/Heliopsy/tix-mobile/compare/v0.21.0...v0.22.0) (2026-11-19)
+
+
+### Features
+
+* **android:** separate Google Play build that updates through Play ([0b7153a](https://github.com/Heliopsy/tix-mobile/commit/0b7153afe1c7489f2c8d5519bc6bc9d575b588a3))
+
 ## [0.21.0](https://github.com/Heliopsy/tix-mobile/compare/v0.20.1...v0.21.0) (2026-11-19)
 
 
