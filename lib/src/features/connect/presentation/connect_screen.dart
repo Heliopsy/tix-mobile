@@ -22,6 +22,7 @@ import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/widgets/sync_findings_note.dart';
 import 'package:tix_mobile/src/core/widgets/tix_mark.dart';
 import 'package:tix_mobile/src/data/local/local_engine.dart';
+import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
 import 'package:tix_mobile/src/data/models/invite_link.dart';
 import 'package:tix_mobile/src/data/models/membership.dart';
@@ -98,6 +99,8 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
   InstanceKind _kind = InstanceKind.remote;
   late ConnectMethod _method = widget.invite.isNotEmpty
       ? ConnectMethod.invite
+      : _replacingToken
+      ? ConnectMethod.token
       : widget.email.isNotEmpty || _replacing != null
       ? ConnectMethod.signIn
       : ConnectMethod.token;
@@ -110,6 +113,13 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
   Object? _error;
 
   String? get _replacing => widget.connectionId;
+
+  late final bool _replacingToken =
+      ref
+          .read(instancesRepositoryProvider)
+          .connection(_replacing ?? '')
+          ?.kind ==
+      ConnectionKind.token;
 
   ConnectFlowProvider get _provider => connectFlowProvider(
     [
@@ -217,6 +227,7 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
               token: _token.text,
               name: _name.text,
               instanceId: widget.instanceId,
+              replacing: _replacing,
             )
           : _flow.signIn(
               url: _url.text,
@@ -512,9 +523,10 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
 
   List<Widget> _remoteForm(BuildContext context, Instance? saved) {
     final l10n = context.l10n;
-    final reauth = _replacing != null;
+    final reauth = _replacing != null && !_replacingToken;
     final signedOut =
-        reauth && ref.watch(sessionControllerProvider).value == null;
+        _replacing != null &&
+        ref.watch(sessionControllerProvider).value == null;
     return [
       if (saved == null && _method != ConnectMethod.invite)
         _Helped(
@@ -542,7 +554,13 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
         Text(saved.baseUrl, key: const Key('connect.instanceUrl')),
       if (saved != null || _method != ConnectMethod.invite)
         const SizedBox(height: 16),
-      if (signedOut) ...[
+      if (signedOut && _replacingToken) ...[
+        Text(
+          l10n.tokenRefusedExplained,
+          key: const Key('connect.tokenRefused'),
+        ),
+        const SizedBox(height: TixSpace.s4),
+      ] else if (signedOut) ...[
         Text(l10n.signedOutExplained, key: const Key('connect.signedOut')),
         const SizedBox(height: TixSpace.s4),
       ],

@@ -61,6 +61,7 @@ struct Labels {
   var complete: String { self("complete", "Complete") }
   var projectMissing: String { self("projectMissing", "Not in this context") }
   var signedOut: String { self("signedOut", "Sign in to tix") }
+  var signInAgain: String { self("signInAgain", "Sign in again to show this") }
   var pickProject: String { self("pickProject", "Edit the widget to choose a project") }
 }
 
@@ -84,6 +85,9 @@ enum EntryLoader {
     let labels = Labels(index.strings)
     guard let ctx = resolve(configured, in: index) else {
       return TixEntry(date: now, index: index, ctx: nil, panel: .message(labels.signedOut))
+    }
+    if index.context(ctx)?.isRefused == true {
+      return TixEntry(date: now, index: index, ctx: ctx, panel: .message(labels.signInAgain))
     }
     guard let storageKey = key(ctx) else {
       return TixEntry(date: now, index: index, ctx: ctx, panel: .message(labels.pickProject))

@@ -127,11 +127,16 @@ fun Message(look: Look, text: String, action: Action? = null) {
 
 /** A bare widget for when there is nothing to draw yet. */
 @Composable
-fun Placeholder(look: Look, title: String, text: String) {
+fun Placeholder(look: Look, title: String, text: String, ctx: String = Keys.ACTIVE) {
     Frame(look, look.palette.muted, title, "", null, "") {
-        Message(look, text, openApp(Links.app(Keys.ACTIVE)))
+        Message(look, text, openApp(Links.app(ctx)))
     }
 }
+
+/** What a context whose session or token the server refused shows instead of its last data. */
+@Composable
+fun SignInAgain(look: Look, title: String, ctx: String) =
+    Placeholder(look, title, look.s("signInAgain", R.string.widget_sign_in_again), ctx)
 
 @Composable
 fun TaskLine(look: Look, ctx: String, task: WTask, tick: Boolean, hideTitle: Boolean) {

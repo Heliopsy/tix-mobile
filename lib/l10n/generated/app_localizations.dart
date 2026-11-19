@@ -16572,6 +16572,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your session on this server ended, so this device stopped syncing. Sign in again to carry on.'**
   String get signedOutExplained;
+
+  /// System notification title when the server refused the saved API token; server is the instance name
+  ///
+  /// In en, this message translates to:
+  /// **'The token for {server} was refused'**
+  String tokenRefusedNoteTitle(String server);
+
+  /// System notification text when the server refused the saved API token
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing stopped. Tap to paste a new token or sign in.'**
+  String get tokenRefusedNoteBody;
+
+  /// Shown on the reconnect form after the server refused the saved API token
+  ///
+  /// In en, this message translates to:
+  /// **'This server refused the saved API token, so this device stopped syncing. Paste a new token or sign in to carry on. Your data on this device is kept.'**
+  String get tokenRefusedExplained;
+
+  /// A widget whose context's session or token the server refused
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in again to show this'**
+  String get widgetSignInAgain;
 }
 
 class _AppLocalizationsDelegate

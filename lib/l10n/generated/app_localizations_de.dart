@@ -10104,4 +10104,20 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get signedOutExplained =>
       'Ihre Sitzung auf diesem Server ist abgelaufen, daher synchronisiert dieses Gerät nicht mehr. Melden Sie sich erneut an, um fortzufahren.';
+
+  @override
+  String tokenRefusedNoteTitle(String server) {
+    return 'Das Token für $server wurde abgelehnt';
+  }
+
+  @override
+  String get tokenRefusedNoteBody =>
+      'Die Synchronisierung wurde angehalten. Tippen, um ein neues Token einzufügen oder sich anzumelden.';
+
+  @override
+  String get tokenRefusedExplained =>
+      'Dieser Server hat das gespeicherte API-Token abgelehnt, daher synchronisiert dieses Gerät nicht mehr. Fügen Sie ein neues Token ein oder melden Sie sich an, um fortzufahren. Ihre Daten auf diesem Gerät bleiben erhalten.';
+
+  @override
+  String get widgetSignInAgain => 'Erneut anmelden, um dies anzuzeigen';
 }

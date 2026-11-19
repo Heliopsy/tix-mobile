@@ -109,6 +109,62 @@ final class AuthRepositoryProvider
 
 String _$authRepositoryHash() => r'4686c63ff368de2d2809164c53a981223ac96509';
 
+/// Confirms and records refused credentials, for the app and the widgets'
+/// headless run alike.
+
+@ProviderFor(refusedCredentials)
+final refusedCredentialsProvider = RefusedCredentialsProvider._();
+
+/// Confirms and records refused credentials, for the app and the widgets'
+/// headless run alike.
+
+final class RefusedCredentialsProvider
+    extends
+        $FunctionalProvider<
+          RefusedCredentials,
+          RefusedCredentials,
+          RefusedCredentials
+        >
+    with $Provider<RefusedCredentials> {
+  /// Confirms and records refused credentials, for the app and the widgets'
+  /// headless run alike.
+  RefusedCredentialsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'refusedCredentialsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$refusedCredentialsHash();
+
+  @$internal
+  @override
+  $ProviderElement<RefusedCredentials> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  RefusedCredentials create(Ref ref) {
+    return refusedCredentials(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(RefusedCredentials value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<RefusedCredentials>(value),
+    );
+  }
+}
+
+String _$refusedCredentialsHash() =>
+    r'eccfab4702861689e76955bc26215fbda277763b';
+
 /// The active session: null until someone connects, and again once the
 /// server refuses a sign-in's session.
 
@@ -140,7 +196,7 @@ final class SessionControllerProvider
   SessionController create() => SessionController();
 }
 
-String _$sessionControllerHash() => r'b9ece8e4edccd267d624358f9785476493e751b8';
+String _$sessionControllerHash() => r'67ffc5f22b400fb99051416aa812315f9830b93c';
 
 /// The active session: null until someone connects, and again once the
 /// server refuses a sign-in's session.

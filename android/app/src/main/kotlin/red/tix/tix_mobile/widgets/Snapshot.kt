@@ -28,7 +28,7 @@ data class Colour(val light: String, val dark: String)
 
 data class Accent(val light: String, val dark: String, val onLight: String, val onDark: String)
 
-data class Ctx(val id: String, val instance: String, val tenant: String, val local: Boolean) {
+data class Ctx(val id: String, val instance: String, val tenant: String, val local: Boolean, val refused: Boolean = false) {
     val label: String get() = listOf(instance, tenant).filter { it.isNotEmpty() }.joinToString(" · ")
 }
 
@@ -116,7 +116,7 @@ object Snapshots {
     private fun colour(o: JSONObject?): Colour? = o?.let { Colour(it.str("light"), it.str("dark")) }
 
     private fun ctx(o: JSONObject?): Ctx =
-        Ctx(o?.str("id") ?: "", o?.str("instance") ?: "", o?.str("tenant") ?: "", o?.optBoolean("local") ?: false)
+        Ctx(o?.str("id") ?: "", o?.str("instance") ?: "", o?.str("tenant") ?: "", o?.optBoolean("local") ?: false, o?.optBoolean("refused") ?: false)
 
     private fun header(o: JSONObject): Header {
         val a = o.optJSONObject("accent")

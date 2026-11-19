@@ -17,3 +17,13 @@ LocalNote signedOutNote(AppLocalizations l10n, String server) => LocalNote(
   payload: signedOutNotePayload,
   channel: NoteChannel.account,
 );
+
+/// The notification saying the server [server] refused the saved API token.
+/// It takes the signed-out notification's place: both ask for a credential.
+LocalNote tokenRefusedNote(AppLocalizations l10n, String server) => LocalNote(
+  id: signedOutNoteId,
+  title: l10n.tokenRefusedNoteTitle(server),
+  body: l10n.tokenRefusedNoteBody,
+  payload: signedOutNotePayload,
+  channel: NoteChannel.account,
+);

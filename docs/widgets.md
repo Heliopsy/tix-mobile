@@ -130,7 +130,7 @@ reads `index.active` and then that context's keys.
   "v": 1,
   "at": 1762600000000,
   "active": "c1.acme",
-  "contexts": [{"id": "c1.acme", "instance": "Work", "tenant": "Acme", "local": false}],
+  "contexts": [{"id": "c1.acme", "instance": "Work", "tenant": "Acme", "local": false, "refused": false}],
   "projects": {"c1.acme": [{"key": "OPS", "name": "Operations", "colour": {"light": "#1d4ed8", "dark": "#60a5fa"}}]},
   "theme": "system",
   "systemBlack": false,
@@ -140,10 +140,16 @@ reads `index.active` and then that context's keys.
     "nothingDue": "Nothing assigned to you", "allRead": "All caught up", "noOpenTasks": "No open tasks",
     "updated": "Updated", "openApp": "Open tix to load this widget", "localStale": "Refreshes when tix is open",
     "overdue": "Overdue", "today": "Today", "complete": "Complete", "projectMissing": "Not in this context",
-    "signedOut": "Sign in to tix", "openUpdate": "Open tix to update", "pickProject": "Pick a project"
+    "signedOut": "Sign in to tix", "signInAgain": "Sign in again to show this", "openUpdate": "Open tix to update",
+    "pickProject": "Pick a project"
   }
 }
 ```
+
+`refused` marks a context whose session or token the server refused (confirmed with `whoami`, in the app or in
+the headless run). The writer removes that context's snapshots and stops asking the server for it, and widgets
+showing it draw `signInAgain`; a tap opens the app on that context, which lands on reconnect. A missing `refused`
+reads as false.
 
 `theme` is `system`, `light`, `dark` or `black`. Widgets use OLED tokens for `black`, and for `system` with
 `systemBlack` when the system is dark: the app's "System, OLED when dark" colour scheme. Widgets have no Low

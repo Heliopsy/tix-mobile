@@ -8,6 +8,7 @@ import 'package:tix_mobile/src/core/design/accent.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/logging/log.dart';
 import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
+import 'package:tix_mobile/src/core/session/refused.dart';
 import 'package:tix_mobile/src/core/session/session.dart' show entriesOf;
 import 'package:tix_mobile/src/core/storage/stores.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
@@ -52,6 +53,9 @@ class WidgetTarget {
 
   /// Whether it is a database served on this device.
   bool get local => instance.kind == InstanceKind.local;
+
+  /// Whether the server refused its connection's credential.
+  bool get refused => connection.refused;
 }
 
 /// The widget key of the context [ref].
@@ -62,17 +66,21 @@ String widgetContextId(ContextRef ref) =>
 /// reached now.
 typedef FeedOpener = Future<WidgetFeed?> Function(WidgetTarget target);
 
+/// Told when the server answered `401` to a context's credential.
+typedef RefusalCheck = Future<void> Function(WidgetTarget target);
+
 /// Opens a feed for a remote [target] with its saved credential, never for
 /// a local one: a widget must not start an engine. Null as well for a
-/// switchable sign-in whose session sits in another tenant, and when the
-/// credential cannot be read (a locked iPhone's keychain).
+/// switchable sign-in whose session sits in another tenant, for a connection
+/// whose credential the server refused, and when the credential cannot be
+/// read (a locked iPhone's keychain).
 Future<WidgetFeed?> openStoredFeed(
   WidgetTarget target, {
   required InstancesRepository instances,
   required TixApiFactory factory,
   required CacheStore cache,
 }) async {
-  if (target.local) return null;
+  if (target.local || target.refused) return null;
   final c = target.connection;
   if (c.switchable && target.tenantKey != c.tenantKey) return null;
   final String? secret;
@@ -83,11 +91,7 @@ Future<WidgetFeed?> openStoredFeed(
     return null;
   }
   if (secret == null || secret.isEmpty) return null;
-  final credential = switch (c.kind) {
-    ConnectionKind.token => BearerCredential(secret) as Credential,
-    ConnectionKind.signIn => SessionCredential(secret),
-  };
-  final api = factory(target.instance.baseUrl, credential);
+  final api = factory(target.instance.baseUrl, credentialOf(c, secret));
   final responses = ResponseCache(
     cache,
     CacheScope(c.id, c.switchable ? c.tenantKey : ''),
@@ -111,6 +115,7 @@ class WidgetWriter {
     required this.l10n,
     required this.now,
     required this.open,
+    this.refused,
   });
 
   /// Widget storage.
@@ -131,6 +136,10 @@ class WidgetWriter {
   /// Opens a context's repositories.
   final FeedOpener open;
 
+  /// Checks a context whose credential was answered `401`, and records the
+  /// refusal when the server confirms it.
+  final RefusalCheck? refused;
+
   /// Every saved context.
   List<WidgetTarget> targets() => [
     for (final i in instances.instances())
@@ -143,12 +152,18 @@ class WidgetWriter {
                 instance: i.name,
                 tenant: e.tenantName,
                 local: i.kind == InstanceKind.local,
+                refused: c.refused,
               ),
               instance: i,
               connection: c,
               tenantKey: e.tenantKey,
             ),
   ];
+
+  /// Whether [t]'s connection is refused by now, a check earlier in the
+  /// same run included.
+  bool _refused(WidgetTarget t) =>
+      instances.connection(t.connection.id)?.refused ?? true;
 
   /// The active context's widget key, null when signed out.
   String? activeId() {
@@ -205,14 +220,14 @@ class WidgetWriter {
       bridge.save(key, jsonEncode(json));
 
   /// Rewrites every snapshot that [reachable] contexts allow, the index and
-  /// the catalog, removes what belonged to contexts that are gone, and
-  /// asks widgets to draw.
+  /// the catalog, removes what belonged to contexts that are gone or
+  /// refused, and asks widgets to draw. A refused context is never asked.
   Future<void> refresh({
     required bool Function(WidgetTarget t) reachable,
   }) async {
     if (!bridge.supported) return;
     final active = activeId();
-    final all = targets();
+    var all = targets();
     final wants = await wanted();
     final old = await _index();
     final projects = <String, Set<String>>{};
@@ -232,11 +247,15 @@ class WidgetWriter {
     };
     for (final MapEntry(key: ctx, value: keys) in projects.entries) {
       final target = all.where((t) => t.ctx.id == ctx).firstOrNull;
-      if (target == null || !reachable(target)) continue;
+      if (target == null || _refused(target) || !reachable(target)) continue;
       final written = await _writeContext(target, keys);
       if (written != null) catalog[ctx] = written;
     }
+    all = targets();
     await _forgetGone(old, all);
+    for (final t in all) {
+      if (t.refused) await _forget(t.ctx.id, catalog[t.ctx.id]);
+    }
     await _save(
       WidgetKeys.index,
       WidgetIndex(
@@ -278,6 +297,7 @@ class WidgetWriter {
       return snaps.catalog();
     } on TixException catch (e) {
       log('widgets: $ctx not refreshed: ${e.kind.name}');
+      if (e.status == 401) await refused?.call(target);
       return null;
     }
   }
@@ -286,11 +306,15 @@ class WidgetWriter {
     if (old == null) return;
     for (final c in old.contexts) {
       if (all.any((t) => t.ctx.id == c.id)) continue;
-      await bridge.save(WidgetKeys.myWork(c.id), null);
-      await bridge.save(WidgetKeys.inbox(c.id), null);
-      for (final p in old.projects[c.id] ?? const <WidgetProject>[]) {
-        await bridge.save(WidgetKeys.project(c.id, p.key), null);
-      }
+      await _forget(c.id, old.projects[c.id]);
+    }
+  }
+
+  Future<void> _forget(String ctx, List<WidgetProject>? projects) async {
+    await bridge.save(WidgetKeys.myWork(ctx), null);
+    await bridge.save(WidgetKeys.inbox(ctx), null);
+    for (final p in projects ?? const <WidgetProject>[]) {
+      await bridge.save(WidgetKeys.project(ctx, p.key), null);
     }
   }
 
@@ -310,12 +334,17 @@ class WidgetWriter {
         settled.add(a.id);
         continue;
       }
-      if (!reachable(target)) continue;
+      if (_refused(target) || !reachable(target)) continue;
       final feed = feeds.containsKey(a.ctx)
           ? feeds[a.ctx]
           : feeds[a.ctx] = await open(target);
       if (feed == null) continue;
       final outcome = await feed.complete(a.ref);
+      if (outcome == ActionOutcome.credentialRefused) {
+        feeds[a.ctx] = null;
+        await refused?.call(target);
+        continue;
+      }
       if (outcome != ActionOutcome.later) settled.add(a.id);
     }
     if (settled.isEmpty) return 0;

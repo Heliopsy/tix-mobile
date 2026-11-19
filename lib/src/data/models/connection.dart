@@ -34,6 +34,10 @@ abstract class Connection with _$Connection {
     @Default(true) bool pinned,
     @Default(<Membership>[]) List<Membership> memberships,
     DateTime? lastUsedAt,
+
+    /// When the server last refused this connection's credential, confirmed
+    /// with `whoami`. Nothing is sent with it until a new one is saved.
+    DateTime? refusedAt,
   }) = _Connection;
 
   const Connection._();
@@ -46,6 +50,9 @@ abstract class Connection with _$Connection {
 
   /// The tenant's name when known, else its key.
   String get tenantLabel => tenantName.isNotEmpty ? tenantName : tenantKey;
+
+  /// Whether the server refused this connection's credential.
+  bool get refused => refusedAt != null;
 
   /// The context this connection targets now.
   ContextRef get ref => ContextRef(connectionId: id, tenantKey: tenantKey);

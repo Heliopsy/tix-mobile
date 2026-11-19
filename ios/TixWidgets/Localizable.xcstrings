@@ -645,6 +645,34 @@
         }
       }
     },
+    "Sign in again to show this" : {
+      "localizations" : {
+        "bg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Влезте отново, за да видите това"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erneut anmelden, um dies anzuzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in again to show this"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reconnectez-vous pour afficher ceci"
+          }
+        }
+      }
+    },
     "Sign in to tix" : {
       "localizations" : {
         "bg" : {

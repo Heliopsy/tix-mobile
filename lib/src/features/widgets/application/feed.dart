@@ -27,6 +27,9 @@ enum ActionOutcome {
 
   /// Try again later.
   later,
+
+  /// The server refused the credential; keep it and check the connection.
+  credentialRefused,
 }
 
 /// Reads what the widgets of one context show, and runs their actions,
@@ -136,6 +139,7 @@ class WidgetFeed {
       await lists.move(ref, done);
       return ActionOutcome.done;
     } on TixException catch (e) {
+      if (e.status == 401) return ActionOutcome.credentialRefused;
       return switch (e.kind) {
         TixErrorKind.notFound ||
         TixErrorKind.forbidden ||

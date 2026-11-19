@@ -42,6 +42,15 @@ class SnapshotTest {
     }
 
     @Test
+    fun indexMarksRefusedContexts() {
+        val index = Snapshots.index(
+            """{"v":1,"at":1,"active":"c1.acme","contexts":[{"id":"c1.acme","instance":"Work","tenant":"Acme","refused":true},{"id":"c2.x","instance":"Home","tenant":"X"}],"projects":{},"theme":"system","systemBlack":false,"lockCounts":true,"strings":{}}""",
+        )!!
+        assertTrue(index.ctx("c1.acme")!!.refused)
+        assertEquals(false, index.ctx("c2.x")!!.refused)
+    }
+
+    @Test
     fun queuedTicksAreHidden() {
         var queue = Snapshots.enqueueComplete(null, "c1.acme", "OPS-1", 5, 1)
         queue = Snapshots.enqueueComplete(queue, "l1.default", "OPS-2", 6, 2)
