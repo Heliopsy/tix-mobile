@@ -7065,5 +7065,22 @@
   "widgetSignInAgain": "Sign in again to show this",
   "@widgetSignInAgain": {
     "description": "A widget whose context's session or token the server refused"
+  },
+  "connectionSignedOut": "Signed out, sign in again",
+  "@connectionSignedOut": {
+    "description": "A saved sign-in whose session the server ended, in the connection lists"
+  },
+  "connectionTokenRefused": "Token refused",
+  "@connectionTokenRefused": {
+    "description": "A saved token connection the server refused, in the connection lists"
+  },
+  "connectionAttention": "Needs attention: {state}",
+  "@connectionAttention": {
+    "description": "Screen reader label for a refused connection; state is connectionSignedOut or connectionTokenRefused",
+    "placeholders": {
+      "state": {
+        "type": "String"
+      }
+    }
   }
 }

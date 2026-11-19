@@ -11,6 +11,7 @@ import 'package:tix_mobile/src/core/platform/files.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/widgets/refused_mark.dart';
 import 'package:tix_mobile/src/core/widgets/sync_findings_note.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
@@ -255,8 +256,23 @@ class InstanceCard extends ConsumerWidget {
               ),
               selected: c.id == activeConnectionId,
               title: Text(connectionTitle(c)),
-              subtitle: Text(connectionSummary(l10n, c)),
-              onTap: c.id == activeConnectionId
+              subtitle: c.refused
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(connectionSummary(l10n, c)),
+                        RefusedMark(connection: c),
+                      ],
+                    )
+                  : Text(connectionSummary(l10n, c)),
+              onTap: c.refused
+                  ? () => _onConnection(
+                      context,
+                      ref,
+                      c,
+                      _ConnectionAction.reconnect,
+                    )
+                  : c.id == activeConnectionId
                   ? null
                   : () => _onConnection(context, ref, c, _ConnectionAction.use),
               trailing: PopupMenuButton<_ConnectionAction>(
@@ -268,18 +284,18 @@ class InstanceCard extends ConsumerWidget {
                       value: _ConnectionAction.use,
                       child: Text(l10n.useConnection),
                     ),
-                  if (c.kind == ConnectionKind.signIn) ...[
+                  if (c.kind == ConnectionKind.signIn)
                     PopupMenuItem(
                       value: c.pinned
                           ? _ConnectionAction.unpin
                           : _ConnectionAction.pin,
                       child: Text(c.pinned ? l10n.makeSwitchable : l10n.pin),
                     ),
+                  if (c.kind == ConnectionKind.signIn || c.refused)
                     PopupMenuItem(
                       value: _ConnectionAction.reconnect,
                       child: Text(l10n.signInAgain),
                     ),
-                  ],
                   if (c.kind == ConnectionKind.token && !local)
                     PopupMenuItem(
                       value: _ConnectionAction.rotate,

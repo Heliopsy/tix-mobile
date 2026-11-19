@@ -17,7 +17,8 @@ T _$identity<T>(T value) => value;
 mixin _$Connection {
 
  String get id; String get instanceId; ConnectionKind get kind; DateTime get createdAt; String get label; String get handle; String get email; String get tenantKey; String get tenantName; TenantIcon get tenantIcon; bool get pinned; List<Membership> get memberships; DateTime? get lastUsedAt;/// When the server last refused this connection's credential, confirmed
-/// with `whoami`. Nothing is sent with it until a new one is saved.
+/// with `whoami`, or a sign-in was found without its session. Nothing is
+/// sent with it until a new one is saved.
  DateTime? get refusedAt;
 /// Create a copy of Connection
 /// with the given fields replaced by the non-null parameter values.
@@ -253,7 +254,8 @@ class _Connection extends Connection {
 
 @override final  DateTime? lastUsedAt;
 /// When the server last refused this connection's credential, confirmed
-/// with `whoami`. Nothing is sent with it until a new one is saved.
+/// with `whoami`, or a sign-in was found without its session. Nothing is
+/// sent with it until a new one is saved.
 @override final  DateTime? refusedAt;
 
 /// Create a copy of Connection

@@ -80,6 +80,7 @@ class InstancesRepository {
   final KeyValueStore _settings;
   final SecretStore _secrets;
   final DateTime Function() _now;
+  bool _sessionsChecked = false;
   static int _counter = 0;
 
   /// A new identifier, unique on this device.
@@ -87,11 +88,35 @@ class InstancesRepository {
       '${DateTime.now().microsecondsSinceEpoch.toRadixString(36)}'
       '${(_counter++).toRadixString(36)}';
 
-  /// Moves 0.1's saved servers over, once, then tidies saved addresses. The
-  /// old keys are left in place so an older build still opens.
+  /// Moves 0.1's saved servers over, once, then tidies saved addresses and,
+  /// once per run, marks sign-ins that lost their session. The old keys are
+  /// left in place so an older build still opens.
   Future<void> migrate() async {
     if (_settings.read(_versionKey) == null) await _migrateLegacy();
     await tidyAddresses();
+    if (_sessionsChecked) return;
+    _sessionsChecked = true;
+    await markSignedOut();
+  }
+
+  /// Marks refused every remote sign-in that holds no session, so it reads
+  /// like one the server refused: 0.22.0 deleted a refused session without
+  /// marking the connection, and a restored device can lose its keychain.
+  /// A session secure storage cannot read now is left alone.
+  Future<void> markSignedOut() async {
+    for (final c in connections()) {
+      if (c.kind != ConnectionKind.signIn || c.refused) continue;
+      if (instance(c.instanceId)?.kind != InstanceKind.remote) continue;
+      final String? session;
+      try {
+        session = await secret(c);
+      } on Exception {
+        continue;
+      }
+      if (session == null || session.isEmpty) {
+        await update(c.copyWith(refusedAt: _now()));
+      }
+    }
   }
 
   Future<void> _migrateLegacy() async {

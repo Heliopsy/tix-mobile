@@ -10049,4 +10049,15 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get widgetSignInAgain => 'Влезте отново, за да видите това';
+
+  @override
+  String get connectionSignedOut => 'Излязохте, влезте отново';
+
+  @override
+  String get connectionTokenRefused => 'Токенът е отказан';
+
+  @override
+  String connectionAttention(String state) {
+    return 'Нужно е действие: $state';
+  }
 }

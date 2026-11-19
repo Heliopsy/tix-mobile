@@ -10120,4 +10120,15 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get widgetSignInAgain => 'Erneut anmelden, um dies anzuzeigen';
+
+  @override
+  String get connectionSignedOut => 'Abgemeldet, erneut anmelden';
+
+  @override
+  String get connectionTokenRefused => 'Token abgelehnt';
+
+  @override
+  String connectionAttention(String state) {
+    return 'Handlungsbedarf: $state';
+  }
 }

@@ -36,7 +36,8 @@ abstract class Connection with _$Connection {
     DateTime? lastUsedAt,
 
     /// When the server last refused this connection's credential, confirmed
-    /// with `whoami`. Nothing is sent with it until a new one is saved.
+    /// with `whoami`, or a sign-in was found without its session. Nothing is
+    /// sent with it until a new one is saved.
     DateTime? refusedAt,
   }) = _Connection;
 

@@ -2747,5 +2747,8 @@
   "tokenRefusedNoteTitle": "Le jeton pour {server} a été refusé",
   "tokenRefusedNoteBody": "La synchronisation s’est arrêtée. Touchez pour coller un nouveau jeton ou vous connecter.",
   "tokenRefusedExplained": "Ce serveur a refusé le jeton d’API enregistré, cet appareil ne se synchronise donc plus. Collez un nouveau jeton ou connectez-vous pour continuer. Vos données sur cet appareil sont conservées.",
-  "widgetSignInAgain": "Reconnectez-vous pour afficher ceci"
+  "widgetSignInAgain": "Reconnectez-vous pour afficher ceci",
+  "connectionSignedOut": "Déconnecté, reconnectez-vous",
+  "connectionTokenRefused": "Jeton refusé",
+  "connectionAttention": "Action requise : {state}"
 }

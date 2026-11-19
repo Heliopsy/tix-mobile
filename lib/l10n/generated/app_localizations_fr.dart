@@ -10110,4 +10110,15 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get widgetSignInAgain => 'Reconnectez-vous pour afficher ceci';
+
+  @override
+  String get connectionSignedOut => 'Déconnecté, reconnectez-vous';
+
+  @override
+  String get connectionTokenRefused => 'Jeton refusé';
+
+  @override
+  String connectionAttention(String state) {
+    return 'Action requise : $state';
+  }
 }

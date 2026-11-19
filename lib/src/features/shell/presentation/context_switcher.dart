@@ -14,6 +14,7 @@ import 'package:tix_mobile/src/core/theme/layout.dart';
 import 'package:tix_mobile/src/core/widgets/confirm.dart';
 import 'package:tix_mobile/src/core/widgets/live_details.dart';
 import 'package:tix_mobile/src/core/widgets/live_status.dart';
+import 'package:tix_mobile/src/core/widgets/refused_mark.dart';
 import 'package:tix_mobile/src/core/widgets/tenant_mark.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
@@ -226,12 +227,17 @@ class _LabelWithStatus extends StatelessWidget {
 }
 
 /// Makes [entry] active, asking for a second factor code when the switch
-/// needs one and reporting a failure in a snack bar.
+/// needs one and reporting a failure in a snack bar. A refused connection
+/// opens its reconnect screen instead.
 Future<void> activateEntry(
   BuildContext context,
   WidgetRef ref,
   ContextEntry entry,
 ) async {
+  if (entry.connection.refused) {
+    context.go(Routes.reconnect(entry.connection.id));
+    return;
+  }
   final session = ref.read(sessionControllerProvider.notifier);
   final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
@@ -391,7 +397,15 @@ class _EntryTile extends StatelessWidget {
         readImage: readImage,
       ),
       title: Text(tenant),
-      subtitle: Text(details, maxLines: 1, overflow: TextOverflow.ellipsis),
+      subtitle: c.refused
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(details, maxLines: 1, overflow: TextOverflow.ellipsis),
+                RefusedMark(connection: c),
+              ],
+            )
+          : Text(details, maxLines: 1, overflow: TextOverflow.ellipsis),
       selected: active,
       trailing: active
           ? const Icon(Icons.check)

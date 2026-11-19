@@ -16596,6 +16596,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sign in again to show this'**
   String get widgetSignInAgain;
+
+  /// A saved sign-in whose session the server ended, in the connection lists
+  ///
+  /// In en, this message translates to:
+  /// **'Signed out, sign in again'**
+  String get connectionSignedOut;
+
+  /// A saved token connection the server refused, in the connection lists
+  ///
+  /// In en, this message translates to:
+  /// **'Token refused'**
+  String get connectionTokenRefused;
+
+  /// Screen reader label for a refused connection; state is connectionSignedOut or connectionTokenRefused
+  ///
+  /// In en, this message translates to:
+  /// **'Needs attention: {state}'**
+  String connectionAttention(String state);
 }
 
 class _AppLocalizationsDelegate
