@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.21.0](https://github.com/Heliopsy/tix-mobile/compare/v0.20.1...v0.21.0) (2026-11-19)
+
+
+### Features
+
+* **update:** notify new versions, check every three hours and ask the App Store ([c613b61](https://github.com/Heliopsy/tix-mobile/commit/c613b612d503c3f2e4a6b06fa0386aedb607c24d))
+
+
+### Bug Fixes
+
+* **ci:** give App Review the version's What's New when promoting ([cb30dba](https://github.com/Heliopsy/tix-mobile/commit/cb30dba013891d2605f420962cec069e8a51738b))
+
+
+### Dependencies
+
+* **fdroid:** fix the recipe for fdroiddata's build server ([3d75812](https://github.com/Heliopsy/tix-mobile/commit/3d758128a2b9da4f7e14738329ec9b21100b63c9))
+* **fdroid:** point the recipe at v0.20.1 and build Go from fdroiddata's srclib ([c495458](https://github.com/Heliopsy/tix-mobile/commit/c49545847aa485f69547ef1f3569126922128c93))
+
 ## [0.20.1](https://github.com/Heliopsy/tix-mobile/compare/v0.20.0...v0.20.1) (2026-11-15)
 
 
