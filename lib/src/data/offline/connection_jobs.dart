@@ -70,6 +70,12 @@ class ConnectionJobs {
   /// up to [grace] for what runs to end. Connection ids are never reused.
   Future<void> stop(String connectionId) async {
     _stopped.add(connectionId);
+    await cancel(connectionId);
+  }
+
+  /// Cancels the work of [connectionId] and waits up to [grace] for what
+  /// runs to end, still taking new work for it afterwards.
+  Future<void> cancel(String connectionId) async {
     final jobs = [
       for (final j in _running)
         if (j.connectionId == connectionId) j,

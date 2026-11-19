@@ -134,7 +134,7 @@ List<Override> fakeOverrides(
 }) => [
   keyValueStoreProvider.overrideWithValue(settings ?? MemoryKeyValueStore()),
   secretStoreProvider.overrideWithValue(secrets ?? MemorySecretStore()),
-  tixApiFactoryProvider.overrideWithValue(server.factory),
+  tixClientFactoryProvider.overrideWithValue(server.factory),
   localTixEngineProvider.overrideWithValue(engine ?? InMemoryLocalTixEngine()),
   localInstancesEnabledProvider.overrideWithValue(local),
   filePickingProvider.overrideWithValue(files ?? FakeFilePicking()),

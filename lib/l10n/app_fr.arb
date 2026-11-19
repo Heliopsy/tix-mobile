@@ -2740,5 +2740,8 @@
   "updatePlayHelp": "Mettez-la à jour depuis Google Play.",
   "updateOpenPlay": "Mettre à jour depuis Google Play",
   "updateFailedPlay": "Impossible de joindre Google Play pour rechercher des mises à jour.",
-  "updateNotePlayBody": "Touchez pour mettre à jour depuis Google Play."
+  "updateNotePlayBody": "Touchez pour mettre à jour depuis Google Play.",
+  "signedOutNoteTitle": "Déconnecté de {server}",
+  "signedOutNoteBody": "Votre session a expiré et la synchronisation s’est arrêtée. Touchez pour vous reconnecter.",
+  "signedOutExplained": "Votre session sur ce serveur a expiré, cet appareil ne se synchronise donc plus. Reconnectez-vous pour continuer."
 }

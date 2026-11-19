@@ -213,6 +213,10 @@ class InstancesRepository {
   Future<void> writeSecret(Connection connection, String secret) =>
       _secrets.write(_secretKey(connection), secret);
 
+  /// Forgets the secret of [connection], keeping the connection itself.
+  Future<void> deleteSecret(Connection connection) =>
+      _secrets.delete(_secretKey(connection));
+
   /// Throws when secure storage would refuse to replace the secret of
   /// [connection] now, such as a locked keyring, by writing and removing a
   /// throwaway value next to it.

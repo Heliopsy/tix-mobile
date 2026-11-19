@@ -10004,4 +10004,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateNotePlayBody => 'Tap to update from Google Play.';
+
+  @override
+  String signedOutNoteTitle(String server) {
+    return 'Signed out of $server';
+  }
+
+  @override
+  String get signedOutNoteBody =>
+      'Your session ended and syncing stopped. Tap to sign in again.';
+
+  @override
+  String get signedOutExplained =>
+      'Your session on this server ended, so this device stopped syncing. Sign in again to carry on.';
 }

@@ -109,15 +109,18 @@ final class AuthRepositoryProvider
 
 String _$authRepositoryHash() => r'4686c63ff368de2d2809164c53a981223ac96509';
 
-/// The active session: null until someone connects.
+/// The active session: null until someone connects, and again once the
+/// server refuses a sign-in's session.
 
 @ProviderFor(SessionController)
 final sessionControllerProvider = SessionControllerProvider._();
 
-/// The active session: null until someone connects.
+/// The active session: null until someone connects, and again once the
+/// server refuses a sign-in's session.
 final class SessionControllerProvider
     extends $AsyncNotifierProvider<SessionController, Session?> {
-  /// The active session: null until someone connects.
+  /// The active session: null until someone connects, and again once the
+  /// server refuses a sign-in's session.
   SessionControllerProvider._()
     : super(
         from: null,
@@ -137,9 +140,10 @@ final class SessionControllerProvider
   SessionController create() => SessionController();
 }
 
-String _$sessionControllerHash() => r'b5b2559f2b0d96e5f28b14a06b9861f06f8a0850';
+String _$sessionControllerHash() => r'b9ece8e4edccd267d624358f9785476493e751b8';
 
-/// The active session: null until someone connects.
+/// The active session: null until someone connects, and again once the
+/// server refuses a sign-in's session.
 
 abstract class _$SessionController extends $AsyncNotifier<Session?> {
   FutureOr<Session?> build();

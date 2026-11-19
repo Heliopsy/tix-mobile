@@ -10091,4 +10091,17 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get updateNotePlayBody =>
       'Tippen, um über Google Play zu aktualisieren.';
+
+  @override
+  String signedOutNoteTitle(String server) {
+    return 'Von $server abgemeldet';
+  }
+
+  @override
+  String get signedOutNoteBody =>
+      'Ihre Sitzung ist abgelaufen und die Synchronisierung wurde angehalten. Tippen, um sich erneut anzumelden.';
+
+  @override
+  String get signedOutExplained =>
+      'Ihre Sitzung auf diesem Server ist abgelaufen, daher synchronisiert dieses Gerät nicht mehr. Melden Sie sich erneut an, um fortzufahren.';
 }

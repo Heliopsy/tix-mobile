@@ -10020,4 +10020,17 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get updateNotePlayBody => 'Докоснете, за да обновите от Google Play.';
+
+  @override
+  String signedOutNoteTitle(String server) {
+    return 'Излязохте от $server';
+  }
+
+  @override
+  String get signedOutNoteBody =>
+      'Сесията ви изтече и синхронизирането спря. Докоснете, за да влезете отново.';
+
+  @override
+  String get signedOutExplained =>
+      'Сесията ви на този сървър изтече и устройството спря да се синхронизира. Влезте отново, за да продължите.';
 }

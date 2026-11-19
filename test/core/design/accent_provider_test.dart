@@ -26,9 +26,7 @@ void main() {
     await c.read(sessionControllerProvider.future);
     final sub = c.listen(tenantAccentProvider, (_, _) {});
     addTearDown(sub.close);
-    for (var i = 0; i < 20; i++) {
-      await Future<void>.delayed(Duration.zero);
-    }
+    await pumpEventQueue(times: 100);
     final accent = c.read(tenantAccentProvider);
     return accent;
   }

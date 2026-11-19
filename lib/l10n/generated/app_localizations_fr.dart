@@ -10081,4 +10081,17 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get updateNotePlayBody =>
       'Touchez pour mettre à jour depuis Google Play.';
+
+  @override
+  String signedOutNoteTitle(String server) {
+    return 'Déconnecté de $server';
+  }
+
+  @override
+  String get signedOutNoteBody =>
+      'Votre session a expiré et la synchronisation s’est arrêtée. Touchez pour vous reconnecter.';
+
+  @override
+  String get signedOutExplained =>
+      'Votre session sur ce serveur a expiré, cet appareil ne se synchronise donc plus. Reconnectez-vous pour continuer.';
 }
