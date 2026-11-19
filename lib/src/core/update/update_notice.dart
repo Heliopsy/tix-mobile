@@ -11,6 +11,7 @@ import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/core/storage/stores.dart';
 import 'package:tix_mobile/src/core/update/updates.dart';
 import 'package:tix_mobile/src/data/repositories/settings_repository.dart';
+import 'package:tix_mobile/src/data/update/play_feed.dart';
 import 'package:tix_mobile/src/data/update/release_feed.dart';
 
 /// What a tap on an update notification hands back.
@@ -25,8 +26,11 @@ enum UpdateNoteKind {
   /// A newer release is out, downloaded by hand from its page.
   available,
 
-  /// The store serves a newer version.
+  /// The App Store serves a newer version.
   store,
+
+  /// Google Play serves a newer version.
+  play,
 
   /// A newer release is downloaded and installs on Restart to update.
   ready,
@@ -35,18 +39,26 @@ enum UpdateNoteKind {
   readyAuto,
 }
 
-/// What to notify about [state] in [mode], null when nothing.
+/// What to notify about [state] in [mode], updating from [store], null
+/// when nothing.
 UpdateNoteKind? updateNoteKind(
   UpdateMode mode,
   UpdateState state, {
   required bool autoInstall,
+  UpdateStore? store,
 }) => switch (state.phase) {
-  UpdatePhase.available when state.offer != null =>
-    mode == UpdateMode.store ? UpdateNoteKind.store : UpdateNoteKind.available,
+  UpdatePhase.available when state.offer != null => _availableKind(mode, store),
   UpdatePhase.ready =>
     autoInstall ? UpdateNoteKind.readyAuto : UpdateNoteKind.ready,
   _ => null,
 };
+
+UpdateNoteKind _availableKind(UpdateMode mode, UpdateStore? store) =>
+    mode != UpdateMode.store
+    ? UpdateNoteKind.available
+    : store == UpdateStore.play
+    ? UpdateNoteKind.play
+    : UpdateNoteKind.store;
 
 /// The notification for [version], worded for [kind].
 LocalNote updateNote(
@@ -64,6 +76,7 @@ LocalNote updateNote(
     body: switch (kind) {
       UpdateNoteKind.available => l10n.updateNoteBody,
       UpdateNoteKind.store => l10n.updateNoteStoreBody,
+      UpdateNoteKind.play => l10n.updateNotePlayBody,
       UpdateNoteKind.ready => l10n.updateNoteReadyBody,
       UpdateNoteKind.readyAuto => l10n.updateNoteReadyAutoBody,
     },
@@ -115,7 +128,9 @@ const updateBackgroundHosts = {'refresh', 'update'};
 
 /// Looks for an update from a background run while the app is closed, at
 /// most once per [updateCheckInterval], and notifies a newer version once.
-/// Does nothing where updates are off or "Check for updates" is.
+/// Does nothing where updates are off or "Check for updates" is. The Play
+/// build has no Play channel here, so it counts only the runs whose [uri]
+/// carries Play's answer, which the Android update worker adds.
 Future<void> runBackgroundUpdateCheck(
   Uri? uri,
   ProviderContainer container,
@@ -127,6 +142,10 @@ Future<void> runBackgroundUpdateCheck(
   try {
     final mode = await container.read(updateModeProvider.future);
     if (mode == UpdateMode.off) return;
+    final from = await container.read(updateStoreProvider.future);
+    if (from == UpdateStore.play && PlayUpdateInfo.fromUri(uri) == null) {
+      return;
+    }
     final now = container.read(clockProvider)();
     if (!updateCheckDue(settings.updateLastCheck(), now)) return;
     await settings.setUpdateLastCheck(now);
@@ -134,9 +153,7 @@ Future<void> runBackgroundUpdateCheck(
     final offer = await updater.check();
     if (offer == null) return;
     final version = offer.version.toString();
-    final kind = mode == UpdateMode.store
-        ? UpdateNoteKind.store
-        : UpdateNoteKind.available;
+    final kind = _availableKind(mode, from);
     await notifyUpdateOnce(
       notes: container.read(localNotesProvider),
       settings: settings,

@@ -2735,5 +2735,10 @@
   "markdownLink": "Връзка",
   "markdownTable": "Таблица",
   "markdownLinkAddress": "Адрес на връзката",
-  "markdownLinkAdd": "Добавяне на връзка"
+  "markdownLinkAdd": "Добавяне на връзка",
+  "settingsUpdatesPlayHelp": "tix пита Google Play дали има нова версия. Google Play я инсталира.",
+  "updatePlayHelp": "Обновете от Google Play.",
+  "updateOpenPlay": "Обновяване от Google Play",
+  "updateFailedPlay": "Няма връзка с Google Play за проверка на обновленията.",
+  "updateNotePlayBody": "Докоснете, за да обновите от Google Play."
 }

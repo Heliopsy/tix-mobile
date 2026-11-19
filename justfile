@@ -78,7 +78,7 @@ doctor:
 get:
     flutter pub get
 
-# Run the app; arguments go to flutter run (e.g. `just run -d linux`).
+# Run the app; arguments go to flutter run (e.g. `just run -d linux`). Android needs a flavour: `--flavor oss`.
 [group('dev')]
 run *ARGS:
     flutter run {{ARGS}}
@@ -307,23 +307,24 @@ release-files-check HEAD_REF="":
 # build. Artifacts land where flutter puts them; the package-* recipes collect
 # them into dist/ under release names.
 
-# Android APK (release). Signed when android/key.properties or ANDROID_KEYSTORE_PATH is set, debug-signed otherwise.
+# Android APKs for GitHub releases and Obtainium (release, oss flavour: nothing proprietary). Signed when
+# android/key.properties or ANDROID_KEYSTORE_PATH is set, debug-signed otherwise.
 [group('build')]
 build-apk *ARGS:
-    flutter build apk --release --split-per-abi {{build_args}} {{ARGS}}
+    flutter build apk --release --split-per-abi --flavor oss {{build_args}} {{ARGS}}
 
-# Android App Bundle (release), signed as build-apk is. The bundle goes to Google Play, which restricts All files
-# access, so it is built without the permission and offers no open in place (docs/architecture.md). Play updates
-# it, so it never looks for releases on GitHub.
+# Android App Bundle for Google Play (release, play flavour), signed as build-apk is. The play flavour leaves out
+# All files access, which Play restricts, so it offers no open in place (docs/architecture.md), and carries Play
+# Core's in-app update, which is how it updates: it asks Play, never GitHub.
 [group('build')]
 build-aab *ARGS:
-    ORG_GRADLE_PROJECT_tixAllFilesAccess=false flutter build appbundle --release --dart-define=TIX_SELF_UPDATE=false {{build_args}} {{ARGS}}
+    flutter build appbundle --release --flavor play --dart-define=TIX_DISTRIBUTION=play {{build_args}} {{ARGS}}
 
-# The APKs F-Droid builds: per ABI, version code from pubspec.yaml rather than BUILD_ARGS (docs/releasing.md#f-droid).
-# F-Droid updates them and forbids self-updaters, so the update check is off.
+# The APKs F-Droid builds: oss flavour, per ABI, version code from pubspec.yaml rather than BUILD_ARGS
+# (docs/releasing.md#f-droid). F-Droid updates them and forbids self-updaters, so the update check is off.
 [group('build')]
 build-fdroid *ARGS:
-    flutter build apk --release --split-per-abi --dart-define=TIX_SELF_UPDATE=false {{ARGS}}
+    flutter build apk --release --split-per-abi --flavor oss --dart-define=TIX_SELF_UPDATE=false --dart-define=TIX_DISTRIBUTION=fdroid {{ARGS}}
 
 # iOS app without code signing (macOS only); proves it builds, installs nowhere.
 [group('build')]
@@ -375,7 +376,7 @@ build-all:
       *)      just build-apk; just build-aab; just build-windows ;;
     esac
 
-# Collect the Android APK and AAB into dist/.
+# Collect the Android APKs (oss) and the AAB (play) into dist/, under the names the release has always used.
 [group('package')]
 package-android:
     #!/usr/bin/env bash
@@ -388,9 +389,9 @@ package-android:
     # One APK per ABI instead of a universal one, which carries all three
     # engines and is several times the size of what a phone needs.
     for abi in arm64-v8a armeabi-v7a x86_64; do
-        cp "build/app/outputs/flutter-apk/app-${abi}-release.apk" "dist/{{app}}-{{version}}-android-${abi}${suffix}.apk"
+        cp "build/app/outputs/flutter-apk/app-${abi}-oss-release.apk" "dist/{{app}}-{{version}}-android-${abi}${suffix}.apk"
     done
-    cp build/app/outputs/bundle/release/app-release.aab "dist/{{app}}-{{version}}-android${suffix}.aab"
+    cp build/app/outputs/bundle/playRelease/app-play-release.aab "dist/{{app}}-{{version}}-android${suffix}.aab"
     ls -l dist
 
 # Tar the Linux bundle into dist/ (ARCH is x64 or arm64).

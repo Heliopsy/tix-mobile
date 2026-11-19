@@ -165,9 +165,10 @@ jobs:
   # Runner labels are exact images rather than *-latest: a label that moves
   # when GitHub promotes a new image is how a green build starts failing on a
   # morning nobody pushed anything.
-  # Pull requests and the merge queue build Android and Linux only, which keeps
-  # them under ten minutes. iOS, macOS and Windows build on every push to main,
-  # so a break there shows up right after the merge. The platform list lives in
+  # Pull requests and the merge queue build Android (the oss APKs) and Linux
+  # only, which keeps them under ten minutes. iOS, macOS, Windows and the
+  # Google Play App Bundle (the play flavour) build on every push to main, so
+  # a break there shows up right after the merge. The platform list lives in
   # .github/build-matrix.json; entries marked main_only are dropped here.
   plan:
     name: Plan builds
@@ -292,8 +293,9 @@ jobs:
           # shellcheck disable=SC2086
           just engine-check "$CHECK" $ARTIFACT
 
-      # Android only: F-Droid builds from this source, and a dependency that
-      # pulls in Play services or Firebase should fail here, not there.
+      # The oss APKs only: F-Droid builds that flavour, and a dependency that
+      # pulls in Play services or Firebase should fail here, not there. The
+      # play App Bundle may carry Play Core and is not checked.
       - name: No non-free code in the APKs
         if: matrix.check == 'android'
         env:

@@ -235,9 +235,9 @@ class _Section extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final store =
-        section == SettingsSection.updates &&
-        ref.watch(updateModeProvider).value == UpdateMode.store;
+    final store = section == SettingsSection.updates
+        ? ref.watch(updateStoreProvider).value
+        : null;
     return TixSection(
       key: Key('settings.section.${section.name}'),
       title: settingsSectionTitle(l10n, section),
@@ -251,8 +251,11 @@ class _Section extends ConsumerWidget {
         SettingsSection.localEngine => l10n.localInstanceIdleHelp,
         SettingsSection.widgets => l10n.settingsWidgetsHelp,
         SettingsSection.desktop => l10n.settingsDesktopHelp,
-        SettingsSection.updates =>
-          store ? l10n.settingsUpdatesStoreHelp : l10n.settingsUpdatesHelp,
+        SettingsSection.updates => switch (store) {
+          UpdateStore.play => l10n.settingsUpdatesPlayHelp,
+          UpdateStore.appStore => l10n.settingsUpdatesStoreHelp,
+          null => l10n.settingsUpdatesHelp,
+        },
         _ => null,
       },
       children: [

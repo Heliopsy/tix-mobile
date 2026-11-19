@@ -75,6 +75,64 @@ void main() {
       expect(store(null), UpdateMode.off);
     });
 
+    test('the distribution picks the Android mode', () {
+      UpdateMode android(Distribution d, {String? installer}) => updateModeFor(
+        UpdateEnvironment(
+          android: true,
+          distribution: d,
+          androidInstaller: installer,
+        ),
+      );
+      expect(android(Distribution.play), UpdateMode.store);
+      expect(
+        android(Distribution.play, installer: 'com.android.vending'),
+        UpdateMode.store,
+      );
+      expect(android(Distribution.fdroid), UpdateMode.off);
+      expect(
+        android(Distribution.fdroid, installer: 'org.fdroid.fdroid'),
+        UpdateMode.off,
+      );
+      expect(android(Distribution.github), UpdateMode.notify);
+      expect(
+        android(Distribution.github, installer: 'com.android.vending'),
+        UpdateMode.off,
+      );
+    });
+
+    test('the distribution only matters on Android', () {
+      expect(
+        updateModeFor(
+          const UpdateEnvironment(
+            desktop: DesktopOs.linux,
+            distribution: Distribution.play,
+          ),
+        ),
+        UpdateMode.notify,
+      );
+    });
+
+    test('a Play build made with self-update off stays off', () {
+      expect(
+        updateModeFor(
+          const UpdateEnvironment(
+            android: true,
+            buildAllows: false,
+            distribution: Distribution.play,
+          ),
+        ),
+        UpdateMode.off,
+      );
+    });
+
+    test('TIX_DISTRIBUTION names a distribution, github otherwise', () {
+      expect(Distribution.parse('play'), Distribution.play);
+      expect(Distribution.parse('fdroid'), Distribution.fdroid);
+      expect(Distribution.parse('github'), Distribution.github);
+      expect(Distribution.parse(''), Distribution.github);
+      expect(Distribution.parse('Play'), Distribution.github);
+    });
+
     test('iOS asks the App Store only for an App Store install', () {
       UpdateMode ios(String? installer, {bool release = true}) => updateModeFor(
         UpdateEnvironment(

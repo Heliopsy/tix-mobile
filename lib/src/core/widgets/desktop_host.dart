@@ -10,14 +10,12 @@ import 'package:tix_mobile/src/core/desktop/tray_status.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/logging/log.dart';
 import 'package:tix_mobile/src/core/notifications/local_notifier.dart';
-import 'package:tix_mobile/src/core/platform/attachments.dart';
 import 'package:tix_mobile/src/core/platform/deep_links.dart';
 import 'package:tix_mobile/src/core/platform/desktop.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
 import 'package:tix_mobile/src/core/update/update_notice.dart';
 import 'package:tix_mobile/src/core/update/updates.dart';
-import 'package:tix_mobile/src/data/update/store_feed.dart';
 
 /// Mounted above the router on every screen: keeps the desktop's tray icon,
 /// its menu, its hover text and the dock badge in step with the active
@@ -135,7 +133,7 @@ class _DesktopHostState extends ConsumerState<DesktopHost> {
     final mode = await ref.read(updateModeProvider.future);
     if (!mounted) return;
     if (mode == UpdateMode.store) {
-      await ref.read(attachmentsProvider).openLink(appStorePage);
+      await ref.read(updatesProvider.notifier).openStore();
     } else {
       await _follow('about');
     }

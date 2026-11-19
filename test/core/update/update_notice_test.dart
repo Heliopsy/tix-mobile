@@ -6,9 +6,11 @@ import 'package:tix_mobile/l10n/generated/app_localizations_en.dart';
 import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/notifications/local_notifier.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
+import 'package:tix_mobile/src/core/update/play_updates.dart';
 import 'package:tix_mobile/src/core/update/update_notice.dart';
 import 'package:tix_mobile/src/core/update/updates.dart';
 import 'package:tix_mobile/src/data/repositories/settings_repository.dart';
+import 'package:tix_mobile/src/data/update/play_feed.dart';
 import 'package:tix_mobile/src/data/update/release.dart';
 import 'package:tix_mobile/src/data/update/release_feed.dart';
 import 'package:tix_mobile/src/data/update/updater.dart';
@@ -128,6 +130,15 @@ void main() {
         kind(UpdateMode.store, UpdatePhase.available),
         UpdateNoteKind.store,
       );
+      expect(
+        updateNoteKind(
+          UpdateMode.store,
+          UpdateState(phase: UpdatePhase.available, offer: offer),
+          autoInstall: false,
+          store: UpdateStore.play,
+        ),
+        UpdateNoteKind.play,
+      );
       expect(kind(UpdateMode.install, UpdatePhase.ready), UpdateNoteKind.ready);
       expect(
         kind(UpdateMode.install, UpdatePhase.ready, auto: true),
@@ -137,6 +148,12 @@ void main() {
       expect(kind(UpdateMode.notify, UpdatePhase.current), isNull);
       expect(kind(UpdateMode.notify, UpdatePhase.failed), isNull);
     });
+  });
+
+  test('a Play note says Google Play', () {
+    final note = updateNote(l10n, '0.21.0', UpdateNoteKind.play);
+    expect(note.title, 'tix 0.21.0 is available');
+    expect(note.body, 'Tap to update from Google Play.');
   });
 
   group('updateCheckDue', () {
@@ -243,6 +260,74 @@ void main() {
       await run('tixwidget://refresh');
       expect(notes.shown, isEmpty);
       expect(SettingsRepository(store).updateLastCheck(), t0);
+    });
+  });
+  group('runBackgroundUpdateCheck in the Play build', () {
+    late MemoryKeyValueStore store;
+    late FakeNotes notes;
+    late DateTime now;
+
+    setUp(() {
+      store = MemoryKeyValueStore();
+      notes = FakeNotes();
+      now = t0;
+    });
+
+    Future<void> run(String link) {
+      final uri = Uri.parse(link);
+      return runBackgroundUpdateCheck(
+        uri,
+        makeContainer([
+          keyValueStoreProvider.overrideWithValue(store),
+          clockProvider.overrideWithValue(() => now),
+          localNotesProvider.overrideWithValue(notes),
+          updateModeProvider.overrideWithValue(
+            const AsyncData(UpdateMode.store),
+          ),
+          updateStoreProvider.overrideWithValue(
+            const AsyncData(UpdateStore.play),
+          ),
+          updaterProvider.overrideWith(
+            (ref) async => Updater(
+              feed: PlayReleaseFeed(LinkPlayUpdates(uri)),
+              installer: FakeInstaller(),
+              current: const ReleaseVersion(0, 20, 0),
+              publicKey: '',
+            ),
+          ),
+        ]),
+      );
+    }
+
+    void later() => now = now.add(const Duration(hours: 3, minutes: 1));
+
+    test('notifies once per version code', () async {
+      await run('tixwidget://update?play=1&code=21000');
+      later();
+      await run('tixwidget://update?play=1&code=21000');
+      expect(notes.shown, hasLength(1));
+      expect(notes.shown.single.title, 'tix 0.21.0 is available');
+      expect(notes.shown.single.body, 'Tap to update from Google Play.');
+      later();
+      await run('tixwidget://update?play=1&code=21001');
+      expect(notes.shown.map((n) => n.title), [
+        'tix 0.21.0 is available',
+        'tix 0.21.1 is available',
+      ]);
+    });
+
+    test('Play saying no update notifies nothing', () async {
+      await run('tixwidget://update?play=0&code=21000');
+      expect(notes.shown, isEmpty);
+      expect(SettingsRepository(store).updateLastCheck(), t0);
+    });
+
+    test("a run without Play's answer does not use up the limit", () async {
+      await run('tixwidget://refresh');
+      await run('tixwidget://update');
+      expect(store.values, isNot(contains('update.lastCheck')));
+      await run('tixwidget://update?play=1&code=21000');
+      expect(notes.shown, hasLength(1));
     });
   });
 }

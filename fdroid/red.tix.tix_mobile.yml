@@ -30,6 +30,14 @@
 # most recipes in fdroiddata do, in the app and in the plugins that set 37
 # (flutter_local_notifications).
 #
+# The app has two Gradle flavours: oss, with nothing proprietary in it, and
+# play, the Google Play build with Play Core's in-app update. F-Droid builds
+# oss. Releases up to v0.21.0 have no flavours, so the build names
+# `--flavor oss` only where build.gradle.kts defines it and `output:` globs
+# over app-<abi>-release.apk and app-<abi>-oss-release.apk; that keeps the
+# lines checkupdates copies forward right across the change. Once every kept
+# build has the flavours the condition can go.
+#
 # fdroiddata wants a full hash in `commit:`; it is the commit v0.20.1 tags.
 # The body below is what `fdroid rewritemeta` writes, so it can be copied to
 # fdroiddata as is.
@@ -56,7 +64,7 @@ Builds:
       - apt-get update
       - apt-get install -y -t trixie-backports golang-go
       - rm -f /usr/bin/go /usr/bin/gofmt
-    output: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+    output: build/app/outputs/flutter-apk/app-armeabi-v7a*-release.apk
     srclibs:
       - flutter@3.47.9
       - go@go1.27.4
@@ -88,8 +96,11 @@ Builds:
       - export PATH=$$flutter$$/bin:$$go$$/bin:$PATH GOROOT=$$go$$
       - export ANDROID_NDK_HOME=$$NDK$$ PUB_CACHE=$(pwd)/.pub-cache
       - flags="--split-per-abi --dart-define=TIX_SELF_UPDATE=false"
+      - flags="$flags --dart-define=TIX_DISTRIBUTION=fdroid"
+      - gradle=android/app/build.gradle.kts
+      - if grep -q 'create("oss")' $gradle; then flags="$flags --flavor oss"; fi
       - flutter build apk $flags --target-platform=android-arm
-      - apk=build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+      - apk=build/app/outputs/flutter-apk/app-armeabi-v7a*-release.apk
       - unzip -l $apk lib/armeabi-v7a/libtix.so
     ndk: r28c
 
@@ -100,7 +111,7 @@ Builds:
       - apt-get update
       - apt-get install -y -t trixie-backports golang-go
       - rm -f /usr/bin/go /usr/bin/gofmt
-    output: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+    output: build/app/outputs/flutter-apk/app-arm64-v8a*-release.apk
     srclibs:
       - flutter@3.47.9
       - go@go1.27.4
@@ -132,8 +143,11 @@ Builds:
       - export PATH=$$flutter$$/bin:$$go$$/bin:$PATH GOROOT=$$go$$
       - export ANDROID_NDK_HOME=$$NDK$$ PUB_CACHE=$(pwd)/.pub-cache
       - flags="--split-per-abi --dart-define=TIX_SELF_UPDATE=false"
+      - flags="$flags --dart-define=TIX_DISTRIBUTION=fdroid"
+      - gradle=android/app/build.gradle.kts
+      - if grep -q 'create("oss")' $gradle; then flags="$flags --flavor oss"; fi
       - flutter build apk $flags --target-platform=android-arm64
-      - apk=build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+      - apk=build/app/outputs/flutter-apk/app-arm64-v8a*-release.apk
       - unzip -l $apk lib/arm64-v8a/libtix.so
     ndk: r28c
 
@@ -144,7 +158,7 @@ Builds:
       - apt-get update
       - apt-get install -y -t trixie-backports golang-go
       - rm -f /usr/bin/go /usr/bin/gofmt
-    output: build/app/outputs/flutter-apk/app-x86_64-release.apk
+    output: build/app/outputs/flutter-apk/app-x86_64*-release.apk
     srclibs:
       - flutter@3.47.9
       - go@go1.27.4
@@ -176,8 +190,11 @@ Builds:
       - export PATH=$$flutter$$/bin:$$go$$/bin:$PATH GOROOT=$$go$$
       - export ANDROID_NDK_HOME=$$NDK$$ PUB_CACHE=$(pwd)/.pub-cache
       - flags="--split-per-abi --dart-define=TIX_SELF_UPDATE=false"
+      - flags="$flags --dart-define=TIX_DISTRIBUTION=fdroid"
+      - gradle=android/app/build.gradle.kts
+      - if grep -q 'create("oss")' $gradle; then flags="$flags --flavor oss"; fi
       - flutter build apk $flags --target-platform=android-x64
-      - apk=build/app/outputs/flutter-apk/app-x86_64-release.apk
+      - apk=build/app/outputs/flutter-apk/app-x86_64*-release.apk
       - unzip -l $apk lib/x86_64/libtix.so
     ndk: r28c
 

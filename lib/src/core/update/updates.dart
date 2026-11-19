@@ -13,12 +13,15 @@ import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/logging/log.dart';
 import 'package:tix_mobile/src/core/notifications/local_notifier.dart';
 import 'package:tix_mobile/src/core/platform/app_info.dart';
+import 'package:tix_mobile/src/core/platform/attachments.dart';
 import 'package:tix_mobile/src/core/platform/desktop.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
+import 'package:tix_mobile/src/core/update/play_updates.dart';
 import 'package:tix_mobile/src/core/update/update_notice.dart';
 import 'package:tix_mobile/src/data/repositories/settings_repository.dart';
 import 'package:tix_mobile/src/data/update/installer.dart';
 import 'package:tix_mobile/src/data/update/platform_installers.dart';
+import 'package:tix_mobile/src/data/update/play_feed.dart';
 import 'package:tix_mobile/src/data/update/release.dart';
 import 'package:tix_mobile/src/data/update/release_feed.dart';
 import 'package:tix_mobile/src/data/update/signing_key.dart';
@@ -28,7 +31,7 @@ import 'package:tix_mobile/src/data/update/updater.dart';
 export 'package:tix_mobile/src/data/update/release_feed.dart'
     show UpdateErrorKind;
 export 'package:tix_mobile/src/data/update/updater.dart'
-    show UpdateMode, UpdateOffer;
+    show Distribution, UpdateMode, UpdateOffer;
 
 part 'updates.g.dart';
 
@@ -38,6 +41,17 @@ const selfUpdateBuildFlag = bool.fromEnvironment(
   'TIX_SELF_UPDATE',
   defaultValue: true,
 );
+
+/// Where this Android build is published: `github` (the default), `fdroid`
+/// or `play`. `just build-aab` passes `play`, the F-Droid recipe `fdroid`.
+const distributionBuildFlag = String.fromEnvironment(
+  'TIX_DISTRIBUTION',
+  defaultValue: 'github',
+);
+
+/// Whether this is the Google Play build. A constant, so the Play channel
+/// client is compiled out of every other build.
+const playBuild = distributionBuildFlag == 'play';
 
 /// How often the app looks for a newer release, running or, as far as the
 /// phone lets it, in the background.
@@ -84,6 +98,7 @@ Future<UpdateEnvironment> updateEnvironment(Ref ref) async {
     releaseBuild: kReleaseMode,
     androidInstaller: Platform.isAndroid ? installer : null,
     appleInstaller: Platform.isIOS ? installer : null,
+    distribution: Distribution.parse(distributionBuildFlag),
   );
 }
 
@@ -95,6 +110,29 @@ ReleaseFeed releaseFeed(Ref ref) => GitHubReleaseFeed();
 @Riverpod(keepAlive: true)
 ReleaseFeed storeFeed(Ref ref) =>
     AppStoreReleaseFeed(country: storefrontOf(Platform.localeName));
+
+/// Google Play's in-app updates; never there outside the Play build.
+@Riverpod(keepAlive: true)
+PlayUpdates playUpdates(Ref ref) =>
+    playBuild ? const ChannelPlayUpdates() : const NoPlayUpdates();
+
+/// Which store sends updates in the `store` mode.
+enum UpdateStore {
+  /// Apple's App Store, on iOS.
+  appStore,
+
+  /// Google Play, on Android.
+  play,
+}
+
+/// The store this build updates from, null outside the `store` mode.
+@Riverpod(keepAlive: true)
+Future<UpdateStore?> updateStore(Ref ref) async {
+  final mode = await ref.watch(updateModeProvider.future);
+  if (mode != UpdateMode.store) return null;
+  final env = await ref.watch(updateEnvironmentProvider.future);
+  return env.android ? UpdateStore.play : UpdateStore.appStore;
+}
 
 /// The platform half of installing an update.
 @Riverpod(keepAlive: true)
@@ -117,9 +155,13 @@ Future<UpdateMode> updateMode(Ref ref) async {
 Future<Updater> updater(Ref ref) async {
   final env = await ref.watch(updateEnvironmentProvider.future);
   final app = await ref.watch(appInfoProvider.future);
-  final store = updateModeFor(env) == UpdateMode.store;
+  final feed = switch (await ref.watch(updateStoreProvider.future)) {
+    UpdateStore.play => PlayReleaseFeed(ref.watch(playUpdatesProvider)),
+    UpdateStore.appStore => ref.watch(storeFeedProvider),
+    null => ref.watch(releaseFeedProvider),
+  };
   return Updater(
-    feed: ref.watch(store ? storeFeedProvider : releaseFeedProvider),
+    feed: feed,
     installer: ref.watch(updateInstallerProvider),
     current:
         ReleaseVersion.tryParse(app.version) ?? const ReleaseVersion(0, 0, 0),
@@ -307,6 +349,7 @@ class Updates extends _$Updates {
       mode,
       state,
       autoInstall: ref.read(autoInstallSettingProvider),
+      store: ref.read(updateStoreProvider).value,
     );
     final version = state.offer?.version.toString();
     if (kind == null || version == null) return;
@@ -388,6 +431,23 @@ class Updates extends _$Updates {
     );
     if (!ref.mounted) return;
     state = UpdateState(phase: UpdatePhase.ready, offer: offer, staged: staged);
+  }
+
+  /// Sends the person to the store to update, in the `store` mode: Google
+  /// Play's flexible in-app update where Play allows one, else the Play
+  /// listing; the App Store page on iOS. False when nothing opened.
+  Future<bool> openStore() async {
+    final store = await ref.read(updateStoreProvider.future);
+    final links = ref.read(attachmentsProvider);
+    switch (store) {
+      case UpdateStore.play:
+        final started = await ref.read(playUpdatesProvider).start();
+        return started != PlayStart.none || await links.openLink(playListing);
+      case UpdateStore.appStore:
+        return await links.openLink(state.offer?.page ?? appStorePage);
+      case null:
+        return false;
+    }
   }
 
   /// Installs the staged update, starts the new version and quits. False

@@ -25,6 +25,14 @@ class UpdatePanel extends ConsumerWidget {
     }
   }
 
+  Future<void> _openStore(BuildContext context, WidgetRef ref) async {
+    final failed = context.l10n.aboutOpenFailed;
+    final ok = await ref.read(updatesProvider.notifier).openStore();
+    if (!ok && context.mounted) {
+      showTixToast(context, failed, tone: TixTone.danger);
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mode = ref.watch(updateModeProvider).value ?? UpdateMode.off;
@@ -35,6 +43,7 @@ class UpdatePanel extends ConsumerWidget {
     final running = ref.watch(appInfoProvider).value?.version ?? '';
     final offer = s.offer;
     final store = mode == UpdateMode.store;
+    final play = ref.watch(updateStoreProvider).value == UpdateStore.play;
     final version = offer?.version.toString() ?? '';
     final (status, help) = switch (s.phase) {
       UpdatePhase.idle => (l10n.updateIdle, null),
@@ -42,7 +51,9 @@ class UpdatePanel extends ConsumerWidget {
       UpdatePhase.current => (l10n.updateCurrent(running), null),
       UpdatePhase.available => (
         l10n.updateAvailable(version),
-        store
+        play
+            ? l10n.updatePlayHelp
+            : store
             ? l10n.updateStoreHelp
             : s.error == UpdateErrorKind.noAsset
             ? l10n.updateNoAsset
@@ -61,8 +72,12 @@ class UpdatePanel extends ConsumerWidget {
           UpdateErrorKind.unverified => l10n.updateFailedVerify,
           UpdateErrorKind.install => l10n.updateFailedInstall,
           UpdateErrorKind.noAsset => l10n.updateNoAsset,
-          UpdateErrorKind.network ||
-          null => store ? l10n.updateFailedStore : l10n.updateFailedNetwork,
+          UpdateErrorKind.network || null =>
+            play
+                ? l10n.updateFailedPlay
+                : store
+                ? l10n.updateFailedStore
+                : l10n.updateFailedNetwork,
         },
         offer == null ? null : l10n.updateAvailable(version),
       ),
@@ -111,9 +126,17 @@ class UpdatePanel extends ConsumerWidget {
                   s.phase != UpdatePhase.downloading)
                 TixButton(
                   key: const Key('update.download'),
-                  label: store ? l10n.updateOpenStore : l10n.updateDownload,
+                  label: play
+                      ? l10n.updateOpenPlay
+                      : store
+                      ? l10n.updateOpenStore
+                      : l10n.updateDownload,
                   icon: store ? Icons.shop_outlined : Icons.download_outlined,
-                  onPressed: () => unawaited(_open(context, ref, offer.page)),
+                  onPressed: () => unawaited(
+                    store
+                        ? _openStore(context, ref)
+                        : _open(context, ref, offer.page),
+                  ),
                 ),
               if (offer != null && !store)
                 TixButton.quiet(

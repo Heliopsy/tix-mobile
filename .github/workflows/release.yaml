@@ -125,7 +125,10 @@ jobs:
           printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.jks"
           echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/upload.jks" >> "$GITHUB_ENV"
 
-      - name: Build the APK and the App Bundle
+      # Two flavours of one app, same id and signing: the APKs from oss,
+      # with nothing proprietary in them (fdroid-check), and the App Bundle
+      # from play, which carries Play Core's in-app update.
+      - name: Build the APKs (oss) and the App Bundle (play)
         env:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
@@ -133,9 +136,9 @@ jobs:
         run: |
           just build-apk
           just build-aab
-          just engine-check android build/app/outputs/flutter-apk/app-*-release.apk
-          just engine-check aab build/app/outputs/bundle/release/app-release.aab
-          just fdroid-check build/app/outputs/flutter-apk/app-*-release.apk
+          just engine-check android build/app/outputs/flutter-apk/app-*-oss-release.apk
+          just engine-check aab build/app/outputs/bundle/playRelease/app-play-release.aab
+          just fdroid-check build/app/outputs/flutter-apk/app-*-oss-release.apk
 
       - name: Remove the keystore
         if: always()

@@ -10063,4 +10063,22 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get markdownLinkAdd => 'Ajouter un lien';
+
+  @override
+  String get settingsUpdatesPlayHelp =>
+      'tix demande à Google Play si une nouvelle version est sortie. Google Play l’installe.';
+
+  @override
+  String get updatePlayHelp => 'Mettez-la à jour depuis Google Play.';
+
+  @override
+  String get updateOpenPlay => 'Mettre à jour depuis Google Play';
+
+  @override
+  String get updateFailedPlay =>
+      'Impossible de joindre Google Play pour rechercher des mises à jour.';
+
+  @override
+  String get updateNotePlayBody =>
+      'Touchez pour mettre à jour depuis Google Play.';
 }

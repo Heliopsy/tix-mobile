@@ -341,9 +341,10 @@ flowchart LR
   Apple platforms bookmark the folder because SQLite must create files beside the database. The bookmark is
   resolved and access started before the engine starts and released after it stops; a stale one is renewed and
   saved through `LocalEngines.renewed`. On Android `MANAGE_EXTERNAL_STORAGE` lives in an overlay manifest
-  (`android/app/src/allFilesAccess/`) that Gradle merges unless the build passes `-PtixAllFilesAccess=false`, which
-  `just build-aab` (the Google Play bundle) does, since Play restricts the permission; the app offers open in place
-  only when the permission is declared. SAF content URIs are never used: SQLite cannot lock through them.
+  (`android/app/src/allFilesAccess/`) that Gradle merges into the oss flavour and leaves out of the play flavour (the
+  Google Play bundle), since Play restricts the permission; `-PtixAllFilesAccess=true|false` overrides that. The app
+  offers open in place only when the permission is declared. SAF content URIs are never used: SQLite cannot lock
+  through them.
 - **Sync safety.** Before opening in place, `probeInPlace` (`data/local/in_place.dart`) checks the folder takes new
   files, the file starts with the SQLite header and can be locked; an iCloud file not yet downloaded is refused.
   Conflict copies (`name (conflicted copy ...).db`, `name.sync-conflict-....db`, `name (1).db`, `name 2.db`) and a
@@ -385,32 +386,42 @@ flowchart LR
 - **Mode.** `updateModeProvider` is `off`, `notify`, `store` or `install` (`updateModeFor` in
   `data/update/updater.dart`). Store for an iOS App Store install (`package_info_plus` reports `com.apple`;
   TestFlight's sandbox receipt reports `com.apple.testflight`, and TestFlight, the simulator and debug builds are
-  off). Off for other builds made with `--dart-define=TIX_SELF_UPDATE=false` (Flatpak, the Play bundle, F-Droid),
-  inside Flatpak or Snap, and on Android installs from a store. Notify for an APK installed through the system
-  package installer, and for a desktop that is a debug build, runs in the macOS App Sandbox or cannot write its
-  install. Install otherwise.
-- **Google Play.** Stays off. Play's in-app update API ships in the Play Core library, which
-  `scripts/fdroid-check.sh` rejects, and the Play bundle and the F-Droid APKs come from one Gradle build without
-  flavours. There is no public lookup of the version Play serves, and GitHub's latest release can still be on the
-  internal track, so the app leaves it to Play.
-- **Check.** `releases/latest` (or, in the store mode, `itunes.apple.com/lookup?bundleId=red.tix.tixMobile` in
-  the device's storefront) at start and every three hours plus up to twenty minutes of jitter while "Check for
-  updates" is on, and on Check now. `ReleaseVersion` compares by semver precedence; drafts and prereleases never
-  count.
+  off), and for the Play bundle (`--dart-define=TIX_DISTRIBUTION=play`). Off for F-Droid (`TIX_DISTRIBUTION=fdroid`),
+  for other builds made with `--dart-define=TIX_SELF_UPDATE=false` (Flatpak), inside Flatpak or Snap, and
+  when a store installed the GitHub APK. Notify for the GitHub APK installed through the system package installer, and
+  for a desktop that is a debug build, runs in the macOS App Sandbox or cannot write its install. Install otherwise.
+- **Google Play.** The bundle is the `play` Gradle flavour; the APKs (GitHub, Obtainium, F-Droid) are `oss`. Only
+  `android/app/src/play/` uses Play Core (`com.google.android.play:app-update`), through `PlayUpdate.kt` on the
+  `tix/play-update` channel: `info` answers AppUpdateManager's `updateAvailability` and `availableVersionCode`,
+  `start` starts a FLEXIBLE in-app update where Play allows one and otherwise opens the Play listing (`market://`,
+  then `https://play.google.com`). A finished download installs at once, or on the next resume. `src/oss/` has a
+  `PlayUpdate.kt` with the same members that answers null, so oss builds carry no Play code and
+  `scripts/fdroid-check.sh` still passes on them. On the Dart side `ChannelPlayUpdates` is only built when
+  `TIX_DISTRIBUTION=play`, a constant, so other builds compile it out. `PlayReleaseFeed`
+  (`data/update/play_feed.dart`) turns the version code back into a version (`MAJOR*1000000 + MINOR*1000 + PATCH`,
+  as `scripts/build-version.sh` stamps it) and offers it only when Play says an update is available, so a release
+  still on the internal track is never offered.
+- **Check.** `releases/latest` (or, in the store mode, `itunes.apple.com/lookup?bundleId=red.tix.tixMobile` in the
+  device's storefront on iOS and Play's in-app update API on Android) at start and every three hours plus up to twenty
+  minutes of jitter while "Check for updates" is on, and on Check now. `ReleaseVersion` compares by semver precedence;
+  drafts and prereleases never count.
 - **Notify.** An automatic check that finds a newer version shows one system notification for it
-  (`core/update/update_notice.dart`), worded for the mode: download, App Store, Restart to update or install on
-  quit. The version is stored (`update.notified`), so neither later checks nor restarts repeat it, and nothing is
-  stored while the platform allows no notifications. Check now never notifies. Android posts it on its own
-  "Updates" channel. A tap, or a launch from one, opens About (`DesktopHost`), or the App Store page in the
-  store mode.
+  (`core/update/update_notice.dart`), worded for the mode: download, App Store, Google Play, Restart to update or
+  install on quit. The version is stored (`update.notified`), so neither later checks nor restarts repeat it, and
+  nothing is stored while the platform allows no notifications. Check now never notifies. Android posts it on its own
+  "Updates" channel. A tap, or a launch from one, opens About (`DesktopHost`), or in the store mode
+  `Updates.openStore`: the App Store page, or Play's flexible update (the Play listing where Play allows none).
 - **In the background.** On phones the headless runner (`widgetHeadlessMain`, `widgetBackgroundCallback`) runs
   `runBackgroundUpdateCheck` for `tixwidget://refresh` (iOS background refresh, Android's widget worker) and
-  `tixwidget://update` (Android's `UpdateWorker`, every three hours with a network, scheduled and cancelled from
-  Dart over `tix/update` as the mode and "Check for updates" allow). It skips a run within three hours of the
-  last check (`update.lastCheck`, also written by the running app). iOS and WorkManager decide when a run
-  happens, so this is best effort: iOS may run it rarely or never for an app the person seldom opens. A running
-  app and a background run keep separate preference caches, so in rare cases both can post the same version; the
-  notification has one id, so the second replaces the first.
+  `tixwidget://update` (Android's `UpdateWorker`, every three hours with a network, scheduled and cancelled from Dart
+  over `tix/update` as the mode and "Check for updates" allow). It skips a run within three hours of the last check
+  (`update.lastCheck`, also written by the running app). iOS and WorkManager decide when a run happens, so this is
+  best effort. The headless engine has no `tix/play-update` channel, so in the play flavour `UpdateWorker` asks
+  AppUpdateManager itself and adds the answer to its link (`tixwidget://update?play=1&code=N`); `main.dart` hands that
+  to the run as `LinkPlayUpdates`, and runs without it (the widget refresh) are skipped without counting towards the
+  three hours. iOS may run it rarely or never for an app the person seldom opens. A running app and a background run
+  keep separate preference caches, so in rare cases both can post the same version; the notification has one id, so
+  the second replaces the first.
 - **Verify.** The archive's SHA-256 must match its line in `SHA256SUMS`. With a key pinned in
   `data/update/signing_key.dart`, `SHA256SUMS.sig` (Ed25519) must verify first, before the archive is fetched;
   with none pinned the check is checksum-only, the trust of a download by hand. Every file must be HTTPS from

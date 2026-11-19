@@ -162,8 +162,9 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   its signature, once the release key is pinned), and installs it when you pick Restart to update, or on quit if
   you turn that on. macOS, and any install in a folder it cannot write, get a link to the release page instead.
   An APK installed from GitHub notifies and links to the release page; the App Store build asks the App Store and
-  opens it. On phones the check also runs in the background while tix is closed, when the system lets it.
-  Flatpak, Snap, F-Droid, Google Play and TestFlight leave updates to their store. "Check for updates" in
+  opens it, and the Google Play build asks Play and updates in the app through Play. On phones the check also runs
+  in the background while tix is closed, when the system lets it.
+  Flatpak, Snap, F-Droid and TestFlight leave updates to their store. "Check for updates" in
   Settings turns the checks and the notifications off.
 - **Command palette** (Ctrl+K or Cmd+K): every command, projects, recent tasks and any task by reference; `?` lists
   the shortcuts.
@@ -247,7 +248,10 @@ and [the app section of tix's docs](https://tix.red/en/docs/#app) covers tokens,
 ### From a release
 
 Every release attaches Android APKs (one per ABI: take `arm64-v8a` for any phone from the last several years)
-and an AAB, Linux `.tar.gz` files for x64 and arm64, a macOS `.zip`, a Windows `.zip`, and a `SHA256SUMS` file.
+and an AAB for Google Play, Linux `.tar.gz` files for x64 and arm64, a macOS `.zip`, a Windows `.zip`, and a
+`SHA256SUMS` file. The APKs, like F-Droid's build, contain nothing proprietary; the Google Play build is a separate
+flavour of the same app that adds Google's Play Core library for in-app updates
+([docs/releasing.md](docs/releasing.md#artifacts)).
 [tix.red/en/apps](https://tix.red/en/apps/) has a one-paste install for Windows and macOS too.
 
 On Linux, this downloads the latest release for your CPU, checks it against `SHA256SUMS`, installs or upgrades it in
