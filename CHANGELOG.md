@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.22.1](https://github.com/Heliopsy/tix-mobile/compare/v0.22.0...v0.22.1) (2026-11-19)
+
+
+### Bug Fixes
+
+* **session:** sign out and stop syncing when the server refuses the session ([e06d6da](https://github.com/Heliopsy/tix-mobile/commit/e06d6da68279fd88530dcf998e618ba1addf6f87))
+* **session:** stop syncing on a refused token and in the widgets' background run ([02c1488](https://github.com/Heliopsy/tix-mobile/commit/02c1488f09aca7c58d972da279803310514d7b44))
+* **settings:** mark refused connections in the instances list and switcher ([bc39468](https://github.com/Heliopsy/tix-mobile/commit/bc394680e0f0cc5b7f233bb6570b24d788dc2afb))
+
 ## [0.22.0](https://github.com/Heliopsy/tix-mobile/compare/v0.21.0...v0.22.0) (2026-11-19)
 
 
