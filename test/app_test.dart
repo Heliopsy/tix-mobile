@@ -283,12 +283,14 @@ void main() {
     expect(find.text('Infrastructure'), findsNothing);
   });
 
-  testWidgets('an expired session offers to sign in again', (tester) async {
+  testWidgets('an expired session leads to signing in again', (tester) async {
     final stores = signInStores(server);
     server.sessions.clear();
     await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
-    await tester.tap(find.byKey(const Key('error.signInAgain')));
-    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('connect.signedOut')), findsOneWidget);
+    expect(find.byKey(const Key('connect.instanceUrl')), findsOneWidget);
+    expect(find.text('https://tix.example'), findsOneWidget);
+    expect(stores.secrets.values, isEmpty);
     expect(find.byKey(const Key('connect.password')), findsOneWidget);
     await tester.enterText(find.byKey(const Key('connect.password')), 'pw');
     await tester.ensureVisible(find.byKey(const Key('connect.submit')));
@@ -297,6 +299,24 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Infrastructure'), findsOneWidget);
     expect(stores.secrets.values.keys, ['session.s1']);
+  });
+
+  testWidgets('a session that ends while in use leads to signing in again', (
+    tester,
+  ) async {
+    final stores = signInStores(server);
+    await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
+    expect(find.text('Infrastructure'), findsOneWidget);
+    server.sessions.clear();
+    await tester.tap(find.text('Infrastructure'));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('connect.signedOut')), findsOneWidget);
+    expect(find.byKey(const Key('connect.password')), findsOneWidget);
+    expect(stores.secrets.values, isEmpty);
+    final requests = server.requests.length;
+    await tester.pump(const Duration(hours: 1));
+    await tester.pumpAndSettle();
+    expect(server.requests.length, requests);
   });
 
   testWidgets('a token refused offers no sign-in', (tester) async {

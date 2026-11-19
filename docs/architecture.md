@@ -455,7 +455,7 @@ The API client reads `code` into a closed set of error kinds and keeps `message`
 | `code` | HTTP status | What the app does |
 | --- | --- | --- |
 | `invalid` | 400 | Shows the server's message next to the input that caused it |
-| `unauthenticated` | 401 | The token or session is wrong, expired or revoked: show the error; for a sign-in, offer to sign in again, keeping the connection |
+| `unauthenticated` | 401 | The token or session is wrong, expired or revoked: show the error; for a sign-in, check the session once with `whoami`, then drop it, stop its sync and open Sign in again, keeping the connection |
 | `forbidden` | 403 | The token lacks a scope: say which action was refused, do not retry |
 | `not_found` | 404 | The item is gone or not visible to this token |
 | `conflict`, `lease_expired` | 409 | Someone changed it first: reload and show the current state |

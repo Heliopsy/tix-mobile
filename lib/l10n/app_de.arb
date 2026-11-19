@@ -2740,5 +2740,8 @@
   "updatePlayHelp": "Aktualisieren Sie es über Google Play.",
   "updateOpenPlay": "Über Google Play aktualisieren",
   "updateFailedPlay": "Google Play war nicht erreichbar, um nach Updates zu suchen.",
-  "updateNotePlayBody": "Tippen, um über Google Play zu aktualisieren."
+  "updateNotePlayBody": "Tippen, um über Google Play zu aktualisieren.",
+  "signedOutNoteTitle": "Von {server} abgemeldet",
+  "signedOutNoteBody": "Ihre Sitzung ist abgelaufen und die Synchronisierung wurde angehalten. Tippen, um sich erneut anzumelden.",
+  "signedOutExplained": "Ihre Sitzung auf diesem Server ist abgelaufen, daher synchronisiert dieses Gerät nicht mehr. Melden Sie sich erneut an, um fortzufahren."
 }

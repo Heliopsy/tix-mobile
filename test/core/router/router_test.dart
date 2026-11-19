@@ -51,6 +51,19 @@ void main() {
     );
   });
 
+  test('a session the server ended leads to signing in to it again', () {
+    String? ended(String location) =>
+        redirectFor(out, Uri.parse(location), awaitingSignIn: 's1');
+    expect(ended('/'), '/connect?connection=s1');
+    expect(ended('/projects/infra'), '/connect?connection=s1');
+    expect(ended('/connect?connection=s1'), isNull);
+    expect(ended('/connect'), isNull);
+    expect(
+      redirectFor(signedIn, Uri.parse('/projects'), awaitingSignIn: 's1'),
+      isNull,
+    );
+  });
+
   test('signed in, the splash and connect lead to projects', () {
     expect(go(signedIn, '/'), '/projects');
     expect(go(signedIn, '/connect'), '/projects');

@@ -574,6 +574,42 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('route:/settings/instances'), findsOneWidget);
     });
+
+    testWidgets('a session the server ended says so, and back leads to '
+        'connect', (tester) async {
+      final stores = signInStores(server);
+      stores.secrets.values.clear();
+      await pumpScreen(
+        tester,
+        const ConnectScreen(adding: true, connectionId: 's1'),
+        overrides: fakeOverrides(
+          server,
+          settings: stores.settings,
+          secrets: stores.secrets,
+        ),
+      );
+      expect(find.byKey(const Key('connect.signedOut')), findsOneWidget);
+      expect(find.text('https://tix.example'), findsOneWidget);
+      await tester.tap(find.byType(BackButton));
+      await tester.pumpAndSettle();
+      expect(find.text('route:/connect'), findsOneWidget);
+    });
+
+    testWidgets('signing in again while signed in says nothing ended', (
+      tester,
+    ) async {
+      final stores = signInStores(server);
+      await pumpScreen(
+        tester,
+        const ConnectScreen(adding: true, connectionId: 's1'),
+        overrides: fakeOverrides(
+          server,
+          settings: stores.settings,
+          secrets: stores.secrets,
+        ),
+      );
+      expect(find.byKey(const Key('connect.signedOut')), findsNothing);
+    });
   });
 
   group('local', () {

@@ -78,12 +78,15 @@ part 'router.g.dart';
 
 /// Where [uri] should lead instead, given [session], or null to stay.
 /// Signing in, or starting signed in, lands on [home]. While [moving] to
-/// another context everything waits on the switching screen.
+/// another context everything waits on the switching screen. With no
+/// session, [awaitingSignIn] names the sign-in whose session the server
+/// ended, and leads to signing in to it again.
 String? redirectFor(
   AsyncValue<Session?> session,
   Uri uri, {
   String home = Routes.projects,
   bool moving = false,
+  String? awaitingSignIn,
 }) {
   final path = uri.path;
   if (path == Routes.gallery && Routes.galleryEnabled) return null;
@@ -92,7 +95,10 @@ String? redirectFor(
     return path == Routes.splash ? null : Routes.splash;
   }
   if (session.value == null) {
-    return path == Routes.connect ? null : Routes.connect;
+    if (path == Routes.connect) return null;
+    return awaitingSignIn == null
+        ? Routes.connect
+        : Routes.reconnect(awaitingSignIn);
   }
   final adding = uri.queryParameters.keys.any(Routes.connectParams.contains);
   if (path == Routes.splash ||
@@ -207,6 +213,9 @@ GoRouter router(Ref ref) {
       state.uri,
       home: home(),
       moving: mover.moving,
+      awaitingSignIn: ref
+          .read(sessionControllerProvider.notifier)
+          .awaitingSignIn(),
     ),
     routes: [
       GoRoute(path: Routes.splash, builder: (_, _) => const SplashScreen()),

@@ -16554,6 +16554,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap to update from Google Play.'**
   String get updateNotePlayBody;
+
+  /// System notification title when the server ended the session; server is the instance name
+  ///
+  /// In en, this message translates to:
+  /// **'Signed out of {server}'**
+  String signedOutNoteTitle(String server);
+
+  /// System notification text when the server ended the session
+  ///
+  /// In en, this message translates to:
+  /// **'Your session ended and syncing stopped. Tap to sign in again.'**
+  String get signedOutNoteBody;
+
+  /// Shown on the sign-in form after the server refused the saved session
+  ///
+  /// In en, this message translates to:
+  /// **'Your session on this server ended, so this device stopped syncing. Sign in again to carry on.'**
+  String get signedOutExplained;
 }
 
 class _AppLocalizationsDelegate

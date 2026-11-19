@@ -31,6 +31,9 @@ enum NoteChannel {
 
   /// A newer version of tix.
   updates,
+
+  /// The account: a session the server ended.
+  account,
 }
 
 /// A button on a notification, run in the background when pressed.
@@ -155,6 +158,12 @@ class PluginLocalNotifier implements LocalNotifier {
     importance: Importance.low,
   );
 
+  static const _account = AndroidNotificationChannel(
+    'account',
+    'Account',
+    description: 'A server ended the session and asks to sign in again',
+  );
+
   @override
   Stream<String> get taps => _taps.stream;
 
@@ -194,6 +203,7 @@ class PluginLocalNotifier implements LocalNotifier {
           >();
       await android?.createNotificationChannel(_channel);
       await android?.createNotificationChannel(_updates);
+      await android?.createNotificationChannel(_account);
     } on Object catch (e) {
       log('notifications: init failed: ${e.runtimeType}');
     }
@@ -286,8 +296,12 @@ class PluginLocalNotifier implements LocalNotifier {
   @override
   Future<void> show(LocalNote note) async {
     await init();
-    final update = note.channel == NoteChannel.updates;
-    final channel = update ? _updates : _channel;
+    final inbox = note.channel == NoteChannel.inbox;
+    final channel = switch (note.channel) {
+      NoteChannel.inbox => _channel,
+      NoteChannel.updates => _updates,
+      NoteChannel.account => _account,
+    };
     try {
       await _plugin.show(
         id: note.id,
@@ -300,18 +314,20 @@ class PluginLocalNotifier implements LocalNotifier {
             channel.name,
             channelDescription: channel.description,
             importance: channel.importance,
-            category: update
-                ? AndroidNotificationCategory.recommendation
-                : AndroidNotificationCategory.social,
+            category: switch (note.channel) {
+              NoteChannel.inbox => AndroidNotificationCategory.social,
+              NoteChannel.updates => AndroidNotificationCategory.recommendation,
+              NoteChannel.account => AndroidNotificationCategory.status,
+            },
             number: note.badge,
-            visibility: update
-                ? NotificationVisibility.public
-                : NotificationVisibility.private,
+            visibility: inbox
+                ? NotificationVisibility.private
+                : NotificationVisibility.public,
           ),
           iOS: DarwinNotificationDetails(badgeNumber: note.badge),
           macOS: DarwinNotificationDetails(badgeNumber: note.badge),
           linux: LinuxNotificationDetails(
-            category: update ? null : LinuxNotificationCategory.imReceived,
+            category: inbox ? LinuxNotificationCategory.imReceived : null,
           ),
         ),
       );

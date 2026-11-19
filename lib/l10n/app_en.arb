@@ -7027,5 +7027,22 @@
   "updateNotePlayBody": "Tap to update from Google Play.",
   "@updateNotePlayBody": {
     "description": "System notification text for an update from Google Play"
+  },
+  "signedOutNoteTitle": "Signed out of {server}",
+  "@signedOutNoteTitle": {
+    "description": "System notification title when the server ended the session; server is the instance name",
+    "placeholders": {
+      "server": {
+        "type": "String"
+      }
+    }
+  },
+  "signedOutNoteBody": "Your session ended and syncing stopped. Tap to sign in again.",
+  "@signedOutNoteBody": {
+    "description": "System notification text when the server ended the session"
+  },
+  "signedOutExplained": "Your session on this server ended, so this device stopped syncing. Sign in again to carry on.",
+  "@signedOutExplained": {
+    "description": "Shown on the sign-in form after the server refused the saved session"
   }
 }

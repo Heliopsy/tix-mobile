@@ -370,7 +370,9 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
       return;
     }
     context.go(
-      widget.instanceId != null || widget.connectionId != null
+      _replacing != null && ref.read(sessionControllerProvider).value == null
+          ? Routes.connect
+          : widget.instanceId != null || widget.connectionId != null
           ? Routes.instances
           : Routes.settings,
     );
@@ -511,6 +513,8 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
   List<Widget> _remoteForm(BuildContext context, Instance? saved) {
     final l10n = context.l10n;
     final reauth = _replacing != null;
+    final signedOut =
+        reauth && ref.watch(sessionControllerProvider).value == null;
     return [
       if (saved == null && _method != ConnectMethod.invite)
         _Helped(
@@ -538,6 +542,10 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
         Text(saved.baseUrl, key: const Key('connect.instanceUrl')),
       if (saved != null || _method != ConnectMethod.invite)
         const SizedBox(height: 16),
+      if (signedOut) ...[
+        Text(l10n.signedOutExplained, key: const Key('connect.signedOut')),
+        const SizedBox(height: TixSpace.s4),
+      ],
       if (!reauth) ...[
         _Helped(
           help: HelpButton(
