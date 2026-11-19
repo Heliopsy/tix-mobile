@@ -46,6 +46,9 @@ class Drawn(val look: Look, val read: (String) -> String?, val want: Want?) {
     /** The context this widget shows, null while signed out. */
     val ctx: String? get() = index?.resolve(want?.ctx)
 
+    /** Whether the server refused the session or token of [ctx]. */
+    val refused: Boolean get() = index?.ctx(ctx)?.refused == true
+
     fun pending(ctx: String): Set<String> = Snapshots.pendingRefs(read(Keys.QUEUE), ctx)
 }
 
@@ -90,6 +93,10 @@ class MyWorkWidget : TixWidget() {
     override fun Draw(d: Drawn) {
         val look = d.look
         val ctx = d.ctx
+        if (ctx != null && d.refused) {
+            SignInAgain(look, title(look), ctx)
+            return
+        }
         val snap = ctx?.let { Snapshots.myWork(d.read(Keys.myWork(it))) }
         if (ctx == null || snap == null) {
             Placeholder(look, title(look), if (d.index != null && ctx == null) look.s("signedOut", R.string.widget_signed_out) else look.s("openApp", R.string.widget_open_app))
@@ -130,6 +137,10 @@ class InboxWidget : TixWidget() {
     override fun Draw(d: Drawn) {
         val look = d.look
         val ctx = d.ctx
+        if (ctx != null && d.refused) {
+            SignInAgain(look, title(look), ctx)
+            return
+        }
         val snap = ctx?.let { Snapshots.inbox(d.read(Keys.inbox(it))) }
         if (ctx == null || snap == null) {
             Placeholder(look, title(look), if (d.index != null && ctx == null) look.s("signedOut", R.string.widget_signed_out) else look.s("openApp", R.string.widget_open_app))
@@ -195,6 +206,10 @@ class ProjectWidget : TixWidget() {
         val key = d.want?.project
         if (ctx == null || key.isNullOrEmpty()) {
             Placeholder(look, title(look), look.context.getString(R.string.widget_pick_project))
+            return
+        }
+        if (d.refused) {
+            SignInAgain(look, key, ctx)
             return
         }
         val snap = Snapshots.project(d.read(Keys.project(ctx, key)))

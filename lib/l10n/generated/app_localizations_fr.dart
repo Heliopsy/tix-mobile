@@ -10094,4 +10094,20 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get signedOutExplained =>
       'Votre session sur ce serveur a expiré, cet appareil ne se synchronise donc plus. Reconnectez-vous pour continuer.';
+
+  @override
+  String tokenRefusedNoteTitle(String server) {
+    return 'Le jeton pour $server a été refusé';
+  }
+
+  @override
+  String get tokenRefusedNoteBody =>
+      'La synchronisation s’est arrêtée. Touchez pour coller un nouveau jeton ou vous connecter.';
+
+  @override
+  String get tokenRefusedExplained =>
+      'Ce serveur a refusé le jeton d’API enregistré, cet appareil ne se synchronise donc plus. Collez un nouveau jeton ou connectez-vous pour continuer. Vos données sur cet appareil sont conservées.';
+
+  @override
+  String get widgetSignInAgain => 'Reconnectez-vous pour afficher ceci';
 }

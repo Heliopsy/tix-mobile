@@ -233,8 +233,10 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 API tokens and sign-in sessions are kept in the platform's secure storage and are never written to logs or
 preferences. Passwords are not stored at all. How long a sign-in session lasts is the server's call: 12 hours by
 default on tix, or 30 days with **Stay signed in**, which the sign-in form turns on by default where the server
-offers it. When the server ends a session, the app stops syncing that account, says so in a notification and
-opens Sign in again with the instance and email filled in.
+offers it. When the server ends a session or refuses a saved API token, the app stops syncing that account, says
+so in a notification and opens Sign in again with the instance and email filled in, or a form to paste a new
+token. A refused token is kept, never deleted behind your back, and the data already on the device stays. The
+home screen widgets notice it too, stop refreshing that account and ask you to sign in again.
 
 ## Screenshots
 

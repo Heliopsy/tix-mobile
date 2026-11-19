@@ -228,7 +228,8 @@ class InstancesRepository {
 
   /// Saves [connection] on [instance] with [secret], replacing a connection
   /// of the same kind, handle, email and tenant there, and returns what was
-  /// saved. The instance is added or updated too.
+  /// saved. The instance is added or updated too. A connection saved with a
+  /// new secret is no longer refused.
   Future<Connection> save({
     required Instance instance,
     required Connection connection,
@@ -245,11 +246,12 @@ class InstancesRepository {
           c.tenantKey == connection.tenantKey,
     );
     final saved = same == null
-        ? connection.copyWith(instanceId: instance.id)
+        ? connection.copyWith(instanceId: instance.id, refusedAt: null)
         : connection.copyWith(
             id: same.id,
             instanceId: instance.id,
             createdAt: same.createdAt,
+            refusedAt: null,
           );
     await writeSecret(saved, secret);
     await _upsertInstance(instance);

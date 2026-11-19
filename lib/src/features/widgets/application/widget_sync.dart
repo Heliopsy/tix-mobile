@@ -115,7 +115,15 @@ class WidgetSync extends _$WidgetSync {
       l10n: widgetL10n(store),
       now: ref.read(clockProvider),
       open: _open,
+      refused: _refused,
     );
+  }
+
+  /// The session hears a refusal of its own credential; any other context
+  /// read with a stored one is checked here.
+  Future<void> _refused(WidgetTarget t) async {
+    if (_isActive(t)) return;
+    await ref.read(refusedCredentialsProvider).check(t.connection);
   }
 
   Session? get _session {

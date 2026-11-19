@@ -16,7 +16,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Connection {
 
- String get id; String get instanceId; ConnectionKind get kind; DateTime get createdAt; String get label; String get handle; String get email; String get tenantKey; String get tenantName; TenantIcon get tenantIcon; bool get pinned; List<Membership> get memberships; DateTime? get lastUsedAt;
+ String get id; String get instanceId; ConnectionKind get kind; DateTime get createdAt; String get label; String get handle; String get email; String get tenantKey; String get tenantName; TenantIcon get tenantIcon; bool get pinned; List<Membership> get memberships; DateTime? get lastUsedAt;/// When the server last refused this connection's credential, confirmed
+/// with `whoami`. Nothing is sent with it until a new one is saved.
+ DateTime? get refusedAt;
 /// Create a copy of Connection
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +32,20 @@ $ConnectionCopyWith<Connection> get copyWith => _$ConnectionCopyWithImpl<Connect
 @override
 bool operator ==(Object other) {
   final _this = this as Connection;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Connection&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.instanceId, _this.instanceId) || other.instanceId == _this.instanceId)&&(identical(other.kind, _this.kind) || other.kind == _this.kind)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.label, _this.label) || other.label == _this.label)&&(identical(other.handle, _this.handle) || other.handle == _this.handle)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.tenantKey, _this.tenantKey) || other.tenantKey == _this.tenantKey)&&(identical(other.tenantName, _this.tenantName) || other.tenantName == _this.tenantName)&&(identical(other.tenantIcon, _this.tenantIcon) || other.tenantIcon == _this.tenantIcon)&&(identical(other.pinned, _this.pinned) || other.pinned == _this.pinned)&&const DeepCollectionEquality().equals(other.memberships, _this.memberships)&&(identical(other.lastUsedAt, _this.lastUsedAt) || other.lastUsedAt == _this.lastUsedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Connection&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.instanceId, _this.instanceId) || other.instanceId == _this.instanceId)&&(identical(other.kind, _this.kind) || other.kind == _this.kind)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.label, _this.label) || other.label == _this.label)&&(identical(other.handle, _this.handle) || other.handle == _this.handle)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.tenantKey, _this.tenantKey) || other.tenantKey == _this.tenantKey)&&(identical(other.tenantName, _this.tenantName) || other.tenantName == _this.tenantName)&&(identical(other.tenantIcon, _this.tenantIcon) || other.tenantIcon == _this.tenantIcon)&&(identical(other.pinned, _this.pinned) || other.pinned == _this.pinned)&&const DeepCollectionEquality().equals(other.memberships, _this.memberships)&&(identical(other.lastUsedAt, _this.lastUsedAt) || other.lastUsedAt == _this.lastUsedAt)&&(identical(other.refusedAt, _this.refusedAt) || other.refusedAt == _this.refusedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Connection;
-  return Object.hash(runtimeType,_this.id,_this.instanceId,_this.kind,_this.createdAt,_this.label,_this.handle,_this.email,_this.tenantKey,_this.tenantName,_this.tenantIcon,_this.pinned,const DeepCollectionEquality().hash(_this.memberships),_this.lastUsedAt);
+  return Object.hash(runtimeType,_this.id,_this.instanceId,_this.kind,_this.createdAt,_this.label,_this.handle,_this.email,_this.tenantKey,_this.tenantName,_this.tenantIcon,_this.pinned,const DeepCollectionEquality().hash(_this.memberships),_this.lastUsedAt,_this.refusedAt);
 }
 
 @override
 String toString() {
   final _this = this as Connection;
-  return 'Connection(id: ${_this.id}, instanceId: ${_this.instanceId}, kind: ${_this.kind}, createdAt: ${_this.createdAt}, label: ${_this.label}, handle: ${_this.handle}, email: ${_this.email}, tenantKey: ${_this.tenantKey}, tenantName: ${_this.tenantName}, tenantIcon: ${_this.tenantIcon}, pinned: ${_this.pinned}, memberships: ${_this.memberships}, lastUsedAt: ${_this.lastUsedAt})';
+  return 'Connection(id: ${_this.id}, instanceId: ${_this.instanceId}, kind: ${_this.kind}, createdAt: ${_this.createdAt}, label: ${_this.label}, handle: ${_this.handle}, email: ${_this.email}, tenantKey: ${_this.tenantKey}, tenantName: ${_this.tenantName}, tenantIcon: ${_this.tenantIcon}, pinned: ${_this.pinned}, memberships: ${_this.memberships}, lastUsedAt: ${_this.lastUsedAt}, refusedAt: ${_this.refusedAt})';
 }
 
 
@@ -54,7 +56,7 @@ abstract mixin class $ConnectionCopyWith<$Res>  {
   factory $ConnectionCopyWith(Connection value, $Res Function(Connection) _then) = _$ConnectionCopyWithImpl;
 @useResult
 $Res call({
- String id, String instanceId, ConnectionKind kind, DateTime createdAt, String label, String handle, String email, String tenantKey, String tenantName, TenantIcon tenantIcon, bool pinned, List<Membership> memberships, DateTime? lastUsedAt
+ String id, String instanceId, ConnectionKind kind, DateTime createdAt, String label, String handle, String email, String tenantKey, String tenantName, TenantIcon tenantIcon, bool pinned, List<Membership> memberships, DateTime? lastUsedAt, DateTime? refusedAt
 });
 
 
@@ -71,7 +73,7 @@ class _$ConnectionCopyWithImpl<$Res>
 
 /// Create a copy of Connection
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? instanceId = null,Object? kind = null,Object? createdAt = null,Object? label = null,Object? handle = null,Object? email = null,Object? tenantKey = null,Object? tenantName = null,Object? tenantIcon = null,Object? pinned = null,Object? memberships = null,Object? lastUsedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? instanceId = null,Object? kind = null,Object? createdAt = null,Object? label = null,Object? handle = null,Object? email = null,Object? tenantKey = null,Object? tenantName = null,Object? tenantIcon = null,Object? pinned = null,Object? memberships = null,Object? lastUsedAt = freezed,Object? refusedAt = freezed,}) {
   return _then(Connection(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,instanceId: null == instanceId ? _self.instanceId : instanceId // ignore: cast_nullable_to_non_nullable
@@ -86,6 +88,7 @@ as String,tenantIcon: null == tenantIcon ? _self.tenantIcon : tenantIcon // igno
 as TenantIcon,pinned: null == pinned ? _self.pinned : pinned // ignore: cast_nullable_to_non_nullable
 as bool,memberships: null == memberships ? _self.memberships : memberships // ignore: cast_nullable_to_non_nullable
 as List<Membership>,lastUsedAt: freezed == lastUsedAt ? _self.lastUsedAt : lastUsedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,refusedAt: freezed == refusedAt ? _self.refusedAt : refusedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
@@ -171,10 +174,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String instanceId,  ConnectionKind kind,  DateTime createdAt,  String label,  String handle,  String email,  String tenantKey,  String tenantName,  TenantIcon tenantIcon,  bool pinned,  List<Membership> memberships,  DateTime? lastUsedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String instanceId,  ConnectionKind kind,  DateTime createdAt,  String label,  String handle,  String email,  String tenantKey,  String tenantName,  TenantIcon tenantIcon,  bool pinned,  List<Membership> memberships,  DateTime? lastUsedAt,  DateTime? refusedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Connection() when $default != null:
-return $default(_that.id,_that.instanceId,_that.kind,_that.createdAt,_that.label,_that.handle,_that.email,_that.tenantKey,_that.tenantName,_that.tenantIcon,_that.pinned,_that.memberships,_that.lastUsedAt);case _:
+return $default(_that.id,_that.instanceId,_that.kind,_that.createdAt,_that.label,_that.handle,_that.email,_that.tenantKey,_that.tenantName,_that.tenantIcon,_that.pinned,_that.memberships,_that.lastUsedAt,_that.refusedAt);case _:
   return orElse();
 
 }
@@ -192,10 +195,10 @@ return $default(_that.id,_that.instanceId,_that.kind,_that.createdAt,_that.label
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String instanceId,  ConnectionKind kind,  DateTime createdAt,  String label,  String handle,  String email,  String tenantKey,  String tenantName,  TenantIcon tenantIcon,  bool pinned,  List<Membership> memberships,  DateTime? lastUsedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String instanceId,  ConnectionKind kind,  DateTime createdAt,  String label,  String handle,  String email,  String tenantKey,  String tenantName,  TenantIcon tenantIcon,  bool pinned,  List<Membership> memberships,  DateTime? lastUsedAt,  DateTime? refusedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Connection():
-return $default(_that.id,_that.instanceId,_that.kind,_that.createdAt,_that.label,_that.handle,_that.email,_that.tenantKey,_that.tenantName,_that.tenantIcon,_that.pinned,_that.memberships,_that.lastUsedAt);case _:
+return $default(_that.id,_that.instanceId,_that.kind,_that.createdAt,_that.label,_that.handle,_that.email,_that.tenantKey,_that.tenantName,_that.tenantIcon,_that.pinned,_that.memberships,_that.lastUsedAt,_that.refusedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -212,10 +215,10 @@ return $default(_that.id,_that.instanceId,_that.kind,_that.createdAt,_that.label
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String instanceId,  ConnectionKind kind,  DateTime createdAt,  String label,  String handle,  String email,  String tenantKey,  String tenantName,  TenantIcon tenantIcon,  bool pinned,  List<Membership> memberships,  DateTime? lastUsedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String instanceId,  ConnectionKind kind,  DateTime createdAt,  String label,  String handle,  String email,  String tenantKey,  String tenantName,  TenantIcon tenantIcon,  bool pinned,  List<Membership> memberships,  DateTime? lastUsedAt,  DateTime? refusedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Connection() when $default != null:
-return $default(_that.id,_that.instanceId,_that.kind,_that.createdAt,_that.label,_that.handle,_that.email,_that.tenantKey,_that.tenantName,_that.tenantIcon,_that.pinned,_that.memberships,_that.lastUsedAt);case _:
+return $default(_that.id,_that.instanceId,_that.kind,_that.createdAt,_that.label,_that.handle,_that.email,_that.tenantKey,_that.tenantName,_that.tenantIcon,_that.pinned,_that.memberships,_that.lastUsedAt,_that.refusedAt);case _:
   return null;
 
 }
@@ -227,7 +230,7 @@ return $default(_that.id,_that.instanceId,_that.kind,_that.createdAt,_that.label
 @JsonSerializable()
 
 class _Connection extends Connection {
-  const _Connection({required this.id, required this.instanceId, required this.kind, required this.createdAt, this.label = '', this.handle = '', this.email = '', this.tenantKey = '', this.tenantName = '', this.tenantIcon = const TenantIcon(), this.pinned = true,  List<Membership> memberships = const <Membership>[], this.lastUsedAt}): _memberships = memberships,super._();
+  const _Connection({required this.id, required this.instanceId, required this.kind, required this.createdAt, this.label = '', this.handle = '', this.email = '', this.tenantKey = '', this.tenantName = '', this.tenantIcon = const TenantIcon(), this.pinned = true,  List<Membership> memberships = const <Membership>[], this.lastUsedAt, this.refusedAt}): _memberships = memberships,super._();
   factory _Connection.fromJson(Map<String, dynamic> json) => _$ConnectionFromJson(json);
 
 @override final  String id;
@@ -249,6 +252,9 @@ class _Connection extends Connection {
 }
 
 @override final  DateTime? lastUsedAt;
+/// When the server last refused this connection's credential, confirmed
+/// with `whoami`. Nothing is sent with it until a new one is saved.
+@override final  DateTime? refusedAt;
 
 /// Create a copy of Connection
 /// with the given fields replaced by the non-null parameter values.
@@ -263,18 +269,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Connection&&(identical(other.id, id) || other.id == id)&&(identical(other.instanceId, instanceId) || other.instanceId == instanceId)&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.label, label) || other.label == label)&&(identical(other.handle, handle) || other.handle == handle)&&(identical(other.email, email) || other.email == email)&&(identical(other.tenantKey, tenantKey) || other.tenantKey == tenantKey)&&(identical(other.tenantName, tenantName) || other.tenantName == tenantName)&&(identical(other.tenantIcon, tenantIcon) || other.tenantIcon == tenantIcon)&&(identical(other.pinned, pinned) || other.pinned == pinned)&&const DeepCollectionEquality().equals(other.memberships, _memberships)&&(identical(other.lastUsedAt, lastUsedAt) || other.lastUsedAt == lastUsedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Connection&&(identical(other.id, id) || other.id == id)&&(identical(other.instanceId, instanceId) || other.instanceId == instanceId)&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.label, label) || other.label == label)&&(identical(other.handle, handle) || other.handle == handle)&&(identical(other.email, email) || other.email == email)&&(identical(other.tenantKey, tenantKey) || other.tenantKey == tenantKey)&&(identical(other.tenantName, tenantName) || other.tenantName == tenantName)&&(identical(other.tenantIcon, tenantIcon) || other.tenantIcon == tenantIcon)&&(identical(other.pinned, pinned) || other.pinned == pinned)&&const DeepCollectionEquality().equals(other.memberships, _memberships)&&(identical(other.lastUsedAt, lastUsedAt) || other.lastUsedAt == lastUsedAt)&&(identical(other.refusedAt, refusedAt) || other.refusedAt == refusedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,instanceId,kind,createdAt,label,handle,email,tenantKey,tenantName,tenantIcon,pinned,const DeepCollectionEquality().hash(_memberships),lastUsedAt);
+    return Object.hash(runtimeType,id,instanceId,kind,createdAt,label,handle,email,tenantKey,tenantName,tenantIcon,pinned,const DeepCollectionEquality().hash(_memberships),lastUsedAt,refusedAt);
 }
 
 @override
 String toString() {
-    return 'Connection(id: $id, instanceId: $instanceId, kind: $kind, createdAt: $createdAt, label: $label, handle: $handle, email: $email, tenantKey: $tenantKey, tenantName: $tenantName, tenantIcon: $tenantIcon, pinned: $pinned, memberships: $memberships, lastUsedAt: $lastUsedAt)';
+    return 'Connection(id: $id, instanceId: $instanceId, kind: $kind, createdAt: $createdAt, label: $label, handle: $handle, email: $email, tenantKey: $tenantKey, tenantName: $tenantName, tenantIcon: $tenantIcon, pinned: $pinned, memberships: $memberships, lastUsedAt: $lastUsedAt, refusedAt: $refusedAt)';
 }
 
 
@@ -285,7 +291,7 @@ abstract mixin class _$ConnectionCopyWith<$Res> implements $ConnectionCopyWith<$
   factory _$ConnectionCopyWith(_Connection value, $Res Function(_Connection) _then) = __$ConnectionCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String instanceId, ConnectionKind kind, DateTime createdAt, String label, String handle, String email, String tenantKey, String tenantName, TenantIcon tenantIcon, bool pinned, List<Membership> memberships, DateTime? lastUsedAt
+ String id, String instanceId, ConnectionKind kind, DateTime createdAt, String label, String handle, String email, String tenantKey, String tenantName, TenantIcon tenantIcon, bool pinned, List<Membership> memberships, DateTime? lastUsedAt, DateTime? refusedAt
 });
 
 
@@ -302,7 +308,7 @@ class __$ConnectionCopyWithImpl<$Res>
 
 /// Create a copy of Connection
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? instanceId = null,Object? kind = null,Object? createdAt = null,Object? label = null,Object? handle = null,Object? email = null,Object? tenantKey = null,Object? tenantName = null,Object? tenantIcon = null,Object? pinned = null,Object? memberships = null,Object? lastUsedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? instanceId = null,Object? kind = null,Object? createdAt = null,Object? label = null,Object? handle = null,Object? email = null,Object? tenantKey = null,Object? tenantName = null,Object? tenantIcon = null,Object? pinned = null,Object? memberships = null,Object? lastUsedAt = freezed,Object? refusedAt = freezed,}) {
   return _then(_Connection(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,instanceId: null == instanceId ? _self.instanceId : instanceId // ignore: cast_nullable_to_non_nullable
@@ -317,6 +323,7 @@ as String,tenantIcon: null == tenantIcon ? _self.tenantIcon : tenantIcon // igno
 as TenantIcon,pinned: null == pinned ? _self.pinned : pinned // ignore: cast_nullable_to_non_nullable
 as bool,memberships: null == memberships ? _self._memberships : memberships // ignore: cast_nullable_to_non_nullable
 as List<Membership>,lastUsedAt: freezed == lastUsedAt ? _self.lastUsedAt : lastUsedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,refusedAt: freezed == refusedAt ? _self.refusedAt : refusedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }

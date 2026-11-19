@@ -8,11 +8,13 @@ import 'package:tix_mobile/src/core/quick/quick_add.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/local/local_engine.dart';
 import 'package:tix_mobile/src/data/models/widget_snapshot.dart';
+import 'package:tix_mobile/src/data/repositories/instances_repository.dart';
 import 'package:tix_mobile/src/features/widgets/application/headless.dart';
 import 'package:tix_mobile/src/features/widgets/application/widget_sync.dart';
 
 import '../../../helpers/app.dart';
 import '../../../helpers/container.dart';
+import '../../../helpers/fake_notes.dart';
 import '../../../helpers/fake_tix.dart';
 import '../../../helpers/fake_widgets.dart';
 import '../../../helpers/stores.dart';
@@ -288,6 +290,118 @@ void main() {
     test('ignores links it does not know', () async {
       await run('nothing');
       expect(widgets.values, isEmpty);
+    });
+
+    Map<String, dynamic> indexed(String ctx) {
+      final index = widgets.json(WidgetKeys.index)! as Map<String, dynamic>;
+      return (index['contexts'] as List)
+          .cast<Map<String, dynamic>>()
+          .firstWhere((c) => c['id'] == ctx);
+    }
+
+    Future<void> headless(
+      String host, {
+      MemoryKeyValueStore? using,
+      MemorySecretStore? holding,
+      FakeNotes? notes,
+    }) => runWidgetBackground(
+      Uri.parse('tixwidget://$host'),
+      makeContainer(
+        fakeOverrides(
+          server,
+          settings: using ?? settings,
+          secrets: holding ?? secrets,
+          engine: engine,
+          local: true,
+          widgets: widgets,
+          notes: notes,
+        ),
+      ),
+    );
+
+    test('a revoked token is kept, marked refused and asked no more; the '
+        'widgets ask to sign in again', () async {
+      final notes = FakeNotes();
+      widgets.values[WidgetKeys.myWork('c1.default')] = '{"v":1}';
+      server.tokens.remove(_token);
+
+      await headless('refresh', notes: notes);
+
+      final saved = InstancesRepository(settings, secrets).connection('c1');
+      expect(saved?.refused, isTrue);
+      expect(secrets.values['token.c1'], _token);
+      expect(server.requestsTo('/api/v1/whoami'), hasLength(1));
+      expect(notes.shown.single.title, contains('token'));
+      expect(
+        widgets.values.containsKey(WidgetKeys.myWork('c1.default')),
+        isFalse,
+      );
+      expect(
+        widgets.values.containsKey(WidgetKeys.inbox('c1.default')),
+        isFalse,
+      );
+      expect(indexed('c1.default')['refused'], isTrue);
+
+      final sent = server.requests.length;
+      queue([
+        const WidgetAction(
+          id: 'w1',
+          op: 'complete',
+          ctx: 'c1.default',
+          ref: 'ops-2',
+        ),
+      ]);
+      await headless('drain', notes: notes);
+      await headless('refresh', notes: notes);
+      expect(server.requests.length, sent);
+      expect(widgets.values[WidgetKeys.queue], contains('w1'));
+      expect(notes.shown, hasLength(1));
+    });
+
+    test('an expired session is deleted and marked refused; the widgets ask '
+        'to sign in again', () async {
+      final stores = signInStores(server);
+      final notes = FakeNotes();
+      server.sessions.clear();
+
+      await headless(
+        'refresh',
+        using: stores.settings,
+        holding: stores.secrets,
+        notes: notes,
+      );
+
+      final repo = InstancesRepository(stores.settings, stores.secrets);
+      expect(repo.connection('s1')?.refused, isTrue);
+      expect(stores.secrets.values.containsKey('session.s1'), isFalse);
+      expect(repo.connection('s1')?.email, 'ana@example.com');
+      expect(notes.shown.single.title, contains('Signed out'));
+      expect(
+        widgets.values.containsKey(WidgetKeys.myWork('s1.default')),
+        isFalse,
+      );
+      expect(indexed('s1.default')['refused'], isTrue);
+
+      final sent = server.requests.length;
+      await headless(
+        'refresh',
+        using: stores.settings,
+        holding: stores.secrets,
+      );
+      expect(server.requests.length, sent);
+    });
+
+    test('a 401 whoami still accepts leaves the token alone', () async {
+      server.failing['/api/v1/workflows'] = FakeResponse(
+        401,
+        envelope('unauthenticated', 'not this one'),
+      );
+      await headless('refresh');
+      expect(
+        InstancesRepository(settings, secrets).connection('c1')?.refused,
+        isFalse,
+      );
+      expect(indexed('c1.default')['refused'], isFalse);
     });
   });
 

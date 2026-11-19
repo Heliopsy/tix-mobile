@@ -14,6 +14,7 @@ WidgetContext _$WidgetContextFromJson(Map<String, dynamic> json) =>
       instance: json['instance'] as String,
       tenant: json['tenant'] as String,
       local: json['local'] as bool? ?? false,
+      refused: json['refused'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$WidgetContextToJson(WidgetContext instance) =>
@@ -22,6 +23,7 @@ Map<String, dynamic> _$WidgetContextToJson(WidgetContext instance) =>
       'instance': instance.instance,
       'tenant': instance.tenant,
       'local': instance.local,
+      'refused': instance.refused,
     };
 
 WidgetColour _$WidgetColourFromJson(Map<String, dynamic> json) =>

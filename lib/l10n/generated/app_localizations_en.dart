@@ -10017,4 +10017,20 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get signedOutExplained =>
       'Your session on this server ended, so this device stopped syncing. Sign in again to carry on.';
+
+  @override
+  String tokenRefusedNoteTitle(String server) {
+    return 'The token for $server was refused';
+  }
+
+  @override
+  String get tokenRefusedNoteBody =>
+      'Syncing stopped. Tap to paste a new token or sign in.';
+
+  @override
+  String get tokenRefusedExplained =>
+      'This server refused the saved API token, so this device stopped syncing. Paste a new token or sign in to carry on. Your data on this device is kept.';
+
+  @override
+  String get widgetSignInAgain => 'Sign in again to show this';
 }

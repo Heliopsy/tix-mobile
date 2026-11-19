@@ -7044,5 +7044,26 @@
   "signedOutExplained": "Your session on this server ended, so this device stopped syncing. Sign in again to carry on.",
   "@signedOutExplained": {
     "description": "Shown on the sign-in form after the server refused the saved session"
+  },
+  "tokenRefusedNoteTitle": "The token for {server} was refused",
+  "@tokenRefusedNoteTitle": {
+    "description": "System notification title when the server refused the saved API token; server is the instance name",
+    "placeholders": {
+      "server": {
+        "type": "String"
+      }
+    }
+  },
+  "tokenRefusedNoteBody": "Syncing stopped. Tap to paste a new token or sign in.",
+  "@tokenRefusedNoteBody": {
+    "description": "System notification text when the server refused the saved API token"
+  },
+  "tokenRefusedExplained": "This server refused the saved API token, so this device stopped syncing. Paste a new token or sign in to carry on. Your data on this device is kept.",
+  "@tokenRefusedExplained": {
+    "description": "Shown on the reconnect form after the server refused the saved API token"
+  },
+  "widgetSignInAgain": "Sign in again to show this",
+  "@widgetSignInAgain": {
+    "description": "A widget whose context's session or token the server refused"
   }
 }

@@ -30,6 +30,9 @@ _Connection _$ConnectionFromJson(Map<String, dynamic> json) => _Connection(
   lastUsedAt: json['last_used_at'] == null
       ? null
       : DateTime.parse(json['last_used_at'] as String),
+  refusedAt: json['refused_at'] == null
+      ? null
+      : DateTime.parse(json['refused_at'] as String),
 );
 
 Map<String, dynamic> _$ConnectionToJson(_Connection instance) =>
@@ -47,6 +50,7 @@ Map<String, dynamic> _$ConnectionToJson(_Connection instance) =>
       'pinned': instance.pinned,
       'memberships': instance.memberships.map((e) => e.toJson()).toList(),
       'last_used_at': ?instance.lastUsedAt?.toIso8601String(),
+      'refused_at': ?instance.refusedAt?.toIso8601String(),
     };
 
 const _$ConnectionKindEnumMap = {

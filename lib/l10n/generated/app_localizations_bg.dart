@@ -10033,4 +10033,20 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String get signedOutExplained =>
       'Сесията ви на този сървър изтече и устройството спря да се синхронизира. Влезте отново, за да продължите.';
+
+  @override
+  String tokenRefusedNoteTitle(String server) {
+    return 'Токенът за $server беше отказан';
+  }
+
+  @override
+  String get tokenRefusedNoteBody =>
+      'Синхронизирането спря. Докоснете, за да поставите нов токен или да влезете.';
+
+  @override
+  String get tokenRefusedExplained =>
+      'Сървърът отказа запазения API токен и устройството спря да се синхронизира. Поставете нов токен или влезте, за да продължите. Данните на това устройство се запазват.';
+
+  @override
+  String get widgetSignInAgain => 'Влезте отново, за да видите това';
 }

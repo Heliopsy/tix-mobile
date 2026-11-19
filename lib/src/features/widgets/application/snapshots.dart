@@ -299,6 +299,7 @@ Map<String, String> widgetStrings(AppLocalizations l10n) => {
   'complete': l10n.widgetComplete,
   'projectMissing': l10n.widgetProjectMissing,
   'signedOut': l10n.widgetSignedOut,
+  'signInAgain': l10n.widgetSignInAgain,
   'openUpdate': l10n.widgetOpenUpdate,
   'pickProject': l10n.widgetPickProject,
 };

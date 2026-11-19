@@ -288,6 +288,13 @@ destinations, the rest open from More, which ends with About. The rail ends with
   switching calls `POST /api/v1/auth/switch`, which mints a session in the target and ends the old one.
 - The **active context** is a connection and the tenant it targets. `SessionController` in `core/session` builds
   it, and everything that talks to the server watches it, so switching rebuilds the client and every list.
+- A connection whose credential the server refused carries `refused_at`. `RefusedCredentials`
+  (`core/session/refused.dart`) is the one place that sets it: it confirms a `401` with `whoami`, cancels the
+  connection's jobs, deletes a session but keeps a token, and posts the account notification. The session
+  controller uses it for the active connection and the widget writer for every other one, in the app and in the
+  headless widget run. A refused connection builds no session, so the router opens reconnect for it on the next
+  start without sending anything, and `openStoredFeed` builds no client for it. Saving a new token or session on
+  the connection clears it.
 
 | Where | Key | Holds |
 | --- | --- | --- |
@@ -455,7 +462,7 @@ The API client reads `code` into a closed set of error kinds and keeps `message`
 | `code` | HTTP status | What the app does |
 | --- | --- | --- |
 | `invalid` | 400 | Shows the server's message next to the input that caused it |
-| `unauthenticated` | 401 | The token or session is wrong, expired or revoked: show the error; for a sign-in, check the session once with `whoami`, then drop it, stop its sync and open Sign in again, keeping the connection |
+| `unauthenticated` | 401 | The token or session is wrong, expired or revoked: show the error, check the credential once with `whoami`, then mark the connection refused, stop its sync and open reconnect for it, keeping the connection and its cache; a session is deleted, a token kept |
 | `forbidden` | 403 | The token lacks a scope: say which action was refused, do not retry |
 | `not_found` | 404 | The item is gone or not visible to this token |
 | `conflict`, `lease_expired` | 409 | Someone changed it first: reload and show the current state |

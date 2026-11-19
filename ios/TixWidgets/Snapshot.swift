@@ -22,6 +22,7 @@ struct ContextInfo: Decodable, Hashable {
   let instance: String
   let tenant: String
   let local: Bool?
+  let refused: Bool?
 
   /// "Work · Acme", as every widget footer names its context.
   var label: String {
@@ -29,6 +30,9 @@ struct ContextInfo: Decodable, Hashable {
   }
 
   var isLocal: Bool { local ?? false }
+
+  /// Whether the server refused this context's session or token.
+  var isRefused: Bool { refused ?? false }
 }
 
 /// A project as the pickers and the project header show it.

@@ -47,6 +47,7 @@ class WidgetContext {
     required this.instance,
     required this.tenant,
     this.local = false,
+    this.refused = false,
   });
 
   /// Reads one back.
@@ -64,6 +65,10 @@ class WidgetContext {
 
   /// Whether the instance is a database served on this device.
   final bool local;
+
+  /// Whether the server refused the context's session or token: widgets ask
+  /// to sign in again instead of drawing a snapshot.
+  final bool refused;
 
   /// The JSON a widget reads.
   Map<String, dynamic> toJson() => _$WidgetContextToJson(this);

@@ -14,6 +14,7 @@
     <string name="widget_open_app">Ouvrez tix pour charger ce widget</string>
     <string name="widget_update_app">Ouvrez tix pour mettre à jour</string>
     <string name="widget_signed_out">Connectez-vous à tix</string>
+    <string name="widget_sign_in_again">Reconnectez-vous pour afficher ceci</string>
     <string name="widget_updated">Mis à jour</string>
     <string name="widget_local_stale">Se met à jour quand tix est ouvert</string>
     <string name="widget_overdue">En retard</string>

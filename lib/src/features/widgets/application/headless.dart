@@ -17,11 +17,13 @@ const widgetBackgroundHosts = {'drain', 'refresh'};
 /// screen and no session: the queue, then every snapshot. Reads stored
 /// credentials through [container]'s providers, the same code the app
 /// signs in with, and never starts a local engine: local contexts are
-/// skipped and keep their snapshot.
+/// skipped and keep their snapshot. A `401` is confirmed and recorded as
+/// the app would, so the next run, and the app, leave that connection be.
 Future<void> runWidgetBackground(Uri? uri, ProviderContainer container) async {
   if (uri == null || !widgetBackgroundHosts.contains(uri.host)) return;
   final store = container.read(keyValueStoreProvider);
   final instances = container.read(instancesRepositoryProvider);
+  final refusals = container.read(refusedCredentialsProvider);
   final writer = WidgetWriter(
     bridge: container.read(widgetBridgeProvider),
     instances: instances,
@@ -34,6 +36,7 @@ Future<void> runWidgetBackground(Uri? uri, ProviderContainer container) async {
       factory: container.read(tixApiFactoryProvider),
       cache: container.read(cacheStoreProvider),
     ),
+    refused: (t) => refusals.check(t.connection),
   );
   bool remote(WidgetTarget t) => !t.local;
   try {

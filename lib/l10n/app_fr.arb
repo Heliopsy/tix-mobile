@@ -2743,5 +2743,9 @@
   "updateNotePlayBody": "Touchez pour mettre à jour depuis Google Play.",
   "signedOutNoteTitle": "Déconnecté de {server}",
   "signedOutNoteBody": "Votre session a expiré et la synchronisation s’est arrêtée. Touchez pour vous reconnecter.",
-  "signedOutExplained": "Votre session sur ce serveur a expiré, cet appareil ne se synchronise donc plus. Reconnectez-vous pour continuer."
+  "signedOutExplained": "Votre session sur ce serveur a expiré, cet appareil ne se synchronise donc plus. Reconnectez-vous pour continuer.",
+  "tokenRefusedNoteTitle": "Le jeton pour {server} a été refusé",
+  "tokenRefusedNoteBody": "La synchronisation s’est arrêtée. Touchez pour coller un nouveau jeton ou vous connecter.",
+  "tokenRefusedExplained": "Ce serveur a refusé le jeton d’API enregistré, cet appareil ne se synchronise donc plus. Collez un nouveau jeton ou connectez-vous pour continuer. Vos données sur cet appareil sont conservées.",
+  "widgetSignInAgain": "Reconnectez-vous pour afficher ceci"
 }

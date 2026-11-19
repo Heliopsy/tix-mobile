@@ -16,9 +16,9 @@ import 'package:tix_mobile/src/core/offline/outbox_owner.dart';
 import 'package:tix_mobile/src/core/platform/files.dart';
 import 'package:tix_mobile/src/core/session/api.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
+import 'package:tix_mobile/src/core/session/refused.dart';
 import 'package:tix_mobile/src/core/session/signed_out.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
-import 'package:tix_mobile/src/core/update/update_notice.dart' show storedL10n;
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/cache/response_cache.dart';
 import 'package:tix_mobile/src/data/local/in_place.dart';
@@ -55,6 +55,18 @@ InstancesRepository instancesRepository(Ref ref) => InstancesRepository(
 @Riverpod(keepAlive: true)
 AuthRepository authRepository(Ref ref) =>
     AuthRepository(ref.watch(tixApiFactoryProvider));
+
+/// Confirms and records refused credentials, for the app and the widgets'
+/// headless run alike.
+@Riverpod(keepAlive: true)
+RefusedCredentials refusedCredentials(Ref ref) => RefusedCredentials(
+  instances: ref.watch(instancesRepositoryProvider),
+  auth: ref.watch(authRepositoryProvider),
+  jobs: ref.watch(connectionJobsProvider),
+  notes: ref.watch(localNotesProvider),
+  store: ref.watch(keyValueStoreProvider),
+  now: ref.watch(clockProvider),
+);
 
 /// The active context: an instance, a connection and its tenant.
 @immutable
@@ -131,17 +143,16 @@ class SessionController extends _$SessionController {
     final instance = connection == null
         ? null
         : repo.instance(connection.instanceId);
-    final secret = connection == null ? null : await repo.secret(connection);
+    final secret = connection == null || connection.refused
+        ? null
+        : await repo.secret(connection);
     if (connection == null ||
         instance == null ||
         secret == null ||
         secret.isEmpty) {
       return null;
     }
-    final credential = switch (connection.kind) {
-      ConnectionKind.token => BearerCredential(secret) as Credential,
-      ConnectionKind.signIn => SessionCredential(secret),
-    };
+    final credential = credentialOf(connection, secret);
     if (instance.kind == InstanceKind.remote) {
       await engines.stopAll();
       return _refreshed(
@@ -182,24 +193,27 @@ class SessionController extends _$SessionController {
     }
   }
 
-  /// The active sign-in connection while there is no session: the one the
-  /// person is asked to sign in to again. Null otherwise.
+  /// The active connection while there is no session, when it is a sign-in
+  /// or its credential was refused: the one the person is asked to sign in
+  /// to again or give a new token. Null otherwise.
   String? awaitingSignIn() {
     if (state.value != null) return null;
     final repo = ref.read(instancesRepositoryProvider);
     final connection = repo.connection(repo.active()?.connectionId ?? '');
-    return connection?.kind == ConnectionKind.signIn ? connection!.id : null;
+    if (connection == null) return null;
+    return connection.kind == ConnectionKind.signIn || connection.refused
+        ? connection.id
+        : null;
   }
 
   /// Hears a `401` answered to [credential] by any client the app built.
-  /// When it is the active remote sign-in's session, it checks once whether
-  /// the server still knows the session before signing it out.
+  /// When it is the active remote connection's session or token, it checks
+  /// once whether the server still accepts it before recording the refusal.
   void _refused(Credential credential) {
     final session = state.value;
     if (_checking ||
         session == null ||
         session.credential != credential ||
-        session.connection.kind != ConnectionKind.signIn ||
         session.instance.kind != InstanceKind.remote ||
         _leaving.contains(session.connection.id)) {
       return;
@@ -208,44 +222,17 @@ class SessionController extends _$SessionController {
     unawaited(_confirmRefused(session).whenComplete(() => _checking = false));
   }
 
-  /// Signs [session] out when `whoami` is refused too. tix has no route that
-  /// renews a session: each use renews a live one, so a session `whoami`
-  /// accepts was refused for something else, such as a wrong code.
+  /// Records the refusal of [session]'s credential when `whoami` refuses it
+  /// too, then drops the session. The connection, its instance, cache and
+  /// outbox stay for signing in again or pasting a new token.
   Future<void> _confirmRefused(Session session) async {
-    try {
-      await ref
-          .read(authRepositoryProvider)
-          .whoami(session.baseUrl, session.credential);
-      return;
-    } on TixException catch (e) {
-      if (e.status != 401) return;
-    }
+    final refusals = ref.read(refusedCredentialsProvider);
+    if (!await refusals.confirmed(session.baseUrl, session.credential)) return;
     if (!ref.mounted || state.value?.credential != session.credential) return;
-    await _signOutRefused(session);
-  }
-
-  /// Stops the background work of [session]'s connection and forgets its
-  /// session, keeping the connection, its email and its instance for
-  /// signing in again, and says so in a notification.
-  Future<void> _signOutRefused(Session session) async {
-    final repo = ref.read(instancesRepositoryProvider);
-    final connection = repo.connection(session.connection.id);
-    if (connection == null) return;
-    await ref.read(connectionJobsProvider).cancel(connection.id);
-    if (await repo.secret(connection) != session.credential.secret) return;
-    await repo.deleteSecret(connection);
-    log('session of ${connection.id} refused; signed out');
-    unawaited(_noteSignedOut(session.instance));
+    if (!await refusals.record(session.connection, session.credential)) return;
     if (!ref.mounted) return;
     ref.invalidateSelf();
     await future;
-  }
-
-  Future<void> _noteSignedOut(Instance instance) async {
-    final notes = ref.read(localNotesProvider);
-    if (!await notes.allowed()) return;
-    final l10n = storedL10n(ref.read(keyValueStoreProvider));
-    await notes.show(signedOutNote(l10n, instance.name));
   }
 
   /// Marks the person as back for the active local instance: its engine
@@ -339,17 +326,20 @@ class SessionController extends _$SessionController {
 
   /// Checks that [url] is a tix server that accepts [token], then saves a
   /// token connection on its instance and makes it active. With [instanceId]
-  /// the connection is added to that saved instance. Throws a
-  /// [TixException] otherwise.
+  /// the connection is added to that saved instance; [replacing] keeps an
+  /// existing connection's id, cache and outbox and clears its refusal.
+  /// Throws a [TixException] otherwise.
   Future<void> connect({
     required String url,
     required String token,
     String name = '',
     String? instanceId,
+    String? replacing,
   }) async {
     final repo = ref.read(instancesRepositoryProvider);
     final auth = ref.read(authRepositoryProvider);
-    final existing = instanceId == null ? null : repo.instance(instanceId);
+    final old = replacing == null ? null : repo.connection(replacing);
+    final existing = repo.instance(old?.instanceId ?? instanceId ?? '');
     final address = existing?.baseUrl ?? normalizeServerUrl(url);
     if (address == null) throw const TixException(TixErrorKind.badUrl);
     final secret = token.trim();
@@ -360,18 +350,30 @@ class SessionController extends _$SessionController {
     final saved = await repo.save(
       instance: instance,
       connection: _withIdentity(
-        Connection(
-          id: InstancesRepository.newId(),
-          instanceId: instance.id,
-          kind: ConnectionKind.token,
-          label: name.trim(),
-          createdAt: DateTime.now(),
-        ),
+        old?.copyWith(kind: ConnectionKind.token, pinned: true) ??
+            Connection(
+              id: InstancesRepository.newId(),
+              instanceId: instance.id,
+              kind: ConnectionKind.token,
+              label: name.trim(),
+              createdAt: DateTime.now(),
+            ),
         me,
       ),
       secret: secret,
     );
+    await _replaced(old, saved);
     await _activate(saved.ref);
+  }
+
+  /// Settles [old] once [saved] took its place: a secret stored under the
+  /// old kind is deleted and the account notification goes.
+  Future<void> _replaced(Connection? old, Connection saved) async {
+    if (old == null) return;
+    if (old.kind != saved.kind) {
+      await ref.read(instancesRepositoryProvider).deleteSecret(old);
+    }
+    unawaited(ref.read(localNotesProvider).cancel(signedOutNoteId));
   }
 
   /// Saves a sign-in to [baseUrl] holding [session] for [me], and makes it
@@ -402,14 +404,16 @@ class SessionController extends _$SessionController {
     final saved = await repo.save(
       instance: instance,
       connection: _withIdentity(
-        base.copyWith(email: email.trim(), pinned: pinned),
+        base.copyWith(
+          kind: ConnectionKind.signIn,
+          email: email.trim(),
+          pinned: pinned,
+        ),
         me,
       ),
       secret: session,
     );
-    if (old != null) {
-      unawaited(ref.read(localNotesProvider).cancel(signedOutNoteId));
-    }
+    await _replaced(old, saved);
     await _activate(saved.ref);
   }
 

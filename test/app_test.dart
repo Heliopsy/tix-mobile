@@ -9,6 +9,7 @@ import 'package:tix_mobile/src/app.dart';
 import 'package:tix_mobile/src/core/config/config.dart';
 import 'package:tix_mobile/src/core/platform/app_info.dart';
 import 'package:tix_mobile/src/core/router/router.dart';
+import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/features/about/presentation/about_screen.dart';
 import 'package:tix_mobile/src/features/audit/presentation/audit_screen.dart';
 import 'package:tix_mobile/src/features/inbox/presentation/inbox_screen.dart';
@@ -17,9 +18,11 @@ import 'package:tix_mobile/src/features/shell/presentation/home_shell.dart';
 import 'package:tix_mobile/src/features/tasks/presentation/task_detail_screen.dart';
 import 'package:tix_mobile/src/features/transfer/presentation/transfer_screen.dart';
 import 'package:tix_mobile/src/features/watch/presentation/watch_screen.dart';
+import 'package:tix_mobile/src/features/widgets/application/headless.dart';
 
 import 'helpers/app.dart';
 import 'helpers/fake_tix.dart';
+import 'helpers/fake_widgets.dart';
 import 'helpers/stores.dart';
 
 void main() {
@@ -319,11 +322,73 @@ void main() {
     expect(server.requests.length, requests);
   });
 
-  testWidgets('a token refused offers no sign-in', (tester) async {
+  testWidgets('a refused token leads to pasting a new one', (tester) async {
     final stores = signedInStores(token: 'revoked');
     await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
-    expect(find.textContaining('did not accept'), findsOneWidget);
-    expect(find.byKey(const Key('error.signInAgain')), findsNothing);
+    expect(find.byKey(const Key('connect.tokenRefused')), findsOneWidget);
+    expect(find.byKey(const Key('connect.instanceUrl')), findsOneWidget);
+    expect(find.byKey(const Key('connect.method')), findsOneWidget);
+    expect(stores.secrets.values['token.c1'], 'revoked');
+    final requests = server.requests.length;
+    await tester.pump(const Duration(hours: 1));
+    await tester.pumpAndSettle();
+    expect(server.requests.length, requests);
+
+    await tester.enterText(find.byKey(const Key('connect.token')), 'tok');
+    await tester.ensureVisible(find.byKey(const Key('connect.submit')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('connect.submit')));
+    await tester.pumpAndSettle();
+    expect(find.text('Infrastructure'), findsOneWidget);
+    expect(stores.secrets.values['token.c1'], 'tok');
+  });
+
+  group('after the widgets found a credential refused', () {
+    Future<void> headless(
+      ({MemoryKeyValueStore settings, MemorySecretStore secrets}) stores,
+    ) async {
+      final c = ProviderContainer(
+        retry: noRetry,
+        overrides: fakeOverrides(
+          server,
+          settings: stores.settings,
+          secrets: stores.secrets,
+          widgets: FakeWidgetBridge(),
+        ),
+      );
+      await c.read(instancesRepositoryProvider).migrate();
+      await runWidgetBackground(Uri.parse('tixwidget://refresh'), c);
+      c.dispose();
+    }
+
+    testWidgets('a token: the app opens on reconnect without asking', (
+      tester,
+    ) async {
+      final stores = signedInStores();
+      server.tokens.remove('tok');
+      await tester.runAsync(() => headless(stores));
+      server.tokens['tok'] = 'default';
+      final sent = server.requests.length;
+
+      await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
+
+      expect(find.byKey(const Key('connect.tokenRefused')), findsOneWidget);
+      expect(find.byKey(const Key('connect.token')), findsOneWidget);
+      expect(server.requests.length, sent);
+    });
+
+    testWidgets('a session: the app opens on signing in again', (tester) async {
+      final stores = signInStores(server);
+      server.sessions.clear();
+      await tester.runAsync(() => headless(stores));
+      final sent = server.requests.length;
+
+      await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
+
+      expect(find.byKey(const Key('connect.signedOut')), findsOneWidget);
+      expect(find.byKey(const Key('connect.password')), findsOneWidget);
+      expect(server.requests.length, sent);
+    });
   });
 
   testWidgets("dates follow the reader's server preference everywhere", (

@@ -239,16 +239,24 @@ class ConnectFlow extends _$ConnectFlow {
     state = const ConnectForm();
   }
 
-  /// Connects with an API token.
+  /// Connects with an API token, in place of the connection [replacing]
+  /// when given.
   Future<void> token({
     required String url,
     required String token,
     String name = '',
     String? instanceId,
+    String? replacing,
   }) async {
     await ref
         .read(sessionControllerProvider.notifier)
-        .connect(url: url, token: token, name: name, instanceId: instanceId);
+        .connect(
+          url: url,
+          token: token,
+          name: name,
+          instanceId: instanceId,
+          replacing: replacing,
+        );
     state = const ConnectDone();
   }
 
