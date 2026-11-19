@@ -173,6 +173,41 @@ void main() {
     expect(await repo.secret(c), 'sess2');
   });
 
+  test(
+    'a sign-in without its session is marked refused on start, once',
+    () async {
+      Connection signIn(String id, String instance) =>
+          token(id, instance).copyWith(kind: ConnectionKind.signIn);
+      final kept = await repo.save(
+        instance: remote('i', 'https://a'),
+        connection: signIn('kept', 'i'),
+        secret: 'sess',
+      );
+      final lost = await repo.save(
+        instance: remote('i', 'https://a'),
+        connection: signIn('lost', 'i').copyWith(email: 'b@example.com'),
+        secret: 'gone',
+      );
+      final tok = await repo.save(
+        instance: remote('i', 'https://a'),
+        connection: token('tok', 'i', tenant: 'acme'),
+        secret: 'gone',
+      );
+      await repo.deleteSecret(lost);
+      await repo.deleteSecret(tok);
+
+      await repo.migrate();
+
+      expect(repo.connection(lost.id)?.refusedAt, now);
+      expect(repo.connection(kept.id)?.refused, isFalse);
+      expect(repo.connection(tok.id)?.refused, isFalse);
+
+      await repo.deleteSecret(kept);
+      await repo.migrate();
+      expect(repo.connection(kept.id)?.refused, isFalse);
+    },
+  );
+
   test('activate records recents, newest first, at most eight', () async {
     for (var n = 0; n < 10; n++) {
       await repo.save(

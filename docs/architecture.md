@@ -289,12 +289,14 @@ destinations, the rest open from More, which ends with About. The rail ends with
 - The **active context** is a connection and the tenant it targets. `SessionController` in `core/session` builds
   it, and everything that talks to the server watches it, so switching rebuilds the client and every list.
 - A connection whose credential the server refused carries `refused_at`. `RefusedCredentials`
-  (`core/session/refused.dart`) is the one place that sets it: it confirms a `401` with `whoami`, cancels the
+  (`core/session/refused.dart`) sets it for a refusal heard now: it confirms a `401` with `whoami`, cancels the
   connection's jobs, deletes a session but keeps a token, and posts the account notification. The session
   controller uses it for the active connection and the widget writer for every other one, in the app and in the
   headless widget run. A refused connection builds no session, so the router opens reconnect for it on the next
   start without sending anything, and `openStoredFeed` builds no client for it. Saving a new token or session on
-  the connection clears it.
+  the connection clears it. Once per run, `InstancesRepository.migrate` also sets it on a remote sign-in that has
+  no session, as 0.22.0 left one it signed out. The instances screen and the context switcher read only
+  `refused`, mark the row with `RefusedMark` (`core/widgets/refused_mark.dart`) and open reconnect on a tap.
 
 | Where | Key | Holds |
 | --- | --- | --- |

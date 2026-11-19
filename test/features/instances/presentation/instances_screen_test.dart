@@ -166,6 +166,107 @@ void main() {
     expect(find.text('Remove connection'), findsOneWidget);
   });
 
+  group('a refused connection', () {
+    void refuse(String id) {
+      final connections =
+          jsonDecode(stores.settings.values['connections']!) as List<dynamic>;
+      for (final c in connections.cast<Map<String, dynamic>>()) {
+        if (c['id'] == id) c['refused_at'] = '2026-11-20T00:00:00.000Z';
+      }
+      stores.settings.values['connections'] = jsonEncode(connections);
+    }
+
+    void addSignedOut() {
+      final connections =
+          jsonDecode(stores.settings.values['connections']!) as List<dynamic>
+            ..add({
+              'id': 's2',
+              'instance_id': 'i1',
+              'kind': 'sign_in',
+              'email': 'bo@example.com',
+              'tenant_key': 'default',
+              'created_at': '2026-11-01T00:00:00.000Z',
+            });
+      stores.settings.values['connections'] = jsonEncode(connections);
+    }
+
+    Finder mark(String id) => inConnection(id, find.byKey(Key('refused.$id')));
+
+    testWidgets('a refused token says so, with a label', (tester) async {
+      refuse('t1');
+      final semantics = tester.ensureSemantics();
+      await pump(tester);
+      expect(inConnection('t1', find.text('Token refused')), findsOneWidget);
+      expect(
+        inConnection('t1', find.byIcon(Icons.warning_amber_rounded)),
+        findsOneWidget,
+      );
+      expect(
+        tester
+            .getSemantics(find.byKey(const Key('instances.connection.t1')))
+            .label,
+        contains('Needs attention: Token refused'),
+      );
+      semantics.dispose();
+    });
+
+    testWidgets('a sign-in the server signed out says so', (tester) async {
+      addSignedOut();
+      await pump(tester);
+      expect(
+        inConnection('s2', find.text('Signed out, sign in again')),
+        findsOneWidget,
+      );
+      expect(mark('s2'), findsOneWidget);
+    });
+
+    testWidgets('a healthy connection has no mark', (tester) async {
+      refuse('t1');
+      addSignedOut();
+      await pump(tester);
+      expect(mark('s1'), findsNothing);
+      expect(mark('l1'), findsNothing);
+      expect(
+        inConnection('s1', find.byIcon(Icons.warning_amber_rounded)),
+        findsNothing,
+      );
+      expect(inConnection('s1', find.textContaining('refused')), findsNothing);
+    });
+
+    testWidgets('a tap opens reconnect instead of switching', (tester) async {
+      refuse('t1');
+      final c = await pump(tester);
+      await tester.tap(find.byKey(const Key('instances.connection.t1')));
+      await tester.pumpAndSettle();
+      expect(find.text('route:/connect?connection=t1'), findsOneWidget);
+      expect(c.read(sessionControllerProvider).value!.connection.id, 's1');
+    });
+
+    testWidgets('its menu offers sign in again', (tester) async {
+      refuse('t1');
+      await pump(tester);
+      await menu(tester, 'instances.connection.t1.menu', 'Sign in again');
+      expect(find.text('route:/connect?connection=t1'), findsOneWidget);
+    });
+
+    testWidgets('the mark goes once a new token is saved', (tester) async {
+      refuse('t1');
+      final c = await pump(tester);
+      expect(mark('t1'), findsOneWidget);
+      server.tokens['fresh'] = 'acme';
+      final saving = c
+          .read(sessionControllerProvider.notifier)
+          .connect(url: '', token: 'fresh', replacing: 't1');
+      await tester.pumpAndSettle();
+      await saving;
+      await tester.pumpAndSettle();
+      expect(c.read(sessionControllerProvider).value!.connection.id, 't1');
+      expect(find.byKey(const Key('instances.connection.t1')), findsOneWidget);
+      expect(mark('t1'), findsNothing);
+      expect(inConnection('t1', find.text('Token refused')), findsNothing);
+    });
+  });
+
   testWidgets('sign in again and add a connection lead to connect', (
     tester,
   ) async {

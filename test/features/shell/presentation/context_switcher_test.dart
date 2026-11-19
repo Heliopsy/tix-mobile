@@ -130,6 +130,39 @@ void main() {
     );
   });
 
+  testWidgets('a refused connection is marked and opens reconnect', (
+    tester,
+  ) async {
+    final connections =
+        jsonDecode(stores.settings.values['connections']!) as List<dynamic>;
+    (connections.last as Map<String, dynamic>)['refused_at'] =
+        '2026-11-20T00:00:00.000Z';
+    stores.settings.values['connections'] = jsonEncode(connections);
+    final c = await pump(tester);
+    await open(tester);
+    Finder inEntry(String key, Finder f) =>
+        find.descendant(of: find.byKey(Key(key)), matching: f);
+    expect(
+      inEntry('switcher.entry.t2.default', find.text('Token refused')),
+      findsOneWidget,
+    );
+    expect(
+      inEntry('switcher.entry.t2.default', find.byKey(const Key('refused.t2'))),
+      findsOneWidget,
+    );
+    expect(
+      inEntry(
+        'switcher.recent.s1.default',
+        find.byKey(const Key('refused.s1')),
+      ),
+      findsNothing,
+    );
+    await tester.tap(find.byKey(const Key('switcher.entry.t2.default')));
+    await tester.pumpAndSettle();
+    expect(find.text('route:/connect?connection=t2'), findsOneWidget);
+    expect(c.read(sessionControllerProvider).value!.connection.id, 's1');
+  });
+
   testWidgets('picking another tenant switches the session', (tester) async {
     final c = await pump(tester);
     await open(tester);

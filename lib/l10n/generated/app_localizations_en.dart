@@ -10033,4 +10033,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get widgetSignInAgain => 'Sign in again to show this';
+
+  @override
+  String get connectionSignedOut => 'Signed out, sign in again';
+
+  @override
+  String get connectionTokenRefused => 'Token refused';
+
+  @override
+  String connectionAttention(String state) {
+    return 'Needs attention: $state';
+  }
 }

@@ -2747,5 +2747,8 @@
   "tokenRefusedNoteTitle": "Das Token für {server} wurde abgelehnt",
   "tokenRefusedNoteBody": "Die Synchronisierung wurde angehalten. Tippen, um ein neues Token einzufügen oder sich anzumelden.",
   "tokenRefusedExplained": "Dieser Server hat das gespeicherte API-Token abgelehnt, daher synchronisiert dieses Gerät nicht mehr. Fügen Sie ein neues Token ein oder melden Sie sich an, um fortzufahren. Ihre Daten auf diesem Gerät bleiben erhalten.",
-  "widgetSignInAgain": "Erneut anmelden, um dies anzuzeigen"
+  "widgetSignInAgain": "Erneut anmelden, um dies anzuzeigen",
+  "connectionSignedOut": "Abgemeldet, erneut anmelden",
+  "connectionTokenRefused": "Token abgelehnt",
+  "connectionAttention": "Handlungsbedarf: {state}"
 }
