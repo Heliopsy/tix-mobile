@@ -9107,7 +9107,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsUpdateCheckHelp =>
-      'Beim Start von tix und alle paar Stunden.';
+      'Beim Start von tix und alle paar Stunden, mit einer Benachrichtigung, wenn eine neue Version da ist.';
 
   @override
   String get settingsUpdateAuto => 'Updates automatisch installieren';
@@ -9182,6 +9182,45 @@ class AppLocalizationsDe extends AppLocalizations {
   String trayUpdateAvailable(String version) {
     return 'Update verfügbar ($version)';
   }
+
+  @override
+  String get settingsUpdatesStoreHelp =>
+      'tix fragt den App Store, ob eine neuere Version da ist. Der App Store installiert sie.';
+
+  @override
+  String get updateStoreHelp => 'Aktualisieren Sie es im App Store.';
+
+  @override
+  String get updateOpenStore => 'App Store öffnen';
+
+  @override
+  String get updateFailedStore =>
+      'Der App Store war nicht erreichbar, um nach Updates zu suchen.';
+
+  @override
+  String updateNoteTitle(String version) {
+    return 'tix $version ist verfügbar';
+  }
+
+  @override
+  String get updateNoteBody =>
+      'Tippen, um das Update zu sehen und herunterzuladen.';
+
+  @override
+  String get updateNoteStoreBody => 'Tippen, um im App Store zu aktualisieren.';
+
+  @override
+  String updateNoteReadyTitle(String version) {
+    return 'tix $version ist bereit zur Installation';
+  }
+
+  @override
+  String get updateNoteReadyBody =>
+      'Tippen zum Aktualisieren: tix startet mit der neuen Version neu.';
+
+  @override
+  String get updateNoteReadyAutoBody =>
+      'Es wird beim Beenden von tix installiert. Tippen, um jetzt zu aktualisieren.';
 
   @override
   String trayRestartToUpdate(String version) {

@@ -11,11 +11,15 @@ import 'package:tix_mobile/src/data/update/verify.dart';
 
 /// How far the app goes with a newer release.
 enum UpdateMode {
-  /// Never checks: a store, Flatpak, iOS or a build that turned it off.
+  /// Never checks: a package manager, Flatpak, Snap, TestFlight, Google
+  /// Play or a build that turned it off.
   off,
 
-  /// Checks and shows it with a link to the release page.
+  /// Checks GitHub and shows it with a link to the release page.
   notify,
+
+  /// Asks the store which version it serves and links to the store page.
+  store,
 
   /// Checks, downloads, verifies and installs on restart.
   install,
@@ -34,6 +38,8 @@ class UpdateEnvironment {
     this.snap = false,
     this.releaseBuild = true,
     this.androidInstaller,
+    this.ios = false,
+    this.appleInstaller,
   });
 
   /// The desktop this runs on, null on a phone.
@@ -59,7 +65,19 @@ class UpdateEnvironment {
 
   /// The package that installed the app on Android, null when unknown.
   final String? androidInstaller;
+
+  /// Whether this is iOS.
+  final bool ios;
+
+  /// Where iOS says the app came from: [appStoreInstaller], TestFlight or
+  /// the simulator; null when unknown.
+  final String? appleInstaller;
 }
+
+/// What `package_info_plus` reports on iOS for an App Store install. A
+/// TestFlight build reports `com.apple.testflight` (its receipt is the
+/// sandbox one) and TestFlight tells testers about new builds itself.
+const appStoreInstaller = 'com.apple';
 
 /// The installers that mean an APK came from the GitHub release: none
 /// (adb) or the system package installer. Play, F-Droid and other stores
@@ -71,6 +89,11 @@ const sideloadInstallers = {
 
 /// What the app does about updates in [env], with the install at [target].
 UpdateMode updateModeFor(UpdateEnvironment env, {InstallTarget? target}) {
+  if (env.ios) {
+    final appStore =
+        env.releaseBuild && env.appleInstaller == appStoreInstaller;
+    return appStore ? UpdateMode.store : UpdateMode.off;
+  }
   if (!env.buildAllows) return UpdateMode.off;
   if (env.android) {
     final installer = env.androidInstaller;

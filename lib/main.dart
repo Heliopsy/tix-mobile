@@ -17,6 +17,7 @@ import 'package:tix_mobile/src/core/platform/adb_bridge.dart';
 import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/core/storage/stores.dart';
+import 'package:tix_mobile/src/core/update/update_notice.dart';
 import 'package:tix_mobile/src/data/local/ffi_local_engine.dart';
 import 'package:tix_mobile/src/features/inbox/application/inbox.dart';
 import 'package:tix_mobile/src/features/inbox/application/note_actions.dart';
@@ -97,13 +98,14 @@ Future<void> noteActionHeadlessMain() async {
   await container.read(noteActionBridgeProvider).listen();
 }
 
-/// What an Android widget's tick or the refresh worker runs, in the
-/// headless engine `home_widget` starts.
+/// What an Android widget's tick, the widget refresh worker or the update
+/// worker runs, in the headless engine `home_widget` starts.
 @pragma('vm:entry-point')
 Future<void> widgetBackgroundCallback(Uri? uri) => _headless(uri);
 
 /// The iOS runner's headless engine starts here for a widget tick or a
-/// background refresh, and is told `done` when the work is over.
+/// background refresh, which also looks for updates, and is told `done`
+/// when the work is over.
 @pragma('vm:entry-point')
 Future<void> widgetHeadlessMain(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -128,6 +130,7 @@ Future<void> _headless(Uri? uri) async {
   );
   try {
     await runWidgetBackground(uri, container);
+    await runBackgroundUpdateCheck(uri, container);
   } finally {
     container.dispose();
   }

@@ -10,11 +10,14 @@ import 'package:tix_mobile/src/core/desktop/tray_status.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/logging/log.dart';
 import 'package:tix_mobile/src/core/notifications/local_notifier.dart';
+import 'package:tix_mobile/src/core/platform/attachments.dart';
 import 'package:tix_mobile/src/core/platform/deep_links.dart';
 import 'package:tix_mobile/src/core/platform/desktop.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/time/times.dart';
+import 'package:tix_mobile/src/core/update/update_notice.dart';
 import 'package:tix_mobile/src/core/update/updates.dart';
+import 'package:tix_mobile/src/data/update/store_feed.dart';
 
 /// Mounted above the router on every screen: keeps the desktop's tray icon,
 /// its menu, its hover text and the dock badge in step with the active
@@ -22,8 +25,9 @@ import 'package:tix_mobile/src/core/update/updates.dart';
 /// window on close when that is chosen, and turns tray picks and the
 /// quick-add hotkey into the same `tix://` links Android's tiles open. Does
 /// nothing where the platform offers none of it. It also keeps the update
-/// check running on every platform, shows an update in the tray, and
-/// installs a staged one on quit when that is chosen.
+/// check running on every platform, shows an update in the tray, opens the
+/// update from its notification, and installs a staged one on quit when
+/// that is chosen.
 class DesktopHost extends ConsumerStatefulWidget {
   /// Hosts the desktop around [child].
   const DesktopHost({required this.child, super.key});
@@ -38,6 +42,7 @@ class DesktopHost extends ConsumerStatefulWidget {
 class _DesktopHostState extends ConsumerState<DesktopHost> {
   StreamSubscription<DesktopEvent>? _events;
   StreamSubscription<String>? _taps;
+  StreamSubscription<String>? _updateTaps;
   bool _ready = false;
   TrayMenu? _menu;
   bool? _close;
@@ -52,6 +57,11 @@ class _DesktopHostState extends ConsumerState<DesktopHost> {
   void initState() {
     super.initState();
     _events = _shell.events.listen((e) => unawaited(_on(e)));
+    final notes = ref.read(localNotesProvider);
+    _updateTaps = notes.taps
+        .where((p) => p == updateNotePayload)
+        .listen((_) => unawaited(_openUpdate()));
+    unawaited(_launchedByUpdate(notes));
     ref.listenManual(desktopCapsProvider, (_, next) {
       final caps = next.value;
       if (caps != null) unawaited(_start(caps));
@@ -62,6 +72,7 @@ class _DesktopHostState extends ConsumerState<DesktopHost> {
   void dispose() {
     unawaited(_events?.cancel());
     unawaited(_taps?.cancel());
+    unawaited(_updateTaps?.cancel());
     _cooldown?.cancel();
     _refresh?.cancel();
     super.dispose();
@@ -111,6 +122,22 @@ class _DesktopHostState extends ConsumerState<DesktopHost> {
         } else if (_installsOnQuit) {
           await _quit();
         }
+    }
+  }
+
+  Future<void> _launchedByUpdate(LocalNotifier notes) async {
+    if (await notes.launchPayload() == updateNotePayload && mounted) {
+      await _openUpdate();
+    }
+  }
+
+  Future<void> _openUpdate() async {
+    final mode = await ref.read(updateModeProvider.future);
+    if (!mounted) return;
+    if (mode == UpdateMode.store) {
+      await ref.read(attachmentsProvider).openLink(appStorePage);
+    } else {
+      await _follow('about');
     }
   }
 

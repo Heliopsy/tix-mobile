@@ -10,9 +10,9 @@ import 'package:tix_mobile/src/core/platform/app_info.dart';
 import 'package:tix_mobile/src/core/platform/attachments.dart';
 import 'package:tix_mobile/src/core/update/updates.dart';
 
-/// Where updates stand, with Check now, Restart to update, Download and
-/// What's new as they apply. Shown in Settings and About; empty where
-/// updates are off.
+/// Where updates stand, with Check now, Restart to update, Download (or
+/// Open the App Store) and What's new as they apply. Shown in Settings and
+/// About; empty where updates are off.
 class UpdatePanel extends ConsumerWidget {
   /// Creates the panel.
   const UpdatePanel({super.key});
@@ -34,6 +34,7 @@ class UpdatePanel extends ConsumerWidget {
     final auto = ref.watch(autoInstallSettingProvider);
     final running = ref.watch(appInfoProvider).value?.version ?? '';
     final offer = s.offer;
+    final store = mode == UpdateMode.store;
     final version = offer?.version.toString() ?? '';
     final (status, help) = switch (s.phase) {
       UpdatePhase.idle => (l10n.updateIdle, null),
@@ -41,7 +42,9 @@ class UpdatePanel extends ConsumerWidget {
       UpdatePhase.current => (l10n.updateCurrent(running), null),
       UpdatePhase.available => (
         l10n.updateAvailable(version),
-        s.error == UpdateErrorKind.noAsset
+        store
+            ? l10n.updateStoreHelp
+            : s.error == UpdateErrorKind.noAsset
             ? l10n.updateNoAsset
             : l10n.updateAvailableHelp,
       ),
@@ -58,7 +61,8 @@ class UpdatePanel extends ConsumerWidget {
           UpdateErrorKind.unverified => l10n.updateFailedVerify,
           UpdateErrorKind.install => l10n.updateFailedInstall,
           UpdateErrorKind.noAsset => l10n.updateNoAsset,
-          UpdateErrorKind.network || null => l10n.updateFailedNetwork,
+          UpdateErrorKind.network ||
+          null => store ? l10n.updateFailedStore : l10n.updateFailedNetwork,
         },
         offer == null ? null : l10n.updateAvailable(version),
       ),
@@ -107,11 +111,11 @@ class UpdatePanel extends ConsumerWidget {
                   s.phase != UpdatePhase.downloading)
                 TixButton(
                   key: const Key('update.download'),
-                  label: l10n.updateDownload,
-                  icon: Icons.download_outlined,
+                  label: store ? l10n.updateOpenStore : l10n.updateDownload,
+                  icon: store ? Icons.shop_outlined : Icons.download_outlined,
                   onPressed: () => unawaited(_open(context, ref, offer.page)),
                 ),
-              if (offer != null)
+              if (offer != null && !store)
                 TixButton.quiet(
                   key: const Key('update.notes'),
                   label: l10n.updateWhatsNew,

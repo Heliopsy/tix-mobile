@@ -61,6 +61,47 @@ void main() {
       expect(android('org.fdroid.fdroid'), UpdateMode.off);
       expect(android('com.looker.droidify'), UpdateMode.off);
     });
+
+    test('a Play or F-Droid build stays off, even sideloaded', () {
+      UpdateMode store(String? installer) => updateModeFor(
+        UpdateEnvironment(
+          android: true,
+          buildAllows: false,
+          androidInstaller: installer,
+        ),
+      );
+      expect(store('com.android.vending'), UpdateMode.off);
+      expect(store('com.android.packageinstaller'), UpdateMode.off);
+      expect(store(null), UpdateMode.off);
+    });
+
+    test('iOS asks the App Store only for an App Store install', () {
+      UpdateMode ios(String? installer, {bool release = true}) => updateModeFor(
+        UpdateEnvironment(
+          ios: true,
+          appleInstaller: installer,
+          releaseBuild: release,
+        ),
+      );
+      expect(ios('com.apple'), UpdateMode.store);
+      expect(ios('com.apple.testflight'), UpdateMode.off);
+      expect(ios('com.apple.simulator'), UpdateMode.off);
+      expect(ios(null), UpdateMode.off);
+      expect(ios('com.apple', release: false), UpdateMode.off);
+    });
+
+    test('the App Store build asks the store whatever the build flag', () {
+      expect(
+        updateModeFor(
+          const UpdateEnvironment(
+            ios: true,
+            buildAllows: false,
+            appleInstaller: 'com.apple',
+          ),
+        ),
+        UpdateMode.store,
+      );
+    });
   });
 
   group('Updater', () {

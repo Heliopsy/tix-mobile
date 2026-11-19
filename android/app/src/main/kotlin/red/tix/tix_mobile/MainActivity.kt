@@ -17,6 +17,7 @@ import red.tix.tix_mobile.adb.AdbService
 import red.tix.tix_mobile.notes.NoteActionHub
 import red.tix.tix_mobile.notes.NoteButton
 import red.tix.tix_mobile.shortcuts.Pins
+import red.tix.tix_mobile.widgets.UpdateWorker
 
 // tix/share holds the latest text shared to the app until Dart takes it, so
 // a share made before Dart listens is not lost.
@@ -35,7 +36,8 @@ import red.tix.tix_mobile.shortcuts.Pins
 //
 // tix/note-actions is this engine's end of NoteActionHub, which runs a
 // pressed notification button here while the app is open. tix/pins puts
-// shortcuts on the home screen.
+// shortcuts on the home screen. tix/update schedules or cancels the
+// background update check (UpdateWorker).
 class MainActivity : FlutterActivity() {
     private var pending: Map<String, String>? = null
     private var channel: MethodChannel? = null
@@ -103,6 +105,14 @@ class MainActivity : FlutterActivity() {
                     ),
                 )
                 else -> result.notImplemented()
+            }
+        }
+        MethodChannel(messenger, "tix/update").setMethodCallHandler { call, result ->
+            if (call.method == "background") {
+                if (call.arguments == true) UpdateWorker.schedule(this) else UpdateWorker.cancel(this)
+                result.success(null)
+            } else {
+                result.notImplemented()
             }
         }
         MethodChannel(messenger, "red.tix/local_access").setMethodCallHandler { call, result ->

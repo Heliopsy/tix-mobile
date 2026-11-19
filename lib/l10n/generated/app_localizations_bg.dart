@@ -9041,7 +9041,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get settingsUpdateCheckHelp =>
-      'При стартиране на tix и на всеки няколко часа.';
+      'При стартиране на tix и на всеки няколко часа, с известие, когато излезе нова версия.';
 
   @override
   String get settingsUpdateAuto => 'Инсталирай обновленията автоматично';
@@ -9113,6 +9113,45 @@ class AppLocalizationsBg extends AppLocalizations {
   String trayUpdateAvailable(String version) {
     return 'Налично обновление ($version)';
   }
+
+  @override
+  String get settingsUpdatesStoreHelp =>
+      'tix пита App Store дали има нова версия. App Store я инсталира.';
+
+  @override
+  String get updateStoreHelp => 'Обновете от App Store.';
+
+  @override
+  String get updateOpenStore => 'Отваряне на App Store';
+
+  @override
+  String get updateFailedStore =>
+      'Няма връзка с App Store за проверка на обновленията.';
+
+  @override
+  String updateNoteTitle(String version) {
+    return 'tix $version е налична';
+  }
+
+  @override
+  String get updateNoteBody =>
+      'Докоснете, за да видите обновлението и да го изтеглите.';
+
+  @override
+  String get updateNoteStoreBody => 'Докоснете, за да обновите от App Store.';
+
+  @override
+  String updateNoteReadyTitle(String version) {
+    return 'tix $version е готова за инсталиране';
+  }
+
+  @override
+  String get updateNoteReadyBody =>
+      'Докоснете, за да обновите: tix се рестартира с новата версия.';
+
+  @override
+  String get updateNoteReadyAutoBody =>
+      'Инсталира се, когато излезете от tix. Докоснете, за да обновите сега.';
 
   @override
   String trayRestartToUpdate(String version) {

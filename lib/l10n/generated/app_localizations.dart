@@ -15004,7 +15004,7 @@ abstract class AppLocalizations {
   /// Help under the check for updates switch
   ///
   /// In en, this message translates to:
-  /// **'When tix starts and every few hours.'**
+  /// **'When tix starts and every few hours, with a notification when a new version is out.'**
   String get settingsUpdateCheckHelp;
 
   /// Switch: install a downloaded update when the app quits
@@ -15120,6 +15120,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Update available ({version})'**
   String trayUpdateAvailable(String version);
+
+  /// Explanation at the top of the updates settings section in an App Store build
+  ///
+  /// In en, this message translates to:
+  /// **'tix asks the App Store whether a newer version is out. The App Store installs it.'**
+  String get settingsUpdatesStoreHelp;
+
+  /// Under an available update in an App Store build
+  ///
+  /// In en, this message translates to:
+  /// **'Update it from the App Store.'**
+  String get updateStoreHelp;
+
+  /// Button: open the app's App Store page to update
+  ///
+  /// In en, this message translates to:
+  /// **'Open the App Store'**
+  String get updateOpenStore;
+
+  /// Update status when the App Store could not be asked
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach the App Store to check for updates.'**
+  String get updateFailedStore;
+
+  /// System notification title when a newer version is out
+  ///
+  /// In en, this message translates to:
+  /// **'tix {version} is available'**
+  String updateNoteTitle(String version);
+
+  /// System notification text for an update downloaded by hand from the release page
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to see the update and download it.'**
+  String get updateNoteBody;
+
+  /// System notification text for an update from the App Store
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to update from the App Store.'**
+  String get updateNoteStoreBody;
+
+  /// System notification title when an update is downloaded and ready to install
+  ///
+  /// In en, this message translates to:
+  /// **'tix {version} is ready to install'**
+  String updateNoteReadyTitle(String version);
+
+  /// System notification text for a ready update, installing on quit off
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to update: tix restarts into the new version.'**
+  String get updateNoteReadyBody;
+
+  /// System notification text for a ready update, installing on quit on
+  ///
+  /// In en, this message translates to:
+  /// **'It installs when you quit tix. Tap to update now.'**
+  String get updateNoteReadyAutoBody;
 
   /// Tray menu entry once an update is ready to install
   ///

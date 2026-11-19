@@ -3,20 +3,26 @@
 import 'dart:async';
 import 'dart:ffi' show Abi;
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/logging/log.dart';
+import 'package:tix_mobile/src/core/notifications/local_notifier.dart';
 import 'package:tix_mobile/src/core/platform/app_info.dart';
 import 'package:tix_mobile/src/core/platform/desktop.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
+import 'package:tix_mobile/src/core/update/update_notice.dart';
 import 'package:tix_mobile/src/data/repositories/settings_repository.dart';
 import 'package:tix_mobile/src/data/update/installer.dart';
 import 'package:tix_mobile/src/data/update/platform_installers.dart';
 import 'package:tix_mobile/src/data/update/release.dart';
 import 'package:tix_mobile/src/data/update/release_feed.dart';
 import 'package:tix_mobile/src/data/update/signing_key.dart';
+import 'package:tix_mobile/src/data/update/store_feed.dart';
 import 'package:tix_mobile/src/data/update/updater.dart';
 
 export 'package:tix_mobile/src/data/update/release_feed.dart'
@@ -33,8 +39,13 @@ const selfUpdateBuildFlag = bool.fromEnvironment(
   defaultValue: true,
 );
 
-/// How often a running app looks for a newer release.
-const updateCheckInterval = Duration(hours: 6);
+/// How often the app looks for a newer release, running or, as far as the
+/// phone lets it, in the background.
+const updateCheckInterval = Duration(hours: 3);
+
+/// The most a running app's next check is put off past
+/// [updateCheckInterval], so that apps started together do not ask at once.
+const updateCheckJitter = Duration(minutes: 20);
 
 /// The process's architecture, as the release archives name it.
 CpuArch currentArch() => switch (Abi.current()) {
@@ -55,23 +66,35 @@ DesktopOs? currentDesktop() => Platform.isLinux
 /// What decides whether and how this build updates itself.
 @Riverpod(keepAlive: true)
 Future<UpdateEnvironment> updateEnvironment(Ref ref) async {
-  if (!selfUpdateBuildFlag) return const UpdateEnvironment(buildAllows: false);
+  final mobile = Platform.isAndroid || Platform.isIOS;
+  final installer = mobile
+      ? (await PackageInfo.fromPlatform()).installerStore
+      : null;
   return UpdateEnvironment(
+    // Only redundant in builds that keep the default; Play, F-Droid and
+    // Flatpak pass TIX_SELF_UPDATE=false.
+    // ignore: avoid_redundant_argument_values
+    buildAllows: selfUpdateBuildFlag,
     desktop: currentDesktop(),
     arch: currentArch(),
     android: Platform.isAndroid,
+    ios: Platform.isIOS,
     flatpak: Platform.isLinux && File('/.flatpak-info').existsSync(),
     snap: Platform.environment.containsKey('SNAP'),
     releaseBuild: kReleaseMode,
-    androidInstaller: Platform.isAndroid
-        ? (await PackageInfo.fromPlatform()).installerStore
-        : null,
+    androidInstaller: Platform.isAndroid ? installer : null,
+    appleInstaller: Platform.isIOS ? installer : null,
   );
 }
 
 /// Where releases come from.
 @Riverpod(keepAlive: true)
 ReleaseFeed releaseFeed(Ref ref) => GitHubReleaseFeed();
+
+/// What the App Store serves, in the device's storefront.
+@Riverpod(keepAlive: true)
+ReleaseFeed storeFeed(Ref ref) =>
+    AppStoreReleaseFeed(country: storefrontOf(Platform.localeName));
 
 /// The platform half of installing an update.
 @Riverpod(keepAlive: true)
@@ -94,8 +117,9 @@ Future<UpdateMode> updateMode(Ref ref) async {
 Future<Updater> updater(Ref ref) async {
   final env = await ref.watch(updateEnvironmentProvider.future);
   final app = await ref.watch(appInfoProvider.future);
+  final store = updateModeFor(env) == UpdateMode.store;
   return Updater(
-    feed: ref.watch(releaseFeedProvider),
+    feed: ref.watch(store ? storeFeedProvider : releaseFeedProvider),
     installer: ref.watch(updateInstallerProvider),
     current:
         ReleaseVersion.tryParse(app.version) ?? const ReleaseVersion(0, 0, 0),
@@ -104,6 +128,35 @@ Future<Updater> updater(Ref ref) async {
     arch: env.arch,
   );
 }
+
+/// Android's periodic background check, which runs while the app is closed.
+abstract interface class BackgroundUpdateChecks {
+  /// Schedules the background check, or cancels it.
+  Future<void> set({required bool on});
+}
+
+/// [BackgroundUpdateChecks] over WorkManager, through `MainActivity`.
+class AndroidBackgroundUpdateChecks implements BackgroundUpdateChecks {
+  static const _channel = MethodChannel('tix/update');
+
+  @override
+  Future<void> set({required bool on}) async {
+    if (!Platform.isAndroid) return;
+    try {
+      await _channel.invokeMethod<void>('background', on);
+    } on PlatformException catch (e) {
+      log('update: background checks not set: ${e.code}');
+    } on MissingPluginException {
+      return;
+    }
+  }
+}
+
+/// The background check; iOS needs none of its own, as its widget refresh
+/// looks for updates too.
+@Riverpod(keepAlive: true)
+BackgroundUpdateChecks backgroundUpdateChecks(Ref ref) =>
+    AndroidBackgroundUpdateChecks();
 
 SettingsRepository _settings(Ref ref) =>
     SettingsRepository(ref.watch(keyValueStoreProvider));
@@ -208,20 +261,62 @@ class Updates extends _$Updates {
   bool _busy = false;
   Future<void>? _cleaning;
 
+  final _random = Random();
+
   @override
   UpdateState build() {
-    final mode = ref.watch(updateModeProvider).value ?? UpdateMode.off;
+    final async = ref.watch(updateModeProvider);
+    final mode = async.value ?? UpdateMode.off;
     ref.onDispose(() => _timer?.cancel());
-    if (mode == UpdateMode.off) return const UpdateState();
+    if (mode == UpdateMode.off) {
+      if (async.hasValue) unawaited(_background(on: false));
+      return const UpdateState();
+    }
     if (mode == UpdateMode.install) _cleaning ??= _cleanup();
     ref.listen(updateCheckSettingProvider, (_, on) {
       _timer?.cancel();
       _timer = null;
+      unawaited(_background(on: on));
       if (!on) return;
-      _timer = Timer.periodic(updateCheckInterval, (_) => unawaited(check()));
-      unawaited(Future<void>.microtask(check));
+      _schedule();
+      unawaited(Future<void>.microtask(_auto));
     }, fireImmediately: true);
     return stateOrNull ?? const UpdateState();
+  }
+
+  Future<void> _background({required bool on}) =>
+      ref.read(backgroundUpdateChecksProvider).set(on: on);
+
+  void _schedule() {
+    final jitter = _random.nextInt(updateCheckJitter.inSeconds + 1);
+    _timer = Timer(updateCheckInterval + Duration(seconds: jitter), () {
+      _schedule();
+      unawaited(_auto());
+    });
+  }
+
+  Future<void> _auto() async {
+    final settings = _settings(ref);
+    await settings.setUpdateLastCheck(ref.read(clockProvider)());
+    await _check(notify: true);
+  }
+
+  Future<void> _notify() async {
+    final mode = ref.read(updateModeProvider).value ?? UpdateMode.off;
+    final kind = updateNoteKind(
+      mode,
+      state,
+      autoInstall: ref.read(autoInstallSettingProvider),
+    );
+    final version = state.offer?.version.toString();
+    if (kind == null || version == null) return;
+    final store = ref.read(keyValueStoreProvider);
+    await notifyUpdateOnce(
+      notes: ref.read(localNotesProvider),
+      settings: SettingsRepository(store),
+      version: version,
+      note: updateNote(storedL10n(store), version, kind),
+    );
   }
 
   Future<void> _cleanup() async {
@@ -234,7 +329,9 @@ class Updates extends _$Updates {
 
   /// Asks for the latest release now, and downloads it where the app
   /// installs itself. Does nothing while a download runs or one is staged.
-  Future<void> check() async {
+  Future<void> check() => _check(notify: false);
+
+  Future<void> _check({required bool notify}) async {
     final mode = ref.read(updateModeProvider).value ?? UpdateMode.off;
     if (_busy || mode == UpdateMode.off) return;
     if (state.phase case UpdatePhase.downloading || UpdatePhase.ready) return;
@@ -255,6 +352,7 @@ class Updates extends _$Updates {
           error: mode == UpdateMode.install ? UpdateErrorKind.noAsset : null,
         );
       }
+      if (notify && ref.mounted) await _notify();
     } on UpdateException catch (e) {
       log('update: $e');
       if (ref.mounted) {

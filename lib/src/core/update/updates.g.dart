@@ -54,7 +54,7 @@ final class UpdateEnvironmentProvider
   }
 }
 
-String _$updateEnvironmentHash() => r'6a3afafee4ae0ec7d699272f99e030cb9091781a';
+String _$updateEnvironmentHash() => r'9ba9e1362fe68c4fe1f4c9a49c9f2a89a7cf7729';
 
 /// Where releases come from.
 
@@ -101,6 +101,52 @@ final class ReleaseFeedProvider
 }
 
 String _$releaseFeedHash() => r'a65318c7c5fd1c4967473bc61fe45a086095a5a9';
+
+/// What the App Store serves, in the device's storefront.
+
+@ProviderFor(storeFeed)
+final storeFeedProvider = StoreFeedProvider._();
+
+/// What the App Store serves, in the device's storefront.
+
+final class StoreFeedProvider
+    extends $FunctionalProvider<ReleaseFeed, ReleaseFeed, ReleaseFeed>
+    with $Provider<ReleaseFeed> {
+  /// What the App Store serves, in the device's storefront.
+  StoreFeedProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'storeFeedProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$storeFeedHash();
+
+  @$internal
+  @override
+  $ProviderElement<ReleaseFeed> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ReleaseFeed create(Ref ref) {
+    return storeFeed(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ReleaseFeed value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ReleaseFeed>(value),
+    );
+  }
+}
+
+String _$storeFeedHash() => r'2d06c7204dadfecf0cb450bf45ecfbb971cb46fa';
 
 /// The platform half of installing an update.
 
@@ -228,7 +274,63 @@ final class UpdaterProvider
   }
 }
 
-String _$updaterHash() => r'c58f9e698c4a6f7ed733052291d91fbac5a628e2';
+String _$updaterHash() => r'144571a923acbf7e1b9c9bd777d56dbedee670d7';
+
+/// The background check; iOS needs none of its own, as its widget refresh
+/// looks for updates too.
+
+@ProviderFor(backgroundUpdateChecks)
+final backgroundUpdateChecksProvider = BackgroundUpdateChecksProvider._();
+
+/// The background check; iOS needs none of its own, as its widget refresh
+/// looks for updates too.
+
+final class BackgroundUpdateChecksProvider
+    extends
+        $FunctionalProvider<
+          BackgroundUpdateChecks,
+          BackgroundUpdateChecks,
+          BackgroundUpdateChecks
+        >
+    with $Provider<BackgroundUpdateChecks> {
+  /// The background check; iOS needs none of its own, as its widget refresh
+  /// looks for updates too.
+  BackgroundUpdateChecksProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'backgroundUpdateChecksProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$backgroundUpdateChecksHash();
+
+  @$internal
+  @override
+  $ProviderElement<BackgroundUpdateChecks> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  BackgroundUpdateChecks create(Ref ref) {
+    return backgroundUpdateChecks(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(BackgroundUpdateChecks value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<BackgroundUpdateChecks>(value),
+    );
+  }
+}
+
+String _$backgroundUpdateChecksHash() =>
+    r'7066cdbdccc747cefcd8124899597df92ae4d418';
 
 /// Whether the app looks for updates on its own; on until turned off.
 
@@ -390,7 +492,7 @@ final class UpdatesProvider extends $NotifierProvider<Updates, UpdateState> {
   }
 }
 
-String _$updatesHash() => r'3ff29154eb088c0e313c9ecd1cfbb100016cca05';
+String _$updatesHash() => r'f760eaae5aa0922446e85f74b0199b786cc453d5';
 
 /// Looks for newer releases, downloads and stages them where the app can
 /// install itself, and installs on restart or on quit.
