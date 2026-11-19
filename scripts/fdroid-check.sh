@@ -8,6 +8,10 @@
 # dependency that pulls one in fails the pull request that adds it rather than
 # the F-Droid build months later.
 #
+# It is for the oss flavour's APKs, which GitHub releases and F-Droid ship.
+# The play flavour's App Bundle carries Play Core on purpose and is not
+# checked (docs/releasing.md#artifacts).
+#
 #   scripts/fdroid-check.sh FILE.apk...
 
 set -euo pipefail

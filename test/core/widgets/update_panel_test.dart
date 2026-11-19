@@ -1,15 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/platform/app_info.dart';
+import 'package:tix_mobile/src/core/update/play_updates.dart';
 import 'package:tix_mobile/src/core/update/updates.dart';
 import 'package:tix_mobile/src/core/widgets/update_panel.dart';
 import 'package:tix_mobile/src/data/update/release.dart';
 
 import '../../helpers/app.dart';
 import '../../helpers/attachments.dart';
+import '../../helpers/fake_play.dart';
 import '../../helpers/fake_tix.dart';
 import '../../helpers/fixed_updates.dart';
 
@@ -31,6 +34,7 @@ void main() {
     UpdateMode mode = UpdateMode.install,
     Size size = phone,
     Map<String, String> settings = const {},
+    List<Override> extra = const [],
   }) async {
     final updates = FixedUpdates(state);
     final server = FakeTix();
@@ -45,6 +49,7 @@ void main() {
         fixedUpdates(updates),
         appInfoProvider.overrideWithValue(const AsyncData(_app)),
         links.asOverride,
+        ...extra,
       ],
     );
     return updates;
@@ -163,6 +168,82 @@ void main() {
       status(tester),
       "Couldn't reach the App Store to check for updates.",
     );
+  });
+
+  group('a Play build', () {
+    late FakePlayUpdates play;
+
+    setUp(() => play = FakePlayUpdates());
+
+    Future<void> pumpPlay(WidgetTester tester, UpdateState state) => pump(
+      tester,
+      state,
+      mode: UpdateMode.store,
+      extra: [
+        updateStoreProvider.overrideWithValue(
+          const AsyncData(UpdateStore.play),
+        ),
+        playUpdatesProvider.overrideWithValue(play),
+      ],
+    );
+
+    UpdateState available() => UpdateState(
+      phase: UpdatePhase.available,
+      offer: UpdateOffer(
+        release: Release(
+          tag: '21000',
+          version: const ReleaseVersion(0, 21, 0),
+          page: Uri.parse(
+            'https://play.google.com/store/apps/details?id=red.tix.tix_mobile',
+          ),
+          assets: const [],
+        ),
+      ),
+    );
+
+    testWidgets("starts Play's in-app update", (tester) async {
+      await pumpPlay(tester, available());
+      expect(find.text('Update it from Google Play.'), findsOneWidget);
+      expect(button('notes'), findsNothing);
+      expect(
+        find.descendant(
+          of: button('download'),
+          matching: find.text('Update from Google Play'),
+        ),
+        findsOneWidget,
+      );
+      await tester.tap(button('download'));
+      await tester.pumpAndSettle();
+      expect(play.starts, 1);
+      expect(links.links, isEmpty);
+    });
+
+    testWidgets('opens the listing when Play starts nothing', (tester) async {
+      play.started = PlayStart.none;
+      await pumpPlay(tester, available());
+      await tester.tap(button('download'));
+      await tester.pumpAndSettle();
+      expect(play.starts, 1);
+      expect(links.links, [
+        Uri.parse(
+          'https://play.google.com/store/apps/details?id=red.tix.tix_mobile',
+        ),
+      ]);
+    });
+
+    testWidgets('one that cannot ask says Google Play', (tester) async {
+      await pumpPlay(
+        tester,
+        const UpdateState(
+          phase: UpdatePhase.failed,
+          error: UpdateErrorKind.network,
+        ),
+      );
+      expect(
+        status(tester),
+        "Couldn't reach Google Play to check for updates.",
+      );
+    });
   });
 
   testWidgets('a download in progress shows how far it is', (tester) async {

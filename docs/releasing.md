@@ -29,11 +29,24 @@ merge commit's own subject, so the commits inside a `--no-ff` merge never reach 
 
 | Platform | File | Built on |
 | --- | --- | --- |
-| Android | APK, for sideloading | Linux |
-| Android | AAB, for Google Play | Linux |
+| Android | APK per ABI, for sideloading and Obtainium (`oss` flavour, `just build-apk`) | Linux |
+| Android | AAB, for Google Play (`play` flavour, `just build-aab`) | Linux |
 | Linux | `.tar.gz` of the desktop bundle | Linux |
 | macOS | `.zip` of the app | macOS |
 | Windows | `.zip` of the desktop bundle | Windows |
+
+The two Android files come from two Gradle flavours of the same app: same application id `red.tix.tix_mobile`,
+same signing key, same version codes as before. `oss` has nothing proprietary in it; F-Droid builds it too.
+`play` adds Google's Play Core library (`com.google.android.play:app-update`) for Play's in-app update, which
+`android/app/src/play/` alone uses. The files keep their names (`tix-mobile-X.Y.Z-android-arm64-v8a.apk`,
+`tix-mobile-X.Y.Z-android.aab`, ...), which tix.red and Obtainium expect. Flutter's own outputs carry the flavour
+(`app-arm64-v8a-oss-release.apk`, `bundle/playRelease/app-play-release.aab`) and `just package-android` renames
+them.
+
+Play Core is proprietary, under the [Play Core Software Development Kit Terms of
+Service](https://developer.android.com/guide/playcore/license) rather than an open source licence, and those terms
+ask for no notice inside the app. The Licenses page lists the Dart packages and the engine, not Gradle libraries, so
+it is the same in both flavours; this paragraph is where the Play bundle's extra dependency is recorded.
 
 Every artifact carries the embedded tix engine (libtix), built from the commit `tix.lock` pins. The release jobs
 install Go, build it through `hook/build.dart` and fail unless `just engine-check` finds it in each artifact; on
@@ -202,9 +215,10 @@ rotation everyone updates by hand once. Losing the key without a leak means the 
 download until people move to a release that pins a new one.
 
 Self-update is off, and nothing is checked, in Flatpak (Flathub updates it), in builds made with
-`--dart-define=TIX_SELF_UPDATE=false` (`flatpak/build.sh`, `just build-aab` for Google Play, the F-Droid recipe and
-`just build-fdroid`), and on iOS. Android APKs from the release only show that a new version is out, and only when
-the system package installer installed them; Play and F-Droid installs never check.
+`--dart-define=TIX_SELF_UPDATE=false` (`flatpak/build.sh`, the F-Droid recipe and `just build-fdroid`), and on iOS
+outside the App Store. Android APKs from the release only show that a new version is out, and only when the system
+package installer installed them. The Play bundle (`--dart-define=TIX_DISTRIBUTION=play`) asks Play's in-app update
+API instead and updates through Play; F-Droid installs never check.
 
 ## When a release goes wrong
 
@@ -284,6 +298,9 @@ Owner, once:
 | `PLAY_SERVICE_ACCOUNT_JSON` (secret) | The JSON key file's contents |
 | `ANDROID_KEYSTORE_*` (secrets) | Already described under [Android](#android); without them the bundle is debug-signed and the upload is skipped |
 | `PLAY_RELEASE_STATUS` (variable, optional) | `draft` (default) until the app has passed its first review, then `completed` |
+
+The bundle is the `play` flavour, the one build with Play Core in it, which gives Play installs Play's in-app
+update (`docs/architecture.md`). It leaves out All files access, which Play restricts.
 
 What runs: after the release is published, the `play` job uploads the bundle to the **internal** track with the
 store text and the changelog. The [promote](#promoting-to-production) workflow moves it on to production;
@@ -368,10 +385,13 @@ Verify: on a Mac, unzip the release asset and run `spctl --assess --type execute
 
 ### F-Droid
 
-F-Droid builds from source and signs with its own key, so there are no secrets. Nothing in the app is non-free,
-so there is no separate Gradle flavour: CI fails any APK that carries Play services, Firebase, Play Core or the
-other SDKs F-Droid's scanner rejects (`just fdroid-check`), and APKs leave out AGP's encrypted dependency
-metadata, which F-Droid also rejects (`dependenciesInfo` in `android/app/build.gradle.kts`).
+F-Droid builds from source and signs with its own key, so there are no secrets. It builds the `oss` flavour
+(`--flavor oss --dart-define=TIX_DISTRIBUTION=fdroid`), which has nothing non-free in it. Play Core is a
+`playImplementation` dependency, used only from `android/app/src/play/`, so neither the oss build nor F-Droid's
+scanner (which only looks at the flavours a recipe builds) sees it. CI fails any oss APK that carries Play
+services, Firebase, Play Core or the other SDKs F-Droid's scanner rejects (`just fdroid-check`), and APKs leave out
+AGP's encrypted dependency metadata, which F-Droid also rejects (`dependenciesInfo` in
+`android/app/build.gradle.kts`).
 
 - `fdroid/red.tix.tix_mobile.yml` is the recipe for fdroiddata's `metadata/`, and `fdroid/srclibs/tix.yml` the
   srclib for the engine. The embedded engine is tix, AGPL Go, built from the commit `tix.lock` pins: the recipe
@@ -385,6 +405,9 @@ metadata, which F-Droid also rejects (`dependenciesInfo` in `android/app/build.g
 - Three builds per release, one per ABI, with version codes from the `+N` release-please increments in
   `pubspec.yaml` plus Flutter's per-ABI offset (1000+N, 2000+N, 4000+N), which F-Droid's update checker reads
   from the tag (`VercodeOperation`). `just build-fdroid` runs the same build locally.
+- Releases up to v0.21.0 have no flavours. The recipe passes `--flavor oss` only where `build.gradle.kts` defines
+  it, and `output:` globs over both APK names, so the lines `checkupdates` copies to the next version build either
+  way. Drop the condition once every build fdroiddata keeps has the flavours.
 - Reproducible builds: not claimed yet. Both Flutter and libtix strip paths (`-trimpath` for Go), but our
   release APKs use different version codes and our signature, so F-Droid publishes its own build. Matching them
   would mean F-Droid building the GitHub APK's exact inputs and `Binaries:` plus `AllowedAPKSigningKeys` in the

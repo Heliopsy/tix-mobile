@@ -2735,5 +2735,10 @@
   "markdownLink": "Lien",
   "markdownTable": "Tableau",
   "markdownLinkAddress": "Adresse du lien",
-  "markdownLinkAdd": "Ajouter un lien"
+  "markdownLinkAdd": "Ajouter un lien",
+  "settingsUpdatesPlayHelp": "tix demande à Google Play si une nouvelle version est sortie. Google Play l’installe.",
+  "updatePlayHelp": "Mettez-la à jour depuis Google Play.",
+  "updateOpenPlay": "Mettre à jour depuis Google Play",
+  "updateFailedPlay": "Impossible de joindre Google Play pour rechercher des mises à jour.",
+  "updateNotePlayBody": "Touchez pour mettre à jour depuis Google Play."
 }

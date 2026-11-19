@@ -54,7 +54,7 @@ final class UpdateEnvironmentProvider
   }
 }
 
-String _$updateEnvironmentHash() => r'9ba9e1362fe68c4fe1f4c9a49c9f2a89a7cf7729';
+String _$updateEnvironmentHash() => r'06aa362b30815b11bd5d647674c6755b02c4f314';
 
 /// Where releases come from.
 
@@ -147,6 +147,96 @@ final class StoreFeedProvider
 }
 
 String _$storeFeedHash() => r'2d06c7204dadfecf0cb450bf45ecfbb971cb46fa';
+
+/// Google Play's in-app updates; never there outside the Play build.
+
+@ProviderFor(playUpdates)
+final playUpdatesProvider = PlayUpdatesProvider._();
+
+/// Google Play's in-app updates; never there outside the Play build.
+
+final class PlayUpdatesProvider
+    extends $FunctionalProvider<PlayUpdates, PlayUpdates, PlayUpdates>
+    with $Provider<PlayUpdates> {
+  /// Google Play's in-app updates; never there outside the Play build.
+  PlayUpdatesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'playUpdatesProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$playUpdatesHash();
+
+  @$internal
+  @override
+  $ProviderElement<PlayUpdates> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  PlayUpdates create(Ref ref) {
+    return playUpdates(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PlayUpdates value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PlayUpdates>(value),
+    );
+  }
+}
+
+String _$playUpdatesHash() => r'ae44598d675112fbecf7e9e750d95fa7a289d441';
+
+/// The store this build updates from, null outside the `store` mode.
+
+@ProviderFor(updateStore)
+final updateStoreProvider = UpdateStoreProvider._();
+
+/// The store this build updates from, null outside the `store` mode.
+
+final class UpdateStoreProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<UpdateStore?>,
+          UpdateStore?,
+          FutureOr<UpdateStore?>
+        >
+    with $FutureModifier<UpdateStore?>, $FutureProvider<UpdateStore?> {
+  /// The store this build updates from, null outside the `store` mode.
+  UpdateStoreProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'updateStoreProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$updateStoreHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<UpdateStore?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<UpdateStore?> create(Ref ref) {
+    return updateStore(ref);
+  }
+}
+
+String _$updateStoreHash() => r'f06417cd84bed521023b730628bb608fa1c24bc4';
 
 /// The platform half of installing an update.
 
@@ -274,7 +364,7 @@ final class UpdaterProvider
   }
 }
 
-String _$updaterHash() => r'144571a923acbf7e1b9c9bd777d56dbedee670d7';
+String _$updaterHash() => r'b06e203b3f4e07862dabb0f77e38243ca51d0fef';
 
 /// The background check; iOS needs none of its own, as its widget refresh
 /// looks for updates too.
@@ -492,7 +582,7 @@ final class UpdatesProvider extends $NotifierProvider<Updates, UpdateState> {
   }
 }
 
-String _$updatesHash() => r'f760eaae5aa0922446e85f74b0199b786cc453d5';
+String _$updatesHash() => r'38ec23973498680c3a9dc8ade7e97f0f79e2f249';
 
 /// Looks for newer releases, downloads and stages them where the app can
 /// install itself, and installs on restart or on quit.

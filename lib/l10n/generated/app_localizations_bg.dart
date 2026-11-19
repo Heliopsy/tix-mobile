@@ -10003,4 +10003,21 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get markdownLinkAdd => 'Добавяне на връзка';
+
+  @override
+  String get settingsUpdatesPlayHelp =>
+      'tix пита Google Play дали има нова версия. Google Play я инсталира.';
+
+  @override
+  String get updatePlayHelp => 'Обновете от Google Play.';
+
+  @override
+  String get updateOpenPlay => 'Обновяване от Google Play';
+
+  @override
+  String get updateFailedPlay =>
+      'Няма връзка с Google Play за проверка на обновленията.';
+
+  @override
+  String get updateNotePlayBody => 'Докоснете, за да обновите от Google Play.';
 }

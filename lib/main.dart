@@ -17,7 +17,9 @@ import 'package:tix_mobile/src/core/platform/adb_bridge.dart';
 import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/core/storage/stores.dart';
+import 'package:tix_mobile/src/core/update/play_updates.dart';
 import 'package:tix_mobile/src/core/update/update_notice.dart';
+import 'package:tix_mobile/src/core/update/updates.dart';
 import 'package:tix_mobile/src/data/local/ffi_local_engine.dart';
 import 'package:tix_mobile/src/features/inbox/application/inbox.dart';
 import 'package:tix_mobile/src/features/inbox/application/note_actions.dart';
@@ -126,6 +128,8 @@ Future<void> _headless(Uri? uri) async {
     overrides: [
       keyValueStoreProvider.overrideWithValue(PrefsKeyValueStore(prefs)),
       widgetBridgeProvider.overrideWithValue(platformWidgetBridge()),
+      if (playBuild)
+        playUpdatesProvider.overrideWithValue(LinkPlayUpdates(uri)),
     ],
   );
   try {

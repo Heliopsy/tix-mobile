@@ -16524,6 +16524,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add link'**
   String get markdownLinkAdd;
+
+  /// Explanation at the top of the updates settings section in a Google Play build
+  ///
+  /// In en, this message translates to:
+  /// **'tix asks Google Play whether a newer version is out. Google Play installs it.'**
+  String get settingsUpdatesPlayHelp;
+
+  /// Under an available update in a Google Play build
+  ///
+  /// In en, this message translates to:
+  /// **'Update it from Google Play.'**
+  String get updatePlayHelp;
+
+  /// Button: start Google Play's in-app update, or open the app's Play listing
+  ///
+  /// In en, this message translates to:
+  /// **'Update from Google Play'**
+  String get updateOpenPlay;
+
+  /// Update status when Google Play could not be asked
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach Google Play to check for updates.'**
+  String get updateFailedPlay;
+
+  /// System notification text for an update from Google Play
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to update from Google Play.'**
+  String get updateNotePlayBody;
 }
 
 class _AppLocalizationsDelegate

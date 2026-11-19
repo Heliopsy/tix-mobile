@@ -102,7 +102,7 @@ To bump the library, change `version` and `sha256` in `scripts/build-ayatana.sh`
 | `just setup` | First-time setup: install the pinned toolchain from `.tool-versions`, fetch packages, precache this host's engines |
 | `just setup-linux` | Install the system packages a Linux desktop build needs (Debian/Ubuntu, uses sudo) |
 | `just get` | `flutter pub get` |
-| `just run *ARGS` | `flutter run`, passing arguments through: `just run -d linux`, `just run -d emulator-5554` |
+| `just run *ARGS` | `flutter run`, passing arguments through: `just run -d linux`, `just run --flavor oss -d emulator-5554` |
 | `just gen` | Run `build_runner` once: Riverpod providers, JSON models, anything else annotated |
 | `just gen-watch` | The same, rebuilding on every save |
 | `just gen-check` | Fail if committed generated code differs from what `build_runner` produces |
@@ -311,8 +311,14 @@ bundle twice, or `tix_mobile tix://inbox` while it runs.
 ```sh
 flutter emulators                         # list AVDs
 flutter emulators --launch <avd-id>
-just run -d emulator-5554
+just run --flavor oss -d emulator-5554
 ```
+
+Android has two Gradle flavours and every Android build names one. `oss` is what GitHub releases and F-Droid ship
+and what you want day to day. `play` is the Google Play bundle, with Play Core's in-app update in
+`android/app/src/play/`; it only does anything when Play installed the app, so add
+`--dart-define=TIX_DISTRIBUTION=play` and use Play's internal app sharing to try it. iOS, macOS and the desktops
+take no flavour.
 
 The emulator reaches the host's loopback at `10.0.2.2`, so a local `tix serve --listen 127.0.0.1:8080` is
 `http://10.0.2.2:8080` inside it. Cleartext HTTP to `10.0.2.2` is allowed in debug builds only; release builds

@@ -19,6 +19,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import es.antonborri.home_widget.HomeWidgetBackgroundIntent
 import es.antonborri.home_widget.HomeWidgetGlanceWidgetReceiver
+import red.tix.tix_mobile.update.PlayUpdate
 import java.util.concurrent.TimeUnit
 
 /** Shared by every tix receiver: the refresh job lives while any widget does. */
@@ -117,11 +118,14 @@ class RefreshWorker(context: Context, params: WorkerParameters) : CoroutineWorke
  * Wakes the app's Dart code every three hours, with a network, to look for
  * a newer version while the app is closed. Dart schedules it where updates
  * are checked and skips a run within three hours of the last check;
- * WorkManager decides when it actually runs.
+ * WorkManager decides when it actually runs. In the play flavour it asks
+ * Google Play first and hands the answer over in the link, as the headless
+ * engine has no Play channel.
  */
 class UpdateWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
-        HomeWidgetBackgroundIntent.getBroadcast(applicationContext, Links.update).send()
+        val link = PlayUpdate.background(applicationContext, Links.update)
+        HomeWidgetBackgroundIntent.getBroadcast(applicationContext, link).send()
         return Result.success()
     }
 

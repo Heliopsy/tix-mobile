@@ -11,18 +11,38 @@ import 'package:tix_mobile/src/data/update/verify.dart';
 
 /// How far the app goes with a newer release.
 enum UpdateMode {
-  /// Never checks: a package manager, Flatpak, Snap, TestFlight, Google
-  /// Play or a build that turned it off.
+  /// Never checks: a package manager, Flatpak, Snap, TestFlight, F-Droid
+  /// or a build that turned it off.
   off,
 
   /// Checks GitHub and shows it with a link to the release page.
   notify,
 
-  /// Asks the store which version it serves and links to the store page.
+  /// Asks the store which version it serves and sends the person there:
+  /// the App Store on iOS, Google Play's in-app update on Android.
   store,
 
   /// Checks, downloads, verifies and installs on restart.
   install,
+}
+
+/// Where an Android build is published, from `--dart-define=TIX_DISTRIBUTION`.
+enum Distribution {
+  /// The oss APK on GitHub releases and Obtainium; the default.
+  github,
+
+  /// The oss APK F-Droid builds and signs.
+  fdroid,
+
+  /// The play App Bundle on Google Play.
+  play;
+
+  /// The distribution [name] names, [github] for anything else.
+  static Distribution parse(String name) => switch (name) {
+    'fdroid' => fdroid,
+    'play' => play,
+    _ => github,
+  };
 }
 
 /// What decides [UpdateMode], gathered once at start.
@@ -40,6 +60,7 @@ class UpdateEnvironment {
     this.androidInstaller,
     this.ios = false,
     this.appleInstaller,
+    this.distribution = Distribution.github,
   });
 
   /// The desktop this runs on, null on a phone.
@@ -72,6 +93,9 @@ class UpdateEnvironment {
   /// Where iOS says the app came from: [appStoreInstaller], TestFlight or
   /// the simulator; null when unknown.
   final String? appleInstaller;
+
+  /// Where this Android build is published.
+  final Distribution distribution;
 }
 
 /// What `package_info_plus` reports on iOS for an App Store install. A
@@ -96,6 +120,14 @@ UpdateMode updateModeFor(UpdateEnvironment env, {InstallTarget? target}) {
   }
   if (!env.buildAllows) return UpdateMode.off;
   if (env.android) {
+    switch (env.distribution) {
+      case Distribution.play:
+        return UpdateMode.store;
+      case Distribution.fdroid:
+        return UpdateMode.off;
+      case Distribution.github:
+        break;
+    }
     final installer = env.androidInstaller;
     return installer == null || sideloadInstallers.contains(installer)
         ? UpdateMode.notify

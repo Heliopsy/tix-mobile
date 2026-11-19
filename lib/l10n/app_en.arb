@@ -7007,5 +7007,25 @@
   "markdownLinkAdd": "Add link",
   "@markdownFormatting": {
     "description": "Label of the formatting toolbar over a Markdown field, as tix's web names it."
+  },
+  "settingsUpdatesPlayHelp": "tix asks Google Play whether a newer version is out. Google Play installs it.",
+  "@settingsUpdatesPlayHelp": {
+    "description": "Explanation at the top of the updates settings section in a Google Play build"
+  },
+  "updatePlayHelp": "Update it from Google Play.",
+  "@updatePlayHelp": {
+    "description": "Under an available update in a Google Play build"
+  },
+  "updateOpenPlay": "Update from Google Play",
+  "@updateOpenPlay": {
+    "description": "Button: start Google Play's in-app update, or open the app's Play listing"
+  },
+  "updateFailedPlay": "Couldn't reach Google Play to check for updates.",
+  "@updateFailedPlay": {
+    "description": "Update status when Google Play could not be asked"
+  },
+  "updateNotePlayBody": "Tap to update from Google Play.",
+  "@updateNotePlayBody": {
+    "description": "System notification text for an update from Google Play"
   }
 }

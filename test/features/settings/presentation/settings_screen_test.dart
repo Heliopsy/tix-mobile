@@ -45,6 +45,7 @@ void main() {
     bool adb = false,
     FakeDesktop? desktop,
     UpdateMode updates = UpdateMode.off,
+    UpdateStore? store,
     FixedUpdates? updater,
   }) async {
     server = tix ?? FakeTix();
@@ -76,6 +77,8 @@ void main() {
           updates: updates,
         ),
         fixedUpdates(updater ?? FixedUpdates(const UpdateState())),
+        if (store != null)
+          updateStoreProvider.overrideWithValue(AsyncData(store)),
         adbControlOfferedProvider.overrideWithValue(adb),
         desktopShellProvider.overrideWithValue(
           desktop ?? FakeDesktop(caps: DesktopCaps.none),
@@ -157,6 +160,16 @@ void main() {
       expect(
         tester.widget<TixSection>(section()).info,
         startsWith('tix asks the App Store'),
+      );
+      expect(find.byKey(const Key('settings.updateCheck')), findsOneWidget);
+      expect(find.byKey(const Key('settings.updateAuto')), findsNothing);
+    });
+
+    testWidgets('a Play build explains Google Play does it', (tester) async {
+      await pump(tester, updates: UpdateMode.store, store: UpdateStore.play);
+      expect(
+        tester.widget<TixSection>(section()).info,
+        startsWith('tix asks Google Play'),
       );
       expect(find.byKey(const Key('settings.updateCheck')), findsOneWidget);
       expect(find.byKey(const Key('settings.updateAuto')), findsNothing);

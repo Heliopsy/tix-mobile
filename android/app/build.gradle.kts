@@ -91,6 +91,22 @@ android {
         includeInBundle = true
     }
 
+    // Two distributions of the same app, same id and signing. `oss` is the
+    // APK on GitHub releases, Obtainium and F-Droid, and carries nothing
+    // proprietary (scripts/fdroid-check.sh). `play` is the App Bundle for
+    // Google Play and may use Play Core's in-app update API, which lives in
+    // src/play only; src/oss has a stand-in that says Play is not there.
+    // Every Android build names one: `--flavor oss` or `--flavor play`.
+    flavorDimensions += "distribution"
+    productFlavors {
+        create("oss") {
+            dimension = "distribution"
+        }
+        create("play") {
+            dimension = "distribution"
+        }
+    }
+
     buildTypes {
         release {
             signingConfig =
@@ -112,14 +128,14 @@ android {
 
 // Open in place on Android needs "All files access", which Google Play only
 // allows for apps whose core purpose is file management. The permission is in
-// an overlay manifest merged into every variant unless the build passes
-// -PtixAllFilesAccess=false; the app asks at runtime whether it was declared
-// and offers open in place only then.
-val allFilesAccess = (findProperty("tixAllFilesAccess") as String?)?.toBoolean() ?: true
+// an overlay manifest merged into every oss variant, and into none of the
+// play ones; -PtixAllFilesAccess=true or false overrides that. The app asks
+// at runtime whether it was declared and offers open in place only then.
+val allFilesAccess = (findProperty("tixAllFilesAccess") as String?)?.toBoolean()
 
 androidComponents {
     onVariants { variant ->
-        if (allFilesAccess) {
+        if (allFilesAccess ?: (variant.flavorName != "play")) {
             variant.sources.manifests.addStaticManifestFile("src/allFilesAccess/AndroidManifest.xml")
         }
     }
@@ -141,6 +157,9 @@ dependencies {
     implementation("androidx.glance:glance-appwidget:1.2.0")
     implementation("androidx.work:work-runtime-ktx:2.11.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+    // Play's in-app updates, in the play flavour only. Proprietary, under the
+    // Play Core SDK terms, so never in an oss build (docs/releasing.md).
+    "playImplementation"("com.google.android.play:app-update:2.1.0")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.json:json:20250517")
 }

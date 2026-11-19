@@ -16,6 +16,7 @@ import '../../helpers/app.dart';
 import '../../helpers/attachments.dart';
 import '../../helpers/fake_desktop.dart';
 import '../../helpers/fake_notes.dart';
+import '../../helpers/fake_play.dart';
 import '../../helpers/fake_tix.dart';
 import '../../helpers/fixed_updates.dart';
 
@@ -405,6 +406,27 @@ void main() {
       expect(links.links, [
         Uri.parse('https://apps.apple.com/app/id6834556706'),
       ]);
+      expect(c.read(deepLinkIntakeProvider).take(), isNull);
+    });
+
+    testWidgets("a Play build starts Play's in-app update", (tester) async {
+      final links = FakeAttachments();
+      final play = FakePlayUpdates();
+      final c = await pump(
+        tester,
+        mode: UpdateMode.store,
+        extra: [
+          links.asOverride,
+          updateStoreProvider.overrideWithValue(
+            const AsyncData(UpdateStore.play),
+          ),
+          playUpdatesProvider.overrideWithValue(play),
+        ],
+      );
+      notes.tap(updateNotePayload);
+      await tester.pumpAndSettle();
+      expect(play.starts, 1);
+      expect(links.links, isEmpty);
       expect(c.read(deepLinkIntakeProvider).take(), isNull);
     });
 

@@ -17,6 +17,7 @@ import red.tix.tix_mobile.adb.AdbService
 import red.tix.tix_mobile.notes.NoteActionHub
 import red.tix.tix_mobile.notes.NoteButton
 import red.tix.tix_mobile.shortcuts.Pins
+import red.tix.tix_mobile.update.PlayUpdate
 import red.tix.tix_mobile.widgets.UpdateWorker
 
 // tix/share holds the latest text shared to the app until Dart takes it, so
@@ -37,7 +38,9 @@ import red.tix.tix_mobile.widgets.UpdateWorker
 // tix/note-actions is this engine's end of NoteActionHub, which runs a
 // pressed notification button here while the app is open. tix/pins puts
 // shortcuts on the home screen. tix/update schedules or cancels the
-// background update check (UpdateWorker).
+// background update check (UpdateWorker). tix/play-update is Google Play's
+// in-app update in the play flavour and a stand-in that answers null in oss
+// (PlayUpdate, one per flavour source set).
 class MainActivity : FlutterActivity() {
     private var pending: Map<String, String>? = null
     private var channel: MethodChannel? = null
@@ -115,6 +118,7 @@ class MainActivity : FlutterActivity() {
                 result.notImplemented()
             }
         }
+        PlayUpdate.attach(this, messenger)
         MethodChannel(messenger, "red.tix/local_access").setMethodCallHandler { call, result ->
             when (call.method) {
                 "declared" -> result.success(declared())
@@ -141,6 +145,11 @@ class MainActivity : FlutterActivity() {
             keep(intent)
             keepLink(intent)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        PlayUpdate.resume(this)
     }
 
     override fun onNewIntent(intent: Intent) {
