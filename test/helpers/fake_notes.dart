@@ -7,10 +7,13 @@ import 'package:tix_mobile/src/core/notifications/local_notifier.dart';
 /// Local notifications recorded instead of shown.
 class FakeNotes implements LocalNotifier {
   /// Answers permission requests with [grant].
-  FakeNotes({this.grant = true, this.launch});
+  FakeNotes({this.grant = true, this.launch, this.enabled = true});
 
   /// What a permission request answers.
   bool grant;
+
+  /// Whether notifications may show without asking.
+  bool enabled;
 
   /// The payload that launched the app.
   String? launch;
@@ -39,6 +42,9 @@ class FakeNotes implements LocalNotifier {
     asked++;
     return grant;
   }
+
+  @override
+  Future<bool> allowed() async => enabled;
 
   @override
   Future<void> show(LocalNote note) async => shown.add(note);

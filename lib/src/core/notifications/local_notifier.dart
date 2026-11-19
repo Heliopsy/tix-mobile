@@ -23,6 +23,16 @@ enum NoteActionKind {
   reply,
 }
 
+/// Which kind of notification, for the platforms that let people mute each
+/// kind on its own (Android channels).
+enum NoteChannel {
+  /// Inbox items.
+  inbox,
+
+  /// A newer version of tix.
+  updates,
+}
+
 /// A button on a notification, run in the background when pressed.
 @immutable
 class LocalNoteAction {
@@ -51,6 +61,7 @@ class LocalNote {
     this.actions = const [],
     this.replyLabel = '',
     this.unlockForActions = false,
+    this.channel = NoteChannel.inbox,
   });
 
   /// Stable per item, so showing it again replaces it.
@@ -84,6 +95,9 @@ class LocalNote {
   /// Whether the buttons ask for the device to be unlocked first, where the
   /// platform can (Android 12 and later).
   final bool unlockForActions;
+
+  /// Its kind.
+  final NoteChannel channel;
 }
 
 /// The platform's local notifications, behind an interface tests fake.
@@ -99,6 +113,9 @@ abstract interface class LocalNotifier {
 
   /// Asks the platform for permission; true when notifications may show.
   Future<bool> requestPermission();
+
+  /// Whether notifications may show now, without asking.
+  Future<bool> allowed();
 
   /// Shows [note].
   Future<void> show(LocalNote note);
@@ -129,6 +146,13 @@ class PluginLocalNotifier implements LocalNotifier {
     'inbox',
     'Inbox',
     description: 'Mentions, assignments, comments and status changes',
+  );
+
+  static const _updates = AndroidNotificationChannel(
+    'updates',
+    'Updates',
+    description: 'A newer version of tix is available',
+    importance: Importance.low,
   );
 
   @override
@@ -164,11 +188,12 @@ class PluginLocalNotifier implements LocalNotifier {
           if (payload != null && payload.isNotEmpty) _taps.add(payload);
         },
       );
-      await _plugin
+      final android = _plugin
           .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin
-          >()
-          ?.createNotificationChannel(_channel);
+          >();
+      await android?.createNotificationChannel(_channel);
+      await android?.createNotificationChannel(_updates);
     } on Object catch (e) {
       log('notifications: init failed: ${e.runtimeType}');
     }
@@ -224,8 +249,45 @@ class PluginLocalNotifier implements LocalNotifier {
   }
 
   @override
+  Future<bool> allowed() async {
+    await init();
+    try {
+      if (Platform.isAndroid) {
+        return await _plugin
+                .resolvePlatformSpecificImplementation<
+                  AndroidFlutterLocalNotificationsPlugin
+                >()
+                ?.areNotificationsEnabled() ??
+            false;
+      }
+      if (Platform.isIOS) {
+        final p = await _plugin
+            .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin
+            >()
+            ?.checkPermissions();
+        return p?.isEnabled ?? false;
+      }
+      if (Platform.isMacOS) {
+        final p = await _plugin
+            .resolvePlatformSpecificImplementation<
+              MacOSFlutterLocalNotificationsPlugin
+            >()
+            ?.checkPermissions();
+        return p?.isEnabled ?? false;
+      }
+    } on Object catch (e) {
+      log('notifications: permission check failed: ${e.runtimeType}');
+      return false;
+    }
+    return true;
+  }
+
+  @override
   Future<void> show(LocalNote note) async {
     await init();
+    final update = note.channel == NoteChannel.updates;
+    final channel = update ? _updates : _channel;
     try {
       await _plugin.show(
         id: note.id,
@@ -234,17 +296,22 @@ class PluginLocalNotifier implements LocalNotifier {
         payload: note.payload,
         notificationDetails: NotificationDetails(
           android: AndroidNotificationDetails(
-            _channel.id,
-            _channel.name,
-            channelDescription: _channel.description,
-            category: AndroidNotificationCategory.social,
+            channel.id,
+            channel.name,
+            channelDescription: channel.description,
+            importance: channel.importance,
+            category: update
+                ? AndroidNotificationCategory.recommendation
+                : AndroidNotificationCategory.social,
             number: note.badge,
-            visibility: NotificationVisibility.private,
+            visibility: update
+                ? NotificationVisibility.public
+                : NotificationVisibility.private,
           ),
           iOS: DarwinNotificationDetails(badgeNumber: note.badge),
           macOS: DarwinNotificationDetails(badgeNumber: note.badge),
-          linux: const LinuxNotificationDetails(
-            category: LinuxNotificationCategory.imReceived,
+          linux: LinuxNotificationDetails(
+            category: update ? null : LinuxNotificationCategory.imReceived,
           ),
         ),
       );

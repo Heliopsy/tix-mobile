@@ -6156,7 +6156,7 @@
   "@settingsUpdateCheck": {
     "description": "Switch: look for new releases automatically"
   },
-  "settingsUpdateCheckHelp": "When tix starts and every few hours.",
+  "settingsUpdateCheckHelp": "When tix starts and every few hours, with a notification when a new version is out.",
   "@settingsUpdateCheckHelp": {
     "description": "Help under the check for updates switch"
   },
@@ -6263,6 +6263,56 @@
         "type": "String"
       }
     }
+  },
+  "settingsUpdatesStoreHelp": "tix asks the App Store whether a newer version is out. The App Store installs it.",
+  "@settingsUpdatesStoreHelp": {
+    "description": "Explanation at the top of the updates settings section in an App Store build"
+  },
+  "updateStoreHelp": "Update it from the App Store.",
+  "@updateStoreHelp": {
+    "description": "Under an available update in an App Store build"
+  },
+  "updateOpenStore": "Open the App Store",
+  "@updateOpenStore": {
+    "description": "Button: open the app's App Store page to update"
+  },
+  "updateFailedStore": "Couldn't reach the App Store to check for updates.",
+  "@updateFailedStore": {
+    "description": "Update status when the App Store could not be asked"
+  },
+  "updateNoteTitle": "tix {version} is available",
+  "@updateNoteTitle": {
+    "description": "System notification title when a newer version is out",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateNoteBody": "Tap to see the update and download it.",
+  "@updateNoteBody": {
+    "description": "System notification text for an update downloaded by hand from the release page"
+  },
+  "updateNoteStoreBody": "Tap to update from the App Store.",
+  "@updateNoteStoreBody": {
+    "description": "System notification text for an update from the App Store"
+  },
+  "updateNoteReadyTitle": "tix {version} is ready to install",
+  "@updateNoteReadyTitle": {
+    "description": "System notification title when an update is downloaded and ready to install",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateNoteReadyBody": "Tap to update: tix restarts into the new version.",
+  "@updateNoteReadyBody": {
+    "description": "System notification text for a ready update, installing on quit off"
+  },
+  "updateNoteReadyAutoBody": "It installs when you quit tix. Tap to update now.",
+  "@updateNoteReadyAutoBody": {
+    "description": "System notification text for a ready update, installing on quit on"
   },
   "trayRestartToUpdate": "Restart to update ({version})",
   "@trayRestartToUpdate": {

@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/platform/app_info.dart';
 import 'package:tix_mobile/src/core/update/updates.dart';
 import 'package:tix_mobile/src/core/widgets/update_panel.dart';
+import 'package:tix_mobile/src/data/update/release.dart';
 
 import '../../helpers/app.dart';
 import '../../helpers/attachments.dart';
@@ -111,6 +112,57 @@ void main() {
       'https://github.com/heliopsy/tix-mobile/releases/tag/v0.12.0',
     );
     expect(links.links, [page, page]);
+  });
+
+  testWidgets('a store build sends the update to the App Store', (
+    tester,
+  ) async {
+    final page = Uri.parse('https://apps.apple.com/app/id6834556706');
+    await pump(
+      tester,
+      UpdateState(
+        phase: UpdatePhase.available,
+        offer: UpdateOffer(
+          release: Release(
+            tag: '0.12.0',
+            version: const ReleaseVersion(0, 12, 0),
+            page: page,
+            assets: const [],
+          ),
+        ),
+      ),
+      mode: UpdateMode.store,
+    );
+    expect(status(tester), 'Update available: tix 0.12.0');
+    expect(find.text('Update it from the App Store.'), findsOneWidget);
+    expect(button('notes'), findsNothing);
+    expect(
+      find.descendant(
+        of: button('download'),
+        matching: find.text('Open the App Store'),
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(button('download'));
+    await tester.pumpAndSettle();
+    expect(links.links, [page]);
+  });
+
+  testWidgets('a store build that cannot ask says the App Store', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      const UpdateState(
+        phase: UpdatePhase.failed,
+        error: UpdateErrorKind.network,
+      ),
+      mode: UpdateMode.store,
+    );
+    expect(
+      status(tester),
+      "Couldn't reach the App Store to check for updates.",
+    );
   });
 
   testWidgets('a download in progress shows how far it is', (tester) async {

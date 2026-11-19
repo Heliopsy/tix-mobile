@@ -367,8 +367,9 @@ flowchart LR
 
 ## Desktop updates
 
-Builds from the GitHub release update themselves. Nothing here is the tix API: `data/update/` has its own small
-GitHub client (`GitHubReleaseFeed`), and the rest is pure functions and one interface.
+Builds from the GitHub release update themselves, and App Store builds point at the App Store. Nothing here is
+the tix API: `data/update/` has its own small GitHub client (`GitHubReleaseFeed`) and App Store lookup
+(`AppStoreReleaseFeed`), and the rest is pure functions and one interface.
 
 ```mermaid
 flowchart LR
@@ -377,16 +378,39 @@ flowchart LR
   U --> I["UpdateInstaller<br/>stage, apply"]
   U --> C["updatesProvider<br/>core/update"]
   C --> P["UpdatePanel<br/>Settings, About"]
-  C --> T["DesktopHost<br/>tray entry, install on quit"]
+  C --> T["DesktopHost<br/>tray entry, install on quit,<br/>notification taps"]
+  C --> N["update_notice<br/>notification once per version"]
 ```
 
-- **Mode.** `updateModeProvider` is `off`, `notify` or `install` (`updateModeFor` in `data/update/updater.dart`).
-  Off for builds made with `--dart-define=TIX_SELF_UPDATE=false` (Flatpak, the Play bundle, F-Droid), inside
-  Flatpak or Snap, on iOS, and on Android installs from a store. Notify for an APK installed through the system
+- **Mode.** `updateModeProvider` is `off`, `notify`, `store` or `install` (`updateModeFor` in
+  `data/update/updater.dart`). Store for an iOS App Store install (`package_info_plus` reports `com.apple`;
+  TestFlight's sandbox receipt reports `com.apple.testflight`, and TestFlight, the simulator and debug builds are
+  off). Off for other builds made with `--dart-define=TIX_SELF_UPDATE=false` (Flatpak, the Play bundle, F-Droid),
+  inside Flatpak or Snap, and on Android installs from a store. Notify for an APK installed through the system
   package installer, and for a desktop that is a debug build, runs in the macOS App Sandbox or cannot write its
   install. Install otherwise.
-- **Check.** `releases/latest` at start and every six hours while "Check for updates" is on, and on Check now.
-  `ReleaseVersion` compares by semver precedence; drafts and prereleases never count.
+- **Google Play.** Stays off. Play's in-app update API ships in the Play Core library, which
+  `scripts/fdroid-check.sh` rejects, and the Play bundle and the F-Droid APKs come from one Gradle build without
+  flavours. There is no public lookup of the version Play serves, and GitHub's latest release can still be on the
+  internal track, so the app leaves it to Play.
+- **Check.** `releases/latest` (or, in the store mode, `itunes.apple.com/lookup?bundleId=red.tix.tixMobile` in
+  the device's storefront) at start and every three hours plus up to twenty minutes of jitter while "Check for
+  updates" is on, and on Check now. `ReleaseVersion` compares by semver precedence; drafts and prereleases never
+  count.
+- **Notify.** An automatic check that finds a newer version shows one system notification for it
+  (`core/update/update_notice.dart`), worded for the mode: download, App Store, Restart to update or install on
+  quit. The version is stored (`update.notified`), so neither later checks nor restarts repeat it, and nothing is
+  stored while the platform allows no notifications. Check now never notifies. Android posts it on its own
+  "Updates" channel. A tap, or a launch from one, opens About (`DesktopHost`), or the App Store page in the
+  store mode.
+- **In the background.** On phones the headless runner (`widgetHeadlessMain`, `widgetBackgroundCallback`) runs
+  `runBackgroundUpdateCheck` for `tixwidget://refresh` (iOS background refresh, Android's widget worker) and
+  `tixwidget://update` (Android's `UpdateWorker`, every three hours with a network, scheduled and cancelled from
+  Dart over `tix/update` as the mode and "Check for updates" allow). It skips a run within three hours of the
+  last check (`update.lastCheck`, also written by the running app). iOS and WorkManager decide when a run
+  happens, so this is best effort: iOS may run it rarely or never for an app the person seldom opens. A running
+  app and a background run keep separate preference caches, so in rare cases both can post the same version; the
+  notification has one id, so the second replaces the first.
 - **Verify.** The archive's SHA-256 must match its line in `SHA256SUMS`. With a key pinned in
   `data/update/signing_key.dart`, `SHA256SUMS.sig` (Ed25519) must verify first, before the archive is fetched;
   with none pinned the check is checksum-only, the trust of a download by hand. Every file must be HTTPS from

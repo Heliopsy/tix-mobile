@@ -135,6 +135,33 @@ void main() {
       expect(find.byKey(const Key('settings.updateAuto')), findsNothing);
     });
 
+    testWidgets('the check switch says it also notifies', (tester) async {
+      await pump(tester, updates: UpdateMode.notify);
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('settings.updateCheck')),
+          matching: find.text(
+            'When tix starts and every few hours, with a notification when '
+            'a new version is out.',
+          ),
+        ),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('an App Store build explains the store does it', (
+      tester,
+    ) async {
+      await pump(tester, updates: UpdateMode.store);
+      expect(section(), findsOneWidget);
+      expect(
+        tester.widget<TixSection>(section()).info,
+        startsWith('tix asks the App Store'),
+      );
+      expect(find.byKey(const Key('settings.updateCheck')), findsOneWidget);
+      expect(find.byKey(const Key('settings.updateAuto')), findsNothing);
+    });
+
     testWidgets('search finds the update settings', (tester) async {
       await pump(tester, updates: UpdateMode.install, query: 'automatically');
       expect(find.byKey(const Key('settings.updateAuto')), findsOneWidget);

@@ -4,8 +4,11 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tix_mobile/src/core/clock/clock.dart';
+import 'package:tix_mobile/src/core/notifications/local_notifier.dart';
 import 'package:tix_mobile/src/core/platform/desktop.dart';
 import 'package:tix_mobile/src/core/storage/providers.dart';
+import 'package:tix_mobile/src/core/update/update_notice.dart';
 import 'package:tix_mobile/src/core/update/updates.dart';
 import 'package:tix_mobile/src/data/update/release.dart';
 import 'package:tix_mobile/src/data/update/release_feed.dart';
@@ -14,10 +17,18 @@ import 'package:tix_mobile/src/data/update/updater.dart';
 import '../../helpers/container.dart';
 import '../../helpers/eventually.dart';
 import '../../helpers/fake_desktop.dart';
+import '../../helpers/fake_notes.dart';
 import '../../helpers/fake_update.dart';
 import '../../helpers/stores.dart';
 
 const linuxX64 = 'tix-mobile-0.12.0-linux-x64.tar.gz';
+
+class FakeBackgroundChecks implements BackgroundUpdateChecks {
+  final calls = <bool>[];
+
+  @override
+  Future<void> set({required bool on}) async => calls.add(on);
+}
 
 void main() {
   late MemoryKeyValueStore store;
@@ -25,8 +36,13 @@ void main() {
   late FakeInstaller installer;
   late FakeDesktop desktop;
   late TestKey key;
+  late FakeNotes notes;
+  late FakeBackgroundChecks background;
+  final now = DateTime.utc(2026, 11, 1, 12);
 
   setUp(() async {
+    notes = FakeNotes();
+    background = FakeBackgroundChecks();
     store = MemoryKeyValueStore();
     feed = FakeReleaseFeed();
     installer = FakeInstaller();
@@ -37,6 +53,9 @@ void main() {
   ProviderContainer container({UpdateMode mode = UpdateMode.install}) {
     final c = makeContainer([
       keyValueStoreProvider.overrideWithValue(store),
+      localNotesProvider.overrideWithValue(notes),
+      clockProvider.overrideWithValue(() => now),
+      backgroundUpdateChecksProvider.overrideWithValue(background),
       desktopShellProvider.overrideWithValue(desktop),
       updateModeProvider.overrideWithValue(AsyncData(mode)),
       updateInstallerProvider.overrideWithValue(installer),
@@ -222,6 +241,77 @@ void main() {
       await c.read(updatesProvider.notifier).check();
       expect(feed.reads, hasLength(reads));
       expect(phase(c), UpdatePhase.ready);
+    });
+  });
+
+  group('notifications', () {
+    test('the check at start notifies an available update once', () async {
+      await release();
+      final c = container(mode: UpdateMode.notify);
+      await eventually(() => phase(c) == UpdatePhase.available);
+      await eventually(() => notes.shown.isNotEmpty);
+      final note = notes.shown.single;
+      expect(note.title, 'tix 0.12.0 is available');
+      expect(note.payload, updateNotePayload);
+      expect(note.channel, NoteChannel.updates);
+      expect(store.values['update.notified'], '0.12.0');
+      expect(store.values['update.lastCheck'], now.toIso8601String());
+      final again = container(mode: UpdateMode.notify);
+      await eventually(() => phase(again) == UpdatePhase.available);
+      await pumpEventQueue();
+      expect(notes.shown, hasLength(1));
+    });
+
+    test('Check now never notifies', () async {
+      store.values['settings.updateCheck'] = 'off';
+      await release();
+      final c = container(mode: UpdateMode.notify);
+      await c.read(updatesProvider.notifier).check();
+      expect(phase(c), UpdatePhase.available);
+      expect(notes.shown, isEmpty);
+    });
+
+    test('a staged update says how it installs', () async {
+      await release();
+      final c = container();
+      await eventually(() => notes.shown.isNotEmpty);
+      expect(phase(c), UpdatePhase.ready);
+      expect(notes.shown.single.title, 'tix 0.12.0 is ready to install');
+      expect(
+        notes.shown.single.body,
+        'Tap to update: tix restarts into the new version.',
+      );
+    });
+
+    test('with installing on quit on, it says so', () async {
+      store.values['settings.updateAutoInstall'] = 'true';
+      await release();
+      container();
+      await eventually(() => notes.shown.isNotEmpty);
+      expect(
+        notes.shown.single.body,
+        'It installs when you quit tix. Tap to update now.',
+      );
+    });
+
+    test('nothing shows where notifications are not allowed', () async {
+      notes.enabled = false;
+      await release();
+      final c = container(mode: UpdateMode.notify);
+      await eventually(() => phase(c) == UpdatePhase.available);
+      await pumpEventQueue();
+      expect(notes.shown, isEmpty);
+      expect(store.values, isNot(contains('update.notified')));
+    });
+
+    test('the background check follows the setting and the mode', () async {
+      final c = container(mode: UpdateMode.notify);
+      await pumpEventQueue();
+      expect(background.calls, [true]);
+      await c.read(updateCheckSettingProvider.notifier).set(on: false);
+      expect(background.calls, [true, false]);
+      container(mode: UpdateMode.off);
+      expect(background.calls, [true, false, false]);
     });
   });
 

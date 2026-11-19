@@ -8,10 +8,12 @@ import 'package:tix_mobile/src/core/desktop/desktop_state.dart';
 import 'package:tix_mobile/src/core/desktop/tray_status.dart';
 import 'package:tix_mobile/src/core/platform/deep_links.dart';
 import 'package:tix_mobile/src/core/platform/desktop.dart';
+import 'package:tix_mobile/src/core/update/update_notice.dart';
 import 'package:tix_mobile/src/core/update/updates.dart';
 import 'package:tix_mobile/src/core/widgets/desktop_host.dart';
 
 import '../../helpers/app.dart';
+import '../../helpers/attachments.dart';
 import '../../helpers/fake_desktop.dart';
 import '../../helpers/fake_notes.dart';
 import '../../helpers/fake_tix.dart';
@@ -32,6 +34,7 @@ void main() {
     int? unread,
     Map<String, String> settings = const {},
     FixedUpdates? updates,
+    UpdateMode? mode,
     DateTime Function()? clock,
     List<Override> extra = const [],
   }) {
@@ -48,7 +51,8 @@ void main() {
           settings: stores.settings,
           secrets: stores.secrets,
           notes: notes,
-          updates: updates == null ? UpdateMode.off : UpdateMode.install,
+          updates:
+              mode ?? (updates == null ? UpdateMode.off : UpdateMode.install),
           clock: clock,
         ),
         desktopShellProvider.overrideWithValue(desktop),
@@ -369,6 +373,53 @@ void main() {
       desktop.emit(const CloseRequested());
       await tester.pumpAndSettle();
       expect(desktop.quits, 0);
+    });
+  });
+
+  group('update notification', () {
+    testWidgets('a tap opens About where the panel is', (tester) async {
+      final links = FakeAttachments();
+      final c = await pump(
+        tester,
+        updates: FixedUpdates(
+          UpdateState(phase: UpdatePhase.available, offer: offerOf('0.12.0')),
+        ),
+        mode: UpdateMode.notify,
+        extra: [links.asOverride],
+      );
+      notes.tap(updateNotePayload);
+      await tester.pumpAndSettle();
+      expect(c.read(deepLinkIntakeProvider).take(), Uri.parse('tix://about'));
+      expect(links.links, isEmpty);
+    });
+
+    testWidgets('a store build opens the App Store page', (tester) async {
+      final links = FakeAttachments();
+      final c = await pump(
+        tester,
+        mode: UpdateMode.store,
+        extra: [links.asOverride],
+      );
+      notes.tap(updateNotePayload);
+      await tester.pumpAndSettle();
+      expect(links.links, [
+        Uri.parse('https://apps.apple.com/app/id6834556706'),
+      ]);
+      expect(c.read(deepLinkIntakeProvider).take(), isNull);
+    });
+
+    testWidgets('one that launched the app opens it too', (tester) async {
+      notes.launch = updateNotePayload;
+      final c = await pump(tester, mode: UpdateMode.notify);
+      await tester.pumpAndSettle();
+      expect(c.read(deepLinkIntakeProvider).take(), Uri.parse('tix://about'));
+    });
+
+    testWidgets('an inbox notification is not taken for one', (tester) async {
+      final c = await pump(tester, mode: UpdateMode.notify);
+      notes.tap('{"route":"/inbox"}');
+      await tester.pumpAndSettle();
+      expect(c.read(deepLinkIntakeProvider).take(), isNull);
     });
   });
 }

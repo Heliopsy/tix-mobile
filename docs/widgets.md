@@ -49,6 +49,10 @@ flowchart LR
   whenever the app goes to the background, and runs the same refresh in a headless Flutter engine. WidgetKit
   timelines re-read storage every 30 minutes and draw the snapshot's age with a self-updating relative date, so an
   old snapshot says so without a reload. macOS refreshes while the app runs.
+- **Update check.** The same headless run also looks for a newer tix, at most once every three hours
+  (`runBackgroundUpdateCheck`, docs/architecture.md#desktop-updates). Android adds its own `UpdateWorker` (every
+  three hours, network required) that wakes the runner with `tixwidget://update`, so the check runs without any
+  widget too.
 - **Ticks.** A tick never talks to the server from the widget. The widget appends the action to the queue in shared
   storage, hides the task at once (it filters out queued refs), and wakes the app's Dart code: on Android through
   `home_widget`'s background receiver, which starts a headless engine; on iOS through the App Intent, which runs in
@@ -240,7 +244,8 @@ Keyed by widget: `android:<appWidgetId>` on Android, `<kind>:<ctx>:<project>` on
 | `tixwidget://quickadd?ctx=<ctx>[&project=<KEY>][&text=<line>]` | The quick add sheet, with `text` in the line, unsent |
 | `tixwidget://app?ctx=<ctx>` | The app, in `ctx` |
 | `tixwidget://drain` | Background only: run the queue |
-| `tixwidget://refresh` | Background only: rewrite every snapshot the runner can reach |
+| `tixwidget://refresh` | Background only: rewrite every snapshot the runner can reach, then look for an update |
+| `tixwidget://update` | Background only: look for an update (Android's `UpdateWorker`) |
 
 On iOS, links carry an extra `homeWidget` query item so `home_widget` recognises them. Flutter's own deep linking
 is off on Android and iOS (`flutter_deeplinking_enabled`, `FlutterDeepLinkingEnabled`), so these never reach the

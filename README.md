@@ -156,12 +156,15 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   unread count in the tooltip and on the macOS Dock. Optional start at login, and Ctrl+Shift+Space (⌃⇧Space on a
   Mac) to open quick add from any app, where the desktop allows global shortcuts. A second launch or a `tix://`
   link brings the running window forward instead of starting another copy.
-- **Updates** for the desktop downloads from GitHub: tix looks for a new release at start and every few hours, and
-  shows it in Settings, About and the tray. On Linux and Windows it downloads the archive for your system from
-  GitHub, checks it against the release's `SHA256SUMS` (and its signature, once the release key is pinned), and
-  installs it when you pick Restart to update, or on quit if you turn that on. macOS, and any install in a folder
-  it cannot write, get a link to the release page instead. Flatpak, store builds and phones
-  leave updates to their store; an APK installed from GitHub only says a new version is out.
+- **Updates** for the desktop downloads from GitHub: tix looks for a new release at start and every three hours,
+  shows it in Settings, About and the tray, and sends one system notification per new version. On Linux and
+  Windows it downloads the archive for your system from GitHub, checks it against the release's `SHA256SUMS` (and
+  its signature, once the release key is pinned), and installs it when you pick Restart to update, or on quit if
+  you turn that on. macOS, and any install in a folder it cannot write, get a link to the release page instead.
+  An APK installed from GitHub notifies and links to the release page; the App Store build asks the App Store and
+  opens it. On phones the check also runs in the background while tix is closed, when the system lets it.
+  Flatpak, Snap, F-Droid, Google Play and TestFlight leave updates to their store. "Check for updates" in
+  Settings turns the checks and the notifications off.
 - **Command palette** (Ctrl+K or Cmd+K): every command, projects, recent tasks and any task by reference; `?` lists
   the shortcuts.
 - **Inbox**: mentions, assignments, comments and status changes, grouped by day, with filters per kind, swipe to

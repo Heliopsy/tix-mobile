@@ -61,4 +61,5 @@ object Links {
 
     val drain: Uri = Uri.parse("tixwidget://drain")
     val refresh: Uri = Uri.parse("tixwidget://refresh")
+    val update: Uri = Uri.parse("tixwidget://update")
 }

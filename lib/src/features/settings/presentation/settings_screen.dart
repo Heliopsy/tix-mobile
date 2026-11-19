@@ -226,15 +226,18 @@ class _ScopeBadge extends StatelessWidget {
   );
 }
 
-class _Section extends StatelessWidget {
+class _Section extends ConsumerWidget {
   const _Section({required this.section, required this.items});
 
   final SettingsSection section;
   final List<SettingsItem> items;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final store =
+        section == SettingsSection.updates &&
+        ref.watch(updateModeProvider).value == UpdateMode.store;
     return TixSection(
       key: Key('settings.section.${section.name}'),
       title: settingsSectionTitle(l10n, section),
@@ -248,7 +251,8 @@ class _Section extends StatelessWidget {
         SettingsSection.localEngine => l10n.localInstanceIdleHelp,
         SettingsSection.widgets => l10n.settingsWidgetsHelp,
         SettingsSection.desktop => l10n.settingsDesktopHelp,
-        SettingsSection.updates => l10n.settingsUpdatesHelp,
+        SettingsSection.updates =>
+          store ? l10n.settingsUpdatesStoreHelp : l10n.settingsUpdatesHelp,
         _ => null,
       },
       children: [

@@ -23,6 +23,8 @@ class SettingsRepository {
   static const _hotkeyKey = 'settings.quickAddHotkey';
   static const _updateCheckKey = 'settings.updateCheck';
   static const _updateAutoKey = 'settings.updateAutoInstall';
+  static const _updateLastCheckKey = 'update.lastCheck';
+  static const _updateNotifiedKey = 'update.notified';
   static const _shortcutsKey = 'settings.shortcuts';
   static const _keymapKey = 'settings.keymap';
 
@@ -129,6 +131,22 @@ class SettingsRepository {
   /// Saves whether a downloaded update is installed on quit.
   Future<void> setUpdateAutoInstall({required bool on}) =>
       on ? _store.write(_updateAutoKey, 'true') : _store.delete(_updateAutoKey);
+
+  /// When the app last looked for an update on its own, null before the
+  /// first time.
+  DateTime? updateLastCheck() =>
+      DateTime.tryParse(_store.read(_updateLastCheckKey) ?? '');
+
+  /// Saves when the app last looked for an update.
+  Future<void> setUpdateLastCheck(DateTime at) =>
+      _store.write(_updateLastCheckKey, at.toUtc().toIso8601String());
+
+  /// The version the last update notification was about.
+  String? updateNotified() => _store.read(_updateNotifiedKey);
+
+  /// Saves the version an update notification was shown for.
+  Future<void> setUpdateNotified(String version) =>
+      _store.write(_updateNotifiedKey, version);
 
   /// Whether keyboard shortcuts are on; on until turned off.
   bool shortcuts() => _store.read(_shortcutsKey) != 'off';

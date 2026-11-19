@@ -112,3 +112,31 @@ class RefreshWorker(context: Context, params: WorkerParameters) : CoroutineWorke
         }
     }
 }
+
+/**
+ * Wakes the app's Dart code every three hours, with a network, to look for
+ * a newer version while the app is closed. Dart schedules it where updates
+ * are checked and skips a run within three hours of the last check;
+ * WorkManager decides when it actually runs.
+ */
+class UpdateWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
+    override suspend fun doWork(): Result {
+        HomeWidgetBackgroundIntent.getBroadcast(applicationContext, Links.update).send()
+        return Result.success()
+    }
+
+    companion object {
+        private const val NAME = "tix.update.check"
+
+        fun schedule(context: Context) {
+            val request = PeriodicWorkRequestBuilder<UpdateWorker>(3, TimeUnit.HOURS)
+                .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+                .build()
+            WorkManager.getInstance(context).enqueueUniquePeriodicWork(NAME, ExistingPeriodicWorkPolicy.KEEP, request)
+        }
+
+        fun cancel(context: Context) {
+            WorkManager.getInstance(context).cancelUniqueWork(NAME)
+        }
+    }
+}
