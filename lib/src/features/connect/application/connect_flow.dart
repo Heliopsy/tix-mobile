@@ -4,8 +4,10 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/durations.dart';
+import 'package:tix_mobile/src/core/platform/sso_browser.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
@@ -16,6 +18,7 @@ import 'package:tix_mobile/src/data/models/auth.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
 import 'package:tix_mobile/src/data/models/invite_link.dart';
 import 'package:tix_mobile/src/data/models/membership.dart';
+import 'package:tix_mobile/src/data/models/sso.dart';
 
 part 'connect_flow.g.dart';
 
@@ -26,6 +29,19 @@ bool rememberOffered(SessionPolicy? policy) {
   final kept = parseGoDuration(policy.rememberTtl);
   final ordinary = parseGoDuration(policy.ttl);
   return kept != null && ordinary != null && kept > ordinary;
+}
+
+/// What the sign-in step at [url] offers. Provider sign-in is left out
+/// where the platform has no external user agent.
+@riverpod
+Future<SignInOptions> signInOptions(Ref ref, String url) async {
+  final baseUrl = normalizeServerUrl(url);
+  if (baseUrl == null) return SignInOptions.none;
+  final options = await ref
+      .watch(authRepositoryProvider)
+      .signInOptions(baseUrl);
+  if (ref.watch(ssoBrowserProvider).supported) return options;
+  return options.copyWith(appSignIn: false);
 }
 
 /// Where adding an instance or a connection has got to.
@@ -215,6 +231,7 @@ final class ConnectDone extends ConnectStep {
 class ConnectFlow extends _$ConnectFlow {
   LocalHandle? _pending;
   Instance? _pendingAccess;
+  int _ssoRun = 0;
 
   @override
   ConnectStep build(String key) {
@@ -295,6 +312,47 @@ class ConnectFlow extends _$ConnectFlow {
       ),
       result,
     );
+  }
+
+  /// Signs in through [provider] in the system browser, at [url] or at the
+  /// instance of [instanceId] or of the connection [replacing], and saves it
+  /// as a password sign-in would. Returns quietly when the person cancels.
+  Future<void> sso({
+    required String url,
+    required String provider,
+    String name = '',
+    String? instanceId,
+    String? replacing,
+  }) async {
+    final repo = ref.read(instancesRepositoryProvider);
+    final auth = ref.read(authRepositoryProvider);
+    final old = replacing == null ? null : repo.connection(replacing);
+    final instance = repo.instance(old?.instanceId ?? instanceId ?? '');
+    final run = ++_ssoRun;
+    final baseUrl = await auth.checkServer(instance?.baseUrl ?? url);
+    if (run != _ssoRun) return;
+    final attempt = auth.startSso(baseUrl, provider);
+    final redirect = await ref
+        .read(ssoBrowserProvider)
+        .authenticate(attempt.url);
+    if (redirect == null || run != _ssoRun) return;
+    final result = await auth.finishSso(attempt, redirect);
+    await _signedIn(
+      SignInDraft(
+        baseUrl: baseUrl,
+        email: old?.email ?? '',
+        name: name,
+        replacing: old?.id,
+        pinned: old?.pinned,
+      ),
+      result,
+    );
+  }
+
+  /// Gives up on the provider sign-in waiting in the browser.
+  Future<void> cancelSso() async {
+    _ssoRun++;
+    await ref.read(ssoBrowserProvider).cancel();
   }
 
   /// Reads the invite link in [text] and what it admits to.
@@ -497,7 +555,7 @@ class ConnectFlow extends _$ConnectFlow {
         .read(sessionControllerProvider.notifier)
         .saveSignIn(
           baseUrl: draft.baseUrl,
-          email: draft.email,
+          email: draft.email.isEmpty ? me.email : draft.email,
           session: session,
           me: me,
           pinned: pinned,

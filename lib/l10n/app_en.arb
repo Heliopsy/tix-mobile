@@ -7082,5 +7082,51 @@
         "type": "String"
       }
     }
+  },
+  "ssoSignInWith": "Sign in with {provider}",
+  "@ssoSignInWith": {
+    "description": "Button that starts single sign-on through an identity provider; provider is its display name",
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "ssoOpensBrowser": "Opens in your browser",
+  "@ssoOpensBrowser": {
+    "description": "Accessibility hint on a single sign-on button"
+  },
+  "ssoOr": "or sign in with your email and password",
+  "@ssoOr": {
+    "description": "Separator between the single sign-on buttons and the password form"
+  },
+  "ssoWaiting": "Finish signing in in your browser, then come back here.",
+  "@ssoWaiting": {
+    "description": "Shown while the browser is open for single sign-on"
+  },
+  "ssoPasswordDisabled": "This server does not take passwords. Use an API token to connect.",
+  "@ssoPasswordDisabled": {
+    "description": "Shown on the sign-in step when the tenant has password sign-in turned off and the app offers no provider"
+  },
+  "errorSsoFailed": "Signing in with the provider did not finish. Try again.",
+  "@errorSsoFailed": {
+    "description": "Error when the single sign-on redirect carried no code"
+  },
+  "errorSsoFailedReason": "Signing in with the provider did not finish ({reason}). Try again.",
+  "@errorSsoFailedReason": {
+    "description": "Error when the single sign-on redirect reported a failure; reason is the server's short reason code",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "errorSsoStateMismatch": "This sign-in could not be verified, so nothing was saved. Try again.",
+  "@errorSsoStateMismatch": {
+    "description": "Error when the single sign-on redirect's state did not match the one the app sent"
+  },
+  "errorSsoRejected": "The server did not accept this sign-in. It may have taken too long. Try again.",
+  "@errorSsoRejected": {
+    "description": "Error when the server refused the single sign-on code exchange"
   }
 }

@@ -10131,4 +10131,40 @@ class AppLocalizationsDe extends AppLocalizations {
   String connectionAttention(String state) {
     return 'Handlungsbedarf: $state';
   }
+
+  @override
+  String ssoSignInWith(String provider) {
+    return 'Mit $provider anmelden';
+  }
+
+  @override
+  String get ssoOpensBrowser => 'Öffnet sich im Browser';
+
+  @override
+  String get ssoOr => 'oder mit E-Mail und Passwort anmelden';
+
+  @override
+  String get ssoWaiting =>
+      'Schließen Sie die Anmeldung im Browser ab und kehren Sie dann hierher zurück.';
+
+  @override
+  String get ssoPasswordDisabled =>
+      'Dieser Server nimmt keine Passwörter an. Verbinden Sie sich mit einem API-Token.';
+
+  @override
+  String get errorSsoFailed =>
+      'Die Anmeldung über den Anbieter wurde nicht abgeschlossen. Versuchen Sie es erneut.';
+
+  @override
+  String errorSsoFailedReason(String reason) {
+    return 'Die Anmeldung über den Anbieter wurde nicht abgeschlossen ($reason). Versuchen Sie es erneut.';
+  }
+
+  @override
+  String get errorSsoStateMismatch =>
+      'Diese Anmeldung konnte nicht bestätigt werden, daher wurde nichts gespeichert. Versuchen Sie es erneut.';
+
+  @override
+  String get errorSsoRejected =>
+      'Der Server hat diese Anmeldung nicht angenommen. Vielleicht hat sie zu lange gedauert. Versuchen Sie es erneut.';
 }

@@ -4,8 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/models/auth.dart';
+import 'package:tix_mobile/src/data/models/sso.dart';
 import 'package:tix_mobile/src/data/repositories/auth_repository.dart';
 
+import '../../helpers/fake_sso.dart';
 import '../../helpers/fake_tix.dart';
 
 void main() {
@@ -291,6 +293,90 @@ void main() {
     test('any other failure reading the policy is not hidden', () async {
       server.override = FakeResponse(503, envelope('upstream', 'x'));
       await expectLater(auth.sessionPolicy(base), kind(TixErrorKind.upstream));
+    });
+  });
+
+  group('single sign-on', () {
+    test('options from a tix without the route are passwords only', () async {
+      expect(await auth.signInOptions(base), SignInOptions.none);
+      server.override = FakeResponse(404, envelope('not_found', 'x'));
+      expect(await auth.signInOptions(base), SignInOptions.none);
+      server.override = FakeResponse(503, envelope('upstream', 'x'));
+      await expectLater(auth.signInOptions(base), kind(TixErrorKind.upstream));
+    });
+
+    test('options are read without a credential', () async {
+      server.ssoOptions = ssoOptionsJson();
+      final o = await auth.signInOptions(base);
+      expect([for (final p in o.appProviders) p.key], ['acme', 'github']);
+      final sent = server.requests.single;
+      expect(sent.uri.path, '/api/v1/auth/sso/options');
+      expect(sent.headers['Authorization'], isNull);
+      expect(sent.headers['Cookie'], isNull);
+    });
+
+    test('the code and verifier are exchanged for a session', () async {
+      final attempt = auth.startSso(base, 'acme');
+      final result = await auth.finishSso(
+        attempt,
+        ssoRedirectFor(server, attempt.url),
+      );
+      expect(result.session?.token, isNotEmpty);
+      final body = server.requests.last.body;
+      expect(server.requests.last.uri.path, '/api/v1/auth/sso/exchange');
+      expect(body, {'code': 'sso-1', 'code_verifier': attempt.verifier});
+    });
+
+    test('a redirect with another state is refused unsent', () async {
+      final attempt = auth.startSso(base, 'acme');
+      await expectLater(
+        auth.finishSso(
+          attempt,
+          ssoRedirectFor(server, attempt.url, state: 'forged'),
+        ),
+        kind(TixErrorKind.ssoStateMismatch),
+      );
+      expect(server.requests, isEmpty);
+    });
+
+    test('an error redirect carries its reason', () async {
+      final attempt = auth.startSso(base, 'acme');
+      final redirect = Uri.parse(
+        'red.tix.mobile:/sso?error=access_denied&state=${attempt.state}',
+      );
+      await expectLater(
+        auth.finishSso(attempt, redirect),
+        throwsA(
+          isA<TixException>()
+              .having((e) => e.kind, 'kind', TixErrorKind.ssoFailed)
+              .having((e) => e.message, 'message', 'access_denied'),
+        ),
+      );
+      expect(server.requests, isEmpty);
+    });
+
+    test('a refused exchange is a failed sign-in', () async {
+      final attempt = auth.startSso(base, 'acme');
+      final redirect = Uri.parse(
+        'red.tix.mobile:/sso?code=unknown&state=${attempt.state}',
+      );
+      await expectLater(
+        auth.finishSso(attempt, redirect),
+        kind(TixErrorKind.ssoRejected),
+      );
+    });
+
+    test('a code bound to another verifier is refused', () async {
+      final attempt = auth.startSso(base, 'acme');
+      final other = auth.startSso(base, 'acme');
+      final redirect = ssoRedirectFor(
+        server,
+        other.url,
+      ).replace(queryParameters: {'code': 'sso-1', 'state': attempt.state});
+      await expectLater(
+        auth.finishSso(attempt, redirect),
+        kind(TixErrorKind.ssoRejected),
+      );
     });
   });
 }

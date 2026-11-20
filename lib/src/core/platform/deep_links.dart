@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
+import 'package:tix_mobile/src/data/models/sso.dart' show ssoScheme;
 
 part 'deep_links.g.dart';
 
@@ -145,10 +146,15 @@ class DeepLinkIntake {
   /// The channel to the platform.
   final MethodChannel channel;
   final _links = StreamController<Uri>.broadcast();
+  final _sso = StreamController<Uri>.broadcast();
   Uri? _waiting;
 
   /// Links as they arrive, while someone listens.
   Stream<Uri> get links => _links.stream;
+
+  /// Single sign-on redirects (`red.tix.mobile:`) as they arrive. They never
+  /// reach [links], and one that arrives while no sign-in waits is dropped.
+  Stream<Uri> get ssoRedirects => _sso.stream;
 
   /// Takes a link that arrived while nobody listened.
   Uri? take() {
@@ -175,6 +181,10 @@ class DeepLinkIntake {
   /// Hands [uri] over as if the platform had opened it: the desktop tray and
   /// hotkey send their links this way.
   void deliver(Uri uri) {
+    if (uri.scheme.toLowerCase() == ssoScheme) {
+      _sso.add(uri);
+      return;
+    }
     if (_links.hasListener) {
       _links.add(uri);
     } else {
@@ -186,6 +196,7 @@ class DeepLinkIntake {
   void dispose() {
     channel.setMethodCallHandler(null);
     unawaited(_links.close());
+    unawaited(_sso.close());
   }
 }
 

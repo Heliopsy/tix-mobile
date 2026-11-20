@@ -80,6 +80,10 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
 
 - **Several tix servers**, each with one or more connections: an API token, or a sign-in with email and password
   (second factor included). A sign-in can follow you between your tenants on that server or stay pinned to one.
+- **Single sign-on**: where the server allows it for apps, Sign in with your tenant's OIDC, GitHub or SAML
+  provider in the system browser (ASWebAuthenticationSession on iOS and macOS, Custom Tabs on Android, your
+  default browser on Linux and Windows), second factor included. A tenant that turned passwords off shows only
+  its providers and the token option. Servers older than the app sign-in support show no provider buttons.
   A password your administrator asks you to replace, or a second factor your tenant requires, is set up right
   there, recovery codes included, without a detour through the browser.
 - **Invite links**: paste one, or share it to tix, see what it admits you to, accept it, and the server and the
@@ -231,12 +235,13 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   Settings.
 
 API tokens and sign-in sessions are kept in the platform's secure storage and are never written to logs or
-preferences. Passwords are not stored at all. How long a sign-in session lasts is the server's call: 12 hours by
-default on tix, or 30 days with **Stay signed in**, which the sign-in form turns on by default where the server
-offers it. When the server ends a session or refuses a saved API token, the app stops syncing that account, says
-so in a notification and opens Sign in again with the instance and email filled in, or a form to paste a new
-token. A refused token is kept, never deleted behind your back, and the data already on the device stays. The
-home screen widgets notice it too, stop refreshing that account and ask you to sign in again.
+preferences. Passwords are not stored at all, and a provider sign-in never runs inside the app: the browser hands
+back a one-time code that only this attempt's PKCE verifier can redeem. How long a sign-in session lasts is the
+server's call: 12 hours by default on tix, or 30 days with **Stay signed in**, which the sign-in form turns on by
+default where the server offers it. When the server ends a session or refuses a saved API token, the app stops
+syncing that account, says so in a notification and opens Sign in again with the instance and email filled in, or a
+form to paste a new token. A refused token is kept, never deleted behind your back, and the data already on the
+device stays. The home screen widgets notice it too, stop refreshing that account and ask you to sign in again.
 
 ## Screenshots
 

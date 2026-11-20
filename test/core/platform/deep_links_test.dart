@@ -190,5 +190,33 @@ void main() {
       intake.deliver(Uri.parse('tix://inbox'));
       expect(intake.take(), Uri.parse('tix://inbox'));
     });
+
+    test(
+      'a sign-in redirect goes to the sign-in, never to the links',
+      () async {
+        final intake = DeepLinkIntake(channel);
+        addTearDown(intake.dispose);
+        final links = <Uri>[];
+        final redirects = <Uri>[];
+        intake.links.listen(links.add);
+        intake.ssoRedirects.listen(redirects.add);
+        pending = 'red.tix.mobile:/sso?code=c&state=s';
+        await messenger.handlePlatformMessage(
+          channel.name,
+          channel.codec.encodeMethodCall(const MethodCall('opened')),
+          (_) {},
+        );
+        await pumpEventQueue();
+        expect(redirects, [Uri.parse('red.tix.mobile:/sso?code=c&state=s')]);
+        expect(links, isEmpty);
+      },
+    );
+
+    test('a sign-in redirect nobody waits for is dropped', () {
+      final intake = DeepLinkIntake(channel);
+      addTearDown(intake.dispose);
+      intake.deliver(Uri.parse('red.tix.mobile:/sso?code=c'));
+      expect(intake.take(), isNull);
+    });
   });
 }

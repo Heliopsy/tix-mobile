@@ -10060,4 +10060,39 @@ class AppLocalizationsBg extends AppLocalizations {
   String connectionAttention(String state) {
     return 'Нужно е действие: $state';
   }
+
+  @override
+  String ssoSignInWith(String provider) {
+    return 'Вход с $provider';
+  }
+
+  @override
+  String get ssoOpensBrowser => 'Отваря се в браузъра';
+
+  @override
+  String get ssoOr => 'или влезте с имейл и парола';
+
+  @override
+  String get ssoWaiting => 'Завършете входа в браузъра и се върнете тук.';
+
+  @override
+  String get ssoPasswordDisabled =>
+      'Този сървър не приема пароли. Използвайте API токен, за да се свържете.';
+
+  @override
+  String get errorSsoFailed =>
+      'Входът чрез доставчика не завърши. Опитайте отново.';
+
+  @override
+  String errorSsoFailedReason(String reason) {
+    return 'Входът чрез доставчика не завърши ($reason). Опитайте отново.';
+  }
+
+  @override
+  String get errorSsoStateMismatch =>
+      'Този вход не можа да бъде потвърден и нищо не е запазено. Опитайте отново.';
+
+  @override
+  String get errorSsoRejected =>
+      'Сървърът не прие този вход. Може би е отнел твърде дълго. Опитайте отново.';
 }

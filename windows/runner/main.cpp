@@ -18,8 +18,9 @@ BOOL CALLBACK FindTixWindow(HWND hwnd, LPARAM found) {
   return FALSE;
 }
 
-// tix runs once per session. A second launch hands its tix:// link (or
-// nothing) to the running window, lets it take the foreground, and leaves.
+// tix runs once per session. A second launch hands its tix:// link or
+// red.tix.mobile:/sso sign-in redirect (or nothing) to the running window,
+// lets it take the foreground, and leaves.
 bool HandedToRunningTix(const std::string& link) {
   HWND running = nullptr;
   EnumWindows(FindTixWindow, reinterpret_cast<LPARAM>(&running));
@@ -46,7 +47,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   for (const std::string& argument : command_line_arguments) {
     if (argument == "--background") {
       background = true;
-    } else if (link.empty() && argument.rfind("tix:", 0) == 0) {
+    } else if (link.empty() && (argument.rfind("tix:", 0) == 0 ||
+                                argument.rfind("red.tix.mobile:", 0) == 0)) {
       link = argument;
     }
   }

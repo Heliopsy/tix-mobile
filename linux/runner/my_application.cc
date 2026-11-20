@@ -121,8 +121,16 @@ static void my_application_activate(GApplication* application) {
   gtk_widget_grab_focus(GTK_WIDGET(view));
 }
 
-// Implements GApplication::open: tix:// links from the desktop entry's
-// x-scheme-handler, or from a second launch, which hands them over here.
+// Whether |uri| is a tix:// link or the red.tix.mobile:/sso redirect that
+// ends a provider sign-in in the browser.
+static gboolean is_app_link(const gchar* uri) {
+  return g_str_has_prefix(uri, "tix:") ||
+         g_str_has_prefix(uri, "red.tix.mobile:");
+}
+
+// Implements GApplication::open: tix:// links and sign-in redirects from the
+// desktop entry's x-scheme-handler, or from a second launch, which hands them
+// over here.
 static void my_application_open(GApplication* application, GFile** files,
                                 gint n_files, const gchar* hint) {
   MyApplication* self = MY_APPLICATION(application);
@@ -130,7 +138,7 @@ static void my_application_open(GApplication* application, GFile** files,
   my_application_activate(application);
   for (gint i = 0; i < n_files; i++) {
     g_autofree gchar* uri = g_file_get_uri(files[i]);
-    if (g_str_has_prefix(uri, "tix:")) {
+    if (is_app_link(uri)) {
       tix_desktop_open_link(self->desktop, uri);
     }
   }
@@ -147,7 +155,7 @@ static gboolean my_application_local_command_line(GApplication* application,
   for (gchar** arg = self->dart_entrypoint_arguments; *arg != nullptr; arg++) {
     if (g_strcmp0(*arg, "--background") == 0) {
       self->background = TRUE;
-    } else if (link == nullptr && g_str_has_prefix(*arg, "tix:")) {
+    } else if (link == nullptr && is_app_link(*arg)) {
       link = *arg;
     }
   }

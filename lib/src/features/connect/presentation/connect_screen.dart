@@ -26,6 +26,7 @@ import 'package:tix_mobile/src/data/models/connection.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
 import 'package:tix_mobile/src/data/models/invite_link.dart';
 import 'package:tix_mobile/src/data/models/membership.dart';
+import 'package:tix_mobile/src/data/models/sso.dart';
 import 'package:tix_mobile/src/features/connect/application/connect_flow.dart';
 import 'package:tix_mobile/src/features/connect/presentation/in_place_browser.dart';
 
@@ -111,6 +112,14 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
   bool _accessRefused = false;
   String? _tenant;
   Object? _error;
+  String? _optionsUrl;
+  Timer? _optionsSettle;
+  String? _ssoWaiting;
+  String? _ssoLast;
+
+  /// How long the address must stay unchanged before its sign-in options
+  /// are read.
+  static const _optionsDelay = Duration(milliseconds: 600);
 
   String? get _replacing => widget.connectionId;
 
@@ -140,6 +149,9 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
     if (old != null) _email.text = old.email;
     final saved = repo.instance(widget.instanceId ?? '');
     if (saved != null) _kind = saved.kind;
+    final known = repo.instance(old?.instanceId ?? widget.instanceId ?? '');
+    _optionsUrl = known?.baseUrl ?? normalizeServerUrl(_url.text);
+    _url.addListener(_urlEdited);
     _inviteLink.addListener(_inviteEdited);
     if (widget.invite.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -167,6 +179,17 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
     unawaited(intake.start());
   }
 
+  void _urlEdited() {
+    _optionsSettle?.cancel();
+    _optionsSettle = Timer(_optionsDelay, _urlSettled);
+  }
+
+  void _urlSettled() {
+    _optionsSettle?.cancel();
+    final url = normalizeServerUrl(_url.text);
+    if (mounted && url != _optionsUrl) setState(() => _optionsUrl = url);
+  }
+
   void _inviteEdited() {
     final link = _invite?.link;
     if (link != null && InviteLink.parse(_inviteLink.text) != link) {
@@ -177,6 +200,7 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
   @override
   void dispose() {
     unawaited(_shares?.cancel());
+    _optionsSettle?.cancel();
     for (final c in [
       _url,
       _token,
@@ -220,6 +244,7 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
   Future<void> _submitRemote() {
     final url = normalizeServerUrl(_url.text);
     if (url != null && url != _url.text) _url.text = url;
+    _urlSettled();
     return _run(
       () => _method == ConnectMethod.token
           ? _flow.token(
@@ -239,6 +264,26 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
               remember: _remember,
             ),
     );
+  }
+
+  Future<void> _signInWith(SsoProviderOption provider) async {
+    final url = normalizeServerUrl(_url.text);
+    if (url != null && url != _url.text) _url.text = url;
+    _urlSettled();
+    setState(() {
+      _ssoWaiting = provider.key;
+      _ssoLast = provider.key;
+    });
+    await _run(
+      () => _flow.sso(
+        url: _url.text,
+        provider: provider.key,
+        name: _name.text,
+        instanceId: widget.instanceId,
+        replacing: _replacing,
+      ),
+    );
+    if (mounted) setState(() => _ssoWaiting = null);
   }
 
   Future<void> _previewInvite() => _run(() async {
@@ -393,6 +438,7 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final step = ref.watch(_provider);
+    final optionsOnEveryStep = _options;
     final error = _error;
     final repo = ref.read(instancesRepositoryProvider);
     final saved = repo.instance(
@@ -447,6 +493,16 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
                           color: Theme.of(context).colorScheme.error,
                         ),
                       ),
+                      if (_ssoRetry(error, optionsOnEveryStep)
+                          case final provider?) ...[
+                        const SizedBox(height: TixSpace.s2),
+                        OutlinedButton.icon(
+                          key: const Key('connect.sso.retry'),
+                          onPressed: _busy ? null : () => _signInWith(provider),
+                          icon: const Icon(Icons.refresh),
+                          label: Text(l10n.retry),
+                        ),
+                      ],
                     ],
                   ],
                 ),
@@ -456,6 +512,70 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
         ),
       ),
     );
+  }
+
+  SignInOptions get _options {
+    final url = _optionsUrl;
+    if (url == null) return SignInOptions.none;
+    return ref.watch(signInOptionsProvider(url)).value ?? SignInOptions.none;
+  }
+
+  /// The provider to try again after [error] ended a provider sign-in.
+  SsoProviderOption? _ssoRetry(Object error, SignInOptions options) {
+    if (error is! TixException ||
+        ref.read(_provider) is! ConnectForm ||
+        !const {
+          TixErrorKind.ssoFailed,
+          TixErrorKind.ssoStateMismatch,
+          TixErrorKind.ssoRejected,
+        }.contains(error.kind)) {
+      return null;
+    }
+    return options.appProviders.where((p) => p.key == _ssoLast).firstOrNull;
+  }
+
+  List<Widget> _ssoButtons(
+    BuildContext context,
+    List<SsoProviderOption> providers,
+  ) {
+    final l10n = context.l10n;
+    final waiting = _ssoWaiting;
+    return [
+      for (final p in providers) ...[
+        MergeSemantics(
+          child: Semantics(
+            hint: l10n.ssoOpensBrowser,
+            child: OutlinedButton.icon(
+              key: Key('connect.sso.${p.key}'),
+              onPressed: _busy ? null : () => _signInWith(p),
+              icon: waiting == p.key
+                  ? const SizedBox.square(
+                      dimension: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.login),
+              label: Text(l10n.ssoSignInWith(p.label)),
+            ),
+          ),
+        ),
+        const SizedBox(height: TixSpace.s2),
+      ],
+      if (waiting != null)
+        Semantics(
+          liveRegion: true,
+          child: Row(
+            key: const Key('connect.sso.waiting'),
+            children: [
+              Expanded(child: Text(l10n.ssoWaiting)),
+              TextButton(
+                key: const Key('connect.sso.cancel'),
+                onPressed: () => unawaited(_flow.cancelSso()),
+                child: Text(l10n.cancel),
+              ),
+            ],
+          ),
+        ),
+    ];
   }
 
   Widget _spinnerOr(String label) => _busy
@@ -527,6 +647,9 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
     final signedOut =
         _replacing != null &&
         ref.watch(sessionControllerProvider).value == null;
+    final options = _options;
+    final providers = options.appProviders;
+    final passwords = options.passwordAllowed;
     return [
       if (saved == null && _method != ConnectMethod.invite)
         _Helped(
@@ -626,58 +749,73 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
           ),
         )
       else ...[
-        _Helped(
-          help: HelpButton(
-            key: const Key('connect.help.email'),
-            title: l10n.emailLabel,
-            body: l10n.helpEmailBody,
-          ),
-          child: TextField(
-            key: const Key('connect.email'),
-            controller: _email,
-            enabled: !_busy,
-            keyboardType: TextInputType.emailAddress,
-            autofillHints: const [AutofillHints.email],
-            autocorrect: false,
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              labelText: l10n.emailLabel,
-              border: const OutlineInputBorder(),
+        if (providers.isNotEmpty) ...[
+          ..._ssoButtons(context, providers),
+          if (passwords) ...[
+            const SizedBox(height: TixSpace.s2),
+            Text(
+              l10n.ssoOr,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: TixSpace.s4),
+          ],
+        ] else if (!passwords)
+          Text(l10n.ssoPasswordDisabled, key: const Key('connect.noPassword')),
+        if (passwords) ...[
+          _Helped(
+            help: HelpButton(
+              key: const Key('connect.help.email'),
+              title: l10n.emailLabel,
+              body: l10n.helpEmailBody,
+            ),
+            child: TextField(
+              key: const Key('connect.email'),
+              controller: _email,
+              enabled: !_busy,
+              keyboardType: TextInputType.emailAddress,
+              autofillHints: const [AutofillHints.email],
+              autocorrect: false,
+              textInputAction: TextInputAction.next,
+              decoration: InputDecoration(
+                labelText: l10n.emailLabel,
+                border: const OutlineInputBorder(),
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 16),
-        _Helped(
-          help: HelpButton(
-            key: const Key('connect.help.password'),
-            title: l10n.passwordLabel,
-            body: l10n.helpPasswordBody,
+          const SizedBox(height: 16),
+          _Helped(
+            help: HelpButton(
+              key: const Key('connect.help.password'),
+              title: l10n.passwordLabel,
+              body: l10n.helpPasswordBody,
+            ),
+            child: _SecretField(
+              fieldKey: const Key('connect.password'),
+              controller: _password,
+              enabled: !_busy,
+              label: l10n.passwordLabel,
+              helper: l10n.signInHelp,
+              visible: _showSecret,
+              onToggle: () => setState(() => _showSecret = !_showSecret),
+            ),
           ),
-          child: _SecretField(
-            fieldKey: const Key('connect.password'),
-            controller: _password,
-            enabled: !_busy,
-            label: l10n.passwordLabel,
-            helper: l10n.signInHelp,
-            visible: _showSecret,
-            onToggle: () => setState(() => _showSecret = !_showSecret),
+          const SizedBox(height: 8),
+          _Helped(
+            help: HelpButton(
+              key: const Key('connect.help.remember'),
+              title: l10n.staySignedIn,
+              body: l10n.helpRememberBody,
+            ),
+            child: SwitchListTile(
+              key: const Key('connect.remember'),
+              value: _remember,
+              onChanged: _busy ? null : (v) => setState(() => _remember = v),
+              title: Text(l10n.staySignedIn),
+              subtitle: Text(l10n.staySignedInHelp),
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
-        _Helped(
-          help: HelpButton(
-            key: const Key('connect.help.remember'),
-            title: l10n.staySignedIn,
-            body: l10n.helpRememberBody,
-          ),
-          child: SwitchListTile(
-            key: const Key('connect.remember'),
-            value: _remember,
-            onChanged: _busy ? null : (v) => setState(() => _remember = v),
-            title: Text(l10n.staySignedIn),
-            subtitle: Text(l10n.staySignedInHelp),
-          ),
-        ),
+        ],
       ],
       if (saved == null && _method != ConnectMethod.invite) ...[
         const SizedBox(height: 16),
@@ -687,7 +825,8 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
           onSubmitted: _busy ? null : _submitRemote,
         ),
       ],
-      if (_method != ConnectMethod.invite) ...[
+      if (_method == ConnectMethod.token ||
+          (_method == ConnectMethod.signIn && passwords)) ...[
         const SizedBox(height: 24),
         FilledButton(
           key: const Key('connect.submit'),

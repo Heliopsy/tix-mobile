@@ -6,10 +6,12 @@ import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/logging/log.dart';
 import 'package:tix_mobile/src/data/api/credential.dart';
 import 'package:tix_mobile/src/data/api/gen/client.gen.dart';
+import 'package:tix_mobile/src/data/api/sso_ops.dart';
 import 'package:tix_mobile/src/data/api/transport.dart';
 
 export 'package:tix_mobile/src/data/api/credential.dart';
 export 'package:tix_mobile/src/data/api/gen/client.gen.dart';
+export 'package:tix_mobile/src/data/api/sso_ops.dart';
 export 'package:tix_mobile/src/data/api/transport.dart';
 
 /// Builds a client for a server and the credential it presents. [tenant]
@@ -40,6 +42,9 @@ class TixApi extends TixClient {
            ),
          ),
        );
+
+  /// Single sign-on for an app, until the generated client has it.
+  late final appSso = SsoOps(transport);
 
   /// The Dio every request of one connection goes through.
   ///

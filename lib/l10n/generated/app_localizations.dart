@@ -16614,6 +16614,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Needs attention: {state}'**
   String connectionAttention(String state);
+
+  /// Button that starts single sign-on through an identity provider; provider is its display name
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with {provider}'**
+  String ssoSignInWith(String provider);
+
+  /// Accessibility hint on a single sign-on button
+  ///
+  /// In en, this message translates to:
+  /// **'Opens in your browser'**
+  String get ssoOpensBrowser;
+
+  /// Separator between the single sign-on buttons and the password form
+  ///
+  /// In en, this message translates to:
+  /// **'or sign in with your email and password'**
+  String get ssoOr;
+
+  /// Shown while the browser is open for single sign-on
+  ///
+  /// In en, this message translates to:
+  /// **'Finish signing in in your browser, then come back here.'**
+  String get ssoWaiting;
+
+  /// Shown on the sign-in step when the tenant has password sign-in turned off and the app offers no provider
+  ///
+  /// In en, this message translates to:
+  /// **'This server does not take passwords. Use an API token to connect.'**
+  String get ssoPasswordDisabled;
+
+  /// Error when the single sign-on redirect carried no code
+  ///
+  /// In en, this message translates to:
+  /// **'Signing in with the provider did not finish. Try again.'**
+  String get errorSsoFailed;
+
+  /// Error when the single sign-on redirect reported a failure; reason is the server's short reason code
+  ///
+  /// In en, this message translates to:
+  /// **'Signing in with the provider did not finish ({reason}). Try again.'**
+  String errorSsoFailedReason(String reason);
+
+  /// Error when the single sign-on redirect's state did not match the one the app sent
+  ///
+  /// In en, this message translates to:
+  /// **'This sign-in could not be verified, so nothing was saved. Try again.'**
+  String get errorSsoStateMismatch;
+
+  /// Error when the server refused the single sign-on code exchange
+  ///
+  /// In en, this message translates to:
+  /// **'The server did not accept this sign-in. It may have taken too long. Try again.'**
+  String get errorSsoRejected;
 }
 
 class _AppLocalizationsDelegate

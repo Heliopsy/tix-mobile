@@ -11,5 +11,6 @@ Terminal=false
 Categories=Office;ProjectManagement;
 Keywords=tasks;todo;tickets;
 StartupWMClass=red.tix.tix_mobile
-# tix:// links (tix://inbox, tix://quick-add) open in the running app.
-MimeType=x-scheme-handler/tix;
+# tix:// links (tix://inbox, tix://quick-add) open in the running app, and
+# red.tix.mobile:/sso hands a provider sign-in back to it.
+MimeType=x-scheme-handler/tix;x-scheme-handler/red.tix.mobile;

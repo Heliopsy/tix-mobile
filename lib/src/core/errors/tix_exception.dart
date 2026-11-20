@@ -32,6 +32,9 @@ enum TixErrorKind {
   localAccessDenied,
   badInviteLink,
   secretStorageUnavailable,
+  ssoFailed,
+  ssoStateMismatch,
+  ssoRejected,
   unknown,
 }
 

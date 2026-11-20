@@ -10121,4 +10121,41 @@ class AppLocalizationsFr extends AppLocalizations {
   String connectionAttention(String state) {
     return 'Action requise : $state';
   }
+
+  @override
+  String ssoSignInWith(String provider) {
+    return 'Se connecter avec $provider';
+  }
+
+  @override
+  String get ssoOpensBrowser => 'S’ouvre dans votre navigateur';
+
+  @override
+  String get ssoOr =>
+      'ou connectez-vous avec votre e-mail et votre mot de passe';
+
+  @override
+  String get ssoWaiting =>
+      'Terminez la connexion dans votre navigateur, puis revenez ici.';
+
+  @override
+  String get ssoPasswordDisabled =>
+      'Ce serveur n’accepte pas les mots de passe. Utilisez un jeton d’API pour vous connecter.';
+
+  @override
+  String get errorSsoFailed =>
+      'La connexion via le fournisseur n’a pas abouti. Réessayez.';
+
+  @override
+  String errorSsoFailedReason(String reason) {
+    return 'La connexion via le fournisseur n’a pas abouti ($reason). Réessayez.';
+  }
+
+  @override
+  String get errorSsoStateMismatch =>
+      'Cette connexion n’a pas pu être vérifiée, rien n’a donc été enregistré. Réessayez.';
+
+  @override
+  String get errorSsoRejected =>
+      'Le serveur n’a pas accepté cette connexion. Elle a peut-être pris trop de temps. Réessayez.';
 }

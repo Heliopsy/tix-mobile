@@ -10044,4 +10044,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String connectionAttention(String state) {
     return 'Needs attention: $state';
   }
+
+  @override
+  String ssoSignInWith(String provider) {
+    return 'Sign in with $provider';
+  }
+
+  @override
+  String get ssoOpensBrowser => 'Opens in your browser';
+
+  @override
+  String get ssoOr => 'or sign in with your email and password';
+
+  @override
+  String get ssoWaiting =>
+      'Finish signing in in your browser, then come back here.';
+
+  @override
+  String get ssoPasswordDisabled =>
+      'This server does not take passwords. Use an API token to connect.';
+
+  @override
+  String get errorSsoFailed =>
+      'Signing in with the provider did not finish. Try again.';
+
+  @override
+  String errorSsoFailedReason(String reason) {
+    return 'Signing in with the provider did not finish ($reason). Try again.';
+  }
+
+  @override
+  String get errorSsoStateMismatch =>
+      'This sign-in could not be verified, so nothing was saved. Try again.';
+
+  @override
+  String get errorSsoRejected =>
+      'The server did not accept this sign-in. It may have taken too long. Try again.';
 }
