@@ -2750,5 +2750,14 @@
   "widgetSignInAgain": "Reconnectez-vous pour afficher ceci",
   "connectionSignedOut": "Déconnecté, reconnectez-vous",
   "connectionTokenRefused": "Jeton refusé",
-  "connectionAttention": "Action requise : {state}"
+  "connectionAttention": "Action requise : {state}",
+  "ssoSignInWith": "Se connecter avec {provider}",
+  "ssoOpensBrowser": "S’ouvre dans votre navigateur",
+  "ssoOr": "ou connectez-vous avec votre e-mail et votre mot de passe",
+  "ssoWaiting": "Terminez la connexion dans votre navigateur, puis revenez ici.",
+  "ssoPasswordDisabled": "Ce serveur n’accepte pas les mots de passe. Utilisez un jeton d’API pour vous connecter.",
+  "errorSsoFailed": "La connexion via le fournisseur n’a pas abouti. Réessayez.",
+  "errorSsoFailedReason": "La connexion via le fournisseur n’a pas abouti ({reason}). Réessayez.",
+  "errorSsoStateMismatch": "Cette connexion n’a pas pu être vérifiée, rien n’a donc été enregistré. Réessayez.",
+  "errorSsoRejected": "Le serveur n’a pas accepté cette connexion. Elle a peut-être pris trop de temps. Réessayez."
 }

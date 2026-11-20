@@ -17,6 +17,7 @@ import 'package:tix_mobile/src/core/offline/connectivity.dart';
 import 'package:tix_mobile/src/core/offline/sync.dart';
 import 'package:tix_mobile/src/core/platform/files.dart';
 import 'package:tix_mobile/src/core/platform/local_access.dart';
+import 'package:tix_mobile/src/core/platform/sso_browser.dart';
 import 'package:tix_mobile/src/core/platform/widget_bridge.dart';
 import 'package:tix_mobile/src/core/session/api.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
@@ -28,6 +29,7 @@ import 'package:tix_mobile/src/data/local/local_engine.dart';
 import 'fake_events.dart';
 import 'fake_local_access.dart';
 import 'fake_notes.dart';
+import 'fake_sso.dart';
 import 'fake_tix.dart';
 import 'fake_widgets.dart';
 import 'stores.dart';
@@ -131,6 +133,7 @@ List<Override> fakeOverrides(
   bool autoSync = false,
   UpdateMode updates = UpdateMode.off,
   DateTime Function()? clock,
+  SsoBrowser? sso,
 }) => [
   keyValueStoreProvider.overrideWithValue(settings ?? MemoryKeyValueStore()),
   secretStoreProvider.overrideWithValue(secrets ?? MemorySecretStore()),
@@ -160,6 +163,7 @@ List<Override> fakeOverrides(
   else
     networkStateProvider.overrideWith((ref) => networks),
   autoSyncProvider.overrideWithValue(autoSync),
+  ssoBrowserProvider.overrideWithValue(sso ?? FakeSsoBrowser()),
   updateModeProvider.overrideWithValue(AsyncData(updates)),
 ];
 

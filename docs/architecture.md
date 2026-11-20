@@ -298,6 +298,18 @@ destinations, the rest open from More, which ends with About. The rail ends with
   no session, as 0.22.0 left one it signed out. The instances screen and the context switcher read only
   `refused`, mark the row with `RefusedMark` (`core/widgets/refused_mark.dart`) and open reconnect on a tap.
 
+- A **provider sign-in** (single sign-on) ends as an ordinary sign-in connection. The connect screen reads
+  `GET /api/v1/auth/sso/options` once the server is known and shows a button per provider only when the answer
+  has `app_sign_in`; `password_login: disabled` hides the password form. `AuthRepository.startSso` makes a PKCE
+  verifier (32 random bytes), its S256 challenge and a random state, and `SsoBrowser` (`core/platform`) opens
+  `/login/sso/<key>` in an external user agent: ASWebAuthenticationSession over `tix/sso` on iOS and macOS,
+  Custom Tabs on Android, the default browser on Linux and Windows. The `red.tix.mobile:/sso` redirect comes
+  back through the scheme handler and `tix/links` (Android's `SsoCallbackActivity`, the Linux desktop entry, a
+  per-user `HKCU` class on Windows), where `DeepLinkIntake.ssoRedirects` keeps it away from `DeepLinkHost`.
+  `finishSso` checks the state and posts the code with the verifier to `POST /api/v1/auth/sso/exchange`, whose
+  answer goes through the same path as a password login, so reconnecting this way also clears `refused_at`.
+  `SsoOps` and its models are written by hand until the pinned OpenAPI document has the routes.
+
 | Where | Key | Holds |
 | --- | --- | --- |
 | Preferences | `instances`, `connections` | The saved instances and connections, no secrets |
@@ -545,7 +557,8 @@ be reached.
 
 `go_router` owns navigation, configured in `core/router`. Routes are paths, so a task has a stable address
 (`/projects/:key/tasks/:ref`) that works for back navigation, desktop windows and `tix://` links on Android, which
-`DeepLinkHost` (`core/widgets`) maps onto routes ([adb.md](adb.md#links)).
+`DeepLinkHost` (`core/widgets`) maps onto routes ([adb.md](adb.md#links)). Single sign-on redirects
+(`red.tix.mobile:`) share the same channel but never reach `DeepLinkHost`.
 
 The shell adapts to the window width, using Material 3's window size classes:
 

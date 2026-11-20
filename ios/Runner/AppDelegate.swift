@@ -1,3 +1,4 @@
+import AuthenticationServices
 import Flutter
 import UIKit
 import UniformTypeIdentifiers
@@ -6,6 +7,7 @@ import UserNotifications
 @main
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
   private var localAccess: LocalAccess?
+  private var sso: SsoSession?
 
   override func application(
     _ application: UIApplication,
@@ -29,6 +31,9 @@ import UserNotifications
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "TixLocalAccess") {
       localAccess = LocalAccess(messenger: registrar.messenger())
+    }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "TixSso") {
+      sso = SsoSession(messenger: registrar.messenger())
     }
   }
 }
@@ -163,5 +168,85 @@ final class LocalAccess: NSObject, UIDocumentPickerDelegate {
       top = presented
     }
     return top
+  }
+}
+
+/// tix/sso: a provider sign-in in ASWebAuthenticationSession, the system's
+/// own browser sheet, which hands the red.tix.mobile redirect straight back
+/// (lib/src/core/platform/sso_browser.dart). A cancel answers "cancelled".
+final class SsoSession: NSObject, ASWebAuthenticationPresentationContextProviding {
+  private let channel: FlutterMethodChannel
+  private var session: ASWebAuthenticationSession?
+  private var pending: FlutterResult?
+  private var attempt = UUID()
+
+  init(messenger: FlutterBinaryMessenger) {
+    channel = FlutterMethodChannel(name: "tix/sso", binaryMessenger: messenger)
+    super.init()
+    channel.setMethodCallHandler { [weak self] call, result in
+      self?.handle(call, result: result)
+    }
+  }
+
+  private func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    switch call.method {
+    case "authenticate":
+      let args = call.arguments as? [String: Any] ?? [:]
+      guard let text = args["url"] as? String, let url = URL(string: text),
+        let scheme = args["scheme"] as? String
+      else {
+        result(FlutterError(code: "failed", message: "no url", details: nil))
+        return
+      }
+      start(url, scheme: scheme, result: result)
+    case "cancel":
+      session?.cancel()
+      finish(FlutterError(code: "cancelled", message: nil, details: nil))
+      result(nil)
+    default:
+      result(FlutterMethodNotImplemented)
+    }
+  }
+
+  private func start(_ url: URL, scheme: String, result: @escaping FlutterResult) {
+    session?.cancel()
+    finish(FlutterError(code: "cancelled", message: nil, details: nil))
+    let id = UUID()
+    let session = ASWebAuthenticationSession(url: url, callbackURLScheme: scheme) {
+      [weak self] callback, error in
+      DispatchQueue.main.async {
+        guard let self, self.attempt == id else { return }
+        if let callback {
+          self.finish(callback.absoluteString)
+        } else if let error = error as? ASWebAuthenticationSessionError,
+          error.code == .canceledLogin
+        {
+          self.finish(FlutterError(code: "cancelled", message: nil, details: nil))
+        } else {
+          self.finish(
+            FlutterError(code: "failed", message: error?.localizedDescription, details: nil))
+        }
+      }
+    }
+    attempt = id
+    session.presentationContextProvider = self
+    self.session = session
+    pending = result
+    if !session.start() {
+      finish(FlutterError(code: "failed", message: "not started", details: nil))
+    }
+  }
+
+  private func finish(_ value: Any?) {
+    let result = pending
+    pending = nil
+    session = nil
+    result?(value)
+  }
+
+  func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+    let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+    let windows = scenes.flatMap { $0.windows }
+    return windows.first { $0.isKeyWindow } ?? windows.first ?? ASPresentationAnchor()
   }
 }

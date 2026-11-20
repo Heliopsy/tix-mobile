@@ -28,7 +28,8 @@ import red.tix.tix_mobile.widgets.UpdateWorker
 // overlay (see build.gradle.kts), so "declared" tells the app whether this
 // build may offer open in place at all.
 //
-// tix/links holds the latest tix:// link the same way. Flutter's own deep
+// tix/links holds the latest tix:// link the same way, and the
+// red.tix.mobile:/sso redirect SsoCallbackActivity passes on. Flutter's own deep
 // linking stays off so home_widget's tixwidget:// launches never reach the
 // router as a path (docs/widgets.md, docs/adb.md).
 //
@@ -161,7 +162,12 @@ class MainActivity : FlutterActivity() {
     private fun keepLink(intent: Intent?): Boolean {
         if (intent?.action != Intent.ACTION_VIEW) return false
         val data = intent.data ?: return false
-        if (!data.scheme.equals("tix", ignoreCase = true)) return false
+        val scheme = data.scheme ?: return false
+        if (!scheme.equals("tix", ignoreCase = true) &&
+            !scheme.equals(SsoCallbackActivity.SCHEME, ignoreCase = true)
+        ) {
+            return false
+        }
         link = data.toString()
         return true
     }

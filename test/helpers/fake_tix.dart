@@ -9,6 +9,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/events/tix_event.dart' show TixEventTypes;
+import 'package:tix_mobile/src/data/models/sso.dart' show pkceChallenge;
 
 /// The JSON body a request sent.
 extension SentBody on RequestOptions {
@@ -374,6 +375,22 @@ class FakeTix {
   /// is known. Each answers what it serves and returns null for the rest.
   final routes = <FakeRoute>[];
 
+  /// What `GET /api/v1/auth/sso/options` answers; null answers like a tix
+  /// without the route.
+  Map<String, Object?>? ssoOptions;
+
+  /// One-time codes `POST /api/v1/auth/sso/exchange` takes, each for an
+  /// account and bound to a PKCE challenge.
+  final ssoCodes = <String, ({String email, String challenge})>{};
+
+  /// A code for [email] bound to [challenge], as the browser sign-in at
+  /// `/login/sso/<key>` would hand back.
+  String grantSso(String challenge, {String email = 'ana@example.com'}) {
+    final code = 'sso-${ssoCodes.length + 1}';
+    ssoCodes[code] = (email: email, challenge: challenge);
+    return code;
+  }
+
   /// Extra routes asked before any credential is checked.
   final publicRoutes = <FakePublicRoute>[];
 
@@ -679,6 +696,15 @@ class FakeTix {
     }
     if (o.method == 'POST' && path == '/api/v1/auth/login') {
       return _login(o.data as Map<String, dynamic>);
+    }
+    final options = ssoOptions;
+    if (o.method == 'GET' &&
+        path == '/api/v1/auth/sso/options' &&
+        options != null) {
+      return FakeResponse(200, options);
+    }
+    if (o.method == 'POST' && path == '/api/v1/auth/sso/exchange') {
+      return _ssoExchange(o.data as Map<String, dynamic>);
     }
     for (final route in publicRoutes) {
       final answer = await route(o, path);
@@ -988,6 +1014,18 @@ class FakeTix {
 
   final _tickets = <String, String>{};
   final _enrolTickets = <String>{};
+
+  FakeResponse _ssoExchange(Map<String, dynamic> body) {
+    final grant = ssoCodes.remove(body['code']);
+    final verifier = body['code_verifier'] as String? ?? '';
+    if (grant == null || pkceChallenge(verifier) != grant.challenge) {
+      return FakeResponse(401, envelope('unauthenticated', 'bad code'));
+    }
+    return FakeResponse(
+      200,
+      _session(grant.email, accounts[grant.email]!.tenants.first),
+    );
+  }
 
   FakeResponse _login(Map<String, dynamic> body) {
     final ticket = body['ticket'] as String?;

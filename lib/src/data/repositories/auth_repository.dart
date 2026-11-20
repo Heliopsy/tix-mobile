@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:math';
+
 import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/data/api/gen/models.gen.dart'
@@ -8,13 +10,17 @@ import 'package:tix_mobile/src/data/api/tix_api.dart';
 import 'package:tix_mobile/src/data/models/actor.dart';
 import 'package:tix_mobile/src/data/models/auth.dart';
 import 'package:tix_mobile/src/data/models/invite_link.dart';
+import 'package:tix_mobile/src/data/models/sso.dart';
 
 /// Checking servers, signing in and switching tenant.
 class AuthRepository {
-  /// Builds clients with [_build].
-  AuthRepository(this._build);
+  /// Builds clients with [_build]; PKCE verifiers and states come from
+  /// [random], a secure one unless a test gives its own.
+  AuthRepository(this._build, {Random? random})
+    : _random = random ?? Random.secure();
 
   final TixApiFactory _build;
+  final Random _random;
 
   /// The surface sessions are minted for: tix's session policy and the
   /// tenant's second factor rule for the command line fit an app best.
@@ -201,6 +207,56 @@ class AuthRepository {
         ),
       ),
     );
+  }
+
+  /// What the sign-in screen at [baseUrl] offers (`sso.options`), or
+  /// [SignInOptions.none] from a tix without the route, which answers it
+  /// without a credential as unauthenticated or not found.
+  Future<SignInOptions> signInOptions(String baseUrl) async {
+    try {
+      return await _build(baseUrl, null).appSso.options();
+    } on TixException catch (e) {
+      if (e.kind == TixErrorKind.notFound ||
+          e.kind == TixErrorKind.unauthenticated) {
+        return SignInOptions.none;
+      }
+      rethrow;
+    }
+  }
+
+  /// A new sign-in at [baseUrl] through the provider [provider], with its
+  /// own PKCE verifier and state.
+  SsoAttempt startSso(String baseUrl, String provider) =>
+      SsoAttempt.start(baseUrl, provider, random: _random);
+
+  /// Finishes [attempt] with the [redirect] the browser came back with:
+  /// checks its state, reads its code and exchanges it with the verifier.
+  Future<LoginResult> finishSso(SsoAttempt attempt, Uri redirect) async {
+    final q = redirect.queryParameters;
+    if (redirect.scheme.toLowerCase() != ssoScheme ||
+        q['state'] != attempt.state) {
+      throw const TixException(TixErrorKind.ssoStateMismatch);
+    }
+    final error = q['error'] ?? '';
+    final code = q['code'] ?? '';
+    if (error.isNotEmpty || code.isEmpty) {
+      throw TixException(TixErrorKind.ssoFailed, message: error);
+    }
+    final LoginResult result;
+    try {
+      result = await _build(attempt.baseUrl, null).appSso.exchange(
+        SsoExchangeInput(code: code, codeVerifier: attempt.verifier),
+      );
+    } on TixException catch (e) {
+      if (e.kind != TixErrorKind.unauthenticated) rethrow;
+      throw TixException(
+        TixErrorKind.ssoRejected,
+        message: e.message,
+        status: e.status,
+        requestId: e.requestId,
+      );
+    }
+    return await _complete(Future.value(result));
   }
 
   /// Ends [session] on the server.

@@ -30,6 +30,12 @@ void main() {
 
   setUp(() => server = FakeTix());
 
+  /// Requests sent, leaving out the sign-in options, which carry no
+  /// credential.
+  int credentialed() => server.requests
+      .where((r) => r.uri.path != '/api/v1/auth/sso/options')
+      .length;
+
   Future<void> pumpApp(
     WidgetTester tester, {
     Size size = phone,
@@ -368,26 +374,26 @@ void main() {
       server.tokens.remove('tok');
       await tester.runAsync(() => headless(stores));
       server.tokens['tok'] = 'default';
-      final sent = server.requests.length;
+      final sent = credentialed();
 
       await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
 
       expect(find.byKey(const Key('connect.tokenRefused')), findsOneWidget);
       expect(find.byKey(const Key('connect.token')), findsOneWidget);
-      expect(server.requests.length, sent);
+      expect(credentialed(), sent);
     });
 
     testWidgets('a session: the app opens on signing in again', (tester) async {
       final stores = signInStores(server);
       server.sessions.clear();
       await tester.runAsync(() => headless(stores));
-      final sent = server.requests.length;
+      final sent = credentialed();
 
       await pumpApp(tester, settings: stores.settings, secrets: stores.secrets);
 
       expect(find.byKey(const Key('connect.signedOut')), findsOneWidget);
       expect(find.byKey(const Key('connect.password')), findsOneWidget);
-      expect(server.requests.length, sent);
+      expect(credentialed(), sent);
     });
   });
 

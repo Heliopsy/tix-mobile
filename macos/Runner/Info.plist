@@ -51,6 +51,14 @@
 				<string>tix</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>red.tix.tixMobile.sso</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>red.tix.mobile</string>
+			</array>
+		</dict>
 	</array>
 	<key>TixAppGroup</key>
 	<string>$(TIX_APP_GROUP)</string>

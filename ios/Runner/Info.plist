@@ -83,6 +83,14 @@
 					<string>tixwidget</string>
 				</array>
 			</dict>
+			<dict>
+				<key>CFBundleURLName</key>
+				<string>red.tix.tixMobile.sso</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>red.tix.mobile</string>
+				</array>
+			</dict>
 		</array>
 		<key>FlutterDeepLinkingEnabled</key>
 		<false/>

@@ -48,6 +48,22 @@
                 <data android:scheme="tix"/>
             </intent-filter>
         </activity>
+        <!-- The red.tix.mobile:/sso redirect that ends a provider sign-in in a
+             Custom Tab; it hands the link to MainActivity and finishes. -->
+        <activity
+            android:name=".SsoCallbackActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="red.tix.mobile"/>
+            </intent-filter>
+        </activity>
         <!-- Home screen widgets (docs/widgets.md). -->
         <receiver
             android:name=".widgets.MyWorkReceiver"
@@ -163,6 +179,10 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- Whether a browser offers Custom Tabs, for provider sign-in. -->
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService"/>
         </intent>
     </queries>
 </manifest>
