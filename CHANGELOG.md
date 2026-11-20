@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.23.0](https://github.com/Heliopsy/tix-mobile/compare/v0.22.1...v0.23.0) (2026-11-20)
+
+
+### Features
+
+* **sign-in:** sign in with the tenant's identity providers ([2b61b6e](https://github.com/Heliopsy/tix-mobile/commit/2b61b6efb4bc35e4331de2bec62c0cc610f7ff22))
+
 ## [0.22.1](https://github.com/Heliopsy/tix-mobile/compare/v0.22.0...v0.22.1) (2026-11-19)
 
 
