@@ -11,7 +11,7 @@ dependencies:
   code_assets: ^2.2.0
   # 7.1 and later read NWPath.isUltraConstrained, which needs Xcode 26; CI builds
   # Apple targets on macos-15. Lift this once the runners move.
-  connectivity_plus: ">=7.0.0 <7.1.0"
+  connectivity_plus: ^7.3.1
   crypto: ^3.0.8
   cryptography: ^2.9.0
   dio: ^5.11.1
@@ -19,20 +19,20 @@ dependencies:
   file_selector: ^1.1.0
   flutter:
     sdk: flutter
-  flutter_local_notifications: ^23.0.0
+  flutter_local_notifications: ^23.0.3
   flutter_localizations:
     sdk: flutter
   flutter_markdown_plus: ^1.0.12
   flutter_riverpod: ^3.5.0
   flutter_secure_storage: ^11.2.0
   freezed_annotation: ^3.1.0
-  go_router: ^18.1.3
+  go_router: ^18.1.4
   home_widget: ^0.10.0
   hooks: ^2.2.0
   image_picker: ^1.2.4
   intl: ^0.20.3
   json_annotation: ^4.12.0
-  material_ui: ^1.10.0
+  material_ui: ^1.11.1
   meta: ^1.19.0
   package_info_plus: ^10.2.2
   path_provider: ^2.1.6
