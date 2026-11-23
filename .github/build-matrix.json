@@ -3,7 +3,7 @@
   {"name": "Android (Google Play)", "os": "ubuntu-24.04", "java": true, "main_only": true, "recipe": "build-aab", "target": "android", "check": "aab", "artifact": "build/app/outputs/bundle/playRelease/app-play-release.aab", "paths": "^android/|^(pubspec\\.lock|tix\\.lock)$|^hook/|^lib/src/(core|data)/update/"},
   {"name": "Linux x64", "os": "ubuntu-24.04", "linux": true, "recipe": "build-linux", "target": "linux", "check": "bundle", "artifact": "build/linux/x64/release/bundle/"},
   {"name": "Linux arm64", "os": "ubuntu-24.04-arm", "linux": true, "recipe": "build-linux", "target": "linux", "check": "bundle", "artifact": "build/linux/arm64/release/bundle/"},
-  {"name": "iOS", "os": "macos-15", "main_only": true, "recipe": "build-ios", "target": "ios", "check": "bundle", "artifact": "build/ios/iphoneos/Runner.app/", "paths": "^(ios|macos)/|^(pubspec\\.lock|tix\\.lock)$|^hook/"},
-  {"name": "macOS", "os": "macos-15", "main_only": true, "recipe": "build-macos", "target": "macos", "check": "bundle", "artifact": "build/macos/Build/Products/Release/", "paths": "^(ios|macos)/|^(pubspec\\.lock|tix\\.lock)$|^hook/"},
+  {"name": "iOS", "os": "macos-15", "main_only": true, "recipe": "build-ios", "target": "ios", "check": "bundle", "artifact": "build/ios/iphoneos/Runner.app/", "paths": "^(ios|macos)/|^(pubspec\\.lock|tix\\.lock)$|^hook/|^\\.github/actions/xcode/"},
+  {"name": "macOS", "os": "macos-15", "main_only": true, "recipe": "build-macos", "target": "macos", "check": "bundle", "artifact": "build/macos/Build/Products/Release/", "paths": "^(ios|macos)/|^(pubspec\\.lock|tix\\.lock)$|^hook/|^\\.github/actions/xcode/"},
   {"name": "Windows", "os": "windows-2025", "main_only": true, "recipe": "build-windows", "target": "windows", "check": "bundle", "artifact": "build/windows/x64/runner/Release/", "paths": "^windows/|^(pubspec\\.lock|tix\\.lock)$|^hook/"}
 ]
