@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.23.1](https://github.com/Heliopsy/tix-mobile/compare/v0.23.0...v0.23.1) (2026-11-23)
+
+
+### Dependencies
+
+* **deps:** bump fastlane from 2.241.2 to 2.242.0 in the bundler group ([a2a6848](https://github.com/Heliopsy/tix-mobile/commit/a2a6848b0e12315dc88a6f4b7c7763d856fa299b))
+* **deps:** bump the pub group across 1 directory with 4 updates ([f1c4a7d](https://github.com/Heliopsy/tix-mobile/commit/f1c4a7d168c7be270027f12b2342e2681c645825))
+
 ## [0.23.0](https://github.com/Heliopsy/tix-mobile/compare/v0.22.1...v0.23.0) (2026-11-20)
 
 
