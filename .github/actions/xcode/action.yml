@@ -1,0 +1,17 @@
+name: Select Xcode 26
+description: >-
+  Switch a macOS runner to the newest Xcode 26 it has. The image default on
+  macos-15 is older, App Store Connect only takes iOS 26 SDK builds, and some
+  plugins (connectivity_plus 7.1 and later) use iOS/macOS 26 APIs.
+runs:
+  using: composite
+  steps:
+    - name: Select Xcode 26
+      shell: bash
+      run: |
+        xcode="$(find /Applications -maxdepth 1 -name 'Xcode_26*.app' | sort -V | tail -1)"
+        if [ -z "$xcode" ]; then
+          echo "::error::no Xcode 26 on this runner"; find /Applications -maxdepth 1 -name 'Xcode*'; exit 1
+        fi
+        sudo xcode-select -s "$xcode/Contents/Developer"
+        xcodebuild -version
