@@ -9,8 +9,8 @@ environment:
 dependencies:
   battery_plus: ^7.1.2
   code_assets: ^2.2.0
-  # 7.1 and later read NWPath.isUltraConstrained, which needs Xcode 26; CI builds
-  # Apple targets on macos-15. Lift this once the runners move.
+  # 7.1 and later read NWPath.isUltraConstrained, which needs Xcode 26. The Apple
+  # builds pick it with .github/actions/xcode.
   connectivity_plus: ^7.3.1
   crypto: ^3.0.8
   cryptography: ^2.9.0
