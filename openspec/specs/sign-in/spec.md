@@ -202,7 +202,7 @@ The app SHALL accept only a `red.tix.mobile:/sso` redirect whose `state` equals 
 
 #### Scenario: Provider error
 
-- **WHEN** the redirect carries an `error=` other than `access_denied`
+- **WHEN** the redirect carries an `error=` with no message of its own
 - **THEN** nothing is stored and the screen says the provider sign-in did not complete
 
 #### Scenario: Exchange refused
@@ -221,12 +221,12 @@ The reconnect screen SHALL offer the same provider buttons for the connection's 
 
 ### Requirement: Redirect reasons are explained
 
-An `error=` redirect SHALL be read by its reason. `access_denied` SHALL return to the form quietly. `not_linked` SHALL say the provider account is not linked to anyone on the server, with no button to try again. `expired` SHALL say the sign-in took too long, with a button to try again. Any other reason SHALL say the sign-in did not finish, without the reason code, with a button to try again.
+An `error=` redirect SHALL be read by its reason. `access_denied` SHALL say the sign-in was declined or refused and to ask the tenant's admin if the person did not cancel it, with no button to try again. `not_linked` SHALL say the provider account is not linked to anyone on the server, with no button to try again. `expired` SHALL say the sign-in took too long, with a button to try again. Any other reason SHALL say it did not finish, without the code, with a button to try again.
 
-#### Scenario: Turned down at the provider
+#### Scenario: Declined or refused
 
-- **WHEN** the redirect carries `error=access_denied`
-- **THEN** the form is shown again with no error and nothing is stored
+- **WHEN** the redirect carries `error=access_denied`, sent for a decline at the provider and for a disabled account, a disallowed domain or a refused role alike
+- **THEN** the form stays, the screen says the sign-in was declined or refused, there is no retry and nothing is stored
 
 #### Scenario: Not linked
 

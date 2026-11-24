@@ -10081,6 +10081,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your account with this provider is not linked to anyone on this server. Ask an administrator to add you, or sign in another way.';
 
   @override
+  String get errorSsoDenied =>
+      'The sign-in was declined or refused. If you didn\'t cancel it, ask your tenant\'s admin.';
+
+  @override
   String get errorSsoExpired =>
       'The sign-in took too long and expired. Try again.';
 

@@ -323,8 +323,8 @@ class ConnectFlow extends _$ConnectFlow {
 
   /// Signs in through [provider] in the system browser, at [url] or at the
   /// instance of [instanceId] or of the connection [replacing], and saves it
-  /// as a password sign-in would. Returns quietly when the person cancels,
-  /// here or at the provider. The attempt is kept in secure storage while
+  /// as a password sign-in would. Returns quietly when the person cancels
+  /// here or closes the browser. The attempt is kept in secure storage while
   /// the browser is open, for [resumeSso] after a restart.
   Future<void> sso({
     required String url,
@@ -420,7 +420,7 @@ class ConnectFlow extends _$ConnectFlow {
     final result = await ref
         .read(authRepositoryProvider)
         .finishSso(attempt, redirect);
-    if (result == null || run != _ssoRun) return;
+    if (run != _ssoRun) return;
     await _signedIn(draft, result);
   }
 

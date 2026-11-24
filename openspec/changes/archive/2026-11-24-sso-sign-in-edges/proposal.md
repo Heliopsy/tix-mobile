@@ -21,8 +21,9 @@ The first cut of provider sign-in has edges where it loses a sign-in or says the
   held. On restart the connect screen finishes the kept attempt when the held redirect matches it and its code is
   under two minutes old; otherwise it says the sign-in was interrupted. With a session already open, the held
   redirect opens the connect screen the attempt started from.
-- `access_denied` returns quietly to the form. `not_linked` and `expired` get messages of their own, and
-  `not_linked` offers no Retry. Any other reason says the sign-in did not finish, without the code.
+- `access_denied`, `not_linked` and `expired` get messages of their own. `access_denied` covers a decline at the
+  provider as well as a disabled account or a disallowed domain, so it says the sign-in was declined or refused
+  and to ask the tenant's admin. Neither it nor `not_linked` offers a Retry. Any other reason says the sign-in did not finish, without the code.
 - Linux offers provider sign-in only when `xdg-mime` names a handler for `x-scheme-handler/red.tix.mobile`, or in a
   Flatpak. Linux and Windows stop waiting after 5 minutes with the expired message.
 - Redirects whose state is not the live attempt's are ignored and the wait goes on.
