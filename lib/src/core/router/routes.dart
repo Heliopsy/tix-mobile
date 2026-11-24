@@ -164,6 +164,9 @@ abstract final class Routes {
   /// The caller's calendar feed.
   static const calendar = '/settings/calendar';
 
+  /// Setting up Reminders, DAVx5 or Thunderbird over CalDAV.
+  static const otherApps = '/settings/other-apps';
+
   /// The caller's own API tokens.
   static const myTokens = '/settings/tokens';
 

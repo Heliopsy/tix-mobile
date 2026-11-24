@@ -10091,4 +10091,390 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorSsoInterrupted =>
       'The sign-in was interrupted before it finished. Try again.';
+
+  @override
+  String get davTitle => 'Tasks in other apps';
+
+  @override
+  String get davSubtitle => 'Reminders, DAVx5 and Thunderbird over CalDAV';
+
+  @override
+  String get davSetUp => 'Set up on this device';
+
+  @override
+  String get davLead =>
+      'Other apps can show this account\'s tix tasks as to-do lists over CalDAV: Apple Reminders, tasks.org or jtx Board through DAVx5, Thunderbird and Evolution. This app keeps syncing through the tix API as before.';
+
+  @override
+  String get davLeadRead =>
+      'For now the lists are read only: changes made in the other app do not come back to tix.';
+
+  @override
+  String get davLeadWrite =>
+      'Changes made in the other app, such as completing, renaming, due dates, priority and new tasks, come back to tix. tix\'s workflow still decides whether a task may be completed.';
+
+  @override
+  String get davPrivacy =>
+      'Setting up asks your server for an app password and hands it to the app you choose: Reminders through a configuration profile, DAVx5, or the clipboard. This app does not keep it.';
+
+  @override
+  String get davLocalTitle => 'Needs a tix server';
+
+  @override
+  String get davLocalBody =>
+      'Other apps cannot reach a database on this device. Use a tix server.';
+
+  @override
+  String get davOldTitle => 'Not offered by this server';
+
+  @override
+  String davOldBody(String version) {
+    return 'This server does not offer CalDAV yet. It needs tix $version or later.';
+  }
+
+  @override
+  String get davOffTitle => 'CalDAV is turned off on this server';
+
+  @override
+  String get davOffBody =>
+      'Ask the server\'s administrator to turn it on. App passwords made before can still be revoked here.';
+
+  @override
+  String get davForbiddenTitle => 'Not for this credential';
+
+  @override
+  String get davForbiddenBody =>
+      'The server refused to set up CalDAV for this connection.';
+
+  @override
+  String get davForbiddenToken =>
+      'An app password belongs to a person. Sign in as yourself on this server to set it up.';
+
+  @override
+  String get davDetails => 'For setting up by hand';
+
+  @override
+  String get davDetailsInfo =>
+      'Give another app this address and user name, and an app password from Set up. Your account password does not work there.';
+
+  @override
+  String get davAddress => 'Address';
+
+  @override
+  String get davUsername => 'User name';
+
+  @override
+  String get davPassword => 'Password';
+
+  @override
+  String get davCopyAddress => 'Copy address';
+
+  @override
+  String get davCopyUsername => 'Copy user name';
+
+  @override
+  String get davCopyPassword => 'Copy password';
+
+  @override
+  String get davShowPassword => 'Show password';
+
+  @override
+  String get davHidePassword => 'Hide password';
+
+  @override
+  String get davPasswordHidden => 'Hidden';
+
+  @override
+  String get davCopiedExpires =>
+      'Password copied. It clears from the clipboard in 2 minutes.';
+
+  @override
+  String get davCopiedHidden =>
+      'Password copied. It is hidden in the clipboard preview.';
+
+  @override
+  String get davCopiedPlain =>
+      'Password copied. Clear the clipboard after pasting it.';
+
+  @override
+  String get davPasswords => 'App passwords';
+
+  @override
+  String get davPasswordsInfo =>
+      'Each app gets a password of its own. Revoke one when you remove the account from that app or lose the device.';
+
+  @override
+  String get davPasswordsEmpty => 'No app passwords yet';
+
+  @override
+  String get davStateLive => 'Active';
+
+  @override
+  String get davStateExpired => 'Expired';
+
+  @override
+  String get davStateRevoked => 'Revoked';
+
+  @override
+  String get davReadOnly => 'Read only';
+
+  @override
+  String get davReadOnlyHelp =>
+      'The other app shows the tasks but cannot change them.';
+
+  @override
+  String get davListsAssigned => 'Assigned to me';
+
+  @override
+  String get davListsProjects => 'One list per project';
+
+  @override
+  String get davListsAll => 'Assigned to me and every project';
+
+  @override
+  String get davListsAssignedHelp =>
+      'Your own work in one list. Best on a phone.';
+
+  @override
+  String get davListsProjectsHelp =>
+      'Every project you can read as a list of its own. Best on a desktop.';
+
+  @override
+  String get davListsAllHelp =>
+      'Both, so a task assigned to you shows in two lists.';
+
+  @override
+  String get davLists => 'Lists';
+
+  @override
+  String get davListsChangeHelp =>
+      'Changing this later means a new password, because other apps keep the list of lists.';
+
+  @override
+  String get davName => 'Name';
+
+  @override
+  String get davNameHelp => 'So the list says which device and app this is.';
+
+  @override
+  String davDefaultName(String platform, String day) {
+    return 'tix app, $platform, $day';
+  }
+
+  @override
+  String get davExpiry => 'Expires';
+
+  @override
+  String get davExpiryNever => 'Never';
+
+  @override
+  String get davExpiry30 => 'In 30 days';
+
+  @override
+  String get davExpiry90 => 'In 90 days';
+
+  @override
+  String get davExpiryYear => 'In a year';
+
+  @override
+  String get davExpiryHelp =>
+      'An app whose password expires stops syncing that day without asking.';
+
+  @override
+  String get davCreate => 'Create password';
+
+  @override
+  String get davHandoffTitle => 'Hand it to the other app';
+
+  @override
+  String get davOnce =>
+      'This password is shown only now. If it is lost, revoke it and set up again.';
+
+  @override
+  String get davIosStep1 =>
+      'Safari asks to download a configuration profile: tap Allow.';
+
+  @override
+  String get davIosStep2 =>
+      'Open Settings and tap Profile Downloaded near the top.';
+
+  @override
+  String get davIosStep3 =>
+      'Tap Install, enter your passcode, then tap Install again.';
+
+  @override
+  String get davAppleStepLast => 'Reminders shows the account under tix.';
+
+  @override
+  String get davIosUnsigned =>
+      'The profile is marked Not Verified because it is not signed. That is expected.';
+
+  @override
+  String get davIosLimits =>
+      'Install it within 8 minutes or iOS drops it. Remove it later in Settings, General, VPN & Device Management. A managed device may block profiles; then use the details in Settings, Calendar, Accounts, Add Account, Other, Add CalDAV Account.';
+
+  @override
+  String get davOpenSafari => 'Open in Safari';
+
+  @override
+  String get davOpenedSafari => 'Opened Safari';
+
+  @override
+  String get davNotFetched =>
+      'Safari did not fetch the profile. Save it to Files and open it from there.';
+
+  @override
+  String get davSaveProfile => 'Save the profile';
+
+  @override
+  String get davMacStep1 =>
+      'System Settings shows Profile Downloaded, or open Privacy & Security, Profiles.';
+
+  @override
+  String get davMacStep2 =>
+      'Double-click the tix profile, click Install and confirm with your password.';
+
+  @override
+  String get davMacUnsigned =>
+      'It is marked Unverified because it is not signed. That is expected. Without the profile, use the details in System Settings, Internet Accounts, Add Other Account, CalDAV account.';
+
+  @override
+  String get davOpenProfile => 'Open the profile';
+
+  @override
+  String get davOpenedSettings => 'Opened System Settings';
+
+  @override
+  String get davOpenFailed => 'It did not open. Use the details below.';
+
+  @override
+  String get davDavx5Body =>
+      'DAVx5 opens with the address, user name and password filled in. It finds the lists and asks which task app shows them.';
+
+  @override
+  String get davOpenDavx5 => 'Open DAVx5';
+
+  @override
+  String get davOpenedDavx5 => 'Opened DAVx5';
+
+  @override
+  String get davNoDavx5 =>
+      'DAVx5 does the syncing and a task app such as tasks.org or jtx Board shows the tasks. Install DAVx5, then set it up with the details below.';
+
+  @override
+  String get davGetDavx5 => 'Get DAVx5';
+
+  @override
+  String get davGetTasksOrg => 'Get tasks.org';
+
+  @override
+  String get davGetJtx => 'Get jtx Board';
+
+  @override
+  String get davThunderbirdSteps =>
+      'Thunderbird: New Calendar, On the Network, enter the address and user name, then the password when asked. The tasks show in the Tasks tab.';
+
+  @override
+  String get davEvolutionSteps =>
+      'Evolution: New, Task List, type CalDAV, enter the address and user name, then the password when asked.';
+
+  @override
+  String get davWindowsNote =>
+      'Windows has no built-in app for CalDAV tasks. Thunderbird shows them.';
+
+  @override
+  String get davDone => 'Done';
+
+  @override
+  String get davRevoke => 'Revoke';
+
+  @override
+  String davRevokeTitle(String name) {
+    return 'Revoke $name?';
+  }
+
+  @override
+  String get davRevokeBody =>
+      'The app signed in with it stops syncing on its next try. Your own sign-in in this app is not affected.';
+
+  @override
+  String davRevokeNamed(String name) {
+    return 'Revoke $name';
+  }
+
+  @override
+  String davRevokedToast(String name) {
+    return '$name revoked';
+  }
+
+  @override
+  String get davReplace => 'Replace';
+
+  @override
+  String davReplaceRevokeTitle(String name) {
+    return 'Revoke $name now?';
+  }
+
+  @override
+  String get davReplaceRevokeBody =>
+      'The new password is set up, so the read-only one can go. Remove its account from the other app too.';
+
+  @override
+  String davCreatedOn(String day) {
+    return 'Created $day';
+  }
+
+  @override
+  String davExpiresOn(String day) {
+    return 'Expires $day';
+  }
+
+  @override
+  String get davNeverExpires => 'Never expires';
+
+  @override
+  String davLastUsed(String when) {
+    return 'Last used $when';
+  }
+
+  @override
+  String get davNotUsed => 'Not used yet';
+
+  @override
+  String get davGuides => 'Guides for each app';
+
+  @override
+  String get davGuideReminders => 'Apple Reminders';
+
+  @override
+  String get davGuideDavx5 => 'DAVx5 and tasks.org';
+
+  @override
+  String get davGuideThunderbird => 'Thunderbird';
+
+  @override
+  String get davGuideEvolution => 'Evolution';
+
+  @override
+  String get davGuideTroubleshooting => 'Troubleshooting';
+
+  @override
+  String davProfileAccount(String name) {
+    return 'tix: $name';
+  }
+
+  @override
+  String get davProfileName => 'tix tasks';
+
+  @override
+  String get davProfileDescription =>
+      'Adds your tix tasks to Reminders over CalDAV, signed in with an app password you can revoke in the tix app.';
+
+  @override
+  String get settingsOtherAppsHelp =>
+      'Reminders, DAVx5 and Thunderbird over CalDAV';
+
+  @override
+  String get calendarTaskApps =>
+      'The feed shows due dates in calendar apps. For the tasks themselves in Reminders or a task app, use Tasks in other apps.';
 }

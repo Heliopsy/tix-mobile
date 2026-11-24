@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
@@ -9,6 +10,7 @@ import 'package:tix_mobile/src/core/l10n/dates.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/attachments.dart';
 import 'package:tix_mobile/src/core/platform/sharing.dart';
+import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/people.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/core/widgets/async_body.dart';
@@ -53,16 +55,21 @@ class CalendarScreen extends ConsumerWidget {
         value: feed,
         onRetry: () => ref.invalidate(calendarProvider),
         data: (f) => f == null
-            ? EmptyState(
-                key: const Key('calendar.none'),
-                icon: Icons.event_outlined,
-                title: l10n.calendarNone,
-                body: l10n.calendarNoneBody,
-                action: TixAction(
-                  label: l10n.calendarCreate,
-                  icon: Icons.add,
-                  onPressed: () => _create(context, ref),
-                ),
+            ? ListView(
+                children: [
+                  EmptyState(
+                    key: const Key('calendar.none'),
+                    icon: Icons.event_outlined,
+                    title: l10n.calendarNone,
+                    body: l10n.calendarNoneBody,
+                    action: TixAction(
+                      label: l10n.calendarCreate,
+                      icon: Icons.add,
+                      onPressed: () => _create(context, ref),
+                    ),
+                  ),
+                  const _TaskAppsLink(),
+                ],
               )
             : _Active(feed: f),
       ),
@@ -102,6 +109,24 @@ Future<void> runIssue(
     if (context.mounted) {
       showTixToast(context, errorMessage(l10n, e), tone: TixTone.danger);
     }
+  }
+}
+
+/// Points from the due-date feed to Tasks in other apps, for task apps.
+class _TaskAppsLink extends StatelessWidget {
+  const _TaskAppsLink();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return ListTile(
+      key: const Key('calendar.taskApps'),
+      leading: const Icon(Icons.checklist_outlined),
+      title: Text(l10n.davTitle),
+      subtitle: Text(l10n.calendarTaskApps),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () => context.push(Routes.otherApps),
+    );
   }
 }
 
@@ -161,6 +186,7 @@ class _Active extends ConsumerWidget {
             ),
           ],
         ),
+        TixSection(title: l10n.davTitle, children: const [_TaskAppsLink()]),
         TixSection(
           title: l10n.calendarRevoke,
           danger: true,

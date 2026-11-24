@@ -10106,4 +10106,391 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String get errorSsoInterrupted =>
       'Входът беше прекъснат, преди да завърши. Опитайте отново.';
+
+  @override
+  String get davTitle => 'Задачи в други приложения';
+
+  @override
+  String get davSubtitle => 'Напомняния, DAVx5 и Thunderbird през CalDAV';
+
+  @override
+  String get davSetUp => 'Настройка на това устройство';
+
+  @override
+  String get davLead =>
+      'Други приложения могат да показват задачите от този акаунт в tix като списъци със задачи през CalDAV: Напомняния на Apple, tasks.org или jtx Board чрез DAVx5, Thunderbird и Evolution. Това приложение продължава да се синхронизира през API на tix както досега.';
+
+  @override
+  String get davLeadRead =>
+      'Засега списъците са само за четене: промените в другото приложение не се връщат в tix.';
+
+  @override
+  String get davLeadWrite =>
+      'Промените в другото приложение, като завършване, преименуване, срокове, приоритет и нови задачи, се връщат в tix. Работният процес на tix пак решава дали задача може да бъде завършена.';
+
+  @override
+  String get davPrivacy =>
+      'Настройката иска от сървъра парола за приложение и я предава на избраното от вас приложение: на Напомняния чрез конфигурационен профил, на DAVx5 или в клипборда. Това приложение не я пази.';
+
+  @override
+  String get davLocalTitle => 'Нужен е сървър на tix';
+
+  @override
+  String get davLocalBody =>
+      'Други приложения нямат достъп до база данни на това устройство. Използвайте сървър на tix.';
+
+  @override
+  String get davOldTitle => 'Този сървър не го предлага';
+
+  @override
+  String davOldBody(String version) {
+    return 'Този сървър още не предлага CalDAV. Нужен е tix $version или по-нов.';
+  }
+
+  @override
+  String get davOffTitle => 'CalDAV е изключен на този сървър';
+
+  @override
+  String get davOffBody =>
+      'Помолете администратора на сървъра да го включи. Създадените преди пароли за приложения още могат да се отнемат оттук.';
+
+  @override
+  String get davForbiddenTitle => 'Не и с тези идентификационни данни';
+
+  @override
+  String get davForbiddenBody =>
+      'Сървърът отказа да настрои CalDAV за тази връзка.';
+
+  @override
+  String get davForbiddenToken =>
+      'Паролата за приложение принадлежи на човек. Влезте със своя акаунт на този сървър, за да я настроите.';
+
+  @override
+  String get davDetails => 'За ръчна настройка';
+
+  @override
+  String get davDetailsInfo =>
+      'Дайте на другото приложение този адрес и потребителско име и парола за приложение от Настройка. Паролата на акаунта ви не работи там.';
+
+  @override
+  String get davAddress => 'Адрес';
+
+  @override
+  String get davUsername => 'Потребителско име';
+
+  @override
+  String get davPassword => 'Парола';
+
+  @override
+  String get davCopyAddress => 'Копиране на адреса';
+
+  @override
+  String get davCopyUsername => 'Копиране на потребителското име';
+
+  @override
+  String get davCopyPassword => 'Копиране на паролата';
+
+  @override
+  String get davShowPassword => 'Показване на паролата';
+
+  @override
+  String get davHidePassword => 'Скриване на паролата';
+
+  @override
+  String get davPasswordHidden => 'Скрита';
+
+  @override
+  String get davCopiedExpires =>
+      'Паролата е копирана. Изчиства се от клипборда след 2 минути.';
+
+  @override
+  String get davCopiedHidden =>
+      'Паролата е копирана. Скрита е в прегледа на клипборда.';
+
+  @override
+  String get davCopiedPlain =>
+      'Паролата е копирана. Изчистете клипборда, след като я поставите.';
+
+  @override
+  String get davPasswords => 'Пароли за приложения';
+
+  @override
+  String get davPasswordsInfo =>
+      'Всяко приложение получава собствена парола. Отнемете я, когато махнете акаунта от това приложение или загубите устройството.';
+
+  @override
+  String get davPasswordsEmpty => 'Още няма пароли за приложения';
+
+  @override
+  String get davStateLive => 'Активна';
+
+  @override
+  String get davStateExpired => 'Изтекла';
+
+  @override
+  String get davStateRevoked => 'Отнета';
+
+  @override
+  String get davReadOnly => 'Само за четене';
+
+  @override
+  String get davReadOnlyHelp =>
+      'Другото приложение показва задачите, но не може да ги променя.';
+
+  @override
+  String get davListsAssigned => 'Възложени на мен';
+
+  @override
+  String get davListsProjects => 'По един списък за проект';
+
+  @override
+  String get davListsAll => 'Възложени на мен и всеки проект';
+
+  @override
+  String get davListsAssignedHelp =>
+      'Вашата работа в един списък. Най-добре за телефон.';
+
+  @override
+  String get davListsProjectsHelp =>
+      'Всеки проект, който можете да четете, като отделен списък. Най-добре за компютър.';
+
+  @override
+  String get davListsAllHelp =>
+      'И двете, така че възложена на вас задача се вижда в два списъка.';
+
+  @override
+  String get davLists => 'Списъци';
+
+  @override
+  String get davListsChangeHelp =>
+      'Промяна по-късно означава нова парола, защото другите приложения пазят списъка със списъци.';
+
+  @override
+  String get davName => 'Име';
+
+  @override
+  String get davNameHelp =>
+      'За да се вижда в списъка кое устройство и приложение е това.';
+
+  @override
+  String davDefaultName(String platform, String day) {
+    return 'приложение tix, $platform, $day';
+  }
+
+  @override
+  String get davExpiry => 'Изтича';
+
+  @override
+  String get davExpiryNever => 'Никога';
+
+  @override
+  String get davExpiry30 => 'След 30 дни';
+
+  @override
+  String get davExpiry90 => 'След 90 дни';
+
+  @override
+  String get davExpiryYear => 'След година';
+
+  @override
+  String get davExpiryHelp =>
+      'Приложение с изтекла парола спира да се синхронизира в този ден, без да пита.';
+
+  @override
+  String get davCreate => 'Създаване на парола';
+
+  @override
+  String get davHandoffTitle => 'Предайте я на другото приложение';
+
+  @override
+  String get davOnce =>
+      'Тази парола се показва само сега. Ако се загуби, я отнемете и настройте отново.';
+
+  @override
+  String get davIosStep1 =>
+      'Safari пита дали да изтегли конфигурационен профил: докоснете Разреши.';
+
+  @override
+  String get davIosStep2 =>
+      'Отворете Настройки и докоснете Профилът е изтеглен най-горе.';
+
+  @override
+  String get davIosStep3 =>
+      'Докоснете Инсталирай, въведете кода си и докоснете Инсталирай отново.';
+
+  @override
+  String get davAppleStepLast => 'Напомняния показва акаунта под tix.';
+
+  @override
+  String get davIosUnsigned =>
+      'Профилът е отбелязан като Непроверен, защото не е подписан. Това е очаквано.';
+
+  @override
+  String get davIosLimits =>
+      'Инсталирайте го до 8 минути, иначе iOS го премахва. Махнете го по-късно от Настройки, Общи, VPN и управление на устройства. Управлявано устройство може да блокира профили; тогава използвайте данните в Настройки, Календар, Акаунти, Добавяне на акаунт, Друг, Добавяне на CalDAV акаунт.';
+
+  @override
+  String get davOpenSafari => 'Отваряне в Safari';
+
+  @override
+  String get davOpenedSafari => 'Safari е отворен';
+
+  @override
+  String get davNotFetched =>
+      'Safari не изтегли профила. Запазете го във Файлове и го отворете оттам.';
+
+  @override
+  String get davSaveProfile => 'Запазване на профила';
+
+  @override
+  String get davMacStep1 =>
+      'Системни настройки показва Профилът е изтеглен, или отворете Поверителност и сигурност, Профили.';
+
+  @override
+  String get davMacStep2 =>
+      'Щракнете двукратно върху профила на tix, щракнете Инсталирай и потвърдете с паролата си.';
+
+  @override
+  String get davMacUnsigned =>
+      'Отбелязан е като Непроверен, защото не е подписан. Това е очаквано. Без профила използвайте данните в Системни настройки, Интернет акаунти, Добавяне на друг акаунт, CalDAV акаунт.';
+
+  @override
+  String get davOpenProfile => 'Отваряне на профила';
+
+  @override
+  String get davOpenedSettings => 'Системни настройки са отворени';
+
+  @override
+  String get davOpenFailed => 'Не се отвори. Използвайте данните по-долу.';
+
+  @override
+  String get davDavx5Body =>
+      'DAVx5 се отваря с попълнени адрес, потребителско име и парола. Намира списъците и пита кое приложение за задачи да ги показва.';
+
+  @override
+  String get davOpenDavx5 => 'Отваряне на DAVx5';
+
+  @override
+  String get davOpenedDavx5 => 'DAVx5 е отворен';
+
+  @override
+  String get davNoDavx5 =>
+      'DAVx5 синхронизира, а приложение за задачи като tasks.org или jtx Board показва задачите. Инсталирайте DAVx5 и го настройте с данните по-долу.';
+
+  @override
+  String get davGetDavx5 => 'Изтегляне на DAVx5';
+
+  @override
+  String get davGetTasksOrg => 'Изтегляне на tasks.org';
+
+  @override
+  String get davGetJtx => 'Изтегляне на jtx Board';
+
+  @override
+  String get davThunderbirdSteps =>
+      'Thunderbird: Нов календар, В мрежата, въведете адреса и потребителското име, после паролата, когато бъде поискана. Задачите се виждат в раздела Задачи.';
+
+  @override
+  String get davEvolutionSteps =>
+      'Evolution: Нов, Списък със задачи, тип CalDAV, въведете адреса и потребителското име, после паролата, когато бъде поискана.';
+
+  @override
+  String get davWindowsNote =>
+      'Windows няма вградено приложение за CalDAV задачи. Thunderbird ги показва.';
+
+  @override
+  String get davDone => 'Готово';
+
+  @override
+  String get davRevoke => 'Отнемане';
+
+  @override
+  String davRevokeTitle(String name) {
+    return 'Отнемане на $name?';
+  }
+
+  @override
+  String get davRevokeBody =>
+      'Приложението, влязло с нея, спира да се синхронизира при следващия опит. Вашият вход в това приложение не се засяга.';
+
+  @override
+  String davRevokeNamed(String name) {
+    return 'Отнемане на $name';
+  }
+
+  @override
+  String davRevokedToast(String name) {
+    return '$name е отнета';
+  }
+
+  @override
+  String get davReplace => 'Замяна';
+
+  @override
+  String davReplaceRevokeTitle(String name) {
+    return 'Да се отнеме ли $name сега?';
+  }
+
+  @override
+  String get davReplaceRevokeBody =>
+      'Новата парола е настроена, така че паролата само за четене може да отпадне. Махнете и акаунта ѝ от другото приложение.';
+
+  @override
+  String davCreatedOn(String day) {
+    return 'Създадена на $day';
+  }
+
+  @override
+  String davExpiresOn(String day) {
+    return 'Изтича на $day';
+  }
+
+  @override
+  String get davNeverExpires => 'Не изтича';
+
+  @override
+  String davLastUsed(String when) {
+    return 'Последно използвана $when';
+  }
+
+  @override
+  String get davNotUsed => 'Още не е използвана';
+
+  @override
+  String get davGuides => 'Ръководства за всяко приложение';
+
+  @override
+  String get davGuideReminders => 'Напомняния на Apple';
+
+  @override
+  String get davGuideDavx5 => 'DAVx5 и tasks.org';
+
+  @override
+  String get davGuideThunderbird => 'Thunderbird';
+
+  @override
+  String get davGuideEvolution => 'Evolution';
+
+  @override
+  String get davGuideTroubleshooting => 'Отстраняване на проблеми';
+
+  @override
+  String davProfileAccount(String name) {
+    return 'tix: $name';
+  }
+
+  @override
+  String get davProfileName => 'Задачи в tix';
+
+  @override
+  String get davProfileDescription =>
+      'Добавя задачите ви от tix в Напомняния през CalDAV, с парола за приложение, която можете да отнемете в приложението tix.';
+
+  @override
+  String get settingsOtherAppsHelp =>
+      'Напомняния, DAVx5 и Thunderbird през CalDAV';
+
+  @override
+  String get calendarTaskApps =>
+      'Емисията показва сроковете в приложения за календар. За самите задачи в Напомняния или приложение за задачи използвайте Задачи в други приложения.';
 }

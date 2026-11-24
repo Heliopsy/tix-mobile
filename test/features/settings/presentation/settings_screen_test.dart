@@ -35,7 +35,7 @@ void main() {
 
   Future<ProviderContainer> pump(
     WidgetTester tester, {
-    Size size = const Size(500, 6000),
+    Size size = const Size(500, 6600),
     Locale locale = const Locale('en'),
     FakeTix? tix,
     String query = '',

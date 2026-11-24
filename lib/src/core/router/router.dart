@@ -28,6 +28,7 @@ import 'package:tix_mobile/src/features/audit/presentation/audit_screen.dart';
 import 'package:tix_mobile/src/features/bundles/presentation/bundles_screen.dart';
 import 'package:tix_mobile/src/features/bundles/presentation/snapshot_import_screen.dart';
 import 'package:tix_mobile/src/features/connect/presentation/connect_screen.dart';
+import 'package:tix_mobile/src/features/dav/presentation/other_apps_screen.dart';
 import 'package:tix_mobile/src/features/gallery/presentation/gallery_screen.dart';
 import 'package:tix_mobile/src/features/inbox/presentation/channel_screen.dart';
 import 'package:tix_mobile/src/features/inbox/presentation/inbox_screen.dart';
@@ -513,6 +514,7 @@ Page<void> _taskPage(BuildContext context, GoRouterState state) {
 final accountRoutes = [
   GoRoute(path: 'account', builder: (_, _) => const AccountScreen()),
   GoRoute(path: 'calendar', builder: (_, _) => const CalendarScreen()),
+  GoRoute(path: 'other-apps', builder: (_, _) => const OtherAppsScreen()),
   GoRoute(
     path: 'tokens',
     builder: (_, _) => const TokensScreen(personal: true),

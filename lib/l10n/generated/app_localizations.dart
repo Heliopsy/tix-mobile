@@ -16686,6 +16686,660 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The sign-in was interrupted before it finished. Try again.'**
   String get errorSsoInterrupted;
+
+  /// No description provided for @davTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks in other apps'**
+  String get davTitle;
+
+  /// No description provided for @davSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders, DAVx5 and Thunderbird over CalDAV'**
+  String get davSubtitle;
+
+  /// No description provided for @davSetUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up on this device'**
+  String get davSetUp;
+
+  /// No description provided for @davLead.
+  ///
+  /// In en, this message translates to:
+  /// **'Other apps can show this account\'s tix tasks as to-do lists over CalDAV: Apple Reminders, tasks.org or jtx Board through DAVx5, Thunderbird and Evolution. This app keeps syncing through the tix API as before.'**
+  String get davLead;
+
+  /// No description provided for @davLeadRead.
+  ///
+  /// In en, this message translates to:
+  /// **'For now the lists are read only: changes made in the other app do not come back to tix.'**
+  String get davLeadRead;
+
+  /// No description provided for @davLeadWrite.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes made in the other app, such as completing, renaming, due dates, priority and new tasks, come back to tix. tix\'s workflow still decides whether a task may be completed.'**
+  String get davLeadWrite;
+
+  /// No description provided for @davPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Setting up asks your server for an app password and hands it to the app you choose: Reminders through a configuration profile, DAVx5, or the clipboard. This app does not keep it.'**
+  String get davPrivacy;
+
+  /// No description provided for @davLocalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs a tix server'**
+  String get davLocalTitle;
+
+  /// No description provided for @davLocalBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Other apps cannot reach a database on this device. Use a tix server.'**
+  String get davLocalBody;
+
+  /// No description provided for @davOldTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Not offered by this server'**
+  String get davOldTitle;
+
+  /// No description provided for @davOldBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This server does not offer CalDAV yet. It needs tix {version} or later.'**
+  String davOldBody(String version);
+
+  /// No description provided for @davOffTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'CalDAV is turned off on this server'**
+  String get davOffTitle;
+
+  /// No description provided for @davOffBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask the server\'s administrator to turn it on. App passwords made before can still be revoked here.'**
+  String get davOffBody;
+
+  /// No description provided for @davForbiddenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Not for this credential'**
+  String get davForbiddenTitle;
+
+  /// No description provided for @davForbiddenBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The server refused to set up CalDAV for this connection.'**
+  String get davForbiddenBody;
+
+  /// No description provided for @davForbiddenToken.
+  ///
+  /// In en, this message translates to:
+  /// **'An app password belongs to a person. Sign in as yourself on this server to set it up.'**
+  String get davForbiddenToken;
+
+  /// No description provided for @davDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'For setting up by hand'**
+  String get davDetails;
+
+  /// No description provided for @davDetailsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Give another app this address and user name, and an app password from Set up. Your account password does not work there.'**
+  String get davDetailsInfo;
+
+  /// No description provided for @davAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get davAddress;
+
+  /// No description provided for @davUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'User name'**
+  String get davUsername;
+
+  /// No description provided for @davPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get davPassword;
+
+  /// No description provided for @davCopyAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy address'**
+  String get davCopyAddress;
+
+  /// No description provided for @davCopyUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy user name'**
+  String get davCopyUsername;
+
+  /// No description provided for @davCopyPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy password'**
+  String get davCopyPassword;
+
+  /// No description provided for @davShowPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get davShowPassword;
+
+  /// No description provided for @davHidePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get davHidePassword;
+
+  /// No description provided for @davPasswordHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden'**
+  String get davPasswordHidden;
+
+  /// No description provided for @davCopiedExpires.
+  ///
+  /// In en, this message translates to:
+  /// **'Password copied. It clears from the clipboard in 2 minutes.'**
+  String get davCopiedExpires;
+
+  /// No description provided for @davCopiedHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Password copied. It is hidden in the clipboard preview.'**
+  String get davCopiedHidden;
+
+  /// No description provided for @davCopiedPlain.
+  ///
+  /// In en, this message translates to:
+  /// **'Password copied. Clear the clipboard after pasting it.'**
+  String get davCopiedPlain;
+
+  /// No description provided for @davPasswords.
+  ///
+  /// In en, this message translates to:
+  /// **'App passwords'**
+  String get davPasswords;
+
+  /// No description provided for @davPasswordsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Each app gets a password of its own. Revoke one when you remove the account from that app or lose the device.'**
+  String get davPasswordsInfo;
+
+  /// No description provided for @davPasswordsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No app passwords yet'**
+  String get davPasswordsEmpty;
+
+  /// No description provided for @davStateLive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get davStateLive;
+
+  /// No description provided for @davStateExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get davStateExpired;
+
+  /// No description provided for @davStateRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoked'**
+  String get davStateRevoked;
+
+  /// No description provided for @davReadOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Read only'**
+  String get davReadOnly;
+
+  /// No description provided for @davReadOnlyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The other app shows the tasks but cannot change them.'**
+  String get davReadOnlyHelp;
+
+  /// No description provided for @davListsAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned to me'**
+  String get davListsAssigned;
+
+  /// No description provided for @davListsProjects.
+  ///
+  /// In en, this message translates to:
+  /// **'One list per project'**
+  String get davListsProjects;
+
+  /// No description provided for @davListsAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned to me and every project'**
+  String get davListsAll;
+
+  /// No description provided for @davListsAssignedHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own work in one list. Best on a phone.'**
+  String get davListsAssignedHelp;
+
+  /// No description provided for @davListsProjectsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Every project you can read as a list of its own. Best on a desktop.'**
+  String get davListsProjectsHelp;
+
+  /// No description provided for @davListsAllHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Both, so a task assigned to you shows in two lists.'**
+  String get davListsAllHelp;
+
+  /// No description provided for @davLists.
+  ///
+  /// In en, this message translates to:
+  /// **'Lists'**
+  String get davLists;
+
+  /// No description provided for @davListsChangeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Changing this later means a new password, because other apps keep the list of lists.'**
+  String get davListsChangeHelp;
+
+  /// No description provided for @davName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get davName;
+
+  /// No description provided for @davNameHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'So the list says which device and app this is.'**
+  String get davNameHelp;
+
+  /// No description provided for @davDefaultName.
+  ///
+  /// In en, this message translates to:
+  /// **'tix app, {platform}, {day}'**
+  String davDefaultName(String platform, String day);
+
+  /// No description provided for @davExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires'**
+  String get davExpiry;
+
+  /// No description provided for @davExpiryNever.
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get davExpiryNever;
+
+  /// No description provided for @davExpiry30.
+  ///
+  /// In en, this message translates to:
+  /// **'In 30 days'**
+  String get davExpiry30;
+
+  /// No description provided for @davExpiry90.
+  ///
+  /// In en, this message translates to:
+  /// **'In 90 days'**
+  String get davExpiry90;
+
+  /// No description provided for @davExpiryYear.
+  ///
+  /// In en, this message translates to:
+  /// **'In a year'**
+  String get davExpiryYear;
+
+  /// No description provided for @davExpiryHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'An app whose password expires stops syncing that day without asking.'**
+  String get davExpiryHelp;
+
+  /// No description provided for @davCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create password'**
+  String get davCreate;
+
+  /// No description provided for @davHandoffTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hand it to the other app'**
+  String get davHandoffTitle;
+
+  /// No description provided for @davOnce.
+  ///
+  /// In en, this message translates to:
+  /// **'This password is shown only now. If it is lost, revoke it and set up again.'**
+  String get davOnce;
+
+  /// No description provided for @davIosStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Safari asks to download a configuration profile: tap Allow.'**
+  String get davIosStep1;
+
+  /// No description provided for @davIosStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings and tap Profile Downloaded near the top.'**
+  String get davIosStep2;
+
+  /// No description provided for @davIosStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap Install, enter your passcode, then tap Install again.'**
+  String get davIosStep3;
+
+  /// No description provided for @davAppleStepLast.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders shows the account under tix.'**
+  String get davAppleStepLast;
+
+  /// No description provided for @davIosUnsigned.
+  ///
+  /// In en, this message translates to:
+  /// **'The profile is marked Not Verified because it is not signed. That is expected.'**
+  String get davIosUnsigned;
+
+  /// No description provided for @davIosLimits.
+  ///
+  /// In en, this message translates to:
+  /// **'Install it within 8 minutes or iOS drops it. Remove it later in Settings, General, VPN & Device Management. A managed device may block profiles; then use the details in Settings, Calendar, Accounts, Add Account, Other, Add CalDAV Account.'**
+  String get davIosLimits;
+
+  /// No description provided for @davOpenSafari.
+  ///
+  /// In en, this message translates to:
+  /// **'Open in Safari'**
+  String get davOpenSafari;
+
+  /// No description provided for @davOpenedSafari.
+  ///
+  /// In en, this message translates to:
+  /// **'Opened Safari'**
+  String get davOpenedSafari;
+
+  /// No description provided for @davNotFetched.
+  ///
+  /// In en, this message translates to:
+  /// **'Safari did not fetch the profile. Save it to Files and open it from there.'**
+  String get davNotFetched;
+
+  /// No description provided for @davSaveProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Save the profile'**
+  String get davSaveProfile;
+
+  /// No description provided for @davMacStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'System Settings shows Profile Downloaded, or open Privacy & Security, Profiles.'**
+  String get davMacStep1;
+
+  /// No description provided for @davMacStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Double-click the tix profile, click Install and confirm with your password.'**
+  String get davMacStep2;
+
+  /// No description provided for @davMacUnsigned.
+  ///
+  /// In en, this message translates to:
+  /// **'It is marked Unverified because it is not signed. That is expected. Without the profile, use the details in System Settings, Internet Accounts, Add Other Account, CalDAV account.'**
+  String get davMacUnsigned;
+
+  /// No description provided for @davOpenProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the profile'**
+  String get davOpenProfile;
+
+  /// No description provided for @davOpenedSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Opened System Settings'**
+  String get davOpenedSettings;
+
+  /// No description provided for @davOpenFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'It did not open. Use the details below.'**
+  String get davOpenFailed;
+
+  /// No description provided for @davDavx5Body.
+  ///
+  /// In en, this message translates to:
+  /// **'DAVx5 opens with the address, user name and password filled in. It finds the lists and asks which task app shows them.'**
+  String get davDavx5Body;
+
+  /// No description provided for @davOpenDavx5.
+  ///
+  /// In en, this message translates to:
+  /// **'Open DAVx5'**
+  String get davOpenDavx5;
+
+  /// No description provided for @davOpenedDavx5.
+  ///
+  /// In en, this message translates to:
+  /// **'Opened DAVx5'**
+  String get davOpenedDavx5;
+
+  /// No description provided for @davNoDavx5.
+  ///
+  /// In en, this message translates to:
+  /// **'DAVx5 does the syncing and a task app such as tasks.org or jtx Board shows the tasks. Install DAVx5, then set it up with the details below.'**
+  String get davNoDavx5;
+
+  /// No description provided for @davGetDavx5.
+  ///
+  /// In en, this message translates to:
+  /// **'Get DAVx5'**
+  String get davGetDavx5;
+
+  /// No description provided for @davGetTasksOrg.
+  ///
+  /// In en, this message translates to:
+  /// **'Get tasks.org'**
+  String get davGetTasksOrg;
+
+  /// No description provided for @davGetJtx.
+  ///
+  /// In en, this message translates to:
+  /// **'Get jtx Board'**
+  String get davGetJtx;
+
+  /// No description provided for @davThunderbirdSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Thunderbird: New Calendar, On the Network, enter the address and user name, then the password when asked. The tasks show in the Tasks tab.'**
+  String get davThunderbirdSteps;
+
+  /// No description provided for @davEvolutionSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Evolution: New, Task List, type CalDAV, enter the address and user name, then the password when asked.'**
+  String get davEvolutionSteps;
+
+  /// No description provided for @davWindowsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Windows has no built-in app for CalDAV tasks. Thunderbird shows them.'**
+  String get davWindowsNote;
+
+  /// No description provided for @davDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get davDone;
+
+  /// No description provided for @davRevoke.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke'**
+  String get davRevoke;
+
+  /// No description provided for @davRevokeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke {name}?'**
+  String davRevokeTitle(String name);
+
+  /// No description provided for @davRevokeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The app signed in with it stops syncing on its next try. Your own sign-in in this app is not affected.'**
+  String get davRevokeBody;
+
+  /// No description provided for @davRevokeNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke {name}'**
+  String davRevokeNamed(String name);
+
+  /// No description provided for @davRevokedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} revoked'**
+  String davRevokedToast(String name);
+
+  /// No description provided for @davReplace.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get davReplace;
+
+  /// No description provided for @davReplaceRevokeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke {name} now?'**
+  String davReplaceRevokeTitle(String name);
+
+  /// No description provided for @davReplaceRevokeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The new password is set up, so the read-only one can go. Remove its account from the other app too.'**
+  String get davReplaceRevokeBody;
+
+  /// No description provided for @davCreatedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Created {day}'**
+  String davCreatedOn(String day);
+
+  /// No description provided for @davExpiresOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires {day}'**
+  String davExpiresOn(String day);
+
+  /// No description provided for @davNeverExpires.
+  ///
+  /// In en, this message translates to:
+  /// **'Never expires'**
+  String get davNeverExpires;
+
+  /// No description provided for @davLastUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Last used {when}'**
+  String davLastUsed(String when);
+
+  /// No description provided for @davNotUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Not used yet'**
+  String get davNotUsed;
+
+  /// No description provided for @davGuides.
+  ///
+  /// In en, this message translates to:
+  /// **'Guides for each app'**
+  String get davGuides;
+
+  /// No description provided for @davGuideReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Reminders'**
+  String get davGuideReminders;
+
+  /// No description provided for @davGuideDavx5.
+  ///
+  /// In en, this message translates to:
+  /// **'DAVx5 and tasks.org'**
+  String get davGuideDavx5;
+
+  /// No description provided for @davGuideThunderbird.
+  ///
+  /// In en, this message translates to:
+  /// **'Thunderbird'**
+  String get davGuideThunderbird;
+
+  /// No description provided for @davGuideEvolution.
+  ///
+  /// In en, this message translates to:
+  /// **'Evolution'**
+  String get davGuideEvolution;
+
+  /// No description provided for @davGuideTroubleshooting.
+  ///
+  /// In en, this message translates to:
+  /// **'Troubleshooting'**
+  String get davGuideTroubleshooting;
+
+  /// No description provided for @davProfileAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'tix: {name}'**
+  String davProfileAccount(String name);
+
+  /// No description provided for @davProfileName.
+  ///
+  /// In en, this message translates to:
+  /// **'tix tasks'**
+  String get davProfileName;
+
+  /// No description provided for @davProfileDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Adds your tix tasks to Reminders over CalDAV, signed in with an app password you can revoke in the tix app.'**
+  String get davProfileDescription;
+
+  /// No description provided for @settingsOtherAppsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders, DAVx5 and Thunderbird over CalDAV'**
+  String get settingsOtherAppsHelp;
+
+  /// No description provided for @calendarTaskApps.
+  ///
+  /// In en, this message translates to:
+  /// **'The feed shows due dates in calendar apps. For the tasks themselves in Reminders or a task app, use Tasks in other apps.'**
+  String get calendarTaskApps;
 }
 
 class _AppLocalizationsDelegate
