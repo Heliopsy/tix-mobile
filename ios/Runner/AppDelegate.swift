@@ -8,6 +8,7 @@ import UserNotifications
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
   private var localAccess: LocalAccess?
   private var sso: SsoSession?
+  private var dav: DavChannel?
 
   override func application(
     _ application: UIApplication,
@@ -34,6 +35,9 @@ import UserNotifications
     }
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "TixSso") {
       sso = SsoSession(messenger: registrar.messenger())
+    }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "TixDav") {
+      dav = DavChannel(messenger: registrar.messenger())
     }
   }
 }
@@ -248,5 +252,51 @@ final class SsoSession: NSObject, ASWebAuthenticationPresentationContextProvidin
     let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
     let windows = scenes.flatMap { $0.windows }
     return windows.first { $0.isKeyWindow } ?? windows.first ?? ASPresentationAnchor()
+  }
+}
+
+/// tix/dav: background time while Safari fetches the CalDAV profile from the
+/// app's loopback server, and a copied app password that stays on this
+/// device and clears after two minutes (lib/src/core/platform/dav_handoff.dart).
+/// Nothing here logs its arguments.
+final class DavChannel: NSObject {
+  private let channel: FlutterMethodChannel
+  private var task: UIBackgroundTaskIdentifier = .invalid
+
+  init(messenger: FlutterBinaryMessenger) {
+    channel = FlutterMethodChannel(name: "tix/dav", binaryMessenger: messenger)
+    super.init()
+    channel.setMethodCallHandler { [weak self] call, result in
+      self?.handle(call, result: result)
+    }
+  }
+
+  private func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    switch call.method {
+    case "beginBackgroundTask":
+      end()
+      task = UIApplication.shared.beginBackgroundTask(withName: "tix.dav.profile") { [weak self] in
+        self?.end()
+      }
+      result(nil)
+    case "endBackgroundTask":
+      end()
+      result(nil)
+    case "copySensitive":
+      let args = call.arguments as? [String: Any] ?? [:]
+      let text = args["text"] as? String ?? ""
+      UIPasteboard.general.setItems(
+        [[UTType.utf8PlainText.identifier: text]],
+        options: [.localOnly: true, .expirationDate: Date().addingTimeInterval(120)])
+      result(nil)
+    default:
+      result(FlutterMethodNotImplemented)
+    }
+  }
+
+  private func end() {
+    guard task != .invalid else { return }
+    UIApplication.shared.endBackgroundTask(task)
+    task = .invalid
   }
 }
