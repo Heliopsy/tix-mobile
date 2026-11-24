@@ -306,8 +306,16 @@ destinations, the rest open from More, which ends with About. The rail ends with
   Custom Tabs on Android, the default browser on Linux and Windows. The `red.tix.mobile:/sso` redirect comes
   back through the scheme handler and `tix/links` (Android's `SsoCallbackActivity`, the Linux desktop entry, a
   per-user `HKCU` class on Windows), where `DeepLinkIntake.ssoRedirects` keeps it away from `DeepLinkHost`.
-  `finishSso` checks the state and posts the code with the verifier to `POST /api/v1/auth/sso/exchange`, whose
-  answer goes through the same path as a password login, so reconnecting this way also clears `refused_at`.
+  The browser waits only for the redirect carrying its attempt's state, so an older tab cannot end it; Linux
+  offers providers only when `xdg-mime` names a `red.tix.mobile` handler (or in a Flatpak), and the desktop
+  gives up after 5 minutes. `finishSso` checks the state and posts the code with the verifier to
+  `POST /api/v1/auth/sso/exchange`, whose answer goes through the same path as a password login, so reconnecting
+  this way also clears `refused_at`. `access_denied` is a quiet cancel; `not_linked` and `expired` have their
+  own messages.
+- While the browser is open the attempt is kept under `sso.pending` (`PendingSsoStore`, `core/platform`), in
+  case the platform ends the app. A redirect that arrives with nothing listening is held by `DeepLinkIntake`;
+  the connect screen finishes the kept attempt with it on start, or says the sign-in was interrupted, and
+  `DeepLinkHost` opens that connect screen when the app restarted beside a session.
   `SsoOps` and its models are written by hand until the pinned OpenAPI document has the routes.
 
 | Where | Key | Holds |
@@ -316,6 +324,7 @@ destinations, the rest open from More, which ends with About. The rail ends with
 | Preferences | `context.active`, `context.recent` | The active context and the recent ones |
 | Secure storage | `token.<connection>` | An API token (the 0.1 key, so upgrading moves nothing) |
 | Secure storage | `session.<connection>` | A sign-in's session token |
+| Secure storage | `sso.pending` | The provider sign-in waiting in the browser, verifier included, cleared when it ends |
 
 The 0.1 list of servers is migrated once, on first start: each becomes a token connection with the same id on a
 remote instance per address. `whoami` names the tenant only for a person's session; for a token the app reads
@@ -558,7 +567,8 @@ be reached.
 `go_router` owns navigation, configured in `core/router`. Routes are paths, so a task has a stable address
 (`/projects/:key/tasks/:ref`) that works for back navigation, desktop windows and `tix://` links on Android, which
 `DeepLinkHost` (`core/widgets`) maps onto routes ([adb.md](adb.md#links)). Single sign-on redirects
-(`red.tix.mobile:`) share the same channel but never reach `DeepLinkHost`.
+(`red.tix.mobile:`) share the same channel but never reach `DeepLinkHost` as links; one that restarted the app
+beside a session makes it open the connect screen that finishes it.
 
 The shell adapts to the window width, using Material 3's window size classes:
 

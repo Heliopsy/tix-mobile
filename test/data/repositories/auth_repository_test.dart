@@ -321,7 +321,7 @@ void main() {
         attempt,
         ssoRedirectFor(server, attempt.url),
       );
-      expect(result.session?.token, isNotEmpty);
+      expect(result?.session?.token, isNotEmpty);
       final body = server.requests.last.body;
       expect(server.requests.last.uri.path, '/api/v1/auth/sso/exchange');
       expect(body, {'code': 'sso-1', 'code_verifier': attempt.verifier});
@@ -339,19 +339,45 @@ void main() {
       expect(server.requests, isEmpty);
     });
 
-    test('an error redirect carries its reason', () async {
+    Uri errorRedirect(SsoAttempt attempt, String reason) =>
+        Uri.parse('red.tix.mobile:/sso?error=$reason&state=${attempt.state}');
+
+    test('access_denied is the person turning it down: no result', () async {
       final attempt = auth.startSso(base, 'acme');
-      final redirect = Uri.parse(
-        'red.tix.mobile:/sso?error=access_denied&state=${attempt.state}',
+      expect(
+        await auth.finishSso(attempt, errorRedirect(attempt, 'access_denied')),
+        isNull,
+      );
+      expect(server.requests, isEmpty);
+    });
+
+    test('not_linked and expired have kinds of their own', () async {
+      final attempt = auth.startSso(base, 'acme');
+      await expectLater(
+        auth.finishSso(attempt, errorRedirect(attempt, 'not_linked')),
+        kind(TixErrorKind.ssoNotLinked),
       );
       await expectLater(
-        auth.finishSso(attempt, redirect),
-        throwsA(
-          isA<TixException>()
-              .having((e) => e.kind, 'kind', TixErrorKind.ssoFailed)
-              .having((e) => e.message, 'message', 'access_denied'),
-        ),
+        auth.finishSso(attempt, errorRedirect(attempt, 'expired')),
+        kind(TixErrorKind.ssoExpired),
       );
+      expect(server.requests, isEmpty);
+    });
+
+    test('other reasons fail the sign-in, the code kept out of the '
+        'message', () async {
+      final attempt = auth.startSso(base, 'acme');
+      for (final reason in ['provider_error', 'server_error', 'new_one']) {
+        await expectLater(
+          auth.finishSso(attempt, errorRedirect(attempt, reason)),
+          throwsA(
+            isA<TixException>()
+                .having((e) => e.kind, 'kind', TixErrorKind.ssoFailed)
+                .having((e) => e.message, 'message', isEmpty)
+                .having((e) => e.details['reason'], 'reason', reason),
+          ),
+        );
+      }
       expect(server.requests, isEmpty);
     });
 

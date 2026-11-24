@@ -10069,15 +10069,22 @@ class AppLocalizationsEn extends AppLocalizations {
       'Signing in with the provider did not finish. Try again.';
 
   @override
-  String errorSsoFailedReason(String reason) {
-    return 'Signing in with the provider did not finish ($reason). Try again.';
-  }
-
-  @override
   String get errorSsoStateMismatch =>
       'This sign-in could not be verified, so nothing was saved. Try again.';
 
   @override
   String get errorSsoRejected =>
       'The server did not accept this sign-in. It may have taken too long. Try again.';
+
+  @override
+  String get errorSsoNotLinked =>
+      'Your account with this provider is not linked to anyone on this server. Ask an administrator to add you, or sign in another way.';
+
+  @override
+  String get errorSsoExpired =>
+      'The sign-in took too long and expired. Try again.';
+
+  @override
+  String get errorSsoInterrupted =>
+      'The sign-in was interrupted before it finished. Try again.';
 }

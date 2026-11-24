@@ -136,8 +136,11 @@ Uri tixLinkTo(
 /// one until it is taken over the `tix/links` channel, and say `opened` when
 /// one arrives while running.
 class DeepLinkIntake {
-  /// Listens on [channel].
-  DeepLinkIntake([this.channel = const MethodChannel('tix/links')]) {
+  /// Listens on [channel], timing held sign-in redirects by [now].
+  DeepLinkIntake([
+    this.channel = const MethodChannel('tix/links'),
+    this.now = DateTime.now,
+  ]) {
     channel.setMethodCallHandler((call) async {
       if (call.method == 'opened') await _pull();
     });
@@ -145,16 +148,33 @@ class DeepLinkIntake {
 
   /// The channel to the platform.
   final MethodChannel channel;
+
+  /// The clock a held sign-in redirect is timed by.
+  final DateTime Function() now;
   final _links = StreamController<Uri>.broadcast();
   final _sso = StreamController<Uri>.broadcast();
   Uri? _waiting;
+  ({Uri uri, DateTime at})? _ssoWaiting;
 
   /// Links as they arrive, while someone listens.
   Stream<Uri> get links => _links.stream;
 
   /// Single sign-on redirects (`red.tix.mobile:`) as they arrive. They never
-  /// reach [links], and one that arrives while no sign-in waits is dropped.
+  /// reach [links]. One that arrives while no sign-in listens, such as the
+  /// one that restarted the app, is held for [takeSso].
   Stream<Uri> get ssoRedirects => _sso.stream;
+
+  /// Whether a sign-in redirect arrived while nobody listened.
+  bool get hasSsoRedirect => _ssoWaiting != null;
+
+  /// Takes the sign-in redirect that arrived while nobody listened, null
+  /// when there is none or it is older than [within].
+  Uri? takeSso({required Duration within}) {
+    final waiting = _ssoWaiting;
+    _ssoWaiting = null;
+    if (waiting == null || now().difference(waiting.at) > within) return null;
+    return waiting.uri;
+  }
 
   /// Takes a link that arrived while nobody listened.
   Uri? take() {
@@ -182,7 +202,11 @@ class DeepLinkIntake {
   /// hotkey send their links this way.
   void deliver(Uri uri) {
     if (uri.scheme.toLowerCase() == ssoScheme) {
-      _sso.add(uri);
+      if (_sso.hasListener) {
+        _sso.add(uri);
+      } else {
+        _ssoWaiting = (uri: uri, at: now());
+      }
       return;
     }
     if (_links.hasListener) {

@@ -73,7 +73,7 @@ final class SignInOptionsProvider
   }
 }
 
-String _$signInOptionsHash() => r'ed45c2a9707ab488ad4cc6baa853c93c58770c4c';
+String _$signInOptionsHash() => r'87bc79cc96533ba4064d356e8608302dfa63d6f2';
 
 /// What the sign-in step at [url] offers. Provider sign-in is left out
 /// where the platform has no external user agent.
@@ -155,7 +155,7 @@ final class ConnectFlowProvider
   }
 }
 
-String _$connectFlowHash() => r'3f280ddfa2ade5f8009b574c8dc38573f729d74e';
+String _$connectFlowHash() => r'6b3979ba584ad9b9aa46e2f05179f18f46166278';
 
 /// Adding an instance or a connection, one step at a time; one flow per
 /// connect screen, named by [key].

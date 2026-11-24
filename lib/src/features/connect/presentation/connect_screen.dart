@@ -159,6 +159,32 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
       });
     }
     if (!widget.adding) _takeShares();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) unawaited(_resumeSso());
+    });
+  }
+
+  /// Finishes, or reports, a provider sign-in the platform cut short by
+  /// ending the app while the browser was open.
+  Future<void> _resumeSso() async {
+    final SsoLeftOver? left;
+    try {
+      left = await _flow.leftOverSso();
+    } on Object catch (e) {
+      if (mounted) setState(() => _error = e);
+      return;
+    }
+    if (left == null || !mounted) return;
+    final pending = left.pending;
+    if (pending != null) {
+      setState(() {
+        _method = ConnectMethod.signIn;
+        _ssoLast = pending.attempt.provider;
+      });
+      if (_url.text.trim().isEmpty) _url.text = pending.attempt.baseUrl;
+      _urlSettled();
+    }
+    await _run(() => _flow.resumeSso(left!));
   }
 
   void _takeShares() {
@@ -528,6 +554,8 @@ class _ConnectScreenState extends ConsumerState<ConnectScreen> {
           TixErrorKind.ssoFailed,
           TixErrorKind.ssoStateMismatch,
           TixErrorKind.ssoRejected,
+          TixErrorKind.ssoExpired,
+          TixErrorKind.ssoInterrupted,
         }.contains(error.kind)) {
       return null;
     }

@@ -2757,7 +2757,9 @@
   "ssoWaiting": "Schließen Sie die Anmeldung im Browser ab und kehren Sie dann hierher zurück.",
   "ssoPasswordDisabled": "Dieser Server nimmt keine Passwörter an. Verbinden Sie sich mit einem API-Token.",
   "errorSsoFailed": "Die Anmeldung über den Anbieter wurde nicht abgeschlossen. Versuchen Sie es erneut.",
-  "errorSsoFailedReason": "Die Anmeldung über den Anbieter wurde nicht abgeschlossen ({reason}). Versuchen Sie es erneut.",
   "errorSsoStateMismatch": "Diese Anmeldung konnte nicht bestätigt werden, daher wurde nichts gespeichert. Versuchen Sie es erneut.",
-  "errorSsoRejected": "Der Server hat diese Anmeldung nicht angenommen. Vielleicht hat sie zu lange gedauert. Versuchen Sie es erneut."
+  "errorSsoRejected": "Der Server hat diese Anmeldung nicht angenommen. Vielleicht hat sie zu lange gedauert. Versuchen Sie es erneut.",
+  "errorSsoNotLinked": "Ihr Konto bei diesem Anbieter ist mit niemandem auf diesem Server verknüpft. Bitten Sie einen Administrator, Sie hinzuzufügen, oder melden Sie sich anders an.",
+  "errorSsoExpired": "Die Anmeldung hat zu lange gedauert und ist abgelaufen. Versuchen Sie es erneut.",
+  "errorSsoInterrupted": "Die Anmeldung wurde unterbrochen, bevor sie abgeschlossen war. Versuchen Sie es erneut."
 }

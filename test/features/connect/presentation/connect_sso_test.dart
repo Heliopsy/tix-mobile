@@ -1,12 +1,17 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/app.dart';
 import 'package:tix_mobile/src/core/config/config.dart';
+import 'package:tix_mobile/src/core/platform/sso_pending.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/models/connection.dart';
+import 'package:tix_mobile/src/data/models/sso.dart';
 import 'package:tix_mobile/src/features/connect/presentation/connect_screen.dart';
 
 import '../../../helpers/app.dart';
@@ -123,7 +128,7 @@ void main() {
   testWidgets('no buttons where the platform has no browser for it', (
     tester,
   ) async {
-    browser = FakeSsoBrowser(supported: false);
+    browser = FakeSsoBrowser(isSupported: false);
     await signInAt(tester);
     expect(acme, findsNothing);
   });
@@ -226,19 +231,220 @@ void main() {
     expect(secrets.values, isEmpty);
   });
 
-  testWidgets('an error redirect says the sign-in did not finish', (
+  Uri errorRedirect(Uri url, String reason) => Uri.parse(
+    'red.tix.mobile:/sso?error=$reason'
+    '&state=${url.queryParameters['app_state']}',
+  );
+
+  testWidgets('turning the sign-in down at the provider is a quiet cancel', (
     tester,
   ) async {
-    browser.answer = (url) => Uri.parse(
-      'red.tix.mobile:/sso?error=access_denied'
-      '&state=${url.queryParameters['app_state']}',
-    );
+    browser.answer = (url) => errorRedirect(url, 'access_denied');
     await signInAt(tester);
     await tap(tester, acme);
     await tester.pumpAndSettle();
-    expect(errorText(tester), contains('did not finish (access_denied)'));
-    expect(retry, findsOneWidget);
+    expect(error, findsNothing);
+    expect(retry, findsNothing);
+    expect(waiting, findsNothing);
     expect(secrets.values, isEmpty);
+  });
+
+  testWidgets('an account the tenant does not know is explained, no retry', (
+    tester,
+  ) async {
+    browser.answer = (url) => errorRedirect(url, 'not_linked');
+    await signInAt(tester);
+    await tap(tester, acme);
+    await tester.pumpAndSettle();
+    expect(errorText(tester), contains('not linked to anyone'));
+    expect(errorText(tester), isNot(contains('not_linked')));
+    expect(retry, findsNothing);
+    expect(secrets.values, isEmpty);
+  });
+
+  testWidgets('an expired sign-in says so and can be tried again', (
+    tester,
+  ) async {
+    browser.answer = (url) => errorRedirect(url, 'expired');
+    await signInAt(tester);
+    await tap(tester, acme);
+    await tester.pumpAndSettle();
+    expect(errorText(tester), contains('took too long'));
+    expect(retry, findsOneWidget);
+  });
+
+  for (final reason in ['provider_error', 'server_error']) {
+    testWidgets('$reason says the sign-in did not finish, without the code', (
+      tester,
+    ) async {
+      browser.answer = (url) => errorRedirect(url, reason);
+      await signInAt(tester);
+      await tap(tester, acme);
+      await tester.pumpAndSettle();
+      expect(errorText(tester), contains('did not finish'));
+      expect(errorText(tester), isNot(contains(reason)));
+      expect(retry, findsOneWidget);
+      expect(secrets.values, isEmpty);
+    });
+  }
+
+  testWidgets('the attempt is kept while the browser is open', (tester) async {
+    await signInAt(tester);
+    await tap(tester, acme);
+    for (var i = 0; i < 10 && browser.opened.isEmpty; i++) {
+      await tester.pump(const Duration(milliseconds: 1));
+    }
+    final kept = jsonDecode(
+      secrets.values[PendingSsoStore.key]!,
+    ) as Map<String, Object?>;
+    final url = browser.opened.single;
+    expect(kept['base_url'], 'https://tix.example');
+    expect(kept['provider'], 'acme');
+    expect(kept['state'], url.queryParameters['app_state']);
+    expect(
+      pkceChallenge(kept['verifier']! as String),
+      url.queryParameters['code_challenge'],
+    );
+    expect(kept['started_at'], isNotNull);
+    await tap(tester, find.byKey(const Key('connect.sso.cancel')));
+    await tester.pumpAndSettle();
+    expect(secrets.values, isEmpty);
+  });
+
+  testWidgets('cancelling during the exchange saves nothing', (tester) async {
+    final gate = Completer<void>();
+    final c = await signInAt(tester);
+    browser.answer = (url) {
+      server.gate = gate;
+      return ssoRedirectFor(server, url);
+    };
+    await tap(tester, acme);
+    for (
+      var i = 0;
+      i < 20 && !server.requests.any((r) => r.uri.path.endsWith('/exchange'));
+      i++
+    ) {
+      await tester.pump(const Duration(milliseconds: 1));
+    }
+    await tap(tester, find.byKey(const Key('connect.sso.cancel')));
+    await tester.pump();
+    server.gate = null;
+    gate.complete();
+    await tester.pumpAndSettle();
+    expect(c.read(sessionControllerProvider).value, isNull);
+    expect(secrets.values, isEmpty);
+    expect(error, findsNothing);
+  });
+
+  group('after the app was restarted', () {
+    PendingSso keep(String state, {String name = ''}) {
+      final pending = PendingSso(
+        attempt: SsoAttempt(
+          baseUrl: 'https://tix.example',
+          provider: 'acme',
+          verifier: 'v' * 43,
+          state: state,
+        ),
+        startedAt: fixedNow.subtract(const Duration(minutes: 1)),
+        name: name,
+      );
+      secrets.values[PendingSsoStore.key] = jsonEncode(pending.toJson());
+      return pending;
+    }
+
+    Future<ProviderContainer> open(WidgetTester tester) async {
+      final c = await pumpScreen(
+        tester,
+        const ConnectScreen(),
+        overrides: fakeOverrides(server, secrets: secrets, sso: browser),
+      );
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pumpAndSettle();
+      return c;
+    }
+
+    testWidgets('a kept attempt and its redirect finish the sign-in', (
+      tester,
+    ) async {
+      final pending = keep('s1');
+      final code = server.grantSso(pkceChallenge(pending.attempt.verifier));
+      browser.left = Uri.parse('red.tix.mobile:/sso?code=$code&state=s1');
+      final c = await open(tester);
+      expect(error, findsNothing);
+      final session = c.read(sessionControllerProvider).value;
+      expect(session?.connection.email, 'ana@example.com');
+      expect(secrets.values.keys.single, startsWith('session.'));
+      expect(browser.opened, isEmpty);
+    });
+
+    testWidgets('a redirect for another attempt says it was interrupted', (
+      tester,
+    ) async {
+      keep('s1');
+      browser.left = Uri.parse('red.tix.mobile:/sso?code=c&state=other');
+      final c = await open(tester);
+      expect(errorText(tester), contains('interrupted'));
+      expect(c.read(sessionControllerProvider).value, isNull);
+      expect(secrets.values, isEmpty);
+      expect(
+        server.requests.where((r) => r.uri.path.endsWith('/sso/exchange')),
+        isEmpty,
+      );
+    });
+
+    testWidgets('a redirect with nothing kept says it was interrupted', (
+      tester,
+    ) async {
+      browser.left = Uri.parse('red.tix.mobile:/sso?code=c&state=s1');
+      await open(tester);
+      expect(errorText(tester), contains('interrupted'));
+    });
+
+    testWidgets('a kept attempt with no redirect says it was interrupted '
+        'and offers the provider again', (tester) async {
+      keep('s1');
+      await open(tester);
+      expect(errorText(tester), contains('interrupted'));
+      expect(secrets.values, isEmpty);
+      expect(
+        tester
+            .widget<EditableText>(
+              find.descendant(
+                of: find.byKey(const Key('connect.url')),
+                matching: find.byType(EditableText),
+              ),
+            )
+            .controller
+            .text,
+        'https://tix.example',
+      );
+      expect(retry, findsOneWidget);
+    });
+
+    testWidgets('a kept attempt past its lifetime is dropped quietly', (
+      tester,
+    ) async {
+      final old = PendingSso(
+        attempt: const SsoAttempt(
+          baseUrl: 'https://tix.example',
+          provider: 'acme',
+          verifier: 'v',
+          state: 's1',
+        ),
+        startedAt: fixedNow.subtract(const Duration(minutes: 11)),
+      );
+      secrets.values[PendingSsoStore.key] = jsonEncode(old.toJson());
+      await open(tester);
+      expect(error, findsNothing);
+      expect(secrets.values, isEmpty);
+    });
+
+    testWidgets('nothing kept and nothing held leaves the screen alone', (
+      tester,
+    ) async {
+      await open(tester);
+      expect(error, findsNothing);
+    });
   });
 
   testWidgets('a refused exchange is explained and can be tried again', (

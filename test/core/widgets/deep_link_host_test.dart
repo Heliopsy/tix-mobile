@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:convert';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/platform/deep_links.dart';
+import 'package:tix_mobile/src/core/platform/sso_pending.dart';
 import 'package:tix_mobile/src/core/quick/quick_add.dart';
 import 'package:tix_mobile/src/core/widgets/deep_link_host.dart';
+import 'package:tix_mobile/src/data/models/sso.dart';
 
 import '../../helpers/app.dart';
 import '../../helpers/fake_tix.dart';
@@ -29,9 +33,16 @@ void main() {
     addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
   });
 
-  Future<void> open(WidgetTester tester, String link) async {
+  Future<void> open(
+    WidgetTester tester,
+    String link, {
+    PendingSso? kept,
+  }) async {
     pending = link;
     final stores = signedInStores();
+    if (kept != null) {
+      stores.secrets.values[PendingSsoStore.key] = jsonEncode(kept.toJson());
+    }
     await pumpScreen(
       tester,
       const DeepLinkHost(child: Scaffold(body: Text('home'))),
@@ -82,6 +93,39 @@ void main() {
     expect(draft!.project, 'OPS');
     expect(draft.text, isEmpty);
     expect(find.text('Link not recognised'), findsNothing);
+  });
+
+  PendingSso kept({String? instanceId, String? replacing}) => PendingSso(
+    attempt: const SsoAttempt(
+      baseUrl: 'https://tix.example',
+      provider: 'acme',
+      verifier: 'v',
+      state: 's',
+    ),
+    startedAt: fixedNow,
+    instanceId: instanceId,
+    replacing: replacing,
+  );
+
+  const redirect = 'red.tix.mobile:/sso?code=c&state=s';
+
+  testWidgets('a sign-in redirect that restarted the app opens the connect '
+      'screen it started from', (tester) async {
+    await open(tester, redirect, kept: kept(replacing: 'c1'));
+    expect(find.text('route:/connect?connection=c1'), findsOneWidget);
+    expect(find.text('Link not recognised'), findsNothing);
+  });
+
+  testWidgets('one for a new connection opens adding to its instance', (
+    tester,
+  ) async {
+    await open(tester, redirect, kept: kept(instanceId: 'i1'));
+    expect(find.text('route:/connect?instance=i1'), findsOneWidget);
+  });
+
+  testWidgets('one with nothing kept opens adding a server', (tester) async {
+    await open(tester, redirect);
+    expect(find.text('route:/connect?add=1'), findsOneWidget);
   });
 
   testWidgets('an unknown link says so and goes home', (tester) async {
