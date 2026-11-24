@@ -15,6 +15,10 @@ abstract interface class KeyValueStore {
 
   /// Removes [key].
   Future<void> delete(String key);
+
+  /// Reads again what another isolate, such as the widgets' headless run,
+  /// may have written since.
+  Future<void> reload();
 }
 
 /// Secrets such as API tokens, kept in the platform keychain. A keychain
@@ -33,10 +37,16 @@ abstract interface class SecretStore {
 
 /// [KeyValueStore] over [SharedPreferencesWithCache].
 class PrefsKeyValueStore implements KeyValueStore {
-  /// Wraps the given preferences.
-  PrefsKeyValueStore(this._prefs);
+  /// Wraps the given preferences, made with [options].
+  PrefsKeyValueStore(
+    this._prefs, {
+    this.options = const SharedPreferencesWithCacheOptions(),
+  });
 
-  final SharedPreferencesWithCache _prefs;
+  /// The options [reload] makes the preferences with again.
+  final SharedPreferencesWithCacheOptions options;
+
+  SharedPreferencesWithCache _prefs;
 
   @override
   String? read(String key) => _prefs.getString(key);
@@ -46,6 +56,13 @@ class PrefsKeyValueStore implements KeyValueStore {
 
   @override
   Future<void> delete(String key) => _prefs.remove(key);
+
+  /// Swaps in freshly read preferences. `reloadCache` would empty the cache
+  /// while it waits, and a read in that gap would find nothing saved.
+  @override
+  Future<void> reload() async {
+    _prefs = await SharedPreferencesWithCache.create(cacheOptions: options);
+  }
 }
 
 /// [SecretStore] over [FlutterSecureStorage].

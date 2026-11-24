@@ -63,17 +63,23 @@ final class EventSocketConnectorProvider
 String _$eventSocketConnectorHash() =>
     r'3d585d101a28b35f873541f0d91a9e21737f3d46';
 
-/// Fires each time the app comes back to the foreground.
+/// Fires each time the app comes back to the foreground, once the settings
+/// another isolate wrote meanwhile, such as a refusal the widgets recorded,
+/// are read again.
 
 @ProviderFor(appResumed)
 final appResumedProvider = AppResumedProvider._();
 
-/// Fires each time the app comes back to the foreground.
+/// Fires each time the app comes back to the foreground, once the settings
+/// another isolate wrote meanwhile, such as a refusal the widgets recorded,
+/// are read again.
 
 final class AppResumedProvider
     extends $FunctionalProvider<AsyncValue<void>, void, Stream<void>>
     with $FutureModifier<void>, $StreamProvider<void> {
-  /// Fires each time the app comes back to the foreground.
+  /// Fires each time the app comes back to the foreground, once the settings
+  /// another isolate wrote meanwhile, such as a refusal the widgets recorded,
+  /// are read again.
   AppResumedProvider._()
     : super(
         from: null,
@@ -99,7 +105,7 @@ final class AppResumedProvider
   }
 }
 
-String _$appResumedHash() => r'a48e02764c6328223e6f2e16cbf9f6bc79a70526';
+String _$appResumedHash() => r'd03fa0686b1a90fa7d8b9aa6fcb03eed264579fe';
 
 /// Fires each time the app goes out of sight, the moment a home screen and
 /// its widgets come back into view.

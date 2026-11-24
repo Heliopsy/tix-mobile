@@ -13,6 +13,37 @@ class MemoryKeyValueStore implements KeyValueStore {
 
   @override
   Future<void> delete(String key) async => values.remove(key);
+
+  @override
+  Future<void> reload() async {}
+}
+
+/// A [MemoryKeyValueStore] that caches [disk] as one isolate's preferences
+/// do: it writes through, but sees what another writer put on [disk] only
+/// after [reload].
+class CachedKeyValueStore extends MemoryKeyValueStore {
+  CachedKeyValueStore(this.disk) {
+    values.addAll(disk);
+  }
+
+  final Map<String, String> disk;
+
+  @override
+  Future<void> write(String key, String value) async {
+    values[key] = value;
+    disk[key] = value;
+  }
+
+  @override
+  Future<void> delete(String key) async {
+    values.remove(key);
+    disk.remove(key);
+  }
+
+  @override
+  Future<void> reload() async => values
+    ..clear()
+    ..addAll(disk);
 }
 
 class MemorySecretStore implements SecretStore {

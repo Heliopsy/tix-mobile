@@ -284,8 +284,18 @@ class InstancesRepository {
     return saved;
   }
 
-  /// Replaces the stored record of [connection], keeping its secret.
-  Future<void> update(Connection connection) => _upsertConnection(connection);
+  /// Reads the saved lists again, for what another isolate, such as the
+  /// widgets' headless run, wrote since.
+  Future<void> reload() => _settings.reload();
+
+  /// Replaces the stored record of [connection], keeping its secret and a
+  /// refusal recorded since it was read: only [save] clears one.
+  Future<void> update(Connection connection) async {
+    await reload();
+    final refusedAt =
+        connection.refusedAt ?? this.connection(connection.id)?.refusedAt;
+    await _upsertConnection(connection.copyWith(refusedAt: refusedAt));
+  }
 
   /// Replaces the stored record of [instance], when it is still saved.
   Future<void> updateInstance(Instance instance) async {
@@ -295,6 +305,7 @@ class InstancesRepository {
 
   /// Makes [ref] the active context and the most recent one.
   Future<void> activate(ContextRef ref) async {
+    await reload();
     final now = _now();
     final conn = connection(ref.connectionId);
     if (conn == null) return;
@@ -315,6 +326,7 @@ class InstancesRepository {
   /// was the last connection. When it was active, the most recent remaining
   /// context, else the first connection, becomes active.
   Future<void> removeConnection(String id) async {
+    await reload();
     final conn = connection(id);
     if (conn == null) return;
     await _secrets.delete(_secretKey(conn));
@@ -393,7 +405,8 @@ class InstancesRepository {
     return _writeInstances(list);
   }
 
-  Future<void> _upsertConnection(Connection connection) {
+  Future<void> _upsertConnection(Connection connection) async {
+    await reload();
     final list = connections();
     final at = list.indexWhere((c) => c.id == connection.id);
     if (at < 0) {
@@ -401,7 +414,7 @@ class InstancesRepository {
     } else {
       list[at] = connection;
     }
-    return _writeConnections(list);
+    await _writeConnections(list);
   }
 
   Future<void> _writeInstances(List<Instance> list) => _settings.write(

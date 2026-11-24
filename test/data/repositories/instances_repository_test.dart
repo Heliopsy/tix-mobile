@@ -228,6 +228,52 @@ void main() {
     expect(repo.active()!.connectionId, 'c5');
   });
 
+  group('a refusal another isolate recorded', () {
+    late Map<String, String> disk;
+    late InstancesRepository app;
+    late InstancesRepository other;
+
+    setUp(() async {
+      await repo.save(
+        instance: remote('i', 'https://a'),
+        connection: token('a', 'i'),
+        secret: 'x',
+      );
+      disk = settings.values;
+      app = InstancesRepository(CachedKeyValueStore(disk), secrets);
+      other = InstancesRepository(CachedKeyValueStore(disk), secrets);
+      await other.update(other.connection('a')!.copyWith(refusedAt: now));
+      expect(app.connection('a')?.refused, isFalse);
+    });
+
+    test('survives activating the connection', () async {
+      await app.activate(const ContextRef(connectionId: 'a'));
+      expect(other.connection('a'), isNotNull);
+      await other.reload();
+      expect(other.connection('a')?.refusedAt, now);
+      expect(other.connection('a')?.lastUsedAt, isNotNull);
+      expect(app.connection('a')?.refusedAt, now);
+    });
+
+    test('survives an update read before it', () async {
+      final stale = app.connection('a')!;
+      await app.update(stale.copyWith(label: 'Work'));
+      await other.reload();
+      expect(other.connection('a')?.refusedAt, now);
+      expect(other.connection('a')?.label, 'Work');
+    });
+
+    test('is cleared by saving a new secret', () async {
+      await app.save(
+        instance: remote('i', 'https://a'),
+        connection: app.connection('a')!,
+        secret: 'y',
+      );
+      await other.reload();
+      expect(other.connection('a')?.refused, isFalse);
+    });
+  });
+
   test('removing the active connection falls back to a recent one', () async {
     final i = remote('i', 'https://a');
     await repo.save(instance: i, connection: token('a', 'i'), secret: 'x');

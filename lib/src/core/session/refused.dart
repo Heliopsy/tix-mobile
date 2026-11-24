@@ -68,14 +68,25 @@ class RefusedCredentials {
   }
 
   /// Cancels the work of [connection], marks it refused and, for a sign-in,
-  /// deletes the session; a token is kept. Notifies when allowed. Does
-  /// nothing when it is already refused or holds another secret than
-  /// [credential] by now. Whether it recorded the refusal.
+  /// deletes the session; a token is kept. Notifies when allowed. Whether
+  /// [connection] stands refused now: also when another isolate, such as the
+  /// widgets' headless run, recorded it first, which notifies no one again,
+  /// or deleted the sign-in's session. False when it is gone or holds
+  /// another secret than [credential] by now.
   Future<bool> record(Connection connection, Credential credential) async {
+    await instances.reload();
     final current = instances.connection(connection.id);
-    if (current == null || current.refused) return false;
+    if (current == null) return false;
+    if (current.refused) return true;
     await jobs.cancel(current.id);
-    if (await instances.secret(current) != credential.secret) return false;
+    final secret = await instances.secret(current);
+    if (secret != credential.secret) {
+      if (current.kind != ConnectionKind.signIn || (secret ?? '').isNotEmpty) {
+        return false;
+      }
+      await instances.update(current.copyWith(refusedAt: now()));
+      return true;
+    }
     await instances.update(current.copyWith(refusedAt: now()));
     if (current.kind == ConnectionKind.signIn) {
       await instances.deleteSecret(current);
