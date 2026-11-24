@@ -24,6 +24,31 @@ void main() {
     expect(store.read('k'), isNull);
   });
 
+  test(
+    'PrefsKeyValueStore sees what another cache wrote after reload',
+    () async {
+      SharedPreferencesAsyncPlatform.instance =
+          InMemorySharedPreferencesAsync.empty();
+      Future<PrefsKeyValueStore> open() async => PrefsKeyValueStore(
+        await SharedPreferencesWithCache.create(
+          cacheOptions: const SharedPreferencesWithCacheOptions(),
+        ),
+      );
+      final app = await open();
+      await app.write('kept', 'a');
+      final headless = await open();
+      await headless.write('k', 'v');
+      expect(app.read('k'), isNull);
+
+      final reloading = app.reload();
+      expect(app.read('kept'), 'a');
+      await reloading;
+
+      expect(app.read('k'), 'v');
+      expect(app.read('kept'), 'a');
+    },
+  );
+
   test('SecureSecretStore reads back what it wrote', () async {
     FlutterSecureStorage.setMockInitialValues({});
     final store = SecureSecretStore();

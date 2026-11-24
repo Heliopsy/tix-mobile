@@ -87,6 +87,31 @@ void main() {
 
   int projectReads() => server.requestsTo('/api/v1/projects').length;
 
+  /// Confirms and records the refusal of [connectionId] as the widgets'
+  /// headless run does, through its own preferences over [disk].
+  Future<void> refuseHeadless(
+    Map<String, String> disk,
+    MemorySecretStore secrets,
+    String connectionId,
+  ) async {
+    final headless = makeContainer(
+      fakeOverrides(
+        server,
+        settings: CachedKeyValueStore(disk),
+        secrets: secrets,
+        notes: notes,
+      ),
+    );
+    final connection = headless
+        .read(instancesRepositoryProvider)
+        .connection(connectionId)!;
+    expect(
+      await headless.read(refusedCredentialsProvider).check(connection),
+      isTrue,
+    );
+    await pumpEventQueue();
+  }
+
   void expectSignedOut(ProviderContainer c) {
     expect(c.read(sessionControllerProvider).value, isNull);
     expect(stores.secrets.values.containsKey('session.s1'), isFalse);
@@ -175,6 +200,28 @@ void main() {
     expect(notes.shown, hasLength(1));
   });
 
+  test('a session the widgets refused meanwhile signs out on the next '
+      'sync without a second notification', () async {
+    final disk = stores.settings.values;
+    final c = await container(
+      using: (settings: CachedKeyValueStore(disk), secrets: stores.secrets),
+    );
+    server.sessions.clear();
+    await refuseHeadless(disk, stores.secrets, 's1');
+    expect(notes.shown, hasLength(1));
+
+    timers.fire();
+    await pumpEventQueue();
+
+    expectSignedOut(c);
+    expect(timers.started.single.$1.cancelled, isTrue);
+    expect(notes.shown, hasLength(1));
+    final after = server.requests.length;
+    timers.fire();
+    await pumpEventQueue();
+    expect(server.requests.length, after);
+  });
+
   group('a token', () {
     late ({MemoryKeyValueStore settings, MemorySecretStore secrets}) tokens;
 
@@ -253,6 +300,31 @@ void main() {
       expect(server.requestsTo('/api/v1/whoami').length, whoamis + 1);
       expect(timers.started.where((t) => !t.$1.cancelled), hasLength(1));
       expect(notes.shown, isEmpty);
+    });
+
+    test('the widgets refused meanwhile stays refused when the app writes '
+        'the connection and drops its session', () async {
+      final disk = tokens.settings.values;
+      final c = await container(
+        using: (settings: CachedKeyValueStore(disk), secrets: tokens.secrets),
+      );
+      server.tokens.remove('tok');
+      await refuseHeadless(disk, tokens.secrets, 'c1');
+      expect(notes.shown, hasLength(1));
+
+      await c
+          .read(instancesRepositoryProvider)
+          .activate(const ContextRef(connectionId: 'c1'));
+      expect(disk['connections'], contains('refused_at'));
+      timers.fire();
+      await pumpEventQueue();
+
+      expect(c.read(sessionControllerProvider).value, isNull);
+      expect(saved(c)?.refused, isTrue);
+      expect(tokens.secrets.values['token.c1'], 'tok');
+      expect(c.read(sessionControllerProvider.notifier).awaitingSignIn(), 'c1');
+      expect(timers.started.single.$1.cancelled, isTrue);
+      expect(notes.shown, hasLength(1));
     });
 
     test('signing in over a refused token keeps the connection', () async {

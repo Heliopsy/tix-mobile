@@ -10,6 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
+import 'package:tix_mobile/src/core/storage/providers.dart';
 import 'package:tix_mobile/src/data/events/live_events.dart';
 import 'package:tix_mobile/src/data/models/instance.dart';
 
@@ -21,11 +22,21 @@ part 'events.g.dart';
 @Riverpod(keepAlive: true)
 EventSocketConnector eventSocketConnector(Ref ref) => ioEventSocket;
 
-/// Fires each time the app comes back to the foreground.
+/// Fires each time the app comes back to the foreground, once the settings
+/// another isolate wrote meanwhile, such as a refusal the widgets recorded,
+/// are read again.
 @Riverpod(keepAlive: true)
 Stream<void> appResumed(Ref ref) {
   final resumed = StreamController<void>.broadcast();
-  final listener = AppLifecycleListener(onResume: () => resumed.add(null));
+  Future<void> resume() async {
+    try {
+      await ref.read(keyValueStoreProvider).reload();
+    } finally {
+      if (!resumed.isClosed) resumed.add(null);
+    }
+  }
+
+  final listener = AppLifecycleListener(onResume: () => unawaited(resume()));
   ref.onDispose(() {
     listener.dispose();
     unawaited(resumed.close());
