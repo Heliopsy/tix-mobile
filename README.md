@@ -190,6 +190,11 @@ App Store, F-Droid, Flathub) are on the [roadmap](ROADMAP.md), not available tod
   tokens issued with scopes and an expiry, shown once, listed with their last use, rotated with a grace window for
   the old value (retiring until it ends) and revoked; your account, tenants and history; the private calendar feed
   for Google, Apple or Outlook. Each shows only when your role or token allows it.
+- **Tasks in other apps**: your tix tasks as to-do lists in Apple Reminders, tasks.org or jtx Board through DAVx5,
+  Thunderbird and Evolution, over tix's CalDAV server (tix 0.69.0 and later). Set up mints an app password for that
+  app alone, with the lists it shows (Assigned to me, one per project, or both), and hands it over: a configuration
+  profile on iOS and macOS, DAVx5's login filled in on Android, copyable details on Linux and Windows. The app
+  keeps no copy; the screen lists the passwords with their last use and revokes them.
 - **Import and export**: a project's tasks, or a filtered part of them, as CSV, JSON, NDJSON or Markdown with the
   columns you choose, a snapshot of the whole tenant, and an import in five steps, as on the web: a file or a
   pasted list in quick-add syntax, which field each column fills, what each status, priority and person becomes,

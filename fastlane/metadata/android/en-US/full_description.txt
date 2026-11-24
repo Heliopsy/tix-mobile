@@ -21,7 +21,7 @@ What it does:
 - Phone and tablet layouts, with a two-pane list and detail on wide screens
 
 Privacy:
-The server stays the source of truth. The app keeps no data of its own beyond the servers you added and a few preferences. API tokens and sign-in sessions are kept in the Android Keystore and are never written to logs or preferences. Passwords are not stored at all. The app contains no analytics, advertising or crash-reporting libraries.
+The server stays the source of truth. The app keeps no data of its own beyond the servers you added and a few preferences. API tokens and sign-in sessions are kept in the Android Keystore and are never written to logs or preferences. Passwords are not stored at all. The app contains no analytics, advertising or crash-reporting libraries. When you set up Tasks in other apps, the app asks your server for an app password and hands it to the app you choose (DAVx5, or the clipboard). The app does not keep it.
 
 Getting started:
 On the machine running tix, mint a token with "tix token create phone --scope task:read --scope task:write --scope project:read", then add the server's URL and the token in the app. A phone cannot reach a server bound to localhost on another machine, so serve tix over HTTPS, either directly or behind a reverse proxy.
