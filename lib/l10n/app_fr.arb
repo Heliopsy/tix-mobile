@@ -2757,7 +2757,9 @@
   "ssoWaiting": "Terminez la connexion dans votre navigateur, puis revenez ici.",
   "ssoPasswordDisabled": "Ce serveur n’accepte pas les mots de passe. Utilisez un jeton d’API pour vous connecter.",
   "errorSsoFailed": "La connexion via le fournisseur n’a pas abouti. Réessayez.",
-  "errorSsoFailedReason": "La connexion via le fournisseur n’a pas abouti ({reason}). Réessayez.",
   "errorSsoStateMismatch": "Cette connexion n’a pas pu être vérifiée, rien n’a donc été enregistré. Réessayez.",
-  "errorSsoRejected": "Le serveur n’a pas accepté cette connexion. Elle a peut-être pris trop de temps. Réessayez."
+  "errorSsoRejected": "Le serveur n’a pas accepté cette connexion. Elle a peut-être pris trop de temps. Réessayez.",
+  "errorSsoNotLinked": "Votre compte chez ce fournisseur n’est lié à personne sur ce serveur. Demandez à un administrateur de vous ajouter, ou connectez-vous autrement.",
+  "errorSsoExpired": "La connexion a pris trop de temps et a expiré. Réessayez.",
+  "errorSsoInterrupted": "La connexion a été interrompue avant d’aboutir. Réessayez."
 }

@@ -4,10 +4,12 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tix_mobile/src/core/clock/clock.dart';
 import 'package:tix_mobile/src/core/config/server_url.dart';
 import 'package:tix_mobile/src/core/errors/tix_exception.dart';
 import 'package:tix_mobile/src/core/l10n/durations.dart';
 import 'package:tix_mobile/src/core/platform/sso_browser.dart';
+import 'package:tix_mobile/src/core/platform/sso_pending.dart';
 import 'package:tix_mobile/src/core/session/local.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/api/tix_api.dart';
@@ -37,12 +39,17 @@ bool rememberOffered(SessionPolicy? policy) {
 Future<SignInOptions> signInOptions(Ref ref, String url) async {
   final baseUrl = normalizeServerUrl(url);
   if (baseUrl == null) return SignInOptions.none;
+  final browser = ref.watch(ssoBrowserProvider);
   final options = await ref
       .watch(authRepositoryProvider)
       .signInOptions(baseUrl);
-  if (ref.watch(ssoBrowserProvider).supported) return options;
+  if (await browser.supported()) return options;
   return options.copyWith(appSignIn: false);
 }
+
+/// A provider sign-in an earlier run of the app left unfinished, and the
+/// redirect that came back while nothing waited for it; either may be gone.
+typedef SsoLeftOver = ({PendingSso? pending, Uri? redirect});
 
 /// Where adding an instance or a connection has got to.
 @immutable
@@ -316,7 +323,9 @@ class ConnectFlow extends _$ConnectFlow {
 
   /// Signs in through [provider] in the system browser, at [url] or at the
   /// instance of [instanceId] or of the connection [replacing], and saves it
-  /// as a password sign-in would. Returns quietly when the person cancels.
+  /// as a password sign-in would. Returns quietly when the person cancels,
+  /// here or at the provider. The attempt is kept in secure storage while
+  /// the browser is open, for [resumeSso] after a restart.
   Future<void> sso({
     required String url,
     required String provider,
@@ -332,24 +341,91 @@ class ConnectFlow extends _$ConnectFlow {
     final baseUrl = await auth.checkServer(instance?.baseUrl ?? url);
     if (run != _ssoRun) return;
     final attempt = auth.startSso(baseUrl, provider);
-    final redirect = await ref
-        .read(ssoBrowserProvider)
-        .authenticate(attempt.url);
-    if (redirect == null || run != _ssoRun) return;
-    final result = await auth.finishSso(attempt, redirect);
-    await _signedIn(
-      SignInDraft(
-        baseUrl: baseUrl,
-        email: old?.email ?? '',
+    final pending = ref.read(pendingSsoProvider);
+    await pending.save(
+      PendingSso(
+        attempt: attempt,
+        startedAt: ref.read(clockProvider)(),
         name: name,
+        instanceId: instanceId,
+        replacing: replacing,
+      ),
+    );
+    try {
+      if (run != _ssoRun) return;
+      final redirect = await ref.read(ssoBrowserProvider).authenticate(attempt);
+      if (redirect == null || run != _ssoRun) return;
+      await _finishSso(
+        run,
+        attempt,
+        redirect,
+        SignInDraft(
+          baseUrl: baseUrl,
+          email: old?.email ?? '',
+          name: name,
+          replacing: old?.id,
+          pinned: old?.pinned,
+        ),
+      );
+    } finally {
+      await pending.clear(attempt.state);
+    }
+  }
+
+  /// The provider sign-in an earlier run of the app left in the browser,
+  /// with the redirect that came back for it; null when neither is there
+  /// or this run has a sign-in of its own under way.
+  Future<SsoLeftOver?> leftOverSso() async {
+    final store = ref.read(pendingSsoProvider);
+    if (store.live) return null;
+    final pending = await store.take();
+    final redirect = await ref.read(ssoBrowserProvider).leftOver();
+    if (pending == null && redirect == null) return null;
+    return (pending: pending, redirect: redirect);
+  }
+
+  /// Finishes [left] when its redirect carries the kept attempt's state, as
+  /// [sso] would have; says the sign-in was interrupted otherwise.
+  Future<void> resumeSso(SsoLeftOver left) async {
+    final (:pending, :redirect) = left;
+    if (pending == null ||
+        redirect == null ||
+        ssoStateOf(redirect) != pending.attempt.state) {
+      throw const TixException(TixErrorKind.ssoInterrupted);
+    }
+    final replacing = pending.replacing;
+    final old = replacing == null
+        ? null
+        : ref.read(instancesRepositoryProvider).connection(replacing);
+    await _finishSso(
+      ++_ssoRun,
+      pending.attempt,
+      redirect,
+      SignInDraft(
+        baseUrl: pending.attempt.baseUrl,
+        email: old?.email ?? '',
+        name: pending.name,
         replacing: old?.id,
         pinned: old?.pinned,
       ),
-      result,
     );
   }
 
-  /// Gives up on the provider sign-in waiting in the browser.
+  Future<void> _finishSso(
+    int run,
+    SsoAttempt attempt,
+    Uri redirect,
+    SignInDraft draft,
+  ) async {
+    final result = await ref
+        .read(authRepositoryProvider)
+        .finishSso(attempt, redirect);
+    if (result == null || run != _ssoRun) return;
+    await _signedIn(draft, result);
+  }
+
+  /// Gives up on the provider sign-in waiting in the browser, or on the
+  /// exchange of its code.
   Future<void> cancelSso() async {
     _ssoRun++;
     await ref.read(ssoBrowserProvider).cancel();

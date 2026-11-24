@@ -231,16 +231,28 @@ class AuthRepository {
 
   /// Finishes [attempt] with the [redirect] the browser came back with:
   /// checks its state, reads its code and exchanges it with the verifier.
-  Future<LoginResult> finishSso(SsoAttempt attempt, Uri redirect) async {
-    final q = redirect.queryParameters;
+  /// Null when the person turned the sign-in down at the provider.
+  Future<LoginResult?> finishSso(SsoAttempt attempt, Uri redirect) async {
     if (redirect.scheme.toLowerCase() != ssoScheme ||
-        q['state'] != attempt.state) {
+        ssoStateOf(redirect) != attempt.state) {
       throw const TixException(TixErrorKind.ssoStateMismatch);
     }
+    final q = redirect.queryParameters;
     final error = q['error'] ?? '';
     final code = q['code'] ?? '';
+    switch (error) {
+      case 'access_denied':
+        return null;
+      case 'not_linked':
+        throw const TixException(TixErrorKind.ssoNotLinked);
+      case 'expired':
+        throw const TixException(TixErrorKind.ssoExpired);
+    }
     if (error.isNotEmpty || code.isEmpty) {
-      throw TixException(TixErrorKind.ssoFailed, message: error);
+      throw TixException(
+        TixErrorKind.ssoFailed,
+        details: {if (error.isNotEmpty) 'reason': error},
+      );
     }
     final LoginResult result;
     try {

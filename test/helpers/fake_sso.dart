@@ -10,13 +10,16 @@ import 'fake_tix.dart';
 /// A browser that answers each provider sign-in with [answer], or waits for
 /// [cancel] when there is none.
 class FakeSsoBrowser implements SsoBrowser {
-  FakeSsoBrowser({this.supported = true, this.answer});
+  FakeSsoBrowser({this.isSupported = true, this.answer, this.left});
 
-  @override
-  final bool supported;
+  /// What [supported] answers.
+  final bool isSupported;
 
   /// The redirect for each opened address; null cancels.
   FutureOr<Uri?> Function(Uri url)? answer;
+
+  /// What [leftOver] hands over once.
+  Uri? left;
 
   /// Every address opened.
   final opened = <Uri>[];
@@ -27,7 +30,11 @@ class FakeSsoBrowser implements SsoBrowser {
   Completer<Uri?>? _held;
 
   @override
-  Future<Uri?> authenticate(Uri url) async {
+  Future<bool> supported() async => isSupported;
+
+  @override
+  Future<Uri?> authenticate(SsoAttempt attempt) async {
+    final url = attempt.url;
     opened.add(url);
     final reply = answer;
     if (reply != null) return await reply(url);
@@ -41,6 +48,13 @@ class FakeSsoBrowser implements SsoBrowser {
     final held = _held;
     _held = null;
     if (held != null && !held.isCompleted) held.complete(null);
+  }
+
+  @override
+  Future<Uri?> leftOver() async {
+    final taken = left;
+    left = null;
+    return taken;
   }
 }
 

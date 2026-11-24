@@ -16645,17 +16645,11 @@ abstract class AppLocalizations {
   /// **'This server does not take passwords. Use an API token to connect.'**
   String get ssoPasswordDisabled;
 
-  /// Error when the single sign-on redirect carried no code
+  /// Error when the single sign-on ended without a code for a reason the app has no message of its own for
   ///
   /// In en, this message translates to:
   /// **'Signing in with the provider did not finish. Try again.'**
   String get errorSsoFailed;
-
-  /// Error when the single sign-on redirect reported a failure; reason is the server's short reason code
-  ///
-  /// In en, this message translates to:
-  /// **'Signing in with the provider did not finish ({reason}). Try again.'**
-  String errorSsoFailedReason(String reason);
 
   /// Error when the single sign-on redirect's state did not match the one the app sent
   ///
@@ -16668,6 +16662,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The server did not accept this sign-in. It may have taken too long. Try again.'**
   String get errorSsoRejected;
+
+  /// Error when the provider account signed in but matches no member of the tenant (the server's not_linked reason)
+  ///
+  /// In en, this message translates to:
+  /// **'Your account with this provider is not linked to anyone on this server. Ask an administrator to add you, or sign in another way.'**
+  String get errorSsoNotLinked;
+
+  /// Error when the single sign-on took too long: the server's expired reason, or the app gave up waiting for the browser
+  ///
+  /// In en, this message translates to:
+  /// **'The sign-in took too long and expired. Try again.'**
+  String get errorSsoExpired;
+
+  /// Error when a single sign-on could not be finished because the app was closed or restarted while the browser was open
+  ///
+  /// In en, this message translates to:
+  /// **'The sign-in was interrupted before it finished. Try again.'**
+  String get errorSsoInterrupted;
 }
 
 class _AppLocalizationsDelegate

@@ -10156,15 +10156,22 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die Anmeldung über den Anbieter wurde nicht abgeschlossen. Versuchen Sie es erneut.';
 
   @override
-  String errorSsoFailedReason(String reason) {
-    return 'Die Anmeldung über den Anbieter wurde nicht abgeschlossen ($reason). Versuchen Sie es erneut.';
-  }
-
-  @override
   String get errorSsoStateMismatch =>
       'Diese Anmeldung konnte nicht bestätigt werden, daher wurde nichts gespeichert. Versuchen Sie es erneut.';
 
   @override
   String get errorSsoRejected =>
       'Der Server hat diese Anmeldung nicht angenommen. Vielleicht hat sie zu lange gedauert. Versuchen Sie es erneut.';
+
+  @override
+  String get errorSsoNotLinked =>
+      'Ihr Konto bei diesem Anbieter ist mit niemandem auf diesem Server verknüpft. Bitten Sie einen Administrator, Sie hinzuzufügen, oder melden Sie sich anders an.';
+
+  @override
+  String get errorSsoExpired =>
+      'Die Anmeldung hat zu lange gedauert und ist abgelaufen. Versuchen Sie es erneut.';
+
+  @override
+  String get errorSsoInterrupted =>
+      'Die Anmeldung wurde unterbrochen, bevor sie abgeschlossen war. Versuchen Sie es erneut.';
 }

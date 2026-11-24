@@ -10147,15 +10147,22 @@ class AppLocalizationsFr extends AppLocalizations {
       'La connexion via le fournisseur n’a pas abouti. Réessayez.';
 
   @override
-  String errorSsoFailedReason(String reason) {
-    return 'La connexion via le fournisseur n’a pas abouti ($reason). Réessayez.';
-  }
-
-  @override
   String get errorSsoStateMismatch =>
       'Cette connexion n’a pas pu être vérifiée, rien n’a donc été enregistré. Réessayez.';
 
   @override
   String get errorSsoRejected =>
       'Le serveur n’a pas accepté cette connexion. Elle a peut-être pris trop de temps. Réessayez.';
+
+  @override
+  String get errorSsoNotLinked =>
+      'Votre compte chez ce fournisseur n’est lié à personne sur ce serveur. Demandez à un administrateur de vous ajouter, ou connectez-vous autrement.';
+
+  @override
+  String get errorSsoExpired =>
+      'La connexion a pris trop de temps et a expiré. Réessayez.';
+
+  @override
+  String get errorSsoInterrupted =>
+      'La connexion a été interrompue avant d’aboutir. Réessayez.';
 }

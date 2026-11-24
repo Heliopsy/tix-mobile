@@ -10084,15 +10084,22 @@ class AppLocalizationsBg extends AppLocalizations {
       'Входът чрез доставчика не завърши. Опитайте отново.';
 
   @override
-  String errorSsoFailedReason(String reason) {
-    return 'Входът чрез доставчика не завърши ($reason). Опитайте отново.';
-  }
-
-  @override
   String get errorSsoStateMismatch =>
       'Този вход не можа да бъде потвърден и нищо не е запазено. Опитайте отново.';
 
   @override
   String get errorSsoRejected =>
       'Сървърът не прие този вход. Може би е отнел твърде дълго. Опитайте отново.';
+
+  @override
+  String get errorSsoNotLinked =>
+      'Профилът ви при този доставчик не е свързан с никого на този сървър. Помолете администратор да ви добави или влезте по друг начин.';
+
+  @override
+  String get errorSsoExpired =>
+      'Входът отне твърде дълго и изтече. Опитайте отново.';
+
+  @override
+  String get errorSsoInterrupted =>
+      'Входът беше прекъснат, преди да завърши. Опитайте отново.';
 }

@@ -78,6 +78,20 @@ const ssoScheme = 'red.tix.mobile';
 /// The redirect the app asks the server for.
 const ssoRedirect = '$ssoScheme:/sso';
 
+/// How long the code a redirect carries can be exchanged: tix's
+/// `SSOHandoffTTL`.
+const ssoCodeLifetime = Duration(minutes: 2);
+
+/// The `state` [redirect] carries, null when it carries none or cannot be
+/// read.
+String? ssoStateOf(Uri redirect) {
+  try {
+    return redirect.queryParameters['state'];
+  } on FormatException {
+    return null;
+  }
+}
+
 /// The S256 challenge of a PKCE [verifier] (RFC 7636, 4.2).
 String pkceChallenge(String verifier) =>
     _base64Url(sha256.convert(ascii.encode(verifier)).bytes);

@@ -7110,16 +7110,7 @@
   },
   "errorSsoFailed": "Signing in with the provider did not finish. Try again.",
   "@errorSsoFailed": {
-    "description": "Error when the single sign-on redirect carried no code"
-  },
-  "errorSsoFailedReason": "Signing in with the provider did not finish ({reason}). Try again.",
-  "@errorSsoFailedReason": {
-    "description": "Error when the single sign-on redirect reported a failure; reason is the server's short reason code",
-    "placeholders": {
-      "reason": {
-        "type": "String"
-      }
-    }
+    "description": "Error when the single sign-on ended without a code for a reason the app has no message of its own for"
   },
   "errorSsoStateMismatch": "This sign-in could not be verified, so nothing was saved. Try again.",
   "@errorSsoStateMismatch": {
@@ -7128,5 +7119,17 @@
   "errorSsoRejected": "The server did not accept this sign-in. It may have taken too long. Try again.",
   "@errorSsoRejected": {
     "description": "Error when the server refused the single sign-on code exchange"
+  },
+  "errorSsoNotLinked": "Your account with this provider is not linked to anyone on this server. Ask an administrator to add you, or sign in another way.",
+  "@errorSsoNotLinked": {
+    "description": "Error when the provider account signed in but matches no member of the tenant (the server's not_linked reason)"
+  },
+  "errorSsoExpired": "The sign-in took too long and expired. Try again.",
+  "@errorSsoExpired": {
+    "description": "Error when the single sign-on took too long: the server's expired reason, or the app gave up waiting for the browser"
+  },
+  "errorSsoInterrupted": "The sign-in was interrupted before it finished. Try again.",
+  "@errorSsoInterrupted": {
+    "description": "Error when a single sign-on could not be finished because the app was closed or restarted while the browser was open"
   }
 }

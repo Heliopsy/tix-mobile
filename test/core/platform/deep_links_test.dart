@@ -212,11 +212,35 @@ void main() {
       },
     );
 
-    test('a sign-in redirect nobody waits for is dropped', () {
+    test('a sign-in redirect nobody waits for is held for the sign-in', () {
       final intake = DeepLinkIntake(channel);
       addTearDown(intake.dispose);
-      intake.deliver(Uri.parse('red.tix.mobile:/sso?code=c'));
+      final redirect = Uri.parse('red.tix.mobile:/sso?code=c&state=s');
+      intake.deliver(redirect);
       expect(intake.take(), isNull);
+      expect(intake.hasSsoRedirect, isTrue);
+      expect(intake.takeSso(within: const Duration(minutes: 2)), redirect);
+      expect(intake.hasSsoRedirect, isFalse);
+      expect(intake.takeSso(within: const Duration(minutes: 2)), isNull);
+    });
+
+    test('a held sign-in redirect past the code lifetime is gone', () {
+      var now = DateTime.utc(2026, 11, 1, 12);
+      final intake = DeepLinkIntake(channel, () => now);
+      addTearDown(intake.dispose);
+      intake.deliver(Uri.parse('red.tix.mobile:/sso?code=c&state=s'));
+      now = now.add(const Duration(minutes: 3));
+      expect(intake.takeSso(within: const Duration(minutes: 2)), isNull);
+      expect(intake.hasSsoRedirect, isFalse);
+    });
+
+    test('a sign-in redirect taken while listened for is not held', () {
+      final intake = DeepLinkIntake(channel);
+      addTearDown(intake.dispose);
+      final sub = intake.ssoRedirects.listen((_) {});
+      addTearDown(sub.cancel);
+      intake.deliver(Uri.parse('red.tix.mobile:/sso?code=c&state=s'));
+      expect(intake.hasSsoRedirect, isFalse);
     });
   });
 }

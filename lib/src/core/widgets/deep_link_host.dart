@@ -8,6 +8,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tix_mobile/src/core/design/design.dart';
 import 'package:tix_mobile/src/core/l10n/l10n.dart';
 import 'package:tix_mobile/src/core/platform/deep_links.dart';
+import 'package:tix_mobile/src/core/platform/sso_pending.dart';
 import 'package:tix_mobile/src/core/quick/quick_add.dart';
 import 'package:tix_mobile/src/core/router/routes.dart';
 import 'package:tix_mobile/src/core/session/context_match.dart';
@@ -45,7 +46,21 @@ class _DeepLinkHostState extends ConsumerState<DeepLinkHost> {
       if (!mounted) return;
       final waiting = intake.take();
       if (waiting != null) unawaited(_open(waiting));
-      unawaited(intake.start());
+      unawaited(intake.start().then((_) => _resumeSso(intake)));
+    });
+  }
+
+  /// Opens the connect screen a provider sign-in started from when its
+  /// redirect restarted the app beside a session; the screen finishes it.
+  Future<void> _resumeSso(DeepLinkIntake intake) async {
+    if (!mounted || !intake.hasSsoRedirect) return;
+    final router = GoRouter.of(context);
+    final pending = await ref.read(pendingSsoProvider).peek();
+    if (!mounted) return;
+    router.go(switch (pending) {
+      PendingSso(:final String replacing) => Routes.reconnect(replacing),
+      PendingSso(:final String instanceId) => Routes.addConnection(instanceId),
+      _ => Routes.addServer,
     });
   }
 
