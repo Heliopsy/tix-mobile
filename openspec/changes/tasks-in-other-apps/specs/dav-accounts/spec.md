@@ -11,12 +11,12 @@ The Tasks in other apps screen SHALL say in visible text that it lets other apps
 
 ### Requirement: Setup is offered only where the server serves CalDAV
 
-The screen SHALL ask `dav.info` with the connection's own credential and offer setup only when it answers `enabled: true`. A local instance, a 404 or 405, `enabled: false`, and a 403 or a `reason` SHALL each show their own explanation and no setup. A network failure SHALL show an error with Retry.
+The screen SHALL ask `dav.info` with the connection's own credential and offer setup only when it answers `enabled: true`. A local instance, a 404 or 405, `enabled: false` and a 403 SHALL each show their own explanation and no setup. A network failure SHALL show an error with Retry.
 
 #### Scenario: Older server
 
 - **WHEN** `dav.info` answers 404
-- **THEN** the screen says the server does not offer CalDAV yet and names the tix version that does, with no Set up action
+- **THEN** the screen says the server does not offer CalDAV yet and names tix 0.69.0, with no Set up action
 
 #### Scenario: Local instance
 
@@ -26,7 +26,26 @@ The screen SHALL ask `dav.info` with the connection's own credential and offer s
 #### Scenario: Credential not allowed
 
 - **WHEN** `dav.info` answers 403 for a token connection
-- **THEN** the screen shows tix's message and says a sign-in can set it up instead
+- **THEN** the screen shows tix's message and says signing in as yourself can set it up instead
+
+#### Scenario: Turned off
+
+- **WHEN** `dav.info` answers `enabled: false` with a reason
+- **THEN** the screen says CalDAV is off on this server with tix's reason, lists existing passwords with Revoke, and offers no setup
+
+### Requirement: The screen shows tix's address and user name
+
+When the server serves CalDAV the screen SHALL show the address and the user name from `dav.info`, each with a copy button, and use the connection's address with `path` when `url` is empty. It SHALL never derive the user name itself.
+
+#### Scenario: Shared host
+
+- **WHEN** `dav.info` answers `url: https://tix.example.com/dav/` and `username: ana@example.com`
+- **THEN** the screen shows both as given
+
+#### Scenario: No public address
+
+- **WHEN** `dav.info` answers an empty `url` and `path: /dav/` for a connection to `https://tix.example`
+- **THEN** the address shown is `https://tix.example/dav/`
 
 ### Requirement: Setup mints a dedicated app password
 
@@ -42,6 +61,20 @@ Set up SHALL create one app password with `dav.password.create`, named after the
 - **WHEN** `dav.password.create` answers 409
 - **THEN** the sheet stays open with tix's message under the name field
 
+### Requirement: Setup chooses the lists and the lifetime
+
+The setup sheet SHALL offer the collections `dav.info` lists with Assigned to me preselected, and an expiry of never, 30 days, 90 days or a year with never preselected. It SHALL send `collections` as chosen and `expires_at` only when an expiry is chosen.
+
+#### Scenario: Projects for a desktop
+
+- **WHEN** a person picks one list per project and leaves the expiry at never
+- **THEN** the request carries `collections: projects` and no `expires_at`
+
+#### Scenario: Expiry chosen
+
+- **WHEN** a person picks 90 days on 2027-03-01
+- **THEN** the request carries an `expires_at` 90 days later
+
 ### Requirement: The app password is never kept
 
 The app password SHALL exist only in the create answer, the open setup sheet and the hand-off it starts. It SHALL never be written to the response cache, preferences, secure storage, files beyond a profile deleted when the sheet closes, provider state or the log.
@@ -53,7 +86,7 @@ The app password SHALL exist only in the create answer, the open setup sheet and
 
 ### Requirement: Copied passwords are marked sensitive
 
-Copying the app password SHALL mark the clip sensitive on Android 13 and later and make it local-only and expire after 2 minutes on iOS. Each detail SHALL have its own copy button labelled with the field it copies.
+Copying the app password SHALL mark the clip sensitive on Android and make it local-only and expire after 2 minutes on iOS. Each detail SHALL have its own copy button labelled with the field it copies.
 
 #### Scenario: Copy on Android
 
@@ -90,7 +123,7 @@ On iOS the app SHALL serve the profile from `127.0.0.1` at a random path, to one
 
 ### Requirement: macOS opens the profile in System Settings
 
-On macOS the app SHALL write the profile to its temporary directory, open it with the system's handler, and delete it when the sheet closes or on the next start.
+On macOS the app SHALL write the profile to its temporary directory, open it with the system's handler, delete it when the sheet closes, and delete any profile an earlier run left there before writing the next.
 
 #### Scenario: Cleaned up
 
@@ -131,7 +164,7 @@ On Linux and Windows the sheet SHALL show the address, user name and password wi
 
 ### Requirement: App passwords are listed and revoked
 
-The screen SHALL list the caller's app passwords from `dav.password.list` with name, created, last use ("Not yet" when none) and state, and revoke one with `dav.password.revoke` after a red confirmation naming it.
+The screen SHALL list the caller's app passwords from `dav.password.list` with name, lists, created, expiry, last use ("Not used yet" when none) and state (live, expired, revoked), and revoke a live one with `dav.password.revoke` after a red confirmation naming it.
 
 #### Scenario: Revoke
 
@@ -163,7 +196,21 @@ The screen SHALL follow the active context. Switching context SHALL close an ope
 
 ### Requirement: Write-back is announced when the server takes writes
 
-When `dav.info` answers `write: true`, the lead text SHALL say changes in the other app come back to tix, and a password without the write scope SHALL be marked Read only with Replace, which sets up a new one and then offers to revoke the old.
+When `dav.info` answers `write: true`, the lead text SHALL say changes in the other app come back to tix, and the setup sheet SHALL offer Read only, off by default, sending `read_only: true` only when it is on. While `write` is false, Read only SHALL not be offered and no password SHALL be marked read only.
+
+#### Scenario: Write-back on
+
+- **WHEN** `dav.info` answers `write: true`
+- **THEN** the lead says changes made in the other app come back to tix and the sheet offers Read only
+
+#### Scenario: Read-only server
+
+- **WHEN** `dav.info` answers `write: false`
+- **THEN** the sheet has no Read only choice and the request carries no `read_only`
+
+### Requirement: A read-only password can be replaced once writes are on
+
+While `dav.info` answers `write: true`, a live password created `read_only` SHALL be marked Read only with Replace, which opens setup with its lists and Read only off and, after the hand-off, offers to revoke the old one by name. Other passwords SHALL need no replacing.
 
 #### Scenario: Replace a read-only password
 
