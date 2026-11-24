@@ -4,8 +4,9 @@
 
 People want their tix tasks next to everything else they track: Apple Reminders on an iPhone or a Mac, tasks.org
 or jtx Board on Android through DAVx5, Thunderbird or Evolution on a desktop. tix is adding a CalDAV server
-(heliopsy/tix, change planned in parallel) that publishes tasks as VTODO, one collection per project, behind HTTP
-Basic with an app password: a narrow tix API token that only CalDAV accepts.
+(heliopsy/tix#380, change `caldav-tasks`) that publishes tasks as VTODO, Assigned to me and one collection per
+project, behind HTTP Basic with an app password: a tix API token whose only scope is `caldav`, which only CalDAV
+accepts.
 
 Setting up a CalDAV account by hand is the hard part. The person needs the right address, the right user name
 (on a shared host that is not obvious), and a password, which an SSO-only account does not have. The app already
@@ -21,11 +22,13 @@ change sits beside it and does not replace it.
 - A new screen, **Tasks in other apps** (`/settings/other-apps`), in the account group of Settings for the active
   context, reached from Settings, settings search and the Calendar feed screen.
 - It explains what CalDAV does and what it does not, then asks the server whether it serves CalDAV
-  (`dav.info`, proposed to tix). An old server, a server with CalDAV turned off, a local instance and a
-  credential that may not use it each get their own explanation and no setup.
-- **Set up** mints a dedicated app password for this device and use (`dav.password.create`, proposed to tix),
-  named after the app and platform, editable. The value exists only in the answer, the hand-off and the one-time
-  sheet. It is never cached, kept in provider state, written to storage or logged.
+  (`dav.info`). An old server, a server with CalDAV turned off, a local instance and a credential that may not
+  use it (an agent) each get their own explanation and no setup.
+- It shows the address and the exact user name tix gives (the sign-in email), for setting up by hand.
+- **Set up** mints a dedicated app password for this device and use (`dav.password.create`), named after the app
+  and platform, editable, with the lists it shows (Assigned to me by default, one per project, or both) and an
+  optional expiry (never by default). The value exists only in the answer, the hand-off and the one-time sheet.
+  It is never cached, kept in provider state, written to storage or logged.
 - The hand-off depends on the platform service, not the window width:
   - **iOS and macOS:** the app builds a CalDAV configuration profile (`com.apple.caldav.account`) and opens it,
     so Reminders gets the account after the system's install steps. The steps and the unsigned-profile warning
@@ -42,8 +45,9 @@ change sits beside it and does not replace it.
   today: the main credential was refused.
 - Works for sign-in connections (SSO or password) and token connections, on every remote instance, each context
   with its own list.
-- Phase 2, when tix accepts writes over CalDAV, the screen says changes sync back, new passwords carry the write
-  scope, and a read-only password still in use is marked with an offer to replace it.
+- Phase 2, when `dav.info` says the caller may write over CalDAV, the screen says changes sync back and offers
+  a Read only choice for new passwords. Existing passwords write without being replaced, since tix reads each
+  request as the owner's current role; a password created read only is marked and can be replaced.
 
 ## Non-goals
 
@@ -54,21 +58,24 @@ change sits beside it and does not replace it.
   profile as unverified.
 - No setup for local instances: their engine runs on loopback and stops in the background, so no other app could
   reach it reliably.
-- No CardDAV, no VEVENT over CalDAV, no per-project choice of collections in the app (the server decides what the
-  account shows).
+- No CardDAV, no VEVENT over CalDAV, no per-project choice of collections: the app offers tix's choices
+  (Assigned to me, projects, both) and nothing finer.
 - No automatic setup of Thunderbird, Evolution or other desktop clients; they get copyable details only.
 
 ## Impact
 
 - Capabilities: `dav-accounts` (new), `app-settings` and `calendar-feed` (added requirements).
-- Code (later, not in this change): `data/repositories/dav_repository.dart`, `features/dav/` (application and
-  presentation), `core/platform/dav_handoff.dart` with a profile builder, a `tix/dav` channel on Android (DAVx5)
-  and iOS (background time while Safari fetches the profile), `AndroidManifest.xml` `<queries>` for DAVx5,
-  `core/router`, `core/help/screen_help.dart`, `core/capability` registry, `lib/l10n/*.arb` (en, bg, de, fr),
-  the README feature list, the store listing's privacy paragraph.
+- Code: `data/api/dav_ops.dart` and `data/models/dav.dart` (by hand until the generated client has them),
+  `data/repositories/dav_repository.dart`, `features/dav/` (application and presentation),
+  `core/platform/dav_handoff.dart`, `dav_profile.dart` and `profile_server.dart`, a `tix/dav` channel on Android
+  (DAVx5, the sensitive clipboard) and iOS (background time while Safari fetches the profile, the expiring
+  clipboard), `AndroidManifest.xml` `<queries>` for DAVx5, `core/router`, `core/help/screen_help.dart`,
+  `lib/l10n/*.arb` (en, bg, de, fr), the README feature list, the store listing's privacy paragraph.
 - **Depends on heliopsy/tix:** the CalDAV server, the `caldav` scope, `dav.info` and the `dav.password.*`
-  operations in tix's OpenAPI document, released and pinned in `tix.lock`. Until then nothing in phase 1 beyond
-  the spec can merge. The contract this plan assumes is listed in `design.md`, Server contract.
+  operations, settled in heliopsy/tix#380 and expected in tix 0.69.0. The app asks `dav.info` rather than
+  comparing versions, so phase 1 can ship before `tix.lock` moves; moving it replaces the hand-written client with
+  the generated one and classifies the operations in `core/capability`. The contract is in `design.md`, Server
+  contract.
 - Privacy: the app password is handed to another app, which stores it. The privacy policy on tix.red (`app`
   part) needs a matching line.
 - New dependencies: none planned. The profile is plain XML, the loopback server is `dart:io`, the hand-off uses
