@@ -10159,6 +10159,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Votre compte chez ce fournisseur n’est lié à personne sur ce serveur. Demandez à un administrateur de vous ajouter, ou connectez-vous autrement.';
 
   @override
+  String get errorSsoDenied =>
+      'La connexion a été déclinée ou refusée. Si vous ne l’avez pas annulée, contactez l’administrateur de votre espace.';
+
+  @override
   String get errorSsoExpired =>
       'La connexion a pris trop de temps et a expiré. Réessayez.';
 

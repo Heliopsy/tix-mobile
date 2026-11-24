@@ -310,8 +310,8 @@ destinations, the rest open from More, which ends with About. The rail ends with
   offers providers only when `xdg-mime` names a `red.tix.mobile` handler (or in a Flatpak), and the desktop
   gives up after 5 minutes. `finishSso` checks the state and posts the code with the verifier to
   `POST /api/v1/auth/sso/exchange`, whose answer goes through the same path as a password login, so reconnecting
-  this way also clears `refused_at`. `access_denied` is a quiet cancel; `not_linked` and `expired` have their
-  own messages.
+  this way also clears `refused_at`. `access_denied` (a decline at the provider, but also a disabled account or a
+  disallowed domain), `not_linked` and `expired` have their own messages; the first two offer no Retry.
 - While the browser is open the attempt is kept under `sso.pending` (`PendingSsoStore`, `core/platform`), in
   case the platform ends the app. A redirect that arrives with nothing listening is held by `DeepLinkIntake`;
   the connect screen finishes the kept attempt with it on start, or says the sign-in was interrupted, and

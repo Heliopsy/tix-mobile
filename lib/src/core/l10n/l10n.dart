@@ -76,6 +76,7 @@ String errorMessage(AppLocalizations l10n, Object error) {
     TixErrorKind.ssoStateMismatch => l10n.errorSsoStateMismatch,
     TixErrorKind.ssoRejected => l10n.errorSsoRejected,
     TixErrorKind.ssoNotLinked => l10n.errorSsoNotLinked,
+    TixErrorKind.ssoDenied => l10n.errorSsoDenied,
     TixErrorKind.ssoExpired => l10n.errorSsoExpired,
     TixErrorKind.ssoInterrupted => l10n.errorSsoInterrupted,
     TixErrorKind.unknown =>

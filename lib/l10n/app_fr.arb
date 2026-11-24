@@ -2760,6 +2760,7 @@
   "errorSsoStateMismatch": "Cette connexion n’a pas pu être vérifiée, rien n’a donc été enregistré. Réessayez.",
   "errorSsoRejected": "Le serveur n’a pas accepté cette connexion. Elle a peut-être pris trop de temps. Réessayez.",
   "errorSsoNotLinked": "Votre compte chez ce fournisseur n’est lié à personne sur ce serveur. Demandez à un administrateur de vous ajouter, ou connectez-vous autrement.",
+  "errorSsoDenied": "La connexion a été déclinée ou refusée. Si vous ne l’avez pas annulée, contactez l’administrateur de votre espace.",
   "errorSsoExpired": "La connexion a pris trop de temps et a expiré. Réessayez.",
   "errorSsoInterrupted": "La connexion a été interrompue avant d’aboutir. Réessayez."
 }

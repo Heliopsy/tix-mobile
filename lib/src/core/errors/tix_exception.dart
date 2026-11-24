@@ -36,6 +36,7 @@ enum TixErrorKind {
   ssoStateMismatch,
   ssoRejected,
   ssoNotLinked,
+  ssoDenied,
   ssoExpired,
   ssoInterrupted,
   unknown,

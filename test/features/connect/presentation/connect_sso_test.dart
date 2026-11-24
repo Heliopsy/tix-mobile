@@ -236,16 +236,19 @@ void main() {
     '&state=${url.queryParameters['app_state']}',
   );
 
-  testWidgets('turning the sign-in down at the provider is a quiet cancel', (
+  testWidgets('a declined or refused sign-in says so, no retry', (
     tester,
   ) async {
     browser.answer = (url) => errorRedirect(url, 'access_denied');
     await signInAt(tester);
     await tap(tester, acme);
     await tester.pumpAndSettle();
-    expect(error, findsNothing);
+    expect(errorText(tester), contains('declined or refused'));
+    expect(errorText(tester), isNot(contains('access_denied')));
     expect(retry, findsNothing);
     expect(waiting, findsNothing);
+    expect(find.byKey(const Key('connect.password')), findsOneWidget);
+    expect(tester.widget<OutlinedButton>(acme).onPressed, isNotNull);
     expect(secrets.values, isEmpty);
   });
 

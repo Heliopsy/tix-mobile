@@ -7124,6 +7124,10 @@
   "@errorSsoNotLinked": {
     "description": "Error when the provider account signed in but matches no member of the tenant (the server's not_linked reason)"
   },
+  "errorSsoDenied": "The sign-in was declined or refused. If you didn't cancel it, ask your tenant's admin.",
+  "@errorSsoDenied": {
+    "description": "Error when the provider or the server turned the single sign-on down (the server's access_denied reason): declined at the provider, a disabled account, a domain or role the tenant does not allow"
+  },
   "errorSsoExpired": "The sign-in took too long and expired. Try again.",
   "@errorSsoExpired": {
     "description": "Error when the single sign-on took too long: the server's expired reason, or the app gave up waiting for the browser"

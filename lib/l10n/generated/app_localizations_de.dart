@@ -10168,6 +10168,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Ihr Konto bei diesem Anbieter ist mit niemandem auf diesem Server verknüpft. Bitten Sie einen Administrator, Sie hinzuzufügen, oder melden Sie sich anders an.';
 
   @override
+  String get errorSsoDenied =>
+      'Die Anmeldung wurde abgelehnt oder verweigert. Wenn Sie sie nicht abgebrochen haben, wenden Sie sich an die Administration Ihres Mandanten.';
+
+  @override
   String get errorSsoExpired =>
       'Die Anmeldung hat zu lange gedauert und ist abgelaufen. Versuchen Sie es erneut.';
 

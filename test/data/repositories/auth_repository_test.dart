@@ -321,7 +321,7 @@ void main() {
         attempt,
         ssoRedirectFor(server, attempt.url),
       );
-      expect(result?.session?.token, isNotEmpty);
+      expect(result.session?.token, isNotEmpty);
       final body = server.requests.last.body;
       expect(server.requests.last.uri.path, '/api/v1/auth/sso/exchange');
       expect(body, {'code': 'sso-1', 'code_verifier': attempt.verifier});
@@ -342,27 +342,25 @@ void main() {
     Uri errorRedirect(SsoAttempt attempt, String reason) =>
         Uri.parse('red.tix.mobile:/sso?error=$reason&state=${attempt.state}');
 
-    test('access_denied is the person turning it down: no result', () async {
-      final attempt = auth.startSso(base, 'acme');
-      expect(
-        await auth.finishSso(attempt, errorRedirect(attempt, 'access_denied')),
-        isNull,
-      );
-      expect(server.requests, isEmpty);
-    });
-
-    test('not_linked and expired have kinds of their own', () async {
-      final attempt = auth.startSso(base, 'acme');
-      await expectLater(
-        auth.finishSso(attempt, errorRedirect(attempt, 'not_linked')),
-        kind(TixErrorKind.ssoNotLinked),
-      );
-      await expectLater(
-        auth.finishSso(attempt, errorRedirect(attempt, 'expired')),
-        kind(TixErrorKind.ssoExpired),
-      );
-      expect(server.requests, isEmpty);
-    });
+    test(
+      'access_denied, not_linked and expired have kinds of their own',
+      () async {
+        final attempt = auth.startSso(base, 'acme');
+        await expectLater(
+          auth.finishSso(attempt, errorRedirect(attempt, 'access_denied')),
+          kind(TixErrorKind.ssoDenied),
+        );
+        await expectLater(
+          auth.finishSso(attempt, errorRedirect(attempt, 'not_linked')),
+          kind(TixErrorKind.ssoNotLinked),
+        );
+        await expectLater(
+          auth.finishSso(attempt, errorRedirect(attempt, 'expired')),
+          kind(TixErrorKind.ssoExpired),
+        );
+        expect(server.requests, isEmpty);
+      },
+    );
 
     test('other reasons fail the sign-in, the code kept out of the '
         'message', () async {

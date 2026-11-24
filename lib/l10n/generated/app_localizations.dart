@@ -16669,6 +16669,12 @@ abstract class AppLocalizations {
   /// **'Your account with this provider is not linked to anyone on this server. Ask an administrator to add you, or sign in another way.'**
   String get errorSsoNotLinked;
 
+  /// Error when the provider or the server turned the single sign-on down (the server's access_denied reason): declined at the provider, a disabled account, a domain or role the tenant does not allow
+  ///
+  /// In en, this message translates to:
+  /// **'The sign-in was declined or refused. If you didn\'t cancel it, ask your tenant\'s admin.'**
+  String get errorSsoDenied;
+
   /// Error when the single sign-on took too long: the server's expired reason, or the app gave up waiting for the browser
   ///
   /// In en, this message translates to:
