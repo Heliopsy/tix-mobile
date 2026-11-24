@@ -106,4 +106,16 @@ void main() {
     await rig.pump(tester, const CalendarScreen());
     expect(find.byKey(const Key('calendar.unavailable')), findsOneWidget);
   });
+
+  testWidgets('points task apps to Tasks in other apps', (tester) async {
+    for (final feed in [
+      null,
+      {'id': 'c1', 'filter': ''},
+    ]) {
+      final rig = PeopleRig()..people.feed = feed;
+      await rig.pump(tester, const CalendarScreen(), size: desktop);
+      await tapIn(tester, find.byKey(const Key('calendar.taskApps')));
+      expect(find.text('route:/settings/other-apps'), findsOneWidget);
+    }
+  });
 }

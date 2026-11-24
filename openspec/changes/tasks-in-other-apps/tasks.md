@@ -14,44 +14,44 @@ wording and controls are gated on `dav.info`'s `write`, so they light up when ti
 
 ## 2. Phase 1: data layer
 
-- [ ] 2.1 Hand-written `DavOps` (`api.appDav`) and models for the four operations, marked for replacement by `just gen`
-- [ ] 2.2 `DavRepository.info()` with 404/405 as "not offered"; tests against `FakeTix` for ready, off, 403, 404, 405
-- [ ] 2.3 `DavRepository.passwords()` and `revoke(id)`, no response cache; tests
-- [ ] 2.4 `DavRepository.create(...)` with name, collections, read_only and expires_at, returning the issued value only; `test/core/session/secrets_test.dart` covers it
-- [ ] 2.5 Build the repository from `sessionApiProvider`
+- [x] 2.1 Hand-written `DavOps` (`api.appDav`) and models for the four operations, marked for replacement by `just gen`
+- [x] 2.2 `DavRepository.info()` with 404/405 as "not offered"; tests against `FakeTix` for ready, off, 403, 404, 405
+- [x] 2.3 `DavRepository.passwords()` and `revoke(id)`, no response cache; tests
+- [x] 2.4 `DavRepository.create(...)` with name, collections, read_only and expires_at, returning the issued value only; `test/core/session/secrets_test.dart` covers it
+- [x] 2.5 Build the repository from `sessionApiProvider`
 
 ## 3. Phase 1: platform hand-off
 
-- [ ] 3.1 Profile builder (pure Dart): plist XML, escaping, https/http, port, per-connection identifier; unit tests on the XML
-- [ ] 3.2 One-shot loopback profile server: random path, one response, 2 minute close, closes on dispose, no logging; unit tests
-- [ ] 3.3 DAVx5 address builder: `caldavs://`/`caldav://`, port, path, never user info; unit tests
-- [ ] 3.4 `DavHandoff` interface and fakes; platform choice by service, not width
-- [ ] 3.5 Android: `<queries>` for `at.bitfire.davdroid`, `tix/dav` `davx5Installed` and `openDavx5` with extras, no logging
-- [ ] 3.6 iOS: `tix/dav` `beginBackgroundTask`/`endBackgroundTask` around the loopback serve; share-sheet fallback
-- [ ] 3.7 macOS: write to the temp directory, open with the system handler, delete on sheet close and before the next profile
-- [ ] 3.8 Sensitive clipboard: Android flag over `tix/dav`, iOS local-only expiring item; tests through a fake
-- [ ] 3.9 Store links per flavour: F-Droid in oss, Google Play in play, for DAVx5, tasks.org and jtx Board
+- [x] 3.1 Profile builder (pure Dart): plist XML, escaping, https/http, port, per-connection identifier; unit tests on the XML
+- [x] 3.2 One-shot loopback profile server: random path, one response, 2 minute close, closes on dispose, no logging; unit tests
+- [x] 3.3 DAVx5 address builder: `caldavs://`/`caldav://`, port, path, never user info; unit tests
+- [x] 3.4 `DavHandoff` interface and fakes; platform choice by service, not width
+- [x] 3.5 Android: `<queries>` for `at.bitfire.davdroid`, `tix/dav` `davx5Installed` and `openDavx5` with extras, no logging
+- [x] 3.6 iOS: `tix/dav` `beginBackgroundTask`/`endBackgroundTask` around the loopback serve; share-sheet fallback
+- [x] 3.7 macOS: write to the temp directory, open with the system handler, delete on sheet close and before the next profile
+- [x] 3.8 Sensitive clipboard: Android flag over `tix/dav`, iOS local-only expiring item; tests through a fake
+- [x] 3.9 Store links per flavour: F-Droid in oss, Google Play in play, for DAVx5, tasks.org and jtx Board
 
 ## 4. Phase 1: application and screen
 
-- [ ] 4.1 `davStatusProvider` mapping local, old server, off, not allowed, ready, error; tests in a `ProviderContainer`
-- [ ] 4.2 `AppPasswords` notifier: list, create (value returned, never in state), revoke; tests
-- [ ] 4.3 Route `/settings/other-apps`, settings catalogue item with search keywords, Calendar feed link
-- [ ] 4.4 `OtherAppsScreen`: lead text, details with copy, and every state, at 400 and 1280; widget tests
-- [ ] 4.5 Setup sheet: name, collections, expiry, create, hand-off per platform fake, details with per-field copy, reveal toggle; widget tests
-- [ ] 4.6 Password rows (lists, created, expiry, last use, state) and revoke with `confirmDestructive`; revoked row has no `RefusedMark`; widget tests
-- [ ] 4.7 A `401` on `dav.*` reaches `RefusedCredentials` like any other call; test that an app password never enters a request
-- [ ] 4.8 Context switch closes the sheet and drops the value; widget test
-- [ ] 4.9 Strings in `app_en.arb`, `app_bg.arb`, `app_de.arb`, `app_fr.arb`
+- [x] 4.1 `davStatusProvider` mapping local, old server, off, not allowed, ready, error; tests in a `ProviderContainer`
+- [x] 4.2 `AppPasswords` notifier: list, create (value returned, never in state), revoke; tests
+- [x] 4.3 Route `/settings/other-apps`, settings catalogue item with search keywords, Calendar feed link
+- [x] 4.4 `OtherAppsScreen`: lead text, details with copy, and every state, at 400 and 1280; widget tests
+- [x] 4.5 Setup sheet: name, collections, expiry, create, hand-off per platform fake, details with per-field copy, reveal toggle; widget tests
+- [x] 4.6 Password rows (lists, created, expiry, last use, state) and revoke with `confirmDestructive`; revoked row has no `RefusedMark`; widget tests
+- [x] 4.7 A `401` on `dav.*` reaches `RefusedCredentials` like any other call; test that an app password never enters a request
+- [x] 4.8 Context switch closes the sheet and drops the value; widget test
+- [x] 4.9 Strings in `app_en.arb`, `app_bg.arb`, `app_de.arb`, `app_fr.arb`
 - [ ] 4.10 Apple step names checked per language on a device in that language
-- [ ] 4.11 Links to tix's per-client guide through the server's docs redirect
-- [ ] 4.12 Semantics labels, 48 dp copy buttons, reveal toggle with hidden semantics value; 200% text check in a widget test
+- [x] 4.11 Links to tix's per-client guide through the server's docs redirect
+- [x] 4.12 Semantics labels, 48 dp copy buttons, reveal toggle with hidden semantics value; 200% text check in a widget test
 
 ## 5. Phase 1: docs and privacy
 
-- [ ] 5.1 README feature list and `docs/architecture.md` (the hand-off, and that the app never sends an app password)
-- [ ] 5.2 Store listing privacy paragraph in `fastlane/metadata/android/*/full_description.txt`
-- [ ] 5.3 Privacy note on the screen itself, beside the setup action
+- [x] 5.1 README feature list and `docs/architecture.md` (the hand-off, and that the app never sends an app password)
+- [x] 5.2 Store listing privacy paragraph in `fastlane/metadata/android/*/full_description.txt`
+- [x] 5.3 Privacy note on the screen itself, beside the setup action
 - [ ] 5.4 Issue or PR on tix.red-site for the matching line in `messages/*/privacy.json`, part `app`, with `lastUpdated` moved
 
 ## 6. Phase 1: device checks
@@ -67,7 +67,7 @@ wording and controls are gated on `dav.info`'s `write`, so they light up when ti
 ## 7. Phase 2: write-back
 
 - [ ] 7.1 **Blocked on the tix release with CalDAV writes:** move `tix.lock`, `just gen`, classify any new operation
-- [ ] 7.2 Lead text for write-back and the Read only choice, gated on `dav.info` `write`; widget test
-- [ ] 7.3 Read only mark and Replace on `read_only` passwords while `write` is true, offering to revoke the old one; widget tests
+- [x] 7.2 Lead text for write-back and the Read only choice, gated on `dav.info` `write`; widget test
+- [x] 7.3 Read only mark and Replace on `read_only` passwords while `write` is true, offering to revoke the old one; widget tests
 - [ ] 7.4 Check that a change made in Reminders arrives as a live event and an offline edit to the same task merges; device test
-- [ ] 7.5 Strings in all four languages
+- [x] 7.5 Strings in all four languages

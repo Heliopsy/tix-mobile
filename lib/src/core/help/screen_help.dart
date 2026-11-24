@@ -102,6 +102,9 @@ const Map<String, DocSection?> screenDocs = {
   '/settings/release': DocSection('web-ui.md', 'the-release-screen'),
   '/settings/account': DocSection('tenancy.md', 'account-history'),
   '/settings/calendar': DocSection('calendar.md', 'getting-the-address'),
+  // caldav.md is not in the pinned tix yet; the screen links its sections
+  // itself until tix.lock moves (tasks-in-other-apps 1.5).
+  '/settings/other-apps': null,
   '/settings/tokens': DocSection('agents.md', 'tokens-and-scopes'),
   '/settings/connect-agent': DocSection('web-ui.md', 'connect-an-agent'),
   '/settings/security': DocSection('web-ui.md', 'the-second-factor'),

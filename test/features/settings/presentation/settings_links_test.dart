@@ -37,4 +37,26 @@ void main() {
     expect(find.byKey(const Key('settings.calendar.open')), findsOneWidget);
     expect(find.byKey(const Key('settings.security.tokens')), findsNothing);
   });
+
+  testWidgets('search finds Tasks in other apps by the apps it serves', (
+    tester,
+  ) async {
+    final rig = PeopleRig();
+    await pump(tester, rig);
+    expect(
+      find.byKey(const Key('settings.calendar.otherApps')),
+      findsOneWidget,
+    );
+    for (final q in ['reminders', 'CalDAV', 'DAVx5', 'thunderbird']) {
+      await tester.enterText(find.byKey(const Key('settings.search')), q);
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const Key('settings.calendar.otherApps')),
+        findsOneWidget,
+        reason: q,
+      );
+    }
+    await tapIn(tester, find.byKey(const Key('settings.calendar.otherApps')));
+    expect(find.text('route:/settings/other-apps'), findsOneWidget);
+  });
 }

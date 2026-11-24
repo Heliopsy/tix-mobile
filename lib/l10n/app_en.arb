@@ -7135,5 +7135,187 @@
   "errorSsoInterrupted": "The sign-in was interrupted before it finished. Try again.",
   "@errorSsoInterrupted": {
     "description": "Error when a single sign-on could not be finished because the app was closed or restarted while the browser was open"
-  }
+  },
+  "davTitle": "Tasks in other apps",
+  "davSubtitle": "Reminders, DAVx5 and Thunderbird over CalDAV",
+  "davSetUp": "Set up on this device",
+  "davLead": "Other apps can show this account's tix tasks as to-do lists over CalDAV: Apple Reminders, tasks.org or jtx Board through DAVx5, Thunderbird and Evolution. This app keeps syncing through the tix API as before.",
+  "davLeadRead": "For now the lists are read only: changes made in the other app do not come back to tix.",
+  "davLeadWrite": "Changes made in the other app, such as completing, renaming, due dates, priority and new tasks, come back to tix. tix's workflow still decides whether a task may be completed.",
+  "davPrivacy": "Setting up asks your server for an app password and hands it to the app you choose: Reminders through a configuration profile, DAVx5, or the clipboard. This app does not keep it.",
+  "davLocalTitle": "Needs a tix server",
+  "davLocalBody": "Other apps cannot reach a database on this device. Use a tix server.",
+  "davOldTitle": "Not offered by this server",
+  "davOldBody": "This server does not offer CalDAV yet. It needs tix {version} or later.",
+  "@davOldBody": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "davOffTitle": "CalDAV is turned off on this server",
+  "davOffBody": "Ask the server's administrator to turn it on. App passwords made before can still be revoked here.",
+  "davForbiddenTitle": "Not for this credential",
+  "davForbiddenBody": "The server refused to set up CalDAV for this connection.",
+  "davForbiddenToken": "An app password belongs to a person. Sign in as yourself on this server to set it up.",
+  "davDetails": "For setting up by hand",
+  "davDetailsInfo": "Give another app this address and user name, and an app password from Set up. Your account password does not work there.",
+  "davAddress": "Address",
+  "davUsername": "User name",
+  "davPassword": "Password",
+  "davCopyAddress": "Copy address",
+  "davCopyUsername": "Copy user name",
+  "davCopyPassword": "Copy password",
+  "davShowPassword": "Show password",
+  "davHidePassword": "Hide password",
+  "davPasswordHidden": "Hidden",
+  "davCopiedExpires": "Password copied. It clears from the clipboard in 2 minutes.",
+  "davCopiedHidden": "Password copied. It is hidden in the clipboard preview.",
+  "davCopiedPlain": "Password copied. Clear the clipboard after pasting it.",
+  "davPasswords": "App passwords",
+  "davPasswordsInfo": "Each app gets a password of its own. Revoke one when you remove the account from that app or lose the device.",
+  "davPasswordsEmpty": "No app passwords yet",
+  "davStateLive": "Active",
+  "davStateExpired": "Expired",
+  "davStateRevoked": "Revoked",
+  "davReadOnly": "Read only",
+  "davReadOnlyHelp": "The other app shows the tasks but cannot change them.",
+  "davListsAssigned": "Assigned to me",
+  "davListsProjects": "One list per project",
+  "davListsAll": "Assigned to me and every project",
+  "davListsAssignedHelp": "Your own work in one list. Best on a phone.",
+  "davListsProjectsHelp": "Every project you can read as a list of its own. Best on a desktop.",
+  "davListsAllHelp": "Both, so a task assigned to you shows in two lists.",
+  "davLists": "Lists",
+  "davListsChangeHelp": "Changing this later means a new password, because other apps keep the list of lists.",
+  "davName": "Name",
+  "davNameHelp": "So the list says which device and app this is.",
+  "davDefaultName": "tix app, {platform}, {day}",
+  "@davDefaultName": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "davExpiry": "Expires",
+  "davExpiryNever": "Never",
+  "davExpiry30": "In 30 days",
+  "davExpiry90": "In 90 days",
+  "davExpiryYear": "In a year",
+  "davExpiryHelp": "An app whose password expires stops syncing that day without asking.",
+  "davCreate": "Create password",
+  "davHandoffTitle": "Hand it to the other app",
+  "davOnce": "This password is shown only now. If it is lost, revoke it and set up again.",
+  "davIosStep1": "Safari asks to download a configuration profile: tap Allow.",
+  "davIosStep2": "Open Settings and tap Profile Downloaded near the top.",
+  "davIosStep3": "Tap Install, enter your passcode, then tap Install again.",
+  "davAppleStepLast": "Reminders shows the account under tix.",
+  "davIosUnsigned": "The profile is marked Not Verified because it is not signed. That is expected.",
+  "davIosLimits": "Install it within 8 minutes or iOS drops it. Remove it later in Settings, General, VPN & Device Management. A managed device may block profiles; then use the details in Settings, Calendar, Accounts, Add Account, Other, Add CalDAV Account.",
+  "davOpenSafari": "Open in Safari",
+  "davOpenedSafari": "Opened Safari",
+  "davNotFetched": "Safari did not fetch the profile. Save it to Files and open it from there.",
+  "davSaveProfile": "Save the profile",
+  "davMacStep1": "System Settings shows Profile Downloaded, or open Privacy & Security, Profiles.",
+  "davMacStep2": "Double-click the tix profile, click Install and confirm with your password.",
+  "davMacUnsigned": "It is marked Unverified because it is not signed. That is expected. Without the profile, use the details in System Settings, Internet Accounts, Add Other Account, CalDAV account.",
+  "davOpenProfile": "Open the profile",
+  "davOpenedSettings": "Opened System Settings",
+  "davOpenFailed": "It did not open. Use the details below.",
+  "davDavx5Body": "DAVx5 opens with the address, user name and password filled in. It finds the lists and asks which task app shows them.",
+  "davOpenDavx5": "Open DAVx5",
+  "davOpenedDavx5": "Opened DAVx5",
+  "davNoDavx5": "DAVx5 does the syncing and a task app such as tasks.org or jtx Board shows the tasks. Install DAVx5, then set it up with the details below.",
+  "davGetDavx5": "Get DAVx5",
+  "davGetTasksOrg": "Get tasks.org",
+  "davGetJtx": "Get jtx Board",
+  "davThunderbirdSteps": "Thunderbird: New Calendar, On the Network, enter the address and user name, then the password when asked. The tasks show in the Tasks tab.",
+  "davEvolutionSteps": "Evolution: New, Task List, type CalDAV, enter the address and user name, then the password when asked.",
+  "davWindowsNote": "Windows has no built-in app for CalDAV tasks. Thunderbird shows them.",
+  "davDone": "Done",
+  "davRevoke": "Revoke",
+  "davRevokeTitle": "Revoke {name}?",
+  "@davRevokeTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "davRevokeBody": "The app signed in with it stops syncing on its next try. Your own sign-in in this app is not affected.",
+  "davRevokeNamed": "Revoke {name}",
+  "@davRevokeNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "davRevokedToast": "{name} revoked",
+  "@davRevokedToast": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "davReplace": "Replace",
+  "davReplaceRevokeTitle": "Revoke {name} now?",
+  "@davReplaceRevokeTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "davReplaceRevokeBody": "The new password is set up, so the read-only one can go. Remove its account from the other app too.",
+  "davCreatedOn": "Created {day}",
+  "@davCreatedOn": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "davExpiresOn": "Expires {day}",
+  "@davExpiresOn": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "davNeverExpires": "Never expires",
+  "davLastUsed": "Last used {when}",
+  "@davLastUsed": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "davNotUsed": "Not used yet",
+  "davGuides": "Guides for each app",
+  "davGuideReminders": "Apple Reminders",
+  "davGuideDavx5": "DAVx5 and tasks.org",
+  "davGuideThunderbird": "Thunderbird",
+  "davGuideEvolution": "Evolution",
+  "davGuideTroubleshooting": "Troubleshooting",
+  "davProfileAccount": "tix: {name}",
+  "@davProfileAccount": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "davProfileName": "tix tasks",
+  "davProfileDescription": "Adds your tix tasks to Reminders over CalDAV, signed in with an app password you can revoke in the tix app.",
+  "settingsOtherAppsHelp": "Reminders, DAVx5 and Thunderbird over CalDAV",
+  "calendarTaskApps": "The feed shows due dates in calendar apps. For the tasks themselves in Reminders or a task app, use Tasks in other apps."
 }

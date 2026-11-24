@@ -350,6 +350,11 @@ class _Entry extends StatelessWidget {
         subtitle: l10n.settingsCalendarHelp,
         push: true,
       ),
+      'calendar.otherApps' => _LinkEntry(
+        item: item,
+        subtitle: l10n.settingsOtherAppsHelp,
+        push: true,
+      ),
       'tenant.settings' => _LinkEntry(
         item: item,
         subtitle: l10n.tenantSettingsSubtitle,

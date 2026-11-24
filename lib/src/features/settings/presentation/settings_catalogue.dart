@@ -427,6 +427,14 @@ List<SettingsItem> settingsCatalogue(
         route: Routes.calendar,
       ),
     SettingsItem(
+      id: 'calendar.otherApps',
+      section: SettingsSection.calendar,
+      label: l10n.davTitle,
+      icon: Icons.checklist_outlined,
+      keywords: 'CalDAV Reminders DAVx5 Thunderbird Evolution tasks.org',
+      route: Routes.otherApps,
+    ),
+    SettingsItem(
       id: 'dates.format',
       section: SettingsSection.dates,
       label: l10n.settingsDateFormat,
