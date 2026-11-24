@@ -184,5 +184,8 @@
         <intent>
             <action android:name="android.support.customtabs.action.CustomTabsService"/>
         </intent>
+        <!-- Whether DAVx5 is installed, to open its login filled in for
+             Tasks in other apps (lib/src/core/platform/dav_handoff.dart). -->
+        <package android:name="at.bitfire.davdroid"/>
     </queries>
 </manifest>
