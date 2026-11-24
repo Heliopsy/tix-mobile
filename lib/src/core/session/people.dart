@@ -3,6 +3,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tix_mobile/src/core/session/session.dart';
 import 'package:tix_mobile/src/data/repositories/account_repository.dart';
+import 'package:tix_mobile/src/data/repositories/dav_repository.dart';
 import 'package:tix_mobile/src/data/repositories/people_repository.dart';
 import 'package:tix_mobile/src/data/repositories/token_repository.dart';
 import 'package:tix_mobile/src/data/repositories/transfer_repository.dart';
@@ -35,3 +36,9 @@ AccountRepository accountRepository(Ref ref) => AccountRepository(
 @riverpod
 TransferRepository transferRepository(Ref ref) =>
     TransferRepository(ref.watch(sessionApiProvider));
+
+/// CalDAV setup and app passwords for the active session. It has no cache,
+/// by design.
+@riverpod
+DavRepository davRepository(Ref ref) =>
+    DavRepository(ref.watch(sessionApiProvider));

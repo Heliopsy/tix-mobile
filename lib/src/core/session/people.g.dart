@@ -212,3 +212,52 @@ final class TransferRepositoryProvider
 
 String _$transferRepositoryHash() =>
     r'e0aec64bc833359f8827781675597b1ef095887b';
+
+/// CalDAV setup and app passwords for the active session. It has no cache,
+/// by design.
+
+@ProviderFor(davRepository)
+final davRepositoryProvider = DavRepositoryProvider._();
+
+/// CalDAV setup and app passwords for the active session. It has no cache,
+/// by design.
+
+final class DavRepositoryProvider
+    extends $FunctionalProvider<DavRepository, DavRepository, DavRepository>
+    with $Provider<DavRepository> {
+  /// CalDAV setup and app passwords for the active session. It has no cache,
+  /// by design.
+  DavRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'davRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$davRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<DavRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  DavRepository create(Ref ref) {
+    return davRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(DavRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<DavRepository>(value),
+    );
+  }
+}
+
+String _$davRepositoryHash() => r'faf8c0216c0847a08bcb0a481338d4210f73af62';
