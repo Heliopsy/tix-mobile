@@ -21,7 +21,7 @@ Was die App kann:
 - Layouts für Handy und Tablet, auf breiten Bildschirmen mit Liste und Details nebeneinander
 
 Datenschutz:
-Der Server bleibt die maßgebliche Quelle. Die App speichert keine eigenen Daten außer den hinzugefügten Servern und ein paar Einstellungen. API-Tokens und Anmeldesitzungen liegen im Android Keystore und landen nie in Logs oder Einstellungen. Passwörter werden gar nicht gespeichert. Die App enthält keine Bibliotheken für Analyse, Werbung oder Absturzberichte.
+Der Server bleibt die maßgebliche Quelle. Die App speichert keine eigenen Daten außer den hinzugefügten Servern und ein paar Einstellungen. API-Tokens und Anmeldesitzungen liegen im Android Keystore und landen nie in Logs oder Einstellungen. Passwörter werden gar nicht gespeichert. Die App enthält keine Bibliotheken für Analyse, Werbung oder Absturzberichte. Wenn Sie Aufgaben in anderen Apps einrichten, erhält die App von Ihrem Server ein App-Passwort und gibt es an die gewählte App weiter (DAVx5 oder die Zwischenablage). Die App behält es nicht.
 
 Erste Schritte:
 Erzeugen Sie auf dem Rechner mit tix ein Token mit „tix token create phone --scope task:read --scope task:write --scope project:read“ und tragen Sie dann die Adresse des Servers und das Token in der App ein. Ein Handy erreicht keinen Server, der auf einem anderen Rechner nur an localhost lauscht. Stellen Sie tix deshalb per HTTPS bereit, direkt oder hinter einem Reverse Proxy.

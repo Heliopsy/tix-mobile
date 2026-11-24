@@ -21,7 +21,7 @@ Ce qu'elle fait :
 - Mise en page pour téléphone et tablette, avec liste et détail côte à côte sur grand écran
 
 Confidentialité :
-Le serveur reste la référence. L'application ne garde aucune donnée propre en dehors des serveurs ajoutés et de quelques préférences. Les jetons d'API et les sessions sont conservés dans le Android Keystore et ne sont jamais écrits dans les journaux ni dans les préférences. Les mots de passe ne sont pas enregistrés du tout. L'application ne contient aucune bibliothèque d'analyse, de publicité ou de rapport de plantage.
+Le serveur reste la référence. L'application ne garde aucune donnée propre en dehors des serveurs ajoutés et de quelques préférences. Les jetons d'API et les sessions sont conservés dans le Android Keystore et ne sont jamais écrits dans les journaux ni dans les préférences. Les mots de passe ne sont pas enregistrés du tout. L'application ne contient aucune bibliothèque d'analyse, de publicité ou de rapport de plantage. Pour Tâches dans d'autres apps, elle obtient du serveur un mot de passe d'app et le passe à l'app choisie (DAVx5 ou presse-papiers), sans le garder.
 
 Pour commencer :
 Sur la machine qui fait tourner tix, créez un jeton avec « tix token create phone --scope task:read --scope task:write --scope project:read », puis saisissez l'adresse du serveur et le jeton dans l'application. Un téléphone ne peut pas joindre un serveur qui n'écoute que sur localhost sur une autre machine : servez tix en HTTPS, directement ou derrière un proxy inverse.

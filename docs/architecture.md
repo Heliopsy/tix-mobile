@@ -325,6 +325,7 @@ destinations, the rest open from More, which ends with About. The rail ends with
 | Secure storage | `token.<connection>` | An API token (the 0.1 key, so upgrading moves nothing) |
 | Secure storage | `session.<connection>` | A sign-in's session token |
 | Secure storage | `sso.pending` | The provider sign-in waiting in the browser, verifier included, cleared when it ends |
+| Nowhere | | An app password for another app: held by the setup sheet only, then dropped |
 
 The 0.1 list of servers is migrated once, on first start: each becomes a token connection with the same id on a
 remote instance per address. `whoami` names the tenant only for a person's session; for a token the app reads
@@ -395,6 +396,49 @@ flowchart LR
   screen shows each engine's state from `localEngineStatusesProvider`, with a Stop button that rests it.
 - **Talking to it.** Once started, a local instance is an ordinary server on loopback: the same `TixApi`, the same
   errors. Android allows cleartext HTTP to `127.0.0.1` only; Apple platforms set `NSAllowsLocalNetworking`.
+
+## Tasks in other apps
+
+tix serves tasks over CalDAV under `/dav/`, behind HTTP Basic with an app password: an API token whose only scope is
+`caldav`, which tix accepts on `/dav/` and nowhere else. The app sets other apps up and never speaks CalDAV itself
+(`openspec/changes/tasks-in-other-apps`).
+
+```mermaid
+flowchart LR
+  S["OtherAppsScreen<br/>features/dav"] --> P["davStatusProvider<br/>AppPasswords"]
+  P --> R["DavRepository"] --> A["api.appDav<br/>/api/v1/dav*"]
+  S --> H["DavHandoff<br/>core/platform"]
+  H --> I["iOS: profile served once<br/>on 127.0.0.1 to Safari"]
+  H --> M["macOS: profile file<br/>System Settings"]
+  H --> D["Android: DAVx5 login<br/>over tix/dav"]
+  H --> C["every platform:<br/>details and copy"]
+```
+
+- **Asking.** `davStatusProvider` maps the active context onto the screen's states: a local instance sends nothing;
+  `GET /api/v1/dav` answering 404 or 405 is a tix before 0.69.0; `enabled: false` is off (passwords can still be
+  listed and revoked); 403 is a credential tix refuses, such as an agent's token. `url` and `username` come from
+  tix, never from `whoami`; an empty `url` means `path` on the connection's address.
+- **The password.** `dav.password.create` answers it once. The notifier hands the answer straight to the setup
+  sheet, which holds it in widget state, builds the hand-off from it and drops it when it closes or the context
+  changes. Nothing caches, stores or logs it, and `IssuedDavPassword.toString` leaves it out;
+  `test/core/session/secrets_test.dart` checks it. The list refreshes on `token.*` events.
+- **Refusals stay apart.** The app sends the app password in none of its own requests, so `RefusalInterceptor` and
+  `RefusedCredentials` can never see it refused. A `401` on `dav.*` is the connection's own credential, handled as
+  any other. A revoked or expired app password is a row state from the list, never a `RefusedMark`.
+- **Hand-off.** `DavHandoff` is chosen by platform service. iOS: `ProfileServer` serves the
+  `com.apple.caldav.account` profile (`buildCalDavProfile`, identified per connection so setting up again replaces
+  the account) once, on loopback, at a random path, for two minutes, while `tix/dav` holds background time; Save the
+  profile shares the file when Safari never came. macOS: the profile goes to `tix-dav/` in the temporary directory
+  and opens in System Settings, deleted when the sheet closes and before the next one is written. Android:
+  `tix/dav` `openDavx5` starts DAVx5 (`at.bitfire.davdroid`, declared in `<queries>`) with a `caldavs://` address
+  that carries no user info and the user name and password as extras; without DAVx5 the sheet links to DAVx5,
+  tasks.org and jtx Board on F-Droid, or on Google Play in the play build. Linux and Windows get the details with
+  Thunderbird and Evolution steps. Copying the password goes through `tix/dav` `copySensitive`: Android marks the clip
+  sensitive, iOS makes it local and expiring after two minutes; elsewhere it is plain text and the toast says so.
+- **Phase 2.** When `dav.info` answers `write: true` the lead says changes come back, the sheet offers Read only,
+  and a password created read only offers Replace. Writes made in Reminders reach the app as ordinary task events.
+- `DavOps` and `data/models/dav.dart` are written by hand until `tix.lock` reaches the release with the routes; the
+  screen's (?) entry waits for the same move, and the screen links to tix's `caldav.md` per client meanwhile.
 
 ## Desktop updates
 
