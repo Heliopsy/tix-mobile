@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.23.2](https://github.com/Heliopsy/tix-mobile/compare/v0.23.1...v0.23.2) (2026-11-24)
+
+
+### Bug Fixes
+
+* **session:** see refusals the widgets' background run records while the app is open ([4776efc](https://github.com/Heliopsy/tix-mobile/commit/4776efc06b3026ca1664008e1fe3fc473078386c))
+* **sign-in:** keep provider sign-ins through restarts, stale tabs and server refusals ([f515857](https://github.com/Heliopsy/tix-mobile/commit/f51585714b5742bbecb8dd9e8848066b37b37291))
+* **sign-in:** say when a provider sign-in was declined or refused ([26b608e](https://github.com/Heliopsy/tix-mobile/commit/26b608e1ceee4c29a9592e0798c3c81f7b172ad4))
+
 ## [0.23.1](https://github.com/Heliopsy/tix-mobile/compare/v0.23.0...v0.23.1) (2026-11-23)
 
 
