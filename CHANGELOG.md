@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.24.0](https://github.com/Heliopsy/tix-mobile/compare/v0.23.2...v0.24.0) (2026-11-25)
+
+
+### Features
+
+* **dav:** hand a CalDAV account to Reminders, DAVx5 or the clipboard ([7a4d714](https://github.com/Heliopsy/tix-mobile/commit/7a4d71489aea3488e170cc0433800de0634b2e12))
+* **dav:** read CalDAV setup and app passwords from tix ([918dbca](https://github.com/Heliopsy/tix-mobile/commit/918dbcabb0bd6f06ea22d6bde22f513a74307257))
+* **dav:** set up tasks in other apps from Settings ([add4512](https://github.com/Heliopsy/tix-mobile/commit/add451253f9709e417150f5bbc91aac70aab76dd))
+
 ## [0.23.2](https://github.com/Heliopsy/tix-mobile/compare/v0.23.1...v0.23.2) (2026-11-24)
 
 
